@@ -190,86 +190,134 @@ export default function Institutions({ name }: { name: string | undefined }) {
       }).then((response) => response.json()),
   });
 
-  const seriesBudget: any = [];
-  const seriesFunding: any = [];
-  const seriesProject: any = [];
-  const seriesBudgetRegion: any = [];
-  const seriesFundingRegion: any = [];
-  const seriesProjectRegion: any = [];
-  const institutionsBudget = data?.aggregations?.by_institution_budget?.buckets ?? [];
-  const institutionsFunding = data?.aggregations?.by_institution_funding?.buckets ?? [];
-  const institutionsProject = data?.aggregations?.by_institution_project?.buckets ?? [];
+  const seriesBudget: any = []
+  const seriesFunding: any = []
+  const seriesProject: any = []
+  const seriesBudgetRegion: any = []
+  const seriesFundingRegion: any = []
+  const seriesProjectRegion: any = []
+  const institutionsBudget = data?.aggregations?.by_institution_budget?.buckets ?? []
+  const institutionsFunding = data?.aggregations?.by_institution_funding?.buckets ?? []
+  const institutionsProject = data?.aggregations?.by_institution_project?.buckets ?? []
+
+  // 1. Calculer les totaux réels pour le tri (après filtrage should_ignore)
+  const budgetTotals = institutionsBudget.map((bucket) => {
+    return funders.reduce((sum, funder) => {
+      const val = bucket.by_project_type.buckets
+        ?.find((bucket) => bucket.key === funder)
+        ?.should_ignore_budget?.buckets
+        ?.find((bucket) => bucket.key.toString() === '0')
+        ?.sum_budget?.value ?? 0;
+      return sum + val;
+    }, 0)
+  })
+  const fundingTotals = institutionsFunding.map((bucket) => {
+    return funders.reduce((sum, funder) => {
+      const val = bucket.by_project_type.buckets
+        ?.find((bucket) => bucket.key === funder)
+        ?.should_ignore_funding?.buckets
+        ?.find((bucket) => bucket.key.toString() === '0')
+        ?.sum_funding?.value ?? 0;
+      return sum + val;
+    }, 0)
+  })
+  // 2. Calculer l'ordre de tri décroissant
+  const sortedIndicesBudget = budgetTotals
+    .map((total, index) => ({ index, total }))
+    .sort((a, b) => b.total - a.total)
+    .map(({ index }) => index);
+  const sortedIndicesFunding = fundingTotals
+    .map((total, index) => ({ index, total }))
+    .sort((a, b) => b.total - a.total)
+    .map(({ index }) => index);
+  // 3. Réordonner les catégories
+  const categoriesBudget = sortedIndicesBudget.map((i) =>
+    institutionsBudget[i].key.split('###')[1]
+  )
+  const categoriesFunding = sortedIndicesFunding.map((i) =>
+    institutionsFunding[i].key.split('###')[1]
+  )
+  // 4. Réordonner les données dans chaque série
+  const sortedBudgetBuckets = sortedIndicesBudget.map((i) => institutionsBudget[i]);
+  const sortedFundingBuckets = sortedIndicesFunding.map((i) => institutionsFunding[i]);
+
   funders.forEach((funder) => {
     seriesBudget.push({
-      color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } },
-      data: institutionsBudget.map((bucket) => bucket.by_project_type.buckets
+      color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: 'funder' }) } },
+      data: sortedBudgetBuckets.map((bucket) => bucket.by_project_type.buckets
         ?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 1)?.should_ignore_budget?.buckets
         ?.find((bucket) => bucket.key.toString() === '0')?.sum_budget?.value ?? 0),
       name: [funder, getI18nLabel(i18n, 'coordinator')].join(' - '),
     });
     seriesBudget.push({
-      color: getCssColor({ name: funder, prefix: "funder" }),
-      data: institutionsBudget.map((bucket) => bucket.by_project_type.buckets
+      color: getCssColor({ name: funder, prefix: 'funder' }),
+      data: sortedBudgetBuckets.map((bucket) => bucket.by_project_type.buckets
         ?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 0)?.should_ignore_budget?.buckets
         ?.find((bucket) => bucket.key.toString() === '0')?.sum_budget?.value ?? 0),
       name: [funder, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
     });
     seriesBudgetRegion.push({
-      color: getCssColor({ name: funder, prefix: "funder" }),
-      data: institutionsBudget.map((bucket) => bucket
+      color: getCssColor({ name: funder, prefix: 'funder' }),
+      data: sortedBudgetBuckets.map((bucket) => bucket
         ?.by_project_type.buckets?.find((bucket) => bucket.key === funder)
         ?.should_ignore_budget?.buckets?.find((bucket) => bucket.key.toString() === '0')?.sum_budget?.value ?? 0),
       name: funder,
     });
     seriesFunding.push({
-      color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } },
-      data: institutionsFunding.map((bucket) => bucket.by_project_type.buckets
+      color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: 'funder' }) } },
+      data: sortedFundingBuckets.map((bucket) => bucket.by_project_type.buckets
         ?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 1)?.should_ignore_funding?.buckets
         ?.find((bucket) => bucket.key.toString() === '0')?.sum_funding?.value ?? 0),
       name: [funder, getI18nLabel(i18n, 'coordinator')].join(' - '),
     });
     seriesFunding.push({
-      color: getCssColor({ name: funder, prefix: "funder" }),
-      data: institutionsFunding.map((bucket) => bucket.by_project_type.buckets
+      color: getCssColor({ name: funder, prefix: 'funder' }),
+      data: sortedFundingBuckets.map((bucket) => bucket.by_project_type.buckets
         ?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 0)?.should_ignore_funding?.buckets
         ?.find((bucket) => bucket.key.toString() === '0')?.sum_funding?.value ?? 0),
       name: [funder, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
     });
     seriesFundingRegion.push({
-      color: getCssColor({ name: funder, prefix: "funder" }),
-      data: institutionsFunding.map((bucket) => bucket
+      color: getCssColor({ name: funder, prefix: 'funder' }),
+      data: sortedFundingBuckets.map((bucket) => bucket
         ?.by_project_type.buckets?.find((bucket) => bucket.key === funder)
         ?.should_ignore_funding?.buckets?.find((bucket) => bucket.key.toString() === '0')?.sum_funding?.value ?? 0),
       name: funder,
     });
     seriesProject.push({
-      color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } },
+      color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: 'funder' }) } },
       data: institutionsProject.map((bucket) => bucket.by_project_type.buckets
         ?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 1)?.by_unique_project?.value ?? 0),
       name: [funder, getI18nLabel(i18n, 'coordinator')].join(' - '),
     });
     seriesProject.push({
-      color: getCssColor({ name: funder, prefix: "funder" }),
+      color: getCssColor({ name: funder, prefix: 'funder' }),
       data: institutionsProject.map((bucket) => bucket.by_project_type.buckets
         ?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 0)?.by_unique_project?.value ?? 0),
       name: [funder, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
     });
     seriesProjectRegion.push({
-      color: getCssColor({ name: funder, prefix: "funder" }),
+      color: getCssColor({ name: funder, prefix: 'funder' }),
       data: institutionsProject.map((bucket) => bucket
         ?.by_project_type.buckets?.find((bucket) => bucket.key === funder)
         ?.by_unique_project?.value ?? 0),
       name: funder,
     });
   });
-  const categoriesBudget = institutionsBudget.map((bucket) => bucket.key.split('###')[1]);
-  const categoriesFunding = institutionsFunding.map((bucket) => bucket.key.split('###')[1]);
+  seriesBudget.reverse()
+  seriesFunding.reverse()
+  seriesProject.reverse()
+  seriesBudgetRegion.reverse()
+  seriesFundingRegion.reverse()
+  seriesProjectRegion.reverse()
+  // const categoriesBudget = institutionsBudget.map((bucket) => bucket.key.split('###')[1]);
+  // const categoriesFunding = institutionsFunding.map((bucket) => bucket.key.split('###')[1]);
   const categoriesProject = institutionsProject.map((bucket) => bucket.key.split('###')[1]);
 
   const title = `Principaux établissements de ${structure ? "l'établissement" : "la région"} ${name} impliqués dans les projets par AAP ${getYearRangeLabel({ yearMax, yearMin })}`;
@@ -279,7 +327,7 @@ export default function Institutions({ name }: { name: string | undefined }) {
   let dataLabel = function (this: any) {
     return `${this.y} projet${this.y > 1 ? 's' : ''}`;
   };
-  let series = structure ? seriesProject.reverse() : seriesProjectRegion.reverse();
+  let series = structure ? seriesProject : seriesProjectRegion;
   let stackLabel = function (this: any) {
     return `${this.total} projet${this.total > 1 ? 's' : ''}`;
   };
@@ -294,7 +342,7 @@ export default function Institutions({ name }: { name: string | undefined }) {
       dataLabel = function (this: any) {
         return `${formatCompactNumber(this.y)} €`;
       };
-      series = structure ? seriesBudget.reverse() : seriesBudgetRegion.reverse();
+      series = structure ? seriesBudget : seriesBudgetRegion;
       stackLabel = function (this: any) {
         return `${formatCompactNumber(this.total)} €`;
       };
@@ -309,12 +357,12 @@ export default function Institutions({ name }: { name: string | undefined }) {
       dataLabel = function (this: any) {
         return `${formatCompactNumber(this.y)} €`;
       };
-      series = structure ? seriesFunding.reverse() : seriesFundingRegion.reverse();
+      series = structure ? seriesFunding : seriesFundingRegion;
       stackLabel = function (this: any) {
         return `${formatCompactNumber(this.total)} €`;
       };
       tooltip = function (this: any) {
-        return `<b>${formatCompactNumber(this.y)} €</b> ont été perçus par <b>${categoriesBudget[this.x]}</b> dans le cadre de projets <b>${this.series.name}</b> pour des projets débutés ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`;
+        return `<b>${formatCompactNumber(this.y)} €</b> ont été perçus par <b>${categoriesFunding[this.x]}</b> dans le cadre de projets <b>${this.series.name}</b> pour des projets débutés ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`;
       };
       break;
   };
