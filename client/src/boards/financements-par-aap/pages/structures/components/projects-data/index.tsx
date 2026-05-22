@@ -1,13 +1,13 @@
-import { Button, Col, Row, Text, Title } from "@dataesr/dsfr-plus";
-import { useQuery } from "@tanstack/react-query";
-import { useMemo, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { Button, Col, Row, Text, Title } from "@dataesr/dsfr-plus"
+import { useQuery } from "@tanstack/react-query"
+import { useMemo, useState } from "react"
+import { useSearchParams } from "react-router-dom"
 
-import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
-import { getEsQuery } from "../../../../utils.ts";
-import DataTable from "./datatable.tsx";
+import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx"
+import { getEsQuery } from "../../../../utils.ts"
+import DataTable from "./datatable.tsx"
 
-const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
+const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env
 
 type Column = {
   id: string,
@@ -43,16 +43,17 @@ type Sort = {
 
 export default function ProjectsData() {
   const [searchParams] = useSearchParams()
-  const structure = searchParams.get("structure");
-  const yearMax = searchParams.get("yearMax");
-  const yearMin = searchParams.get("yearMin");
+  const region = searchParams.get("region")
+  const structure = searchParams.get("structure")
+  const yearMax = searchParams.get("yearMax")
+  const yearMin = searchParams.get("yearMin")
 
   const [filters, setFilters] = useState<Filter[]>([])
   const [pagination, setPagination] = useState({ from: 0, size: 10 })
-  const [sorting, setSorting] = useState<Sort>({ id: 'project_budgetFinanced', order: 'desc' });
+  const [sorting, setSorting] = useState<Sort>({ id: 'project_budgetFinanced', order: 'desc' })
 
   const body = {
-    ...getEsQuery({ structures: [structure], yearMax, yearMin }),
+    ...getEsQuery({ regions: [region], structures: [structure], yearMax, yearMin }),
     from: pagination?.from ?? 0,
     size: pagination?.size ?? 10,
   }
@@ -63,23 +64,26 @@ export default function ProjectsData() {
     region: { terms: { field: 'participant_region_with_labs.keyword' } },
     type: { terms: { field: 'project_type.keyword' } },
     year: { terms: { field: 'project_year' } },
-  };
+  }
 
   if (sorting?.id) {
     body.sort = { [sorting.id]: sorting.order }
   }
   if (filters.length > 0) {
     filters.forEach((filter) => {
-      if (filter.id === 'region') {
-        body.query.bool.filter.push({ match: { 'participant_region_with_labs.keyword': filter.value } })
-      } else if (filter.id === 'id') {
+      if (filter.id === 'id') {
         body.query.bool.filter.push({ match: { 'project_id.keyword': filter.value } })
       } else if (filter.id === 'instrument') {
         body.query.bool.filter.push({ match: { 'project_instrument.keyword': filter.value } })
       } else if (filter.id === 'label') {
-        body.query.bool.filter.push({ query_string: { default_field: 'project_label.keyword', query: filter.value } })
+        body.query.bool.filter.push({ wildcard: { 'project_label.keyword': {
+          case_insensitive: true,
+          value: `*${filter.value.toLowerCase()}*`,
+        } } })
       } else if (filter.id === 'participationIsCoordinator') {
         body.query.bool.filter.push({ term: { participation_is_coordinator: filter.value === "1" } })
+      } else if (filter.id === 'region') {
+        body.query.bool.filter.push({ match: { 'participant_region_with_labs.keyword': filter.value } })
       } else if (filter.id === 'type') {
         body.query.bool.filter.push({ match: { 'project_type.keyword': filter.value } })
       } else if (filter.id === 'year') {
@@ -91,7 +95,7 @@ export default function ProjectsData() {
   }
 
   const { data, isLoading } = useQuery({
-    queryKey: ["fundings-data", filters, pagination, sorting, structure, yearMax, yearMin],
+    queryKey: ["fundings-data", filters, pagination, region, sorting, structure, yearMax, yearMin],
     queryFn: () =>
       fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_ES_INDEX_PARTICIPATIONS}`, {
         body: JSON.stringify(body),
@@ -101,10 +105,10 @@ export default function ProjectsData() {
         },
         method: "POST",
       }).then((response) => response.json()),
-  });
+  })
 
   const { data: dataAll, isLoading: isLoadingAll } = useQuery({
-    queryKey: ["fundings-data-all", structure, yearMax, yearMin],
+    queryKey: ["fundings-data-all", region, structure, yearMax, yearMin],
     queryFn: () =>
       fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_ES_INDEX_PARTICIPATIONS}`, {
         body: JSON.stringify({ ...body, from: 0, size: 10000, aggregations }),
@@ -114,7 +118,7 @@ export default function ProjectsData() {
         },
         method: "POST",
       }).then((response) => response.json()),
-  });
+  })
 
   const dataTable: Project[] = (data?.hits?.hits ?? []).map((hit) => ({
     id: hit._source?.project_id,
@@ -207,7 +211,7 @@ export default function ProjectsData() {
       label: 'Financement perçu',
       sortableField: 'participation_funding',
     }
-  ], []);
+  ], [])
 
   const downloadCsv = (e) => {
     e.preventDefault();
@@ -223,7 +227,7 @@ export default function ProjectsData() {
       ].join('\n');
       // Create a hidden download link
       const link = document.createElement('a');
-      link.download = `tableaux_financements_par_aap_${structure}_${yearMin}_${yearMax}.csv`;
+      link.download = `tableaux_financements_par_aap_${structure ?? region}_${yearMin}_${yearMax}.csv`;
       link.href = URL.createObjectURL(new Blob([csvContent], { type: 'text/csv;charset=utf-8' }));
       link.style.visibility = 'hidden';
       // Append link to DOM, trigger click, and clean up
