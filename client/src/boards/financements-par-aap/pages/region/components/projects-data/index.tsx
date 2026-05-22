@@ -78,11 +78,11 @@ export default function ProjectsData() {
       } else if (filter.id === 'instrument') {
         body.query.bool.filter.push({ match: { 'project_instrument.keyword': filter.value } })
       } else if (filter.id === 'label') {
-        body.query.bool.filter.push({ query_string: { default_field: 'project_label.keyword', query: filter.value } })
+        body.query.bool.filter.push({ query_string: { default_field: 'project_label', query: filter.value } })
       } else if (filter.id === 'participantId') {
         body.query.bool.filter.push({ match: { 'participant_id.keyword': filter.value } })
       } else if (filter.id === 'participantLabel') {
-        body.query.bool.filter.push({ query_string: { default_field: 'participant_label.fr.keyword', query: filter.value } })
+        body.query.bool.filter.push({ query_string: { default_field: 'participant_label.fr', query: filter.value } })
       } else if (filter.id === 'participationIsCoordinator') {
         body.query.bool.filter.push({ term: { participation_is_coordinator: filter.value === "1" } })
       } else if (filter.id === 'region') {
