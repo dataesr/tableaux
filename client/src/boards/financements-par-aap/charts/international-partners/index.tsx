@@ -199,10 +199,54 @@ export default function InternationalPartners({ name }: { name: string | undefin
   const partnersBudget = data?.aggregations?.by_international_partners_budget?.buckets ?? [];
   const partnersFunding = data?.aggregations?.by_international_partners_funding?.buckets ?? [];
   const partnersProject = data?.aggregations?.by_international_partners_project?.buckets ?? [];
+
+  // 1. Calculer les totaux réels pour le tri (après filtrage should_ignore)
+  const budgetTotals = partnersBudget.map((bucket) => {
+    return funders.reduce((sum, funder) => {
+      const val = bucket.by_project_type.buckets
+        ?.find((bucket) => bucket.key === funder)
+        ?.should_ignore_budget?.buckets
+        ?.find((bucket) => bucket.key.toString() === '0')
+        ?.sum_budget?.value ?? 0;
+      return sum + val;
+    }, 0)
+  })
+  const fundingTotals = partnersFunding.map((bucket) => {
+    return funders.reduce((sum, funder) => {
+      const val = bucket.by_project_type.buckets
+        ?.find((bucket) => bucket.key === funder)
+        ?.should_ignore_funding?.buckets
+        ?.find((bucket) => bucket.key.toString() === '0')
+        ?.sum_funding?.value ?? 0;
+      return sum + val;
+    }, 0)
+  })
+  // 2. Calculer l'ordre de tri décroissant
+  const sortedIndicesBudget = budgetTotals
+    .map((total, index) => ({ index, total }))
+    .sort((a, b) => b.total - a.total)
+    .map(({ index }) => index);
+  const sortedIndicesFunding = fundingTotals
+    .map((total, index) => ({ index, total }))
+    .sort((a, b) => b.total - a.total)
+    .map(({ index }) => index);
+  // 3. Réordonner les catégories
+  const categoriesBudget = sortedIndicesBudget.map((i) => {
+    const structure = Object.fromEntries(new URLSearchParams(partnersBudget[i].key));
+    return `${structure.label} (${structure.country})`;
+  })
+  const categoriesFunding = sortedIndicesFunding.map((i) => {
+    const structure = Object.fromEntries(new URLSearchParams(partnersBudget[i].key));
+    return `${structure.label} (${structure.country})`;
+  })
+  // 4. Réordonner les données dans chaque série
+  const sortedBudgetBuckets = sortedIndicesBudget.map((i) => partnersBudget[i]);
+  const sortedFundingBuckets = sortedIndicesFunding.map((i) => partnersFunding[i]);
+
   funders.forEach((funder) => {
     seriesBudget.push({
       color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } },
-      data: partnersBudget.map((partner) => partner.by_project_type.buckets
+      data: sortedBudgetBuckets.map((partner) => partner.by_project_type.buckets
         .find((project) => project.key === funder)?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 1)?.should_ignore_budget?.buckets
         ?.find((bucket) => bucket.key.toString() === '0')?.sum_budget?.value ?? 0),
@@ -210,7 +254,7 @@ export default function InternationalPartners({ name }: { name: string | undefin
     });
     seriesBudget.push({
       color: getCssColor({ name: funder, prefix: "funder" }),
-      data: partnersBudget.map((partner) => partner.by_project_type.buckets
+      data: sortedBudgetBuckets.map((partner) => partner.by_project_type.buckets
         .find((project) => project.key === funder)?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 0)?.should_ignore_budget?.buckets
         ?.find((bucket) => bucket.key.toString() === '0')?.sum_budget?.value ?? 0),
@@ -218,14 +262,14 @@ export default function InternationalPartners({ name }: { name: string | undefin
     });
     seriesBudgetRegion.push({
       color: getCssColor({ name: funder, prefix: "funder" }),
-      data: partnersBudget.map((partner) => partner
+      data: sortedBudgetBuckets.map((partner) => partner
         ?.by_project_type.buckets?.find((project) => project.key === funder)
         ?.should_ignore_budget?.buckets?.find((bucket) => bucket.key.toString() === '0')?.sum_budget?.value ?? 0),
       name: funder,
     });
     seriesFunding.push({
       color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } },
-      data: partnersFunding.map((partner) => partner.by_project_type.buckets
+      data: sortedFundingBuckets.map((partner) => partner.by_project_type.buckets
         .find((project) => project.key === funder)?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 1)?.should_ignore_funding?.buckets
         ?.find((bucket) => bucket.key.toString() === '0')?.sum_funding?.value ?? 0),
@@ -233,7 +277,7 @@ export default function InternationalPartners({ name }: { name: string | undefin
     });
     seriesFunding.push({
       color: getCssColor({ name: funder, prefix: "funder" }),
-      data: partnersFunding.map((partner) => partner.by_project_type.buckets
+      data: sortedFundingBuckets.map((partner) => partner.by_project_type.buckets
         .find((project) => project.key === funder)?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 0)?.should_ignore_funding?.buckets
         ?.find((bucket) => bucket.key.toString() === '0')?.sum_funding?.value ?? 0),
@@ -241,7 +285,7 @@ export default function InternationalPartners({ name }: { name: string | undefin
     });
     seriesFundingRegion.push({
       color: getCssColor({ name: funder, prefix: "funder" }),
-      data: partnersFunding.map((partner) => partner
+      data: sortedFundingBuckets.map((partner) => partner
         ?.by_project_type.buckets?.find((project) => project.key === funder)
         ?.should_ignore_funding?.buckets?.find((bucket) => bucket.key.toString() === '0')?.sum_funding?.value ?? 0),
       name: funder,
@@ -267,14 +311,6 @@ export default function InternationalPartners({ name }: { name: string | undefin
     });
   });
   const categoriesProject = partnersProject?.map((partner) => {
-    const structure = Object.fromEntries(new URLSearchParams(partner.key));
-    return `${structure.label} (${structure.country})`;
-  });
-  const categoriesBudget = partnersBudget.map((partner) => {
-    const structure = Object.fromEntries(new URLSearchParams(partner.key));
-    return `${structure.label} (${structure.country})`;
-  });
-  const categoriesFunding = partnersFunding.map((partner) => {
     const structure = Object.fromEntries(new URLSearchParams(partner.key));
     return `${structure.label} (${structure.country})`;
   });

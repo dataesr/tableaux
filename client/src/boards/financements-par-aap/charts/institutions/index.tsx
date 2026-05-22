@@ -316,8 +316,6 @@ export default function Institutions({ name }: { name: string | undefined }) {
   seriesBudgetRegion.reverse()
   seriesFundingRegion.reverse()
   seriesProjectRegion.reverse()
-  // const categoriesBudget = institutionsBudget.map((bucket) => bucket.key.split('###')[1]);
-  // const categoriesFunding = institutionsFunding.map((bucket) => bucket.key.split('###')[1]);
   const categoriesProject = institutionsProject.map((bucket) => bucket.key.split('###')[1]);
 
   const title = `Principaux établissements de ${structure ? "l'établissement" : "la région"} ${name} impliqués dans les projets par AAP ${getYearRangeLabel({ yearMax, yearMin })}`;

@@ -199,10 +199,52 @@ export default function Laboratories({ name }: { name: string | undefined }) {
   const laboratoriesBudget = data?.aggregations?.by_laboratory_budget?.buckets ?? [];
   const laboratoriesFunding = data?.aggregations?.by_laboratory_funding?.buckets ?? [];
   const laboratoriesProject = data?.aggregations?.by_laboratory_project?.buckets ?? [];
+
+  // 1. Calculer les totaux réels pour le tri (après filtrage should_ignore)
+  const budgetTotals = laboratoriesBudget.map((bucket) => {
+    return funders.reduce((sum, funder) => {
+      const val = bucket.by_project_type.buckets
+        ?.find((bucket) => bucket.key === funder)
+        ?.should_ignore_budget?.buckets
+        ?.find((bucket) => bucket.key.toString() === '0')
+        ?.sum_budget?.value ?? 0;
+      return sum + val;
+    }, 0)
+  })
+  const fundingTotals = laboratoriesFunding.map((bucket) => {
+    return funders.reduce((sum, funder) => {
+      const val = bucket.by_project_type.buckets
+        ?.find((bucket) => bucket.key === funder)
+        ?.should_ignore_funding?.buckets
+        ?.find((bucket) => bucket.key.toString() === '0')
+        ?.sum_funding?.value ?? 0;
+      return sum + val;
+    }, 0)
+  })
+  // 2. Calculer l'ordre de tri décroissant
+  const sortedIndicesBudget = budgetTotals
+    .map((total, index) => ({ index, total }))
+    .sort((a, b) => b.total - a.total)
+    .map(({ index }) => index);
+  const sortedIndicesFunding = fundingTotals
+    .map((total, index) => ({ index, total }))
+    .sort((a, b) => b.total - a.total)
+    .map(({ index }) => index);
+  // 3. Réordonner les catégories
+  const categoriesBudget = sortedIndicesBudget.map((i) =>
+    (Object.fromEntries(new URLSearchParams(laboratoriesBudget[i].key))).label
+  )
+  const categoriesFunding = sortedIndicesFunding.map((i) =>
+    (Object.fromEntries(new URLSearchParams(laboratoriesFunding[i].key))).label
+  )
+  // 4. Réordonner les données dans chaque série
+  const sortedBudgetBuckets = sortedIndicesBudget.map((i) => laboratoriesBudget[i]);
+  const sortedFundingBuckets = sortedIndicesFunding.map((i) => laboratoriesFunding[i]);
+
   funders.forEach((funder) => {
     seriesBudget.push({
       color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } },
-      data: laboratoriesBudget.map((bucket) => bucket.by_project_type.buckets
+      data: sortedBudgetBuckets.map((bucket) => bucket.by_project_type.buckets
         ?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 1)?.should_ignore_budget?.buckets
         ?.find((bucket) => bucket.key.toString() === '0')?.sum_budget?.value ?? 0),
@@ -210,7 +252,7 @@ export default function Laboratories({ name }: { name: string | undefined }) {
     });
     seriesBudget.push({
       color: getCssColor({ name: funder, prefix: "funder" }),
-      data: laboratoriesBudget.map((bucket) => bucket.by_project_type.buckets
+      data: sortedBudgetBuckets.map((bucket) => bucket.by_project_type.buckets
         ?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 0)?.should_ignore_budget?.buckets
         ?.find((bucket) => bucket.key.toString() === '0')?.sum_budget?.value ?? 0),
@@ -218,14 +260,14 @@ export default function Laboratories({ name }: { name: string | undefined }) {
     });
     seriesBudgetRegion.push({
       color: getCssColor({ name: funder, prefix: "funder" }),
-      data: laboratoriesBudget.map((bucket) => bucket
+      data: sortedBudgetBuckets.map((bucket) => bucket
         ?.by_project_type.buckets?.find((bucket) => bucket.key === funder)
         ?.should_ignore_budget?.buckets?.find((bucket) => bucket.key.toString() === '0')?.sum_budget?.value ?? 0),
       name: funder,
     });
     seriesFunding.push({
       color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } },
-      data: laboratoriesFunding.map((bucket) => bucket.by_project_type.buckets
+      data: sortedFundingBuckets.map((bucket) => bucket.by_project_type.buckets
         ?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 1)?.should_ignore_funding?.buckets
         ?.find((bucket) => bucket.key.toString() === '0')?.sum_funding?.value ?? 0),
@@ -233,7 +275,7 @@ export default function Laboratories({ name }: { name: string | undefined }) {
     });
     seriesFunding.push({
       color: getCssColor({ name: funder, prefix: "funder" }),
-      data: laboratoriesFunding.map((bucket) => bucket.by_project_type.buckets
+      data: sortedFundingBuckets.map((bucket) => bucket.by_project_type.buckets
         ?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 0)?.should_ignore_funding?.buckets
         ?.find((bucket) => bucket.key.toString() === '0')?.sum_funding?.value ?? 0),
@@ -241,7 +283,7 @@ export default function Laboratories({ name }: { name: string | undefined }) {
     });
     seriesFundingRegion.push({
       color: getCssColor({ name: funder, prefix: "funder" }),
-      data: laboratoriesFunding.map((bucket) => bucket
+      data: sortedFundingBuckets.map((bucket) => bucket
         ?.by_project_type.buckets?.find((bucket) => bucket.key === funder)
         ?.should_ignore_funding?.buckets?.find((bucket) => bucket.key.toString() === '0')?.sum_funding?.value ?? 0),
       name: funder,
@@ -266,10 +308,8 @@ export default function Laboratories({ name }: { name: string | undefined }) {
         ?.by_project_type.buckets?.find((bucket) => bucket.key === funder)
         ?.by_unique_project?.value ?? 0),
       name: funder,
-    });
-  });
-  const categoriesBudget = laboratoriesBudget.map((bucket) => (Object.fromEntries(new URLSearchParams(bucket.key))).label);
-  const categoriesFunding = laboratoriesFunding.map((bucket) => (Object.fromEntries(new URLSearchParams(bucket.key))).label);
+    })
+  })
   const categoriesProject = laboratoriesProject.map((bucket) => (Object.fromEntries(new URLSearchParams(bucket.key))).label);
 
   const title = `Principaux laboratoires de ${structure ? "l'établissement" : "la région"} ${name} impliqués dans les projets par AAP ${getYearRangeLabel({ yearMax, yearMin })}`;
@@ -314,7 +354,7 @@ export default function Laboratories({ name }: { name: string | undefined }) {
         return `${formatCompactNumber(this.total)} €`;
       };
       tooltip = function (this: any) {
-        return `<b>${formatCompactNumber(this.y)} €</b> ont été perçus par <b>${categoriesBudget[this.x]}</b> dans le cadre de projets <b>${this.series.name}</b> pour des projets débutés ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`;
+        return `<b>${formatCompactNumber(this.y)} €</b> ont été perçus par <b>${categoriesFunding[this.x]}</b> dans le cadre de projets <b>${this.series.name}</b> pour des projets débutés ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`;
       };
       break;
   };

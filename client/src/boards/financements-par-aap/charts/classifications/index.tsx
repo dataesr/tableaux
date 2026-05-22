@@ -29,9 +29,15 @@ export default function Classifications({ name }: { name: string | undefined }) 
       by_classifications_project: {
         terms: {
           field: "project_classification.primary_field.keyword",
+          order: { "by_unique_project": "desc" },
           size: 15,
         },
         aggregations: {
+          by_unique_project: {
+            cardinality: {
+              field: "project_id.keyword",
+            },
+          },
           by_project_type: {
             terms: {
               field: "project_type.keyword",
@@ -191,10 +197,52 @@ export default function Classifications({ name }: { name: string | undefined }) 
   const classificationsBudget = data?.aggregations?.by_classifications_budget?.buckets ?? [];
   const classificationsFunding = data?.aggregations?.by_classifications_funding?.buckets ?? [];
   const classificationsProject = data?.aggregations?.by_classifications_project?.buckets ?? [];
+
+  // 1. Calculer les totaux réels pour le tri (après filtrage should_ignore)
+  const budgetTotals = classificationsBudget.map((bucket) => {
+    return funders.reduce((sum, funder) => {
+      const val = bucket.by_project_type.buckets
+        ?.find((bucket) => bucket.key === funder)
+        ?.should_ignore_budget?.buckets
+        ?.find((bucket) => bucket.key.toString() === '0')
+        ?.sum_budget?.value ?? 0;
+      return sum + val;
+    }, 0)
+  })
+  const fundingTotals = classificationsFunding.map((bucket) => {
+    return funders.reduce((sum, funder) => {
+      const val = bucket.by_project_type.buckets
+        ?.find((bucket) => bucket.key === funder)
+        ?.should_ignore_funding?.buckets
+        ?.find((bucket) => bucket.key.toString() === '0')
+        ?.sum_funding?.value ?? 0;
+      return sum + val;
+    }, 0)
+  })
+  // 2. Calculer l'ordre de tri décroissant
+  const sortedIndicesBudget = budgetTotals
+    .map((total, index) => ({ index, total }))
+    .sort((a, b) => b.total - a.total)
+    .map(({ index }) => index);
+  const sortedIndicesFunding = fundingTotals
+    .map((total, index) => ({ index, total }))
+    .sort((a, b) => b.total - a.total)
+    .map(({ index }) => index);
+  // 3. Réordonner les catégories
+  const categoriesBudget = sortedIndicesBudget.map((i) =>
+    classificationsBudget[i].key
+  )
+  const categoriesFunding = sortedIndicesFunding.map((i) =>
+    classificationsFunding[i].key
+  )
+  // 4. Réordonner les données dans chaque série
+  const sortedBudgetBuckets = sortedIndicesBudget.map((i) => classificationsBudget[i]);
+  const sortedFundingBuckets = sortedIndicesFunding.map((i) => classificationsFunding[i]);
+
   funders.forEach((funder) => {
     seriesBudget.push({
       color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } },
-      data: classificationsBudget.map((classification) => classification.by_project_type.buckets
+      data: sortedBudgetBuckets.map((classification) => classification.by_project_type.buckets
         ?.find((project) => project.key === funder)?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 1)?.should_ignore_budget?.buckets
         ?.find((bucket) => bucket.key.toString() === '0')?.sum_budget?.value ?? 0),
@@ -202,7 +250,7 @@ export default function Classifications({ name }: { name: string | undefined }) 
     });
     seriesBudget.push({
       color: getCssColor({ name: funder, prefix: "funder" }),
-      data: classificationsBudget.map((classification) => classification.by_project_type.buckets
+      data: sortedBudgetBuckets.map((classification) => classification.by_project_type.buckets
         ?.find((project) => project.key === funder)?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 0)?.should_ignore_budget?.buckets
         ?.find((bucket) => bucket.key.toString() === '0')?.sum_budget?.value ?? 0),
@@ -210,14 +258,14 @@ export default function Classifications({ name }: { name: string | undefined }) 
     });
     seriesBudgetRegion.push({
       color: getCssColor({ name: funder, prefix: "funder" }),
-      data: classificationsBudget.map((classification) => classification
+      data: sortedBudgetBuckets.map((classification) => classification
         ?.by_project_type.buckets?.find((project) => project.key === funder)
         ?.should_ignore_budget?.buckets?.find((bucket) => bucket.key.toString() === '0')?.sum_budget?.value ?? 0),
       name: funder,
     });
     seriesFunding.push({
       color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } },
-      data: classificationsFunding.map((classification) => classification.by_project_type.buckets
+      data: sortedFundingBuckets.map((classification) => classification.by_project_type.buckets
         ?.find((project) => project.key === funder)?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 1)?.should_ignore_funding?.buckets
         ?.find((bucket) => bucket.key.toString() === '0')?.sum_funding?.value ?? 0),
@@ -225,7 +273,7 @@ export default function Classifications({ name }: { name: string | undefined }) 
     });
     seriesFunding.push({
       color: getCssColor({ name: funder, prefix: "funder" }),
-      data: classificationsFunding.map((classification) => classification.by_project_type.buckets
+      data: sortedFundingBuckets.map((classification) => classification.by_project_type.buckets
         ?.find((project) => project.key === funder)?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 0)?.should_ignore_funding?.buckets
         ?.find((bucket) => bucket.key.toString() === '0')?.sum_funding?.value ?? 0),
@@ -233,7 +281,7 @@ export default function Classifications({ name }: { name: string | undefined }) 
     });
     seriesFundingRegion.push({
       color: getCssColor({ name: funder, prefix: "funder" }),
-      data: classificationsFunding.map((classification) => classification
+      data: sortedFundingBuckets.map((classification) => classification
         ?.by_project_type.buckets?.find((project) => project.key === funder)
         ?.should_ignore_funding?.buckets?.find((bucket) => bucket.key.toString() === '0')?.sum_funding?.value ?? 0),
       name: funder,
@@ -261,8 +309,6 @@ export default function Classifications({ name }: { name: string | undefined }) 
     });
   });
   const categoriesProject = classificationsProject.map((classification) => classification.key);
-  const categoriesBudget = classificationsBudget.map((classification) => classification.key);
-  const categoriesFunding = classificationsFunding.map((classification) => classification.key);
 
   const title = `Financements par discipline de ${structure ? "l'établissement" : "la région"} ${name} ${getYearRangeLabel({ yearMax, yearMin })}`;
   // If view by number of projects
