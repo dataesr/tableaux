@@ -80,6 +80,13 @@ export default function ProjectsData() {
           case_insensitive: true,
           value: `*${filter.value.toLowerCase()}*`,
         } } })
+      } else if (filter.id === 'participantId') {
+        body.query.bool.filter.push({ match: { 'participant_id.keyword': filter.value } })
+      } else if (filter.id === 'participantLabel') {
+        body.query.bool.filter.push({ wildcard: { 'participant_label.fr.keyword': {
+          case_insensitive: true,
+          value: `*${filter.value.toLowerCase()}*`,
+        } } })
       } else if (filter.id === 'participationIsCoordinator') {
         body.query.bool.filter.push({ term: { participation_is_coordinator: filter.value === "1" } })
       } else if (filter.id === 'region') {
@@ -124,6 +131,8 @@ export default function ProjectsData() {
     id: hit._source?.project_id,
     instrument: hit._source?.project_instrument,
     label: hit._source?.project_label,
+    participantId: hit._source?.participant_id,
+    participantLabel: hit._source?.participant_label?.fr,
     participationFunding: hit._source?.participation_funding ? `${hit._source.participation_funding} €` : '',
     participationIsCoordinator: hit._source?.participation_is_coordinator ? 'Oui' : 'Non',
     projectBudgetFinanced: hit._source?.project_budgetFinanced ? `${hit._source.project_budgetFinanced} €` : '',
@@ -138,6 +147,8 @@ export default function ProjectsData() {
     id: hit._source?.project_id,
     instrument: hit._source?.project_instrument,
     label: hit._source?.project_label,
+    participantId: hit._source?.participant_id,
+    participantLabel: hit._source?.participant_label?.fr,
     participationFunding: hit._source?.participation_funding ? `${hit._source.participation_funding} €` : '',
     participationIsCoordinator: hit._source?.participation_is_coordinator ? 'Oui' : 'Non',
     projectBudgetFinanced: hit._source?.project_budgetFinanced ? `${hit._source.project_budgetFinanced} €` : '',
@@ -157,6 +168,25 @@ export default function ProjectsData() {
       sortableField: 'project_year',
     },
     {
+      id: 'region',
+      isFilterable: true,
+      isFilterableBySelect: true,
+      isSortable: false,
+      label: 'Région',
+    },
+    {
+      id: 'participantId',
+      isFilterable: true,
+      isSortable: false,
+      label: "Identifiant d'établissement",
+    },
+    {
+      id: 'participantLabel',
+      isFilterable: true,
+      isSortable: false,
+      label: "Nom de l'établissement",
+    },
+    {
       id: 'type',
       isFilterable: true,
       isFilterableBySelect: true,
@@ -169,13 +199,6 @@ export default function ProjectsData() {
       isFilterable: true,
       isSortable: false,
       label: 'Identifiant',
-    },
-    {
-      id: 'region',
-      isFilterable: true,
-      isFilterableBySelect: true,
-      isSortable: false,
-      label: 'Région',
     },
     {
       id: 'label',
