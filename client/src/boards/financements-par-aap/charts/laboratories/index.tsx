@@ -178,6 +178,13 @@ export default function Laboratories({ name }: { name: string | undefined }) {
     filters.push({ term: { participant_type: "laboratory" } })
     body.query.bool.filter = filters
   }
+  if (structure) {
+    // Change to filter on type "laboratory" instead of "institution" and to filter on "participant_institutions.structure" instead of "participant_id"
+    const filters = body.query.bool.filter.filter((f) => !f?.term?.["participant_type"] && !f?.terms?.["participant_id.keyword"] && !f?.term?.participant_is_main_parent && !f.terms?.["participant_typologie_1.keyword"])
+    filters.push({ term: { "participant_type.keyword": "laboratory" } })
+    filters.push({ term: { "participant_institutions.structure.keyword": structure } })
+    body.query.bool.filter = filters
+  }
 
   const { data, isLoading } = useQuery({
     queryKey: ["fundings-laboratories", region, structure, yearMax, yearMin],

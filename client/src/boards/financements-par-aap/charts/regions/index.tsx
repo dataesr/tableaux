@@ -113,6 +113,7 @@ export default function Regions({ name }: { name: string | undefined }) {
                 terms: {
                   field: "participation_is_coordinator",
                 },
+                // No "should_ignore_funding" needed
                 aggregations: {
                   sum_funding: {
                     sum: {
