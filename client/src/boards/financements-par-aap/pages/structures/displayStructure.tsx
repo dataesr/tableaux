@@ -4,7 +4,6 @@ import { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
 import Select from "../../../../components/select";
-import { isInProduction } from "../../../../utils";
 import Classifications from "../../charts/classifications";
 import Classifications2 from "../../charts/classifications2";
 import FrenchPartners from "../../charts/french-partners";
@@ -43,12 +42,9 @@ export default function DisplayStructure() {
     { id: "laboratoires", label: "Laboratoires" },
     { id: "disciplines", label: "Disciplines" },
     { id: "instruments", label: "Instruments" },
+    { id: "regions", label: "Régions" },
+    { id: "donnees", label: "Données" },
   ];
-
-  if (!isInProduction()) {
-    sections.push({ id: "regions", label: "Régions" });
-    sections.push({ id: "donnees", label: "Données" });
-  };
 
   const handleNavClick = (section: string) => {
     searchParams.set("section", section);

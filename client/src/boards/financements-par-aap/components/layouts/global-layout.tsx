@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { Link, Outlet, useLocation, useSearchParams } from "react-router-dom";
 
 import Footer from "../../../../components/footer";
-import { getI18nLabel, isInProduction } from "../../../../utils";
+import { getI18nLabel } from "../../../../utils";
 import { years } from "../../utils";
 import i18n from "./i18n.json";
 
@@ -96,7 +96,7 @@ export default function GlobalLayout() {
                     {getI18nLabel(i18n, "etablissement")}
                   </Link>
                 </li>
-                {isInProduction() && (
+                {/*
                   <li className="fr-nav__item">
                     <Link
                       {...(is("/financements-par-aap/comparaison") && { "aria-current": "page" })}
@@ -107,19 +107,17 @@ export default function GlobalLayout() {
                       {getI18nLabel(i18n, "comparaison")}
                     </Link>
                   </li>
-                )}
-                {!isInProduction() && (
-                  <li className="fr-nav__item">
-                    <Link
-                      {...(is("/financements-par-aap/region") && { "aria-current": "page" })}
-                      className="fr-nav__link"
-                      target="_self"
-                      to={`/financements-par-aap/region?${searchParamsFiltered()}`}
-                    >
-                      {getI18nLabel(i18n, "region")}
-                    </Link>
-                  </li>
-                )}
+                */}
+                <li className="fr-nav__item">
+                  <Link
+                    {...(is("/financements-par-aap/region") && { "aria-current": "page" })}
+                    className="fr-nav__link"
+                    target="_self"
+                    to={`/financements-par-aap/region?${searchParamsFiltered()}`}
+                  >
+                    {getI18nLabel(i18n, "region")}
+                  </Link>
+                </li>
               </ul>
             </nav>
           </div>
