@@ -28,7 +28,7 @@ export default function Laboratories({ name }: { name: string | undefined }) {
     aggregations: {
       by_laboratory_project: {
         terms: {
-          field: "co_partners_fr_labs.keyword",
+          field: "participant_id_name_default.keyword",
           order: { "by_unique_project": "desc" },
         },
         aggregations: {
@@ -65,7 +65,7 @@ export default function Laboratories({ name }: { name: string | undefined }) {
       },
       by_laboratory_budget: {
         terms: {
-          field: "co_partners_fr_labs.keyword",
+          field: "participant_id_name_default.keyword",
           order: { "sum_budget": "desc" },
         },
         aggregations: {
@@ -86,7 +86,7 @@ export default function Laboratories({ name }: { name: string | undefined }) {
                 aggregations: {
                   should_ignore_budget: {
                     terms: {
-                      field: structure ? "participant_ignore_total_budget" : "region_ignore_total_budget",
+                      field: "participant_ignore_total_budget",
                       missing: 0,
                     },
                     aggregations: {
@@ -101,7 +101,7 @@ export default function Laboratories({ name }: { name: string | undefined }) {
               },
               should_ignore_budget: {
                 terms: {
-                  field: structure ? "participant_ignore_total_budget" : "region_ignore_total_budget",
+                  field: "participant_ignore_total_budget",
                   missing: 0,
                 },
                 aggregations: {
@@ -118,7 +118,7 @@ export default function Laboratories({ name }: { name: string | undefined }) {
       },
       by_laboratory_funding: {
         terms: {
-          field: "co_partners_fr_labs.keyword",
+          field: "participant_id_name_default.keyword",
           order: { "sum_funding": "desc" },
         },
         aggregations: {
@@ -139,7 +139,7 @@ export default function Laboratories({ name }: { name: string | undefined }) {
                 aggregations: {
                   should_ignore_funding: {
                     terms: {
-                      field: structure ? "participant_ignore_funding" : "region_ignore_funding",
+                      field: "participant_ignore_funding",
                       missing: 0,
                     },
                     aggregations: {
@@ -154,7 +154,7 @@ export default function Laboratories({ name }: { name: string | undefined }) {
               },
               should_ignore_funding: {
                 terms: {
-                  field: structure ? "participant_ignore_funding" : "region_ignore_funding",
+                  field: "participant_ignore_funding",
                   missing: 0,
                 },
                 aggregations: {
@@ -172,8 +172,10 @@ export default function Laboratories({ name }: { name: string | undefined }) {
     },
   }
   if (region) {
-    const filters = body.query.bool.filter.filter((f) => !f?.terms?.["participant_region.keyword"])// && f?.terms?.["participant_region.keyword"]?.length === 0 && f?.terms?.["participant_region.keyword"]?.[0] === region)
-    filters.push({ terms: { "participant_region_with_labs.keyword": [region] } })
+    // Change to filter on type "laboratory" instead of "institution" and to filter on "participant_region_with_labs" instead of "participant_region"
+    const filters = body.query.bool.filter.filter((f) => !f?.terms?.["participant_region.keyword"] && !f?.term?.["participant_type"])
+    filters.push({ term: { "participant_region_with_labs.keyword": region } })
+    filters.push({ term: { participant_type: "laboratory" } })
     body.query.bool.filter = filters
   }
 
@@ -231,12 +233,8 @@ export default function Laboratories({ name }: { name: string | undefined }) {
     .sort((a, b) => b.total - a.total)
     .map(({ index }) => index);
   // 3. Réordonner les catégories
-  const categoriesBudget = sortedIndicesBudget.map((i) =>
-    (Object.fromEntries(new URLSearchParams(laboratoriesBudget[i].key))).label
-  )
-  const categoriesFunding = sortedIndicesFunding.map((i) =>
-    (Object.fromEntries(new URLSearchParams(laboratoriesFunding[i].key))).label
-  )
+  const categoriesBudget = sortedIndicesBudget.map((i) => laboratoriesBudget[i].key.split('###')[1])
+  const categoriesFunding = sortedIndicesFunding.map((i) => laboratoriesFunding[i].key.split('###')[1])
   // 4. Réordonner les données dans chaque série
   const sortedBudgetBuckets = sortedIndicesBudget.map((i) => laboratoriesBudget[i]);
   const sortedFundingBuckets = sortedIndicesFunding.map((i) => laboratoriesFunding[i]);
@@ -310,7 +308,7 @@ export default function Laboratories({ name }: { name: string | undefined }) {
       name: funder,
     })
   })
-  const categoriesProject = laboratoriesProject.map((bucket) => (Object.fromEntries(new URLSearchParams(bucket.key))).label);
+  const categoriesProject = laboratoriesProject.map((bucket) => bucket.key.split('###')[1]);
 
   const title = `Principaux laboratoires de ${structure ? "l'établissement" : "la région"} ${name} impliqués dans les projets par AAP ${getYearRangeLabel({ yearMax, yearMin })}`;
   // If view by number of projects

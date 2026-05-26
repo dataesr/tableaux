@@ -86,7 +86,7 @@ export default function Institutions({ name }: { name: string | undefined }) {
                 aggregations: {
                   should_ignore_budget: {
                     terms: {
-                      field: structure ? "participant_ignore_total_budget" : "region_ignore_total_budget",
+                      field: "participant_ignore_total_budget",
                       missing: 0,
                     },
                     aggregations: {
@@ -101,7 +101,7 @@ export default function Institutions({ name }: { name: string | undefined }) {
               },
               should_ignore_budget: {
                 terms: {
-                  field: structure ? "participant_ignore_total_budget" : "region_ignore_total_budget",
+                  field: "participant_ignore_total_budget",
                   missing: 0,
                 },
                 aggregations: {
@@ -139,7 +139,7 @@ export default function Institutions({ name }: { name: string | undefined }) {
                 aggregations: {
                   should_ignore_funding: {
                     terms: {
-                      field: structure ? "participant_ignore_funding" : "region_ignore_funding",
+                      field: "participant_ignore_funding",
                       missing: 0,
                     },
                     aggregations: {
@@ -154,7 +154,7 @@ export default function Institutions({ name }: { name: string | undefined }) {
               },
               should_ignore_funding: {
                 terms: {
-                  field: structure ? "participant_ignore_funding" : "region_ignore_funding",
+                  field: "participant_ignore_funding",
                   missing: 0,
                 },
                 aggregations: {
