@@ -131,7 +131,7 @@ export default function Footer({
             <li className="fr-footer__bottom-item">
               <a
                 className="fr-footer__bottom-link"
-                href={`https://github.com/dataesr/datasupr/releases/tag/v${VITE_VERSION}`}
+                href={`https://github.com/dataesr/tableaux/releases/tag/v${VITE_VERSION}`}
                 rel="noreferer noopenner"
                 target="_blank"
               >
