@@ -50,7 +50,7 @@ const SITUATION_COLOR_KEYS: Record<string, string> = {
     SIT07: "outcomes-cpge",
     SIT08: "outcomes-iut",
     SIT09: "outcomes-lp",
-    SIT10: "outcomes-autres",
+    SIT10: "outcomes-sante",
     SIT11: "outcomes-ecoles",
     SIT12: "outcomes-autres",
     SIT_DIPL: "outcomes-sortants-diplomes",

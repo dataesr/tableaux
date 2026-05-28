@@ -138,12 +138,12 @@ export function createProfilesDiplomaStackOptions(profiles: ProfileStackInput[])
         series: [
             {
                 name: "Diplômés du supérieur",
-                color: "var(--green-emeraude-main-632)",
+                color: getCssColor("outcomes-m1"),
                 data: diplData,
             },
             {
                 name: "Sortants sans diplôme",
-                color: "var(--purple-glycine-main-494)",
+                color: getCssColor("outcomes-sortants-non-diplomes"),
                 data: nonDiplData,
             },
         ],
