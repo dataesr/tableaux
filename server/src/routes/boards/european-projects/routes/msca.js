@@ -355,6 +355,9 @@ router.route("/european-projects/msca/evolution").get(async (req, res) => {
     countryFilters.country_code = req.query.country_code.toUpperCase();
   }
 
+  countryFilters.call_year = { $ne: null, $exists: true, $nin: ["2002", "2003", "2004", "2005", "2006"] };
+  baseFilters.call_year = { $ne: null, $exists: true, $nin: ["2002", "2003", "2004", "2005", "2006"] };
+
   // Agrégation commune
   const aggregationPipeline = (filters, stage) => [
     { $match: { ...filters, stage } },

@@ -460,40 +460,17 @@ export default function Home() {
           <h3 className="fr-mb-2w">〉Ajout des tableaux de bord</h3>
           <Row gutters className="form-row">
             <Col>
-              <input
-                type="text"
-                className="fr-input fr-mb-2w"
-                placeholder="Identifiant du tableau de bord"
-                value={newDashboard.id}
-                onChange={(e) => setNewDashboard({ ...newDashboard, id: e.target.value })}
-              />
+              <input type="text" className="fr-input fr-mb-2w" placeholder="Identifiant du tableau de bord" value={newDashboard.id} onChange={(e) => setNewDashboard({ ...newDashboard, id: e.target.value })} />
             </Col>
             <Col>
-              <input
-                type="text"
-                className="fr-input fr-mb-2w"
-                placeholder="Nom du tableau de bord (FR)"
-                value={newDashboard.name_fr}
-                onChange={(e) => setNewDashboard({ ...newDashboard, name_fr: e.target.value })}
-              />
+              <input type="text" className="fr-input fr-mb-2w" placeholder="Nom du tableau de bord (FR)" value={newDashboard.name_fr} onChange={(e) => setNewDashboard({ ...newDashboard, name_fr: e.target.value })} />
             </Col>
             <Col>
-              <input
-                type="text"
-                className="fr-input fr-mb-2w"
-                placeholder="Nom du tableau de bord (EN)"
-                value={newDashboard.name_en}
-                onChange={(e) => setNewDashboard({ ...newDashboard, name_en: e.target.value })}
-              />
+              <input type="text" className="fr-input fr-mb-2w" placeholder="Nom du tableau de bord (EN)" value={newDashboard.name_en} onChange={(e) => setNewDashboard({ ...newDashboard, name_en: e.target.value })} />
             </Col>
             <Col>
               <div className="fr-checkbox-group">
-                <input
-                  type="checkbox"
-                  id="isMultilingual"
-                  checked={newDashboard.isMultilingual}
-                  onChange={(e) => setNewDashboard({ ...newDashboard, isMultilingual: e.target.checked })}
-                />
+                <input type="checkbox" id="isMultilingual" checked={newDashboard.isMultilingual} onChange={(e) => setNewDashboard({ ...newDashboard, isMultilingual: e.target.checked })} />
                 <label className="fr-label" htmlFor="isMultilingual">
                   Multilingue
                 </label>
@@ -501,12 +478,7 @@ export default function Home() {
             </Col>
             <Col>
               <div className="fr-checkbox-group">
-                <input
-                  type="checkbox"
-                  id="homePageVisible"
-                  checked={newDashboard.homePageVisible}
-                  onChange={(e) => setNewDashboard({ ...newDashboard, homePageVisible: e.target.checked })}
-                />
+                <input type="checkbox" id="homePageVisible" checked={newDashboard.homePageVisible} onChange={(e) => setNewDashboard({ ...newDashboard, homePageVisible: e.target.checked })} />
                 <label className="fr-label" htmlFor="homePageVisible">
                   Visible sur la page d'accueil
                 </label>
@@ -515,40 +487,16 @@ export default function Home() {
           </Row>
           <Row gutters className="form-row">
             <Col>
-              <input
-                type="text"
-                className="fr-input fr-mb-2w"
-                placeholder="Description du tableau de bord (FR)"
-                value={newDashboard.description_fr}
-                onChange={(e) => setNewDashboard({ ...newDashboard, description_fr: e.target.value })}
-              />
+              <input type="text" className="fr-input fr-mb-2w" placeholder="Description du tableau de bord (FR)" value={newDashboard.description_fr} onChange={(e) => setNewDashboard({ ...newDashboard, description_fr: e.target.value })} />
             </Col>
             <Col>
-              <input
-                type="text"
-                className="fr-input fr-mb-2w"
-                placeholder="Description du tableau de bord (EN)"
-                value={newDashboard.description_en}
-                onChange={(e) => setNewDashboard({ ...newDashboard, description_en: e.target.value })}
-              />
+              <input type="text" className="fr-input fr-mb-2w" placeholder="Description du tableau de bord (EN)" value={newDashboard.description_en} onChange={(e) => setNewDashboard({ ...newDashboard, description_en: e.target.value })} />
             </Col>
             <Col>
-              <input
-                type="text"
-                className="fr-input fr-mb-2w"
-                placeholder="URL du tableau"
-                value={newDashboard.url}
-                onChange={(e) => setNewDashboard({ ...newDashboard, url: e.target.value })}
-              />
+              <input type="text" className="fr-input fr-mb-2w" placeholder="URL du tableau" value={newDashboard.url} onChange={(e) => setNewDashboard({ ...newDashboard, url: e.target.value })} />
             </Col>
             <Col>
-              <input
-                type="text"
-                className="fr-input fr-mb-2w"
-                placeholder="URL de l'API"
-                value={newDashboard.api_url}
-                onChange={(e) => setNewDashboard({ ...newDashboard, api_url: e.target.value })}
-              />
+              <input type="text" className="fr-input fr-mb-2w" placeholder="URL de l'API" value={newDashboard.api_url} onChange={(e) => setNewDashboard({ ...newDashboard, api_url: e.target.value })} />
             </Col>
             <Col md={1} className="text-right">
               <Button color="blue-cumulus" onClick={() => add_dashboard()} disabled={addDashboardMutation.isPending}>
@@ -581,6 +529,10 @@ export default function Home() {
                     <td>
                       <Link href={dashboard.url} target="_blank" rel="noopener noreferrer">
                         {dashboard.id}
+                      </Link>
+                      {"  "}
+                      <Link href={`./accessibility/${dashboard.id}`} target="_blank" rel="noopener noreferrer">
+                        A
                       </Link>
                     </td>
                     <td>{dashboard.name_fr}</td>
@@ -621,8 +573,7 @@ export default function Home() {
 
       <h3 className="fr-mb-2w">〉Ajout des collections</h3>
       <Callout>
-        Pour ajouter une nouvelle collection à un tableau de bord, il suffit de créer la collection dans MongoDB avec le nom suivant :
-        nom-du-tableau_nom-de-la-collection_version.
+        Pour ajouter une nouvelle collection à un tableau de bord, il suffit de créer la collection dans MongoDB avec le nom suivant : nom-du-tableau_nom-de-la-collection_version.
         <br />
         Exemple : ep_collaborations_staging
       </Callout>
@@ -630,8 +581,7 @@ export default function Home() {
       <h3 className="fr-my-2w">〉Caractérisation d'un tableau de bord</h3>
       <div className="characterization-section">
         <Callout>
-          Afin de caractériser un tableau de bord, il est nécessaire de definir toutes les clés de chaque collection et leur route associée. Cela a
-          pour but de mettre en base toutes les valeurs qui pourront être utilisées comme filtres.
+          Afin de caractériser un tableau de bord, il est nécessaire de definir toutes les clés de chaque collection et leur route associée. Cela a pour but de mettre en base toutes les valeurs qui pourront être utilisées comme filtres.
         </Callout>
 
         <Row className="fr-mt-1w">
@@ -643,14 +593,7 @@ export default function Home() {
                   <div className="fr-grid-row fr-grid-row--gutters">
                     <div className="fr-col-12 fr-col-md-6">
                       <div className="fr-radio-group fr-radio-rich">
-                        <input
-                          type="radio"
-                          id="mode-collection"
-                          name="characterization-mode"
-                          value="collection"
-                          checked={characterizationMode === "collection"}
-                          onChange={(e) => setCharacterizationMode(e.target.value as "collection" | "manual")}
-                        />
+                        <input type="radio" id="mode-collection" name="characterization-mode" value="collection" checked={characterizationMode === "collection"} onChange={(e) => setCharacterizationMode(e.target.value as "collection" | "manual")} />
                         <label className="fr-label" htmlFor="mode-collection">
                           Caractériser depuis une collection
                           <span className="fr-hint-text">Sélectionner un champ existant dans une collection</span>
@@ -659,14 +602,7 @@ export default function Home() {
                     </div>
                     <div className="fr-col-12 fr-col-md-6">
                       <div className="fr-radio-group fr-radio-rich">
-                        <input
-                          type="radio"
-                          id="mode-manual"
-                          name="characterization-mode"
-                          value="manual"
-                          checked={characterizationMode === "manual"}
-                          onChange={(e) => setCharacterizationMode(e.target.value as "collection" | "manual")}
-                        />
+                        <input type="radio" id="mode-manual" name="characterization-mode" value="manual" checked={characterizationMode === "manual"} onChange={(e) => setCharacterizationMode(e.target.value as "collection" | "manual")} />
                         <label className="fr-label" htmlFor="mode-manual">
                           Caractériser depuis un champ libre
                           <span className="fr-hint-text">Ajouter manuellement un champ et sa valeur</span>
@@ -683,13 +619,7 @@ export default function Home() {
         {characterizationMode === "collection" && (
           <Row gutters className="form-row">
             <Col>
-              <select
-                name="dashboard-select"
-                id="dashboard-select"
-                className="fr-mb-2w fr-select"
-                value={selectedDashboard}
-                onChange={(e) => setSelectedDashboard(e.target.value)}
-              >
+              <select name="dashboard-select" id="dashboard-select" className="fr-mb-2w fr-select" value={selectedDashboard} onChange={(e) => setSelectedDashboard(e.target.value)}>
                 <option value="">Sélectionner un tableau de bord</option>
                 {data.map((dashboard) => (
                   <option key={`dashboard-select-${dashboard.id}`} value={dashboard.id}>
@@ -699,14 +629,7 @@ export default function Home() {
               </select>
             </Col>
             <Col>
-              <select
-                name="collection-select"
-                id="collection-select"
-                className="fr-mb-2w fr-select"
-                disabled={!selectedDashboard}
-                value={selectedCollection}
-                onChange={(e) => setSelectedCollection(e.target.value)}
-              >
+              <select name="collection-select" id="collection-select" className="fr-mb-2w fr-select" disabled={!selectedDashboard} value={selectedCollection} onChange={(e) => setSelectedCollection(e.target.value)}>
                 <option value="">Sélectionner une collection</option>
                 {availableCollections.map((collectionName) => (
                   <option key={`collection-select-${collectionName}`} value={collectionName}>
@@ -716,14 +639,7 @@ export default function Home() {
               </select>
             </Col>
             <Col>
-              <select
-                name="field-select"
-                id="field-select"
-                className="fr-mb-2w fr-select"
-                disabled={!selectedCollection || isLoadingCollectionFields}
-                value={selectedField}
-                onChange={(e) => setSelectedField(e.target.value)}
-              >
+              <select name="field-select" id="field-select" className="fr-mb-2w fr-select" disabled={!selectedCollection || isLoadingCollectionFields} value={selectedField} onChange={(e) => setSelectedField(e.target.value)}>
                 <option value="">Sélectionner un champ</option>
                 {collectionFields?.fields?.map((field) => (
                   <option key={`field-select-${field.name}`} value={field.name}>
@@ -733,14 +649,7 @@ export default function Home() {
               </select>
             </Col>
             <Col>
-              <input
-                type="text"
-                className="fr-input fr-mb-2w"
-                placeholder="Route du tableau"
-                value={associatedRoute}
-                onChange={(e) => setAssociatedRoute(e.target.value)}
-                disabled={!selectedField}
-              />
+              <input type="text" className="fr-input fr-mb-2w" placeholder="Route du tableau" value={associatedRoute} onChange={(e) => setAssociatedRoute(e.target.value)} disabled={!selectedField} />
             </Col>
             <Col md={1} className="text-right">
               <Button
@@ -768,13 +677,7 @@ export default function Home() {
         {characterizationMode === "manual" && (
           <Row gutters className="form-row">
             <Col>
-              <select
-                name="dashboard-select-manual"
-                id="dashboard-select-manual"
-                className="fr-mb-2w fr-select"
-                value={selectedDashboard}
-                onChange={(e) => setSelectedDashboard(e.target.value)}
-              >
+              <select name="dashboard-select-manual" id="dashboard-select-manual" className="fr-mb-2w fr-select" value={selectedDashboard} onChange={(e) => setSelectedDashboard(e.target.value)}>
                 <option value="">Sélectionner un tableau de bord</option>
                 {data.map((dashboard) => (
                   <option key={`dashboard-select-manual-${dashboard.id}`} value={dashboard.id}>
@@ -784,34 +687,13 @@ export default function Home() {
               </select>
             </Col>
             <Col>
-              <input
-                type="text"
-                className="fr-input fr-mb-2w"
-                placeholder="Nom du champ libre"
-                value={manualFieldName}
-                onChange={(e) => setManualFieldName(e.target.value)}
-                disabled={!selectedDashboard}
-              />
+              <input type="text" className="fr-input fr-mb-2w" placeholder="Nom du champ libre" value={manualFieldName} onChange={(e) => setManualFieldName(e.target.value)} disabled={!selectedDashboard} />
             </Col>
             <Col>
-              <input
-                type="text"
-                className="fr-input fr-mb-2w"
-                placeholder="Valeur de comparaison"
-                value={manualFieldValue}
-                onChange={(e) => setManualFieldValue(e.target.value)}
-                disabled={!selectedDashboard}
-              />
+              <input type="text" className="fr-input fr-mb-2w" placeholder="Valeur de comparaison" value={manualFieldValue} onChange={(e) => setManualFieldValue(e.target.value)} disabled={!selectedDashboard} />
             </Col>
             <Col>
-              <input
-                type="text"
-                className="fr-input fr-mb-2w"
-                placeholder="Route du tableau"
-                value={manualRoute}
-                onChange={(e) => setManualRoute(e.target.value)}
-                disabled={!selectedDashboard}
-              />
+              <input type="text" className="fr-input fr-mb-2w" placeholder="Route du tableau" value={manualRoute} onChange={(e) => setManualRoute(e.target.value)} disabled={!selectedDashboard} />
             </Col>
             <Col md={1} className="text-right">
               <Button
@@ -968,8 +850,7 @@ export default function Home() {
                         Object.entries(collections)
                           .sort(([a], [b]) => a.localeCompare(b))
                           .map(([collectionName, versions]) => {
-                            const getVersionInfo = (version) =>
-                              allCollections?.find((b) => b.boardName === boardName && b.collectionName === collectionName && b.version === version);
+                            const getVersionInfo = (version) => allCollections?.find((b) => b.boardName === boardName && b.collectionName === collectionName && b.version === version);
 
                             return (
                               <Fragment key={`${boardName}-${collectionName}`}>
@@ -1061,18 +942,12 @@ export default function Home() {
           Valeurs de caractérisation
           {selectedCharacterization && (
             <div className="fr-text--sm fr-mt-1w">
-              <strong>Tableau :</strong> {selectedCharacterization.boardId} |<strong> Collection :</strong> {selectedCharacterization.collectionId} |
-              <strong> Champ :</strong> {selectedCharacterization.field}
+              <strong>Tableau :</strong> {selectedCharacterization.boardId} |<strong> Collection :</strong> {selectedCharacterization.collectionId} |<strong> Champ :</strong> {selectedCharacterization.field}
             </div>
           )}
         </ModalTitle>
         <ModalContent>
-          <TextInput
-            label="Rechercher une valeur"
-            value={searchValue}
-            onChange={(e) => setSearchValue(e.target.value)}
-            placeholder="Tapez pour filtrer les valeurs..."
-          />
+          <TextInput label="Rechercher une valeur" value={searchValue} onChange={(e) => setSearchValue(e.target.value)} placeholder="Tapez pour filtrer les valeurs..." />
           <div className="fr-mt-2w" style={{ maxHeight: "400px", overflowY: "auto" }}>
             {filteredValues.length > 0 ? (
               <ul className="fr-raw-list">

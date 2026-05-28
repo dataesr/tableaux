@@ -13,7 +13,7 @@
     "react-hooks/exhaustive-deps": "warn",
     "max-len": [
       "warn",
-      200
+      300
     ],
     "react/prop-types": "warn",
     "import/prefer-default-export": 0,

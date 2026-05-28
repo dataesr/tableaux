@@ -6,22 +6,14 @@ const { Console } = winston.transports;
 const { logLevel } = config.logger;
 
 const format = combine(
-  colorize({ all: true }),
+  colorize({ all: true, colors: { info: "blue", error: "red" } }),
   timestamp({ format: "YY-MM-DD HH:MM:SS" }),
   printf((info) => {
-    const {
-      level,
-      message,
-      timestamp: ts,
-      service,
-      stack,
-      method,
-      path,
-    } = info;
+    const { level, message, timestamp: ts, service, stack, method, path } = info;
     const requestInfo = method ? `(${method} ${path})` : "";
     const stacked = stack ? `\n${stack}` : "";
     return ` [${ts}][${service}][${level}]${requestInfo}: ${message} ${stacked}`;
-  })
+  }),
 );
 
 const logger = winston.createLogger({
