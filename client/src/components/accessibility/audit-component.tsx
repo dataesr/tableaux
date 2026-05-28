@@ -5,6 +5,7 @@ import { Badge, Button, Text, Title } from "@dataesr/dsfr-plus";
 const { VITE_APP_SERVER_URL } = import.meta.env;
 
 import { rgaa_tests_list_type } from "./types";
+import Callout from "../callout";
 
 const i18n = {
   title: {
@@ -101,7 +102,7 @@ export default function AuditComponent({ idSite }) {
     enabled: !!data?.rgaaId,
   });
 
-  if (isLoading || !data || !rgaa) return <div>Pas d'audit trouvé pour ce tableau de bord</div>;
+  if (isLoading || !data || !rgaa) return <Callout colorFamily="green-bourgeon">Audit d'accessibilité en cours ...</Callout>;
 
   // construction d'une liste "à plat" qui contient tous les tests du rgaa
   const rgaa_tests_list = rgaa?.criteria?.flatMap(({ thematique_id, thematique, criteres }) =>
