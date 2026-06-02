@@ -6,6 +6,8 @@ const router = new express.Router();
 
 const routesPrefix = "/european-projects/type-beneficiaries";
 
+const collection_projects_entities = "european-projects_projects-entities_staging";
+
 router.route(routesPrefix + "/top10-countries-by-type-of-beneficiaries").get(async (req, res) => {
   if (!req.query.country_code) {
     return res.status(400).json({ error: "Le code pays est requis" });
@@ -37,7 +39,7 @@ router.route(routesPrefix + "/top10-countries-by-type-of-beneficiaries").get(asy
     }
 
     const data = await db
-      .collection("european-projects_projects-entities_staging")
+      .collection(collection_projects_entities)
       .aggregate([
         {
           $match: filters,
@@ -110,7 +112,7 @@ router.route(routesPrefix + "/top10-countries-by-type-of-beneficiaries").get(asy
 router.route(routesPrefix + "/top10-countries-by-type-of-beneficiaries_indexes").get(async (req, res) => {
   try {
     await recreateIndex(
-      db.collection("european-projects_projects-entities_staging"),
+      db.collection(collection_projects_entities),
       {
         // Champs de filtrage (ordre optimisé pour la sélectivité)
         framework: 1,
@@ -123,7 +125,7 @@ router.route(routesPrefix + "/top10-countries-by-type-of-beneficiaries_indexes")
         fund_eur: 1,
         call_year: 1,
       },
-      "idx_top10_countries_by_type_of_beneficiaries_covered"
+      "idx_top10_countries_by_type_of_beneficiaries_covered",
     );
 
     res.status(201).json({
@@ -181,7 +183,7 @@ router.route(routesPrefix + "/type-beneficiaries-evolution").get(async (req, res
 
     // Première étape : obtenir le top 10 des pays pour ce type d'entité
     const top10Countries = await db
-      .collection("european-projects_projects-entities_staging")
+      .collection(collection_projects_entities)
       .aggregate([
         {
           $match: filters,
@@ -221,7 +223,7 @@ router.route(routesPrefix + "/type-beneficiaries-evolution").get(async (req, res
     if (targetCountryIndex === -1) {
       // Le pays cible n'est pas dans le top 10, remplacer le 10ème
       const targetCountryData = await db
-        .collection("european-projects_projects-entities_staging")
+        .collection(collection_projects_entities)
         .aggregate([
           {
             $match: { ...filters, country_code: targetCountry },
@@ -286,7 +288,7 @@ router.route(routesPrefix + "/type-beneficiaries-evolution").get(async (req, res
 
     // Deuxième étape : obtenir l'évolution temporelle pour ces pays
     const evolutionData = await db
-      .collection("european-projects_projects-entities_staging")
+      .collection(collection_projects_entities)
       .aggregate([
         {
           $match: evolutionFilters,
@@ -347,7 +349,7 @@ router.route(routesPrefix + "/type-beneficiaries-evolution").get(async (req, res
     } else {
       // Sinon, récupérer toutes les années disponibles
       const allYears = await db
-        .collection("european-projects_projects-entities_staging")
+        .collection(collection_projects_entities)
         .aggregate([
           {
             $match: {
@@ -415,7 +417,7 @@ router.route(routesPrefix + "/type-beneficiaries-evolution").get(async (req, res
 router.route(routesPrefix + "/type-beneficiaries-evolution_indexes").get(async (req, res) => {
   try {
     await recreateIndex(
-      db.collection("european-projects_projects-entities_staging"),
+      db.collection(collection_projects_entities),
       {
         // Champs de filtrage (ordre optimisé pour la sélectivité)
         framework: 1,
@@ -428,7 +430,7 @@ router.route(routesPrefix + "/type-beneficiaries-evolution_indexes").get(async (
         call_year: 1,
         fund_eur: 1,
       },
-      "idx_type_beneficiaries_evolution_covered"
+      "idx_type_beneficiaries_evolution_covered",
     );
 
     res.status(201).json({

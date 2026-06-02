@@ -6,6 +6,8 @@ const router = new express.Router();
 
 const routesPrefix = "/european-projects/beneficiaries";
 
+const collection_projects_entities = "european-projects_projects-entities_staging";
+
 router.route(routesPrefix + "/main-beneficiaries-pct-50").get(async (req, res) => {
   if (!req.query.country_code) {
     return res.status(400).json({ error: "Le code pays est requis" });
@@ -40,7 +42,7 @@ router.route(routesPrefix + "/main-beneficiaries-pct-50").get(async (req, res) =
     filters.framework = "Horizon Europe";
 
     const data = await db
-      .collection("european-projects_projects-entities_staging")
+      .collection(collection_projects_entities)
       .aggregate([
         {
           $match: filters,
@@ -91,7 +93,7 @@ router.route(routesPrefix + "/main-beneficiaries-pct-50").get(async (req, res) =
 router.route(routesPrefix + "/main-beneficiaries-pct-50_indexes").get(async (req, res) => {
   try {
     await recreateIndex(
-      db.collection("european-projects_projects-entities_staging"),
+      db.collection(collection_projects_entities),
       {
         // Champs de filtrage (ordre optimisé pour la sélectivité)
         country_code: 1,
@@ -105,7 +107,7 @@ router.route(routesPrefix + "/main-beneficiaries-pct-50_indexes").get(async (req
         entities_acronym: 1,
         fund_eur: 1,
       },
-      "idx_main_beneficiaries_pct_50_covered"
+      "idx_main_beneficiaries_pct_50_covered",
     );
 
     res.status(201).json({
@@ -148,7 +150,7 @@ router.route(routesPrefix + "/beneficiaries-by-role").get(async (req, res) => {
     filters.country_code = req.query.country_code; // Filtre obligatoire TODO
 
     const data = await db
-      .collection("european-projects_projects-entities_staging")
+      .collection(collection_projects_entities)
       .aggregate([
         {
           $match: filters,
@@ -262,7 +264,7 @@ router.route(routesPrefix + "/beneficiaries-by-role").get(async (req, res) => {
 router.route(routesPrefix + "/beneficiaries-by-role_indexes").get(async (req, res) => {
   try {
     await recreateIndex(
-      db.collection("european-projects_projects-entities_staging"),
+      db.collection(collection_projects_entities),
       {
         // Champs de filtrage
         framework: 1,
@@ -280,7 +282,7 @@ router.route(routesPrefix + "/beneficiaries-by-role_indexes").get(async (req, re
         country_name_en: 1,
         fund_eur: 1,
       },
-      "idx_beneficiaries_by_role_covered"
+      "idx_beneficiaries_by_role_covered",
     );
 
     res.status(201).json({

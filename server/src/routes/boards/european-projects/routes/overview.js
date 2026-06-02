@@ -3,6 +3,9 @@ import { db } from "../../../../services/mongo.js";
 
 const router = new express.Router();
 
+const collection_projects_synthese = "fr-esr-all-projects-synthese";
+const collection_projects_entities = "fr-esr-all-projects-entities";
+
 import { checkQuery } from "../../../utils.js";
 
 const rangeOfYears = ["2021", "2022", "2023"];
@@ -10,7 +13,7 @@ const rangeOfYears = ["2021", "2022", "2023"];
 router.route("/european-projects/overview/graph1").get(async (req, res) => {
   const filters = checkQuery(req.query, ["country_code", "extra_joint_organization", "stage"], res);
 
-  const data = await db.collection("fr-esr-all-projects-entities").aggregate([{ $match: filters }]);
+  const data = await db.collection(collection_projects_entities).aggregate([{ $match: filters }]);
 });
 
 router.route("/european-projects/synthesis-focus").get(async (req, res) => {
@@ -37,7 +40,7 @@ router.route("/european-projects/synthesis-focus").get(async (req, res) => {
   }
 
   const dataSuccessful = await db
-    .collection("fr-esr-all-projects-synthese")
+    .collection(collection_projects_synthese)
     .aggregate([
       { $match: { ...filters, stage: "successful" } },
       {
@@ -79,7 +82,7 @@ router.route("/european-projects/synthesis-focus").get(async (req, res) => {
     .toArray();
 
   const dataEvaluated = await db
-    .collection("fr-esr-all-projects-synthese")
+    .collection(collection_projects_synthese)
     .aggregate([
       { $match: { ...filters, stage: "evaluated" } },
       {
@@ -149,7 +152,7 @@ router.route("/european-projects/synthesis-focus").get(async (req, res) => {
 router.route("/european-projects/funded-objectives").get(async (req, res) => {
   const filters = checkQuery(req.query, ["country_code", "extra_joint_organization", "stage"], res);
   const data = await db
-    .collection("fr-esr-all-projects-synthese")
+    .collection(collection_projects_synthese)
     .aggregate([
       { $match: filters },
       {
@@ -191,7 +194,7 @@ router.route("/european-projects/overview/pillars-funding").get(async (req, res)
   delete filters.destinations;
 
   const data = await db
-    .collection("fr-esr-all-projects-synthese")
+    .collection(collection_projects_synthese)
     .aggregate([
       { $match: { $and: [filters] } },
       {
@@ -254,7 +257,7 @@ router.route("/european-projects/overview/pillars-funding-proportion").get(async
   delete filters.destinations;
 
   const data_country = await db
-    .collection("fr-esr-all-projects-synthese")
+    .collection(collection_projects_synthese)
     .aggregate([
       { $match: { $and: [filters] } },
       {
@@ -287,7 +290,7 @@ router.route("/european-projects/overview/pillars-funding-proportion").get(async
   delete filters_all.country_code;
 
   const data_all = await db
-    .collection("fr-esr-all-projects-synthese")
+    .collection(collection_projects_synthese)
     .aggregate([
       { $match: { $and: [filters_all] } },
       {
@@ -359,7 +362,7 @@ router.route("/european-projects/overview/programs-funding").get(async (req, res
   delete filters.thematics;
   delete filters.destinations;
   const data = await db
-    .collection("fr-esr-all-projects-synthese")
+    .collection(collection_projects_synthese)
     .aggregate([
       { $match: { $and: [filters] } },
       {
@@ -427,7 +430,7 @@ router.route("/european-projects/overview/programs-funding-proportion").get(asyn
   delete filters.destinations;
 
   const data_country = await db
-    .collection("fr-esr-all-projects-synthese")
+    .collection(collection_projects_synthese)
     .aggregate([
       { $match: { $and: [filters] } },
       {
@@ -460,7 +463,7 @@ router.route("/european-projects/overview/programs-funding-proportion").get(asyn
   delete filters_all.country_code;
 
   const data_all = await db
-    .collection("fr-esr-all-projects-synthese")
+    .collection(collection_projects_synthese)
     .aggregate([
       { $match: { $and: [filters_all] } },
       {
@@ -526,7 +529,7 @@ router.route("/european-projects/overview/topics-funding").get(async (req, res) 
   delete filters.destinations;
 
   const data = await db
-    .collection("fr-esr-all-projects-synthese")
+    .collection(collection_projects_synthese)
     .aggregate([
       { $match: { $and: [filters] } },
       {
@@ -600,7 +603,7 @@ router.route("/european-projects/overview/topics-funding-proportion").get(async 
   delete filters.destinations;
 
   const data_country = await db
-    .collection("fr-esr-all-projects-synthese")
+    .collection(collection_projects_synthese)
     .aggregate([
       { $match: { $and: [filters] } },
       {
@@ -633,7 +636,7 @@ router.route("/european-projects/overview/topics-funding-proportion").get(async 
   delete filters_all.country_code;
 
   const data_all = await db
-    .collection("fr-esr-all-projects-synthese")
+    .collection(collection_projects_synthese)
     .aggregate([
       { $match: { $and: [filters_all] } },
       {
@@ -703,7 +706,7 @@ router.route("/european-projects/overview/destination-funding").get(async (req, 
   }
 
   const data = await db
-    .collection("fr-esr-all-projects-synthese")
+    .collection(collection_projects_synthese)
     .aggregate([
       { $match: { $and: [filters] } },
       {
@@ -772,7 +775,7 @@ router.route("/european-projects/overview/destination-funding-proportion").get(a
   }
 
   const data_country = await db
-    .collection("fr-esr-all-projects-synthese")
+    .collection(collection_projects_synthese)
     .aggregate([
       { $match: { $and: [filters] } },
       {
@@ -801,7 +804,7 @@ router.route("/european-projects/overview/destination-funding-proportion").get(a
   delete filters_all.country_code;
 
   const data_all = await db
-    .collection("fr-esr-all-projects-synthese")
+    .collection(collection_projects_synthese)
     .aggregate([
       { $match: { $and: [filters_all] } },
       {
@@ -872,7 +875,7 @@ router.route("/european-projects/overview/pillars-funding-evo-3-years").get(asyn
 
   const query = () => {
     return db
-      .collection("fr-esr-all-projects-synthese")
+      .collection(collection_projects_synthese)
       .aggregate([
         {
           $match: { $and: [filters] },
@@ -974,7 +977,7 @@ router.route("/european-projects/overview/programs-funding-evo-3-years").get(asy
 
   const query = () => {
     return db
-      .collection("fr-esr-all-projects-synthese")
+      .collection(collection_projects_synthese)
       .aggregate([
         {
           $match: { $and: [filters] },
@@ -1077,7 +1080,7 @@ router.route("/european-projects/overview/topics-funding-evo-3-years").get(async
 
   const query = () => {
     return db
-      .collection("fr-esr-all-projects-synthese")
+      .collection(collection_projects_synthese)
       .aggregate([
         {
           $match: { $and: [filters] },
@@ -1179,7 +1182,7 @@ router.route("/european-projects/overview/destinations-funding-evo-3-years").get
   //TODO: ! destination_name_fr n'existe pas en base
   const query = () => {
     return db
-      .collection("fr-esr-all-projects-synthese")
+      .collection(collection_projects_synthese)
       .aggregate([
         {
           $match: { $and: [filters] },
@@ -1291,7 +1294,7 @@ router.route("/european-projects/overview/projects-types-1").get(async (req, res
   }
 
   const data_country = await db
-    .collection("fr-esr-all-projects-synthese")
+    .collection(collection_projects_synthese)
     .aggregate([
       { $match: { $and: [filters] } },
       {
@@ -1346,7 +1349,7 @@ router.route("/european-projects/overview/projects-types-1").get(async (req, res
 
   delete filters.country_code;
   const data_all = await db
-    .collection("fr-esr-all-projects-synthese")
+    .collection(collection_projects_synthese)
     .aggregate([
       { $match: { $and: [filters] } },
       {
@@ -1448,7 +1451,7 @@ router.route("/european-projects/overview/projects-types-2").get(async (req, res
   //TODO: get the range of years from the database
   filters.call_year = { $in: rangeOfYears };
   const data_country = await db
-    .collection("fr-esr-all-projects-synthese")
+    .collection(collection_projects_synthese)
     .aggregate([
       { $match: { $and: [filters] } },
       {
@@ -1506,7 +1509,7 @@ router.route("/european-projects/overview/projects-types-2").get(async (req, res
     .toArray();
 
   const data_all = await db
-    .collection("fr-esr-all-projects-synthese")
+    .collection(collection_projects_synthese)
     .aggregate([
       {
         $group: {
@@ -1600,7 +1603,7 @@ router.route("/european-projects/overview/projects-types-3").get(async (req, res
   }
 
   const dataSelectedCountry = await db
-    .collection("fr-esr-all-projects-synthese")
+    .collection(collection_projects_synthese)
     .aggregate([
       { $match: { $and: [filters] } },
       {
@@ -1657,7 +1660,7 @@ router.route("/european-projects/overview/projects-types-3").get(async (req, res
   filters.country_association_code = "MEMBER-ASSOCIATED";
 
   const otherCountries = await db
-    .collection("fr-esr-all-projects-synthese")
+    .collection(collection_projects_synthese)
     .aggregate([
       { $match: { $and: [filters] } },
       {

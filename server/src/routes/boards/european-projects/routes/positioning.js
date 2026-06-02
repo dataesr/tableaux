@@ -4,6 +4,9 @@ import { db } from "../../../../services/mongo.js";
 
 const router = new express.Router();
 
+const collection_projects_entities = "european-projects_projects-entities_staging";
+const collection_projects_synthese = "fr-esr-all-projects-synthese";
+
 router.route("/european-projects/positioning/top-10-funding-ranking").get(async (req, res) => {
   const filters = {};
   if (req.query.pillars) {
@@ -25,7 +28,7 @@ router.route("/european-projects/positioning/top-10-funding-ranking").get(async 
   filters.country_code = { $nin: ["ZOE", "ZOI"] };
 
   const data = await db
-    .collection("fr-esr-all-projects-synthese")
+    .collection(collection_projects_synthese)
     .aggregate([
       { $match: filters },
       {
@@ -192,7 +195,7 @@ router.route("/european-projects/positioning/top-10-beneficiaries").get(async (r
   }
 
   const data = await db
-    .collection("european-projects_projects-entities_staging")
+    .collection(collection_projects_entities)
     .aggregate([
       { $match: filters },
       {
@@ -263,7 +266,7 @@ router.route("/european-projects/positionning/funding-evo-3-years").get(async (r
 
   const query = () => {
     return db
-      .collection("fr-esr-all-projects-synthese")
+      .collection(collection_projects_synthese)
       .aggregate([
         {
           $match: { $and: [filters] },

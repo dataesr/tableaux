@@ -4,21 +4,12 @@ import { recreateIndex } from "../../../utils.js";
 
 const router = new express.Router();
 
-// const getCurrentCollectionName = async (idCollection) => {
-//   const data = await db.collection("boards").find({ id: "european-projects" }).toArray();
-//   const currentCollection = data[0].data.find(
-//     (item) => item.id === idCollection
-//   ).current;
-
-//   if (currentCollection) {
-//     return currentCollection;
-//   }
-// };
+const collection_projects_entities = "european-projects_projects-entities_staging";
 
 router.route("/european-projects/filters-countries").get(async (req, res) => {
   try {
     const data = await db
-      .collection("european-projects_projects-entities_staging")
+      .collection(collection_projects_entities)
       .aggregate(
         [
           {
@@ -48,7 +39,7 @@ router.route("/european-projects/filters-countries").get(async (req, res) => {
         ],
         {
           collation: { locale: "fr", strength: 1 },
-        }
+        },
       )
       .toArray();
 
@@ -61,7 +52,7 @@ router.route("/european-projects/filters-countries").get(async (req, res) => {
 router.route("/european-projects/filters-programs").get(async (req, res) => {
   try {
     const data = await db
-      .collection("european-projects_projects-entities_staging")
+      .collection(collection_projects_entities)
       .aggregate(
         [
           {
@@ -93,7 +84,7 @@ router.route("/european-projects/filters-programs").get(async (req, res) => {
         ],
         {
           collation: { locale: "fr", strength: 1 },
-        }
+        },
       )
       .toArray();
 
@@ -119,7 +110,7 @@ router.route("/european-projects/filters-thematics").get(async (req, res) => {
     }
 
     const data = await db
-      .collection("european-projects_projects-entities_staging")
+      .collection(collection_projects_entities)
       .aggregate(
         [
           {
@@ -149,7 +140,7 @@ router.route("/european-projects/filters-thematics").get(async (req, res) => {
         ],
         {
           collation: { locale: "fr", strength: 1 },
-        }
+        },
       )
       .toArray();
 
@@ -162,7 +153,7 @@ router.route("/european-projects/filters-thematics").get(async (req, res) => {
 router.route("/european-projects/filters-pillars").get(async (req, res) => {
   try {
     const data = await db
-      .collection("european-projects_projects-entities_staging")
+      .collection(collection_projects_entities)
       .aggregate(
         [
           {
@@ -195,7 +186,7 @@ router.route("/european-projects/filters-pillars").get(async (req, res) => {
         ],
         {
           collation: { locale: "fr", strength: 1 },
-        }
+        },
       )
       .toArray();
 
@@ -208,7 +199,7 @@ router.route("/european-projects/filters-pillars").get(async (req, res) => {
 router.route("/european-projects/all-programs").get(async (req, res) => {
   try {
     const data = await db
-      .collection("european-projects_projects-entities_staging")
+      .collection(collection_projects_entities)
       .aggregate(
         [
           {
@@ -240,7 +231,7 @@ router.route("/european-projects/all-programs").get(async (req, res) => {
         ],
         {
           collation: { locale: "fr", strength: 1 },
-        }
+        },
       )
       .toArray();
 
@@ -253,7 +244,7 @@ router.route("/european-projects/all-programs").get(async (req, res) => {
 router.route("/european-projects/all-thematics").get(async (req, res) => {
   try {
     const data = await db
-      .collection("european-projects_projects-entities_staging")
+      .collection(collection_projects_entities)
       .aggregate(
         [
           {
@@ -285,7 +276,7 @@ router.route("/european-projects/all-thematics").get(async (req, res) => {
         ],
         {
           collation: { locale: "fr", strength: 1 },
-        }
+        },
       )
       .toArray();
 
@@ -298,7 +289,7 @@ router.route("/european-projects/all-thematics").get(async (req, res) => {
 router.route("/european-projects/all-destinations").get(async (req, res) => {
   try {
     const data = await db
-      .collection("european-projects_projects-entities_staging")
+      .collection(collection_projects_entities)
       .aggregate(
         [
           {
@@ -331,7 +322,7 @@ router.route("/european-projects/all-destinations").get(async (req, res) => {
         ],
         {
           collation: { locale: "fr", strength: 1 },
-        }
+        },
       )
       .toArray();
 
@@ -344,7 +335,7 @@ router.route("/european-projects/all-destinations").get(async (req, res) => {
 router.route("/european-projects/programs-from-pillars").get(async (req, res) => {
   try {
     const data = await db
-      .collection("european-projects_projects-entities_staging")
+      .collection(collection_projects_entities)
       .aggregate(
         [
           {
@@ -377,7 +368,7 @@ router.route("/european-projects/programs-from-pillars").get(async (req, res) =>
         ],
         {
           collation: { locale: "fr", strength: 1 },
-        }
+        },
       )
       .toArray();
 
@@ -390,7 +381,7 @@ router.route("/european-projects/programs-from-pillars").get(async (req, res) =>
 router.route("/european-projects/thematics-from-programs").get(async (req, res) => {
   try {
     const data = await db
-      .collection("european-projects_projects-entities_staging")
+      .collection(collection_projects_entities)
       .aggregate(
         [
           {
@@ -423,7 +414,7 @@ router.route("/european-projects/thematics-from-programs").get(async (req, res) 
         ],
         {
           collation: { locale: "fr", strength: 1 },
-        }
+        },
       )
       .toArray();
 
@@ -436,7 +427,7 @@ router.route("/european-projects/thematics-from-programs").get(async (req, res) 
 router.route("/european-projects/destinations-from-thematics").get(async (req, res) => {
   try {
     const data = await db
-      .collection("european-projects_projects-entities_staging")
+      .collection(collection_projects_entities)
       .aggregate(
         [
           {
@@ -470,7 +461,7 @@ router.route("/european-projects/destinations-from-thematics").get(async (req, r
         ],
         {
           collation: { locale: "fr", strength: 1 },
-        }
+        },
       )
       .toArray();
 
@@ -485,7 +476,7 @@ router.route("/european-projects/get-countries-with-data").get(async (req, res) 
 
   try {
     const data = await db
-      .collection("european-projects_projects-entities_staging")
+      .collection(collection_projects_entities)
       .aggregate(
         [
           {
@@ -515,7 +506,7 @@ router.route("/european-projects/get-countries-with-data").get(async (req, res) 
         ],
         {
           collation: { locale: "fr", strength: 1 },
-        }
+        },
       )
       .toArray();
 
@@ -532,14 +523,14 @@ router.route("/european-projects/get-hierarchy").get(async (req, res) => {
     // Si pillarId est fourni, filtrer uniquement sur ce pilier
     const pillarFilter = pillarId ? { pilier_code: pillarId } : {};
 
-    const pillars = await db.collection("european-projects_projects-entities_staging").distinct("pilier_code", {
+    const pillars = await db.collection(collection_projects_entities).distinct("pilier_code", {
       framework: "Horizon Europe",
       pilier_code: { $ne: null },
       ...pillarFilter,
     });
 
     const programs = await db
-      .collection("european-projects_projects-entities_staging")
+      .collection(collection_projects_entities)
       .aggregate([
         {
           $match: {
@@ -557,7 +548,7 @@ router.route("/european-projects/get-hierarchy").get(async (req, res) => {
       .toArray();
 
     const thematics = await db
-      .collection("european-projects_projects-entities_staging")
+      .collection(collection_projects_entities)
       .aggregate([
         {
           $match: {
@@ -575,7 +566,7 @@ router.route("/european-projects/get-hierarchy").get(async (req, res) => {
       .toArray();
 
     const destinations = await db
-      .collection("european-projects_projects-entities_staging")
+      .collection(collection_projects_entities)
       .aggregate([
         {
           $match: {
@@ -627,7 +618,7 @@ router.route("/european-projects/get-hierarchy").get(async (req, res) => {
 router.route("/european-projects/get-hierarchy_indexes").get(async (req, res) => {
   try {
     await recreateIndex(
-      db.collection("european-projects_projects-entities_staging"),
+      db.collection(collection_projects_entities),
       {
         // Champs de filtrage essentiels pour la hiérarchie
         framework: 1,
@@ -641,7 +632,7 @@ router.route("/european-projects/get-hierarchy_indexes").get(async (req, res) =>
         thema_name_fr: 1,
         destination_name_en: 1,
       },
-      "idx_hierarchy_covered"
+      "idx_hierarchy_covered",
     );
 
     res.status(201).json({

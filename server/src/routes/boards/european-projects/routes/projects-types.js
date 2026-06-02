@@ -3,6 +3,8 @@ import { db } from "../../../../services/mongo.js";
 
 const router = new express.Router();
 
+const collection_projects_synthese = "fr-esr-all-projects-synthese";
+
 router.route("/european-projects/general-projectsTypes-successRateForAmountsByPillar").get(async (req, res) => {
   if (!req.query.country_code) {
     res.status(400).send("country_code is required");
@@ -12,7 +14,7 @@ router.route("/european-projects/general-projectsTypes-successRateForAmountsByPi
     req.query.country_code = req.query.country_code.toUpperCase();
   }
   const dataSelectedCountry = await db
-    .collection("fr-esr-all-projects-synthese")
+    .collection(collection_projects_synthese)
     .aggregate([
       { $match: { country_code: req.query.country_code } },
       {
@@ -94,7 +96,7 @@ router.route("/european-projects/general-projectsTypes-successRateForAmountsByPi
     .toArray();
 
   const otherCountries = await db
-    .collection("fr-esr-all-projects-synthese")
+    .collection(collection_projects_synthese)
     .aggregate([
       { $match: { country_association_code: "MEMBER-ASSOCIATED" } },
       {
@@ -209,7 +211,7 @@ router.route("/european-projects/general-projectsTypes-pillarsRequestedByProject
   }
 
   const data_country = await db
-    .collection("fr-esr-all-projects-synthese")
+    .collection(collection_projects_synthese)
     .aggregate([
       { $match: { country_code: req.query.country_code } },
       {
@@ -291,7 +293,7 @@ router.route("/european-projects/general-projectsTypes-pillarsRequestedByProject
     .toArray();
 
   const data_all = await db
-    .collection("fr-esr-all-projects-synthese")
+    .collection(collection_projects_synthese)
     .aggregate([
       {
         $group: {
@@ -399,7 +401,7 @@ router.route("/european-projects/general-projectsTypes-pillarsSubsidiesRequested
   }
   const rangeOfYears = ["2021", "2022", "2023"];
   const data_country = await db
-    .collection("fr-esr-all-projects-synthese")
+    .collection(collection_projects_synthese)
     .aggregate([
       {
         $match: {
@@ -486,7 +488,7 @@ router.route("/european-projects/general-projectsTypes-pillarsSubsidiesRequested
     .toArray();
 
   const data_all = await db
-    .collection("fr-esr-all-projects-synthese")
+    .collection(collection_projects_synthese)
     .aggregate([
       {
         $group: {

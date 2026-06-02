@@ -1,5 +1,5 @@
 import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js";
-import "highcharts/modules/heatmap";
+// import "highcharts/modules/heatmap";
 
 import { CreateChartOptions } from "../../../../components/chart-ep";
 import type { EvolutionDataItem } from "./types";

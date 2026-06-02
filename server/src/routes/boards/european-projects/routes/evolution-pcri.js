@@ -37,6 +37,8 @@ async function recreateIndex(collection, indexSpec, indexName) {
 const router = new express.Router();
 const routesPrefix = "/european-projects/evolution-pcri";
 
+const collections_projects_evolution = "european-projects_evolution_staging";
+
 router
   .route(routesPrefix + "/get-evolution-by-country")
   .get(async (req, res) => {
@@ -63,7 +65,7 @@ router
 
     try {
       const evolution = await db
-        .collection("european-projects_evolution_staging")
+        .collection(collections_projects_evolution)
         .find(filters)
         .project({
           _id: 0,
@@ -97,14 +99,14 @@ router
   .get(async (req, res) => {
     try {
       await recreateIndex(
-        db.collection("european-projects_evolution_staging"),
+        db.collection(collections_projects_evolution),
         {
           country_code: 1,
           framework: 1,
           stage: 1,
           call_year: 1,
         },
-        "idx_evolution_by_country"
+        "idx_evolution_by_country",
       );
 
       res.status(201).json({ message: "Index recréé avec succès" });
@@ -138,7 +140,7 @@ router.route(routesPrefix + "/get-evolution-global").get(async (req, res) => {
 
   try {
     const evolution = await db
-      .collection("european-projects_evolution_staging")
+      .collection(collections_projects_evolution)
       .find(filters)
       .project({
         _id: 0,
@@ -182,7 +184,7 @@ router
 
     try {
       const evolution = await db
-        .collection("european-projects_evolution_staging")
+        .collection(collections_projects_evolution)
         .aggregate([
           { $match: filters },
           {

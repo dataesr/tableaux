@@ -3,7 +3,9 @@ import { db } from "../../../../services/mongo.js";
 
 const router = new express.Router();
 
-const COLLECTION_NAME = "european-projects_erc-projects-synthese_staging";
+const collection_erc_projects_synthese = "european-projects_erc-projects-synthese_staging";
+const collection_projects_entities = "european-projects_projects-entities_staging";
+const collection_persons = "european-projects_erc-persons_staging";
 
 /**
  * Route de synthèse ERC - récupère les données agrégées pour les cartes de synthèse
@@ -37,7 +39,7 @@ router.route("/european-projects/erc/synthesis").get(async (req, res) => {
 
   // Données pour les projets lauréats (successful)
   const dataSuccessful = await db
-    .collection(COLLECTION_NAME)
+    .collection(collection_erc_projects_synthese)
     .aggregate([
       { $match: { ...filters, stage: "successful" } },
       {
@@ -88,7 +90,7 @@ router.route("/european-projects/erc/synthesis").get(async (req, res) => {
 
   // Données pour les projets évalués (evaluated)
   const dataEvaluated = await db
-    .collection(COLLECTION_NAME)
+    .collection(collection_erc_projects_synthese)
     .aggregate([
       { $match: { ...filters, stage: "evaluated" } },
       {
@@ -191,7 +193,7 @@ router.route("/european-projects/erc/synthesis-by-destination").get(async (req, 
   }
 
   const data = await db
-    .collection(COLLECTION_NAME)
+    .collection(collection_erc_projects_synthese)
     .aggregate([
       { $match: filters },
       {
@@ -278,7 +280,7 @@ router.route("/european-projects/erc/synthesis-by-panel").get(async (req, res) =
   }
 
   const data = await db
-    .collection(COLLECTION_NAME)
+    .collection(collection_erc_projects_synthese)
     .aggregate([
       { $match: filters },
       {
@@ -364,7 +366,7 @@ router.route("/european-projects/erc/panel-funding").get(async (req, res) => {
   }
 
   const data = await db
-    .collection(COLLECTION_NAME)
+    .collection(collection_erc_projects_synthese)
     .aggregate([
       { $match: filters },
       {
@@ -463,14 +465,14 @@ router.route("/european-projects/erc/evolution").get(async (req, res) => {
 
   // Données pour le pays sélectionné
   const [countrySuccessful, countryEvaluated] = await Promise.all([
-    db.collection(COLLECTION_NAME).aggregate(aggregationPipeline(countryFilters, "successful")).toArray(),
-    db.collection(COLLECTION_NAME).aggregate(aggregationPipeline(countryFilters, "evaluated")).toArray(),
+    db.collection(collection_erc_projects_synthese).aggregate(aggregationPipeline(countryFilters, "successful")).toArray(),
+    db.collection(collection_erc_projects_synthese).aggregate(aggregationPipeline(countryFilters, "evaluated")).toArray(),
   ]);
 
   // Données globales (tous pays) pour calculer les poids
   const [totalSuccessful, totalEvaluated] = await Promise.all([
-    db.collection(COLLECTION_NAME).aggregate(aggregationPipeline(baseFilters, "successful")).toArray(),
-    db.collection(COLLECTION_NAME).aggregate(aggregationPipeline(baseFilters, "evaluated")).toArray(),
+    db.collection(collection_erc_projects_synthese).aggregate(aggregationPipeline(baseFilters, "successful")).toArray(),
+    db.collection(collection_erc_projects_synthese).aggregate(aggregationPipeline(baseFilters, "evaluated")).toArray(),
   ]);
 
   res.json({
@@ -543,14 +545,14 @@ router.route("/european-projects/erc/evolution-by-domain").get(async (req, res) 
 
   // Données pour le pays sélectionné
   const [countrySuccessful, countryEvaluated] = await Promise.all([
-    db.collection(COLLECTION_NAME).aggregate(aggregationPipeline(countryFilters, "successful")).toArray(),
-    db.collection(COLLECTION_NAME).aggregate(aggregationPipeline(countryFilters, "evaluated")).toArray(),
+    db.collection(collection_erc_projects_synthese).aggregate(aggregationPipeline(countryFilters, "successful")).toArray(),
+    db.collection(collection_erc_projects_synthese).aggregate(aggregationPipeline(countryFilters, "evaluated")).toArray(),
   ]);
 
   // Données globales (tous pays) pour calculer les poids
   const [totalSuccessful, totalEvaluated] = await Promise.all([
-    db.collection(COLLECTION_NAME).aggregate(aggregationPipeline(baseFilters, "successful")).toArray(),
-    db.collection(COLLECTION_NAME).aggregate(aggregationPipeline(baseFilters, "evaluated")).toArray(),
+    db.collection(collection_erc_projects_synthese).aggregate(aggregationPipeline(baseFilters, "successful")).toArray(),
+    db.collection(collection_erc_projects_synthese).aggregate(aggregationPipeline(baseFilters, "evaluated")).toArray(),
   ]);
 
   res.json({
@@ -630,14 +632,14 @@ router.route("/european-projects/erc/evolution-by-panel").get(async (req, res) =
 
   // Données pour le pays sélectionné
   const [countrySuccessful, countryEvaluated] = await Promise.all([
-    db.collection(COLLECTION_NAME).aggregate(aggregationPipeline(countryFilters, "successful")).toArray(),
-    db.collection(COLLECTION_NAME).aggregate(aggregationPipeline(countryFilters, "evaluated")).toArray(),
+    db.collection(collection_erc_projects_synthese).aggregate(aggregationPipeline(countryFilters, "successful")).toArray(),
+    db.collection(collection_erc_projects_synthese).aggregate(aggregationPipeline(countryFilters, "evaluated")).toArray(),
   ]);
 
   // Données globales (tous pays) pour calculer les poids
   const [totalSuccessful, totalEvaluated] = await Promise.all([
-    db.collection(COLLECTION_NAME).aggregate(aggregationPipeline(baseFilters, "successful")).toArray(),
-    db.collection(COLLECTION_NAME).aggregate(aggregationPipeline(baseFilters, "evaluated")).toArray(),
+    db.collection(collection_erc_projects_synthese).aggregate(aggregationPipeline(baseFilters, "successful")).toArray(),
+    db.collection(collection_erc_projects_synthese).aggregate(aggregationPipeline(baseFilters, "evaluated")).toArray(),
   ]);
 
   res.json({
@@ -677,7 +679,7 @@ router.route("/european-projects/erc/main-entities").get(async (req, res) => {
       filters.call_year = { $in: years };
     }
     const data = await db
-      .collection("european-projects_projects-entities_staging")
+      .collection(collection_projects_entities)
       .aggregate([
         { $match: filters },
         {
@@ -735,7 +737,7 @@ router.route("/european-projects/erc/main-entities-by-domain").get(async (req, r
     }
 
     // Récup des project_id correspondants aux filtres
-    const matchingProjectIds = await db.collection(COLLECTION_NAME).distinct("project_id", filters);
+    const matchingProjectIds = await db.collection(collection_erc_projects_synthese).distinct("project_id", filters);
 
     if (!matchingProjectIds.length) {
       return res.status(200).json({ total_fund_eur: 0, list: [] });
@@ -743,7 +745,7 @@ router.route("/european-projects/erc/main-entities-by-domain").get(async (req, r
 
     // Agrégation des entités à partir de la collection des entités, filtrée par les project_id
     const data = await db
-      .collection("european-projects_projects-entities_staging")
+      .collection(collection_projects_entities)
       .aggregate([
         { $match: { project_id: { $in: matchingProjectIds }, country_code: filters.country_code, thema_code: "ERC" } },
         {
@@ -780,17 +782,13 @@ router.route("/european-projects/erc/main-entities-by-domain").get(async (req, r
  */
 router.route("/european-projects/erc/filters").get(async (req, res) => {
   const [years, destinations, panels, frameworks, yearsByFrameworkRaw] = await Promise.all([
-    db.collection(COLLECTION_NAME).distinct("call_year"),
+    db.collection(collection_erc_projects_synthese).distinct("call_year"),
     db
-      .collection(COLLECTION_NAME)
-      .aggregate([
-        { $group: { _id: { code: "$destination_code", name: "$destination_name_en" } } },
-        { $project: { _id: 0, code: "$_id.code", name: "$_id.name" } },
-        { $sort: { code: 1 } },
-      ])
+      .collection(collection_erc_projects_synthese)
+      .aggregate([{ $group: { _id: { code: "$destination_code", name: "$destination_name_en" } } }, { $project: { _id: 0, code: "$_id.code", name: "$_id.name" } }, { $sort: { code: 1 } }])
       .toArray(),
     db
-      .collection(COLLECTION_NAME)
+      .collection(collection_erc_projects_synthese)
       .aggregate([
         {
           $group: {
@@ -807,14 +805,10 @@ router.route("/european-projects/erc/filters").get(async (req, res) => {
         { $sort: { domaine: 1, id: 1 } },
       ])
       .toArray(),
-    db.collection(COLLECTION_NAME).distinct("framework"),
+    db.collection(collection_erc_projects_synthese).distinct("framework"),
     db
-      .collection(COLLECTION_NAME)
-      .aggregate([
-        { $group: { _id: { framework: "$framework", call_year: "$call_year" } } },
-        { $group: { _id: "$_id.framework", years: { $addToSet: "$_id.call_year" } } },
-        { $project: { _id: 0, framework: "$_id", years: 1 } },
-      ])
+      .collection(collection_erc_projects_synthese)
+      .aggregate([{ $group: { _id: { framework: "$framework", call_year: "$call_year" } } }, { $group: { _id: "$_id.framework", years: { $addToSet: "$_id.call_year" } } }, { $project: { _id: 0, framework: "$_id", years: 1 } }])
       .toArray(),
   ]);
 
@@ -832,7 +826,7 @@ router.route("/european-projects/erc/filters").get(async (req, res) => {
   });
 });
 
-const PERSONS_COLLECTION = "european-projects_erc-persons_staging";
+
 
 /**
  * Route genre ERC - répartition par genre selon le type de financement
@@ -862,7 +856,7 @@ router.route("/european-projects/erc/gender-by-destination").get(async (req, res
     }
 
     const data = await db
-      .collection(PERSONS_COLLECTION)
+      .collection(collection_persons)
       .aggregate([
         { $match: filters },
         {
@@ -899,7 +893,7 @@ router.route("/european-projects/erc/gender-by-destination").get(async (req, res
       .toArray();
 
     const totalByGender = await db
-      .collection(PERSONS_COLLECTION)
+      .collection(collection_persons)
       .aggregate([{ $match: filters }, { $group: { _id: "$gender", count: { $sum: 1 } } }, { $project: { _id: 0, gender: "$_id", count: 1 } }])
       .toArray();
 
@@ -935,7 +929,7 @@ router.route("/european-projects/erc/gender-evolution").get(async (req, res) => 
     }
 
     const data = await db
-      .collection(PERSONS_COLLECTION)
+      .collection(collection_persons)
       .aggregate([
         { $match: filters },
         {
@@ -1010,7 +1004,7 @@ router.route("/european-projects/erc/gender-by-domain").get(async (req, res) => 
     }
 
     const data = await db
-      .collection(PERSONS_COLLECTION)
+      .collection(collection_persons)
       .aggregate([
         { $match: groupFilters },
         {

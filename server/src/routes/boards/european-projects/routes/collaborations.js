@@ -34,6 +34,9 @@ async function recreateIndex(collection, indexSpec, indexName) {
 const router = new express.Router();
 const routesPrefix = "/european-projects/collaborations";
 
+const collection_projects_entities = "european-projects_projects-entities_staging";
+const collection_collaborations = "european-projects_collaborations_staging";
+
 router.route(routesPrefix + "/get-entities").get(async (req, res) => {
   const { entityName, country_code } = req.query;
 
@@ -45,7 +48,7 @@ router.route(routesPrefix + "/get-entities").get(async (req, res) => {
 
   try {
     const entities = await db
-      .collection("european-projects_projects-entities_staging")
+      .collection(collection_projects_entities)
       .aggregate([
         {
           $match: {
@@ -90,7 +93,7 @@ router.route(routesPrefix + "/get-suggested-entities").get(async (req, res) => {
 
   try {
     const suggestedEntities = await db
-      .collection("european-projects_projects-entities_staging")
+      .collection(collection_projects_entities)
       .aggregate([
         {
           $match: {
@@ -135,13 +138,13 @@ router.route(routesPrefix + "/get-suggested-entities").get(async (req, res) => {
 router.route(routesPrefix + "/get-entities_indexes").get(async (req, res) => {
   try {
     await recreateIndex(
-      db.collection("european-projects_projects-entities_staging"),
+      db.collection(collection_projects_entities),
       {
         entities_name: 1,
         country_code: 1,
         entities_id: 1,
       },
-      "idx_entities_covered"
+      "idx_entities_covered",
     );
 
     res.status(201).json({ message: "Index recréé avec succès" });
@@ -177,7 +180,7 @@ router.route(routesPrefix + "/get-collaborations").get(async (req, res) => {
 
   try {
     const collaborations = await db
-      .collection("european-projects_collaborations_staging")
+      .collection(collection_collaborations)
       .aggregate([
         { $match: { ...filters } },
         {
@@ -245,7 +248,7 @@ router.route(routesPrefix + "/get-collaborations").get(async (req, res) => {
 router.route(routesPrefix + "/get-collaborations_indexes").get(async (req, res) => {
   try {
     await recreateIndex(
-      db.collection("european-projects_collaborations_staging"),
+      db.collection(collection_collaborations),
       {
         country_code: 1,
         country_code_collab: 1,
@@ -299,7 +302,7 @@ router.route(routesPrefix + "/get-collaborations-by-country").get(async (req, re
 
   try {
     const collaborations = await db
-      .collection("european-projects_collaborations_staging")
+      .collection(collection_collaborations)
       .find({ ...filters })
       .project({
         _id: 0,
@@ -333,7 +336,7 @@ router.route(routesPrefix + "/get-collaborations-by-country").get(async (req, re
 router.route(routesPrefix + "/get-collaborations-by-country_indexes").get(async (req, res) => {
   try {
     await recreateIndex(
-      db.collection("european-projects_collaborations_staging"),
+      db.collection(collection_collaborations),
       {
         country_code: 1,
         country_code_collab: 1,
@@ -355,7 +358,7 @@ router.route(routesPrefix + "/get-collaborations-by-country_indexes").get(async 
         extra_joint_organizations: 1,
         extra_joint_organizations_collab: 1,
       },
-      "idx_collaborations-by-country_covered"
+      "idx_collaborations-by-country_covered",
     );
 
     res.status(201).json({ message: "Index recréé avec succès" });
@@ -429,16 +432,14 @@ router.route(routesPrefix + "/get-collaborations-by-entity").get(async (req, res
 
   try {
     // Récupérer d'abord les informations de l'entité
-    const entityInfo = await db
-      .collection("european-projects_projects-entities_staging")
-      .findOne({ entities_id: entity_id }, { projection: { _id: 0, entities_name: 1 } });
+    const entityInfo = await db.collection(collection_projects_entities).findOne({ entities_id: entity_id }, { projection: { _id: 0, entities_name: 1 } });
 
     if (!entityInfo) {
       return res.status(404).json({ error: "Entité non trouvée" });
     }
 
     const entityCollaborations = await db
-      .collection("european-projects_projects-entities_staging")
+      .collection(collection_projects_entities)
       .aggregate([
         // Étape 1 : Récupérer tous les project_ids de l'entité avec les filtres
         {
@@ -453,7 +454,7 @@ router.route(routesPrefix + "/get-collaborations-by-entity").get(async (req, res
         // Étape 2 : Rechercher toutes les entités qui collaborent sur ces projets
         {
           $lookup: {
-            from: "european-projects_projects-entities_staging",
+            from: collection_projects_entities,
             let: { projectIds: "$project_ids" },
             pipeline: [
               {
@@ -488,7 +489,7 @@ router.route(routesPrefix + "/get-collaborations-by-entity").get(async (req, res
               // Ajout d'une étape pour compter le nombre total de projets (avec les mêmes filtres)
               {
                 $lookup: {
-                  from: "european-projects_projects-entities_staging",
+                  from: collection_projects_entities,
                   let: { entityId: "$_id" },
                   pipeline: [
                     {
@@ -562,7 +563,7 @@ router.route(routesPrefix + "/get-collaborations-by-entity_indexes").get(async (
   try {
     await Promise.all([
       recreateIndex(
-        db.collection("european-projects_projects-entities_staging"),
+        db.collection(collection_projects_entities),
         {
           entities_id: 1,
           project_id: 1,
@@ -570,15 +571,15 @@ router.route(routesPrefix + "/get-collaborations-by-entity_indexes").get(async (
           country_code: 1,
           role: 1,
         },
-        "idx_entity_collaborations_main"
+        "idx_entity_collaborations_main",
       ),
       recreateIndex(
-        db.collection("european-projects_projects-entities_staging"),
+        db.collection(collection_projects_entities),
         {
           entities_id: 1,
           project_id: 1,
         },
-        "idx_entity_total_projects"
+        "idx_entity_total_projects",
       ),
     ]);
 
