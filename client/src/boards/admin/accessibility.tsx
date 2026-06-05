@@ -51,7 +51,7 @@ export default function AccessibilityPage() {
     // init du state
     if (audit) {
       const initialFormResponses: FormResponse[] = [];
-      audit.tests.forEach((test) => {
+      audit.tests?.forEach((test) => {
         initialFormResponses.push({ testId: test.testId, value: test.value, comment: test.comment, modified: false });
       });
       setFormResponses(initialFormResponses);
@@ -86,6 +86,7 @@ export default function AccessibilityPage() {
 
   const updateTestsInDb = () => {
     // envoi des tests modifiés ou nouveaux uniquement
+
     fetch(`${VITE_APP_SERVER_URL}/update-tests`, {
       method: "POST",
       headers: {
@@ -147,25 +148,39 @@ export default function AccessibilityPage() {
         <Col>
           <Title as="h1">Audits d'accessibilité</Title>
         </Col>
-        <Col className="text-right">
+        <Col md={3}>
           <Button
             variant="secondary"
             disabled={!changesDetected}
             onClick={() => {
-              rgaa_tests_list.forEach((test) => {
-                const value = getValueFromState(test.testId, "value");
-                const comment = getValueFromState(test.testId, "comment");
-                const testInAudit = audit?.tests?.find((t) => t.testId === test.testId);
-                const valueInAudit = testInAudit?.value || "initial";
-                const commentInAudit = testInAudit?.comment || "";
-                if (value !== valueInAudit || comment !== commentInAudit) {
-                  updateTestsInDb();
-                }
-              });
+              updateTestsInDb();
             }}
           >
             Enregistrer les modifications
           </Button>
+        </Col>
+        <Col md={2}>
+          <fieldset>
+            <legend className="fr-mb-2w">Statut des tests</legend>
+            <div className="fr-flex fr-flex-wrap fr-gap-2w">
+              <div className="fr-flex fr-items-center fr-gap-1w">
+                <span className="fr-mr-1w">🟢</span>
+                <span>Réussi</span>
+              </div>
+              <div className="fr-flex fr-items-center fr-gap-1w">
+                <span className="fr-mr-1w">🔴</span>
+                <span>Échoué</span>
+              </div>
+              <div className="fr-flex fr-items-center fr-gap-1w">
+                <span className="fr-mr-1w">🟠</span>
+                <span>Non applicable</span>
+              </div>
+              <div className="fr-flex fr-items-center fr-gap-1w">
+                <span className="fr-mr-1w">⚪</span>
+                <span>Non testé</span>
+              </div>
+            </div>
+          </fieldset>
         </Col>
       </Row>
       <section className="fr-mt-5w">
@@ -187,7 +202,8 @@ export default function AccessibilityPage() {
                         const testsFail = audit?.tests?.filter((test) => test.value === "fail" && rgaa_tests_list?.find((t) => t.testId === test.testId)?.thematiqueId === thematique_id).length || 0;
                         const testsNa = audit?.tests?.filter((test) => test.value === "na" && rgaa_tests_list?.find((t) => t.testId === test.testId)?.thematiqueId === thematique_id).length || 0;
                         const totalTestsAuditThematique = audit?.tests?.filter((test) => rgaa_tests_list?.find((t) => t.testId === test.testId)?.thematiqueId === thematique_id).length || 0;
-                        const testsNonTestes = totalTestsThematique - totalTestsAuditThematique;
+                        const testsNonTestes =
+                          totalTestsThematique - totalTestsAuditThematique + audit?.tests?.filter((test) => test.value === "initial" && rgaa_tests_list?.find((t) => t.testId === test.testId)?.thematiqueId === thematique_id).length || 0;
                         return `${testsOk} 🟢 / ${testsFail} 🔴 / ${testsNa} 🟠 / ${testsNonTestes} ⚪`;
                       })()
                     }
@@ -227,7 +243,7 @@ export default function AccessibilityPage() {
                               <input type="text" className="fr-input" value={getValueFromState(testId, "comment")} onChange={(e) => setValueInState(testId, "comment", e.target.value)} />
                             </Col>
                             <Col>
-                              {audit?.tests.find((t) => t.testId === testId)?.date
+                              {audit?.tests?.find((t) => t.testId === testId)?.date
                                 ? new Date(audit.tests.find((t) => t.testId === testId).date).toLocaleDateString("fr-FR", {
                                     year: "numeric",
                                     month: "long",

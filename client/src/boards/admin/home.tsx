@@ -531,7 +531,7 @@ export default function Home() {
                         {dashboard.id}
                       </Link>
                       {"  "}
-                      <Link href={`./accessibility/${dashboard.id}`} target="_blank" rel="noopener noreferrer">
+                      <Link href={`./admin/accessibility/${dashboard.id}`} target="_blank" rel="noopener noreferrer">
                         A
                       </Link>
                     </td>

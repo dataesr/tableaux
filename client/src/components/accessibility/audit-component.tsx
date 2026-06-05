@@ -139,6 +139,8 @@ export default function AuditComponent({ idSite }) {
     day: "numeric",
   });
 
+  const nbTests = rgaa_tests_list.length - rgaa_tests_list.filter((test) => test.status === "na").length;
+
   return (
     <section>
       <Title as="h2">{i18n.title[currentLang]}</Title>
@@ -152,7 +154,7 @@ export default function AuditComponent({ idSite }) {
       </Text>
       <Text>
         {i18n["conformity-percentage"][currentLang]}
-        <strong>{Math.round((rgaa_tests_list.filter((test) => test.status === "ok").length / rgaa_tests_list.length) * 100)}%</strong> ({rgaa_tests_list.filter((test) => test.status === "ok").length} / {rgaa_tests_list.length} tests)
+        <strong>{Math.round((rgaa_tests_list.filter((test) => test.status === "ok").length / nbTests) * 100)}%</strong> ({rgaa_tests_list.filter((test) => test.status === "ok").length} / {nbTests} tests)
       </Text>
       <Text>
         {i18n["rgaa-version-label"][currentLang]}

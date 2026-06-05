@@ -56,7 +56,6 @@ router.get("/get-rgaa/:rgaaId", async (req, res) => {
 
 router.post("/update-tests", async (req, res) => {
   const { siteId, rgaaId, tests } = req.body;
-  console.log("Received update-tests request with data:", { siteId, rgaaId, tests });
   try {
     // Vérifie si un audit existe déjà pour ce site et ce RGAA
     const existingAudit = await db.collection("audits").findOne({ siteId, rgaaId });
@@ -67,18 +66,21 @@ router.post("/update-tests", async (req, res) => {
         const existingTest = existingAudit.tests.find((t) => t.testId === test.testId);
         if (existingTest) {
           // Si le test existe, le mettre à jour
-          await db.collection("audits").updateOne({ _id: existingAudit._id }, { $set: { "tests.$[elem]": test } }, { arrayFilters: [{ "elem.testId": test.testId }] });
+          const updatedTest = { ...test, updatedAt: new Date() };
+          await db.collection("audits").updateOne({ _id: existingAudit._id }, { $set: { "tests.$[elem]": updatedTest } }, { arrayFilters: [{ "elem.testId": test.testId }] });
         } else {
           // Si le test n'existe pas, l'ajouter
-          await db.collection("audits").updateOne({ _id: existingAudit._id }, { $push: { tests: test } });
+          const newTest = { ...test, createdAt: new Date(), updatedAt: new Date() };
+          await db.collection("audits").updateOne({ _id: existingAudit._id }, { $push: { tests: newTest } });
         }
       }
     } else {
       // Si l'audit n'existe pas, crée un nouvel audit avec les tests
+      const testsWithDates = tests.map((test) => ({ ...test, createdAt: new Date(), updatedAt: new Date() }));
       await db.collection("audits").insertOne({
         siteId,
         rgaaId,
-        tests: tests,
+        tests: testsWithDates,
         createdAt: new Date(),
       });
     }
