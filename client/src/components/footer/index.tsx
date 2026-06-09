@@ -15,7 +15,7 @@ const LANGUAGE_LABELS: Record<string, string> = {
   en: "English",
 };
 
-export default function Footer({ href = "/", title = "Accueil - DataSupR" }: { href?: string; title?: string }) {
+export default function Footer({ href = "/", sitemapHref, title = "Accueil - DataSupR" }: { href?: string; sitemapHref?: string; title?: string }) {
   const location = useLocation();
   const [searchParams] = useSearchParams();
   const currentLang = searchParams.get("language") || "fr";
@@ -67,7 +67,7 @@ export default function Footer({ href = "/", title = "Accueil - DataSupR" }: { h
         <div className="fr-footer__bottom">
           <ul className="fr-footer__bottom-list">
             <li className="fr-footer__bottom-item">
-              <a className="fr-footer__bottom-link" href="#">
+              <a className="fr-footer__bottom-link" href={sitemapHref ?? "#"}>
                 {getI18nLabel(i18n, "sitemap")}
               </a>
             </li>

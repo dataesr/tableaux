@@ -20,6 +20,8 @@ const ENSEMBLE_LABEL = "Ensemble";
 export function createHeatmapOptions({
     vOptions,
     hOptions,
+    vAxisLabel,
+    hAxisLabel,
     getCell,
     getRowMargin,
     getColMargin,
@@ -62,6 +64,19 @@ export function createHeatmapOptions({
     const chartHeight = Math.max(380, yCategories.length * 56 + 100);
 
     return createChartOptions("heatmap" as any, ({
+        accessibility: {
+            enabled: true,
+            description: `Carte de chaleur : taux de diplômés (%) selon ${vAxisLabel} (axe vertical) et ${hAxisLabel} (axe horizontal). La ligne et la colonne « Ensemble » présentent les totaux marginaux pour chaque critère. Les valeurs vont de 0 % (rouge) à 100 % (vert).`,
+            point: {
+                descriptionFormatter: function (point: any) {
+                    if (point.value === null) return `${point.custom?.vLabel ?? ""} / ${point.custom?.hLabel ?? ""} : données non disponibles`;
+                    return `${point.custom?.vLabel ?? ""} / ${point.custom?.hLabel ?? ""} : ${point.value.toFixed(1)} % de diplômés`;
+                },
+            },
+        },
+        exporting: {
+            tableCaption: `Tableau de données : taux de diplômés (%) croisé selon ${vAxisLabel} (lignes) et ${hAxisLabel} (colonnes). La ligne « Ensemble » représente le total pour chaque valeur de ${hAxisLabel} ; la colonne « Ensemble » représente le total pour chaque valeur de ${vAxisLabel}.`,
+        },
         caption: {
             align: "left",
             style: { color: "var(--text-mention-grey)", fontSize: "11px" },

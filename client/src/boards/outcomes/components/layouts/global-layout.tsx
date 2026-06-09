@@ -21,10 +21,17 @@ const NAV_ITEMS = [
   { key: "methodologie", labelKey: "methodologie", to: `${BASE}/methodologie` },
 ] as const;
 
+const ALL_BREADCRUMB_PAGES = [
+  ...NAV_ITEMS,
+  { key: "plan-du-site", labelKey: "planDuSite", to: `${BASE}/plan-du-site` },
+] as const;
+
 export default function GlobalLayout() {
   const { pathname, search } = useLocation();
 
   if (!pathname) return null;
+
+  const currentPage = ALL_BREADCRUMB_PAGES.find(({ to }) => pathname === to || pathname.startsWith(to + "/"));
 
   return (
     <>
@@ -78,6 +85,7 @@ export default function GlobalLayout() {
                       target="_self"
                       {...(pathname === to && { "aria-current": "page" })}
                       className="fr-nav__link"
+                      title={getI18nLabel(i18n, labelKey)}
                     >
                       {getI18nLabel(i18n, labelKey)}
                     </Link>
@@ -89,9 +97,35 @@ export default function GlobalLayout() {
         </div>
       </header>
       <main id="main-content" tabIndex={-1}>
+        <div className="fr-container fr-pt-2w fr-pb-0">
+          <nav role="navigation" className="fr-breadcrumb" aria-label="vous êtes ici :">
+            <button className="fr-breadcrumb__button" aria-expanded="false" aria-controls="breadcrumb-outcomes">
+              Voir le fil d'Ariane
+            </button>
+            <div className="fr-collapse" id="breadcrumb-outcomes">
+              <ol className="fr-breadcrumb__list">
+                <li>
+                  <a className="fr-breadcrumb__link" href="/">Accueil</a>
+                </li>
+                <li>
+                  <a className="fr-breadcrumb__link" href={`${BASE}/flux`}>
+                    Parcours des néo-bacheliers inscrits en L1 en 2019
+                  </a>
+                </li>
+                {currentPage && (
+                  <li>
+                    <a className="fr-breadcrumb__link" aria-current="page">
+                      {getI18nLabel(i18n, currentPage.labelKey)}
+                    </a>
+                  </li>
+                )}
+              </ol>
+            </div>
+          </nav>
+        </div>
         <Outlet />
       </main>
-      <Footer href={`${BASE}/flux`} title="#dataESR tableaux de bord" />
+      <Footer href={`${BASE}/flux`} sitemapHref={`${BASE}/plan-du-site`} title="#dataESR tableaux de bord" />
     </>
   );
 }

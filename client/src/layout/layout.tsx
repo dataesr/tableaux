@@ -94,7 +94,9 @@ export function Layout({ languageSelector = false }) {
           )}
         </FastAccess>
       </Header>
-      <Outlet />
+      <main id="main-content" tabIndex={-1}>
+        <Outlet />
+      </main>
       <Footer />
       <SwitchTheme />
       <CookieConsent />

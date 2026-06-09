@@ -27,6 +27,10 @@
     "fr": "Méthodologie",
     "en": "Methodology"
   },
+  "planDuSite": {
+    "fr": "Plan du site",
+    "en": "Sitemap"
+  },
   "accessibility": {
     "fr": "Accessibilité : non/partiellement/totalement conforme",
     "en": "Accessibility : non/partially/totally compliant"
