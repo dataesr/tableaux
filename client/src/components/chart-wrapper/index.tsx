@@ -127,7 +127,7 @@ function MenuModal({
   setIsOpenIntegration,
 }) {
   const shareUrl = typeof window !== "undefined"
-    ? new URL(`https://tableaux.dataesr.ovh/structures-finance/accueil`, VITE_APP_URL || window.location.origin).toString()
+    ? new URL(window.location.pathname + window.location.search, VITE_APP_URL || window.location.origin).toString()
     : "";
   const pageUrl = encodeURIComponent(shareUrl);
   const shareText = (() => {
