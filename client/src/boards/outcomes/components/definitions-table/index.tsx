@@ -26,7 +26,7 @@ export default function OutcomesDefinitionsTable({
     if (!definitions.length) return null;
 
     return (
-        <div className="metric-definitions-table fr-mt-4w">
+        <div className="metric-definitions-table fr-mt-4w fr-mb-4w">
             <button
                 className="definitions-toggle"
                 onClick={() => setIsOpen(!isOpen)}
