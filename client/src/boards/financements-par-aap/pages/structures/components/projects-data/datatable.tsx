@@ -132,7 +132,7 @@ export default function DataTable({ aggregations, columns, dataTable, filters, n
                     <tr key={row.uniqId}>
                       {columns.map((column) => (
                         <td key={`${column.id}-${row.id}`}>
-                          {column.getCellValue ? column.getCellValue(row) : row?.[column?.id]}
+                          {column.getCellValue ? column.getCellValue(row) : <span title={row?.[column?.id]}>{row?.[column?.id]}</span>}
                         </td>
                       ))}
                     </tr>
