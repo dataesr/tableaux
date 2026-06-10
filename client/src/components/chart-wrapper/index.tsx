@@ -126,6 +126,24 @@ function MenuModal({
   setIsOpen,
   setIsOpenIntegration,
 }) {
+  const shareUrl = typeof window !== "undefined"
+    ? new URL(`https://tableaux.dataesr.ovh/structures-finance/accueil`, VITE_APP_URL || window.location.origin).toString()
+    : "";
+  const pageUrl = encodeURIComponent(shareUrl);
+  const shareText = (() => {
+    if (typeof config.title === "string") return config.title;
+    if (typeof window === "undefined" || !config.title || typeof config.title !== "object") return "";
+
+    const language = new URLSearchParams(window.location.search).get("language") || "fr";
+    const localizedTitle = config.title[language] ?? config.title.fr;
+    return typeof localizedTitle === "string" ? localizedTitle : "";
+  })();
+  const chartTitle = encodeURIComponent(shareText);
+
+  const openSharePopup = (url: string) => {
+    window.open(url, "_blank", "noopener,noreferrer,width=620,height=520,scrollbars=yes,resizable=yes");
+  };
+
   return (
     <Modal
       hide={() => setIsOpen(false)}
@@ -204,37 +222,66 @@ function MenuModal({
         </ul>
         <hr />
         <Container fluid>
-          <Row>
-            <Col>
-              <Title as="h2" look="h6">
-                {getI18nLabel(i18n, "share")}
-              </Title>
-              <div className="share">
-                <Button
-                  disabled
-                  icon="twitter-x-fill"
-                  title="Twitter-X"
-                  variant="text"
-                />
-                <Button
-                  disabled
-                  icon="linkedin-box-fill"
-                  title="Linkedin"
-                  variant="text"
-                />
-                <Button
-                  disabled
-                  icon="facebook-circle-fill"
-                  title="Facebook"
-                  variant="text"
-                />
+          <Row gutters>
+            <Col md={6} className="fr-mb-2w ">
+              <div className="fr-share">
+                <Title as="h2" look="h6" className="fr-share__title">
+                  {getI18nLabel(i18n, "share")}
+                </Title>
+                <ul className="fr-btns-group fr-btns-group--inline-md fr-btns-group--equisized">
+                  <li>
+                    <a
+                      className="fr-btn fr-btn--facebook"
+                      href={`https://www.facebook.com/sharer/sharer.php?u=${pageUrl}${chartTitle ? `&quote=${chartTitle}` : ""}`}
+                      rel="noopener external"
+                      target="_blank"
+                      onClick={(e) => { e.preventDefault(); openSharePopup(`https://www.facebook.com/sharer/sharer.php?u=${pageUrl}${chartTitle ? `&quote=${chartTitle}` : ""}`); }}
+                    >
+                      Partager sur Facebook
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      className="fr-btn fr-btn--twitter-x"
+                      href={`https://twitter.com/intent/tweet?url=${pageUrl}${chartTitle ? `&text=${chartTitle}` : ""}`}
+                      rel="noopener external"
+                      target="_blank"
+                      onClick={(e) => { e.preventDefault(); openSharePopup(`https://twitter.com/intent/tweet?url=${pageUrl}${chartTitle ? `&text=${chartTitle}` : ""}`); }}
+                    >
+                      Partager sur X (anciennement Twitter)
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      className="fr-btn fr-btn--linkedin"
+                      href={`https://www.linkedin.com/sharing/share-offsite/?url=${pageUrl}`}
+                      rel="noopener external"
+                      target="_blank"
+                      onClick={(e) => { e.preventDefault(); openSharePopup(`https://www.linkedin.com/sharing/share-offsite/?url=${pageUrl}`); }}
+                    >
+                      Partager sur LinkedIn
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      className="fr-btn--mail fr-btn"
+                      href={`mailto:?subject=${chartTitle ? `${chartTitle} - ` : ""}Découvrez ce graphique&body=${shareText ? `${shareText} - ` : ""}${shareUrl}`}
+                      rel="noopener external"
+                      target="_blank"
+                    >
+                      Partager par email
+                    </a>
+                  </li>
+                </ul>
               </div>
             </Col>
-            <Col>
-              <Title as="h2" look="h6" className="text-right">
-                {getI18nLabel(i18n, "integration")}
-              </Title>
-              <div className="share text-right">
+            <Col md={6}>
+              <div>
+                <Title as="h2" look="h6" className="fr-mb-1w">
+                  {getI18nLabel(i18n, "integration")}
+                </Title>
+              </div>
+              <div className="fr-mt-2w">
                 <Button
                   disabled={!config.integrationURL}
                   icon="code-s-slash-line"
@@ -253,8 +300,8 @@ function MenuModal({
             </Col>
           </Row>
         </Container>
-        <div className="fr-mt-2w text-right">
-          <hr />
+        <hr />
+        <div className="fr-mt-2w fr-grid-row fr-grid-row--right">
           <Button onClick={() => setIsOpen(false)}>
             {getI18nLabel(i18n, "close")}
           </Button>

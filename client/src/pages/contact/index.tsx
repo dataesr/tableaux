@@ -51,10 +51,10 @@ export default function ContactPage() {
 
   const set =
     (field: keyof FormValues) =>
-    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      setValues((prev) => ({ ...prev, [field]: e.target.value }));
-      setErrors((prev) => ({ ...prev, [field]: undefined }));
-    };
+      (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        setValues((prev) => ({ ...prev, [field]: e.target.value }));
+        setErrors((prev) => ({ ...prev, [field]: undefined }));
+      };
 
   const validate = (): boolean => {
     const newErrors: FormErrors = {};
@@ -112,7 +112,7 @@ export default function ContactPage() {
   };
   return (
     <Container className="fr-py-8w">
-      <Title as="h2" look="h5" className="fr-mb-2w">
+      <Title as="h1" look="h5" className="fr-mb-2w">
         {t("title")}
       </Title>
       <Text className="fr-text--lg fr-mb-6w">{t("description")}</Text>

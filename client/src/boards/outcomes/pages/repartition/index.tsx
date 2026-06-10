@@ -189,7 +189,7 @@ export default function RepartitionPage() {
                                 ))}
                             </section>
                         ))}
-                        <Button className="fr-mt-3w" onClick={resetFilters}>Réinitialiser les filtres</Button>
+                        <Button title="Réinitialiser les filtres" className="fr-mt-3w" onClick={resetFilters}>Réinitialiser les filtres</Button>
                     </section>
                 </Col>
                 <Col lg={8}>

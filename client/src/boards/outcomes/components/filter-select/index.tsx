@@ -42,23 +42,28 @@ export default function OutcomesFilterSelect({
                 size="sm"
                 title={label}
             >
-                <Select.Option
-                    value=""
-                    selected={!selectedKey}
-                    onClick={() => onSelect(null)}
-                >
-                    {emptyLabel}
-                </Select.Option>
-                {options.map((opt) => (
-                    <Select.Option
-                        key={opt.key}
-                        value={opt.key}
-                        selected={selectedKey === opt.key}
-                        onClick={() => onSelect(opt.key)}
-                    >
-                        {opt.label}{typeof opt.count === "number" && opt.count > 0 ? ` (${opt.count})` : ""}
-                    </Select.Option>
-                ))}
+                <ul role="presentation">
+                    <li>
+                        <Select.Option
+                            value=""
+                            selected={!selectedKey}
+                            onClick={() => onSelect(null)}
+                        >
+                            {emptyLabel}
+                        </Select.Option>
+                    </li>
+                    {options.map((opt) => (
+                        <li key={opt.key}>
+                            <Select.Option
+                                value={opt.key}
+                                selected={selectedKey === opt.key}
+                                onClick={() => onSelect(opt.key)}
+                            >
+                                {opt.label}{typeof opt.count === "number" && opt.count > 0 ? ` (${opt.count})` : ""}
+                            </Select.Option>
+                        </li>
+                    ))}
+                </ul>
             </Select>
         </div>
     );

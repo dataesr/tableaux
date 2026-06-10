@@ -190,7 +190,7 @@ export default function PlusHautDiplomePage() {
                                 ))}
                             </section>
                         ))}
-                        <Button className="fr-mt-3w" onClick={resetFilters}>Réinitialiser les filtres</Button>
+                        <Button title="Réinitialiser les filtres" className="fr-mt-3w" onClick={resetFilters}>Réinitialiser les filtres</Button>
                     </section>
                 </Col>
                 <Col lg={8}>
@@ -211,7 +211,7 @@ export default function PlusHautDiplomePage() {
                         {hasData && (
                             <>
                                 <div className="outcomes-phd__table-actions fr-mb-1w">
-                                    <Button icon="file-download-line" onClick={exportCsv} size="sm">
+                                    <Button icon="file-download-line" onClick={exportCsv} title="Export des données" size="sm">
                                         Export des données
                                     </Button>
                                 </div>

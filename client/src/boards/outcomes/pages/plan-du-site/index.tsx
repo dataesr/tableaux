@@ -25,14 +25,14 @@ export default function PlanDuSitePage() {
                     <nav aria-label="Plan du site">
                         <ul className="fr-raw-list">
                             <li>
-                                <a className="fr-link" href="/">Accueil dataSupR</a>
+                                <a title="Accueil" className="fr-link" href="/">Accueil dataSupR</a>
                             </li>
                             <li className="fr-mt-2w">
                                 <strong>Parcours des néo-bacheliers inscrits en L1 en 2019</strong>
                                 <ul className="fr-raw-list fr-mt-1w fr-pl-3w">
                                     {PAGES.map(({ label, href }) => (
                                         <li key={href} className="fr-mb-1w">
-                                            <a className="fr-link" href={href}>{label}</a>
+                                            <a title={label} className="fr-link" href={href}>{label}</a>
                                         </li>
                                     ))}
                                 </ul>

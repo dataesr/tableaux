@@ -247,7 +247,7 @@ export default function ProfilesTab({ axisOptions, isLoadingOptions, cohortTotal
             {profiles.length < 3 && (
                 <Row className="fr-mt-2w">
                     <Col>
-                        <Button icon="account-circle-fill" variant="secondary" size="sm" onClick={addProfile}>
+                        <Button title="Ajouter un troisième profil" icon="account-circle-fill" variant="secondary" size="sm" onClick={addProfile}>
                             Ajouter un troisième profil
                         </Button>
                     </Col>

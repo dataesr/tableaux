@@ -31,6 +31,7 @@ export default function OutcomesDefinitionsTable({
                 className="definitions-toggle"
                 onClick={() => setIsOpen(!isOpen)}
                 aria-expanded={isOpen}
+                title={isOpen ? "Fermer les définitions" : "Ouvrir les définitions"}
             >
                 <div className="definitions-toggle-content">
                     <span className="fr-icon-information-line fr-icon--lg" aria-hidden="true" />

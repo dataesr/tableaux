@@ -99,22 +99,22 @@ export default function GlobalLayout() {
       <main id="main-content" tabIndex={-1}>
         <div className="fr-container fr-pt-2w fr-pb-0">
           <nav role="navigation" className="fr-breadcrumb" aria-label="vous êtes ici :">
-            <button className="fr-breadcrumb__button" aria-expanded="false" aria-controls="breadcrumb-outcomes">
+            <button title="Voir le fil d'Ariane" className="fr-breadcrumb__button" aria-expanded="false" aria-controls="breadcrumb-outcomes">
               Voir le fil d'Ariane
             </button>
             <div className="fr-collapse" id="breadcrumb-outcomes">
               <ol className="fr-breadcrumb__list">
                 <li>
-                  <a className="fr-breadcrumb__link" href="/">Accueil</a>
+                  <a title="Accueil" className="fr-breadcrumb__link" href="/">Accueil</a>
                 </li>
                 <li>
-                  <a className="fr-breadcrumb__link" href={`${BASE}/flux`}>
+                  <a title="Parcours des néo-bacheliers inscrits en L1 en 2019" className="fr-breadcrumb__link" href={`${BASE}/flux`}>
                     Parcours des néo-bacheliers inscrits en L1 en 2019
                   </a>
                 </li>
                 {currentPage && (
                   <li>
-                    <a className="fr-breadcrumb__link" aria-current="page">
+                    <a title={getI18nLabel(i18n, currentPage.labelKey)} className="fr-breadcrumb__link" aria-current="page">
                       {getI18nLabel(i18n, currentPage.labelKey)}
                     </a>
                   </li>
