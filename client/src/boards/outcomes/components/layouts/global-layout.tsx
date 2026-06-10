@@ -104,9 +104,9 @@ export default function GlobalLayout() {
             </button>
             <div className="fr-collapse" id="breadcrumb-outcomes">
               <ol className="fr-breadcrumb__list">
-                <li>
+                {/* <li>
                   <a title="Accueil" className="fr-breadcrumb__link" href="/">Accueil</a>
-                </li>
+                </li> */}
                 <li>
                   <a title="Parcours des néo-bacheliers inscrits en L1 en 2019" className="fr-breadcrumb__link" href={`${BASE}/flux`}>
                     Parcours des néo-bacheliers inscrits en L1 en 2019
