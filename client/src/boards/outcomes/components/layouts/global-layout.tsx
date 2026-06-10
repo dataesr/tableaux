@@ -16,7 +16,7 @@ const NAV_ITEMS = [
   { key: "flux", labelKey: "flux", to: `${BASE}/flux` },
   { key: "repartition", labelKey: "repartition", to: `${BASE}/repartition` },
   { key: "plus-haut-diplome", labelKey: "plusHautDiplome", to: `${BASE}/plus-haut-diplome` },
-  { key: "croisements", labelKey: "croisements", to: `${BASE}/croisements` },
+  // { key: "croisements", labelKey: "croisements", to: `${BASE}/croisements` },
   { key: "comparaison-profils", labelKey: "comparaisonProfils", to: `${BASE}/comparaison-profils` },
   { key: "methodologie", labelKey: "methodologie", to: `${BASE}/methodologie` },
 ] as const;
