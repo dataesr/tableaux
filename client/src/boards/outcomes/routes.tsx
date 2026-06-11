@@ -12,7 +12,7 @@ import "./styles.scss";
 import FluxPage from "./pages/flux/index.tsx";
 import RepartitionPage from "./pages/repartition/index.tsx";
 // import CroisementsPage from "./pages/croisements/index.tsx";
-// import ComparaisonProfilsPage from "./pages/comparaison-profils/index.tsx";
+import ComparaisonProfilsPage from "./pages/comparaison-profils/index.tsx";
 import PlanDuSitePage from "./pages/plan-du-site/index.tsx";
 
 const RouteWithTitle = ({ titleKey, element }) => {
@@ -30,7 +30,7 @@ export default function OutcomesRoutes() {
         <Route path="repartition" element={<RouteWithTitle titleKey="repartition" element={<RepartitionPage />} />} />
         <Route path="plus-haut-diplome" element={<RouteWithTitle titleKey="plusHautDiplome" element={<PlusHautDiplomePage />} />} />
         {/* <Route path="croisements" element={<RouteWithTitle titleKey="croisements" element={<CroisementsPage />} />} /> */}
-        {/* <Route path="comparaison-profils" element={<RouteWithTitle titleKey="comparaisonProfils" element={<ComparaisonProfilsPage />} />} /> */}
+        <Route path="comparaison-profils" element={<RouteWithTitle titleKey="comparaisonProfils" element={<ComparaisonProfilsPage />} />} />
         <Route path="methodologie" element={<RouteWithTitle titleKey="methodologie" element={<MethodologiePage />} />} />
         <Route path="plan-du-site" element={<RouteWithTitle titleKey="planDuSite" element={<PlanDuSitePage />} />} />
       </Route>
