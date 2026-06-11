@@ -78,17 +78,25 @@ export default function ProjectsData() {
       } else if (filter.id === 'instrument') {
         body.query.bool.filter.push({ match: { 'project_instrument.keyword': filter.value } })
       } else if (filter.id === 'label') {
-        body.query.bool.filter.push({ wildcard: { 'project_label.keyword': {
-          case_insensitive: true,
-          value: `*${filter.value.toLowerCase()}*`,
-        } } })
+        body.query.bool.filter.push({
+          wildcard: {
+            'project_label.keyword': {
+              case_insensitive: true,
+              value: `*${filter.value.toLowerCase()}*`,
+            }
+          }
+        })
       } else if (filter.id === 'participantId') {
         body.query.bool.filter.push({ match: { 'participant_id.keyword': filter.value } })
       } else if (filter.id === 'participantLabel') {
-        body.query.bool.filter.push({ wildcard: { 'participant_label.fr.keyword': {
-          case_insensitive: true,
-          value: `*${filter.value.toLowerCase()}*`,
-        } } })
+        body.query.bool.filter.push({
+          wildcard: {
+            'participant_label.fr.keyword': {
+              case_insensitive: true,
+              value: `*${filter.value.toLowerCase()}*`,
+            }
+          }
+        })
       } else if (filter.id === 'participationIsCoordinator') {
         body.query.bool.filter.push({ term: { participation_is_coordinator: filter.value === "1" } })
       } else if (filter.id === 'region') {
@@ -262,7 +270,7 @@ export default function ProjectsData() {
     }
   }
 
-  if (isLoading) return <DefaultSkeleton height="600px" />
+  if (isLoading || isLoadingAll) return <DefaultSkeleton height="600px" />
 
   return (
     <>
@@ -274,17 +282,15 @@ export default function ProjectsData() {
           </Text>
         </Col>
         <Col style={{ display: "flex", justifyContent: "flex-end" }}>
-          {isLoadingAll ? "Chargement..." : (
-            <Button
-              icon="download-line"
-              iconPosition="left"
-              onClick={(e) => downloadCsv(e)}
-              size="sm"
-              variant="secondary"
-            >
-              Télécharger en CSV
-            </Button>
-          )}
+          <Button
+            icon="download-line"
+            iconPosition="left"
+            onClick={(e) => downloadCsv(e)}
+            size="sm"
+            variant="secondary"
+          >
+            Télécharger en CSV
+          </Button>
         </Col>
       </Row>
       <Row>
