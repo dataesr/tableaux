@@ -1,27 +1,17 @@
-/* eslint-disable @typescript-eslint/no-this-alias */
 import React from "react";
-import Highcharts from "highcharts/es-modules/masters/highcharts.src.js";
-import "highcharts/modules/map";
 import HighchartsReact from "highcharts-react-official";
+import Highcharts from "highcharts/es-modules/masters/highcharts.src.js";
+import "highcharts/es-modules/masters/modules/map.src.js";
+
+/* eslint-disable @typescript-eslint/no-this-alias */
 import * as turf from "@turf/turf";
 
 import MapSkeleton from "../skeletons/map";
 
-export default function MapPieGenders({
-  currentYear,
-  isLoading,
-  mapPieData,
-  polygonsData,
-}) {
+export default function MapPieGenders({ currentYear, isLoading, mapPieData, polygonsData }) {
   if (isLoading) return <MapSkeleton />;
 
-  const data = mapPieData.map((item) => [
-    item.id,
-    item.effectif_feminin,
-    item.effectif_masculin,
-    item.effectif_feminin > item.effectif_masculin ? -1 : 1,
-    item.nom,
-  ]);
+  const data = mapPieData.map((item) => [item.id, item.effectif_feminin, item.effectif_masculin, item.effectif_feminin > item.effectif_masculin ? -1 : 1, item.nom]);
 
   Highcharts.seriesType(
     "mappie",
@@ -66,8 +56,7 @@ export default function MapPieGenders({
           options.size = options.sizeFormatter.call(this);
         }
         // Call parent function
-        const result =
-          Highcharts.seriesTypes.pie.prototype.getCenter.call(this);
+        const result = Highcharts.seriesTypes.pie.prototype.getCenter.call(this);
         // Must correct for slicing room to get exact pixel pos
         result[0] -= slicingRoom;
         result[1] -= slicingRoom;
@@ -78,16 +67,16 @@ export default function MapPieGenders({
         this.center = this.getCenter();
         return Highcharts.seriesTypes.pie.prototype.translate.call(this, p);
       },
-    }
+    },
   );
 
   // Compute min and max staff to find relative sizes of bubbles
   let maxStaff = 0;
-  Highcharts.each(data, function (row) {
+  data.forEach(function (row) {
     maxStaff = Math.max(maxStaff, row[1] + row[2]);
   });
   let minStaff = maxStaff;
-  Highcharts.each(data, function (row) {
+  data.forEach(function (row) {
     minStaff = Math.min(minStaff, row[1] + row[2]);
   });
   const a = 1 / (maxStaff - minStaff);
@@ -99,10 +88,10 @@ export default function MapPieGenders({
     title: { text: "" },
     credits: { enabled: false },
     legend: {
-      itemStyle:{
+      itemStyle: {
         color: rootStyles.getPropertyValue("--label-color"),
         fontFamily: "Marianne, sans-serif",
-      }
+      },
     },
     chart: {
       animation: false,
@@ -112,7 +101,7 @@ export default function MapPieGenders({
         load: function () {
           const chart = this;
           // Add the pies after chart load, optionally with offset and connectors
-          Highcharts.each(chart.series[0].points, function (state) {
+          chart.series[0].points.forEach(function (state) {
             if (!state.id || !state.geometry) {
               return; // Skip points with no data, if any
             }
@@ -149,16 +138,8 @@ export default function MapPieGenders({
                           return b[1] - a[1];
                         }),
                         function (line) {
-                          return (
-                            '<span style="color:' +
-                            line[2] +
-                            '">\u25CF</span> ' +
-                            line[0] +
-                            ": " +
-                            Highcharts.numberFormat(line[1], 0) +
-                            "<br/>"
-                          );
-                        }
+                          return '<span style="color:' + line[2] + '">\u25CF</span> ' + line[0] + ": " + Highcharts.numberFormat(line[1], 0) + "<br/>";
+                        },
                       ).join("") +
                       "<hr/>Total: " +
                       Highcharts.numberFormat(this.total, 0) +
@@ -166,9 +147,7 @@ export default function MapPieGenders({
                     );
                   },
                 },
-                size:
-                  ((state.effectifFeminin + state.effectifMasculin) * 70) /
-                  maxStaff,
+                size: ((state.effectifFeminin + state.effectifMasculin) * 70) / maxStaff,
                 data: [
                   {
                     name: "Effectif féminin",
@@ -188,7 +167,7 @@ export default function MapPieGenders({
                   lon: center.geometry.coordinates[0],
                 },
               },
-              false
+              false,
             );
           });
           chart.redraw();
@@ -236,13 +215,7 @@ export default function MapPieGenders({
         nullColor: "rgba(0, 0, 0, 0.3)",
         showInLegend: false,
         joinBy: "originalId",
-        keys: [
-          "originalId",
-          "effectifFeminin",
-          "effectifMasculin",
-          "value",
-          "territory",
-        ],
+        keys: ["originalId", "effectifFeminin", "effectifMasculin", "value", "territory"],
         tooltip: {
           headerFormat: "",
           pointFormatter: function () {
@@ -272,13 +245,10 @@ export default function MapPieGenders({
                     (line[0] === hoverVotes ? "</b>" : "") +
                     "<br/>"
                   );
-                }
+                },
               ).join("") +
               "<hr/>Total: " +
-              Highcharts.numberFormat(
-                this.effectifFeminin + this.effectifMasculin,
-                0
-              ) +
+              Highcharts.numberFormat(this.effectifFeminin + this.effectifMasculin, 0) +
               " étudiant(e)s"
             );
           },

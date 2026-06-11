@@ -118,7 +118,7 @@ export function Search() {
 
   return (
     <Container as="section">
-      <Row>
+      <Row className="fr-mb-5w">
         <Col md={7}>
           <Container fluid>
             <Row>
@@ -127,24 +127,13 @@ export function Search() {
                   Atlas des effectifs étudiants
                 </Title>
                 <Text>
-                  L’Atlas des effectifs étudiants est un outil indispensable
-                  pour une bonne appréhension de la structuration territoriale
-                  de l’enseignement supérieur et pour l’élaboration de
-                  stratégies territoriales. Il présente, sous forme de cartes,
-                  de graphiques et de tableaux, la diversité du système français
-                  d’enseignement supérieur.
+                  L’Atlas des effectifs étudiants est un outil indispensable pour une bonne appréhension de la structuration territoriale de l’enseignement supérieur et pour l’élaboration de stratégies territoriales. Il présente, sous forme de
+                  cartes, de graphiques et de tableaux, la diversité du système français d’enseignement supérieur.
                   <br />
                   <br />
-                  L’Atlas comprend le niveau géographique « France » comme
-                  l’agrégat regroupant la France métropolitaine, les
-                  départements et régions d’Outre-mer (DROM), et les autres
-                  collectivités d’outre-mer (COM) et la Nouvelle-Calédonie. Les
-                  effectifs d’étudiants inscrits dans une implantation à
-                  l’étranger d’un établissement dont le siège est situé en
-                  France ne sont comptabilisés ni au niveau de la France ni aux
-                  différents niveaux géographiques (unité urbaine ou commune
-                  rurale, département, académie, région) auxquelles appartient
-                  l’établissement d’origine.
+                  L’Atlas comprend le niveau géographique « France » comme l’agrégat regroupant la France métropolitaine, les départements et régions d’Outre-mer (DROM), et les autres collectivités d’outre-mer (COM) et la Nouvelle-Calédonie. Les
+                  effectifs d’étudiants inscrits dans une implantation à l’étranger d’un établissement dont le siège est situé en France ne sont comptabilisés ni au niveau de la France ni aux différents niveaux géographiques (unité urbaine ou commune
+                  rurale, département, académie, région) auxquelles appartient l’établissement d’origine.
                 </Text>
               </Col>
             </Row>
@@ -171,12 +160,7 @@ export function Search() {
                 />
               </Col>
               <Col md={3}>
-                <Button
-                  className="fr-mt-4w"
-                  color="pink-tuile"
-                  icon="search-line"
-                  onClick={handleClick}
-                >
+                <Button className="fr-mt-4w" icon="search-line" onClick={handleClick}>
                   Rechercher
                 </Button>
               </Col>
@@ -185,20 +169,12 @@ export function Search() {
               <Col>
                 <div className="territories-filter">
                   <ul>
-                    {dataSearch?.length > 0 && (
-                      <span
-                        className="fr-icon-filter-line"
-                        aria-hidden="true"
-                      />
-                    )}
+                    {dataSearch?.length > 0 && <span className="fr-icon-filter-line" aria-hidden="true" />}
                     <GetFilterButton type="all" label="Tous" />
                     <GetFilterButton type="REGION" label="Régions" />
                     <GetFilterButton type="ACADEMIE" label="Académies" />
                     <GetFilterButton type="DEPARTEMENT" label="Départements" />
-                    <GetFilterButton
-                      type="UNITE_URBAINE"
-                      label="Unités urbaines"
-                    />
+                    <GetFilterButton type="UNITE_URBAINE" label="Unités urbaines" />
                     <GetFilterButton type="COMMUNE" label="Communes" />
                   </ul>
                 </div>
@@ -212,8 +188,7 @@ export function Search() {
                 {!isLoadingSearch && dataSearch?.length === undefined && (
                   <div className="results">
                     <i className="hint">
-                      Saisissez un mot clé pour rechercher un territoire. Par
-                      exemple : "Paris", "Bretagne", etc ...
+                      Saisissez un mot clé pour rechercher un territoire. Par exemple : "Paris", "Bretagne", etc ...
                       <br />
                       Puis cliquez sur le bouton <strong>"Rechercher"</strong>
                     </i>
@@ -226,13 +201,7 @@ export function Search() {
                       <li
                         key={result.geo_id}
                         onClick={() => {
-                          navigate(
-                            `/atlas/general?geo_id=${
-                              result.geo_id
-                            }&annee_universitaire=${currentYear}${
-                              datasupr ? "&datasupr" : ""
-                            }`
-                          );
+                          navigate(`/atlas/general?geo_id=${result.geo_id}&annee_universitaire=${currentYear}${datasupr ? "&datasupr" : ""}`);
                         }}
                       >
                         <span
@@ -259,19 +228,10 @@ export function Search() {
         <Col md={4} offsetMd={1}>
           <Container fluid className="fr-mb-1w">
             <StudentsCardWithTrend
-              descriptionNode={
-                <Badge color="yellow-tournesol">{currentYear}</Badge>
-              }
+              descriptionNode={<Badge color="yellow-tournesol">{currentYear}</Badge>}
               number={nbStudents}
-              label={`Étudiant${nbStudents > 1 ? "s" : ""} inscrit${
-                nbStudents > 1 ? "s" : ""
-              } en France`}
-              trendGraph={
-                <TrendCard
-                  color="#e18b76"
-                  data={dataByYear?.map((item) => item.effectif_total)}
-                />
-              }
+              label={`Étudiant${nbStudents > 1 ? "s" : ""} inscrit${nbStudents > 1 ? "s" : ""} en France`}
+              trendGraph={<TrendCard color="#e18b76" data={dataByYear?.map((item) => item.effectif_total)} />}
             />
           </Container>
           <FavoritesList territoiresList={territoiresList} />

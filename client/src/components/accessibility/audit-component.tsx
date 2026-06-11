@@ -37,8 +37,12 @@ const i18n = {
     en: "Tests performed successfully",
   },
   "not-performed-tests-title": {
-    fr: "Tests non passés ou non applicables",
-    en: "Tests not performed or not applicable",
+    fr: "Tests non passés",
+    en: "Tests not performed",
+  },
+  "not-applicable-tests-title": {
+    fr: "Tests non applicables",
+    en: "Not applicable tests",
   },
   "develop-button": {
     fr: "Développer",
@@ -133,7 +137,8 @@ export default function AuditComponent({ idSite }) {
   });
 
   // date du test le plus récent
-  const lastUpdateDate = new Date(data?.tests.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())[0]?.date).toLocaleDateString("fr-FR", {
+  const testsWithDate = data?.tests.filter((test) => test.updatedAt);
+  const lastUpdateDate = new Date(testsWithDate.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())[0]?.updatedAt).toLocaleDateString("fr-FR", {
     year: "numeric",
     month: "long",
     day: "numeric",
@@ -154,15 +159,16 @@ export default function AuditComponent({ idSite }) {
       </Text>
       <Text>
         {i18n["conformity-percentage"][currentLang]}
-        <strong>{Math.round((rgaa_tests_list.filter((test) => test.status === "ok").length / nbTests) * 100)}%</strong> ({rgaa_tests_list.filter((test) => test.status === "ok").length} / {nbTests} tests)
+        <strong>{Math.round((rgaa_tests_list.filter((test) => test.status === "ok").length / nbTests) * 100)}%</strong> ({rgaa_tests_list.filter((test) => test.status === "ok").length} / {nbTests} tests applicables)
       </Text>
       <Text>
         {i18n["rgaa-version-label"][currentLang]}
         <strong>{data.rgaaId}</strong>
       </Text>
-      <List expanded list={rgaa_tests_list.filter((test) => test.status === "fail")} title={i18n["non-conformities-title"][currentLang]} numberOfTests={rgaa_tests_list.length} />
-      <List list={rgaa_tests_list.filter((test) => test.status === "ok")} title={i18n["performed-tests-title"][currentLang]} numberOfTests={rgaa_tests_list.length} />
-      <List list={rgaa_tests_list.filter((test) => test.status === "initial" || test.status === "na")} title={i18n["not-performed-tests-title"][currentLang]} numberOfTests={rgaa_tests_list.length} />
+      <List expanded list={rgaa_tests_list.filter((test) => test.status === "fail")} title={i18n["non-conformities-title"][currentLang]} numberOfTests={nbTests} />
+      <List list={rgaa_tests_list.filter((test) => test.status === "ok")} title={i18n["performed-tests-title"][currentLang]} numberOfTests={nbTests} />
+      <List list={rgaa_tests_list.filter((test) => test.status === "na")} title={i18n["not-applicable-tests-title"][currentLang]} numberOfTests={rgaa_tests_list.length} />
+      <List list={rgaa_tests_list.filter((test) => test.status === "initial")} title={i18n["not-performed-tests-title"][currentLang]} numberOfTests={rgaa_tests_list.length} />
     </section>
   );
 }

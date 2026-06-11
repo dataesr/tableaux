@@ -28,17 +28,14 @@ import SubListGenders from "../components/sub-list-genders.tsx";
 // import { DEFAULT_CURRENT_YEAR } from "../../../../../constants.tsx";
 import { useAtlas } from "../useAtlas.tsx";
 
-export function Genders() {
+export default function Genders() {
   const [chartView, setChartView] = useState<"basic" | "percentage">("basic");
   const [chartType, setChartType] = useState<"column" | "line">("column");
   const [searchParams] = useSearchParams();
   const { DEFAULT_CURRENT_YEAR } = useAtlas();
-  const currentYear =
-    searchParams.get("annee_universitaire") || DEFAULT_CURRENT_YEAR;
+  const currentYear = searchParams.get("annee_universitaire") || DEFAULT_CURRENT_YEAR;
   const geoId = searchParams.get("geo_id") || "";
-  const params = [...searchParams]
-    .map(([key, value]) => `${key}=${value}`)
-    .join("&");
+  const params = [...searchParams].map(([key, value]) => `${key}=${value}`).join("&");
   const navigate = useNavigate();
 
   const { data, isLoading } = useQuery({
@@ -54,30 +51,16 @@ export function Genders() {
   const dataGender = [
     {
       name: "Masculin",
-      y:
-        dataByYear?.find(
-          (el: DataByYear) =>
-            el.annee_universitaire === data?.annee_universitaire
-        )?.effectif_masculin || 0,
+      y: dataByYear?.find((el: DataByYear) => el.annee_universitaire === data?.annee_universitaire)?.effectif_masculin || 0,
     },
     {
       name: "Féminin",
-      y:
-        dataByYear?.find(
-          (el: DataByYear) =>
-            el.annee_universitaire === data?.annee_universitaire
-        )?.effectif_feminin || 0,
+      y: dataByYear?.find((el: DataByYear) => el.annee_universitaire === data?.annee_universitaire)?.effectif_feminin || 0,
     },
   ];
 
-  const effectifF =
-    dataByYear?.find(
-      (el: DataByYear) => el.annee_universitaire === data?.annee_universitaire
-    )?.effectif_feminin || 0;
-  const effectifM =
-    dataByYear?.find(
-      (el: DataByYear) => el.annee_universitaire === data?.annee_universitaire
-    )?.effectif_masculin || 0;
+  const effectifF = dataByYear?.find((el: DataByYear) => el.annee_universitaire === data?.annee_universitaire)?.effectif_feminin || 0;
+  const effectifM = dataByYear?.find((el: DataByYear) => el.annee_universitaire === data?.annee_universitaire)?.effectif_masculin || 0;
   const pctF = effectifF / (effectifF + effectifM);
 
   function getLevel() {
@@ -121,11 +104,7 @@ export function Genders() {
   });
 
   const { data: dataGenders, isLoading: isLoadingDataGenders } = useQuery({
-    queryKey: [
-      "atlas/get-number-of-students-by-gender-and-sublevel",
-      geoId,
-      currentYear,
-    ],
+    queryKey: ["atlas/get-number-of-students-by-gender-and-sublevel", geoId, currentYear],
     queryFn: () => getNumberOfStudentsByGenderAndSublevel(geoId, currentYear),
   });
 
@@ -139,13 +118,7 @@ export function Genders() {
     })
     .sort((a: SimilarData, b: SimilarData) => a.distance - b.distance);
 
-  if (
-    isLoading ||
-    isLoadingByYear ||
-    isLoadingSimilar ||
-    isLoadingDataGenders ||
-    isLoadingPolygons
-  ) {
+  if (isLoading || isLoadingByYear || isLoadingSimilar || isLoadingDataGenders || isLoadingPolygons) {
     return <div>Loading...</div>;
   }
 
@@ -190,42 +163,20 @@ export function Genders() {
           <Row gutters>
             <Col>
               <StudentsCardWithTrend
-                descriptionNode={
-                  <Badge color="yellow-tournesol">{currentYear}</Badge>
-                }
+                descriptionNode={<Badge color="yellow-tournesol">{currentYear}</Badge>}
                 number={effectifF}
-                label={`Etudiante${effectifF > 1 ? "s" : ""} inscrite${
-                  effectifF > 1 ? "s" : ""
-                }`}
-                trendGraph={
-                  <TrendCard
-                    color="#e18b76"
-                    data={dataByYear.map(
-                      (item: DataByYear) => item.effectif_feminin
-                    )}
-                  />
-                }
+                label={`Etudiante${effectifF > 1 ? "s" : ""} inscrite${effectifF > 1 ? "s" : ""}`}
+                trendGraph={<TrendCard color="#e18b76" data={dataByYear.map((item: DataByYear) => item.effectif_feminin)} />}
               />
             </Col>
           </Row>
           <Row gutters>
             <Col>
               <StudentsCardWithTrend
-                descriptionNode={
-                  <Badge color="yellow-tournesol">{currentYear}</Badge>
-                }
+                descriptionNode={<Badge color="yellow-tournesol">{currentYear}</Badge>}
                 number={effectifM}
-                label={`Etudiant${effectifM > 1 ? "s" : ""} inscrit${
-                  effectifM > 1 ? "s" : ""
-                }`}
-                trendGraph={
-                  <TrendCard
-                    color="#efcb3a"
-                    data={dataByYear.map(
-                      (item: DataByYear) => item.effectif_masculin
-                    )}
-                  />
-                }
+                label={`Etudiant${effectifM > 1 ? "s" : ""} inscrit${effectifM > 1 ? "s" : ""}`}
+                trendGraph={<TrendCard color="#efcb3a" data={dataByYear.map((item: DataByYear) => item.effectif_masculin)} />}
               />
             </Col>
           </Row>
@@ -240,101 +191,60 @@ export function Genders() {
           <GenderChart data={dataGender || []} isLoading={isLoading} />
         </Col>
       </Row>
-      {polygonsData?.length > 1 &&
-        geoId !== "PAYS_100" &&
-        geoId !== "D075" &&
-        geoId !== "R00" && (
-          <>
-            <Row className="fr-my-5w">
-              <Col>
-                <Title as="h3" look="h5">
-                  <span
-                    className="fr-icon-pie-chart-2-line fr-mr-1w"
-                    aria-hidden="true"
-                  />
-                  {`Répartition des effectifs étudiants par ${getSubLevelName()}`}
-                </Title>
-              </Col>
-            </Row>
-            <Row gutters>
-              <Col md={7}>
-                <MapPieGender
-                  currentYear={currentYear}
-                  isLoading={isLoadingDataGenders}
-                  mapPieData={dataGenders}
-                  polygonsData={polygonsData}
-                />
-              </Col>
-              <Col md={5}>
-                <SubListGenders />
-              </Col>
-            </Row>
-          </>
-        )}
+      {polygonsData?.length > 1 && geoId !== "PAYS_100" && geoId !== "D075" && geoId !== "R00" && (
+        <>
+          <Row className="fr-my-5w">
+            <Col>
+              <Title as="h3" look="h5">
+                <span className="fr-icon-pie-chart-2-line fr-mr-1w" aria-hidden="true" />
+                {`Répartition des effectifs étudiants par ${getSubLevelName()}`}
+              </Title>
+            </Col>
+          </Row>
+          <Row gutters>
+            <Col md={7}>
+              <MapPieGender currentYear={currentYear} isLoading={isLoadingDataGenders} mapPieData={dataGenders} polygonsData={polygonsData} />
+            </Col>
+            <Col md={5}>
+              <SubListGenders />
+            </Col>
+          </Row>
+        </>
+      )}
       <Row className="fr-mt-5w">
         <Col>
           <Title as="h3" look="h5">
-            <span
-              className="fr-icon-bar-chart-box-line fr-mr-1w"
-              aria-hidden="true"
-            />
-            Données historiques depuis l'année universitaire{" "}
-            <Badge color="yellow-tournesol">2001-02</Badge>
+            <span className="fr-icon-bar-chart-box-line fr-mr-1w" aria-hidden="true" />
+            Données historiques depuis l'année universitaire <Badge color="yellow-tournesol">2001-02</Badge>
           </Title>
           <div className="text-right">
             <Button onClick={() => toggleView()} size="sm" variant="text">
-              #
-              {chartView === "basic" ? (
-                <span className="fr-icon-arrow-right-s-fill" />
-              ) : (
-                <span className="fr-icon-arrow-left-s-fill" />
-              )}
-              %
+              #{chartView === "basic" ? <span className="fr-icon-arrow-right-s-fill" /> : <span className="fr-icon-arrow-left-s-fill" />}%
             </Button>
             <Button onClick={() => toggleType()} size="sm" variant="text">
               <span className="fr-icon-bar-chart-box-line" />
-              {chartType === "column" ? (
-                <span className="fr-icon-arrow-right-s-fill" />
-              ) : (
-                <span className="fr-icon-arrow-left-s-fill" />
-              )}
+              {chartType === "column" ? <span className="fr-icon-arrow-right-s-fill" /> : <span className="fr-icon-arrow-left-s-fill" />}
 
               <span className="fr-icon-line-chart-line" />
             </Button>
           </div>
-          <GenderHistoChart
-            data={dataByYear}
-            isLoading={isLoadingByYear}
-            type={chartType}
-            view={chartView}
-          />
+          <GenderHistoChart data={dataByYear} isLoading={isLoadingByYear} type={chartType} view={chartView} />
         </Col>
       </Row>
-      {dataSimilarSorted?.filter((el: SimilarData) => el.geo_id !== geoId)
-        .length > 0 && (
+      {dataSimilarSorted?.filter((el: SimilarData) => el.geo_id !== geoId).length > 0 && (
         <Row className="fr-mt-5w">
           <Col>
             <Title as="h2" look="h5">
-              <span
-                className="fr-icon-list-unordered fr-mr-1w"
-                aria-hidden="true"
-              />
-              Liste des territoires similaires sur la répartition par genre pour
-              l'année universitaire{" "}
-              <Badge color="yellow-tournesol">{currentYear}</Badge>
+              <span className="fr-icon-list-unordered fr-mr-1w" aria-hidden="true" />
+              Liste des territoires similaires sur la répartition par genre pour l'année universitaire <Badge color="yellow-tournesol">{currentYear}</Badge>
             </Title>
             <Text>
-              Les territoires similaires sont ceux qui ont une répartition par
-              genre du nombre d'étudiants inscrits proche du territoire
-              sélectionné. La tolérance maximum est de <strong>5&nbsp;%</strong>
+              Les territoires similaires sont ceux qui ont une répartition par genre du nombre d'étudiants inscrits proche du territoire sélectionné. La tolérance maximum est de <strong>5&nbsp;%</strong>
               . Seuls les 5 premiers résutats sont affichés.
               <br />
-              L'année universitaire sélectionnée est{" "}
-              <Badge color="yellow-tournesol">{currentYear}</Badge>.
+              L'année universitaire sélectionnée est <Badge color="yellow-tournesol">{currentYear}</Badge>.
               <br />
-              Seuls les territoires ayant le même niveau géographique que le
-              territoire sélectionné sont pris en compte (
-              <Badge color="blue-ecume">{getLevel()}</Badge>).
+              Seuls les territoires ayant le même niveau géographique que le territoire sélectionné sont pris en compte (<Badge color="blue-ecume">{getLevel()}</Badge>).
               <br />
               <br />
               <ul>
@@ -343,20 +253,8 @@ export function Genders() {
                   .slice(0, 6)
                   .map((el: SimilarData) => (
                     <li key={el.geo_id}>
-                      {el.geo_nom} (Féminin:{" "}
-                      <strong>{el.pctF.toFixed(1)}&nbsp;%</strong> - Masculin:{" "}
-                      <strong>{el.pctM.toFixed(1)}&nbsp;%</strong>)
-                      <Button
-                        size="sm"
-                        variant="text"
-                        className="fr-ml-1w"
-                        color="pink-tuile"
-                        onClick={() =>
-                          navigate(
-                            `/atlas/general?geo_id=${el.geo_id}&annee_universitaire=${currentYear}`
-                          )
-                        }
-                      >
+                      {el.geo_nom} (Féminin: <strong>{el.pctF.toFixed(1)}&nbsp;%</strong> - Masculin: <strong>{el.pctM.toFixed(1)}&nbsp;%</strong>)
+                      <Button size="sm" variant="text" className="fr-ml-1w" color="pink-tuile" onClick={() => navigate(`/atlas/general?geo_id=${el.geo_id}&annee_universitaire=${currentYear}`)}>
                         Voir
                       </Button>
                     </li>

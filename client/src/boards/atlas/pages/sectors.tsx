@@ -27,17 +27,14 @@ import StudentsCardWithTrend from "../../../components/cards/students-card-with-
 import SubListSectors from "../components/sub-list-sectors.tsx";
 import { useAtlas } from "../useAtlas.tsx";
 
-export function Sectors() {
+export default function Sectors() {
   const [chartView, setChartView] = useState<"basic" | "percentage">("basic");
   const [chartType, setChartType] = useState<"column" | "line">("column");
   const [searchParams] = useSearchParams();
   const { DEFAULT_CURRENT_YEAR } = useAtlas();
-  const currentYear =
-    searchParams.get("annee_universitaire") || DEFAULT_CURRENT_YEAR;
+  const currentYear = searchParams.get("annee_universitaire") || DEFAULT_CURRENT_YEAR;
   const geoId = searchParams.get("geo_id") || "";
-  const params = [...searchParams]
-    .map(([key, value]) => `${key}=${value}`)
-    .join("&");
+  const params = [...searchParams].map(([key, value]) => `${key}=${value}`).join("&");
   const navigate = useNavigate();
 
   const { data, isLoading } = useQuery({
@@ -50,14 +47,8 @@ export function Sectors() {
     queryFn: () => getNumberOfStudentsByYear(params),
   });
 
-  const effectifPU =
-    dataByYear?.find(
-      (el: DataByYear) => el.annee_universitaire === data?.annee_universitaire
-    )?.effectif_pu || 0;
-  const effectifPR =
-    dataByYear?.find(
-      (el: DataByYear) => el.annee_universitaire === data?.annee_universitaire
-    )?.effectif_pr || 0;
+  const effectifPU = dataByYear?.find((el: DataByYear) => el.annee_universitaire === data?.annee_universitaire)?.effectif_pu || 0;
+  const effectifPR = dataByYear?.find((el: DataByYear) => el.annee_universitaire === data?.annee_universitaire)?.effectif_pr || 0;
   const pctPU = effectifPU / (effectifPU + effectifPR);
 
   function getLevel() {
@@ -95,16 +86,10 @@ export function Sectors() {
     queryFn: () => getSimilarElements(similarParams),
   });
 
-  const { data: dataSectorsMap, isLoading: isLoadingDataSectorsMap } = useQuery(
-    {
-      queryKey: [
-        "atlas/get-number-of-students-by-sector-and-sublevel",
-        geoId,
-        currentYear,
-      ],
-      queryFn: () => getNumberOfStudentsBySectorAndSublevel(geoId, currentYear),
-    }
-  );
+  const { data: dataSectorsMap, isLoading: isLoadingDataSectorsMap } = useQuery({
+    queryKey: ["atlas/get-number-of-students-by-sector-and-sublevel", geoId, currentYear],
+    queryFn: () => getNumberOfStudentsBySectorAndSublevel(geoId, currentYear),
+  });
 
   const { data: polygonsData, isLoading: isLoadingPolygons } = useQuery({
     queryKey: ["atlas/get-geo-polygons", geoId],
@@ -126,13 +111,7 @@ export function Sectors() {
     { name: "Secteur privé", y: effectifPR },
   ];
 
-  if (
-    isLoading ||
-    isLoadingByYear ||
-    isLoadingSimilar ||
-    isLoadingDataSectorsMap ||
-    isLoadingPolygons
-  ) {
+  if (isLoading || isLoadingByYear || isLoadingSimilar || isLoadingDataSectorsMap || isLoadingPolygons) {
     return <div>Loading...</div>;
   }
 
@@ -177,42 +156,20 @@ export function Sectors() {
           <Row gutters>
             <Col>
               <StudentsCardWithTrend
-                descriptionNode={
-                  <Badge color="yellow-tournesol">{currentYear}</Badge>
-                }
+                descriptionNode={<Badge color="yellow-tournesol">{currentYear}</Badge>}
                 number={effectifPU}
-                label={`Etudiant${effectifPU > 1 ? "s" : ""} inscrit${
-                  effectifPU > 1 ? "s" : ""
-                } dans le secteur public`}
-                trendGraph={
-                  <TrendCard
-                    color="#748CC0"
-                    data={dataByYear?.map(
-                      (item: DataByYear) => item.effectif_pu
-                    )}
-                  />
-                }
+                label={`Etudiant${effectifPU > 1 ? "s" : ""} inscrit${effectifPU > 1 ? "s" : ""} dans le secteur public`}
+                trendGraph={<TrendCard color="#748CC0" data={dataByYear?.map((item: DataByYear) => item.effectif_pu)} />}
               />
             </Col>
           </Row>
           <Row gutters>
             <Col>
               <StudentsCardWithTrend
-                descriptionNode={
-                  <Badge color="yellow-tournesol">{currentYear}</Badge>
-                }
+                descriptionNode={<Badge color="yellow-tournesol">{currentYear}</Badge>}
                 number={effectifPR}
-                label={`Etudiant${effectifPR > 1 ? "s" : ""} inscrit${
-                  effectifPR > 1 ? "s" : ""
-                } dans le secteur privé`}
-                trendGraph={
-                  <TrendCard
-                    color="#755F4D"
-                    data={dataByYear.map(
-                      (item: DataByYear) => item.effectif_pr
-                    )}
-                  />
-                }
+                label={`Etudiant${effectifPR > 1 ? "s" : ""} inscrit${effectifPR > 1 ? "s" : ""} dans le secteur privé`}
+                trendGraph={<TrendCard color="#755F4D" data={dataByYear.map((item: DataByYear) => item.effectif_pr)} />}
               />
             </Col>
           </Row>
@@ -227,127 +184,70 @@ export function Sectors() {
           <SectortsChart data={dataSectors || []} isLoading={isLoading} />
         </Col>
       </Row>
-      {polygonsData.length > 1 &&
-        geoId !== "PAYS_100" &&
-        geoId !== "D075" &&
-        geoId !== "R00" && (
-          <>
-            <Row className="fr-my-5w">
-              <Col>
-                <Title as="h3" look="h5">
-                  <span
-                    className="fr-icon-pie-chart-2-line fr-mr-1w"
-                    aria-hidden="true"
-                  />
-                  {`Répartition des effectifs étudiants par ${getSubLevelName()}`}
-                </Title>
-              </Col>
-            </Row>
-            <Row gutters>
-              <Col md={7}>
-                <MapPieSectors
-                  currentYear={currentYear}
-                  isLoading={isLoadingDataSectorsMap}
-                  mapPieData={dataSectorsMap}
-                  polygonsData={polygonsData}
-                />
-              </Col>
-              <Col md={5}>
-                <SubListSectors />
-              </Col>
-            </Row>
-          </>
-        )}
+      {polygonsData.length > 1 && geoId !== "PAYS_100" && geoId !== "D075" && geoId !== "R00" && (
+        <>
+          <Row className="fr-my-5w">
+            <Col>
+              <Title as="h3" look="h5">
+                <span className="fr-icon-pie-chart-2-line fr-mr-1w" aria-hidden="true" />
+                {`Répartition des effectifs étudiants par ${getSubLevelName()}`}
+              </Title>
+            </Col>
+          </Row>
+          <Row gutters>
+            <Col md={7}>
+              <MapPieSectors currentYear={currentYear} isLoading={isLoadingDataSectorsMap} mapPieData={dataSectorsMap} polygonsData={polygonsData} />
+            </Col>
+            <Col md={5}>
+              <SubListSectors />
+            </Col>
+          </Row>
+        </>
+      )}
       <Row className="fr-mt-5w">
         <Col>
           <Title as="h3" look="h5">
-            <span
-              className="fr-icon-bar-chart-box-line fr-mr-1w"
-              aria-hidden="true"
-            />
-            Données historiques depuis l'année universitaire{" "}
-            <Badge color="yellow-tournesol">2001-02</Badge>
+            <span className="fr-icon-bar-chart-box-line fr-mr-1w" aria-hidden="true" />
+            Données historiques depuis l'année universitaire <Badge color="yellow-tournesol">2001-02</Badge>
           </Title>
           <div className="text-right">
             <Button onClick={() => toggleView()} size="sm" variant="text">
-              #
-              {chartView === "basic" ? (
-                <span className="fr-icon-arrow-right-s-fill" />
-              ) : (
-                <span className="fr-icon-arrow-left-s-fill" />
-              )}
-              %
+              #{chartView === "basic" ? <span className="fr-icon-arrow-right-s-fill" /> : <span className="fr-icon-arrow-left-s-fill" />}%
             </Button>
             <Button onClick={() => toggleType()} size="sm" variant="text">
               <span className="fr-icon-bar-chart-box-line" />
-              {chartType === "column" ? (
-                <span className="fr-icon-arrow-right-s-fill" />
-              ) : (
-                <span className="fr-icon-arrow-left-s-fill" />
-              )}
+              {chartType === "column" ? <span className="fr-icon-arrow-right-s-fill" /> : <span className="fr-icon-arrow-left-s-fill" />}
 
               <span className="fr-icon-line-chart-line" />
             </Button>
           </div>
-          <SectorHistoChart
-            data={dataByYear}
-            isLoading={isLoadingByYear}
-            type={chartType}
-            view={chartView}
-          />
+          <SectorHistoChart data={dataByYear} isLoading={isLoadingByYear} type={chartType} view={chartView} />
         </Col>
       </Row>
-      {dataSimilarSorted?.filter((el: SimilarData) => el.geo_id !== geoId)
-        .length > 0 && (
+      {dataSimilarSorted?.filter((el: SimilarData) => el.geo_id !== geoId).length > 0 && (
         <Row className="fr-mt-5w">
           <Col>
             <Title as="h2" look="h5">
-              <span
-                className="fr-icon-list-unordered fr-mr-1w"
-                aria-hidden="true"
-              />
-              Liste des territoires similaires sur la répartition des secteurs
-              pour l'année universitaire{" "}
-              <Badge color="yellow-tournesol">{currentYear}</Badge>
+              <span className="fr-icon-list-unordered fr-mr-1w" aria-hidden="true" />
+              Liste des territoires similaires sur la répartition des secteurs pour l'année universitaire <Badge color="yellow-tournesol">{currentYear}</Badge>
             </Title>
             <Text>
-              Les territoires similaires sont ceux qui ont une répartition du
-              nombre d'étudiants inscrits dans le secteur public et privé proche
-              du territoire sélectionné. La tolérance maximum est de{" "}
-              <strong>5&nbsp;%</strong>. Seuls les 5 premiers résutats sont
-              affichés.
+              Les territoires similaires sont ceux qui ont une répartition du nombre d'étudiants inscrits dans le secteur public et privé proche du territoire sélectionné. La tolérance maximum est de <strong>5&nbsp;%</strong>. Seuls les 5 premiers
+              résutats sont affichés.
               <br />
-              L'année universitaire sélectionnée est{" "}
-              <Badge color="yellow-tournesol">{currentYear}</Badge>.
+              L'année universitaire sélectionnée est <Badge color="yellow-tournesol">{currentYear}</Badge>.
               <br />
-              Seuls les territoires ayant le même niveau géographique que le
-              territoire sélectionné sont pris en compte (
-              <Badge color="blue-ecume">{getLevel()}</Badge>).
+              Seuls les territoires ayant le même niveau géographique que le territoire sélectionné sont pris en compte (<Badge color="blue-ecume">{getLevel()}</Badge>).
               <br />
               <br />
               <ul>
                 {dataSimilarSorted
-                  ?.filter(
-                    (el: SimilarData) =>
-                      el.geo_id !== searchParams.get("geo_id")
-                  )
+                  ?.filter((el: SimilarData) => el.geo_id !== searchParams.get("geo_id"))
                   .slice(0, 6)
                   .map((el: SimilarData) => (
                     <li key={el.geo_id}>
-                      {el.geo_nom} (Secteur public:{" "}
-                      <strong>{el.pctPU.toFixed(1)}&nbsp;%</strong> - Secteur
-                      privé: <strong>{el.pctPR.toFixed(1)}&nbsp;%</strong>)
-                      <Button
-                        size="sm"
-                        variant="text"
-                        className="fr-ml-1w"
-                        color="pink-tuile"
-                        onClick={() =>
-                          navigate(
-                            `/atlas/general?geo_id=${el.geo_id}&annee_universitaire=${currentYear}`
-                          )
-                        }
-                      >
+                      {el.geo_nom} (Secteur public: <strong>{el.pctPU.toFixed(1)}&nbsp;%</strong> - Secteur privé: <strong>{el.pctPR.toFixed(1)}&nbsp;%</strong>)
+                      <Button size="sm" variant="text" className="fr-ml-1w" color="pink-tuile" onClick={() => navigate(`/atlas/general?geo_id=${el.geo_id}&annee_universitaire=${currentYear}`)}>
                         Voir
                       </Button>
                     </li>

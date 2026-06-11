@@ -35,7 +35,7 @@ import "./styles.scss";
 import Callout from "../components/callout.tsx";
 import BoardsSuggestComponent from "../../../components/boards-suggest-component/index.tsx";
 
-export function General() {
+export default function General() {
   const [searchParams] = useSearchParams();
   const params = [...searchParams].map(([key, value]) => `${key}=${value}`).join("&");
   const geoId = searchParams.get("geo_id") || "";
@@ -168,7 +168,7 @@ export function General() {
     if (geoId === "PAYS_100") {
       return (
         <div className="atlas-map">
-          <Row className="fr-mt-5w">
+          <Row className="fr-my-5w">
             <Col>
               <Title as="h3" look="h5">
                 <span className="fr-icon-pie-chart-2-fill fr-mr-1w" aria-hidden="true" />
@@ -178,118 +178,59 @@ export function General() {
           </Row>
           <div className="container">
             <div className="Map1">
-              <MapWithPolygonAndBubbles
-                currentYear={currentYear}
-                isLoading={isLoadingHistoric}
-                mapbubbleData={mapbubbleData}
-                polygonsData={polygonsData}
-              />
+              <MapWithPolygonAndBubbles currentYear={currentYear} isLoading={isLoadingHistoric} mapbubbleData={mapbubbleData} polygonsData={polygonsData} />
             </div>
             <div className="col1">
               <div className="item ">
-                <MapWithPolygonAndBubbles
-                  currentYear={currentYear}
-                  idToFocus="D988"
-                  isLoading={isLoadingHistoric}
-                  mapbubbleData={mapbubbleData}
-                  polygonsData={polygonsData}
-                />
+                <MapWithPolygonAndBubbles currentYear={currentYear} idToFocus="D988" isLoading={isLoadingHistoric} mapbubbleData={mapbubbleData} polygonsData={polygonsData} />
                 <div className="item-label">Nouvelle-Calédonie</div>
               </div>
             </div>
             <div className="col2">
               <div className="item ">
-                <MapWithPolygonAndBubbles
-                  currentYear={currentYear}
-                  idToFocus="D987"
-                  isLoading={isLoadingHistoric}
-                  mapbubbleData={mapbubbleData}
-                  polygonsData={polygonsData}
-                />
+                <MapWithPolygonAndBubbles currentYear={currentYear} idToFocus="D987" isLoading={isLoadingHistoric} mapbubbleData={mapbubbleData} polygonsData={polygonsData} />
                 <div className="item-label">Polynésie française</div>
               </div>
             </div>
             <div className="col3">
               <div className="item ">
-                <MapWithPolygonAndBubbles
-                  currentYear={currentYear}
-                  idToFocus="D978"
-                  isLoading={isLoadingHistoric}
-                  mapbubbleData={mapbubbleData}
-                  polygonsData={polygonsData}
-                />
+                <MapWithPolygonAndBubbles currentYear={currentYear} idToFocus="D978" isLoading={isLoadingHistoric} mapbubbleData={mapbubbleData} polygonsData={polygonsData} />
                 <div className="item-label">Saint-Martin</div>
               </div>
             </div>
             <div className="col4">
               <div className="item ">
-                <MapWithPolygonAndBubbles
-                  currentYear={currentYear}
-                  idToFocus="D986"
-                  isLoading={isLoadingHistoric}
-                  mapbubbleData={mapbubbleData}
-                  polygonsData={polygonsData}
-                />
+                <MapWithPolygonAndBubbles currentYear={currentYear} idToFocus="D986" isLoading={isLoadingHistoric} mapbubbleData={mapbubbleData} polygonsData={polygonsData} />
                 <div className="item-label">Wallis et Futuna</div>
               </div>
             </div>
             <div className="drom1">
               <div className="item">
-                <MapWithPolygonAndBubbles
-                  currentYear={currentYear}
-                  idToFocus="R01"
-                  isLoading={isLoadingHistoric}
-                  mapbubbleData={mapbubbleData}
-                  polygonsData={polygonsData}
-                />
+                <MapWithPolygonAndBubbles currentYear={currentYear} idToFocus="R01" isLoading={isLoadingHistoric} mapbubbleData={mapbubbleData} polygonsData={polygonsData} />
                 <div className="item-label">Guadeloupe</div>
               </div>
             </div>
             <div className="drom2">
               <div className="item">
-                <MapWithPolygonAndBubbles
-                  currentYear={currentYear}
-                  idToFocus="R02"
-                  isLoading={isLoadingHistoric}
-                  mapbubbleData={mapbubbleData}
-                  polygonsData={polygonsData}
-                />
+                <MapWithPolygonAndBubbles currentYear={currentYear} idToFocus="R02" isLoading={isLoadingHistoric} mapbubbleData={mapbubbleData} polygonsData={polygonsData} />
                 <div className="item-label">Martinique</div>
               </div>
             </div>
             <div className="drom3">
               <div className="item">
-                <MapWithPolygonAndBubbles
-                  currentYear={currentYear}
-                  idToFocus="R03"
-                  isLoading={isLoadingHistoric}
-                  mapbubbleData={mapbubbleData}
-                  polygonsData={polygonsData}
-                />
+                <MapWithPolygonAndBubbles currentYear={currentYear} idToFocus="R03" isLoading={isLoadingHistoric} mapbubbleData={mapbubbleData} polygonsData={polygonsData} />
                 <div className="item-label">Guyane</div>
               </div>
             </div>
             <div className="drom4">
               <div className="item">
-                <MapWithPolygonAndBubbles
-                  currentYear={currentYear}
-                  idToFocus="R04"
-                  isLoading={isLoadingHistoric}
-                  mapbubbleData={mapbubbleData}
-                  polygonsData={polygonsData}
-                />
+                <MapWithPolygonAndBubbles currentYear={currentYear} idToFocus="R04" isLoading={isLoadingHistoric} mapbubbleData={mapbubbleData} polygonsData={polygonsData} />
                 <div className="item-label">La Réunion</div>
               </div>
             </div>
             <div className="drom5">
               <div className="item">
-                <MapWithPolygonAndBubbles
-                  currentYear={currentYear}
-                  idToFocus="R06"
-                  isLoading={isLoadingHistoric}
-                  mapbubbleData={mapbubbleData}
-                  polygonsData={polygonsData}
-                />
+                <MapWithPolygonAndBubbles currentYear={currentYear} idToFocus="R06" isLoading={isLoadingHistoric} mapbubbleData={mapbubbleData} polygonsData={polygonsData} />
                 <div className="item-label">Mayotte</div>
               </div>
             </div>
@@ -347,49 +288,25 @@ export function General() {
                 <Row gutters>
                   <Col md={6}>
                     <div className="standard-item">
-                      <MapWithPolygonAndBubbles
-                        currentYear={currentYear}
-                        idToFocus="D988"
-                        isLoading={isLoadingHistoric}
-                        mapbubbleData={mapbubbleData}
-                        polygonsData={polygonsData}
-                      />
+                      <MapWithPolygonAndBubbles currentYear={currentYear} idToFocus="D988" isLoading={isLoadingHistoric} mapbubbleData={mapbubbleData} polygonsData={polygonsData} />
                       <div className="item-label">Nouvelle-Calédonie</div>
                     </div>
                   </Col>
                   <Col md={6}>
                     <div className="standard-item">
-                      <MapWithPolygonAndBubbles
-                        currentYear={currentYear}
-                        idToFocus="D987"
-                        isLoading={isLoadingHistoric}
-                        mapbubbleData={mapbubbleData}
-                        polygonsData={polygonsData}
-                      />
+                      <MapWithPolygonAndBubbles currentYear={currentYear} idToFocus="D987" isLoading={isLoadingHistoric} mapbubbleData={mapbubbleData} polygonsData={polygonsData} />
                       <div className="item-label">Polynésie française</div>
                     </div>
                   </Col>
                   <Col md={6}>
                     <div className="standard-item">
-                      <MapWithPolygonAndBubbles
-                        currentYear={currentYear}
-                        idToFocus="D978"
-                        isLoading={isLoadingHistoric}
-                        mapbubbleData={mapbubbleData}
-                        polygonsData={polygonsData}
-                      />
+                      <MapWithPolygonAndBubbles currentYear={currentYear} idToFocus="D978" isLoading={isLoadingHistoric} mapbubbleData={mapbubbleData} polygonsData={polygonsData} />
                       <div className="item-label">Saint-Martin</div>
                     </div>
                   </Col>
                   <Col md={6}>
                     <div className="standard-item">
-                      <MapWithPolygonAndBubbles
-                        currentYear={currentYear}
-                        idToFocus="D986"
-                        isLoading={isLoadingHistoric}
-                        mapbubbleData={mapbubbleData}
-                        polygonsData={polygonsData}
-                      />
+                      <MapWithPolygonAndBubbles currentYear={currentYear} idToFocus="D986" isLoading={isLoadingHistoric} mapbubbleData={mapbubbleData} polygonsData={polygonsData} />
                       <div className="item-label">Wallis et Futuna</div>
                     </div>
                   </Col>
@@ -416,12 +333,7 @@ export function General() {
             </Row>
             <Row gutters>
               <Col md={8}>
-                <MapWithPolygonAndBubbles
-                  currentYear={currentYear}
-                  isLoading={isLoadingHistoric}
-                  mapbubbleData={mapbubbleData}
-                  polygonsData={polygonsData}
-                />
+                <MapWithPolygonAndBubbles currentYear={currentYear} isLoading={isLoadingHistoric} mapbubbleData={mapbubbleData} polygonsData={polygonsData} />
                 {geoId === "D069" && (
                   <>
                     <Title as="h4" look="h6">
@@ -464,11 +376,9 @@ export function General() {
       {geoId === "PAYS_100" && (
         <div className="fr-mb-3w">
           <Callout>
-            L’Atlas comprend le niveau géographique « France » comme l’agrégat regroupant la France métropolitaine, les départements et régions
-            d’Outre-mer (DROM), et les autres collectivités d’outre-mer (COM) et la Nouvelle-Calédonie. Les effectifs d’étudiants inscrits dans une
-            implantation à l’étranger d’un établissement dont le siège est situé en France ne sont comptabilisés ni au niveau de la France ni aux
-            différents niveaux géographiques (unité urbaine ou commune rurale, département, académie, région) auxquelles appartient l’établissement
-            d’origine.
+            L’Atlas comprend le niveau géographique « France » comme l’agrégat regroupant la France métropolitaine, les départements et régions d’Outre-mer (DROM), et les autres collectivités d’outre-mer (COM) et la Nouvelle-Calédonie. Les effectifs
+            d’étudiants inscrits dans une implantation à l’étranger d’un établissement dont le siège est situé en France ne sont comptabilisés ni au niveau de la France ni aux différents niveaux géographiques (unité urbaine ou commune rurale,
+            département, académie, région) auxquelles appartient l’établissement d’origine.
           </Callout>
         </div>
       )}
@@ -478,7 +388,7 @@ export function General() {
             descriptionNode={<Badge color="yellow-tournesol">{currentYear}</Badge>}
             number={nbStudents}
             label={`Étudiant${nbStudents > 1 ? "s" : ""} inscrit${nbStudents > 1 ? "s" : ""}`}
-            trendGraph={<TrendCard color="#e18b76" data={dataByYear?.map((item) => item.effectif_total)} />}
+            trendGraph={<TrendCard color="#000091" data={dataByYear?.map((item) => item.effectif_total)} />}
           />
         </Col>
         <Col md={6}>
@@ -490,9 +400,7 @@ export function General() {
           />
         </Col>
       </Row>
-
       <MapSelector />
-
       <Row className="fr-mt-5w">
         <Col md={6}>
           <Title as="h3" look="h5">
@@ -517,8 +425,8 @@ export function General() {
                 <strong>{effectifPR.toLocaleString()}</strong> étudiants sont inscrits dans le secteur privé
               </>
             )}
-            , soit une répartition de <strong>{pctPU.toFixed(1)}&nbsp;%</strong> dans le secteur public et <strong>{pctPR.toFixed(1)}&nbsp;%</strong>{" "}
-            dans le secteur privé pour l'année universitaire <Badge color="yellow-tournesol">{currentYear}</Badge>.
+            , soit une répartition de <strong>{pctPU.toFixed(1)}&nbsp;%</strong> dans le secteur public et <strong>{pctPR.toFixed(1)}&nbsp;%</strong> dans le secteur privé pour l'année universitaire{" "}
+            <Badge color="yellow-tournesol">{currentYear}</Badge>.
           </Text>
           <Link href={`/atlas/effectifs-par-secteur?${params}`}>Voir le détail des effectifs par secteur</Link>
         </Col>
@@ -556,8 +464,8 @@ export function General() {
                 <strong>{effectifF.toLocaleString()}</strong> étudiants sont de genre féminin
               </>
             )}
-            , soit une répartition de <strong>{pctM.toFixed(1)}&nbsp;%</strong> dans le genre masculin et <strong>{pctF.toFixed(1)}&nbsp;%</strong>{" "}
-            dans le genre féminin pour l'année universitaire <Badge color="yellow-tournesol">{currentYear}</Badge>.
+            , soit une répartition de <strong>{pctM.toFixed(1)}&nbsp;%</strong> dans le genre masculin et <strong>{pctF.toFixed(1)}&nbsp;%</strong> dans le genre féminin pour l'année universitaire <Badge color="yellow-tournesol">{currentYear}</Badge>
+            .
           </Text>
           <Link href={`/atlas/effectifs-par-genre?${params}`}>Voir le détail des effectifs par genre</Link>
         </Col>

@@ -8,9 +8,7 @@ import { DEFAULT_CURRENT_YEAR } from "../../constants.tsx";
 
 export default function FilieresList() {
   const [searchParams] = useSearchParams();
-  const params = [...searchParams]
-    .map(([key, value]) => `${key}=${value}`)
-    .join("&");
+  const params = [...searchParams].map(([key, value]) => `${key}=${value}`).join("&");
   const currentYear = searchParams.get("annee_universitaire") || DEFAULT_CURRENT_YEAR;
 
   const { data, isLoading } = useQuery({
@@ -22,9 +20,7 @@ export default function FilieresList() {
     return <ListSkeleton />;
   }
 
-  const maxValue: number = Math.max(
-    ...data.filieres.map((el) => (el.effectif_PU || 0) + (el.effectif_PR || 0))
-  );
+  const maxValue: number = Math.max(...data.filieres.map((el) => (el.effectif_PU || 0) + (el.effectif_PR || 0)));
 
   return (
     <Container fluid className="fr-my-1w">
@@ -38,24 +34,17 @@ export default function FilieresList() {
 
       <Row gutters>
         <Col>
-          <ol>
+          <ul>
             {data?.filieres.map((filiere) => {
-              if (
-                (filiere.effectif_PR || 0) + (filiere.effectif_PU || 0) !==
-                0
-              ) {
-                const size =
-                  (((filiere.effectif_PR || 0) + (filiere.effectif_PU || 0)) *
-                    100) /
-                  maxValue;
+              if ((filiere.effectif_PR || 0) + (filiere.effectif_PU || 0) !== 0) {
+                const size = (((filiere.effectif_PR || 0) + (filiere.effectif_PU || 0)) * 100) / maxValue;
 
                 return (
                   <li style={{ listStyle: "none" }} key={filiere.id}>
                     <Title as="h3" look="h6" className="fr-mb-0">
-                      <Link
-                        to={`/atlas/effectifs-par-filiere/${filiere.id}?${params}`}
-                      >
-                        {filiere.label}
+                      {filiere.label}
+                      <Link to={`/atlas/effectifs-par-filiere/${filiere.id}?${params}`} className="fr-link fr-ml-1w">
+                        Détails
                       </Link>
                     </Title>
                     <Text as="p" className="fr-mb-1w">
@@ -63,19 +52,14 @@ export default function FilieresList() {
                       <Badge color="yellow-tournesol" size="sm">
                         {currentYear}
                       </Badge>{" "}
-                      :{" "}
-                      {(
-                        (filiere.effectif_PR || 0) + (filiere.effectif_PU || 0)
-                      ).toLocaleString("fr-FR")}
+                      : <strong>{((filiere.effectif_PR || 0) + (filiere.effectif_PU || 0)).toLocaleString("fr-FR")}</strong>
                     </Text>
                     <div
                       className="fr-mb-1w"
                       style={{
                         width: `${size}%`,
-                        height: "8px",
-                        backgroundColor: "#D98281",
-                        borderTopRightRadius: "3px",
-                        borderBottomRightRadius: "3px",
+                        height: "7px",
+                        backgroundColor: "#000091",
                       }}
                     />
                   </li>
@@ -83,7 +67,7 @@ export default function FilieresList() {
               }
               return null;
             })}
-          </ol>
+          </ul>
         </Col>
       </Row>
     </Container>

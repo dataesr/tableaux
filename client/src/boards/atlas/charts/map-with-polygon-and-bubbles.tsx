@@ -1,7 +1,7 @@
 import { useSearchParams } from "react-router-dom";
 import Highcharts from "highcharts/es-modules/masters/highcharts.src.js";
 import HighchartsReact from "highcharts-react-official";
-import "highcharts/modules/map";
+import "highcharts/es-modules/masters/modules/map.src.js";
 
 import { MapBubbleDataProps, PolygonsDataProps } from "../../../types/atlas";
 import MapSkeleton from "./skeletons/map";
@@ -65,7 +65,7 @@ export default function MapWithPolygonAndBubbles({
       {
         type: "mapbubble",
         name: `Effectifs étudiants ${currentYear}`,
-        color: "#D5706F",
+        color: "#000091",
         data: mapbubbleData,
         cursor: "pointer",
         showInLegend: false,

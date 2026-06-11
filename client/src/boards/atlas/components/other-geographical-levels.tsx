@@ -5,13 +5,11 @@ import References from "./references";
 import { getReferences } from "../../../api";
 import { Breadcrumb, Link, Title } from "@dataesr/dsfr-plus";
 
-export function OtherGeographicalLevels() {
+export default function OtherGeographicalLevels() {
   const [searchParams] = useSearchParams();
   const { pathname } = useLocation();
 
-  const params = [...searchParams]
-    .map(([key, value]) => `${key}=${value}`)
-    .join("&");
+  const params = [...searchParams].map(([key, value]) => `${key}=${value}`).join("&");
 
   const { data: dataReferences, isLoading: isLoadingReferences } = useQuery({
     queryKey: ["atlas/get-references", params],
@@ -27,10 +25,7 @@ export function OtherGeographicalLevels() {
       </Breadcrumb>
       <section>
         <Title as="h2">Autres niveaux géographiques disponibles</Title>
-        <References
-          data={dataReferences?.data || []}
-          isLoading={isLoadingReferences}
-        />
+        <References data={dataReferences?.data || []} isLoading={isLoadingReferences} />
       </section>
     </>
   );

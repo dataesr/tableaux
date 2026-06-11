@@ -3,19 +3,6 @@
   --bg-dark: #242424;
 }
 
-.atlas-header {
-  .button {
-    &:first-child {
-      border-bottom-left-radius: 8px;
-      border-right: 1px solid #e0e0e0;
-    }
-
-    &:last-child {
-      border-bottom-right-radius: 8px;
-    }
-  }
-}
-
 .source, .callout {
   padding: 1rem;
   border-radius: 8px;

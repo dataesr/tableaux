@@ -63,13 +63,7 @@ export default function YearsModalButton() {
 
   return (
     <>
-      <Button
-        className="button"
-        color="pink-tuile"
-        icon="calendar-2-line"
-        onClick={() => setIsOpen(true)}
-        size="sm"
-      >
+      <Button icon="calendar-2-line" onClick={() => setIsOpen(true)} size="sm">
         Année universitaire&nbsp;<strong>{currentYear}</strong>
       </Button>
       <Modal isOpen={isOpen} hide={() => setIsOpen(false)} size="lg">

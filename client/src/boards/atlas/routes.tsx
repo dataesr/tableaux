@@ -1,21 +1,23 @@
+import { lazy, Suspense } from "react";
 import { Route, Routes } from "react-router-dom";
 
-import NotFoundPage from "../../components/not-found-page.tsx";
 import { Layout } from "./components/layout/layout.tsx";
-import { OtherGeographicalLevels } from "./components/other-geographical-levels.tsx";
 import { AtlasProvider } from "./context.tsx";
 import AtlasHeader from "./index.tsx";
-import { FieldsRouter } from "./pages/fields/index.tsx";
-import { Genders } from "./pages/genders.tsx";
-import { General } from "./pages/general.tsx";
-import { Sectors } from "./pages/sectors.tsx";
-import Accessibility from "./pages/static-pages/accessibility.tsx";
-import Contact from "./pages/static-pages/contact.tsx";
-import CookieManagement from "./pages/static-pages/cookie-management.tsx";
-import LegalMentions from "./pages/static-pages/legal-mentions.tsx";
-import Methodology from "./pages/static-pages/methodology.tsx";
-import SiteMap from "./pages/static-pages/site-map.tsx";
 
+const FieldsRouter = lazy(() => import("./pages/fields/index.tsx"));
+const Genders = lazy(() => import("./pages/genders.tsx"));
+const General = lazy(() => import("./pages/general.tsx"));
+const OtherGeographicalLevels = lazy(() => import("./components/other-geographical-levels.tsx"));
+const Sectors = lazy(() => import("./pages/sectors.tsx"));
+
+const Accessibility = lazy(() => import("./pages/static-pages/accessibility.tsx"));
+const Contact = lazy(() => import("./pages/static-pages/contact.tsx"));
+const CookieManagement = lazy(() => import("./pages/static-pages/cookie-management.tsx"));
+const LegalMentions = lazy(() => import("./pages/static-pages/legal-mentions.tsx"));
+const Methodology = lazy(() => import("./pages/static-pages/methodology.tsx"));
+const NotFoundPage = lazy(() => import("../../components/not-found-page.tsx"));
+const SiteMap = lazy(() => import("./pages/static-pages/site-map.tsx"));
 
 export default function AtlasRoutes() {
   return (
@@ -23,26 +25,104 @@ export default function AtlasRoutes() {
       <Routes>
         <Route element={<Layout />}>
           <Route path="/" element={<AtlasHeader />}>
-            <Route path="general" element={<General />} />
+            <Route
+              path="general"
+              element={
+                <Suspense>
+                  <General />
+                </Suspense>
+              }
+            />
             <Route
               path="effectifs-par-filiere/:idFiliere?"
-              element={<FieldsRouter />}
+              element={
+                <Suspense>
+                  <FieldsRouter />
+                </Suspense>
+              }
             />
-            <Route path="effectifs-par-secteur" element={<Sectors />} />
-            <Route path="effectifs-par-genre" element={<Genders />} />
+            <Route
+              path="effectifs-par-secteur"
+              element={
+                <Suspense>
+                  <Sectors />
+                </Suspense>
+              }
+            />
+            <Route
+              path="effectifs-par-genre"
+              element={
+                <Suspense>
+                  <Genders />
+                </Suspense>
+              }
+            />
             <Route
               path="autres-niveaux-geographiques"
-              element={<OtherGeographicalLevels />}
+              element={
+                <Suspense>
+                  <OtherGeographicalLevels />
+                </Suspense>
+              }
             />
           </Route>
-          <Route path="plan-du-site" element={<SiteMap />} />
-          <Route path="methodologie" element={<Methodology />} />
-          <Route path="accessibilite" element={<Accessibility />} />
-          <Route path="mentions-legales" element={<LegalMentions />} />
-          <Route path="gestion-des-cookies" element={<CookieManagement />} />
-          <Route path="contact" element={<Contact />} />
+          <Route
+            path="plan-du-site"
+            element={
+              <Suspense>
+                <SiteMap />
+              </Suspense>
+            }
+          />
+          <Route
+            path="methodologie"
+            element={
+              <Suspense>
+                <Methodology />
+              </Suspense>
+            }
+          />
+          <Route
+            path="accessibilite"
+            element={
+              <Suspense>
+                <Accessibility />
+              </Suspense>
+            }
+          />
+          <Route
+            path="mentions-legales"
+            element={
+              <Suspense>
+                <LegalMentions />
+              </Suspense>
+            }
+          />
+          <Route
+            path="gestion-des-cookies"
+            element={
+              <Suspense>
+                <CookieManagement />
+              </Suspense>
+            }
+          />
+          <Route
+            path="contact"
+            element={
+              <Suspense>
+                <Contact />
+              </Suspense>
+            }
+          />
         </Route>
-        <Route path="*" element={<NotFoundPage />} />
+        <Route
+          path="*"
+          element={
+            <Suspense>
+              <NotFoundPage />
+            </Suspense>
+          }
+        />
       </Routes>
     </AtlasProvider>
   );

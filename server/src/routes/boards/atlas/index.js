@@ -52,7 +52,7 @@ const getCurrentCollectionName = async (idCollection) => {
     return currentCollection;
   }
   if (idCollection === "atlas") {
-    return "atlas2024";
+    return "atlas_2025";
   }
   if (idCollection === "similar-elements") {
     return "similar-elements-2022-23";

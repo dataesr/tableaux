@@ -1,22 +1,11 @@
 import { useEffect } from "react";
-import { useSearchParams, useNavigate } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import {
-  Button,
-  Breadcrumb,
-  Container,
-  Row,
-  Col,
-  Link,
-} from "@dataesr/dsfr-plus";
+import { Breadcrumb, Container, Row, Col, Link } from "@dataesr/dsfr-plus";
 
 import { useTitle } from "../../hooks/usePageTitle.tsx";
-import { getFiltersValues, getParentsFromGeoId } from "../../api/atlas.ts";
-import {
-  getGeoLabel,
-  getParentFromLevel,
-  setfavoriteIdsInCookie,
-} from "../../utils.tsx";
+import { getFiltersValues } from "../../api/atlas.ts";
+import { getGeoLabel, setfavoriteIdsInCookie } from "../../utils.tsx";
 import { Search } from "./pages/search/index.tsx";
 import YearsModalButton from "./components/header/years-modal-button.tsx";
 import { AtlasSideMenu } from "./components/side-menu-layout/index.tsx";
@@ -25,15 +14,11 @@ import { getLevelFromGeoId } from "./utils/index.tsx";
 
 import "./styles.scss";
 
-import { DEFAULT_CURRENT_YEAR } from "../../constants.tsx";
-
 export default function AtlasHeader() {
   const [searchParams] = useSearchParams();
   const geoId = searchParams.get("geo_id") || "";
   const isdatasupr = searchParams.get("datasupr") === "true";
-  const currentYear =
-    searchParams.get("annee_universitaire") || DEFAULT_CURRENT_YEAR;
-  const navigate = useNavigate();
+
 
   useTitle("dataSupR - Atlas des effectifs étudiant-e-s");
 
@@ -48,15 +33,8 @@ export default function AtlasHeader() {
     queryFn: () => getFiltersValues(geoId),
   });
 
-  const { data: dataParents, isLoading: isLoadingParents } = useQuery({
-    queryKey: ["atlas/get-parents-from-geoId", geoId],
-    queryFn: () => getParentsFromGeoId(geoId),
-  });
 
-  let parent;
-  if (!isLoadingParents) {
-    parent = getParentFromLevel(dataParents, geoId);
-  }
+
 
   if (isLoadingFiltersValues) {
     return (
@@ -79,66 +57,20 @@ export default function AtlasHeader() {
   );
 
   return (
-    <Container as="main" className="atlas-header">
+    <Container as="main">
       <Row>
-        <Col>
-          {geoId && (
-            <Button
-              className="button"
-              color="pink-tuile"
-              icon="home-4-line"
-              onClick={() =>
-                navigate(`/atlas${isdatasupr ? "?datasupr" : ""}`)
-              }
-              size="sm"
-            >
-              Revenir à la page de sélection des territoires
-            </Button>
-          )}
-          {geoId && !isLoadingParents && dataParents && parent && (
-            <Button
-              className="button"
-              color="pink-tuile"
-              icon="arrow-up-line"
-              onClick={() =>
-                navigate(
-                  `/atlas/general?geo_id=${
-                    parent.geo_id
-                  }&annee_universitaire=${currentYear}${
-                    isdatasupr ? "&datasupr" : ""
-                  }`
-                )
-              }
-              size="sm"
-            >
-              Revenir au territoire parent ({parent.geo_nom})
-            </Button>
-          )}
-        </Col>
-        <Col md={3} style={{ textAlign: "right" }}>
+        <Col style={{ textAlign: "right" }}>
           <YearsModalButton />
         </Col>
       </Row>
 
       <Breadcrumb>
-        {isdatasupr && (
-          <Link href={`/${isdatasupr ? "?datasupr" : ""}`}>Accueil</Link>
-        )}
-        <Link href={`/atlas${isdatasupr ? "?datasupr" : ""}`}>
-          {isdatasupr ? "Atlas des effectifs étudiant-e-s" : "Accueil"}
-        </Link>
+        {isdatasupr && <Link href={`/${isdatasupr ? "?datasupr" : ""}`}>Accueil</Link>}
+        <Link href={`/atlas${isdatasupr ? "?datasupr" : ""}`}>{isdatasupr ? "Atlas des effectifs étudiant-e-s" : "Accueil"}</Link>
         {geoId && <Link>{geoLabel}</Link>}
       </Breadcrumb>
 
-      {!geoId ? (
-        <Search />
-      ) : (
-        <AtlasSideMenu
-          geoLabel={geoLabel}
-          level={getLevelFromGeoId({ geoId })}
-          title={geoLabelFull}
-        />
-      )}
+      {!geoId ? <Search /> : <AtlasSideMenu geoLabel={geoLabel} level={getLevelFromGeoId({ geoId })} title={geoLabelFull} />}
     </Container>
   );
 }
