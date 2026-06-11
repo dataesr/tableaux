@@ -98,7 +98,7 @@ export default function Router() {
             </Suspense>
           }
         />
-        <Route path="/structures-finance/accueil" element={<Navigate to="/structures-finance/accueil" replace />} />
+        <Route path="/structures-finance" element={<Navigate to="/structures-finance/accueil" replace />} />
         <Route
           path="/structures-finance/*"
           element={
