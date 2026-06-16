@@ -400,8 +400,10 @@ export default function General() {
           />
         </Col>
       </Row>
+
       <MapSelector />
-      <Row className="fr-mt-5w">
+
+      <Row className="fr-mt-5w atlas-bloc">
         <Col md={6}>
           <Title as="h3" look="h5">
             Répartition des effectifs étudiants par secteur
@@ -440,7 +442,7 @@ export default function General() {
           />
         </Col>
       </Row>
-      <Row className="fr-mt-5w fr-mb-5w">
+      <Row className="fr-mt-5w fr-mb-5w  atlas-bloc">
         <Col md={6}>
           <Title as="h3" look="h5">
             Répartition des effectifs étudiants par genre
