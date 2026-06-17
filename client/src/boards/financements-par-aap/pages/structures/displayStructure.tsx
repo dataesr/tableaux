@@ -30,7 +30,7 @@ export default function DisplayStructure() {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const section = searchParams.get("section");
-  const structure = searchParams.get("structure");
+  const structure = searchParams.get("structureId");
   const yearMax = searchParams.get("yearMax") ?? String(years[years.length - 2]);
   const yearMin = searchParams.get("yearMin") ?? String(years[years.length - 2]);
   const [isOpen, setIsOpen] = useState(false);

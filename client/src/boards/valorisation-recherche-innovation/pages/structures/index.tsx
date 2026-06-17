@@ -12,7 +12,7 @@ import "./styles.scss";
 
 export default function Structures() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const structure = searchParams.get("structure");
+  const structure = searchParams.get("structureId");
   const [structures, setStructures] = useState([]);
 
   useEffect(() => {
@@ -23,7 +23,7 @@ export default function Structures() {
   }, [searchParams, setSearchParams]);
 
   const handleStructure = (structure) => {
-    searchParams.set("structure", structure);
+    searchParams.set("structureId", structure);
     setSearchParams(searchParams);
   };
 

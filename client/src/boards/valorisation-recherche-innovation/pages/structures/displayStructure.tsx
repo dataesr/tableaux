@@ -23,7 +23,7 @@ const { VITE_APP_ES_INDEX_ORGANIZATIONS, VITE_APP_SERVER_URL } = import.meta.env
 export default function DisplayStructure() {
   const [searchParams, setSearchParams] = useSearchParams();
   const section = searchParams.get("section") ?? "startups";
-  const structure = searchParams.get("structure");
+  const structure = searchParams.get("structureId");
   const yearMax = searchParams.get("yearMax") ?? String(years[years.length - 2]);
   const yearMin = searchParams.get("yearMin") ?? String(years[years.length - 2]);
   const [isOpen, setIsOpen] = useState(false);

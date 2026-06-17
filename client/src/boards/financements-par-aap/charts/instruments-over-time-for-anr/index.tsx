@@ -18,7 +18,7 @@ export default function InstrumentsOverTimeForAnr({ name }: { name: string | und
   const [selectedControl, setSelectedControl] = useState("projects")
   const [searchParams] = useSearchParams()
   const region = searchParams.get("region")
-  const structure = searchParams.get("structure")
+  const structure = searchParams.get("structureId")
   const color = useChartColor()
 
   const body = {

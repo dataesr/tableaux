@@ -14,7 +14,7 @@ export default function StructureSelector({ setStructures }) {
   const [county, setCounty] = useState("*");
   const [typology, setTypology] = useState("*");
   const [searchParams, setSearchParams] = useSearchParams({});
-  const structure = searchParams.get("structure") ?? "";
+  const structure = searchParams.get("structureId") ?? "";
 
   const bodyCounties: any = {
     ...getEsQueryStartups({}),
@@ -125,7 +125,7 @@ export default function StructureSelector({ setStructures }) {
 
   const handleStructureChange = (selectedStructure?: string) => {
     if (selectedStructure) {
-      searchParams.set("structure", selectedStructure);
+      searchParams.set("structureId", selectedStructure);
       setSearchParams(searchParams);
     }
   };

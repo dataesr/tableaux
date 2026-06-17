@@ -12,7 +12,7 @@ const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.en
 export default function Cards() {
   const [searchParams] = useSearchParams()
   const region = searchParams.get("region")
-  const structure = searchParams.get("structure")
+  const structure = searchParams.get("structureId")
   const yearMax = searchParams.get("yearMax")
   const yearMin = searchParams.get("yearMin")
 

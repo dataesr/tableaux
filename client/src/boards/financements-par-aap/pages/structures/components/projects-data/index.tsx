@@ -44,7 +44,7 @@ type Sort = {
 export default function ProjectsData() {
   const [searchParams] = useSearchParams()
   const region = searchParams.get("region")
-  const structure = searchParams.get("structure")
+  const structure = searchParams.get("structureId")
   const yearMax = searchParams.get("yearMax")
   const yearMin = searchParams.get("yearMin")
 

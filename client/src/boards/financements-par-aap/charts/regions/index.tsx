@@ -17,7 +17,7 @@ const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.en
 export default function Regions({ name }: { name: string | undefined }) {
   const [selectedControl, setSelectedControl] = useState("projects");
   const [searchParams] = useSearchParams()
-  const structure = searchParams.get("structure")
+  const structure = searchParams.get("structureId")
   const yearMax = searchParams.get("yearMax")
   const yearMin = searchParams.get("yearMin")
   const color = useChartColor()

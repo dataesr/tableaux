@@ -18,7 +18,7 @@ export default function InstrumentsForEurope({ name }: { name: string | undefine
   const [selectedControl, setSelectedControl] = useState("projects")
   const [searchParams] = useSearchParams()
   const region = searchParams.get("region")
-  const structure = searchParams.get("structure")
+  const structure = searchParams.get("structureId")
   const yearMax = searchParams.get("yearMax")
   const yearMin = searchParams.get("yearMin")
   const color = useChartColor()

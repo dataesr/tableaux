@@ -13,7 +13,7 @@ const { VITE_APP_ES_INDEX_ORGANIZATIONS, VITE_APP_ES_INDEX_PUBLICATIONS, VITE_AP
 
 export default function PublicationsByTopic({ name }: { name: string | undefined }) {
   const [searchParams] = useSearchParams();
-  const structure = searchParams.get("structure");
+  const structure = searchParams.get("structureId");
   const yearMax = searchParams.get("yearMax");
   const yearMin = searchParams.get("yearMin");
   const color = useChartColor();
