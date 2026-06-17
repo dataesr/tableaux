@@ -7,6 +7,7 @@ import Breadcrumb from "../../../components/breadcrumb";
 import DefaultSkeleton from "../../../../../components/charts-skeletons/default";
 import FranceMap from "./france-map";
 import Select from "../../../../../components/select";
+import { getParamKey } from "../utils";
 
 const VIEW_CONFIG: Record<ViewType, { title: string; searchLabel: string; searchPlaceholder: string; resultLabel: string }> = {
     structure: {
@@ -83,12 +84,18 @@ export default function EntitySelector({ viewType }: Props) {
     }, [items, searchQuery]);
 
     const handleSelect = (id: string) => {
-        setSearchParams({ id, section: "enseignants-chercheurs" });
+        const paramKey = getParamKey(viewType);
+
+        setSearchParams({
+            [paramKey]: id,
+            section: "enseignants-chercheurs",
+        });
+
         setSearchQuery("");
     };
 
-    const handleMapRegionClick = (_geoId: string, geoName: string) => {
-        navigate(`/personnel-enseignant/regions?id=${encodeURIComponent(geoName)}&section=enseignants-chercheurs`);
+    const handleMapRegionClick = (_geoId: string) => {
+        navigate(`/personnel-enseignant/regions?geo_id=${encodeURIComponent(_geoId)}&section=enseignants-chercheurs`);
     };
     return (
         <main>

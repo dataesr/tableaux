@@ -36,7 +36,7 @@ function HeroSection() {
   }, [etablissementOptions, searchValue]);
 
   const handleSelect = (id: string) => {
-    navigate(`/personnel-enseignant/etablissements?id=${encodeURIComponent(id)}&section=enseignants-chercheurs`);
+    navigate(`/personnel-enseignant/etablissements?structureId=${encodeURIComponent(id)}&section=enseignants-chercheurs`);
     setSearchValue("");
   };
 
@@ -133,8 +133,8 @@ function MapSection() {
   const years: string[] = yearsData?.years || [];
   const latestYear = years.length > 0 ? years[years.length - 1] : "";
 
-  const handleRegionClick = (_geoId: string, geoName: string) => {
-    navigate(`/personnel-enseignant/regions?id=${encodeURIComponent(geoName)}&section=enseignants-chercheurs`);
+  const handleRegionClick = (geo_id: string) => {
+    navigate(`/personnel-enseignant/regions?geo_id=${encodeURIComponent(geo_id)}&section=enseignants-chercheurs`);
   };
 
   if (!latestYear) return null;

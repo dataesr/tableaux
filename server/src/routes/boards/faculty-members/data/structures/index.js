@@ -97,13 +97,13 @@ router.get("/faculty-members/filters", async (req, res) => {
       },
       regions: {
         groupId: {
-          id: "$etablissement_region",
+          id: "$etablissement_code_region",
           label: "$etablissement_region",
         },
       },
       academies: {
         groupId: {
-          id: "$etablissement_academie",
+          id: "$etablissement_code_academie",
           label: "$etablissement_academie",
         },
       },

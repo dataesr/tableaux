@@ -2,6 +2,7 @@ import { useSearchParams } from "react-router-dom";
 import { ViewType } from "./api";
 import EntityView from "./components/entity-view";
 import EntitySelector from "./components/entity-selector";
+import { getParamKey } from "./utils";
 
 interface Props {
   viewType: ViewType;
@@ -9,7 +10,8 @@ interface Props {
 
 export default function DataView({ viewType }: Props) {
   const [searchParams] = useSearchParams();
-  const selectedId = searchParams.get("id");
+
+  const selectedId = searchParams.get(getParamKey(viewType)) || "";
 
   return selectedId ? (
     <EntityView viewType={viewType} />

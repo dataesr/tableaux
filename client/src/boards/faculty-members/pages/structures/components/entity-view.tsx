@@ -12,6 +12,7 @@ import DefaultSkeleton from "../../../../../components/charts-skeletons/default"
 import Breadcrumb from "../../../components/breadcrumb";
 import { IncompleteYearWarning } from "../../../components/incomplete-year";
 import EvolutionsSection from "../sections/analyses";
+import { getParamKey } from "../utils";
 
 const VIEW_LABELS: Record<ViewType, { plural: string; singular: string; basePath: string }> = {
     structure: { plural: "Établissements", singular: "établissement", basePath: "/personnel-enseignant/etablissements" },
@@ -28,7 +29,7 @@ export default function EntityView({ viewType }: Props) {
     const [searchParams, setSearchParams] = useSearchParams();
     const labels = VIEW_LABELS[viewType];
 
-    const selectedId = searchParams.get("id") || "";
+    const selectedId = searchParams.get("structureId") || "";
     const section = searchParams.get("section") || "enseignants-chercheurs";
 
     const { data: yearsData, isLoading: isLoadingYears } = useFacultyYears(viewType, selectedId);
@@ -46,9 +47,11 @@ export default function EntityView({ viewType }: Props) {
 
     const handleClearSelection = () => {
         const params = Object.fromEntries(searchParams);
-        delete params.id;
+
+        delete params[getParamKey(viewType)];
         delete params.section;
         delete params.year;
+
         setSearchParams(params);
     };
 
