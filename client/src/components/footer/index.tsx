@@ -73,11 +73,6 @@ export default function Footer({ href = "/", sitemapHref, title = "Accueil - Dat
             </li>
             <li className="fr-footer__bottom-item">
               <a className="fr-footer__bottom-link" href="#">
-                {getI18nLabel(i18n, "accessibility")}
-              </a>
-            </li>
-            <li className="fr-footer__bottom-item">
-              <a className="fr-footer__bottom-link" href="#">
                 {getI18nLabel(i18n, "legalNotice")}
               </a>
             </li>
