@@ -25,7 +25,7 @@ export default function PlanDuSitePage() {
                     <nav aria-label="Plan du site">
                         <ul className="fr-raw-list">
                             <li>
-                                <a title="Accueil" className="fr-link" href="/">Accueil dataSupR</a>
+                                <a title="Accueil" className="fr-link" href="/">Accueil Tableaux</a>
                             </li>
                             <li className="fr-mt-2w">
                                 <strong>Parcours des néo-bacheliers inscrits en L1 en 2019</strong>
