@@ -109,8 +109,8 @@ export default function OneField() {
   const effectifPR =
     dataByYear?.find((el: DataByYear) => el.annee_universitaire === currentYear)
       ?.effectif_pr || 0;
-  const pctPU = Math.round((effectifPU / (effectifPU + effectifPR)) * 100);
-  const pctPR = Math.round((effectifPR / (effectifPU + effectifPR)) * 100);
+  const pctPU = Math.round((effectifPU / (effectifPU + effectifPR)) * 1000) / 10;
+  const pctPR = Math.round((effectifPR / (effectifPU + effectifPR)) * 1000) / 10;
 
   const effectifM =
     dataByYear?.find((el: DataByYear) => el.annee_universitaire === currentYear)
@@ -118,8 +118,8 @@ export default function OneField() {
   const effectifF =
     dataByYear?.find((el: DataByYear) => el.annee_universitaire === currentYear)
       ?.effectif_feminin || 0;
-  const pctM = Math.round((effectifM / (effectifM + effectifF)) * 100);
-  const pctF = Math.round((effectifF / (effectifM + effectifF)) * 100);
+  const pctM = Math.round((effectifM / (effectifM + effectifF)) * 1000) / 10;
+  const pctF = Math.round((effectifF / (effectifM + effectifF)) * 1000) / 10;
 
   return (
     <>

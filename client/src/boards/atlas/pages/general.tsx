@@ -68,13 +68,13 @@ export default function General() {
 
   const effectifPU = dataByYear?.find((el: DataByYear) => el.annee_universitaire === currentYear)?.effectif_pu || 0;
   const effectifPR = dataByYear?.find((el: DataByYear) => el.annee_universitaire === currentYear)?.effectif_pr || 0;
-  const pctPU = Math.round((effectifPU / (effectifPU + effectifPR)) * 100);
-  const pctPR = Math.round((effectifPR / (effectifPU + effectifPR)) * 100);
+  const pctPU = Math.round((effectifPU / (effectifPU + effectifPR)) * 1000) / 10;
+  const pctPR = Math.round((effectifPR / (effectifPU + effectifPR)) * 1000) / 10;
 
   const effectifM = dataByYear?.find((el: DataByYear) => el.annee_universitaire === currentYear)?.effectif_masculin || 0;
   const effectifF = dataByYear?.find((el: DataByYear) => el.annee_universitaire === currentYear)?.effectif_feminin || 0;
-  const pctM = Math.round((effectifM / (effectifM + effectifF)) * 100);
-  const pctF = Math.round((effectifF / (effectifM + effectifF)) * 100);
+  const pctM = Math.round((effectifM / (effectifM + effectifF)) * 1000) / 10;
+  const pctF = Math.round((effectifF / (effectifM + effectifF)) * 1000) / 10;
 
   const getSubLevelName = () => {
     if (!geoId || geoId === "PAYS_100") {
@@ -325,7 +325,7 @@ export default function General() {
           <>
             <Row className="fr-my-5w">
               <Col>
-                <Title as="h3" look="h5">
+                <Title as="h2" look="h5">
                   <span className="fr-icon-pie-chart-2-fill fr-mr-1w" aria-hidden="true" />
                   {`Répartition des effectifs étudiants par ${getSubLevelName()}`}
                 </Title>
@@ -405,7 +405,7 @@ export default function General() {
 
       <Row className="fr-mt-5w atlas-bloc">
         <Col md={6}>
-          <Title as="h3" look="h5">
+          <Title as="h2" look="h5">
             Répartition des effectifs étudiants par secteur
           </Title>
           <Text>
@@ -427,8 +427,7 @@ export default function General() {
                 <strong>{effectifPR.toLocaleString()}</strong> étudiants sont inscrits dans le secteur privé
               </>
             )}
-            , soit une répartition de <strong>{pctPU.toFixed(1)}&nbsp;%</strong> dans le secteur public et <strong>{pctPR.toFixed(1)}&nbsp;%</strong> dans le secteur privé pour l'année universitaire{" "}
-            <Badge color="yellow-tournesol">{currentYear}</Badge>.
+            , soit une répartition de <strong>{pctPU}&nbsp;%</strong> dans le secteur public et <strong>{pctPR}&nbsp;%</strong> dans le secteur privé pour l'année universitaire <Badge color="yellow-tournesol">{currentYear}</Badge>.
           </Text>
           <Link href={`/atlas/effectifs-par-secteur?${params}`}>Voir le détail des effectifs par secteur</Link>
         </Col>
@@ -444,7 +443,7 @@ export default function General() {
       </Row>
       <Row className="fr-mt-5w fr-mb-5w  atlas-bloc">
         <Col md={6}>
-          <Title as="h3" look="h5">
+          <Title as="h2" look="h5">
             Répartition des effectifs étudiants par genre
           </Title>
           <Text>
@@ -466,8 +465,7 @@ export default function General() {
                 <strong>{effectifF.toLocaleString()}</strong> étudiants sont de genre féminin
               </>
             )}
-            , soit une répartition de <strong>{pctM.toFixed(1)}&nbsp;%</strong> dans le genre masculin et <strong>{pctF.toFixed(1)}&nbsp;%</strong> dans le genre féminin pour l'année universitaire <Badge color="yellow-tournesol">{currentYear}</Badge>
-            .
+            , soit une répartition de <strong>{pctM}&nbsp;%</strong> dans le genre masculin et <strong>{pctF}&nbsp;%</strong> dans le genre féminin pour l'année universitaire <Badge color="yellow-tournesol">{currentYear}</Badge>.
           </Text>
           <Link href={`/atlas/effectifs-par-genre?${params}`}>Voir le détail des effectifs par genre</Link>
         </Col>

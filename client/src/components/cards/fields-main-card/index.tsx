@@ -1,23 +1,16 @@
-import { Col, Container, Link, Row } from '@dataesr/dsfr-plus';
+import { Col, Container, Link, Row, Title } from "@dataesr/dsfr-plus";
 
-import './styles.scss';
+import "./styles.scss";
 
 type CardProps = {
-  descriptionNode?: JSX.Element,
-  label?: string,
-  number: number | string,
-  tagsNode?: JSX.Element,
-  to?: string,
+  descriptionNode?: JSX.Element;
+  label?: string;
+  number: number | string;
+  tagsNode?: JSX.Element;
+  to?: string;
 };
 
-
-export default function FieldsMainCard({
-  descriptionNode,
-  label,
-  number,
-  tagsNode,
-  to = "#",
-}: CardProps) {
+export default function FieldsMainCard({ descriptionNode, label, number, tagsNode, to = "#" }: CardProps) {
   return (
     <div className="fr-card fr-enlarge-link fr-card--horizontal student-card-with-trend">
       <div className="fr-card__body">
@@ -25,34 +18,26 @@ export default function FieldsMainCard({
           <Container fluid>
             <Row>
               <Col>
-                <h3 className="fr-card__title">
+                <Title as="h2" look="h3" className="fr-card__title">
                   <Link href={to} className="fr-card__link">
-                    {
-                      label ? (
-                        <div className="students-label">{label}</div>
-                      ) : (
-                        <div className="students-label">Etudiants<br />inscrits</div>
-                      )
-                    }
-                    <div className="key-number">
-                      {number.toLocaleString('fr-FR')}
-                    </div>
+                    {label ? (
+                      <div className="students-label">{label}</div>
+                    ) : (
+                      <div className="students-label">
+                        Etudiants
+                        <br />
+                        inscrits
+                      </div>
+                    )}
+                    <div className="key-number">{number.toLocaleString("fr-FR")}</div>
                   </Link>
-                </h3>
+                </Title>
               </Col>
             </Row>
           </Container>
 
-          <div className="fr-card__desc card-description">
-            {descriptionNode}
-          </div>
-          {
-            tagsNode && (
-              <div className="fr-card__start">
-                {tagsNode}
-              </div>
-            )
-          }
+          <div className="fr-card__desc card-description">{descriptionNode}</div>
+          {tagsNode && <div className="fr-card__start">{tagsNode}</div>}
         </div>
       </div>
     </div>

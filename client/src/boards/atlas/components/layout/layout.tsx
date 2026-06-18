@@ -29,49 +29,33 @@ export function Layout({ languageSelector = false }) {
         <FastAccess>
           <Button
             as="a"
-            href="https://data.enseignementsup-recherche.gouv.fr/explore/dataset/fr-esr-atlas_regional-effectifs-d-etudiants-inscrits/table/?disjunctive.rgp_formations_ou_etablissements&sort=-rentree"
+            href="https://data.enseignementsup-recherche.gouv.fr/explore/assets/fr-esr-atlas_regional-effectifs-d-etudiants-inscrits_agregeables/"
             icon="code-s-slash-line"
             rel="noreferer noopener"
             size="sm"
             target="_blank"
             variant="text"
           >
-            {(searchParams.get('language') === 'EN') ? "Dataset" : "Jeu de données"}
+            {searchParams.get("language") === "EN" ? "Dataset" : "Jeu de données"}
           </Button>
-          <Button
-            aria-controls="fr-theme-modal"
-            className="fr-btn fr-icon-theme-fill"
-            data-fr-opened="false"
-          >
-            {(searchParams.get('language') === 'EN') ? "Themes" : "Changer de thème"}
+          <Button aria-controls="fr-theme-modal" className="fr-btn fr-icon-theme-fill" data-fr-opened="false">
+            {searchParams.get("language") === "EN" ? "Themes" : "Changer de thème"}
           </Button>
-          {
-            languageSelector && (
-              <select
-                className="fr-select fr-p-0 fr-pl-1w"
-                style={{ height: '25px', width: '55px' }}
-                onChange={handleChange}
-              >
-                <option
-                  selected={searchParams.get('language') === 'FR'}
-                  value="FR"
-                >
-                  Fr
-                </option>
-                <option
-                  selected={searchParams.get('language') === 'EN'}
-                  value="EN"
-                >
-                  En
-                </option>
-              </select>
-            )
-          }
+          {languageSelector && (
+            <select className="fr-select fr-p-0 fr-pl-1w" style={{ height: "25px", width: "55px" }} onChange={handleChange}>
+              <option selected={searchParams.get("language") === "FR"} value="FR">
+                Fr
+              </option>
+              <option selected={searchParams.get("language") === "EN"} value="EN">
+                En
+              </option>
+            </select>
+          )}
         </FastAccess>
       </Header>
       <Outlet />
       <Footer />
       <SwitchTheme />
     </>
-  )
+  );
 }

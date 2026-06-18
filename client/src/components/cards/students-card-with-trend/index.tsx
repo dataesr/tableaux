@@ -28,7 +28,7 @@ export default function StudentsCardWithTrend({
             <Row>
               <Col>
                 {to ? (
-                  <Title as="h3" className="fr-card__title">
+                  <Title as="h2" look="h3" className="fr-card__title">
                     <a href={to} className="fr-card__link">
                       {label ? (
                         <div className="students-label">{label}</div>
@@ -39,13 +39,11 @@ export default function StudentsCardWithTrend({
                           inscrits
                         </div>
                       )}
-                      <div className="key-number">
-                        {number.toLocaleString("fr-FR")}
-                      </div>
+                      <div className="key-number">{number.toLocaleString("fr-FR")}</div>
                     </a>
                   </Title>
                 ) : (
-                  <Title as="h3" className="fr-card__title">
+                  <Title as="h2" look="h3" className="fr-card__title">
                     {label ? (
                       <div className="students-label">{label}</div>
                     ) : (
@@ -55,9 +53,7 @@ export default function StudentsCardWithTrend({
                         inscrits
                       </div>
                     )}
-                    <div className="key-number">
-                      {number.toLocaleString("fr-FR")}
-                    </div>
+                    <div className="key-number">{number.toLocaleString("fr-FR")}</div>
                   </Title>
                 )}
               </Col>
