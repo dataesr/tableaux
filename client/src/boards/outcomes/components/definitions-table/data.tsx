@@ -97,7 +97,7 @@ export const OUTCOMES_DEFINITIONS: OutcomesDefinition[] = [
                         <b>Inscriptions récurrentes sans dépasser le niveau BAC+3</b> : non-diplômés restés inscrits au moins 3 fois sur les 5 années d'observation sans dépasser le niveau BAC+3. Les trajectoires de ces étudiants sont marquées par des sorties temporaires, des redoublements et des réorientations vers d'autres formations et/ou secteurs disciplinaires.
                     </li>
                     <li>
-                        <b>Sorties récurrentes sans dépasser le niveau BAC+2</b> : non-diplômés qui ne s'inscrivent pas plus de 2 fois dans l'enseignement supérieur durant la période d'observation et ne dépassent jamais le niveau BAC+2.
+                        <b>Inscrits moins de deux fois durant la période d'observation</b> : non-diplômés qui ne s'inscrivent pas plus de 2 fois dans l'enseignement supérieur durant la période d'observation et ne dépassent jamais le niveau BAC+2.
                     </li>
                 </ul>
             </>

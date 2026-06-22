@@ -74,7 +74,7 @@ export default function MethodologiePage() {
                                 Inscriptions récurrentes sans dépasser le niveau BAC+3 : non-diplômés restés inscrits au moins 3 fois sur les 5 années d'observation sans dépasser le niveau BAC+3. Les trajectoires de ces étudiants sont marquées par des sorties temporaires, des redoublements et des réorientations vers d'autres formations et/ou secteurs disciplinaires. Ils peuvent atteindre un niveau d'étude égale à BAC+3 sans s'être réorientés, sinon un BAC+2 ou ne jamais dépasser le niveau BAC+1.
                             </li>
                             <li>
-                                Sorties récurrentes sans dépasser le niveau BAC+2 : non-diplômés qui ne s'inscrivent pas plus de 2 fois dans l'enseignement supérieur durant la période d'observation et ne dépasse jamais le niveau BAC+2.
+                                Inscrits moins de deux fois durant la période d'observation : non-diplômés qui ne s'inscrivent pas plus de 2 fois dans l'enseignement supérieur durant la période d'observation et ne dépasse jamais le niveau BAC+2.
                             </li>
                         </ul>
                         <p>
