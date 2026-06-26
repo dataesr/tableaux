@@ -1,4 +1,4 @@
-import { Button, ButtonGroup, Col, Container, Modal, ModalContent, ModalTitle, Row, Text, Title } from "@dataesr/dsfr-plus";
+import { Button, ButtonGroup, Col, Container, Link, Modal, ModalContent, ModalTitle, Row, Text, Title } from "@dataesr/dsfr-plus";
 import { useState } from "react";
 
 import { useCookieConsent } from "../../../hooks/useCookieConsent";
@@ -7,7 +7,6 @@ import { getI18nLabel } from "../../../utils";
 import Footer from "../../footer";
 import i18n from "../cookie-consent/i18n.json";
 import { CookieConsentModalContent } from "../cookie-consent/index";
-
 
 export default function CookiePolicyPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -118,16 +117,7 @@ export default function CookiePolicyPage() {
                   </p>
                   <ul>
                     <li>
-                      <code>selectedPillars</code> : Sauvegarde vos filtres de piliers dans les projets européens
-                    </li>
-                    <li>
-                      <code>selectedPrograms</code> : Sauvegarde vos filtres de programmes
-                    </li>
-                    <li>
-                      <code>selectedThematics</code> : Sauvegarde vos filtres de thématiques
-                    </li>
-                    <li>
-                      <code>selectedDestinations</code> : Sauvegarde vos filtres de destinations
+                      <code>Favoris géographques de l'altlas des effectifs étudiants</code> : Sauvegarde vos favorie afin de pouvoir les récupérer lors de votre prochaine viste
                     </li>
                   </ul>
                   <p>
@@ -147,8 +137,7 @@ export default function CookiePolicyPage() {
                 <div className="fr-accordion__body">
                   <p>{getI18nLabel(i18n, "categories.analytics.description")}</p>
                   <p>
-                    <strong>Note :</strong> Les cookies analytiques ne sont pas encore implémentés sur ce site, mais cette catégorie est prévue pour
-                    de futurs outils d'analyse d'audience anonymisés.
+                    <strong>Note :</strong> Les cookies analytiques ne sont pas encore implémentés sur ce site, mais cette catégorie est prévue pour de futurs outils d'analyse d'audience anonymisés.
                   </p>
                   <p>
                     <strong>Durée de conservation prévue :</strong> 13 mois maximum
@@ -201,9 +190,9 @@ export default function CookiePolicyPage() {
               <p>
                 Ministère de l'Enseignement supérieur, de la Recherche et de l'Espace
                 <br />
-                Direction des systèmes d'information
-                <br />
-                Email : <a href="mailto:contact@datasupr.fr">contact@datasupr.fr</a>
+                <Link href="/contact" target="_blank">
+                  Nous contacter
+                </Link>
               </p>
             </div>
 
@@ -216,12 +205,7 @@ export default function CookiePolicyPage() {
         <Modal isOpen={isModalOpen} hide={handleCloseModal} size="lg">
           <ModalTitle>{getI18nLabel(i18n, "modal.title")}</ModalTitle>
           <ModalContent>
-            <CookieConsentModalContent
-              onAcceptAll={handleAcceptAllFromModal}
-              onRefuseAll={handleRefuseAllFromModal}
-              onSavePreferences={handleSavePreferences}
-              consent={consent}
-            />
+            <CookieConsentModalContent onAcceptAll={handleAcceptAllFromModal} onRefuseAll={handleRefuseAllFromModal} onSavePreferences={handleSavePreferences} consent={consent} />
           </ModalContent>
         </Modal>
       </Container>
