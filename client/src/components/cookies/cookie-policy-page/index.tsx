@@ -2,7 +2,7 @@ import { Button, ButtonGroup, Col, Container, Link, Modal, ModalContent, ModalTi
 import { useState } from "react";
 
 import { useCookieConsent } from "../../../hooks/useCookieConsent";
-import HeaderDatasupR from "../../../layout/header";
+import HeaderTableaux from "../../../layout/header";
 import { getI18nLabel } from "../../../utils";
 import Footer from "../../footer";
 import i18n from "../cookie-consent/i18n.json";
@@ -43,7 +43,7 @@ export default function CookiePolicyPage() {
 
   return (
     <>
-      <HeaderDatasupR />
+      <HeaderTableaux />
       <Container>
         <Row>
           <Col>

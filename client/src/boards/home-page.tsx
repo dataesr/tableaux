@@ -2,7 +2,7 @@ import { Badge, Col, Container, Link, Row } from "@dataesr/dsfr-plus";
 import { useQuery } from "@tanstack/react-query";
 
 import Footer from "../components/footer";
-import HeaderDatasupR from "../layout/header.tsx";
+import HeaderTableaux from "../layout/header.tsx";
 import { isInProduction } from "../utils.tsx";
 
 import "./home-styles.scss";
@@ -34,7 +34,7 @@ export default function HomePage() {
 
   return (
     <>
-      <HeaderDatasupR />
+      <HeaderTableaux />
       <div className="home-page">
         <section className="home-hero">
           <Container>
@@ -44,9 +44,8 @@ export default function HomePage() {
                   <p className="home-hero__label">ENSEIGNEMENT SUPÉRIEUR, RECHERCHE ET ESPACE</p>
                   <h1 className="home-hero__title">Explorez les données ...</h1>
                   <p className="home-hero__description">
-                    DataESR est la plateforme de visualisation des données de l'enseignement supérieur, de la recherche et de l'espace. Accédez à des
-                    tableaux de bord interactifs, cartes et graphiques sur les effectifs étudiants, les formations, la recherche, les finances et plus
-                    encore.
+                    DataESR est la plateforme de visualisation des données de l'enseignement supérieur, de la recherche et de l'espace. Accédez à des tableaux de bord interactifs, cartes et graphiques sur les effectifs étudiants, les formations, la
+                    recherche, les finances et plus encore.
                   </p>
                 </div>
               </Col>
@@ -69,10 +68,7 @@ export default function HomePage() {
                       <Link href={dashboard.url}>
                         <div className="home-dashboard-card">
                           <div className="home-dashboard-card__icon">
-                            <span
-                              className={`fr-icon-${dashboard.icon}`}
-                              aria-hidden="true"
-                            />
+                            <span className={`fr-icon-${dashboard.icon}`} aria-hidden="true" />
                           </div>
                           <h3 className="home-dashboard-card__title">{dashboard.name_fr}</h3>
                           <p className="home-dashboard-card__description">{dashboard.description_fr}</p>
