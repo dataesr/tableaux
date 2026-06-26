@@ -35,8 +35,13 @@ export function useGetParams() {
     params.push(`destinations=${destinationIds}`);
   }
 
+  const structureId = searchParams.get("structureid");
+  if (structureId) {
+    params.push(`structureid=${structureId}`);
+  }
+
   // Ajouter le paramètre stage=successful
-  params.push("stage=successful");
+  // params.push("stage=successful");
 
   return params.join("&");
 }

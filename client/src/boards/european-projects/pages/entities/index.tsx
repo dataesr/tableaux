@@ -1,16 +1,14 @@
 import { Container, Row, Col, Title, Text } from "@dataesr/dsfr-plus";
+
 import Callout from "../../../../components/callout";
+import SearchEntities from "./components/search";
 import { getI18nLabel } from "../../../../utils";
 
-import i18n from "./i18n.json";
-import EntitySearchBar from "../../components/entity-searchbar";
-import { useState } from "react";
+import i18n from "./i18n";
 
-export default function Entities({ entity_id }: { entity_id?: string }) {
-  const [, setEntityId] = useState<string>(entity_id || "");
-
+export default function Entities() {
   return (
-    <Container as="section" className="fr-mt-2w">
+    <Container as="section" className="fr-my-2w">
       <Row>
         <Col>
           <Title as="h2">{getI18nLabel(i18n, "title")}</Title>
@@ -26,7 +24,7 @@ export default function Entities({ entity_id }: { entity_id?: string }) {
       </Row>
       <Row>
         <Col>
-          <EntitySearchBar setEntityId={setEntityId} />
+          <SearchEntities />
         </Col>
       </Row>
     </Container>
