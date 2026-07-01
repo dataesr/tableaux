@@ -1,6 +1,5 @@
 import { Col, Container, Row, Title } from "@dataesr/dsfr-plus";
 
-import Callout from "../../../../components/callout.tsx";
 import OutcomesDefinitionsTable from "../../components/definitions-table/index.tsx";
 import { OUTCOMES_DEFINITIONS } from "../../components/definitions-table/data.tsx";
 import { useOutcomesPlusHautDiplome } from "../../api";
