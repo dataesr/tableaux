@@ -22,14 +22,6 @@ export default function ComparaisonProfilsPage() {
         <Container className="outcomes-section-page outcomes-croisements">
             <Row gutters>
                 <Col>
-                    <Callout className="fr-mb-2w" colorFamily="pink-tuile" icon="fr-icon-alert-line">
-                        Version sous embargo à ne pas diffuser
-                    </Callout>
-                </Col>
-            </Row>
-
-            <Row gutters>
-                <Col>
                     <Title as="h1" look="h4" className="fr-mb-1w">
                         Comparer les trajectoires de plusieurs profils
                     </Title>

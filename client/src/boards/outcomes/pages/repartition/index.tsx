@@ -159,13 +159,6 @@ export default function RepartitionPage() {
     };
     return (
         <Container className="outcomes-section-page outcomes-flux-page">
-            <Row gutters>
-                <Col>
-                    <Callout className="fr-mb-2w" colorFamily="pink-tuile" icon="fr-icon-alert-line">
-                        Version sous embargo à ne pas diffuser
-                    </Callout>
-                </Col>
-            </Row>
             <Row>
                 <Title as="h1" look="h4" className="fr-mb-3w">
                     Parcours des néo-bacheliers inscrits en L1 en 2019

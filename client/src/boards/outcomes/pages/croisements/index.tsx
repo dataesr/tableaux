@@ -1,6 +1,5 @@
 import { Col, Container, Row, Title } from "@dataesr/dsfr-plus";
 
-import Callout from "../../../../components/callout.tsx";
 import OutcomesDefinitionsTable from "../../components/definitions-table/index.tsx";
 import { OUTCOMES_DEFINITIONS } from "../../components/definitions-table/data.tsx";
 
@@ -10,14 +9,6 @@ import HeatmapTab from "./heatmap";
 export default function CroisementsPage() {
     return (
         <Container className="outcomes-section-page outcomes-flux-page outcomes-croisements">
-            <Row gutters>
-                <Col>
-                    <Callout className="fr-mb-2w" colorFamily="pink-tuile" icon="fr-icon-alert-line">
-                        Version sous embargo à ne pas diffuser
-                    </Callout>
-                </Col>
-            </Row>
-
             <Row gutters>
                 <Col>
                     <Title as="h1" look="h4" className="fr-mb-1w">
