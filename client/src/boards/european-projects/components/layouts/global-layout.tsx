@@ -1,5 +1,5 @@
 import { Container } from "@dataesr/dsfr-plus";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link, Outlet, useLocation, useSearchParams } from "react-router-dom";
 
 import CountrySelector from "../../../../components/country-selector/selector";
@@ -12,6 +12,7 @@ import "../../colors.scss";
 export default function GlobalLayout() {
   const { pathname } = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const currentLang = searchParams.get("language") || "fr";
   const filtersParams = searchParams.toString();
 
@@ -29,6 +30,10 @@ export default function GlobalLayout() {
       setSearchParams(searchParams);
     }
   }, [searchParams, setSearchParams]);
+
+  useEffect(() => {
+    setIsMenuOpen(false);
+  }, [pathname]);
 
   if (!pathname) return null;
   const is = (str: string): boolean => pathname?.startsWith(str);
@@ -61,12 +66,14 @@ export default function GlobalLayout() {
                   </div>
                   <div className="fr-header__navbar">
                     <button
-                      data-fr-opened="false"
-                      aria-controls="modal-header"
+                      data-fr-opened={isMenuOpen ? "true" : "false"}
+                      aria-controls="main-navigation"
+                      aria-expanded={isMenuOpen}
                       title="Menu"
                       type="button"
                       id="button-header"
                       className="fr-btn--menu fr-btn"
+                      onClick={() => setIsMenuOpen((open) => !open)}
                     >
                       Menu
                     </button>
@@ -77,67 +84,37 @@ export default function GlobalLayout() {
           </div>
         </div>
       </header>
-      <nav className="ep-sticky-nav fr-nav" role="navigation" aria-label="Menu principal">
+      <nav id="main-navigation" className={`ep-sticky-nav fr-nav${isMenuOpen ? " ep-nav-open" : ""}`} role="navigation" aria-label="Menu principal">
         <Container>
           <ul className="fr-nav__list">
             <li className="fr-nav__item">
-              <Link
-                to="/european-projects/accueil"
-                target="_self"
-                {...(pathname === "/european-projects/accueil" && { "aria-current": "page" })}
-                className="fr-nav__link"
-              >
+              <Link to="/european-projects/accueil" target="_self" {...(pathname === "/european-projects/accueil" && { "aria-current": "page" })} className="fr-nav__link">
                 <span className="fr-icon-home-4-line fr-mr-1w" aria-hidden="true" />
                 {getI18nLabel("home")}
               </Link>
             </li>
             <li className="fr-nav__item">
-              <Link
-                to={`/european-projects/horizon-europe?section=synthesis&${filtersParams}`}
-                target="_self"
-                {...(is("/european-projects/horizon-europe") && { "aria-current": "page" })}
-                className="fr-nav__link"
-              >
+              <Link to={`/european-projects/horizon-europe?section=synthesis&${filtersParams}`} target="_self" {...(is("/european-projects/horizon-europe") && { "aria-current": "page" })} className="fr-nav__link">
                 {getI18nLabel("he")}
               </Link>
             </li>
             <li className="fr-nav__item">
-              <Link
-                to={`/european-projects/msca?${filtersParams}`}
-                target="_self"
-                {...(is("/european-projects/msca") && { "aria-current": "page" })}
-                className="fr-nav__link"
-              >
+              <Link to={`/european-projects/msca?${filtersParams}`} target="_self" {...(is("/european-projects/msca") && { "aria-current": "page" })} className="fr-nav__link">
                 Focus MSCA
               </Link>
             </li>
             <li className="fr-nav__item">
-              <Link
-                to={`/european-projects/erc?${filtersParams}`}
-                target="_self"
-                {...(is("/european-projects/erc") && { "aria-current": "page" })}
-                className="fr-nav__link"
-              >
+              <Link to={`/european-projects/erc?${filtersParams}`} target="_self" {...(is("/european-projects/erc") && { "aria-current": "page" })} className="fr-nav__link">
                 Focus ERC
               </Link>
             </li>
             <li className="fr-nav__item">
-              <Link
-                to="/european-projects/evolution-pcri"
-                target="_self"
-                {...(is("/european-projects/evolution-pcri") && { "aria-current": "page" })}
-                className="fr-nav__link"
-              >
+              <Link to="/european-projects/evolution-pcri" target="_self" {...(is("/european-projects/evolution-pcri") && { "aria-current": "page" })} className="fr-nav__link">
                 {getI18nLabel("evolutionPcri")}
               </Link>
             </li>
             <li>
-              <Link
-                to={`/european-projects/entities?${filtersParams}`}
-                target="_self"
-                {...(is("/european-projects/entities") && { "aria-current": "page" })}
-                className="fr-nav__link"
-              >
+              <Link to={`/european-projects/entities?${filtersParams}`} target="_self" {...(is("/european-projects/entities") && { "aria-current": "page" })} className="fr-nav__link">
                 {getI18nLabel("entities")}
               </Link>
             </li>
