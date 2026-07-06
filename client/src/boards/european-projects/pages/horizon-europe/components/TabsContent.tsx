@@ -6,6 +6,7 @@ import PositionnementContent from "./tabs/PositionnementContent";
 import CollaborationsContent from "./tabs/CollaborationsContent";
 import CheckEICAccelerator from "../../../components/check-eic-accelerator";
 import EntitiesContent from "./tabs/EntitiesContent";
+import StructureIdentity from "./structure-identity";
 
 export default function TabsContent() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -27,6 +28,7 @@ export default function TabsContent() {
   return (
     <div>
       <CheckEICAccelerator />
+      <StructureIdentity />
       <nav className="fr-nav" role="navigation" aria-label="Menu principal">
         <ul className="fr-nav__list">
           <li className="fr-nav__item">
