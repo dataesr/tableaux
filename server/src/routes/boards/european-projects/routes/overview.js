@@ -6,7 +6,7 @@ const router = new express.Router();
 const collection_projects_synthese = "fr-esr-all-projects-synthese";
 const collection_projects_entities = "european-projects_projects-entities";
 
-import { checkQuery } from "../../../utils.js";
+import { checkQuery, recreateIndex } from "../../../utils.js";
 
 const rangeOfYears = ["2021", "2022", "2023"];
 
@@ -160,142 +160,28 @@ router.route("/european-projects/synthesis-focus").get(async (req, res) => {
   });
 });
 
+// Route pour créer l'index pour synthesis-focus
+router.route("/european-projects/synthesis-focus_indexes").get(async (req, res) => {
+  try {
+    await recreateIndex(
+      db.collection(collection_projects_entities),
+      {
+        country_code: 1,
+        pilier_code: 1,
+        programme_code: 1,
+        thema_code: 1,
+        destination_code: 1,
+        call_year: 1,
+        entities_id: 1,
+      },
+      "idx_synthesis-focus_covered",
+    );
 
-
-router.route("/european-projects/synthesis-focus").get(async (req, res) => {
-  const filters = {};
-  if (req.query.pillars) {
-    const pillars = req.query.pillars.split("|");
-    filters.pilier_code = { $in: pillars };
+    res.status(201).json({ message: "Index recréé avec succès" });
+  } catch (error) {
+    console.error("Erreur lors de la recréation de l'index:", error);
+    res.status(500).json({ error: "Erreur lors de la recréation de l'index" });
   }
-  if (req.query.programs) {
-    const programs = req.query.programs.split("|");
-    filters.programme_code = { $in: programs };
-  }
-  if (req.query.thematics) {
-    const thematics = req.query.thematics.split(",");
-    filters.thema_code = { $in: thematics };
-  }
-  if (req.query.destinations) {
-    const destinations = req.query.destinations.split(",");
-    filters.destination_code = { $in: destinations };
-  }
-  if (req.query.range_of_years) {
-    const rangeOfYears = req.query.range_of_years.split(",");
-    filters.call_year = { $in: rangeOfYears };
-  }
-  if (req.query.structureid) {
-    filters.entities_id = req.query.structureid;
-  }
-
-  const dataSuccessful = await db
-    .collection(collection_projects_entities)
-    .aggregate([
-      { $match: { ...filters, stage: "successful" } },
-      {
-        $group: {
-          _id: "$country_code",
-          total_fund_eur: { $sum: "$calculated_fund" },
-          total_involved: { $sum: "$number_involved" },
-          total_coordination_number: { $sum: "$coordination_number" },
-        },
-      },
-      {
-        $project: {
-          _id: 0,
-          total_fund_eur: 1,
-          total_involved: 1,
-          total_coordination_number: 1,
-          country_code: "$_id",
-        },
-      },
-      {
-        $group: {
-          _id: null,
-          total_fund_eur: { $sum: "$total_fund_eur" },
-          total_involved: { $sum: "$total_involved" },
-          total_coordination_number: { $sum: "$total_coordination_number" },
-          countries: { $push: "$$ROOT" },
-        },
-      },
-      {
-        $project: {
-          _id: 0,
-          total_fund_eur: 1,
-          total_involved: 1,
-          total_coordination_number: 1,
-          countries: 1,
-        },
-      },
-    ])
-    .toArray();
-
-  const dataEvaluated = await db
-    .collection(collection_projects_entities)
-    .aggregate([
-      { $match: { ...filters, stage: "evaluated" } },
-      {
-        $group: {
-          _id: "$country_code",
-          total_fund_eur: { $sum: "$calculated_fund" },
-          total_involved: { $sum: "$number_involved" },
-          total_coordination_number: { $sum: "$coordination_number" },
-        },
-      },
-      {
-        $project: {
-          _id: 0,
-          total_fund_eur: 1,
-          total_involved: 1,
-          total_coordination_number: 1,
-          country_code: "$_id",
-        },
-      },
-      {
-        $group: {
-          _id: null,
-          total_fund_eur: { $sum: "$total_fund_eur" },
-          total_involved: { $sum: "$total_involved" },
-          total_coordination_number: { $sum: "$total_coordination_number" },
-          countries: { $push: "$$ROOT" },
-        },
-      },
-      {
-        $project: {
-          _id: 0,
-          total_fund_eur: 1,
-          total_involved: 1,
-          total_coordination_number: 1,
-          countries: 1,
-        },
-      },
-    ])
-    .toArray();
-
-  if (req.query.country_code) {
-    return res.json({
-      successful: dataSuccessful[0]
-        ? {
-            total_fund_eur: dataSuccessful[0].total_fund_eur,
-            total_involved: dataSuccessful[0].total_involved,
-            total_coordination_number: dataSuccessful[0].total_coordination_number,
-            countries: dataSuccessful[0].countries.filter((el) => el.country_code.toLowerCase() === req.query.country_code.toLowerCase()),
-          }
-        : null,
-      evaluated: dataEvaluated[0]
-        ? {
-            total_fund_eur: dataEvaluated[0].total_fund_eur,
-            total_involved: dataEvaluated[0].total_involved,
-            total_coordination_number: dataEvaluated[0].total_coordination_number,
-            countries: dataEvaluated[0].countries.filter((el) => el.country_code.toLowerCase() === req.query.country_code.toLowerCase()),
-          }
-        : null,
-    });
-  }
-  res.json({
-    successful: dataSuccessful[0] || null,
-    evaluated: dataEvaluated[0] || null,
-  });
 });
 
 router.route("/european-projects/funded-objectives").get(async (req, res) => {
