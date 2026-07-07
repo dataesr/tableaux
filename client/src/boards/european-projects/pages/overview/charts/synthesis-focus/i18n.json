@@ -119,6 +119,38 @@
         "fr": "Projets évalués",
         "en": "Evaluated projects"
       }
+    },
+    "EntityFundsShare": {
+      "numerator": {
+        "fr": "Financements de la structure",
+        "en": "Entity funding"
+      }
+    },
+    "entityParticipantsShare": {
+      "numerator": {
+        "fr": "Participants lauréats de la structure",
+        "en": "Winning participants from the entity"
+      }
+    }
+  },
+  "EntityFundsShare": {
+    "label": {
+      "fr": "part captée par la structure",
+      "en": "share captured by the entity"
+    },
+    "tooltip": {
+      "fr": "Part des subventions obtenues par la structure pays par rapport au total des subventions obtenues par toutes les structures du pays.",
+      "en": "Share of funding obtained by the entity from the country compared to the total funding obtained by all entities from the country."
+    }
+  },
+  "entityParticipantsShare": {
+    "label": {
+      "fr": "part des participants lauréats de la structure",
+      "en": "share of winning participants from the entity"
+    },
+    "tooltip": {
+      "fr": "Part du nombre de participants de la structure parmi l'ensemble des participants du pays ayant obtenu un financement.",
+      "en": "Share of the number of participants from the entity among all participants from the country who have obtained funding."
     }
   }
 }
