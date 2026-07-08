@@ -67,21 +67,28 @@ export default function EvolutionsSection({ viewType, selectedId }: EvolutionsSe
         if (!data?.records?.length) {
             return { analysesWithData: new Set<string>(), allAnalyses: {}, metricsConfig: {}, records: [], periodText: "" };
         }
-        const analyses = buildAllFmAnalyses(data);
-        const metrics = buildAllFmMetricsConfig(data);
+        const completeRecords = data.records.filter(
+            (r: any) => (r.effectif_permanents || 0) > 0 && (r.effectif_non_titulaire || 0) > 0
+        );
+        if (!completeRecords.length) {
+            return { analysesWithData: new Set<string>(), allAnalyses: {}, metricsConfig: {}, records: [], periodText: "" };
+        }
+        const dataComplete = { ...data, records: completeRecords };
+        const analyses = buildAllFmAnalyses(dataComplete);
+        const metrics = buildAllFmMetricsConfig(dataComplete);
         const available = new Set<string>();
 
         Object.entries(analyses).forEach(([key, analysis]) => {
             const hasData = analysis.metrics.some((m) =>
-                data.records.some((r: any) => r[m] != null && r[m] !== 0)
+                completeRecords.some((r: any) => r[m] != null && r[m] !== 0)
             );
             if (hasData) available.add(key);
         });
 
-        const years = data.records.map((r: any) => r.annee_universitaire).filter(Boolean).sort();
+        const years = completeRecords.map((r: any) => r.annee_universitaire).filter(Boolean).sort();
         const period = years.length > 1 ? `${years[0]} — ${years[years.length - 1]}` : years[0] || "";
 
-        return { analysesWithData: available, allAnalyses: analyses, metricsConfig: metrics, records: data.records, periodText: period };
+        return { analysesWithData: available, allAnalyses: analyses, metricsConfig: metrics, records: completeRecords, periodText: period };
     }, [data]);
 
     useEffect(() => {

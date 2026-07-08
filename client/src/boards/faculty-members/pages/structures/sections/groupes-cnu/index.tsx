@@ -7,7 +7,7 @@ import TreemapSectionsChart from "./charts/treemap-sections";
 
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 import FmMetricDefinitionsTable from "../../../../components/metric-definitions";
-import { CNU_GROUPS } from "../../../../pages/definitions/cnu-data";
+import { CNU_GROUPS } from "../../../definitions/cnu-data";
 
 interface GroupesCnuSectionProps {
     viewType: ViewType;
@@ -209,24 +209,22 @@ export default function GroupesCnuSection({ viewType, selectedId, selectedYear }
                 </Title>
             </div>
             <div className="fr-callout fr-mb-4w">
-                 <Text className="fr-callout__text fr-text--sm">
-                     <strong> Explicitez le périmètre de la donnée de la section CNU </strong>
-                     <br/>
-                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi risus diam,
-                     vestibulum vitae neque at, maximus placerat risus. In malesuada blandit lectus
-                     at scelerisque. Mauris a diam vel ante feugiat accumsan id finibus mi.
-                     Nam pellentesque libero sed turpis varius dapibus. Fusce sit amet urna id eros
-                     venenatis malesuada in et libero. Integer aliquam, magna quis tempus dignissim,
-                     magna metus efficitur nisl, in suscipit velit eros sit amet erat. Fusce dolor nibh, sagittis sed molestie id, auctor et augue. Nam nec magna vel nisl consequat interdum. Maecenas vestibulum lorem sit amet pretium scelerisque.
-                 </Text>
-             </div>   
-            <Row  className="fr-mb-5w">
+                <Text className="fr-callout__text fr-text--sm">
+                    <strong> Explicitez le périmètre de la donnée de la section CNU </strong>
+                    <br />
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi risus diam,
+                    vestibulum vitae neque at, maximus placerat risus. In malesuada blandit lectus
+                    at scelerisque. Mauris a diam vel ante feugiat accumsan id finibus mi.
+                    Nam pellentesque libero sed turpis varius dapibus. Fusce sit amet urna id eros
+                    venenatis malesuada in et libero. Integer aliquam, magna quis tempus dignissim,
+                    magna metus efficitur nisl, in suscipit velit eros sit amet erat. Fusce dolor nibh, sagittis sed molestie id, auctor et augue. Nam nec magna vel nisl consequat interdum. Maecenas vestibulum lorem sit amet pretium scelerisque.
+                </Text>
+            </div>
+            <Row className="fr-mb-5w">
                 <Col>
                     <TreemapSectionsChart cnuGroups={currentData.cnuGroups} selectedYear={selectedYear} />
                 </Col>
             </Row>
-
-            
 
             <FmMetricDefinitionsTable
                 definitionKeys={[

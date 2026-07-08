@@ -28,8 +28,9 @@ interface Props {
 export default function EntityView({ viewType }: Props) {
     const [searchParams, setSearchParams] = useSearchParams();
     const labels = VIEW_LABELS[viewType];
+    console.log(labels);
 
-    const selectedId = searchParams.get("structureId") || "";
+    const selectedId = searchParams.get(getParamKey(viewType)) || "";
     const section = searchParams.get("section") || "enseignants-chercheurs";
 
     const { data: yearsData, isLoading: isLoadingYears } = useFacultyYears(viewType, selectedId);

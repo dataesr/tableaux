@@ -19,10 +19,10 @@ function buildMatchStage(view, id, year) {
       match.code_grande_discipline = id;
       break;
     case "region":
-      match.etablissement_region = id;
+      match.etablissement_code_region = id;
       break;
     case "academie":
-      match.etablissement_academie = id;
+      match.etablissement_code_academie = id;
       break;
   }
   return match;
@@ -34,8 +34,8 @@ async function getContextInfo(collection, view, id) {
   const fieldMap = {
     structure: "etablissement_id_paysage",
     discipline: "code_grande_discipline",
-    region: "etablissement_region",
-    academie: "etablissement_academie",
+    region: "etablissement_code_region",
+    academie: "etablissement_code_academie",
   };
 
   const doc = await collection.findOne(

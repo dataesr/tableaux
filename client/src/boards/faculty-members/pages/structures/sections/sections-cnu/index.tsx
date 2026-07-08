@@ -6,7 +6,7 @@ import MetricCard from "../../components/metric-card";
 import TreemapSectionsChart from "./charts/treemap-sections";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 import FmMetricDefinitionsTable from "../../../../components/metric-definitions";
-import { CNU_SECTIONS } from "../../../../pages/definitions/cnu-data";
+import { CNU_SECTIONS } from "../../../definitions/cnu-data";
 
 interface SectionsCnuSectionProps {
     viewType: ViewType;
