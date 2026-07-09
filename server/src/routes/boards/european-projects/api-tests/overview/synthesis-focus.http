@@ -1,1 +1,5 @@
+GET http://localhost:3000/api/european-projects/synthesis-focus
+
+###
+
 GET http://localhost:3000/api/european-projects/synthesis-focus_indexes

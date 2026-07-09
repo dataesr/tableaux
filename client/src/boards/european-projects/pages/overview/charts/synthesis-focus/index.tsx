@@ -153,13 +153,49 @@ export default function SynthesisFocus() {
         <Col md={6}>
           <RateCard
             nb={dataSuccessful.entity.total_coordination_number / dataCurrentCountry_successful.total_coordination_number}
-            label={getI18nLabel("coordinationsShare.label")}
+            label={getI18nLabel("entityCoordinationsShare.label")}
             loading={false}
-            tooltipText={getI18nLabel("coordinationsShare.tooltip")}
+            tooltipText={getI18nLabel("entityCoordinationsShare.tooltip")}
             numerator={dataSuccessful.entity.total_coordination_number}
             denominator={dataCurrentCountry_successful.total_coordination_number}
-            numeratorLabel={getI18nLabel("labels.coordinationsShare.numerator")}
-            denominatorLabel={getI18nLabel("labels.coordinationsShare.denominator")}
+            numeratorLabel={getI18nLabel("labels.entityCoordinationsShare.numerator")}
+            denominatorLabel={getI18nLabel("labels.coordinationsShare.numerator")}
+          />
+        </Col>
+        <Col md={6}>
+          <RateCard
+            nb={dataSuccessful.entity.total_fund_eur / dataEvaluated.entity.total_fund_eur}
+            label={getI18nLabel("fundsSuccessRate.label")}
+            loading={false}
+            tooltipText={getI18nLabel("fundsSuccessRate.tooltip")}
+            numerator={dataSuccessful.entity.total_fund_eur}
+            denominator={dataEvaluated.entity.total_fund_eur}
+            numeratorLabel={getI18nLabel("labels.fundsSuccessRate.numerator")}
+            denominatorLabel={getI18nLabel("labels.fundsSuccessRate.denominator")}
+          />
+        </Col>
+        <Col md={6}>
+          <RateCard
+            nb={dataSuccessful.entity.total_involved / dataEvaluated.entity.total_involved}
+            label={getI18nLabel("participantsSuccessRate.label")}
+            loading={false}
+            tooltipText={getI18nLabel("participantsSuccessRate.tooltip")}
+            numerator={dataSuccessful.entity.total_involved}
+            denominator={dataEvaluated.entity.total_involved}
+            numeratorLabel={getI18nLabel("labels.participantsSuccessRate.numerator")}
+            denominatorLabel={getI18nLabel("labels.participantsSuccessRate.denominator")}
+          />
+        </Col>
+        <Col md={6}>
+          <RateCard
+            nb={dataSuccessful.entity.total_coordination_number / dataEvaluated.entity.total_coordination_number}
+            label={getI18nLabel("projectsSuccessRate.label")}
+            loading={false}
+            tooltipText={getI18nLabel("projectsSuccessRate.tooltip")}
+            numerator={dataSuccessful.entity.total_coordination_number}
+            denominator={dataEvaluated.entity.total_coordination_number}
+            numeratorLabel={getI18nLabel("labels.projectsSuccessRate.numerator")}
+            denominatorLabel={getI18nLabel("labels.projectsSuccessRate.denominator")}
           />
         </Col>
       </Row>

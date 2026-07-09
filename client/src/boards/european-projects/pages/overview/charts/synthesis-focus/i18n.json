@@ -131,6 +131,12 @@
         "fr": "Participants lauréats de la structure",
         "en": "Winning participants from the entity"
       }
+    },
+    "entityCoordinationsShare": {
+      "numerator": {
+        "fr": "Coordinations de la structure",
+        "en": "Coordination of the structure"
+      }
     }
   },
   "EntityFundsShare": {
@@ -151,6 +157,16 @@
     "tooltip": {
       "fr": "Part du nombre de participants de la structure parmi l'ensemble des participants du pays ayant obtenu un financement.",
       "en": "Share of the number of participants from the entity among all participants from the country who have obtained funding."
+    }
+  },
+  "entityCoordinationsShare": {
+    "label": {
+      "fr": "part des coordinations de projets de la structure",
+      "en": "share of project coordinations from the entity"
+    },
+    "tooltip": {
+      "fr": "Part du nombre des projets coordonnés par un participant de la structure parmi l'ensemble des projets financés du pays.",
+      "en": "Share of projects coordinated by a participant from the organization out of the total number of projects funded in the country."
     }
   }
 }
