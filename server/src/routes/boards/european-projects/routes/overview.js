@@ -224,12 +224,17 @@ router.route("/european-projects/overview/pillars-funding").get(async (req, res)
     const pillars = req.query.pillars.split("|");
     filters.pilier_code = { $in: pillars };
   }
+  console.log(req.query);
+  if (req.query.structureid) {
+    filters.entities_id = req.query.structureid;
+    delete filters.structureid;
+  }
   delete filters.programs;
   delete filters.thematics;
   delete filters.destinations;
 
   const data = await db
-    .collection(collection_projects_synthese)
+    .collection(collection_projects_entities)
     .aggregate([
       { $match: { $and: [filters] } },
       {
@@ -240,7 +245,7 @@ router.route("/european-projects/overview/pillars-funding").get(async (req, res)
             pilier_name_fr: "$pilier_name_fr",
             pilier_name_en: "$pilier_name_en",
           },
-          total_fund_eur: { $sum: "$fund_eur" },
+          total_fund_eur: { $sum: "$calculated_fund" },
           count: { $sum: 1 },
         },
       },

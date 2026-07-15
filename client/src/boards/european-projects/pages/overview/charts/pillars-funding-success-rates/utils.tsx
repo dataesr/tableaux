@@ -19,6 +19,12 @@ export function useGetParams() {
     params.push(`pillars=${pillarId}`);
   }
 
+  // Récupérer le paramètre structureid s'il existe
+  const structureId = searchParams.get("structureid");
+  if (structureId) {
+    params.push(`structureid=${structureId}`);
+  }
+
   return params.join("&");
 }
 
