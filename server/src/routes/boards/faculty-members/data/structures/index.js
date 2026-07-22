@@ -3737,7 +3737,7 @@ router.get("/faculty-members/analyses", async (req, res) => {
 
       const effectif_ec = sumStatus("ec");
       const effectif_tit_non_ec = sumStatus("tit");
-      const effectif_non_titulaire = sumStatus("non_tit");
+      const effectif_non_permanents = sumStatus("non_tit");
       const effectif_permanents = effectif_ec + effectif_tit_non_ec;
       const femmes_ec = sumStatus("ec", "Féminin");
       const femmes_perm =
@@ -3820,7 +3820,7 @@ router.get("/faculty-members/analyses", async (req, res) => {
         taux_feminisation: total > 0 ? (femmes / total) * 100 : 0,
         effectif_ec,
         effectif_tit_non_ec,
-        effectif_non_titulaire,
+        effectif_non_permanents,
         effectif_permanents,
         taux_permanents: total > 0 ? (effectif_permanents / total) * 100 : 0,
         taux_ec: total > 0 ? (effectif_ec / total) * 100 : 0,
@@ -3834,9 +3834,9 @@ router.get("/faculty-members/analyses", async (req, res) => {
           effectif_permanents > 0
             ? (femmes_perm / effectif_permanents) * 100
             : 0,
-        taux_feminisation_non_titulaires:
-          effectif_non_titulaire > 0
-            ? (femmes_non_tit / effectif_non_titulaire) * 100
+        taux_feminisation_non_permanents:
+          effectif_non_permanents > 0
+            ? (femmes_non_tit / effectif_non_permanents) * 100
             : 0,
         effectif_temps_plein,
         effectif_temps_partiel,

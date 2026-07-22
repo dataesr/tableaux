@@ -18,7 +18,7 @@ const ANALYSIS_DEFINITION_KEYS: Record<string, string[]> = {
     "taux-feminisation": ["Taux de féminisation"],
     "femi-ec": ["Taux de féminisation", "Enseignant-chercheur (EC)"],
     "femi-permanents": ["Taux de féminisation", "Permanent / Non permanent"],
-    "femi-non-titulaires": ["Taux de féminisation"],
+    "femi-non-permanents": ["Taux de féminisation"],
     "femi-par-statut-base100": ["Taux de féminisation", "Statut : 3 catégories mutuellement exclusives"],
     "genre-base100": ["Taux de féminisation"],
     "taux-permanents": ["Permanent / Non permanent"],
@@ -68,7 +68,7 @@ export default function EvolutionsSection({ viewType, selectedId }: EvolutionsSe
             return { analysesWithData: new Set<string>(), allAnalyses: {}, metricsConfig: {}, records: [], periodText: "" };
         }
         const completeRecords = data.records.filter(
-            (r: any) => (r.effectif_permanents || 0) > 0 && (r.effectif_non_titulaire || 0) > 0
+            (r: any) => (r.effectif_permanents || 0) > 0 && (r.effectif_non_permanents || 0) > 0
         );
         if (!completeRecords.length) {
             return { analysesWithData: new Set<string>(), allAnalyses: {}, metricsConfig: {}, records: [], periodText: "" };

@@ -46,8 +46,8 @@ export const FM_STATIC_METRICS: Record<string, FmMetricConfig> = {
     color: getCssColor("fm-statut-titulaire"),
     category: "Effectifs globaux",
   },
-  effectif_non_titulaire: {
-    label: "Non-titulaires",
+  effectif_non_permanents: {
+    label: "Non-permanents",
     format: "number",
     color: getCssColor("fm-statut-non-permanent"),
     category: "Effectifs globaux",
@@ -147,8 +147,8 @@ export const FM_STATIC_METRICS: Record<string, FmMetricConfig> = {
     category: "Genre",
     suffix: "%",
   },
-  taux_feminisation_non_titulaires: {
-    label: "Féminisation des non-titulaires",
+  taux_feminisation_non_permanents: {
+    label: "Féminisation des non-permanents",
     format: "percent",
     color: getCssColor("fm-femmes"),
     category: "Genre",
@@ -313,8 +313,8 @@ export const PREDEFINED_FM_STATIC_ANALYSES: Record<string, FmAnalysisConfig> = {
     chartType: "area",
   },
   "statut-effectifs": {
-    label: "Effectifs par statut (EC, titulaires, non-titulaires)",
-    metrics: ["effectif_non_titulaire", "effectif_tit_non_ec", "effectif_ec"],
+    label: "Effectifs par statut (EC, titulaires, non-permanents)",
+    metrics: ["effectif_non_permanents", "effectif_tit_non_ec", "effectif_ec"],
     category: "Effectifs globaux",
     chartType: "stacked",
   },
@@ -342,11 +342,11 @@ export const PREDEFINED_FM_STATIC_ANALYSES: Record<string, FmAnalysisConfig> = {
     chartType: "pyramid",
   },
   "effectifs-base100": {
-    label: "EC, permanents et non-titulaires (base 100)",
+    label: "EC, permanents et non-permanents (base 100)",
     metrics: [
       "effectif_ec",
       "effectif_permanents",
-      "effectif_non_titulaire",
+      "effectif_non_permanents",
       "effectif_total",
     ],
     category: "Effectifs globaux",
@@ -372,9 +372,9 @@ export const PREDEFINED_FM_STATIC_ANALYSES: Record<string, FmAnalysisConfig> = {
     category: "Genre",
     chartType: "single",
   },
-  "femi-non-titulaires": {
-    label: "Féminisation des non-titulaires",
-    metrics: ["taux_feminisation_non_titulaires"],
+  "femi-non-permanents": {
+    label: "Féminisation des non-permanents",
+    metrics: ["taux_feminisation_non_permanents"],
     category: "Genre",
     chartType: "single",
   },
@@ -384,7 +384,7 @@ export const PREDEFINED_FM_STATIC_ANALYSES: Record<string, FmAnalysisConfig> = {
       "taux_feminisation",
       "taux_feminisation_ec",
       "taux_feminisation_permanents",
-      "taux_feminisation_non_titulaires",
+      "taux_feminisation_non_permanents",
     ],
     category: "Genre",
     chartType: "base100",
@@ -428,8 +428,8 @@ export const PREDEFINED_FM_STATIC_ANALYSES: Record<string, FmAnalysisConfig> = {
     chartType: "single",
   },
   "statut-base100": {
-    label: "Enseignants chercheurs, permanents, non-titulaires (base 100)",
-    metrics: ["effectif_ec", "effectif_permanents", "effectif_non_titulaire"],
+    label: "Enseignants chercheurs, permanents, non-permanents (base 100)",
+    metrics: ["effectif_ec", "effectif_permanents", "effectif_non_permanents"],
     category: "Permanents et EC",
     chartType: "base100",
   },
@@ -492,7 +492,7 @@ export const PREDEFINED_FM_STATIC_ANALYSES: Record<string, FmAnalysisConfig> = {
   "categories-personnel": {
     label: "Effectifs par catégorie de personnel",
     metrics: [
-      "effectif_non_titulaire",
+      "effectif_non_permanents",
       "effectif_tit_non_ec",
       "effectif_mcf",
       "effectif_pr",
@@ -506,7 +506,7 @@ export const PREDEFINED_FM_STATIC_ANALYSES: Record<string, FmAnalysisConfig> = {
       "effectif_pr",
       "effectif_mcf",
       "effectif_tit_non_ec",
-      "effectif_non_titulaire",
+      "effectif_non_permanents",
     ],
     category: "Catégories de personnel",
     chartType: "base100",
