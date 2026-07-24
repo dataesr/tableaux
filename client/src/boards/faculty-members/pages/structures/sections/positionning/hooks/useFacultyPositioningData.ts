@@ -34,13 +34,19 @@ export function useFacultyPositioningData(
 
   const allItems: any[] = useMemo(() => data?.items || [], [data]);
 
-  const currentItem = useMemo(
-    () =>
-      allItems.find(
-        (item) => item.etablissement_id_paysage_actuel === selectedId
-      ),
-    [allItems, selectedId]
-  );
+  const currentItem = useMemo(() => {
+    if (viewType === "region")
+      return allItems.find(
+        (item) => item.etablissement_code_region === selectedId
+      );
+    if (viewType === "academie")
+      return allItems.find(
+        (item) => item.etablissement_code_academie === selectedId
+      );
+    return allItems.find(
+      (item) => item.etablissement_id_paysage_actuel === selectedId
+    );
+  }, [allItems, selectedId, viewType]);
 
   const filteredItems = useMemo(() => {
     return allItems.filter((item) => {

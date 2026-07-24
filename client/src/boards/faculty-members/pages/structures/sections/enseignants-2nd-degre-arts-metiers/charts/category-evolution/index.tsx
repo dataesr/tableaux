@@ -38,15 +38,14 @@ export default function CategoryEvolutionChart({
       config={{
         id: "faculty-category-evolution",
         title: {
-          fr: "Évolution par catégorie (enseignants-chercheurs)",
+          fr: "Évolution de l'effectif des enseignants du second degré et assimilés",
           size: "h3" as const,
           look: "h6" as const,
         },
         readingKey: readingKey || undefined,
         comment: {
           fr: (<>
-            Évolution des catégories de personnel parmi les enseignants-chercheurs
-            uniquement (professeurs, maîtres de conférences, etc.).
+            Évolution des catégories de personnel parmi les enseignants du second degré et assimilés uniquement (professeurs, maîtres de conférences, etc.).
           </>),
         },
         sources: [

@@ -97,7 +97,7 @@ export default function EnseignantsNonPermanentsSection({
             <div className="fr-callout fr-mb-4w">
                 <Text className="fr-callout__text fr-text--sm">
                     <strong>Explicitez la définition des EC et nuances entre MCF et Prof </strong>
-                    <br/>
+                    <br />
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi risus diam,
                     vestibulum vitae neque at, maximus placerat risus. In malesuada blandit lectus
                     at scelerisque. Mauris a diam vel ante feugiat accumsan id finibus mi.
@@ -124,7 +124,7 @@ export default function EnseignantsNonPermanentsSection({
                                 return (
                                     <Col xs="12" md="4" lg="3" key={cat.categoryCode}>
                                         <MetricCard
-                                            title={cat.categoryName}
+                                            title={cat.categoryName || cat.categoryCode}
                                             value={total.toLocaleString("fr-FR")}
                                             detail={`${pct(total, totalEC)} des enseignants non permanents · ${pct(cat.femaleCount || 0, total)} de femmes`}
                                             color={color}
