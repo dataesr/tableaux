@@ -217,73 +217,73 @@ router.route("/european-projects/funded-objectives").get(async (req, res) => {
   res.json(data);
 });
 
-router.route("/european-projects/overview/pillars-funding").get(async (req, res) => {
-  const filters = checkQuery(req.query, ["country_code"], res);
+// router.route("/european-projects/overview/pillars-funding").get(async (req, res) => {
+//   const filters = checkQuery(req.query, ["country_code"], res);
 
-  if (req.query.pillars) {
-    const pillars = req.query.pillars.split("|");
-    filters.pilier_code = { $in: pillars };
-  }
-  console.log(req.query);
-  if (req.query.structureid) {
-    filters.entities_id = req.query.structureid;
-    delete filters.structureid;
-  }
-  delete filters.programs;
-  delete filters.thematics;
-  delete filters.destinations;
+//   if (req.query.pillars) {
+//     const pillars = req.query.pillars.split("|");
+//     filters.pilier_code = { $in: pillars };
+//   }
 
-  const data = await db
-    .collection(collection_projects_entities)
-    .aggregate([
-      { $match: { $and: [filters] } },
-      {
-        $group: {
-          _id: {
-            pillar: "$pilier_code",
-            stage: "$stage",
-            pilier_name_fr: "$pilier_name_fr",
-            pilier_name_en: "$pilier_name_en",
-          },
-          total_fund_eur: { $sum: "$calculated_fund" },
-          count: { $sum: 1 },
-        },
-      },
-      {
-        $project: {
-          _id: 0,
-          pillar: "$_id.pillar",
-          pilier_name_fr: "$_id.pilier_name_fr",
-          pilier_name_en: "$_id.pilier_name_en",
-          stage: "$_id.stage",
-          total_fund_eur: 1,
-          count: 1,
-        },
-      },
-      { $sort: { total_fund_eur: -1 } },
-    ])
-    .toArray();
+//   if (req.query.structureid) {
+//     filters.entities_id = req.query.structureid;
+//     delete filters.structureid;
+//   }
+//   delete filters.programs;
+//   delete filters.thematics;
+//   delete filters.destinations;
 
-  const successRates = data.reduce((acc, item) => {
-    const pillar = item.pillar;
-    if (!acc[pillar]) {
-      acc[pillar] = { successful: 0, evaluated: 0 };
-    }
-    if (item.stage === "successful") {
-      acc[pillar].successful += item.total_fund_eur;
-    } else if (item.stage === "evaluated") {
-      acc[pillar].evaluated += item.total_fund_eur;
-    }
-    return acc;
-  }, {});
+//   const data = await db
+//     .collection(collection_projects_entities)
+//     .aggregate([
+//       { $match: { $and: [filters] } },
+//       {
+//         $group: {
+//           _id: {
+//             pillar: "$pilier_code",
+//             stage: "$stage",
+//             pilier_name_fr: "$pilier_name_fr",
+//             pilier_name_en: "$pilier_name_en",
+//           },
+//           total_fund_eur: { $sum: "$calculated_fund" },
+//           count: { $sum: 1 },
+//         },
+//       },
+//       {
+//         $project: {
+//           _id: 0,
+//           pillar: "$_id.pillar",
+//           pilier_name_fr: "$_id.pilier_name_fr",
+//           pilier_name_en: "$_id.pilier_name_en",
+//           stage: "$_id.stage",
+//           total_fund_eur: 1,
+//           count: 1,
+//         },
+//       },
+//       { $sort: { total_fund_eur: -1 } },
+//     ])
+//     .toArray();
 
-  const successRateByPillar = Object.entries(successRates).map(([pillar, { successful, evaluated }]) => ({
-    pillar,
-    successRate: evaluated > 0 ? successful / evaluated : 0,
-  }));
+//   const successRates = data.reduce((acc, item) => {
+//     const pillar = item.pillar;
+//     if (!acc[pillar]) {
+//       acc[pillar] = { successful: 0, evaluated: 0 };
+//     }
+//     if (item.stage === "successful") {
+//       acc[pillar].successful += item.total_fund_eur;
+//     } else if (item.stage === "evaluated") {
+//       acc[pillar].evaluated += item.total_fund_eur;
+//     }
+//     return acc;
+//   }, {});
 
-  res.json({ data, successRateByPillar });
-});
+//   const successRateByPillar = Object.entries(successRates).map(([pillar, { successful, evaluated }]) => ({
+//     pillar,
+//     successRate: evaluated > 0 ? successful / evaluated : 0,
+//   }));
+
+//   res.json({ data, successRateByPillar });
+// });
 
 router.route("/european-projects/overview/pillars-funding-proportion").get(async (req, res) => {
   const filters = checkQuery(req.query, ["country_code"], res);
@@ -387,7 +387,7 @@ router.route("/european-projects/overview/pillars-funding-proportion").get(async
 });
 
 router.route("/european-projects/overview/programs-funding").get(async (req, res) => {
-  const filters = checkQuery(req.query, ["country_code", "pillars"], res);
+  const filters = checkQuery(req.query, ["country_code"], res);
 
   if (req.query.pillars) {
     const pillars = req.query.pillars.split("|");
@@ -401,8 +401,9 @@ router.route("/european-projects/overview/programs-funding").get(async (req, res
   delete filters.pillars;
   delete filters.thematics;
   delete filters.destinations;
+
   const data = await db
-    .collection(collection_projects_synthese)
+    .collection(collection_projects_entities)
     .aggregate([
       { $match: { $and: [filters] } },
       {
@@ -413,7 +414,7 @@ router.route("/european-projects/overview/programs-funding").get(async (req, res
             programme_name_fr: "$programme_name_fr",
             programme_name_en: "$programme_name_en",
           },
-          total_fund_eur: { $sum: "$fund_eur" },
+          total_fund_eur: { $sum: "$calculated_fund" },
           count: { $sum: 1 },
         },
       },
@@ -569,7 +570,7 @@ router.route("/european-projects/overview/topics-funding").get(async (req, res) 
   delete filters.destinations;
 
   const data = await db
-    .collection(collection_projects_synthese)
+    .collection(collection_projects_entities)
     .aggregate([
       { $match: { $and: [filters] } },
       {
@@ -579,10 +580,10 @@ router.route("/european-projects/overview/topics-funding").get(async (req, res) 
             stage: "$stage",
             thema_name_fr: "$thema_name_fr",
             thema_name_en: "$thema_name_en",
-            pilier_code: "$pilier_code",
-            programme_code: "$programme_code",
+            // pilier_code: "$pilier_code",
+            // programme_code: "$programme_code",
           },
-          total_fund_eur: { $sum: "$fund_eur" },
+          total_fund_eur: { $sum: "$calculated_fund" },
           count: { $sum: 1 },
         },
       },
@@ -594,8 +595,8 @@ router.route("/european-projects/overview/topics-funding").get(async (req, res) 
           thema_name_en: "$_id.thema_name_en",
           stage: "$_id.stage",
           total_fund_eur: 1,
-          pilier_code: "$_id.pilier_code",
-          programme_code: "$_id.programme_code",
+          // pilier_code: "$_id.pilier_code",
+          // programme_code: "$_id.programme_code",
           count: 1,
         },
       },
@@ -746,7 +747,7 @@ router.route("/european-projects/overview/destination-funding").get(async (req, 
   }
 
   const data = await db
-    .collection(collection_projects_synthese)
+    .collection(collection_projects_entities)
     .aggregate([
       { $match: { $and: [filters] } },
       {
@@ -755,7 +756,7 @@ router.route("/european-projects/overview/destination-funding").get(async (req, 
             destination: "$destination_code",
             stage: "$stage",
           },
-          total_fund_eur: { $sum: "$fund_eur" },
+          total_fund_eur: { $sum: "$calculated_fund" },
           count: { $sum: 1 },
         },
       },
@@ -893,6 +894,105 @@ router.route("/european-projects/overview/destination-funding-proportion").get(a
   // });
 
   res.json({ data });
+});
+
+router.route("/european-projects/overview/funding").get(async (req, res) => {
+  const filters = checkQuery(req.query, ["country_code"], res);
+
+  // test filters (thematics, programs, thematics, destinations)
+  if (req.query.pillars) {
+    const pillars = req.query.pillars.split("|");
+    filters.pilier_code = { $in: pillars };
+  }
+  if (req.query.programs) {
+    const programs = req.query.programs.split("|");
+    filters.programme_code = { $in: programs };
+  }
+  if (req.query.thematics) {
+    const thematics = req.query.thematics.split(",");
+    const filteredThematics = thematics.filter((thematic) => !["ERC", "MSCA"].includes(thematic));
+    filters.thema_code = { $in: filteredThematics };
+  }
+  if (req.query.destinations) {
+    const destinations = req.query.destinations.split(",");
+    filters.destination_code = { $in: destinations };
+  }
+  if (req.query.structureid) {
+    filters.entities_id = req.query.structureid;
+    delete filters.structureid;
+  }
+
+  // test filters (thematics, programs, thematics, destinations)
+  const groupBy = { code: "$pilier_code", name_fr: "$pilier_name_fr", name_en: "$pilier_name_en" };
+  if (filters.programme_code) {
+    groupBy.code = "$pilier_code";
+    groupBy.name_fr = "$pilier_name_fr";
+    groupBy.name_en = "$pilier_name_en";
+  } else if (filters.programme_code) {
+    groupBy.code = "$programme_code";
+    groupBy.name_fr = "$programme_name_fr";
+    groupBy.name_en = "$programme_name_en";
+  } else if (filters.thema_code) {
+    groupBy.code = "$thema_code";
+    groupBy.name_fr = "$thema_name_fr";
+    groupBy.name_en = "$thema_name_en";
+  } else if (filters.destination_code) {
+    groupBy.code = "$destination_code";
+    groupBy.name_fr = "$destination_name_fr";
+    groupBy.name_en = "$destination_name_en";
+  }
+
+  console.log("filters2", filters);
+  console.log("groupBy", groupBy);
+  const data = await db
+    .collection(collection_projects_entities)
+    .aggregate([
+      { $match: { $and: [filters] } },
+      {
+        $group: {
+          _id: {
+            code: groupBy.code,
+            stage: "$stage",
+            name_fr: groupBy.name_fr,
+            name_en: groupBy.name_en,
+          },
+          total_fund_eur: { $sum: "$calculated_fund" },
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          code: "$_id.code",
+          name_fr: "$_id.name_fr",
+          name_en: "$_id.name_en",
+          stage: "$_id.stage",
+          total_fund_eur: 1,
+          count: 1,
+        },
+      },
+      { $sort: { total_fund_eur: -1 } },
+    ])
+    .toArray();
+
+  const successRates = data.reduce((acc, item) => {
+    if (!acc[item.code]) {
+      acc[item.code] = { successful: 0, evaluated: 0 };
+    }
+    if (item.stage === "successful") {
+      acc[item.code].successful += item.total_fund_eur;
+    } else if (item.stage === "evaluated") {
+      acc[item.code].evaluated += item.total_fund_eur;
+    }
+    return acc;
+  }, {});
+
+  const successRatesByCodes = Object.entries(successRates).map(([code, { successful, evaluated }]) => ({
+    code,
+    successRate: evaluated > 0 ? successful / evaluated : 0,
+  }));
+
+  res.json({ data, successRatesByCodes });
 });
 
 router.route("/european-projects/overview/pillars-funding-evo-3-years").get(async (req, res) => {

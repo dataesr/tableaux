@@ -46,7 +46,7 @@ export default function Options(data, title) {
         name: getI18nLabel(i18n, "evaluatedProjects"),
         color: getCssColor("evaluated-project"),
         groupPadding: 0,
-        data: data.data.filter((item) => item.stage === "evaluated").map((item) => [item.pilier_name_fr, item.total_fund_eur]),
+        data: data.data.filter((item) => item.stage === "evaluated").map((item) => [item.name_fr, item.total_fund_eur]),
         dataLabels: {
           formatter: function () {
             return formatToMillions(this.y ?? 0);
@@ -58,7 +58,7 @@ export default function Options(data, title) {
         name: getI18nLabel(i18n, "successfulProjects"),
         color: getCssColor("successful-project"),
         groupPadding: 0,
-        data: data.data.filter((item) => item.stage === "successful").map((item) => [item.pilier_name_fr, item.total_fund_eur]),
+        data: data.data.filter((item) => item.stage === "successful").map((item) => [item.name_fr, item.total_fund_eur]),
         dataLabels: {
           formatter: function () {
             return formatToMillions(this.y ?? 0);

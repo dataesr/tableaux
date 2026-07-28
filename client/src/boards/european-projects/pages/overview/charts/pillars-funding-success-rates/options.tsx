@@ -48,8 +48,8 @@ export default function Options(data, title) {
         name: getI18nLabel(i18n, "successRate"),
         color: getCssColor("successRate"),
         groupPadding: 0,
-        data: data.successRateByPillar.map((item) => ({
-          name: item.pillar,
+        data: data.successRatesByCodes.map((item) => ({
+          name: item.code,
           y: item.successRate,
         })),
         dataLabels: [

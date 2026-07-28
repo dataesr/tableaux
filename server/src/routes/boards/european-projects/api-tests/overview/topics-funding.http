@@ -1,1 +1,1 @@
-GET http://localhost:3000/api/european-projects/overview/topics-funding?country_code=FRA&pillars=p4&programs=HORIZON.4.2
+GET http://localhost:3000/api/european-projects/overview/topics-funding?country_code=FRA&thematics=MSCA

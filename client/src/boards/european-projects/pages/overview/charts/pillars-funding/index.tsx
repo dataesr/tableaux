@@ -17,7 +17,7 @@ export default function PillarsFundingValues() {
   const params = useGetParams();
   const [searchParams] = useSearchParams();
   const currentLang = searchParams.get("language") || "fr";
-  
+
   const { data, isLoading } = useQuery({
     queryKey: [config.idQuery, params],
     queryFn: () => getData(params),
@@ -26,10 +26,8 @@ export default function PillarsFundingValues() {
   if (isLoading || !data) return <DefaultSkeleton />;
 
   return (
-    <ChartWrapper
-      config={config}
-      options={options(data, currentLang === "fr" ? "Subventions (M€)" : "Funding (M€)")}
-      renderData={() => renderDataTable(data, "fr")}
-    />
+    <>
+      <ChartWrapper config={config} options={options(data, currentLang === "fr" ? "Subventions (M€)" : "Funding (M€)")} renderData={() => renderDataTable(data, "fr")} />
+    </>
   );
 }

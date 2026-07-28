@@ -1,0 +1,14 @@
+### Empty
+GET http://localhost:3000/api/european-projects/overview/funding?country_code=FRA
+
+### Pillar
+GET http://localhost:3000/api/european-projects/overview/funding?country_code=FRA&pillars=HORIZON.3
+
+### Program
+GET http://localhost:3000/api/european-projects/overview/funding?country_code=FRA&programs=HORIZON.3.1
+
+### Thematics
+GET http://localhost:3000/api/european-projects/overview/funding?country_code=FRA&topics=MSCA
+
+### Destinations
+GET http://localhost:3000/api/european-projects/overview/funding?country_code=FRA&destinations=STG

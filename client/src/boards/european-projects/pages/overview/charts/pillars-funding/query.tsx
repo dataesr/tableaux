@@ -5,7 +5,5 @@ export async function getData(params: string) {
     return [];
   }
 
-  return fetch(
-    `${VITE_APP_SERVER_URL}/european-projects/overview/pillars-funding?${params}`
-  ).then((response) => response.json());
+  return fetch(`${VITE_APP_SERVER_URL}/european-projects/overview/funding?${params}`).then((response) => response.json());
 }

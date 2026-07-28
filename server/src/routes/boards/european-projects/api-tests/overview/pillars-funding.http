@@ -1,1 +1,1 @@
-GET http://localhost:3000/api/european-projects/overview/pillars-funding?country_code=FRA&programs=HORIZON.3.1
+GET http://localhost:3000/api/european-projects/overview/pillars-funding?country_code=FRA&pillars=HORIZON.3
