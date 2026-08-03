@@ -7,7 +7,6 @@
   top: 56px;
   z-index: 10;
   max-height: 300px;
-  overflow: hidden;
   transition: max-height 0.4s ease, padding 0.4s ease, opacity 0.3s ease, margin 0.4s ease;
 
   &--collapsed {
