@@ -1,6 +1,6 @@
 import { Col, Row } from "@dataesr/dsfr-plus";
-import TopicsFundingValues from "../charts/topics-funding";
-import TopicsFundingSuccessRates from "../charts/topics-funding-success-rates";
+import FundingValues from "../charts/funding";
+import FundingSuccessRates from "../charts/funding-success-rates";
 import TopicsFundingProportion from "../charts/topics-funding-proportion";
 import ChartFooter from "../../../../../components/chart-footer";
 import { EPChartsSources } from "../../../config";
@@ -8,39 +8,22 @@ import { EPChartsSources } from "../../../config";
 export default function TopicsFunding() {
   return (
     <>
-      <Row className="chart-container chart-container--programs" style={{ marginLeft: "var(--spacing-1w)", marginRight: "var(--spacing-1w)" }}>
+      <Row className="chart-container chart-container--programs">
         <Col md={6}>
-          <TopicsFundingValues />
+          <FundingValues />
         </Col>
         <Col md={6}>
-          <TopicsFundingSuccessRates />
+          <FundingSuccessRates />
         </Col>
         <Col md={12} className="chart-footer">
           <ChartFooter
             comment={{
-              fr: (
-                <>
-                  Ce graphique affiche la répartition des subventions demandées et obtenues (en M€) par thématique, ainsi que le taux de succès
-                  associé (montants obtenus / montants demandés).
-                </>
-              ),
-              en: (
-                <>
-                  This chart displays the distribution of requested and obtained funding (in M€) by topic, as well as the associated success rate
-                  (amounts obtained / amounts requested).
-                </>
-              ),
+              fr: <>Ce graphique affiche la répartition des subventions demandées et obtenues (en M€) par thématique, ainsi que le taux de succès associé (montants obtenus / montants demandés).</>,
+              en: <>This chart displays the distribution of requested and obtained funding (in M€) by topic, as well as the associated success rate (amounts obtained / amounts requested).</>,
             }}
             readingKey={{
-              fr: (
-                <>
-                  Pour la thématique "Excellence Scientifique", les projets ont demandé X M€ de subventions, et en ont obtenu Y M€, soit un taux de
-                  succès de Z %.
-                </>
-              ),
-              en: (
-                <>For the "Scientific Excellence" topic, projects requested X M€ in funding and obtained Y M€, representing a success rate of Z%.</>
-              ),
+              fr: <>Pour la thématique "Excellence Scientifique", les projets ont demandé X M€ de subventions, et en ont obtenu Y M€, soit un taux de succès de Z %.</>,
+              en: <>For the "Scientific Excellence" topic, projects requested X M€ in funding and obtained Y M€, representing a success rate of Z%.</>,
             }}
             sources={EPChartsSources}
           />

@@ -19,12 +19,27 @@ export function useGetParams() {
     params.push(`pillars=${pillarId}`);
   }
 
+  // Récupérer le paramètre programId et l'ajouter comme programs s'il existe
+  const programId = searchParams.get("programId");
+  if (programId) {
+    params.push(`programs=${programId}`);
+  }
+
+  // Récupérer le paramètre thematicIds et l'ajouter comme topics s'il existe
+  const thematicIds = searchParams.get("thematicIds");
+  if (thematicIds) {
+    params.push(`thematics=${thematicIds}`);
+  }
+
   // Récupérer le paramètre structureid s'il existe
   const structureId = searchParams.get("structureid");
   if (structureId) {
     params.push(`structureid=${structureId}`);
   }
 
+  // const currentLang = searchParams.get("language") || "fr";
+
+  // return { params: params.join("&"), currentLang };
   return params.join("&");
 }
 
@@ -77,17 +92,19 @@ export function renderDataTable(data: { data: Array<{ pilier_name_fr: string; st
 
   const formatToMillions = (value: number) => {
     const millions = value / 1000000;
-    return new Intl.NumberFormat(currentLang === "fr" ? "fr-FR" : "en-US", { 
+    return new Intl.NumberFormat(currentLang === "fr" ? "fr-FR" : "en-US", {
       maximumFractionDigits: 2,
-      minimumFractionDigits: 2 
+      minimumFractionDigits: 2,
     }).format(millions);
   };
 
   const formatPercentage = (value: number) => {
-    return new Intl.NumberFormat(currentLang === "fr" ? "fr-FR" : "en-US", { 
-      maximumFractionDigits: 1,
-      minimumFractionDigits: 1 
-    }).format(value) + " %";
+    return (
+      new Intl.NumberFormat(currentLang === "fr" ? "fr-FR" : "en-US", {
+        maximumFractionDigits: 1,
+        minimumFractionDigits: 1,
+      }).format(value) + " %"
+    );
   };
 
   const labels = {
@@ -102,10 +119,7 @@ export function renderDataTable(data: { data: Array<{ pilier_name_fr: string; st
   return (
     <div style={{ width: "100%" }}>
       <div className="fr-table-responsive">
-        <table
-          className="fr-table fr-table--bordered fr-table--sm"
-          style={{ width: "100%" }}
-        >
+        <table className="fr-table fr-table--bordered fr-table--sm" style={{ width: "100%" }}>
           <caption className="fr-sr-only">{labels.caption}</caption>
           <thead>
             <tr>
@@ -119,8 +133,14 @@ export function renderDataTable(data: { data: Array<{ pilier_name_fr: string; st
             {sortedPillars.map((pillar, index) => (
               <tr key={index}>
                 <th scope="row">{pillar.pillar}</th>
-                <td>{formatToMillions(pillar.evaluated)} {labels.unit}</td>
-                <td><strong>{formatToMillions(pillar.successful)} {labels.unit}</strong></td>
+                <td>
+                  {formatToMillions(pillar.evaluated)} {labels.unit}
+                </td>
+                <td>
+                  <strong>
+                    {formatToMillions(pillar.successful)} {labels.unit}
+                  </strong>
+                </td>
                 <td>{pillar.successRate > 0 ? formatPercentage(pillar.successRate) : "—"}</td>
               </tr>
             ))}

@@ -2,9 +2,9 @@ import { useQuery } from "@tanstack/react-query";
 
 import { Container, Row, Col } from "@dataesr/dsfr-plus";
 import { formatToMillions } from "../../../../../utils/format";
-import { getData } from "../charts/pillars-funding/query";
+import { getData } from "../charts/funding/query";
 // import { getData as getDataProportion } from "../charts/pillars-funding-proportion/query";
-import { useGetParams } from "../charts/pillars-funding/utils";
+import { useGetParams } from "../charts/funding/utils";
 import EvaluatedCard from "../../../components/cards/funds-cards/evaluated";
 import SuccessfulCard from "../../../components/cards/funds-cards/succesful";
 // import SuccessRateCard from "../../../components/cards/funds-cards/success-rate";

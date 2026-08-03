@@ -907,15 +907,21 @@ router.route("/european-projects/overview/funding").get(async (req, res) => {
   if (req.query.programs) {
     const programs = req.query.programs.split("|");
     filters.programme_code = { $in: programs };
+    delete filters.pilier_code;
   }
   if (req.query.thematics) {
     const thematics = req.query.thematics.split(",");
     const filteredThematics = thematics.filter((thematic) => !["ERC", "MSCA"].includes(thematic));
     filters.thema_code = { $in: filteredThematics };
+    delete filters.pilier_code;
+    delete filters.programme_code;
   }
   if (req.query.destinations) {
     const destinations = req.query.destinations.split(",");
     filters.destination_code = { $in: destinations };
+    delete filters.pilier_code;
+    delete filters.programme_code;
+    delete filters.thematics;
   }
   if (req.query.structureid) {
     filters.entities_id = req.query.structureid;
@@ -924,19 +930,20 @@ router.route("/european-projects/overview/funding").get(async (req, res) => {
 
   // test filters (thematics, programs, thematics, destinations)
   const groupBy = { code: "$pilier_code", name_fr: "$pilier_name_fr", name_en: "$pilier_name_en" };
-  if (filters.programme_code) {
-    groupBy.code = "$pilier_code";
-    groupBy.name_fr = "$pilier_name_fr";
-    groupBy.name_en = "$pilier_name_en";
-  } else if (filters.programme_code) {
+  if (filters.pilier_code) {
     groupBy.code = "$programme_code";
     groupBy.name_fr = "$programme_name_fr";
     groupBy.name_en = "$programme_name_en";
-  } else if (filters.thema_code) {
+  } else if (filters.programme_code) {
     groupBy.code = "$thema_code";
     groupBy.name_fr = "$thema_name_fr";
     groupBy.name_en = "$thema_name_en";
+  } else if (filters.thema_code) {
+    groupBy.code = "$destination_code";
+    groupBy.name_fr = "$destination_name_fr";
+    groupBy.name_en = "$destination_name_en";
   } else if (filters.destination_code) {
+    // todo ???
     groupBy.code = "$destination_code";
     groupBy.name_fr = "$destination_name_fr";
     groupBy.name_en = "$destination_name_en";

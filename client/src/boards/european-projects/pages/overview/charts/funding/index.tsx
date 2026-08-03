@@ -4,18 +4,18 @@ import { useSearchParams } from "react-router-dom";
 import { getData } from "./query";
 import options from "./options";
 import { useGetParams, renderDataTable } from "./utils";
-
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 
 const config = {
-  id: "pillarsFundingSuccessRates",
-  idQuery: "pillarsFunding",
-  integrationURL: "/european-projects/components/pages/analysis/overview/charts/destination-funding-success-rates",
+  id: "FundingValues",
+  idQuery: "Funding",
+  integrationURL: "/european-projects/components/pages/analysis/overview/charts/destination-funding",
 };
 
-export default function PillarsFundingSuccessRates() {
+export default function FundingValues() {
   const params = useGetParams();
+  console.log(params);
   const [searchParams] = useSearchParams();
   const currentLang = searchParams.get("language") || "fr";
 
@@ -27,10 +27,9 @@ export default function PillarsFundingSuccessRates() {
   if (isLoading || !data) return <DefaultSkeleton />;
 
   return (
-    <ChartWrapper
-      config={config}
-      options={options(data, currentLang === "fr" ? "Taux de succès" : "Success rate")}
-      renderData={() => renderDataTable(data, "fr")}
-    />
+    <>
+      jerem
+      <ChartWrapper config={config} options={options(data, currentLang === "fr" ? "Subventions (M€)" : "Funding (M€)")} renderData={() => renderDataTable(data, "fr")} />
+    </>
   );
 }
