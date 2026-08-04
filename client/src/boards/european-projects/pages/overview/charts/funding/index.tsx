@@ -26,10 +26,5 @@ export default function FundingValues() {
 
   if (isLoading || !data) return <DefaultSkeleton />;
 
-  return (
-    <>
-      jerem
-      <ChartWrapper config={config} options={options(data, currentLang === "fr" ? "Subventions (M€)" : "Funding (M€)")} renderData={() => renderDataTable(data, "fr")} />
-    </>
-  );
+  return <ChartWrapper config={config} options={options(data, currentLang === "fr" ? "Subventions (M€)" : "Funding (M€)")} renderData={() => renderDataTable(data, "fr")} />;
 }
