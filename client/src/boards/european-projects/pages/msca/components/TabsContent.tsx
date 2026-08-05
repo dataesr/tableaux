@@ -4,7 +4,7 @@ import i18n from "../../../i18n-global.json";
 import SyntheseContent from "./tabs/SyntheseContent";
 import PositionnementContent from "./tabs/PositionnementContent";
 import EvolutionContent from "./tabs/EvolutionContent";
-import EntitiesContent from "./tabs/EntitiesContent";
+// import EntitiesContent from "./tabs/EntitiesContent";
 
 export default function TabsContent() {
   const [searchParams, setSearchParams] = useSearchParams();
