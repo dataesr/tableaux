@@ -95,21 +95,13 @@ function PositioningGlobalChartInner({ countryCode: propCountryCode, currentLang
       <h3>{title}</h3>
       <div className="positioning-global-chart__controls">
         <SegmentedControl className="fr-segmented--sm" name="positioning-global-metric">
-          <SegmentedElement
-            checked={metric === "projects"}
-            label={getI18nLabel(i18n, "projects", currentLang)}
-            onClick={() => setMetric("projects")}
-            value="projects"
-          />
-          <SegmentedElement
-            checked={metric === "funding"}
-            label={getI18nLabel(i18n, "funding", currentLang)}
-            onClick={() => setMetric("funding")}
-            value="funding"
-          />
+          <SegmentedElement checked={metric === "projects"} label={getI18nLabel(i18n, "projects", currentLang)} onClick={() => setMetric("projects")} value="projects" />
+          <SegmentedElement checked={metric === "funding"} label={getI18nLabel(i18n, "funding", currentLang)} onClick={() => setMetric("funding")} value="funding" />
         </SegmentedControl>
       </div>
-      <ChartWrapper config={config} options={options} renderData={() => renderDataTable(processedData, currentLang)} />
+      <div className="chart-container chart-container--default">
+        <ChartWrapper config={config} options={options} renderData={() => renderDataTable(processedData, currentLang)} />
+      </div>
     </div>
   );
 }

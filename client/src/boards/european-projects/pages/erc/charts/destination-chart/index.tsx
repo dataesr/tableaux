@@ -227,7 +227,7 @@ export function DestinationChartProjects({ countryCode: propCountryCode, callYea
   if (!options) return null;
 
   return (
-    <div className="fr-my-3w">
+    <div className="fr-my-3w chart-container chart-container--default">
       <ChartWrapper config={configProjects} options={options} renderData={() => renderDataTableProjects(data, currentLang)} />
     </div>
   );
@@ -259,7 +259,7 @@ export function DestinationChartFunding({ countryCode: propCountryCode, callYear
   if (!options) return null;
 
   return (
-    <div className="fr-my-3w">
+    <div className="fr-my-3w chart-container chart-container--default">
       <ChartWrapper config={configFunding} options={options} renderData={() => renderDataTableFunding(data, currentLang)} />
     </div>
   );

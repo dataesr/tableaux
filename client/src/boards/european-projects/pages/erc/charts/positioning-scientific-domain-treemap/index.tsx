@@ -1,7 +1,7 @@
 // import "highcharts/modules/treemap";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { SegmentedControl, SegmentedElement } from "@dataesr/dsfr-plus";
+import { SegmentedControl, SegmentedElement, Title } from "@dataesr/dsfr-plus";
 
 import { getData } from "./query";
 import Options from "./options";
@@ -82,7 +82,7 @@ export default function PositioningScientificDomainTreemapInner({
 
   return (
     <div className="positioning-scientific-domain-treemap">
-      <h3>{title}</h3>
+      <Title as="h3">{title}</Title>
 
       <div className="positioning-scientific-domain-treemap__controls">
         <div className="select-wrapper">
@@ -90,12 +90,7 @@ export default function PositioningScientificDomainTreemapInner({
             <label className="fr-label" htmlFor="treemap-domain-select">
               {getI18nLabel(i18n, "select-domain", currentLang)}
             </label>
-            <select
-              className="fr-select"
-              id="treemap-domain-select"
-              onChange={(e) => setDomainCode(e.target.value as ScientificDomainCode)}
-              value={domainCode}
-            >
+            <select className="fr-select" id="treemap-domain-select" onChange={(e) => setDomainCode(e.target.value as ScientificDomainCode)} value={domainCode}>
               {SCIENTIFIC_DOMAINS.map((d) => (
                 <option key={d.code} value={d.code}>
                   {d.label[currentLang as "fr" | "en"]}
@@ -106,34 +101,14 @@ export default function PositioningScientificDomainTreemapInner({
         </div>
         <div className="segmented-wrapper">
           <SegmentedControl className="fr-segmented--sm" name="positioning-treemap-metric">
-            <SegmentedElement
-              checked={metric === "projects"}
-              label={getI18nLabel(i18n, "projects", currentLang)}
-              onClick={() => setMetric("projects")}
-              value="projects"
-            />
-            <SegmentedElement
-              checked={metric === "funding"}
-              label={getI18nLabel(i18n, "funding", currentLang)}
-              onClick={() => setMetric("funding")}
-              value="funding"
-            />
+            <SegmentedElement checked={metric === "projects"} label={getI18nLabel(i18n, "projects", currentLang)} onClick={() => setMetric("projects")} value="projects" />
+            <SegmentedElement checked={metric === "funding"} label={getI18nLabel(i18n, "funding", currentLang)} onClick={() => setMetric("funding")} value="funding" />
           </SegmentedControl>
         </div>
         <div className="segmented-wrapper">
           <SegmentedControl className="fr-segmented--sm" name="positioning-treemap-others">
-            <SegmentedElement
-              checked={!showOthersDetail}
-              label={getI18nLabel(i18n, "others-aggregated", currentLang)}
-              onClick={() => setShowOthersDetail(false)}
-              value="aggregated"
-            />
-            <SegmentedElement
-              checked={showOthersDetail}
-              label={getI18nLabel(i18n, "others-detail", currentLang)}
-              onClick={() => setShowOthersDetail(true)}
-              value="detail"
-            />
+            <SegmentedElement checked={!showOthersDetail} label={getI18nLabel(i18n, "others-aggregated", currentLang)} onClick={() => setShowOthersDetail(false)} value="aggregated" />
+            <SegmentedElement checked={showOthersDetail} label={getI18nLabel(i18n, "others-detail", currentLang)} onClick={() => setShowOthersDetail(true)} value="detail" />
           </SegmentedControl>
         </div>
       </div>
@@ -144,7 +119,9 @@ export default function PositioningScientificDomainTreemapInner({
           <p>{getI18nLabel(i18n, "no-data", currentLang)}</p>
         </div>
       ) : (
-        <ChartWrapper config={config} options={options} renderData={() => renderDataTable(processedData, currentLang, showOthersDetail)} />
+        <div className="chart-container chart-container--default">
+          <ChartWrapper config={config} options={options} renderData={() => renderDataTable(processedData, currentLang, showOthersDetail)} />
+        </div>
       )}
     </div>
   );

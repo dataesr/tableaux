@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { SegmentedControl, SegmentedElement } from "@dataesr/dsfr-plus";
+import { Title, SegmentedControl, SegmentedElement } from "@dataesr/dsfr-plus";
 
 import { getData } from "./query";
 import OptionsEvolution from "./options";
@@ -140,7 +140,7 @@ export default function EvolutionPanelDetail({ currentLang: propLang }: Evolutio
 
   return (
     <div className="evolution-panel-detail">
-      <h3>{currentLang === "fr" ? "Évolution par panel ERC" : "Evolution by ERC panel"}</h3>
+      <Title as="h3">{currentLang === "fr" ? "Évolution par panel ERC" : "Evolution by ERC panel"}</Title>
 
       {/* Sélecteur de domaine */}
       <div className="fr-mb-3w">
@@ -163,12 +163,12 @@ export default function EvolutionPanelDetail({ currentLang: propLang }: Evolutio
       </div>
 
       {/* Graphique 1: Poids des projets par panel */}
-      <div className="fr-mb-4w">
+      <div className="fr-mb-4w chart-container chart-container--default">
         <ChartWrapper config={configWeight} options={weightOptions} renderData={() => null} />
       </div>
 
       {/* Graphique 2: Taux de succès par panel */}
-      <div className="fr-mb-4w">
+      <div className="fr-mb-4w chart-container chart-container--default">
         <ChartWrapper config={configSuccessRate} options={successRateOptions} renderData={() => null} />
       </div>
     </div>

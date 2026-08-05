@@ -104,7 +104,7 @@ export default function ErcGenderEvolution() {
   };
 
   return (
-    <div className="fr-my-5w">
+    <div className="fr-my-5w chart-container--default">
       <ChartWrapper.Title config={{ title: titleConfig, id: config.id }} />
       <Row gutters>
         <Col md={4}>
@@ -112,12 +112,7 @@ export default function ErcGenderEvolution() {
             <label className="fr-label" htmlFor="gender-evo-dest-select">
               {currentLang === "fr" ? "Type de financement" : "Funding type"}
             </label>
-            <select
-              className="fr-select"
-              id="gender-evo-dest-select"
-              value={selectedDestination}
-              onChange={(e) => setSelectedDestination(e.target.value)}
-            >
+            <select className="fr-select" id="gender-evo-dest-select" value={selectedDestination} onChange={(e) => setSelectedDestination(e.target.value)}>
               {ERC_DESTINATIONS.map((d) => (
                 <option key={d.code} value={d.code}>
                   {currentLang === "fr" ? d.labelFr : d.labelEn}
@@ -171,7 +166,9 @@ export default function ErcGenderEvolution() {
       ) : !data?.years?.length ? (
         <p className="fr-text--sm fr-hint-text">{currentLang === "fr" ? "Aucune donnée disponible." : "No data available."}</p>
       ) : (
-        <ChartWrapper config={config} options={Options(data, currentLang)} renderData={() => null} />
+        <div className="chart-container chart-container--default">
+          <ChartWrapper config={config} options={Options(data, currentLang)} renderData={() => null} />
+        </div>
       )}
     </div>
   );

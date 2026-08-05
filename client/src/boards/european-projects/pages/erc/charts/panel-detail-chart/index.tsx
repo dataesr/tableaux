@@ -281,30 +281,14 @@ export default function PanelDetailChart({ countryCode: propCountryCode, callYea
 
         {/* Sélecteur projets/financements */}
         <SegmentedControl className="fr-segmented--sm" name="panel-detail-view-mode">
-          <SegmentedElement
-            checked={viewMode === "projects"}
-            label={currentLang === "fr" ? "Projets" : "Projects"}
-            onClick={() => setViewMode("projects")}
-            value="projects"
-          />
-          <SegmentedElement
-            checked={viewMode === "funding"}
-            label={currentLang === "fr" ? "Financements" : "Funding"}
-            onClick={() => setViewMode("funding")}
-            value="funding"
-          />
+          <SegmentedElement checked={viewMode === "projects"} label={currentLang === "fr" ? "Projets" : "Projects"} onClick={() => setViewMode("projects")} value="projects" />
+          <SegmentedElement checked={viewMode === "funding"} label={currentLang === "fr" ? "Financements" : "Funding"} onClick={() => setViewMode("funding")} value="funding" />
         </SegmentedControl>
       </div>
 
-      <ChartWrapper
-        config={config}
-        options={options}
-        renderData={() =>
-          viewMode === "projects"
-            ? renderDataTableProjects(data, effectiveDomain, currentLang)
-            : renderDataTableFunding(data, effectiveDomain, currentLang)
-        }
-      />
+      <div className="chart-container chart-container--default">
+        <ChartWrapper config={config} options={options} renderData={() => (viewMode === "projects" ? renderDataTableProjects(data, effectiveDomain, currentLang) : renderDataTableFunding(data, effectiveDomain, currentLang))} />
+      </div>
     </div>
   );
 }

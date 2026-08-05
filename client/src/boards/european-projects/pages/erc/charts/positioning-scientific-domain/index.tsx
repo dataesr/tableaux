@@ -185,12 +185,7 @@ function PositioningScientificDomainChartInner({ countryCode: propCountryCode, c
             <label className="fr-label" htmlFor="domain-select">
               {getI18nLabel(i18n, "select-domain", currentLang)}
             </label>
-            <select
-              className="fr-select"
-              id="domain-select"
-              value={domainCode}
-              onChange={(e) => setDomainCode(e.target.value as ScientificDomainCode)}
-            >
+            <select className="fr-select" id="domain-select" value={domainCode} onChange={(e) => setDomainCode(e.target.value as ScientificDomainCode)}>
               {SCIENTIFIC_DOMAINS.map((d) => (
                 <option key={d.code} value={d.code}>
                   {d.label[currentLang as "fr" | "en"]}
@@ -201,18 +196,8 @@ function PositioningScientificDomainChartInner({ countryCode: propCountryCode, c
         </div>
         <div className="segmented-wrapper">
           <SegmentedControl className="fr-segmented--sm" name="positioning-scientific-domain-metric">
-            <SegmentedElement
-              checked={metric === "projects"}
-              label={getI18nLabel(i18n, "projects", currentLang)}
-              onClick={() => setMetric("projects")}
-              value="projects"
-            />
-            <SegmentedElement
-              checked={metric === "funding"}
-              label={getI18nLabel(i18n, "funding", currentLang)}
-              onClick={() => setMetric("funding")}
-              value="funding"
-            />
+            <SegmentedElement checked={metric === "projects"} label={getI18nLabel(i18n, "projects", currentLang)} onClick={() => setMetric("projects")} value="projects" />
+            <SegmentedElement checked={metric === "funding"} label={getI18nLabel(i18n, "funding", currentLang)} onClick={() => setMetric("funding")} value="funding" />
           </SegmentedControl>
         </div>
       </div>
@@ -222,25 +207,13 @@ function PositioningScientificDomainChartInner({ countryCode: propCountryCode, c
         <div className="positioning-scientific-domain-chart__panel-selector">
           <span className="fr-label fr-text--sm">{getI18nLabel(i18n, "select-panel", currentLang)}&nbsp;:</span>
           <div className="panel-toggle-group" role="group" aria-label={getI18nLabel(i18n, "select-panel", currentLang)}>
-            <button
-              type="button"
-              className={`fr-tag fr-tag--sm${isCumul ? " fr-tag--selected" : ""}`}
-              onClick={() => setSelectedPanels("all")}
-              aria-pressed={isCumul}
-            >
+            <button type="button" className={`fr-tag fr-tag--sm${isCumul ? " fr-tag--selected" : ""}`} onClick={() => setSelectedPanels("all")} aria-pressed={isCumul}>
               {getI18nLabel(i18n, "all-panels", currentLang)}
             </button>
             {domainPanels.map((p) => {
               const isActive = isPanelMode && (selectedPanels as string[]).includes(p.panel_id);
               return (
-                <button
-                  key={p.panel_id}
-                  type="button"
-                  className={`fr-tag fr-tag--sm${isActive ? " fr-tag--selected" : ""}`}
-                  onClick={() => togglePanel(p.panel_id)}
-                  aria-pressed={isActive}
-                  title={p.panel_lib || p.panel_name || p.panel_id}
-                >
+                <button key={p.panel_id} type="button" className={`fr-tag fr-tag--sm${isActive ? " fr-tag--selected" : ""}`} onClick={() => togglePanel(p.panel_id)} aria-pressed={isActive} title={p.panel_lib || p.panel_name || p.panel_id}>
                   {p.panel_name || p.panel_id}
                 </button>
               );
@@ -256,7 +229,9 @@ function PositioningScientificDomainChartInner({ countryCode: propCountryCode, c
       ) : isChartLoading ? (
         <DefaultSkeleton />
       ) : (
-        <ChartWrapper config={config} options={chartOptions} renderData={renderDataFn} />
+        <div className="chart-container chart-container--default">
+          <ChartWrapper config={config} options={chartOptions} renderData={renderDataFn} />
+        </div>
       )}
     </div>
   );

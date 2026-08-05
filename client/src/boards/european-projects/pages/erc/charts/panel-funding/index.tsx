@@ -98,7 +98,9 @@ export default function PanelFundingChart({ countryAdjective = "français", curr
         </div>
       </div>
 
-      <ChartWrapper config={config} options={options} renderData={() => renderDataTable(data, currentLang)} />
+      <div className="chart-container chart-container--default">
+        <ChartWrapper config={config} options={options} renderData={() => renderDataTable(data, currentLang)} />
+      </div>
 
       {/* Légende personnalisée */}
       <div className="panel-funding-chart__legend">

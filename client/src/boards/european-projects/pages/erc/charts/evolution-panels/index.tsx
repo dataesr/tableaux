@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { Title } from "@dataesr/dsfr-plus";
 
 import { getData } from "./query";
 import Options from "./options";
@@ -109,22 +110,16 @@ export default function EvolutionPanelsCharts({ countryAdjective = "français", 
 
   return (
     <div className="evolution-panels-charts">
-      <h3>
-        {currentLang === "fr" ? `Évolution ${countryAdjective} par domaine scientifique` : `${countryAdjective} evolution by scientific domain`}
-      </h3>
+      <Title as="h3">{currentLang === "fr" ? `Évolution ${countryAdjective} par domaine scientifique` : `${countryAdjective} evolution by scientific domain`}</Title>
 
       {/* Graphique 1: Poids des projets par domaine */}
-      <div className="fr-mb-4w">
+      <div className="fr-mb-4w chart-container chart-container--default">
         <ChartWrapper config={configWeight} options={weightOptions} renderData={() => renderDataTable(processedData, "weight", currentLang)} />
       </div>
 
       {/* Graphique 2: Taux de succès par domaine */}
-      <div className="fr-mb-4w">
-        <ChartWrapper
-          config={configSuccessRate}
-          options={successRateOptions}
-          renderData={() => renderDataTable(processedData, "successRate", currentLang)}
-        />
+      <div className="fr-mb-4w chart-container chart-container--default">
+        <ChartWrapper config={configSuccessRate} options={successRateOptions} renderData={() => renderDataTable(processedData, "successRate", currentLang)} />
       </div>
     </div>
   );

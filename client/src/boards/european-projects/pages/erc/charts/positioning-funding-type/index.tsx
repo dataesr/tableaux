@@ -95,12 +95,7 @@ function PositioningFundingTypeChartInner({ countryCode: propCountryCode, curren
             <label className="fr-label" htmlFor="funding-type-select">
               {getI18nLabel(i18n, "select-funding-type", currentLang)}
             </label>
-            <select
-              className="fr-select"
-              id="funding-type-select"
-              value={fundingType}
-              onChange={(e) => setFundingType(e.target.value as FundingTypeCode)}
-            >
+            <select className="fr-select" id="funding-type-select" value={fundingType} onChange={(e) => setFundingType(e.target.value as FundingTypeCode)}>
               {FUNDING_TYPES.map((ft) => (
                 <option key={ft.code} value={ft.code}>
                   {ft.label[currentLang as "fr" | "en"]}
@@ -111,18 +106,8 @@ function PositioningFundingTypeChartInner({ countryCode: propCountryCode, curren
         </div>
         <div className="segmented-wrapper">
           <SegmentedControl className="fr-segmented--sm" name="positioning-funding-type-metric">
-            <SegmentedElement
-              checked={metric === "projects"}
-              label={getI18nLabel(i18n, "projects", currentLang)}
-              onClick={() => setMetric("projects")}
-              value="projects"
-            />
-            <SegmentedElement
-              checked={metric === "funding"}
-              label={getI18nLabel(i18n, "funding", currentLang)}
-              onClick={() => setMetric("funding")}
-              value="funding"
-            />
+            <SegmentedElement checked={metric === "projects"} label={getI18nLabel(i18n, "projects", currentLang)} onClick={() => setMetric("projects")} value="projects" />
+            <SegmentedElement checked={metric === "funding"} label={getI18nLabel(i18n, "funding", currentLang)} onClick={() => setMetric("funding")} value="funding" />
           </SegmentedControl>
         </div>
       </div>
@@ -132,7 +117,9 @@ function PositioningFundingTypeChartInner({ countryCode: propCountryCode, curren
           <p>{getI18nLabel(i18n, "no-data", currentLang)}</p>
         </div>
       ) : (
-        <ChartWrapper config={config} options={options} renderData={() => renderDataTable(processedData, currentLang)} />
+        <div className="chart-container chart-container--default">
+          <ChartWrapper config={config} options={options} renderData={() => renderDataTable(processedData, currentLang)} />
+        </div>
       )}
     </div>
   );

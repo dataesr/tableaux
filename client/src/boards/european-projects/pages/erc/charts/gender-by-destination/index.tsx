@@ -54,14 +54,16 @@ export default function ErcGenderByDestination() {
   };
 
   return (
-    <div className="fr-my-5w">
+    <div className="fr-my-5w chart-container--default">
       <ChartWrapper.Title config={{ title: titleConfig, id: config.id }} />
       {isLoading || !data ? (
         <DefaultSkeleton />
       ) : !data?.byDestination?.length ? (
         <p className="fr-text--sm fr-hint-text">{currentLang === "fr" ? "Aucune donnée disponible." : "No data available."}</p>
       ) : (
-        <ChartWrapper config={config} options={Options(data, currentLang)} renderData={() => null} />
+        <div className="chart-container chart-container--default">
+          <ChartWrapper config={config} options={Options(data, currentLang)} renderData={() => null} />
+        </div>
       )}
     </div>
   );
