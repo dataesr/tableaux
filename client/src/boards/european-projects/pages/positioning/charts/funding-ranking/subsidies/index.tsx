@@ -74,11 +74,10 @@ export default function FundingRankingSubsidies() {
             {getI18nLabel("title")}
           </Title>
           <Callout className="callout-style">
-            La comparaison des montants demandés et obtenus permet d'évaluer l'efficacité des pays dans l'obtention de subventions pour leurs projets.
-            Plus la différence entre les deux montants est faible, meilleure est la performance du pays en matière de financement.
+            La comparaison des montants demandés et obtenus permet d'évaluer l'efficacité des pays dans l'obtention de subventions pour leurs projets. Plus la différence entre les deux montants est faible, meilleure est la performance du pays en
+            matière de financement.
             <br />
-            Le deuxième graphique illustre le taux de succès du pays par rapport à la moyenne des taux de succès des autres pays, offrant ainsi une
-            perspective comparative sur l'efficacité des demandes de financement.
+            Le deuxième graphique illustre le taux de succès du pays par rapport à la moyenne des taux de succès des autres pays, offrant ainsi une perspective comparative sur l'efficacité des demandes de financement.
           </Callout>
         </Col>
       </Row>
@@ -109,7 +108,7 @@ export default function FundingRankingSubsidies() {
           </fieldset>
         </Col>
       </Row>
-      <Row className="chart-container chart-container--pillars">
+      <Row className="chart-container chart-container--default">
         <Col>
           <Title as="h3" look="h5" style={{ minHeight: "4.5rem", lineHeight: "1.5rem" }} className="fr-mb-0">
             {getI18nLabel("configChart1a-title")}
@@ -127,9 +126,7 @@ export default function FundingRankingSubsidies() {
           <ChartWrapper
             config={configChart1b}
             options={optionSubSuccessRate(prepareData(data, "total_successful"), currentLang)}
-            renderData={() =>
-              renderDataTableSuccessRate(prepareData(data, "total_successful"), currentLang, searchParams.get("country_code") ?? null)
-            }
+            renderData={() => renderDataTableSuccessRate(prepareData(data, "total_successful"), currentLang, searchParams.get("country_code") ?? null)}
           />
         </Col>
         <Col md={12} className="chart-footer">
@@ -137,16 +134,14 @@ export default function FundingRankingSubsidies() {
             comment={{
               fr: (
                 <>
-                  Ce graphique représente le positionnement du pays sélectionné par rapport aux autres pays en fonction des montants de subventions
-                  demandés et obtenus. La barre bleue correspond aux montants demandés pour les projets évalués, la barre verte aux montants obtenus
-                  pour les projets réussis. Le taux de succès compare le pays sélectionné avec la moyenne européenne.
+                  Ce graphique représente le positionnement du pays sélectionné par rapport aux autres pays en fonction des montants de subventions demandés et obtenus. La barre bleue correspond aux montants demandés pour les projets évalués, la
+                  barre verte aux montants obtenus pour les projets réussis. Le taux de succès compare le pays sélectionné avec la moyenne européenne.
                 </>
               ),
               en: (
                 <>
-                  This chart shows the positioning of the selected country compared to other countries based on the amounts of subsidies requested and
-                  obtained. The blue bar corresponds to the amounts requested for evaluated projects, the green bar to the amounts obtained for
-                  successful projects. The success rate compares the selected country with the European average.
+                  This chart shows the positioning of the selected country compared to other countries based on the amounts of subsidies requested and obtained. The blue bar corresponds to the amounts requested for evaluated projects, the green bar
+                  to the amounts obtained for successful projects. The success rate compares the selected country with the European average.
                 </>
               ),
             }}

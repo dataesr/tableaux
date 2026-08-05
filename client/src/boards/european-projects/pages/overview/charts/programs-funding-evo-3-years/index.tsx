@@ -86,9 +86,9 @@ export default function ProgramsFundingEvo3Years() {
   };
 
   return (
-    <Container fluid className="chart-container chart-container--programs">
+    <Container fluid className="chart-container chart-container--default">
       <Row className="fr-my-1w">
-        <Col>
+        <Col className="fr-px-1w">
           <select className="fr-select" onChange={(e) => setDisplayType(e.target.value)}>
             <option value="total_fund_eur">{getI18nLabel(i18n, "total-fund-eur")}</option>
             <option value="total_coordination_number">{getI18nLabel(i18n, "total-coordination-number")}</option>
@@ -98,20 +98,12 @@ export default function ProgramsFundingEvo3Years() {
       </Row>
       <Row>
         <Col md={12}>
-          <ChartWrapper
-            config={configChart1}
-            options={optionsValues(data, displayType, currentLang)}
-            renderData={() => renderDataTable(data, currentLang, displayType)}
-          />
+          <ChartWrapper config={configChart1} options={optionsValues(data, displayType, currentLang)} renderData={() => renderDataTable(data, currentLang, displayType)} />
         </Col>
       </Row>
       <Row className="fr-my-1w">
         <Col>
-          <ChartWrapper
-            config={configChart3}
-            options={optionsSuccessRates(data, displayType, currentLang)}
-            renderData={() => renderDataTableRates(data, currentLang, displayType)}
-          />
+          <ChartWrapper config={configChart3} options={optionsSuccessRates(data, displayType, currentLang)} renderData={() => renderDataTableRates(data, currentLang, displayType)} />
         </Col>
       </Row>
     </Container>

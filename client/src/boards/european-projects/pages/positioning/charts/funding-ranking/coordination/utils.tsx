@@ -1,5 +1,7 @@
 import { useSearchParams } from "react-router-dom";
-
+import { getI18nLabel } from "../../../../../../../utils";
+import i18n from "../../../../../i18n-global.json";
+  
 export function useGetParams() {
   const [searchParams] = useSearchParams();
 
@@ -70,9 +72,8 @@ export function readingKey(data) {
               {firstCountry.rank_coordination_number_evaluated}
               {getOrdinal(firstCountry.rank_coordination_number_evaluated, "fr")}
             </strong>{" "}
-            position pour le nombre de coordinations évaluées (<strong>{firstCountry.total_coordination_number_evaluated}</strong>) ainsi que pour les
-            coordinations réussies (<strong>{firstCountry.total_coordination_number_successful}</strong>). Son taux de succès est de{" "}
-            <strong>{firstCountry.ratio_coordination_number.toFixed(1)}%</strong>.
+            position pour le nombre de coordinations évaluées (<strong>{firstCountry.total_coordination_number_evaluated}</strong>) ainsi que pour les coordinations réussies (<strong>{firstCountry.total_coordination_number_successful}</strong>). Son
+            taux de succès est de <strong>{firstCountry?.ratio_coordination_number?.toFixed(1)}%</strong>.
           </>
         ) : (
           <>
@@ -81,14 +82,12 @@ export function readingKey(data) {
               {firstCountry.rank_coordination_number_evaluated}
               {getOrdinal(firstCountry.rank_coordination_number_evaluated, "fr")}
             </strong>{" "}
-            position pour le nombre de coordinations évaluées (<strong>{firstCountry.total_coordination_number_evaluated}</strong>) alors qu'il arrive
-            en{" "}
+            position pour le nombre de coordinations évaluées (<strong>{firstCountry.total_coordination_number_evaluated}</strong>) alors qu'il arrive en{" "}
             <strong>
               {firstCountry.rank_coordination_number_successful}
               {getOrdinal(firstCountry.rank_coordination_number_successful, "fr")}
             </strong>{" "}
-            position pour les coordinations réussies (<strong>{firstCountry.total_coordination_number_successful}</strong>). Le taux de succès est de{" "}
-            <strong>{firstCountry.ratio_coordination_number.toFixed(1)}%</strong>.
+            position pour les coordinations réussies (<strong>{firstCountry.total_coordination_number_successful}</strong>). Le taux de succès est de <strong>{firstCountry?.ratio_coordination_number?.toFixed(1)}%</strong>.
           </>
         )}
       </>
@@ -102,9 +101,8 @@ export function readingKey(data) {
               {firstCountry.rank_coordination_number_evaluated}
               {getOrdinal(firstCountry.rank_coordination_number_evaluated, "en")}
             </strong>{" "}
-            for the number of evaluated coordinations (<strong>{firstCountry.total_coordination_number_evaluated}</strong>) as well as for successful
-            coordinations (<strong>{firstCountry.total_coordination_number_successful}</strong>). Its success rate is{" "}
-            <strong>{firstCountry.ratio_coordination_number.toFixed(1)}%</strong>.
+            for the number of evaluated coordinations (<strong>{firstCountry.total_coordination_number_evaluated}</strong>) as well as for successful coordinations (<strong>{firstCountry.total_coordination_number_successful}</strong>). Its success
+            rate is <strong>{firstCountry?.ratio_coordination_number?.toFixed(1)}%</strong>.
           </>
         ) : (
           <>
@@ -113,23 +111,20 @@ export function readingKey(data) {
               {firstCountry.rank_coordination_number_evaluated}
               {getOrdinal(firstCountry.rank_coordination_number_evaluated, "en")}
             </strong>{" "}
-            for the number of evaluated coordinations (<strong>{firstCountry.total_coordination_number_evaluated}</strong>) while it ranks{" "}
+            for the number of evaluated coordinations (<strong>{firstCountry?.total_coordination_number_evaluated}</strong>) while it ranks{" "}
             <strong>
               {firstCountry.rank_coordination_number_successful}
-              {getOrdinal(firstCountry.rank_coordination_number_successful, "en")}
+              {getOrdinal(firstCountry?.rank_coordination_number_successful, "en")}
             </strong>{" "}
-            for successful coordinations (<strong>{firstCountry.total_coordination_number_successful}</strong>). The success rate is{" "}
-            <strong>{firstCountry.ratio_coordination_number.toFixed(1)}%</strong>.
+            for successful coordinations (<strong>{firstCountry?.total_coordination_number_successful}</strong>). The success rate is <strong>{firstCountry?.ratio_coordination_number?.toFixed(1)}%</strong>.
           </>
         )}
       </>
     ),
   };
 }
+
 export function renderDataTableCoordination(data, currentLang, selectedCountryCode) {
-  const { getI18nLabel } = require("../../../../../../../utils");
-  const i18n = require("../../../../../i18n-global.json");
-  
   if (!data || data.length === 0) return null;
 
   const labels = {
@@ -153,10 +148,18 @@ export function renderDataTableCoordination(data, currentLang, selectedCountryCo
                 <tr>
                   <th scope="col">{labels.position}</th>
                   <th scope="col">{labels.country}</th>
-                  <th scope="col" style={{ textAlign: "right" }}>{labels.coordEvaluated}</th>
-                  <th scope="col" style={{ textAlign: "right" }}>{labels.rankEvaluated}</th>
-                  <th scope="col" style={{ textAlign: "right" }}>{labels.coordSuccessful}</th>
-                  <th scope="col" style={{ textAlign: "right" }}>{labels.rankSuccessful}</th>
+                  <th scope="col" style={{ textAlign: "right" }}>
+                    {labels.coordEvaluated}
+                  </th>
+                  <th scope="col" style={{ textAlign: "right" }}>
+                    {labels.rankEvaluated}
+                  </th>
+                  <th scope="col" style={{ textAlign: "right" }}>
+                    {labels.coordSuccessful}
+                  </th>
+                  <th scope="col" style={{ textAlign: "right" }}>
+                    {labels.rankSuccessful}
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -165,11 +168,7 @@ export function renderDataTableCoordination(data, currentLang, selectedCountryCo
                   const isSelectedCountry = item.id === selectedCountryCode;
 
                   return (
-                    <tr 
-                      key={item.id} 
-                      style={isSelectedCountry ? { fontWeight: "bold" } : undefined}
-                      aria-current={isSelectedCountry ? "true" : undefined}
-                    >
+                    <tr key={item.id} style={isSelectedCountry ? { fontWeight: "bold" } : undefined} aria-current={isSelectedCountry ? "true" : undefined}>
                       <th scope="row">{index + 1}</th>
                       <td>{countryName}</td>
                       <td style={{ textAlign: "right" }}>{item.total_coordination_number_evaluated}</td>
@@ -189,11 +188,7 @@ export function renderDataTableCoordination(data, currentLang, selectedCountryCo
 }
 
 export function renderDataTableCoordinationSuccessRate(data, currentLang, selectedCountryCode) {
-  const { getI18nLabel } = require("../../../../../../../utils");
-  const i18n = require("../../../../../i18n-global.json");
-  
   if (!data || data.length === 0) return null;
-
   // Calculer le taux moyen
   const total = data.reduce((acc, el) => acc + el.ratio_coordination_number, 0);
   const average = total / data.length;
@@ -218,8 +213,12 @@ export function renderDataTableCoordinationSuccessRate(data, currentLang, select
                 <tr>
                   <th scope="col">{labels.position}</th>
                   <th scope="col">{labels.country}</th>
-                  <th scope="col" style={{ textAlign: "right" }}>{labels.successRate}</th>
-                  <th scope="col" style={{ textAlign: "right" }}>{labels.vsAverage}</th>
+                  <th scope="col" style={{ textAlign: "right" }}>
+                    {labels.successRate}
+                  </th>
+                  <th scope="col" style={{ textAlign: "right" }}>
+                    {labels.vsAverage}
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -230,15 +229,14 @@ export function renderDataTableCoordinationSuccessRate(data, currentLang, select
                   const diffSign = diff >= 0 ? "+" : "";
 
                   return (
-                    <tr 
-                      key={item.id} 
-                      style={isSelectedCountry ? { fontWeight: "bold" } : undefined}
-                      aria-current={isSelectedCountry ? "true" : undefined}
-                    >
+                    <tr key={item.id} style={isSelectedCountry ? { fontWeight: "bold" } : undefined} aria-current={isSelectedCountry ? "true" : undefined}>
                       <th scope="row">{index + 1}</th>
                       <td>{countryName}</td>
                       <td style={{ textAlign: "right" }}>{item.ratio_coordination_number.toFixed(1)} %</td>
-                      <td style={{ textAlign: "right" }}>{diffSign}{diff.toFixed(1)} %</td>
+                      <td style={{ textAlign: "right" }}>
+                        {diffSign}
+                        {diff.toFixed(1)} %
+                      </td>
                     </tr>
                   );
                 })}

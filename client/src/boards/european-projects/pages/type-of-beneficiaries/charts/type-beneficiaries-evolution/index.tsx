@@ -70,18 +70,12 @@ export default function TypeOfBeneficiariesEvolution() {
   return (
     <div className={`fr-mt-5w chart-container chart-container--${color}`}>
       <ChartWrapper.Title config={config}>
-        <div className="fr-my-3w">
+        <div className="fr-my-3w fr-px-1w">
           <div className="fr-select-group">
             <label className="fr-label" htmlFor="entity-type-select-evolution">
               {getI18nLabel(i18n, "type-of-entity-evolution")}
             </label>
-            <select
-              className="fr-select"
-              id="entity-type-select-evolution"
-              name="entity-type-select-evolution"
-              value={selectedEntityType}
-              onChange={(e) => setSelectedEntityType(e.target.value)}
-            >
+            <select className="fr-select" id="entity-type-select-evolution" name="entity-type-select-evolution" value={selectedEntityType} onChange={(e) => setSelectedEntityType(e.target.value)}>
               {entityTypes.map((type) => (
                 <option key={type.value} value={type.value}>
                   {type.label}
@@ -92,12 +86,7 @@ export default function TypeOfBeneficiariesEvolution() {
         </div>
       </ChartWrapper.Title>
 
-      <ChartWrapper
-        config={{ ...config, sources: EPChartsSources }}
-        hideTitle={true}
-        options={options(data, currentLang, selectedCountry)}
-        renderData={() => RenderData(data, currentLang)}
-      />
+      <ChartWrapper config={{ ...config, sources: EPChartsSources }} hideTitle={true} options={options(data, currentLang, selectedCountry)} renderData={() => RenderData(data, currentLang)} />
     </div>
   );
 }

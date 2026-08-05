@@ -66,10 +66,8 @@ export default function Top10Beneficiaries() {
   };
 
   return (
-    <ChartWrapper
-      config={config}
-      options={options(prepareData(data), searchParams.get("country_code") ?? null, currentLang)}
-      renderData={() => renderDataTable(prepareData(data), currentLang, searchParams.get("country_code") ?? null)}
-    />
+    <div className="chart-container chart-container--default">
+      <ChartWrapper config={config} options={options(prepareData(data), searchParams.get("country_code") ?? null, currentLang)} renderData={() => renderDataTable(prepareData(data), currentLang, searchParams.get("country_code") ?? null)} />
+    </div>
   );
 }

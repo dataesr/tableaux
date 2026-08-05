@@ -8,7 +8,7 @@ import { EPChartsSources } from "../../../config";
 export default function PillarsFunding() {
   return (
     <Container fluid>
-      <Row className="chart-container chart-container--pillars">
+      <Row className="chart-container chart-container--default">
         <Col md={8}>
           <FundingValues />
         </Col>
@@ -30,7 +30,7 @@ export default function PillarsFunding() {
         </Col>
       </Row>
 
-      <Row className="fr-mt-1w chart-container chart-container--pillars">
+      <Row className="fr-mt-1w chart-container chart-container--default">
         <Col>
           <PillarsFundingProportion />
         </Col>

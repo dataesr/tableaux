@@ -8,7 +8,7 @@ import { EPChartsSources } from "../../../config";
 export default function TopicsFunding() {
   return (
     <>
-      <Row className="chart-container chart-container--programs">
+      <Row className="chart-container chart-container--default">
         <Col md={6}>
           <FundingValues />
         </Col>
@@ -29,7 +29,7 @@ export default function TopicsFunding() {
           />
         </Col>
       </Row>
-      <Row className="fr-mt-1w chart-container chart-container--programs">
+      <Row className="fr-mt-1w chart-container chart-container--default">
         <Col>
           <TopicsFundingProportion />
         </Col>

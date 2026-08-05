@@ -18,7 +18,7 @@ export default function ProgramsFunding() {
 
   return (
     <>
-      <Row className="chart-container chart-container--pillars" style={{ marginLeft: "var(--spacing-1w)", marginRight: "var(--spacing-1w)" }}>
+      <Row className="chart-container chart-container--default">
         <Col md={6}>
           <FundingValues />
         </Col>
@@ -36,7 +36,7 @@ export default function ProgramsFunding() {
           />
         </Col>
       </Row>
-      <Row className="fr-mt-1w chart-container chart-container--pillars">
+      <Row className="fr-mt-1w chart-container chart-container--default">
         <Col>
           <ProgramsFundingProportion />
         </Col>

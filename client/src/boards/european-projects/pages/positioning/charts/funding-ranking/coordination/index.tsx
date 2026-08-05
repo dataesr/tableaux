@@ -74,12 +74,10 @@ export default function FundingRankingCoordination() {
             {getI18nLabel("title")}
           </Title>
           <Callout className="callout-style">
-            Ce graphique présente le classement des pays en fonction du nombre de coordinations de projets européens déposés et lauréats. Les
-            coordinations représentent le rôle principal dans un projet européen. La barre bleue indique le nombre de coordinations de projets déposés
-            (évalués), tandis que la barre verte indique le nombre de coordinations de projets lauréats.
+            Ce graphique présente le classement des pays en fonction du nombre de coordinations de projets européens déposés et lauréats. Les coordinations représentent le rôle principal dans un projet européen. La barre bleue indique le nombre de
+            coordinations de projets déposés (évalués), tandis que la barre verte indique le nombre de coordinations de projets lauréats.
             <br />
-            Le second graphique illustre le taux de succès des coordinations de projets pour chaque pays, comparant le pays sélectionné à la moyenne
-            européenne.
+            Le second graphique illustre le taux de succès des coordinations de projets pour chaque pays, comparant le pays sélectionné à la moyenne européenne.
           </Callout>
         </Col>
       </Row>
@@ -110,7 +108,7 @@ export default function FundingRankingCoordination() {
           </fieldset>
         </Col>
       </Row>
-      <Row className="chart-container chart-container--pillars">
+      <Row className="chart-container chart-container--default">
         <Col md={6}>
           <Title as="h3" look="h5" style={{ minHeight: "4.5rem", lineHeight: "1.5rem" }} className="fr-mb-0">
             {getI18nLabel("configChart2a-title")}
@@ -118,13 +116,7 @@ export default function FundingRankingCoordination() {
           <ChartWrapper
             config={configChart2a}
             options={optionsCoordinationNumber(prepareData(data, "total_coordination_number_successful"), currentLang)}
-            renderData={() =>
-              renderDataTableCoordination(
-                prepareData(data, "total_coordination_number_successful"),
-                currentLang,
-                searchParams.get("country_code") ?? null,
-              )
-            }
+            renderData={() => renderDataTableCoordination(prepareData(data, "total_coordination_number_successful"), currentLang, searchParams.get("country_code") ?? null)}
           />
         </Col>
         <Col md={6}>
@@ -134,13 +126,7 @@ export default function FundingRankingCoordination() {
           <ChartWrapper
             config={configChart2b}
             options={optionCoordinationNumberSuccessRate(prepareData(data, "total_coordination_number_successful"), currentLang)}
-            renderData={() =>
-              renderDataTableCoordinationSuccessRate(
-                prepareData(data, "total_coordination_number_successful"),
-                currentLang,
-                searchParams.get("country_code") ?? null,
-              )
-            }
+            renderData={() => renderDataTableCoordinationSuccessRate(prepareData(data, "total_coordination_number_successful"), currentLang, searchParams.get("country_code") ?? null)}
           />
         </Col>
         <Col md={12} className="chart-footer">
@@ -148,16 +134,14 @@ export default function FundingRankingCoordination() {
             comment={{
               fr: (
                 <>
-                  Ce graphique représente le positionnement du pays sélectionné par rapport aux autres pays en fonction du nombre de coordinations de
-                  projets déposés et lauréats. La barre bleue correspond aux coordinations déposées, la barre verte aux coordinations lauréates. Le
-                  taux de succès compare le pays sélectionné avec la moyenne européenne.
+                  Ce graphique représente le positionnement du pays sélectionné par rapport aux autres pays en fonction du nombre de coordinations de projets déposés et lauréats. La barre bleue correspond aux coordinations déposées, la barre verte
+                  aux coordinations lauréates. Le taux de succès compare le pays sélectionné avec la moyenne européenne.
                 </>
               ),
               en: (
                 <>
-                  This chart shows the positioning of the selected country compared to other countries based on the number of project coordinations
-                  submitted and winners. The blue bar corresponds to submitted coordinations, the green bar to winning coordinations. The success rate
-                  compares the selected country with the European average.
+                  This chart shows the positioning of the selected country compared to other countries based on the number of project coordinations submitted and winners. The blue bar corresponds to submitted coordinations, the green bar to winning
+                  coordinations. The success rate compares the selected country with the European average.
                 </>
               ),
             }}

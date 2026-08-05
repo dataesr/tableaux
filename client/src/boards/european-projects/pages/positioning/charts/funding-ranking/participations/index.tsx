@@ -74,13 +74,11 @@ export default function FundingRankingParticipations() {
             {getI18nLabel("title")}
           </Title>
           <Callout className="callout-style">
-            Ce graphique illustre le positionnement du pays sélectionné par rapport aux autres pays en fonction du nombre de participants impliqués
-            dans les projets évalués et réussis (lauréats). La barre bleue représente le nombre de participants dans les projets évalués, tandis que
-            la barre verte indique le nombre de participants dans les projets réussis. Le classement est basé sur ces deux critères, offrant une
-            perspective comparative sur l'engagement des pays dans les projets européens.
+            Ce graphique illustre le positionnement du pays sélectionné par rapport aux autres pays en fonction du nombre de participants impliqués dans les projets évalués et réussis (lauréats). La barre bleue représente le nombre de participants
+            dans les projets évalués, tandis que la barre verte indique le nombre de participants dans les projets réussis. Le classement est basé sur ces deux critères, offrant une perspective comparative sur l'engagement des pays dans les projets
+            européens.
             <br />
-            Le second graphique présente le taux de succès des participants du pays sélectionné par rapport à la moyenne européenne, fournissant ainsi
-            une évaluation de l'efficacité des participations nationales dans les projets financés.
+            Le second graphique présente le taux de succès des participants du pays sélectionné par rapport à la moyenne européenne, fournissant ainsi une évaluation de l'efficacité des participations nationales dans les projets financés.
           </Callout>
         </Col>
       </Row>
@@ -111,7 +109,7 @@ export default function FundingRankingParticipations() {
           </fieldset>
         </Col>
       </Row>
-      <Row className="chart-container chart-container--pillars">
+      <Row className="chart-container chart-container--default">
         <Col>
           <Title as="h3" look="h5" style={{ minHeight: "4.5rem", lineHeight: "1.5rem" }} className="fr-mb-0">
             {getI18nLabel("configChart3a-title")}
@@ -119,13 +117,7 @@ export default function FundingRankingParticipations() {
           <ChartWrapper
             config={configChart3a}
             options={optionsNumberInvolved(prepareData(data, "total_number_involved_successful"), currentLang)}
-            renderData={() =>
-              renderDataTableParticipations(
-                prepareData(data, "total_number_involved_successful"),
-                currentLang,
-                searchParams.get("country_code") ?? null
-              )
-            }
+            renderData={() => renderDataTableParticipations(prepareData(data, "total_number_involved_successful"), currentLang, searchParams.get("country_code") ?? null)}
           />
         </Col>
         <Col>
@@ -135,13 +127,7 @@ export default function FundingRankingParticipations() {
           <ChartWrapper
             config={configChart3b}
             options={optionNumberInvolvedSuccessRate(prepareData(data, "total_number_involved_successful"), currentLang)}
-            renderData={() =>
-              renderDataTableParticipationsSuccessRate(
-                prepareData(data, "total_number_involved_successful"),
-                currentLang,
-                searchParams.get("country_code") ?? null
-              )
-            }
+            renderData={() => renderDataTableParticipationsSuccessRate(prepareData(data, "total_number_involved_successful"), currentLang, searchParams.get("country_code") ?? null)}
           />
         </Col>
         <Col md={12} className="chart-footer">
@@ -149,16 +135,14 @@ export default function FundingRankingParticipations() {
             comment={{
               fr: (
                 <>
-                  Ce graphique représente le positionnement du pays sélectionné par rapport aux autres pays en fonction du nombre de participants
-                  impliqués dans les projets évalués et réussis. La barre bleue correspond aux participants dans les projets évalués, la barre verte
-                  aux participants dans les projets réussis. Le taux de succès compare le pays sélectionné avec la moyenne européenne.
+                  Ce graphique représente le positionnement du pays sélectionné par rapport aux autres pays en fonction du nombre de participants impliqués dans les projets évalués et réussis. La barre bleue correspond aux participants dans les
+                  projets évalués, la barre verte aux participants dans les projets réussis. Le taux de succès compare le pays sélectionné avec la moyenne européenne.
                 </>
               ),
               en: (
                 <>
-                  This chart shows the positioning of the selected country compared to other countries based on the number of participants involved in
-                  evaluated and successful projects. The blue bar corresponds to participants in evaluated projects, the green bar to participants in
-                  successful projects. The success rate compares the selected country with the European average.
+                  This chart shows the positioning of the selected country compared to other countries based on the number of participants involved in evaluated and successful projects. The blue bar corresponds to participants in evaluated projects,
+                  the green bar to participants in successful projects. The success rate compares the selected country with the European average.
                 </>
               ),
             }}

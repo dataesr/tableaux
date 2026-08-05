@@ -8,7 +8,7 @@ import { EPChartsSources } from "../../../config";
 export default function DestinationsFunding() {
   return (
     <>
-      <Row className="chart-container chart-container--thematics" style={{ marginLeft: "var(--spacing-1w)", marginRight: "var(--spacing-1w)" }}>
+      <Row className="chart-container chart-container--default">
         <Col md={6}>
           <DestinationFundingValues />
         </Col>
@@ -18,35 +18,18 @@ export default function DestinationsFunding() {
         <Col md={12} className="chart-footer">
           <ChartFooter
             comment={{
-              fr: (
-                <>
-                  Ce graphique affiche la répartition des subventions demandées et obtenues (en M€) par destination, ainsi que le taux de succès
-                  associé (montants obtenus / montants demandés).
-                </>
-              ),
-              en: (
-                <>
-                  This chart displays the distribution of requested and obtained funding (in M€) by destination, as well as the associated success
-                  rate (amounts obtained / amounts requested).
-                </>
-              ),
+              fr: <>Ce graphique affiche la répartition des subventions demandées et obtenues (en M€) par destination, ainsi que le taux de succès associé (montants obtenus / montants demandés).</>,
+              en: <>This chart displays the distribution of requested and obtained funding (in M€) by destination, as well as the associated success rate (amounts obtained / amounts requested).</>,
             }}
             readingKey={{
-              fr: (
-                <>
-                  Pour la thématique "Excellence Scientifique", les projets ont demandé X M€ de subventions, et en ont obtenu Y M€, soit un taux de
-                  succès de Z %.
-                </>
-              ),
-              en: (
-                <>For the "Scientific Excellence" topic, projects requested X M€ in funding and obtained Y M€, representing a success rate of Z%.</>
-              ),
+              fr: <>Pour la thématique "Excellence Scientifique", les projets ont demandé X M€ de subventions, et en ont obtenu Y M€, soit un taux de succès de Z %.</>,
+              en: <>For the "Scientific Excellence" topic, projects requested X M€ in funding and obtained Y M€, representing a success rate of Z%.</>,
             }}
             sources={EPChartsSources}
           />
         </Col>
       </Row>
-      <Row className="fr-mt-1w chart-container chart-container--thematics">
+      <Row className="fr-mt-1w chart-container chart-container--default">
         <Col>
           <DestinationFundingProportion />
         </Col>
