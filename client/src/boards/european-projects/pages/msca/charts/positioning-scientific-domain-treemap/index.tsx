@@ -63,7 +63,9 @@ function PositioningScientificDomainTreemapInner({ currentLang: propLang }: Posi
   config.title.en = title;
   return (
     <div className="positioning-scientific-domain-treemap-chart">
-      <ChartWrapper config={config} options={options} />
+      <div className="chart-container chart-container--default">
+        <ChartWrapper config={config} options={options} />
+      </div>
     </div>
   );
 }

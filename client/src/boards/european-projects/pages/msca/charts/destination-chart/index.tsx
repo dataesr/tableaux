@@ -180,7 +180,7 @@ function DestinationChartProjects({ countryCode, callYear, currentLang = "fr" }:
   if (!options) return null;
 
   return (
-    <div className="fr-my-3w">
+    <div className="fr-my-3w chart-container chart-container--default">
       <ChartWrapper config={configProjects} options={options} renderData={() => renderDataTableProjects(data, currentLang)} />
     </div>
   );
@@ -201,7 +201,7 @@ function DestinationChartFunding({ countryCode, callYear, currentLang = "fr" }: 
   if (!options) return null;
 
   return (
-    <div className="fr-my-3w">
+    <div className="fr-my-3w chart-container chart-container--default">
       <ChartWrapper config={configFunding} options={options} renderData={() => renderDataTableFunding(data, currentLang)} />
     </div>
   );
@@ -218,25 +218,11 @@ export default function DestinationChart({ countryCode, callYear, currentLang: p
     <div className="fr-my-3w">
       <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "1rem" }}>
         <SegmentedControl className="fr-segmented--sm" name="msca-destination-chart-view-mode">
-          <SegmentedElement
-            checked={viewMode === "projects"}
-            label={currentLang === "fr" ? "Projets" : "Projects"}
-            onClick={() => setViewMode("projects")}
-            value="projects"
-          />
-          <SegmentedElement
-            checked={viewMode === "funding"}
-            label={currentLang === "fr" ? "Financements" : "Funding"}
-            onClick={() => setViewMode("funding")}
-            value="funding"
-          />
+          <SegmentedElement checked={viewMode === "projects"} label={currentLang === "fr" ? "Projets" : "Projects"} onClick={() => setViewMode("projects")} value="projects" />
+          <SegmentedElement checked={viewMode === "funding"} label={currentLang === "fr" ? "Financements" : "Funding"} onClick={() => setViewMode("funding")} value="funding" />
         </SegmentedControl>
       </div>
-      {viewMode === "projects" ? (
-        <DestinationChartProjects countryCode={countryCode} callYear={callYear} currentLang={currentLang} />
-      ) : (
-        <DestinationChartFunding countryCode={countryCode} callYear={callYear} currentLang={currentLang} />
-      )}
+      {viewMode === "projects" ? <DestinationChartProjects countryCode={countryCode} callYear={callYear} currentLang={currentLang} /> : <DestinationChartFunding countryCode={countryCode} callYear={callYear} currentLang={currentLang} />}
     </div>
   );
 }

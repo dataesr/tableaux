@@ -97,31 +97,19 @@ function PositioningFundingTypeChartInner({ countryCode: propCountryCode, curren
   return (
     <div className="positioning-funding-type-chart">
       <div className="positioning-funding-type-chart__controls">
-        <Select
-          label={getI18nLabel(i18n, "funding-type", currentLang)}
-          selectedKey={fundingType}
-          onSelectionChange={(key) => setFundingType(key as FundingTypeCode)}
-        >
+        <Select label={getI18nLabel(i18n, "funding-type", currentLang)} selectedKey={fundingType} onSelectionChange={(key) => setFundingType(key as FundingTypeCode)}>
           {FUNDING_TYPES.map((type) => (
             <SelectOption key={type.code}>{type.label[currentLang]}</SelectOption>
           ))}
         </Select>
         <SegmentedControl className="fr-segmented--sm" name="positioning-funding-type-metric">
-          <SegmentedElement
-            checked={metric === "projects"}
-            label={getI18nLabel(i18n, "projects", currentLang)}
-            onClick={() => setMetric("projects")}
-            value="projects"
-          />
-          <SegmentedElement
-            checked={metric === "funding"}
-            label={getI18nLabel(i18n, "funding", currentLang)}
-            onClick={() => setMetric("funding")}
-            value="funding"
-          />
+          <SegmentedElement checked={metric === "projects"} label={getI18nLabel(i18n, "projects", currentLang)} onClick={() => setMetric("projects")} value="projects" />
+          <SegmentedElement checked={metric === "funding"} label={getI18nLabel(i18n, "funding", currentLang)} onClick={() => setMetric("funding")} value="funding" />
         </SegmentedControl>
       </div>
-      <ChartWrapper config={config} options={options} renderData={() => renderDataTable(processedData, currentLang)} />
+      <div className="chart-container chart-container--default">
+        <ChartWrapper config={config} options={options} renderData={() => renderDataTable(processedData, currentLang)} />
+      </div>
     </div>
   );
 }

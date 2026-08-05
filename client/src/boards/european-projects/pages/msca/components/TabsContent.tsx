@@ -49,7 +49,8 @@ export default function TabsContent() {
               {getIntlLabel("positioning")}
             </button>
           </li>
-          <li className="fr-nav__item">
+          {/** TODO: Add entities tab */}
+          {/* <li className="fr-nav__item">
             <button
               className="fr-nav__link"
               onClick={(e) => {
@@ -60,7 +61,7 @@ export default function TabsContent() {
             >
               {getIntlLabel("entities")}
             </button>
-          </li>
+          </li> */}
           <li className="fr-nav__item">
             <button
               className="fr-nav__link"
@@ -78,7 +79,7 @@ export default function TabsContent() {
       <div className="fr-mt-3w">
         {activeTab === "synthesis" && <SyntheseContent />}
         {activeTab === "positioning" && <PositionnementContent />}
-        {activeTab === "entities" && <EntitiesContent />}
+        {/* {activeTab === "entities" && <EntitiesContent />} */}
         {activeTab === "evolution" && <EvolutionContent />}
       </div>
     </div>

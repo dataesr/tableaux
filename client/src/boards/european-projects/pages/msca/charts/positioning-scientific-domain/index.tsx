@@ -96,31 +96,19 @@ function PositioningScientificDomainChartInner({ countryCode: propCountryCode, c
   return (
     <div className="positioning-scientific-domain-chart">
       <div className="positioning-scientific-domain-chart__controls">
-        <Select
-          label={getI18nLabel(i18n, "scientific-domain", currentLang)}
-          selectedKey={domain}
-          onSelectionChange={(key) => setDomain(key as ScientificDomainCode)}
-        >
+        <Select label={getI18nLabel(i18n, "scientific-domain", currentLang)} selectedKey={domain} onSelectionChange={(key) => setDomain(key as ScientificDomainCode)}>
           {SCIENTIFIC_DOMAINS.map((d) => (
             <SelectOption key={d.code}>{d.label[currentLang]}</SelectOption>
           ))}
         </Select>
         <SegmentedControl className="fr-segmented--sm" name="positioning-scientific-domain-metric">
-          <SegmentedElement
-            checked={metric === "projects"}
-            label={getI18nLabel(i18n, "projects", currentLang)}
-            onClick={() => setMetric("projects")}
-            value="projects"
-          />
-          <SegmentedElement
-            checked={metric === "funding"}
-            label={getI18nLabel(i18n, "funding", currentLang)}
-            onClick={() => setMetric("funding")}
-            value="funding"
-          />
+          <SegmentedElement checked={metric === "projects"} label={getI18nLabel(i18n, "projects", currentLang)} onClick={() => setMetric("projects")} value="projects" />
+          <SegmentedElement checked={metric === "funding"} label={getI18nLabel(i18n, "funding", currentLang)} onClick={() => setMetric("funding")} value="funding" />
         </SegmentedControl>
       </div>
-      <ChartWrapper config={config} options={options} renderData={() => renderDataTable(processedData, currentLang)} />
+      <div className="chart-container chart-container--default">
+        <ChartWrapper config={config} options={options} renderData={() => renderDataTable(processedData, currentLang)} />
+      </div>
     </div>
   );
 }

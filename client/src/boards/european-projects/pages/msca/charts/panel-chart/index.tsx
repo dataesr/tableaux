@@ -171,7 +171,7 @@ function PanelChartProjects({ countryCode, callYear, currentLang = "fr" }: Panel
   if (!options) return null;
 
   return (
-    <div className="fr-my-3w">
+    <div className="fr-my-3w chart-container chart-container--default">
       <ChartWrapper config={configProjects} options={options} renderData={() => renderDataTableProjects(data, currentLang)} />
     </div>
   );
@@ -192,7 +192,7 @@ function PanelChartFunding({ countryCode, callYear, currentLang = "fr" }: PanelC
   if (!options) return null;
 
   return (
-    <div className="fr-my-3w">
+    <div className="fr-my-3w chart-container chart-container--default">
       <ChartWrapper config={configFunding} options={options} renderData={() => renderDataTableFunding(data, currentLang)} />
     </div>
   );
