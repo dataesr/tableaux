@@ -532,7 +532,7 @@ export default function Home() {
                       </Link>
                       {"  "}
                       <Link href={`./admin/accessibility/${dashboard.id}`} target="_blank" rel="noopener noreferrer">
-                        A
+                        <i className="ri-accessibility-line" />
                       </Link>
                     </td>
                     <td>{dashboard.name_fr}</td>
