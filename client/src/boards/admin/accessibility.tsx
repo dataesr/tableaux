@@ -172,7 +172,7 @@ export default function AccessibilityPage() {
                 <span>Échoué</span>
               </div>
               <div className="fr-flex fr-items-center fr-gap-1w">
-                <span className="fr-mr-1w">🟠</span>
+                <span className="fr-mr-1w">🔵</span>
                 <span>Non applicable</span>
               </div>
               <div className="fr-flex fr-items-center fr-gap-1w">
@@ -195,7 +195,7 @@ export default function AccessibilityPage() {
                   {thematique}
                   <Badge className="fr-ml-2w">
                     {
-                      // nombre de tests réussis 🟢, nombre de tests échoués 🔴, nombre de tests non-applcables 🟠, non-testés ⚪ pour cette thématique
+                      // nombre de tests réussis 🟢, nombre de tests échoués 🔴, nombre de tests non-applcables 🔵, non-testés ⚪ pour cette thématique
                       (() => {
                         const totalTestsThematique = rgaa_tests_list?.filter((t) => t.thematiqueId === thematique_id).length || 0;
                         const testsOk = audit?.tests?.filter((test) => test.value === "ok" && rgaa_tests_list?.find((t) => t.testId === test.testId)?.thematiqueId === thematique_id).length || 0;
@@ -204,7 +204,7 @@ export default function AccessibilityPage() {
                         const totalTestsAuditThematique = audit?.tests?.filter((test) => rgaa_tests_list?.find((t) => t.testId === test.testId)?.thematiqueId === thematique_id).length || 0;
                         const testsNonTestes =
                           totalTestsThematique - totalTestsAuditThematique + audit?.tests?.filter((test) => test.value === "initial" && rgaa_tests_list?.find((t) => t.testId === test.testId)?.thematiqueId === thematique_id).length || 0;
-                        return `${testsOk} 🟢 / ${testsFail} 🔴 / ${testsNa} 🟠 / ${testsNonTestes} ⚪`;
+                        return `${testsOk} 🟢 / ${testsFail} 🔴 / ${testsNa} 🔵 / ${testsNonTestes} ⚪`;
                       })()
                     }
                   </Badge>
@@ -224,7 +224,7 @@ export default function AccessibilityPage() {
                             : audit?.tests?.find((test) => test.testId === testId)?.value === "fail"
                               ? "🔴 "
                               : audit?.tests?.find((test) => test.testId === testId)?.value === "na"
-                                ? "🟠 "
+                                ? "🔵 "
                                 : "⚪ "}
                           {description}
                         </Text>
