@@ -12,8 +12,9 @@ import { useFilters } from "../../../utils/useFilters";
 import "../styles.scss";
 import Dropdown from "../../../../../components/dropdown";
 import Breadcrumb from "../../../components/breadcrumb";
+import { DEFAULT_REFERENCE_YEAR } from "../../../config/constants";
 
-const DEFAULT_YEAR = "2024";
+const DEFAULT_YEAR = DEFAULT_REFERENCE_YEAR;
 
 export default function NationalSelector() {
   const [searchParams, setSearchParams] = useSearchParams();

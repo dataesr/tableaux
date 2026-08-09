@@ -24,11 +24,12 @@ import NoDataForYearAlert from "./no-data-for-year-alert";
 import MultipleStructuresSelector from "./multiple-structures-selector";
 import DefaultSkeleton from "../../../../../components/charts-skeletons/default";
 import Breadcrumb from "../../../components/breadcrumb";
+import { DEFAULT_REFERENCE_YEAR } from "../../../config/constants";
 
 export default function StructureView() {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const selectedYear = searchParams.get("year") || "2024";
+  const selectedYear = searchParams.get("year") || DEFAULT_REFERENCE_YEAR;
   const selectedStructure = searchParams.get("structureId") || "";
   const useHistorical = searchParams.get("useHistorical") === "true";
   const section = searchParams.get("section") || "ressources";

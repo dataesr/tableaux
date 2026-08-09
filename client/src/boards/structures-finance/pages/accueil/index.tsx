@@ -6,6 +6,7 @@ import { useFinanceEtablissements } from "./api";
 import Select from "../../../../components/select";
 import "./styles.scss";
 import { normalizeString } from "../../utils/utils";
+import { DEFAULT_REFERENCE_YEAR } from "../../config/constants";
 
 function HeroSection() {
   const navigate = useNavigate();
@@ -60,7 +61,7 @@ function QuickAccessSection() {
   const navigate = useNavigate();
   const [searchValue, setSearchValue] = useState("");
   const { data: yearsData } = useFinanceYears();
-  const latestYear = (yearsData?.years || [])[0] || "2024";
+  const latestYear = (yearsData?.years || [])[0] || DEFAULT_REFERENCE_YEAR;
   const { data: etablissementsData } = useFinanceEtablissements(
     String(latestYear)
   );
@@ -92,7 +93,7 @@ function QuickAccessSection() {
   const handleEtablissementSelect = (etablissementId?: string) => {
     if (etablissementId) {
       navigate(
-        `/structures-finance/etablissements?year=2024&type=tous&region=toutes&structureId=${etablissementId}`
+        `/structures-finance/etablissements?year=${DEFAULT_REFERENCE_YEAR}&type=tous&region=toutes&structureId=${etablissementId}`
       );
       setSearchValue("");
     }

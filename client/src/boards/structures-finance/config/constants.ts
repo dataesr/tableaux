@@ -1,0 +1,1 @@
+export const DEFAULT_REFERENCE_YEAR = "2025";

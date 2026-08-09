@@ -4,6 +4,7 @@ import { useSearchParams } from "react-router-dom";
 import NationalChart from "./charts";
 import AnalysisFilter from "./analysis-filter";
 import { type AnalysisKey } from "../../../../config/metrics-config";
+import { DEFAULT_REFERENCE_YEAR } from "../../../../config/constants";
 import { useFinanceYears } from "../../../../api";
 import { useFinanceAdvancedComparison } from "../../../../api";
 import { useFilteredNationalData } from "../../hooks/useFilteredNationalData";
@@ -25,7 +26,7 @@ export function AnalyseSection({
   selectedDevimmo,
 }: AnalyseSectionProps) {
   const [searchParams] = useSearchParams();
-  const urlYear = searchParams.get("year") || "2024";
+  const urlYear = searchParams.get("year") || DEFAULT_REFERENCE_YEAR;
 
   const [localYear, setLocalYear] = useState<string>(urlYear);
 

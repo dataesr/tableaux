@@ -2,6 +2,7 @@ import { useSearchParams } from "react-router-dom";
 import { Col, Container, Row, Text } from "@dataesr/dsfr-plus";
 import { useStructuresFilters } from "./useStructuresFilters";
 import { useFinanceYears } from "../../../api";
+import { DEFAULT_REFERENCE_YEAR } from "../../../config/constants";
 import { useFilters } from "../../../utils/useFilters";
 import SelectionUI from "./selection-ui";
 import CardSimple from "../../../../../components/card-simple";
@@ -13,7 +14,7 @@ export default function StructureSelection() {
 
   const { data: yearsData, isLoading: isLoadingYears } = useFinanceYears();
   const latestYear = (() => {
-    if (!yearsData?.years?.length) return "2024";
+    if (!yearsData?.years?.length) return DEFAULT_REFERENCE_YEAR;
     return String(Math.max(...yearsData.years));
   })();
 
@@ -46,7 +47,7 @@ export default function StructureSelection() {
     setSearchParams({
       structureId: id,
       section: "ressources",
-      year: "2024",
+      year: DEFAULT_REFERENCE_YEAR,
     });
   };
 
