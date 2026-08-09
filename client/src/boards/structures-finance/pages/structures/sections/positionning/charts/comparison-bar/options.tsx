@@ -156,7 +156,7 @@ export const createPositioningComparisonBarOptions = (
       },
     },
     legend: {
-      enabled: true,
+      enabled: false,
     },
     series: [
       {
