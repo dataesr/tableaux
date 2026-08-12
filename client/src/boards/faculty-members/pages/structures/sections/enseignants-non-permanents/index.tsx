@@ -8,6 +8,10 @@ import GenderEvolutionChart from "./charts/gender-evolution";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 import AgeDistributionChart from "./charts/age-distribution";
 import CategoryDistributionChart from "./charts/category-distribution";
+import FeminizationRateChart from "./charts/feminization-rate";
+import AgeCategoryHeatmapChart from "./charts/age-category-heatmap";
+import QuotiteByCategoryChart from "./charts/quotite-by-category";
+import PartTimeEvolutionChart from "./charts/part-time-evolution";
 import FmMetricDefinitionsTable from "../../../../components/metric-definitions";
 
 interface EnseignantsNonPermanentsSectionProps {
@@ -136,9 +140,14 @@ export default function EnseignantsNonPermanentsSection({
                             <CategoryEvolutionChart categoryEvolution={currentData?.categoryEvolution} />
                         </Col>
                     </Row>
-                    <Row gutters>
+                    <Row gutters className="fr-mb-3w">
                         <Col xs="12">
                             <GenderEvolutionChart genderEvolution={currentData?.genderEvolution} />
+                        </Col>
+                    </Row>
+                    <Row gutters>
+                        <Col xs="12">
+                            <FeminizationRateChart genderEvolution={currentData?.genderEvolution} />
                         </Col>
                     </Row>
                 </Tab>
@@ -149,6 +158,21 @@ export default function EnseignantsNonPermanentsSection({
                         </Col>
                         <Col xs="12" md="6">
                             <CategoryDistributionChart categoryDistribution={currentData?.categoryDistribution} selectedYear={selectedYear} />
+                        </Col>
+                    </Row>
+                    <Row gutters className="fr-mt-3w">
+                        <Col xs="12">
+                            <AgeCategoryHeatmapChart categoryDistribution={currentData?.categoryDistribution} selectedYear={selectedYear} />
+                        </Col>
+                    </Row>
+                </Tab>
+                <Tab label="Quotité">
+                    <Row gutters>
+                        <Col xs="12" md="6">
+                            <QuotiteByCategoryChart quotiteByCategory={currentData?.quotiteByCategory} selectedYear={selectedYear} />
+                        </Col>
+                        <Col xs="12" md="6">
+                            <PartTimeEvolutionChart quotiteEvolution={currentData?.quotiteEvolution} />
                         </Col>
                     </Row>
                 </Tab>
