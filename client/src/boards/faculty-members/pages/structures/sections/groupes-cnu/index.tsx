@@ -210,14 +210,14 @@ export default function GroupesCnuSection({ viewType, selectedId, selectedYear }
             </div>
             <div className="fr-callout fr-mb-4w">
                 <Text className="fr-callout__text fr-text--sm">
-                    <strong> Explicitez le périmètre de la donnée de la section CNU </strong>
+                    <strong>Qu'est-ce qu'une section CNU ?</strong>
                     <br />
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi risus diam,
-                    vestibulum vitae neque at, maximus placerat risus. In malesuada blandit lectus
-                    at scelerisque. Mauris a diam vel ante feugiat accumsan id finibus mi.
-                    Nam pellentesque libero sed turpis varius dapibus. Fusce sit amet urna id eros
-                    venenatis malesuada in et libero. Integer aliquam, magna quis tempus dignissim,
-                    magna metus efficitur nisl, in suscipit velit eros sit amet erat. Fusce dolor nibh, sagittis sed molestie id, auctor et augue. Nam nec magna vel nisl consequat interdum. Maecenas vestibulum lorem sit amet pretium scelerisque.
+                    Le Conseil national des universités (CNU) organise les disciplines de
+                    l'enseignement supérieur en groupes puis en sections. Chaque enseignant-chercheur
+                    titulaire est rattaché à une section CNU qui définit sa spécialité disciplinaire
+                    (par exemple mathématiques, droit privé, biologie…). Cette nomenclature structure
+                    le recrutement, la qualification et le suivi de carrière des personnels ; elle
+                    permet ici d'analyser la répartition des effectifs par champ disciplinaire.
                 </Text>
             </div>
             <Row className="fr-mb-5w">

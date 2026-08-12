@@ -38,7 +38,7 @@ export default function CategoryEvolutionChart({
       config={{
         id: "faculty-category-evolution",
         title: {
-          fr: "Évolution par catégorie (enseignants-chercheurs)",
+          fr: "Évolution par catégorie",
           size: "h2" as const,
           look: "h6" as const,
         },

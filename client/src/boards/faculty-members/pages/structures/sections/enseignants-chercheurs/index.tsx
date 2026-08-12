@@ -95,14 +95,15 @@ export default function EnseignantsChercheurSection({
             </div>
             <div className="fr-callout fr-mb-4w">
                 <Text className="fr-callout__text fr-text--sm">
-                    <strong>Explicitez la définition des EC et nuances entre MCF et Prof </strong>
+                    <strong>Qui sont les enseignants-chercheurs ?</strong>
                     <br />
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi risus diam,
-                    vestibulum vitae neque at, maximus placerat risus. In malesuada blandit lectus
-                    at scelerisque. Mauris a diam vel ante feugiat accumsan id finibus mi.
-                    Nam pellentesque libero sed turpis varius dapibus. Fusce sit amet urna id eros
-                    venenatis malesuada in et libero. Integer aliquam, magna quis tempus dignissim,
-                    magna metus efficitur nisl, in suscipit velit eros sit amet erat. Fusce dolor nibh, sagittis sed molestie id, auctor et augue. Nam nec magna vel nisl consequat interdum. Maecenas vestibulum lorem sit amet pretium scelerisque.
+                    Les enseignants-chercheurs sont des personnels titulaires de l'enseignement
+                    supérieur qui exercent une double mission d'enseignement et de recherche. Ils se
+                    répartissent principalement entre deux corps : les professeurs des universités
+                    (PR) et les maîtres de conférences (MCF). Recrutés par concours et rattachés à
+                    une section du Conseil national des universités (CNU) correspondant à leur
+                    discipline, ils constituent le cœur du corps enseignant permanent des
+                    établissements.
                 </Text>
             </div>
 

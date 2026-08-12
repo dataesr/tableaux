@@ -1,5 +1,5 @@
-import { useMemo, useState } from "react";
-import { Col, Row, Title, Text } from "@dataesr/dsfr-plus";
+import { useMemo } from "react";
+import { Accordion, AccordionGroup, Col, Row, Tab, Tabs, Title, Text } from "@dataesr/dsfr-plus";
 import { ViewType, useFaculty2ndDegreeTeachers } from "../../api";
 import { getCssColor } from "../../../../../../utils/colors";
 import MetricCard from "../../components/metric-card";
@@ -35,7 +35,6 @@ export default function Enseignants2ndDegreArtsMetiersSection({
         selectedId,
         selectedYear
     );
-    const [selectedCategoryCode, setSelectedCategoryCode] = useState<string | null>(null);
 
     const catEvoMap = useMemo(() => {
         type CatEvo = {
@@ -96,67 +95,73 @@ export default function Enseignants2ndDegreArtsMetiersSection({
             </div>
             <div className="fr-callout fr-mb-4w">
                 <Text className="fr-callout__text fr-text--sm">
-                    <strong>Explicitez la définition du personnel de 2nd degré et Arts & Métiers </strong>
-                    <br/>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi risus diam,
-                    vestibulum vitae neque at, maximus placerat risus. In malesuada blandit lectus
-                    at scelerisque. Mauris a diam vel ante feugiat accumsan id finibus mi.
-                    Nam pellentesque libero sed turpis varius dapibus. Fusce sit amet urna id eros
-                    venenatis malesuada in et libero. Integer aliquam, magna quis tempus dignissim,
-                    magna metus efficitur nisl, in suscipit velit eros sit amet erat. Fusce dolor nibh, sagittis sed molestie id, auctor et augue. Nam nec magna vel nisl consequat interdum. Maecenas vestibulum lorem sit amet pretium scelerisque.
+                    <strong>Qui sont les enseignants du second degré et Arts et Métiers ?</strong>
+                    <br />
+                    Il s'agit d'enseignants titulaires du second degré (professeurs agrégés – PRAG,
+                    professeurs certifiés – PRCE, etc.) affectés dans l'enseignement supérieur, ainsi
+                    que des corps propres aux écoles d'Arts et Métiers. À la différence des
+                    enseignants-chercheurs, ils assurent principalement une mission d'enseignement et
+                    n'ont pas d'obligation statutaire de recherche. Ils contribuent fortement à
+                    l'encadrement pédagogique, en particulier dans les premiers cycles.
                 </Text>
             </div>
 
-            {Array.from({ length: Math.ceil(categories.length / 4) }, (_, rowIdx) => {
-                const rowCats: any[] = categories.slice(rowIdx * 4, rowIdx * 4 + 4);
-                const rowSelectedCat = rowCats.find((c: any) => c.categoryCode === selectedCategoryCode);
+            <Title as="h3" look="h6" className="fr-mb-2w">
+                Synthèse par catégorie
+            </Title>
+            <Row gutters className="fr-mb-4w">
+                {categories.map((cat: any, idx: number) => {
+                    const color = getCssColor(SCALE_COLORS[idx % SCALE_COLORS.length]);
+                    const evo = catEvoMap.get(cat.categoryCode);
+                    const total = cat.totalCount || 0;
+                    return (
+                        <Col xs="12" md="4" lg="3" key={cat.categoryCode}>
+                            <MetricCard
+                                title={cat.categoryName}
+                                value={total.toLocaleString("fr-FR")}
+                                detail={`${pct(total, totalEC)} des enseignants du 2nd degré et Arts et Métiers · ${pct(cat.femaleCount || 0, total)} de femmes`}
+                                color={color}
+                                evolutionData={evo?.total}
+                            />
+                        </Col>
+                    );
+                })}
+            </Row>
 
-                return (
-                    <div key={rowIdx}>
-                        <Row gutters className="fr-mb-2w">
-                            {rowCats.map((cat: any, i: number) => {
-                                const globalIdx = rowIdx * 4 + i;
-                                const color = getCssColor(SCALE_COLORS[globalIdx % SCALE_COLORS.length]);
-                                const evo = catEvoMap.get(cat.categoryCode);
-                                const isSelected = selectedCategoryCode === cat.categoryCode;
-                                const total = cat.totalCount || 0;
-
-                                return (
-                                    <Col xs="12" md="4" lg="3" key={cat.categoryCode}>
-                                        <MetricCard
-                                            title={cat.categoryName}
-                                            value={total.toLocaleString("fr-FR")}
-                                            detail={`${pct(total, totalEC)} des enseignants du 2nd degré et Arts et Métiers · ${pct(cat.femaleCount || 0, total)} de femmes`}
-                                            color={color}
-                                            evolutionData={evo?.total}
-                                            onToggle={() => setSelectedCategoryCode(isSelected ? null : cat.categoryCode)}
-                                            isExpanded={isSelected}
-                                        />
-                                    </Col>
-                                );
-                            })}
-                        </Row>
-
-                        {rowSelectedCat && (() => {
-                            const sc = rowSelectedCat;
-                            const scIdx = categories.findIndex((c: any) => c.categoryCode === sc.categoryCode);
-                            const scEvo = catEvoMap.get(sc.categoryCode);
-                            const scColor = getCssColor(SCALE_COLORS[scIdx % SCALE_COLORS.length]);
-                            const scTotal = sc.totalCount || 0;
+            <Tabs>
+                <Tab label="Évolutions">
+                    <Row gutters>
+                        <Col xs="12" md="6">
+                            <CategoryEvolutionChart categoryEvolution={currentData?.categoryEvolution} />
+                        </Col>
+                        <Col xs="12" md="6">
+                            <GenderEvolutionChart genderEvolution={currentData?.genderEvolution} />
+                        </Col>
+                    </Row>
+                </Tab>
+                <Tab label="Répartitions">
+                    <Row gutters>
+                        <Col xs="12" md="6">
+                            <AgeDistributionChart ageDistribution={currentData?.ageDistribution} selectedYear={selectedYear} />
+                        </Col>
+                        <Col xs="12" md="6">
+                            <CategoryDistributionChart categoryDistribution={currentData?.categoryDistribution} selectedYear={selectedYear} />
+                        </Col>
+                    </Row>
+                </Tab>
+                <Tab label="Détail par catégorie">
+                    <AccordionGroup>
+                        {categories.map((cat: any, idx: number) => {
+                            const scColor = getCssColor(SCALE_COLORS[idx % SCALE_COLORS.length]);
+                            const scEvo = catEvoMap.get(cat.categoryCode);
+                            const scTotal = cat.totalCount || 0;
                             return (
-                                <div className="fr-mb-4w fr-p-3w" style={{ backgroundColor: "var(--background-alt-grey)", borderRadius: "4px", borderLeft: `4px solid ${scColor}` }}>
-                                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }} className="fr-mb-3w">
-                                        <Title as="h3" look="h6" className="fr-mb-0">
-                                            {sc.categoryName}
-                                        </Title>
-                                        <button
-                                            className="fr-btn fr-btn--tertiary-no-outline fr-btn--sm fr-icon-close-line fr-btn--icon-right"
-                                            aria-label="Fermer le détail"
-                                            onClick={() => setSelectedCategoryCode(null)}
-                                        >
-                                            Fermer
-                                        </button>
-                                    </div>
+                                <Accordion
+                                    key={cat.categoryCode}
+                                    title={`${cat.categoryName} · ${scTotal.toLocaleString("fr-FR")} enseignants du 2nd degré et Arts et Métiers`}
+                                    titleAs="h4"
+                                    defaultExpanded={false}
+                                >
                                     <Row gutters className="fr-mb-2w">
                                         <Col xs="12" md="4">
                                             <MetricCard
@@ -170,8 +175,8 @@ export default function Enseignants2ndDegreArtsMetiersSection({
                                         <Col xs="12" md="4">
                                             <MetricCard
                                                 title="Femmes"
-                                                value={(sc.femaleCount || 0).toLocaleString("fr-FR")}
-                                                detail={`${pct(sc.femaleCount || 0, scTotal)} de la catégorie`}
+                                                value={(cat.femaleCount || 0).toLocaleString("fr-FR")}
+                                                detail={`${pct(cat.femaleCount || 0, scTotal)} de la catégorie`}
                                                 color={getCssColor("fm-femmes")}
                                                 evolutionData={scEvo?.female}
                                             />
@@ -179,8 +184,8 @@ export default function Enseignants2ndDegreArtsMetiersSection({
                                         <Col xs="12" md="4">
                                             <MetricCard
                                                 title="Hommes"
-                                                value={(sc.maleCount || 0).toLocaleString("fr-FR")}
-                                                detail={`${pct(sc.maleCount || 0, scTotal)} de la catégorie`}
+                                                value={(cat.maleCount || 0).toLocaleString("fr-FR")}
+                                                detail={`${pct(cat.maleCount || 0, scTotal)} de la catégorie`}
                                                 color={getCssColor("fm-hommes")}
                                                 evolutionData={scEvo?.male}
                                             />
@@ -188,7 +193,7 @@ export default function Enseignants2ndDegreArtsMetiersSection({
                                     </Row>
                                     <Row gutters>
                                         {AGE_CLASSES.map(({ key, label, color: ageColor }) => {
-                                            const count = sc.ageDistribution?.find((a: any) => a.ageClass === key)?.count || 0;
+                                            const count = cat.ageDistribution?.find((a: any) => a.ageClass === key)?.count || 0;
                                             return (
                                                 <Col xs="12" md="3" key={key}>
                                                     <MetricCard
@@ -202,30 +207,13 @@ export default function Enseignants2ndDegreArtsMetiersSection({
                                             );
                                         })}
                                     </Row>
-                                </div>
+                                </Accordion>
                             );
-                        })()}
-                    </div>
-                );
-            })}
+                        })}
+                    </AccordionGroup>
+                </Tab>
+            </Tabs>
 
-            <Row gutters className="fr-mt-3w">
-                <Col xs="12" md="6">
-                    <CategoryEvolutionChart categoryEvolution={currentData?.categoryEvolution} />
-                </Col>
-                <Col xs="12" md="6">
-                    <GenderEvolutionChart genderEvolution={currentData?.genderEvolution} />
-                </Col>
-            </Row>
-            <Row gutters className="fr-mt-3w">
-                <Col xs="12" md="6">
-                    <AgeDistributionChart ageDistribution={currentData?.ageDistribution} selectedYear={selectedYear} />
-                </Col>
-                <Col xs="12" md="6">
-                    <CategoryDistributionChart categoryDistribution={currentData?.categoryDistribution} selectedYear={selectedYear} />
-                </Col>
-            </Row>
-            
             <FmMetricDefinitionsTable
                 definitionKeys={[
                     "Enseignant du second degré affecté dans le supérieur",
