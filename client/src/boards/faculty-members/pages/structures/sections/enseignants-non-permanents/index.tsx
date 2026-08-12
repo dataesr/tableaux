@@ -131,11 +131,13 @@ export default function EnseignantsNonPermanentsSection({
 
             <Tabs>
                 <Tab label="Évolutions">
-                    <Row gutters>
-                        <Col xs="12" md="6">
+                    <Row gutters className="fr-mb-3w">
+                        <Col xs="12">
                             <CategoryEvolutionChart categoryEvolution={currentData?.categoryEvolution} />
                         </Col>
-                        <Col xs="12" md="6">
+                    </Row>
+                    <Row gutters>
+                        <Col xs="12">
                             <GenderEvolutionChart genderEvolution={currentData?.genderEvolution} />
                         </Col>
                     </Row>

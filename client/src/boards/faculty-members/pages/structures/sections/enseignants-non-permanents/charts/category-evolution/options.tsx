@@ -2,17 +2,7 @@ import Highcharts from "highcharts/es-modules/masters/highcharts.src.js";
 import { createChartOptions } from "../../../../../../../../components/chart-wrapper/default-options";
 import { getCssColor } from "../../../../../../../../utils/colors";
 
-const CATEGORY_COLORS: Array<{ pattern: RegExp; color: string }> = [
-  { pattern: /professeur/i, color: getCssColor("fm-cat-pr") },
-  { pattern: /ma[iî]tre.*conf[eé]rence|MCF/i, color: getCssColor("fm-cat-mcf") },
-  { pattern: /2[eè]me degr[eé]|second degr[eé]/i, color: getCssColor("fm-cat-2nd-degre") },
-  { pattern: /non.permanent|vacataire|ATER|contract/i, color: getCssColor("fm-cat-non-permanents") },
-];
-
-function getCategoryColor(name: string): string {
-  const match = CATEGORY_COLORS.find(({ pattern }) => pattern.test(name));
-  return match ? match.color : getCssColor("fm-cat-non-permanents");
-}
+const SCALE_COLORS = Array.from({ length: 14 }, (_, i) => `scale-${i + 1}`);
 
 export function createCategoryEvolutionOptions(
   categories: string[],
@@ -24,10 +14,10 @@ export function createCategoryEvolutionOptions(
   );
 
   const series: Highcharts.SeriesOptionsType[] = [...allCategories].map(
-    (cat) => ({
+    (cat, i) => ({
       type: "area" as const,
       name: cat,
-      color: getCategoryColor(cat),
+      color: getCssColor(SCALE_COLORS[i % SCALE_COLORS.length]),
       data: categoryEvolution.map((e: any) => {
         const b = e.category_breakdown?.find(
           (c: any) => c.category === cat
@@ -61,7 +51,15 @@ export function createCategoryEvolutionOptions(
     },
     legend: {
       enabled: true,
+      layout: "horizontal",
+      align: "center",
+      verticalAlign: "bottom",
+      maxHeight: 66,
+      itemDistance: 12,
+      symbolWidth: 10,
+      symbolHeight: 10,
       itemStyle: { fontSize: "11px", fontWeight: "normal" },
+      navigation: { animation: true },
     },
     series,
   });

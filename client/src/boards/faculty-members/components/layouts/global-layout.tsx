@@ -130,7 +130,7 @@ export default function GlobalLayout() {
                     Académies
                   </Link>
                 </li>
-                <li className="fr-nav__item">
+                {/* <li className="fr-nav__item">
                   <Link
                     to={"/personnel-enseignant/faq"}
                     target="_self"
@@ -141,7 +141,7 @@ export default function GlobalLayout() {
                   >
                     FAQ
                   </Link>
-                </li>
+                </li> */}
                 <li className="fr-nav__item">
                   <Link
                     to={"/personnel-enseignant/definitions"}

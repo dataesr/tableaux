@@ -68,6 +68,15 @@ export default function FacultyMembersRoutes() {
             />
           }
         />
+        {/* <Route
+          path="FAQ"
+          element={
+            <RouteWithTitle
+              titleKey="FAQ - Personnel enseignant"
+              element={<Suspense><FAQView /></Suspense>}
+            />
+          }
+        /> */}
         <Route
           path="definitions"
           element={
