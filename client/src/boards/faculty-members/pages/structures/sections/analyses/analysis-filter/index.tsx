@@ -15,7 +15,7 @@ export default function FmAnalysisFilter({
     selectedAnalysis,
     onSelectAnalysis,
 }: FmAnalysisFilterProps) {
-    const [selectedCategory, setSelectedCategory] = useState<string>("Effectifs globaux");
+    const [selectedCategory, setSelectedCategory] = useState<string>("Vue d'ensemble");
 
     const items: FilterItem[] = Object.entries(allAnalyses).map(([key, analysis]) => ({
         key,

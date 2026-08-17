@@ -10,6 +10,7 @@ import {
     createFmStackedAreaOptions,
     createFmBase100Options,
     createFmPyramidOptions,
+    createFmLinesOptions,
 } from "./options";
 
 interface FmEvolutionChartProps {
@@ -20,6 +21,10 @@ interface FmEvolutionChartProps {
     periodText: string;
     ageClass: string;
     onAgeClassChange: (val: string) => void;
+    gender: string;
+    onGenderChange: (val: string) => void;
+    status: string;
+    onStatusChange: (val: string) => void;
 }
 
 const ANALYSIS_COMMENTS: Record<string, string> = {
@@ -51,6 +56,17 @@ const ANALYSIS_COMMENTS: Record<string, string> = {
     "ec-mcf-pr-base100": "Chaque courbe démarre à 100. Compare la vitesse de croissance des effectifs MCF et PR, indépendamment de leurs niveaux de départ.",
     "categories-personnel": "Répartition détaillée en 4 catégories : PR, MCF, titulaires non-EC et non-permanents.",
     "categories-base100": "Chaque courbe démarre à 100 (= effectif de la première année disponible pour cette catégorie). Une valeur de 120 signifie +20 % par rapport au départ. Compare les trajectoires des PR, MCF, titulaires non-EC et non-permanents, même si leurs effectifs de départ sont très différents.",
+    "taux-age-35-moins": "Part des personnels âgés de 35 ans ou moins.",
+    "taux-age-56-plus": "Part des personnels âgés de 56 ans ou plus.",
+    "age-structure-base100": "Indices base 100 : compare les vitesses d'évolution des effectifs jeunes (≤ 35 ans) et âgés (≥ 56 ans).",
+    "tp-global": "Part des personnels exerçant à temps partiel.",
+    "tp-effectifs": "Effectifs à temps plein et à temps partiel.",
+    "femi-par-statut": "Taux de féminisation comparé selon le statut (global, EC, permanents, non-permanents).",
+    "femi-mcf-pr": "Taux de féminisation comparé entre MCF, PR et l'ensemble des EC.",
+    "femi-par-age": "Taux de féminisation par tranche d'âge.",
+    "tp-par-genre": "Part du temps partiel chez les femmes et chez les hommes.",
+    "tp-par-age": "Part du temps partiel par tranche d'âge.",
+    "tp-par-statut": "Part du temps partiel selon le statut (EC, titulaires non-EC, non-permanents).",
 };
 
 const ANALYSIS_READING_KEYS: Record<string, string> = {
@@ -82,6 +98,17 @@ const ANALYSIS_READING_KEYS: Record<string, string> = {
     "ec-mcf-pr-base100": "Si la courbe PR monte plus vite que MCF, le corps des professeurs se développe proportionnellement plus vite.",
     "categories-personnel": "Observer l'évolution de la composition : une couche « non-permanents » qui croît au détriment des autres signale une précarisation structurelle.",
     "categories-base100": "La courbe la plus pentue identifie la catégorie en plus forte croissance relative. Si PR et MCF divergent, le ratio MCF/PR évolue. Si « non-permanents » monte plus vite que toutes les autres, la structure se précarise.",
+    "taux-age-35-moins": "Une hausse traduit un rajeunissement par recrutement.",
+    "taux-age-56-plus": "Une hausse traduit un vieillissement de la structure.",
+    "age-structure-base100": "Si la courbe ≥ 56 ans domine, la population vieillit plus vite qu'elle ne se renouvelle.",
+    "tp-global": "Un temps partiel élevé peut signaler une part importante de vacataires ou de quotités réduites.",
+    "tp-effectifs": "Observer si la hausse des effectifs s'appuie surtout sur des temps partiels.",
+    "femi-par-statut": "Un écart durable entre EC et non-permanents révèle une féminisation concentrée sur les emplois précaires.",
+    "femi-mcf-pr": "L'écart entre MCF et PR quantifie le plafond de verre ; une convergence indique un rattrapage.",
+    "femi-par-age": "Une féminisation plus forte chez les jeunes annonce un rééquilibrage à venir de l'ensemble.",
+    "tp-par-genre": "Un temps partiel nettement plus féminin signale une inégalité des conditions d'emploi.",
+    "tp-par-age": "Le temps partiel plus fréquent aux âges élevés peut traduire des fins de carrière aménagées.",
+    "tp-par-statut": "Le temps partiel très élevé chez les non-permanents reflète le poids des vacataires.",
 };
 
 function getAnalysisComment(key: string, ageClass: string, periodText: string): string {
@@ -133,6 +160,10 @@ export default function FmEvolutionChart({
     periodText,
     ageClass,
     onAgeClassChange,
+    gender,
+    onGenderChange,
+    status,
+    onStatusChange,
 }: FmEvolutionChartProps) {
     const [displayMode, setDisplayMode] = useState<"values" | "percentage">("values");
     const [viewMode, setViewMode] = useState<"evolution" | "variation">("evolution");
@@ -158,6 +189,9 @@ export default function FmEvolutionChart({
         }
         if (chartType === "base100") {
             return createFmBase100Options(records, metrics, metricsConfig);
+        }
+        if (chartType === "lines") {
+            return createFmLinesOptions(records, metrics, metricsConfig);
         }
         // single
         const metricKey = metrics[0];
@@ -185,6 +219,53 @@ export default function FmEvolutionChart({
         readingKey: readingKeyText ? { fr: <>{readingKeyText}</> } : undefined,
         sources: [{ label: { fr: <>MESR-SIES, SISE</> }, url: { fr: "https://data.enseignementsup-recherche.gouv.fr" } }],
     };
+
+    const metricsStr = metrics.join(" ");
+    // Masque un filtre quand l'analyse porte déjà sur cette dimension.
+    const isAgeDim = chartType === "pyramid" || /age/i.test(metricsStr);
+    const isGenderDim = /femmes|hommes|feminisation|_f_|_h_|_f\b|_h\b/i.test(metricsStr);
+    const isStatusDim = /cnu_|_ec\b|\bec_|perm|_tit|mcf|_pr\b|_pr_/i.test(metricsStr);
+
+    const populationFilters = [
+        {
+            name: "fm-age-filter",
+            label: "Âge",
+            value: ageClass,
+            onChange: onAgeClassChange,
+            visible: !isAgeDim,
+            options: [
+                { label: "Tous âges", value: "" },
+                { label: "≤ 35 ans", value: "35 ans et moins" },
+                { label: "36 – 55 ans", value: "36 à 55 ans" },
+                { label: "≥ 56 ans", value: "56 ans et plus" },
+            ],
+        },
+        {
+            name: "fm-gender-filter",
+            label: "Genre",
+            value: gender,
+            onChange: onGenderChange,
+            visible: !isGenderDim,
+            options: [
+                { label: "Tous", value: "" },
+                { label: "Femmes", value: "Féminin" },
+                { label: "Hommes", value: "Masculin" },
+            ],
+        },
+        {
+            name: "fm-status-filter",
+            label: "Statut",
+            value: status,
+            onChange: onStatusChange,
+            visible: !isStatusDim,
+            options: [
+                { label: "Tous", value: "" },
+                { label: "EC", value: "ec" },
+                { label: "Titulaires non-EC", value: "tit_non_ec" },
+                { label: "Non-permanents", value: "non_permanent" },
+            ],
+        },
+    ].filter((f) => f.visible);
 
     return (
         <>
@@ -226,14 +307,29 @@ export default function FmEvolutionChart({
                 </div>
             )}
 
-            {chartType !== "pyramid" && (
-                <div className="fr-mb-3w">
-                    <SegmentedControl name="fm-age-filter" className="fr-segmented--sm">
-                        <SegmentedElement label="Tous âges" value="" checked={ageClass === ""} onClick={() => onAgeClassChange("")} />
-                        <SegmentedElement label="≤ 35 ans" value="35 ans et moins" checked={ageClass === "35 ans et moins"} onClick={() => onAgeClassChange("35 ans et moins")} />
-                        <SegmentedElement label="36 – 55 ans" value="36 à 55 ans" checked={ageClass === "36 à 55 ans"} onClick={() => onAgeClassChange("36 à 55 ans")} />
-                        <SegmentedElement label="≥ 56 ans" value="56 ans et plus" checked={ageClass === "56 ans et plus"} onClick={() => onAgeClassChange("56 ans et plus")} />
-                    </SegmentedControl>
+            {chartType !== "pyramid" && populationFilters.length > 0 && (
+                <div
+                    className="fr-mb-3w"
+                    style={{ display: "flex", flexWrap: "wrap", gap: "1.5rem", alignItems: "flex-end" }}
+                >
+                    {populationFilters.map((f) => (
+                        <div key={f.name}>
+                            <p className="fr-text--xs fr-mb-1v" style={{ color: "var(--text-mention-grey)" }}>
+                                {f.label}
+                            </p>
+                            <SegmentedControl name={f.name} className="fr-segmented--sm">
+                                {f.options.map((o) => (
+                                    <SegmentedElement
+                                        key={o.value || "all"}
+                                        label={o.label}
+                                        value={o.value}
+                                        checked={f.value === o.value}
+                                        onClick={() => f.onChange(o.value)}
+                                    />
+                                ))}
+                            </SegmentedControl>
+                        </div>
+                    ))}
                 </div>
             )}
 

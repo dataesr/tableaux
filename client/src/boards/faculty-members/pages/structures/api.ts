@@ -76,14 +76,18 @@ export const useFacultyEvolution = (viewType: ViewType, id?: string) =>
 export const useFacultyAnalyses = (
   viewType: ViewType,
   id?: string,
-  ageClass?: string
+  ageClass?: string,
+  gender?: string,
+  status?: string
 ) =>
   useQuery({
-    queryKey: ["faculty", "analyses", viewType, id, ageClass],
+    queryKey: ["faculty", "analyses", viewType, id, ageClass, gender, status],
     queryFn: async () => {
       const params = new URLSearchParams({ view: viewType });
       if (id) params.append("id", id);
       if (ageClass) params.append("age_class", ageClass);
+      if (gender) params.append("gender", gender);
+      if (status) params.append("status", status);
       const response = await fetch(
         `${VITE_APP_SERVER_URL}/faculty-members/analyses?${params}`
       );
@@ -130,7 +134,9 @@ export const useFaculty2ndDegreeTeachers = (
         `${VITE_APP_SERVER_URL}/faculty-members/2nd-degree-teachers?${params}`
       );
       if (!response.ok)
-        throw new Error("Erreur récupération Enseignants 2nd Degré & Arts et Métiers");
+        throw new Error(
+          "Erreur récupération Enseignants 2nd Degré & Arts et Métiers"
+        );
       return response.json();
     },
     enabled: !!year,

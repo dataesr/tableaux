@@ -473,3 +473,65 @@ export function createFmPyramidOptions(
     ],
   });
 }
+
+export function createFmLinesOptions(
+  records: Records,
+  metricKeys: string[],
+  metricsConfig: Record<string, FmMetricConfig>
+): Highcharts.Options {
+  const categories = records.map((r) => r.annee_universitaire);
+  const isPercent = metricsConfig[metricKeys[0]]?.format === "percent";
+
+  const DASH: Highcharts.DashStyleValue[] = [
+    "Solid",
+    "ShortDash",
+    "Dot",
+    "LongDash",
+    "ShortDot",
+  ];
+
+  const series = metricKeys.map((key, i) => {
+    const cfg = metricsConfig[key];
+    return {
+      type: "line" as const,
+      name: cfg?.label || key,
+      color: cfg?.color,
+      dashStyle: DASH[i % DASH.length],
+      lineWidth: 2.5,
+      marker: { enabled: true, radius: 3 },
+      data: records.map((r) => (typeof r[key] === "number" ? r[key] : null)),
+    };
+  });
+
+  return createChartOptions("line", {
+    chart: { height: 480 },
+    xAxis: {
+      categories,
+      title: { text: "Année universitaire" },
+      crosshair: true,
+    },
+    yAxis: {
+      title: { text: isPercent ? "%" : "Effectif" },
+      labels: { format: isPercent ? "{value:.0f}\u00a0%" : "{value:,.0f}" },
+      min: isPercent ? 0 : undefined,
+    },
+    plotOptions: {
+      line: {
+        lineWidth: 2.5,
+        marker: { enabled: true, radius: 3 },
+      },
+    },
+    tooltip: {
+      shared: true,
+      headerFormat: "<b>{point.key}</b><br/>",
+      pointFormat: isPercent
+        ? '<span style="color:{series.color}">●</span> {series.name}: <b>{point.y:.1f}\u00a0%</b><br/>'
+        : '<span style="color:{series.color}">●</span> {series.name}: <b>{point.y:,.0f}</b><br/>',
+    },
+    legend: {
+      enabled: true,
+      itemStyle: { fontSize: "11px", fontWeight: "normal" },
+    },
+    series,
+  });
+}

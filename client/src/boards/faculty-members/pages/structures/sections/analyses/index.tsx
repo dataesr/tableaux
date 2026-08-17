@@ -60,15 +60,26 @@ export default function EvolutionsSection({ viewType, selectedId }: EvolutionsSe
     const [searchParams, setSearchParams] = useSearchParams();
     const selectedAnalysis = searchParams.get("fmAnalysis") || null;
     const ageClass = searchParams.get("fmAgeClass") || "";
+    const gender = searchParams.get("fmGender") || "";
+    const status = searchParams.get("fmStatus") || "";
 
-    const { data, isLoading } = useFacultyAnalyses(viewType, selectedId, ageClass || undefined);
+    const { data, isLoading } = useFacultyAnalyses(
+        viewType,
+        selectedId,
+        ageClass || undefined,
+        gender || undefined,
+        status || undefined
+    );
 
     const { analysesWithData, allAnalyses, metricsConfig, records, periodText } = useMemo(() => {
         if (!data?.records?.length) {
             return { analysesWithData: new Set<string>(), allAnalyses: {}, metricsConfig: {}, records: [], periodText: "" };
         }
         const completeRecords = data.records.filter(
-            (r: any) => (r.effectif_permanents || 0) > 0 && (r.effectif_non_permanents || 0) > 0
+            (r: any) =>
+                status
+                    ? (r.effectif_total || 0) > 0
+                    : (r.effectif_permanents || 0) > 0 && (r.effectif_non_permanents || 0) > 0
         );
         if (!completeRecords.length) {
             return { analysesWithData: new Set<string>(), allAnalyses: {}, metricsConfig: {}, records: [], periodText: "" };
@@ -89,7 +100,7 @@ export default function EvolutionsSection({ viewType, selectedId }: EvolutionsSe
         const period = years.length > 1 ? `${years[0]} — ${years[years.length - 1]}` : years[0] || "";
 
         return { analysesWithData: available, allAnalyses: analyses, metricsConfig: metrics, records: completeRecords, periodText: period };
-    }, [data]);
+    }, [data, status]);
 
     useEffect(() => {
         if (analysesWithData.size === 0) return;
@@ -111,6 +122,20 @@ export default function EvolutionsSection({ viewType, selectedId }: EvolutionsSe
         const params = new URLSearchParams(searchParams);
         if (val) params.set("fmAgeClass", val);
         else params.delete("fmAgeClass");
+        setSearchParams(params, { replace: true });
+    };
+
+    const handleGender = (val: string) => {
+        const params = new URLSearchParams(searchParams);
+        if (val) params.set("fmGender", val);
+        else params.delete("fmGender");
+        setSearchParams(params, { replace: true });
+    };
+
+    const handleStatus = (val: string) => {
+        const params = new URLSearchParams(searchParams);
+        if (val) params.set("fmStatus", val);
+        else params.delete("fmStatus");
         setSearchParams(params, { replace: true });
     };
 
@@ -160,6 +185,10 @@ export default function EvolutionsSection({ viewType, selectedId }: EvolutionsSe
                                 periodText={periodText}
                                 ageClass={ageClass}
                                 onAgeClassChange={handleAgeClass}
+                                gender={gender}
+                                onGenderChange={handleGender}
+                                status={status}
+                                onStatusChange={handleStatus}
                             />
                         )}
                     </Col>
