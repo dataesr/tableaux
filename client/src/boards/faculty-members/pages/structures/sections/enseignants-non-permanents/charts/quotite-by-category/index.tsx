@@ -52,7 +52,7 @@ export default function QuotiteByCategoryChart({
                 readingKey: readingKey || undefined,
                 sources: [
                     {
-                        label: { fr: <>MESR-SIES, SISE</> },
+                        label: { fr: <>MESRE-DGRH, traitement DND</> },
                         url: { fr: "https://data.enseignementsup-recherche.gouv.fr" },
                     },
                 ],

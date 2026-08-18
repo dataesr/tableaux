@@ -127,6 +127,6 @@ export const definitions = [
   {
     title: "Source des données",
     definition:
-      "Les données proviennent du système d'information SISE (Système d'information sur le suivi de l'étudiant) et des enquêtes du MESR-SIES (Ministère de l'Enseignement supérieur et de la Recherche — Sous-direction des systèmes d'information et des études statistiques). Les données de l'année la plus récente peuvent être provisoires.",
+      "Les données proviennent de la DGRH du MESRE (Ministère de l'Enseignement supérieur, de la Recherche et de l'Éducation), traitées via la DND. Les données de l'année la plus récente peuvent être incomplètes lorsque certaines enquêtes ne sont pas encore disponibles.",
   },
 ];

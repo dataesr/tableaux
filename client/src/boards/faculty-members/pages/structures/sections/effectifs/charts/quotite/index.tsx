@@ -20,7 +20,7 @@ export default function QuotiteChart({ selectedYear, quotiteByGender }: QuotiteC
             config={{
                 id: "faculty-quotite-grouped",
                 title: { fr: `Temps plein et temps partiel par genre (${selectedYear})`, look: "h5" as const },
-                sources: [{ label: { fr: <>MESR-SIES, SISE</> }, url: { fr: "https://data.enseignementsup-recherche.gouv.fr" } }],
+                sources: [{ label: { fr: <>MESRE-DGRH, traitement DND</> }, url: { fr: "https://data.enseignementsup-recherche.gouv.fr" } }],
             }}
             options={options}
         />

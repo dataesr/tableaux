@@ -58,7 +58,7 @@ export default function ComparisonBarChart({ data, currentId, currentName, selec
                 id: `fm-comparison-bar-${selectedMetric}`,
                 title: { fr: `${displayLabel} ${currentName ? `: ${currentName}` : ""} (${selectedYear})`, look: "h5" as const },
                 readingKey: readingKey || undefined,
-                sources: [{ label: { fr: <>MESR-SIES, SISE</> }, url: { fr: "https://data.enseignementsup-recherche.gouv.fr" } }],
+                sources: [{ label: { fr: <>MESRE-DGRH, traitement DND</> }, url: { fr: "https://data.enseignementsup-recherche.gouv.fr" } }],
             }}
             options={options}
         />

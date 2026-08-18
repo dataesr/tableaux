@@ -19,7 +19,7 @@ export default function GenderEvolutionChart({
         const firstMale = first?.gender_breakdown?.find((g: any) => g.gender === "Masculin")?.count || 0;
         const lastMale = last?.gender_breakdown?.find((g: any) => g.gender === "Masculin")?.count || 0;
         const diffFemale = lastFemale - firstFemale;
-        const diffMale = lastFemale - firstFemale;
+        const diffMale = lastMale - firstMale;
         const pctFemale = firstFemale > 0 ? ((diffFemale / firstFemale) * 100).toFixed(1) : "0";
         const pctMale = firstMale > 0 ? ((diffMale / firstMale) * 100).toFixed(1) : "0";
 
@@ -56,7 +56,7 @@ export default function GenderEvolutionChart({
                 readingKey: readingKey || undefined,
                 sources: [
                     {
-                        label: { fr: <>MESR-SIES, SISE</> },
+                        label: { fr: <>MESRE-DGRH, traitement DND</> },
                         url: { fr: "https://data.enseignementsup-recherche.gouv.fr" },
                     },
                 ],

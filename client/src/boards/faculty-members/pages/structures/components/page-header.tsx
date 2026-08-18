@@ -192,19 +192,15 @@ export default function PageHeader({
                                 const ecCount = statusDistribution.find((s: any) => s._id === "enseignant_chercheur")?.count || 0;
                                 const titNonEcCount = statusDistribution.find((s: any) => s._id === "titulaire_non_chercheur")?.count || 0;
                                 const nonTitCount = statusDistribution.find((s: any) => s._id === "non_titulaire")?.count || 0;
-                                const permanentCount = ecCount + titNonEcCount;
                                 const rows = [
-                                    { key: "permanent", label: "Permanents", icon: "fr-icon-briefcase-fill", variant: "page-header__stat-icon--green-emeraude", count: permanentCount },
-                                    { key: "enseignant_chercheur", label: "Enseignants-chercheurs", icon: "fr-icon-microscope-fill", variant: "page-header__stat-icon--blue-france", count: ecCount },
-                                    { key: "non_titulaire", label: "Non permanents", icon: "fr-icon-time-fill", variant: "page-header__stat-icon--purple-glycine", count: nonTitCount },
+                                    { key: "enseignant_chercheur", label: "Enseignants-chercheurs", count: ecCount },
+                                    { key: "titulaire_non_chercheur", label: "Autres permanents", count: titNonEcCount },
+                                    { key: "non_titulaire", label: "Non permanents", count: nonTitCount },
                                 ];
-                                return rows.map(({ key, label, icon, variant, count }) => {
+                                return rows.map(({ key, label, count }) => {
                                     const pct = totalCount > 0 ? ((count / totalCount) * 100).toFixed(0) : "0";
                                     return (
                                         <li key={key} className="page-header__detail-row">
-                                            <span className={`page-header__stat-icon page-header__stat-icon--sm ${variant}`} aria-hidden="true">
-                                                <span className={icon} aria-hidden="true" />
-                                            </span>
                                             <span className="page-header__detail-label">{label}</span>
                                             <span className="page-header__detail-value">
                                                 {count.toLocaleString("fr-FR")}
@@ -247,7 +243,7 @@ export default function PageHeader({
                                             style={{ backgroundColor: getCssColor(AGE_COLORS[age._id] ?? "blue-france-main-525") }}
                                             aria-hidden="true"
                                         />
-                                        <span className="page-header__detail-label">{age._id || "N/A"}</span>
+                                        <span className="page-header__detail-label">{age._id || "Âge non renseigné"}</span>
                                         <span className="page-header__detail-value">
                                             {age.total.toLocaleString("fr-FR")}
                                             <span className="page-header__detail-pct"> · {pct}% ({fPct}% F)</span>

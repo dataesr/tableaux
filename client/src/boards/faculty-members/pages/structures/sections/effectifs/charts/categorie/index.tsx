@@ -24,7 +24,7 @@ export default function CategoryChart({ selectedYear, categoryDistribution }: Ca
       config={{
         id: "faculty-category-distribution",
         title: { fr: `Composition H/F par corps et grade (${selectedYear})`, look: "h5" as const },
-        sources: [{ label: { fr: <>MESR-SIES, SISE</> }, url: { fr: "https://data.enseignementsup-recherche.gouv.fr" } }],
+        sources: [{ label: { fr: <>MESRE-DGRH, traitement DND</> }, url: { fr: "https://data.enseignementsup-recherche.gouv.fr" } }],
       }}
       options={options}
     />

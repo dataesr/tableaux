@@ -64,7 +64,10 @@ export default function FranceMap({
                         <strong>{mapData.regions.length}</strong> régions pour un
                         total de{" "}
                         <strong>{total.toLocaleString("fr-FR")}</strong>{" "}
-                        enseignants.
+                        enseignants. La région correspond au siège de l'établissement.
+                        Les territoires non représentés sur la carte (Polynésie française,
+                        Nouvelle-Calédonie, autres collectivités d'outre-mer et étranger)
+                        peuvent être comptés dans le total sans figurer sur le fond cartographique.
                     </>
                 ),
             },
@@ -110,13 +113,13 @@ export default function FranceMap({
             config={{
                 id: `faculty-map-france-${level}`,
                 title: {
-                    fr: title || `Répartition géographique des enseignants (${year})`,
+                    fr: title || `Répartition par région du siège de l'établissement (${year})`,
                     look: "h5" as const,
                 },
                 readingKey,
                 sources: [
                     {
-                        label: { fr: <>MESR-SIES, SISE</> },
+                        label: { fr: <>MESRE-DGRH, traitement DND</> },
                         url: {
                             fr: "https://data.enseignementsup-recherche.gouv.fr",
                         },

@@ -217,7 +217,7 @@ export default function FmEvolutionChart({
         title: { fr: label, look: "h5" as const },
         comment: commentText ? { fr: <>{commentText}</> } : undefined,
         readingKey: readingKeyText ? { fr: <>{readingKeyText}</> } : undefined,
-        sources: [{ label: { fr: <>MESR-SIES, SISE</> }, url: { fr: "https://data.enseignementsup-recherche.gouv.fr" } }],
+        sources: [{ label: { fr: <>MESRE-DGRH, traitement DND</> }, url: { fr: "https://data.enseignementsup-recherche.gouv.fr" } }],
     };
 
     const metricsStr = metrics.join(" ");

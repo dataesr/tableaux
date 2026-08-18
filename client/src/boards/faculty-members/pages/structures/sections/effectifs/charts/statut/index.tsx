@@ -20,7 +20,7 @@ export default function StatusChart({ selectedYear, statusDistribution }: Status
       config={{
         id: "faculty-status-distribution",
         title: { fr: `Effectifs par statut (${selectedYear})`, look: "h5" as const },
-        sources: [{ label: { fr: <>MESR-SIES, SISE</> }, url: { fr: "https://data.enseignementsup-recherche.gouv.fr" } }],
+        sources: [{ label: { fr: <>MESRE-DGRH, traitement DND</> }, url: { fr: "https://data.enseignementsup-recherche.gouv.fr" } }],
       }}
       options={options}
     />
