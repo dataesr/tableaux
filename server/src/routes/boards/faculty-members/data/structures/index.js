@@ -193,7 +193,7 @@ router.get("/faculty-members/dashboard", async (req, res) => {
       establishmentTypeAgg,
       quotiteByGenderAgg,
       quotiteByAgeAgg,
-      topItems,
+      rankedItems,
       contextInfo,
     ] = await Promise.all([
       collection
@@ -404,11 +404,11 @@ router.get("/faculty-members/dashboard", async (req, res) => {
             label: "$grande_discipline",
           },
           region: {
-            id: "$etablissement_region",
+            id: "$etablissement_code_region",
             label: "$etablissement_region",
           },
           academie: {
-            id: "$etablissement_academie",
+            id: "$etablissement_code_academie",
             label: "$etablissement_academie",
           },
         };
@@ -419,25 +419,11 @@ router.get("/faculty-members/dashboard", async (req, res) => {
             { $match: yearMatch },
             {
               $group: {
-                _id: {
-                  id: topGroup.id,
-                  label: topGroup.label,
-                  gender: "$sexe",
-                },
-                count: { $sum: "$effectif" },
-              },
-            },
-            {
-              $group: {
-                _id: { id: "$_id.id", label: "$_id.label" },
-                total: { $sum: "$count" },
-                gender_breakdown: {
-                  $push: { gender: "$_id.gender", count: "$count" },
-                },
+                _id: { id: topGroup.id, label: topGroup.label },
+                total: { $sum: "$effectif" },
               },
             },
             { $sort: { total: -1 } },
-            { $limit: 5 },
           ])
           .toArray();
       })(),
@@ -446,6 +432,24 @@ router.get("/faculty-members/dashboard", async (req, res) => {
     ]);
 
     const total_count = genderAgg.reduce((s, g) => s + g.count, 0);
+
+    // Voisinage par effectif : fenêtre de 5 entités centrée sur l'entité courante.
+    let neighbors = [];
+    const currentIndex = rankedItems.findIndex(
+      (r) => String(r._id?.id) === String(id)
+    );
+    if (currentIndex >= 0) {
+      const n = rankedItems.length;
+      let start = Math.max(0, currentIndex - 2);
+      const end = Math.min(n, start + 5);
+      start = Math.max(0, end - 5);
+      neighbors = rankedItems.slice(start, end).map((r) => ({
+        id: r._id?.id,
+        label: r._id?.label,
+        total: r.total,
+        is_current: String(r._id?.id) === String(id),
+      }));
+    }
 
     res.json({
       context_info: contextInfo,
@@ -458,7 +462,7 @@ router.get("/faculty-members/dashboard", async (req, res) => {
       establishment_type_distribution: establishmentTypeAgg,
       quotite_by_gender: quotiteByGenderAgg,
       quotite_by_age: quotiteByAgeAgg,
-      top_items: topItems,
+      neighbors,
     });
   } catch (error) {
     console.error("Error fetching dashboard:", error);

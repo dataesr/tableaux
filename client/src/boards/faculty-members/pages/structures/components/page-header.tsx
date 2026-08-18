@@ -17,11 +17,11 @@ const AGE_COLORS: Record<string, string> = {
     "56 ans et plus": "fm-age-56-et-plus-ec",
 };
 
-const VIEW_TOP_LABELS: Record<ViewType, string> = {
-    structure: "Top 5 établissements",
-    discipline: "Top 5 disciplines",
-    region: "Top 5 régions",
-    academie: "Top 5 académies",
+const VIEW_NEIGHBOR_LABELS: Record<ViewType, string> = {
+    structure: "Établissements de taille comparable",
+    discipline: "Disciplines d'effectif comparable",
+    region: "Régions d'effectif comparable",
+    academie: "Académies d'effectif comparable",
 };
 
 function femalePctOf(items: any[]): string {
@@ -39,6 +39,7 @@ interface PageHeaderProps {
     totalCount: number;
     viewType: ViewType;
     onClose: () => void;
+    onSelectEntity: (id: string) => void;
 }
 
 export default function PageHeader({
@@ -49,11 +50,12 @@ export default function PageHeader({
     totalCount,
     viewType,
     onClose,
+    onSelectEntity,
 }: PageHeaderProps) {
     const genderDistribution = data?.gender_distribution || [];
     const statusDistribution = data?.status_distribution || [];
     const ageDistribution = data?.age_distribution || [];
-    const topItems = data?.top_items || [];
+    const neighbors = data?.neighbors || [];
 
     const maleCount =
         genderDistribution.find((g: any) => g._id === "Masculin")?.count || 0;
@@ -257,22 +259,23 @@ export default function PageHeader({
 
                 <Col xs="12" md="4">
                     <div className="fr-card fr-card--shadow fr-px-3v fr-py-2w page-header__detail-card">
-                        <Text size="sm" bold className="fr-mb-1w">{VIEW_TOP_LABELS[viewType]}</Text>
-                        <ol className="page-header__top-list">
-                            {topItems.map((item: any, idx: number) => {
-                                const label = item._id?.label || "–";
-                                const fPct = femalePctOf(item.gender_breakdown || []);
-                                const isCurrent = item._id?.id === data?.context_info?.id;
-                                return (
-                                    <li key={item._id?.id || idx} className={`page-header__top-item${isCurrent ? " page-header__top-item--current" : ""}`}>
-                                        <span className="page-header__top-rank">{idx + 1}</span>
-                                        <span className="page-header__top-label" title={label}>{label}</span>
-                                        <span className="page-header__top-count">{item.total.toLocaleString("fr-FR")}</span>
-                                        <span className="page-header__top-fpct">{fPct}% F</span>
-                                    </li>
-                                );
-                            })}
-                        </ol>
+                        <Text size="sm" bold className="fr-mb-1w">{VIEW_NEIGHBOR_LABELS[viewType]}</Text>
+                        <ul className="page-header__detail-list">
+                            {neighbors.map((item: any, idx: number) => (
+                                <li key={item.id || idx}>
+                                    <button
+                                        type="button"
+                                        className={`page-header__neighbor-btn${item.is_current ? " page-header__neighbor-btn--current" : ""}`}
+                                        onClick={() => onSelectEntity(item.id)}
+                                        disabled={item.is_current}
+                                        title={item.is_current ? item.label : `Voir ${item.label}`}
+                                    >
+                                        <span className="page-header__detail-label">{item.label}</span>
+                                        <span className="page-header__detail-value">{item.total.toLocaleString("fr-FR")}</span>
+                                    </button>
+                                </li>
+                            ))}
+                        </ul>
                     </div>
                 </Col>
             </Row>

@@ -72,6 +72,12 @@ export default function EntityView({ viewType }: Props) {
         setSearchParams({ ...params, year });
     };
 
+    const handleSelectEntity = (newId: string) => {
+        const params = Object.fromEntries(searchParams);
+        params[getParamKey(viewType)] = newId;
+        setSearchParams(params);
+    };
+
     const renderSectionContent = () => {
         switch (section) {
             case "personnels":
@@ -148,6 +154,7 @@ export default function EntityView({ viewType }: Props) {
                         totalCount={totalCount}
                         viewType={viewType}
                         onClose={handleClearSelection}
+                        onSelectEntity={handleSelectEntity}
                     />
                 </Container>
             </Container>
