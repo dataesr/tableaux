@@ -4,6 +4,8 @@ const { VITE_APP_SERVER_URL } = import.meta.env;
 
 export type ViewType = "structure" | "discipline" | "region" | "academie";
 
+export type FacultyScope = "permanents" | "all";
+
 const FILTER_TYPE_MAP: Record<ViewType, string> = {
   structure: "structures",
   discipline: "disciplines",

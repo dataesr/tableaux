@@ -13,9 +13,7 @@ interface SectionNavigationProps {
 }
 
 const ALL_NAV_ITEMS = [
-    { id: "enseignants-chercheurs", label: "Enseignants-chercheurs" },
-    { id: "enseignants-2nd-degre-arts-metiers", label: "Enseignants 2nd degré & Arts et Métiers" },
-    { id: "enseignants-non-permanents", label: "Enseignants non permanents" },
+    { id: "personnels", label: "Personnels enseignants" },
     { id: "groupes-cnu", label: "Groupes CNU" },
     { id: "comparaison", label: "Positionnement" },
     { id: "analyses", label: "Analyses" },

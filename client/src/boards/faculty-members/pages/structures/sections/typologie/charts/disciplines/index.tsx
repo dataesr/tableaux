@@ -49,14 +49,14 @@ export default function DisciplineChart({
         },
         readingKey: largest
           ? {
-              fr: (
-                <>
-                  La discipline la plus représentée est «{" "}
-                  <strong>{largest.name}</strong> » avec{" "}
-                  <strong>{largest.total.toLocaleString("fr-FR")}</strong> enseignants.
-                </>
-              ),
-            }
+            fr: (
+              <>
+                La discipline la plus représentée est «{" "}
+                <strong>{largest.name}</strong> » avec{" "}
+                <strong>{largest.total.toLocaleString("fr-FR")}</strong> enseignants.
+              </>
+            ),
+          }
           : undefined,
         sources: [
           {

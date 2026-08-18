@@ -3,9 +3,7 @@ import { Col, Container, Row } from "@dataesr/dsfr-plus";
 import { ViewType, useFacultyYears, useFacultyDashboard, useFacultyEvolution } from "../api";
 import PageHeader from "./page-header";
 import SectionNavigation from "./section-navigation";
-import EnseignantsChercheurSection from "../sections/enseignants-chercheurs";
-import Enseignants2ndDegreArtsMetiersSection from "../sections/enseignants-2nd-degre-arts-metiers";
-import EnseignantsNonPermanentsSection from "../sections/enseignants-non-permanents";
+import PersonnelsSection from "../sections/personnels";
 import GroupesCnuSection from "../sections/groupes-cnu";
 import ComparaisonSection from "../sections/positionning";
 import DefaultSkeleton from "../../../../../components/charts-skeletons/default";
@@ -21,6 +19,12 @@ const VIEW_LABELS: Record<ViewType, { plural: string; singular: string; basePath
     academie: { plural: "Académies", singular: "académie", basePath: "/personnel-enseignant/academies" },
 };
 
+const POPULATION_SECTIONS = [
+    "enseignants-chercheurs",
+    "enseignants-2nd-degre-arts-metiers",
+    "enseignants-non-permanents",
+];
+
 interface Props {
     viewType: ViewType;
 }
@@ -28,10 +32,12 @@ interface Props {
 export default function EntityView({ viewType }: Props) {
     const [searchParams, setSearchParams] = useSearchParams();
     const labels = VIEW_LABELS[viewType];
-    console.log(labels);
 
     const selectedId = searchParams.get(getParamKey(viewType)) || "";
-    const section = searchParams.get("section") || "enseignants-chercheurs";
+    const rawSection = searchParams.get("section") || "personnels";
+
+    const section = POPULATION_SECTIONS.includes(rawSection) ? "personnels" : rawSection;
+    const initialPopulation = POPULATION_SECTIONS.includes(rawSection) ? rawSection : undefined;
 
     const { data: yearsData, isLoading: isLoadingYears } = useFacultyYears(viewType, selectedId);
     const years: string[] = yearsData?.years || [];
@@ -68,28 +74,13 @@ export default function EntityView({ viewType }: Props) {
 
     const renderSectionContent = () => {
         switch (section) {
-            case "enseignants-chercheurs":
+            case "personnels":
                 return (
-                    <EnseignantsChercheurSection
+                    <PersonnelsSection
                         viewType={viewType}
                         selectedId={selectedId}
                         selectedYear={selectedYear}
-                    />
-                );
-            case "enseignants-2nd-degre-arts-metiers":
-                return (
-                    <Enseignants2ndDegreArtsMetiersSection
-                        viewType={viewType}
-                        selectedId={selectedId}
-                        selectedYear={selectedYear}
-                    />
-                );
-            case "enseignants-non-permanents":
-                return (
-                    <EnseignantsNonPermanentsSection
-                        viewType={viewType}
-                        selectedId={selectedId}
-                        selectedYear={selectedYear}
+                        initialPopulation={initialPopulation}
                     />
                 );
             case "groupes-cnu":

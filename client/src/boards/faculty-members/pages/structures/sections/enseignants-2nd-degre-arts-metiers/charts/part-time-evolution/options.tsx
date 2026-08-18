@@ -3,15 +3,22 @@ import { createChartOptions } from "../../../../../../../../components/chart-wra
 import { getCssColor } from "../../../../../../../../utils/colors";
 
 const isPartiel = (q: string) => /partiel/i.test(q || "");
+const isNonRenseigne = (q: string) => /non renseign/i.test(q || "");
 
-function partTimeRate(entry: any, gender?: string): number | null {
+function quotiteTotals(entry: any, gender?: string): { partiel: number; total: number } {
     let partiel = 0;
     let total = 0;
     (entry?.quotite_breakdown || []).forEach((b: any) => {
         if (gender && b.gender !== gender) return;
+        if (isNonRenseigne(b.quotite)) return;
         total += b.count || 0;
         if (isPartiel(b.quotite)) partiel += b.count || 0;
     });
+    return { partiel, total };
+}
+
+function partTimeRate(entry: any, gender?: string): number | null {
+    const { partiel, total } = quotiteTotals(entry, gender);
     return total > 0 ? Math.round((partiel / total) * 1000) / 10 : null;
 }
 
@@ -20,13 +27,26 @@ export function createPartTimeEvolutionOptions(
 ): Highcharts.Options | null {
     if (!quotiteEvolution?.length) return null;
 
-    const rows = [...quotiteEvolution].sort((a, b) =>
+    const sorted = [...quotiteEvolution].sort((a, b) =>
         String(a._id).localeCompare(String(b._id))
     );
+    // On retire les années sans quotité comparable au lieu d'afficher un trou.
+    const rows = sorted.filter((e) => quotiteTotals(e).total > 0);
+    const droppedYears = sorted
+        .filter((e) => quotiteTotals(e).total === 0)
+        .map((e) => e._id);
+    if (!rows.length) return null;
     const categories = rows.map((e) => e._id);
 
     return createChartOptions("line", {
         chart: { height: 350 },
+        subtitle: droppedYears.length
+            ? {
+                text: `Années sans donnée de quotité comparable, exclues : ${droppedYears.join(", ")}.`,
+                align: "left",
+                style: { fontSize: "10px", color: getCssColor("text-title-grey") },
+            }
+            : undefined,
         xAxis: {
             categories,
             title: { text: null },

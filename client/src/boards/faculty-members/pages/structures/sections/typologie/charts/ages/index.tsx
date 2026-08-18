@@ -49,14 +49,14 @@ export default function AgeChart({
         },
         readingKey: peakClass
           ? {
-              fr: (
-                <>
-                  La tranche d'âge la plus représentée est «{" "}
-                  <strong>{peakClass.name}</strong> » avec{" "}
-                  <strong>{peakClass.total.toLocaleString("fr-FR")}</strong> personnes.
-                </>
-              ),
-            }
+            fr: (
+              <>
+                La tranche d'âge la plus représentée est «{" "}
+                <strong>{peakClass.name}</strong> » avec{" "}
+                <strong>{peakClass.total.toLocaleString("fr-FR")}</strong> personnes.
+              </>
+            ),
+          }
           : undefined,
         sources: [
           {
