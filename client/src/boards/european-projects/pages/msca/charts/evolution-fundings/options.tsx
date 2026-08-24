@@ -51,7 +51,6 @@ export default function Options({
       style: {
         fontSize: "10px",
         fontWeight: "normal",
-        textOutline: "1px white",
       },
       y: -8,
     },
