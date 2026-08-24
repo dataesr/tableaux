@@ -6,14 +6,14 @@ export interface MscaCountryData {
   country_code: string;
   country_name_fr: string;
   country_name_en: string;
-  total_funding: number;
+  total_funding_project: number;
   total_involved: number;
   total_projects: number;
-  total_coordinations: number;
+  total_pi: number;
 }
 
 export interface MscaStageSummary {
-  total_funding: number;
+  total_funding_project: number;
   total_involved: number;
   total_projects: number;
   total_coordinations: number;
@@ -29,13 +29,13 @@ export interface MscaDestinationData {
   destination_code: string;
   destination_name_en: string;
   evaluated: {
-    total_funding: number;
+    total_funding_project: number;
     total_involved: number;
     total_projects: number;
     total_coordinations: number;
   } | null;
   successful: {
-    total_funding: number;
+    total_funding_project: number;
     total_involved: number;
     total_projects: number;
     total_coordinations: number;

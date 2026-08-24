@@ -31,7 +31,7 @@ export default function MscaSynthesisCards({
   const adjMascPlural = countryAdj.m.endsWith("s") ? countryAdj.m : `${countryAdj.m}s`;
 
   // Totaux globaux
-  const totalFundingSuccessful = data?.successful?.total_funding || 0;
+  const totalFundingSuccessful = data?.successful?.total_funding_project || 0;
   const totalProjectsSuccessful = data?.successful?.total_projects || 0;
   const totalProjectsEvaluated = data?.evaluated?.total_projects || 0;
 
@@ -39,9 +39,9 @@ export default function MscaSynthesisCards({
   const country = data?.successful?.countries?.[0];
   const countryEval = data?.evaluated?.countries?.[0];
 
-  const countryFunding = country?.total_funding || 0;
+  const countryFunding = country?.total_funding_project || 0;
   const countryProjects = country?.total_projects || 0;
-  const countryCoordinations = country?.total_coordinations || 0;
+  const countryCoordinations = country?.total_pi || 0;
   const countryProjectsEvaluated = countryEval?.total_projects || 0;
 
   // Parts et taux
