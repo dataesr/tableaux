@@ -8,7 +8,7 @@ $ep-orange: #c75000;
 .ep-home {
 
   &__hero {
-    background: linear-gradient(150deg, #f0f4ff 0%, #eaefff 100%);
+    background: linear-gradient(150deg, var(--background-contrast-blue-france) 0%, var(--background-contrast-blue-ecume) 100%);
     border-bottom: 3px solid $ep-blue;
     padding: 3rem 0 2rem;
 
@@ -106,9 +106,11 @@ $ep-orange: #c75000;
   // ── Sections de contenu ───────────────────────────────────────────────────
   &__section {
     padding: 2.5rem 0;
+    background: var(--background-default-grey);
 
     &--alt {
-      background: color-mix(in srgb, $ep-blue 4%, white);
+      background: var(--background-contrast-blue-france);
+
     }
   }
 
