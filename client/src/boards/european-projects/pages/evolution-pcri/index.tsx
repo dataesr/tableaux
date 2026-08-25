@@ -12,6 +12,21 @@ export default function EvolutionPcri() {
   const [searchParams] = useSearchParams();
   const currentLang = searchParams.get("language") || "fr";
 
+  const title = {
+    fr: (
+      <>
+        Evolution des programmes-cadres pour la recherche et l'innovation : <br />
+        de FP6 à Horizon Europe
+      </>
+    ),
+    en: (
+      <>
+        Evolution of framework programmes for research and innovation: <br />
+        from FP6 to Horizon Europe
+      </>
+    ),
+  };
+
   const calloutContent = {
     fr: (
       <>
@@ -35,13 +50,9 @@ export default function EvolutionPcri() {
     <Container as="section" className="fr-mt-2w">
       <Row>
         <Col>
-          <Title as="h2">
-            Evolution des programmes-cadres pour la recherche et l'innovation : <br />
-            de FP6 à Horizon Europe
-          </Title>
+          <Title as="h2">{title[currentLang]}</Title>
         </Col>
       </Row>
-
       <Row>
         <Col>
           <Callout className="callout-style">{calloutContent[currentLang]}</Callout>
