@@ -42,6 +42,7 @@ export default function FundingByCountry() {
     title: {
       fr: "Évolution des subventions de FP6 à Horizon Europe",
       en: "Funding evolution from FP6 to Horizon Europe",
+      className: "fr-pt-2w fr-pl-1w",
     },
     comment: {
       fr: <>Evolution des subventions cumuleés obtenues par les pays depuis FP6 jusqu'à Horizon Europe.</>,

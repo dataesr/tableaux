@@ -61,12 +61,12 @@
   // Badge réutilisable pour les graphiques
   .chart-badge {
     position: absolute;
-    top: -24px;
-    left: -8px;
-    background-color: var(--background-action-high-blue-france);
+    top: -25px;
+    left: -12px;
+    background-color: #003399;
     color: var(--text-default-grey);
     padding: 4px 12px;
-    border-radius: 4px;
+    // border-radius: 4px;
     font-size: 0.75rem;
     font-weight: 700;
     text-transform: uppercase;
@@ -77,10 +77,10 @@
   }
 
   .chart-container--default {
-    background-color: var(--background-contrast-blue-ecume);
-    border: 1px solid var(--background-contrast-blue-ecume) !important;
+    background-color: var(--background-contrast-blue-france);
+    border: 1px solid var(--background-contrast-blue-france) !important;
     .chart-footer{
-      background-color: var(--background-contrast-blue-ecume);
+      background-color: var(--background-contrast-blue-france);
       padding: 8px;
     }
   }

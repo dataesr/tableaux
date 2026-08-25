@@ -329,6 +329,7 @@ function ChartTitle({
     return (
       <>
         <Title as="h2" look="h6" className="fr-m-0">
+          45
           {config.title}
         </Title>
         {children}
@@ -339,11 +340,7 @@ function ChartTitle({
   // Si title est un objet avec configuration
   return (
     <>
-      <Title
-        as={config.title.size ? config.title.size : "h2"}
-        className={config.title.className ? config.title.className : "fr-my-0"}
-        look={config.title.look ? config.title.look : "h6"}
-      >
+      <Title as={config.title.size ? config.title.size : "h2"} className={config.title.className ? config.title.className : "fr-my-0"} look={config.title.look ? config.title.look : "h6"}>
         {config.title[currentLang]}
       </Title>
       {children}

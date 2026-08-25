@@ -31,6 +31,7 @@ export default function SuccessRateEvolution() {
     title: {
       fr: i18n.title.fr,
       en: i18n.title.en,
+      className: "fr-pt-2w fr-pl-1w",
     },
     comment: {
       fr: <>{i18n.comment.fr}</>,

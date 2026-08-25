@@ -24,7 +24,7 @@ export default function EfficiencyScatter() {
   // États pour l'animation
   const [currentFrameworkIndex, setCurrentFrameworkIndex] = useState<number>(0);
   const [isPlaying, setIsPlaying] = useState(false);
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   // États pour les sélecteurs d'axes
   const [xAxisVar, setXAxisVar] = useState<AxisVariable>("success_rate_project");
@@ -103,7 +103,6 @@ export default function EfficiencyScatter() {
   const chartId = "efficiencyScatter";
   const config = {
     id: chartId,
-
     comment: {
       fr: <>{i18n.comment.fr}</>,
       en: <>{i18n.comment.en}</>,
@@ -116,7 +115,7 @@ export default function EfficiencyScatter() {
   return (
     <div className={`chart-container chart-container--${color}`}>
       <span className="chart-badge">Top 15</span>
-      <Row className="fr-m-1w">
+      <Row className="fr-mt-2w fr-ml-1w">
         <Col>
           <Title as="h3" look="h6" className="fr-mb-1w">
             {i18n.title.fr}
@@ -127,13 +126,7 @@ export default function EfficiencyScatter() {
           <div className="efficiency-scatter__controls fr-mb-2w">
             <div className="efficiency-scatter__buttons">
               {!isPlaying ? (
-                <Button
-                  onClick={handlePlay}
-                  size="sm"
-                  variant="secondary"
-                  icon="play-fill"
-                  title={currentLang === "fr" ? "Lancer l'animation" : "Play animation"}
-                >
+                <Button onClick={handlePlay} size="sm" variant="secondary" icon="play-fill" title={currentLang === "fr" ? "Lancer l'animation" : "Play animation"}>
                   {currentLang === "fr" ? "Lecture" : "Play"}
                 </Button>
               ) : (
@@ -141,14 +134,7 @@ export default function EfficiencyScatter() {
                   {currentLang === "fr" ? "Pause" : "Pause"}
                 </Button>
               )}
-              <Button
-                onClick={handleReset}
-                size="sm"
-                variant="tertiary"
-                icon="refresh-line"
-                title={currentLang === "fr" ? "Revenir au début" : "Back to start"}
-                disabled={currentFrameworkIndex === 0 && !isPlaying}
-              >
+              <Button onClick={handleReset} size="sm" variant="tertiary" icon="refresh-line" title={currentLang === "fr" ? "Revenir au début" : "Back to start"} disabled={currentFrameworkIndex === 0 && !isPlaying}>
                 {currentLang === "fr" ? "Début" : "Start"}
               </Button>
             </div>
@@ -156,12 +142,7 @@ export default function EfficiencyScatter() {
             {/* Indicateurs de framework */}
             <div>
               {FRAMEWORKS_ORDER.map((fw, index) => (
-                <button
-                  key={fw}
-                  onClick={() => handleSelectFramework(index)}
-                  className={`efficiency-scatter__framework-btn ${currentFrameworkIndex === index ? "efficiency-scatter__framework-btn--active" : ""}`}
-                  title={FRAMEWORK_LABELS[fw]}
-                >
+                <button key={fw} onClick={() => handleSelectFramework(index)} className={`efficiency-scatter__framework-btn ${currentFrameworkIndex === index ? "efficiency-scatter__framework-btn--active" : ""}`} title={FRAMEWORK_LABELS[fw]}>
                   {fw === "HORIZON EUROPE" ? "HE" : fw}
                 </button>
               ))}
@@ -174,12 +155,7 @@ export default function EfficiencyScatter() {
       <Row className="fr-px-1w" gutters>
         <Col>
           <label htmlFor="x-axis-selector">{getI18nLabel(i18n, "x-axis-selector", currentLang)}</label>
-          <select
-            id="x-axis-selector"
-            value={xAxisVar}
-            onChange={(e) => setXAxisVar(e.target.value as AxisVariable)}
-            className="fr-select efficiency-scatter__select"
-          >
+          <select id="x-axis-selector" value={xAxisVar} onChange={(e) => setXAxisVar(e.target.value as AxisVariable)} className="fr-select efficiency-scatter__select">
             {AXIS_VARIABLES.map((varKey) => (
               <option key={varKey} value={varKey}>
                 {getI18nLabel(i18n, VARIABLE_CONFIG[varKey].i18nKey, currentLang)}
@@ -189,12 +165,7 @@ export default function EfficiencyScatter() {
         </Col>
         <Col>
           <label htmlFor="y-axis-selector">{getI18nLabel(i18n, "y-axis-selector", currentLang)}</label>
-          <select
-            id="y-axis-selector"
-            value={yAxisVar}
-            onChange={(e) => setYAxisVar(e.target.value as AxisVariable)}
-            className="fr-select efficiency-scatter__select"
-          >
+          <select id="y-axis-selector" value={yAxisVar} onChange={(e) => setYAxisVar(e.target.value as AxisVariable)} className="fr-select efficiency-scatter__select">
             {AXIS_VARIABLES.map((varKey) => (
               <option key={varKey} value={varKey}>
                 {getI18nLabel(i18n, VARIABLE_CONFIG[varKey].i18nKey, currentLang)}
@@ -204,11 +175,7 @@ export default function EfficiencyScatter() {
         </Col>
       </Row>
 
-      <ChartWrapper
-        config={config}
-        options={options(data, currentLang, currentFramework, xAxisVar, yAxisVar)}
-        renderData={() => renderDataTable(data, currentLang)}
-      />
+      <ChartWrapper config={config} options={options(data, currentLang, currentFramework, xAxisVar, yAxisVar)} renderData={() => renderDataTable(data, currentLang)} />
     </div>
   );
 }
