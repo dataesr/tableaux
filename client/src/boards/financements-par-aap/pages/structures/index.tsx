@@ -16,15 +16,17 @@ export default function Structures() {
   const [structures, setStructures] = useState([])
 
   useEffect(() => {
+    if (searchParams.get("region")) {
+      searchParams.delete("region")
+    }
     if (!searchParams.get("section")) {
       searchParams.set("section", "apercu")
-      setSearchParams(searchParams)
     }
+    setSearchParams(searchParams)
   }, [searchParams, setSearchParams])
 
   const handleStructure = (structure) => {
     searchParams.set("structureId", structure)
-    searchParams.delete("region")
     setSearchParams(searchParams)
   };
 

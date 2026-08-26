@@ -18,9 +18,18 @@ export default function regions() {
   const region = searchParams.get("region")
   const [regions, setRegions] = useState([])
 
+  useEffect(() => {
+    if (searchParams.get("structureId")) {
+      searchParams.delete("structureId")
+    }
+    if (!searchParams.get("section")) {
+      searchParams.set("section", "apercu")
+    }
+    setSearchParams(searchParams)
+  }, [searchParams, setSearchParams])
+
   const handleRegion = (region) => {
     searchParams.set("region", region)
-    searchParams.delete("structure")
     setSearchParams(searchParams)
   };
 
