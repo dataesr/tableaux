@@ -21,6 +21,7 @@ const config = {
   title: {
     en: getI18nLabel(i18n, "title", "en"),
     fr: getI18nLabel(i18n, "title", "fr"),
+    className: "fr-mt-2w fr-ml-1w",
   },
   comment: {
     fr: <>{getI18nLabel(i18n, "comment", "fr")}</>,
