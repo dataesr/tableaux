@@ -41,7 +41,7 @@ export default function EstablishmentTypeChart({
                     {
                         label: { fr: <>MESRE-DGRH, traitement DND</> },
                         url: {
-                            fr: "https://www.enseignementsup-recherche.gouv.fr/fr/le-systeme-d-information-sur-le-suivi-de-l-etudiant-sise-46229",
+                            fr: "https://data.enseignementsup-recherche.gouv.fr",
                         },
                     },
                 ],

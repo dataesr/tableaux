@@ -8,7 +8,6 @@ import GenderEvolutionChart from "./charts/gender-evolution";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 import AgeDistributionChart from "./charts/age-distribution";
 import CategoryDistributionChart from "./charts/category-distribution";
-import FeminizationRateChart from "./charts/feminization-rate";
 import AgeCategoryHeatmapChart from "./charts/age-category-heatmap";
 import QuotiteByCategoryChart from "./charts/quotite-by-category";
 import PartTimeEvolutionChart from "./charts/part-time-evolution";
@@ -133,32 +132,22 @@ export default function Enseignants2ndDegreArtsMetiersSection({
             </Row>
 
             <Tabs>
-                <Tab label="Évolutions">
+                <Tab label="Sexe">
                     <Row gutters>
-                        <Col xs="12" md="6">
-                            <CategoryEvolutionChart categoryEvolution={currentData?.categoryEvolution} />
-                        </Col>
                         <Col xs="12" md="6">
                             <GenderEvolutionChart genderEvolution={currentData?.genderEvolution} />
-                        </Col>
-                    </Row>
-                    <Row gutters className="fr-mt-3w">
-                        <Col xs="12">
-                            <FeminizationRateChart genderEvolution={currentData?.genderEvolution} />
-                        </Col>
-                    </Row>
-                </Tab>
-                <Tab label="Répartitions">
-                    <Row gutters>
-                        <Col xs="12" md="6">
-                            <AgeDistributionChart ageDistribution={currentData?.ageDistribution} selectedYear={selectedYear} />
                         </Col>
                         <Col xs="12" md="6">
                             <CategoryDistributionChart categoryDistribution={currentData?.categoryDistribution} selectedYear={selectedYear} />
                         </Col>
                     </Row>
-                    <Row gutters className="fr-mt-3w">
-                        <Col xs="12">
+                </Tab>
+                <Tab label="Âge">
+                    <Row gutters>
+                        <Col xs="12" md="6">
+                            <AgeDistributionChart ageDistribution={currentData?.ageDistribution} selectedYear={selectedYear} />
+                        </Col>
+                        <Col xs="12" md="6">
                             <AgeCategoryHeatmapChart categoryDistribution={currentData?.categoryDistribution} selectedYear={selectedYear} />
                         </Col>
                     </Row>
@@ -173,7 +162,12 @@ export default function Enseignants2ndDegreArtsMetiersSection({
                         </Col>
                     </Row>
                 </Tab>
-                <Tab label="Détail par catégorie">
+                <Tab label="Catégories">
+                    <Row gutters className="fr-mb-3w">
+                        <Col xs="12">
+                            <CategoryEvolutionChart categoryEvolution={currentData?.categoryEvolution} />
+                        </Col>
+                    </Row>
                     <AccordionGroup>
                         {categories.map((cat: any, idx: number) => {
                             const scColor = getCssColor(SCALE_COLORS[idx % SCALE_COLORS.length]);

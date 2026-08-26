@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import "highcharts/modules/treemap";
 import ChartWrapper from "../../../../../../../../components/chart-wrapper";
 import { createDisciplinesTreemapOptions } from "./options";
+import { formatDisciplineLabel } from "../../../../utils";
 
 interface DisciplinesTreemapChartProps {
     selectedYear: string;
@@ -18,8 +19,9 @@ export default function DisciplinesTreemapChart({
         const treemapData = disciplineDistribution
             .filter((d: any) => (d.total || 0) > 0)
             .map((d: any) => {
-                const name =
-                    d._id?.name || d._id?.discipline_name || "Non précisé";
+                const name = formatDisciplineLabel(
+                    d._id?.name || d._id?.discipline_name || "Non précisé"
+                );
                 const maleCount =
                     d.gender_breakdown?.find((g: any) => g.gender === "Masculin")
                         ?.count || 0;
@@ -77,7 +79,7 @@ export default function DisciplinesTreemapChart({
                     {
                         label: { fr: <>MESRE-DGRH, traitement DND</> },
                         url: {
-                            fr: "https://www.enseignementsup-recherche.gouv.fr/fr/le-systeme-d-information-sur-le-suivi-de-l-etudiant-sise-46229",
+                            fr: "https://data.enseignementsup-recherche.gouv.fr",
                         },
                     },
                 ],

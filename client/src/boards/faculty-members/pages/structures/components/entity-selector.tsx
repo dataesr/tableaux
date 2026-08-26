@@ -7,7 +7,7 @@ import Breadcrumb from "../../../components/breadcrumb";
 import DefaultSkeleton from "../../../../../components/charts-skeletons/default";
 import FranceMap from "./france-map";
 import Select from "../../../../../components/select";
-import { getParamKey } from "../utils";
+import { getParamKey, formatDisciplineLabel } from "../utils";
 
 const VIEW_CONFIG: Record<ViewType, { title: string; searchLabel: string; searchPlaceholder: string; resultLabel: string }> = {
     structure: {
@@ -75,13 +75,18 @@ export default function EntitySelector({ viewType }: Props) {
             );
     }, [data]);
 
+    const displayLabel = (s: any): string =>
+        viewType === "discipline" ? formatDisciplineLabel(s.label) : s.label;
+
     const filteredItems = useMemo(() => {
-        if (!searchQuery.trim()) return items;
-        const normalized = normalizeString(searchQuery);
-        return items.filter((s: any) =>
-            normalizeString(s.label).includes(normalized)
-        );
-    }, [items, searchQuery]);
+        const query = searchQuery.trim();
+        if (!query) return items;
+        const tokens = normalizeString(query).split(/\s+/).filter(Boolean);
+        return items.filter((s: any) => {
+            const haystack = normalizeString(displayLabel(s));
+            return tokens.every((t) => haystack.includes(t));
+        });
+    }, [items, searchQuery, viewType]);
 
     const handleSelect = (id: string) => {
         const paramKey = getParamKey(viewType);
@@ -142,7 +147,7 @@ export default function EntitySelector({ viewType }: Props) {
                                                     value={item.id}
                                                     onClick={() => handleSelect(item.id)}
                                                 >
-                                                    {item.label}
+                                                    {displayLabel(item)}
                                                 </Select.Option>
                                             ))}
                                             {filteredItems.length === 0 && (
@@ -178,7 +183,7 @@ export default function EntitySelector({ viewType }: Props) {
                         {filteredItems.map((item: any) => (
                             <Col key={item.id} xs="12" md="6" lg="4">
                                 <CardSimple
-                                    title={item.label}
+                                    title={displayLabel(item)}
                                     onClick={() => handleSelect(item.id)}
                                     className="fr-mb-2w"
                                     description={`${item?.count?.toLocaleString("fr-FR")} enseignant${item.count > 1 ? "s" : ""}  en ${latestYear}`}
