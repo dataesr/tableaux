@@ -329,7 +329,6 @@ function ChartTitle({
     return (
       <>
         <Title as="h2" look="h6" className="fr-m-0">
-          45
           {config.title}
         </Title>
         {children}
