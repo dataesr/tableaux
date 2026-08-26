@@ -144,12 +144,19 @@ export default function AccessibilityPage() {
 
   return (
     <Container className="fr-py-5w" role="main">
-      <Row>
+      <Row className="">
         <Col>
-          <Title as="h1">Audits d'accessibilité</Title>
+          <Title as="h2">Audit d'accessibilité pour {dashboardId}</Title>
+          <Text>Date du dernier audit : 01/01/2024</Text>
+          <Text>Version du RGAA testée : {rgaa?.rgaaId} </Text>
         </Col>
         <Col md={3}>
+          <fieldset className="fr-m-0">
+            <legend className="fr-mb-2w">Stats</legend>
+            <div>...</div>
+          </fieldset>
           <Button
+            className="fr-mt-1w"
             variant="secondary"
             disabled={!changesDetected}
             onClick={() => {
@@ -183,10 +190,7 @@ export default function AccessibilityPage() {
           </fieldset>
         </Col>
       </Row>
-      <section className="fr-mt-5w">
-        <Title as="h2">Audit d'accessibilité pour {dashboardId}</Title>
-        <Text>Date du dernier audit : 01/01/2024</Text>
-        <Text>Version du RGAA testée : {rgaa?.rgaaId} </Text>
+      <Row className="fr-mt-3w">
         <section className="fr-accordion">
           {rgaaFlat.raw?.criteria?.map(({ thematique_id, thematique, criteres }) => (
             <div key={thematique_id}>
@@ -261,7 +265,7 @@ export default function AccessibilityPage() {
             </div>
           ))}
         </section>
-      </section>
+      </Row>
     </Container>
   );
 }
