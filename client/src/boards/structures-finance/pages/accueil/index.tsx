@@ -45,7 +45,7 @@ function HeroSection() {
           <Col xs="12" lg="6">
             <div className="accueil-hero__illustration">
               <img
-                src="/artwork/pictograms/institutions/money.svg"
+                src="/src/assets/boards/structures-finance.svg"
                 alt=""
                 aria-hidden="true"
               />

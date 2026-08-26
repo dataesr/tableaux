@@ -60,7 +60,7 @@ function HeroSection() {
           <Col xs="12" lg="6">
             <div className="fm-accueil-hero__illustration">
               <img
-                src="/artwork/pictograms/buildings/school.svg"
+                src="/src/assets/boards/faculty-members.svg"
                 alt=""
                 aria-hidden="true"
               />
