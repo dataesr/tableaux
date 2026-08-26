@@ -119,7 +119,7 @@ export default function AccessibilityPage() {
   const from = searchParams.get("from") || "general";
 
   return (
-    <Container as="main" className="fr-py-8w" role="main">
+    <Container as="main" role="main">
       <Breadcrumb>
         <Link href="/">{i18n.home[currentLang]}</Link>
         <Link>{i18n.title[currentLang]}</Link>
