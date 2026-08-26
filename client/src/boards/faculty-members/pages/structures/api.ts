@@ -3,8 +3,8 @@ import { useQuery, keepPreviousData } from "@tanstack/react-query";
 const { VITE_APP_SERVER_URL } = import.meta.env;
 
 export type ViewType = "structure" | "discipline" | "region" | "academie";
-
 export type FacultyScope = "permanents" | "all";
+export type MapLevel = "region" | "academie";
 
 const FILTER_TYPE_MAP: Record<ViewType, string> = {
   structure: "structures",
@@ -13,260 +13,182 @@ const FILTER_TYPE_MAP: Record<ViewType, string> = {
   academie: "academies",
 };
 
-export const useFacultyFilters = (viewType: ViewType, year?: string) =>
+type Query = Record<string, string | number | undefined>;
+
+// Un seul point d'accès réseau : construit l'URL, lance la requête, renvoie le JSON.
+async function get<T = any>(path: string, query: Query = {}): Promise<T> {
+  const params = new URLSearchParams();
+  for (const [key, value] of Object.entries(query)) {
+    if (value != null && value !== "") params.append(key, String(value));
+  }
+  const response = await fetch(
+    `${VITE_APP_SERVER_URL}/faculty-members/${path}?${params}`
+  );
+  if (!response.ok) throw new Error(`Erreur de récupération : ${path}`);
+  return response.json() as Promise<T>;
+}
+
+// La fabrique de clés — toutes les clés de cette ressource, au même endroit.
+export const facultyMembersKeys = {
+  all: ["faculty"] as const,
+  filters: (view: ViewType, year?: string) =>
+    [...facultyMembersKeys.all, "filters", view, year ?? null] as const,
+  years: (view: ViewType, id?: string) =>
+    [...facultyMembersKeys.all, "years", view, id ?? null] as const,
+  dashboard: (view: ViewType, id?: string, year?: string) =>
+    [...facultyMembersKeys.all, "dashboard", view, id, year] as const,
+  evolution: (view: ViewType, id?: string) =>
+    [...facultyMembersKeys.all, "evolution", view, id] as const,
+  analyses: (
+    view: ViewType,
+    id?: string,
+    ageClass?: string,
+    gender?: string,
+    status?: string
+  ) =>
+    [...facultyMembersKeys.all, "analyses", view, id, ageClass, gender, status] as const,
+  population: (endpoint: string, view: ViewType, id?: string, year?: string) =>
+    [...facultyMembersKeys.all, endpoint, view, id, year] as const,
+  mapData: (year?: string, level?: MapLevel) =>
+    [...facultyMembersKeys.all, "map-data", year, level] as const,
+  positioning: (
+    view: ViewType,
+    year?: string,
+    cnuType?: string,
+    cnuCode?: number,
+    assimilCode?: string
+  ) =>
+    [
+      ...facultyMembersKeys.all,
+      "positioning",
+      view,
+      year,
+      cnuType ?? null,
+      cnuCode ?? null,
+      assimilCode ?? null,
+    ] as const,
+  cnuList: (year?: string) =>
+    [...facultyMembersKeys.all, "cnu-list", year ?? null] as const,
+  assimilationList: (year?: string) =>
+    [...facultyMembersKeys.all, "assimilation-list", year ?? null] as const,
+};
+
+export const useFacultyFilters = (view: ViewType, year?: string) =>
   useQuery({
-    queryKey: ["faculty", "filters", viewType, year ?? null],
-    queryFn: async () => {
-      const params = new URLSearchParams({ type: FILTER_TYPE_MAP[viewType] });
-      if (year) params.append("year", year);
-      const response = await fetch(
-        `${VITE_APP_SERVER_URL}/faculty-members/filters?${params}`
-      );
-      if (!response.ok) throw new Error("Erreur récupération filtres");
-      return response.json();
-    },
+    queryKey: facultyMembersKeys.filters(view, year),
+    queryFn: () => get("filters", { type: FILTER_TYPE_MAP[view], year }),
   });
 
-export const useFacultyYears = (viewType: ViewType, id?: string) =>
+export const useFacultyYears = (view: ViewType, id?: string) =>
   useQuery({
-    queryKey: ["faculty", "years", viewType, id ?? null],
-    queryFn: async () => {
-      const params = new URLSearchParams({ view: viewType });
-      if (id) params.append("id", id);
-      const response = await fetch(
-        `${VITE_APP_SERVER_URL}/faculty-members/years?${params}`
-      );
-      if (!response.ok) throw new Error("Erreur récupération années");
-      return response.json();
-    },
+    queryKey: facultyMembersKeys.years(view, id),
+    queryFn: () => get("years", { view, id }),
   });
 
-export const useFacultyDashboard = (
-  viewType: ViewType,
-  id?: string,
-  year?: string
-) =>
+export const useFacultyDashboard = (view: ViewType, id?: string, year?: string) =>
   useQuery({
-    queryKey: ["faculty", "dashboard", viewType, id, year],
-    queryFn: async () => {
-      const params = new URLSearchParams({ view: viewType });
-      if (id) params.append("id", id);
-      if (year) params.append("year", year);
-      const response = await fetch(
-        `${VITE_APP_SERVER_URL}/faculty-members/dashboard?${params}`
-      );
-      if (!response.ok) throw new Error("Erreur récupération dashboard");
-      return response.json();
-    },
+    queryKey: facultyMembersKeys.dashboard(view, id, year),
+    queryFn: () => get("dashboard", { view, id, year }),
     enabled: !!year,
   });
 
-export const useFacultyEvolution = (viewType: ViewType, id?: string) =>
+export const useFacultyEvolution = (view: ViewType, id?: string) =>
   useQuery({
-    queryKey: ["faculty", "evolution", viewType, id],
-    queryFn: async () => {
-      const params = new URLSearchParams({ view: viewType });
-      if (id) params.append("id", id);
-      const response = await fetch(
-        `${VITE_APP_SERVER_URL}/faculty-members/evolution?${params}`
-      );
-      if (!response.ok) throw new Error("Erreur récupération évolution");
-      return response.json();
-    },
+    queryKey: facultyMembersKeys.evolution(view, id),
+    queryFn: () => get("evolution", { view, id }),
   });
 
 export const useFacultyAnalyses = (
-  viewType: ViewType,
+  view: ViewType,
   id?: string,
   ageClass?: string,
   gender?: string,
   status?: string
 ) =>
   useQuery({
-    queryKey: ["faculty", "analyses", viewType, id, ageClass, gender, status],
-    queryFn: async () => {
-      const params = new URLSearchParams({ view: viewType });
-      if (id) params.append("id", id);
-      if (ageClass) params.append("age_class", ageClass);
-      if (gender) params.append("gender", gender);
-      if (status) params.append("status", status);
-      const response = await fetch(
-        `${VITE_APP_SERVER_URL}/faculty-members/analyses?${params}`
-      );
-      if (!response.ok) throw new Error("Erreur récupération analyses");
-      return response.json();
-    },
+    queryKey: facultyMembersKeys.analyses(view, id, ageClass, gender, status),
+    queryFn: () =>
+      get("analyses", { view, id, age_class: ageClass, gender, status }),
     enabled: !!id,
     placeholderData: keepPreviousData,
   });
 
-export const useFacultyResearchTeachers = (
-  viewType: ViewType,
+// Les trois populations partagent la même requête ; seul l'endpoint change.
+const usePopulation = (
+  endpoint: string,
+  view: ViewType,
   id?: string,
   year?: string
 ) =>
   useQuery({
-    queryKey: ["faculty", "research-teachers", viewType, id, year],
-    queryFn: async () => {
-      const params = new URLSearchParams({ view: viewType });
-      if (id) params.append("id", id);
-      if (year) params.append("year", year);
-      const response = await fetch(
-        `${VITE_APP_SERVER_URL}/faculty-members/research-teachers?${params}`
-      );
-      if (!response.ok)
-        throw new Error("Erreur récupération enseignants-chercheurs");
-      return response.json();
-    },
+    queryKey: facultyMembersKeys.population(endpoint, view, id, year),
+    queryFn: () => get(endpoint, { view, id, year }),
     enabled: !!year,
   });
+
+export const useFacultyResearchTeachers = (
+  view: ViewType,
+  id?: string,
+  year?: string
+) => usePopulation("research-teachers", view, id, year);
 
 export const useFaculty2ndDegreeTeachers = (
-  viewType: ViewType,
+  view: ViewType,
   id?: string,
   year?: string
-) =>
-  useQuery({
-    queryKey: ["faculty", "2nd-degree-teachers", viewType, id, year],
-    queryFn: async () => {
-      const params = new URLSearchParams({ view: viewType });
-      if (id) params.append("id", id);
-      if (year) params.append("year", year);
-      const response = await fetch(
-        `${VITE_APP_SERVER_URL}/faculty-members/2nd-degree-teachers?${params}`
-      );
-      if (!response.ok)
-        throw new Error(
-          "Erreur récupération Enseignants 2nd Degré & Arts et Métiers"
-        );
-      return response.json();
-    },
-    enabled: !!year,
-  });
+) => usePopulation("2nd-degree-teachers", view, id, year);
 
 export const useFacultyNonPermanentsTeachers = (
-  viewType: ViewType,
+  view: ViewType,
   id?: string,
   year?: string
-) =>
-  useQuery({
-    queryKey: ["faculty", "non-permanents-teachers", viewType, id, year],
-    queryFn: async () => {
-      const params = new URLSearchParams({ view: viewType });
-      if (id) params.append("id", id);
-      if (year) params.append("year", year);
-      const response = await fetch(
-        `${VITE_APP_SERVER_URL}/faculty-members/non-permanents-teachers?${params}`
-      );
-      if (!response.ok)
-        throw new Error("Erreur récupération Enseignants Non Permanents");
-      return response.json();
-    },
-    enabled: !!year,
-  });
-
-export type MapLevel = "region" | "academie";
+) => usePopulation("non-permanents-teachers", view, id, year);
 
 export const useFacultyMapData = (year?: string, level: MapLevel = "region") =>
   useQuery({
-    queryKey: ["faculty", "map-data", year, level],
-    queryFn: async () => {
-      const params = new URLSearchParams({ level });
-      if (year) params.append("annee_universitaire", year);
-      const response = await fetch(
-        `${VITE_APP_SERVER_URL}/faculty-members/geo/map-data?${params}`
-      );
-      if (!response.ok) throw new Error("Erreur récupération données carte");
-      return response.json();
-    },
+    queryKey: facultyMembersKeys.mapData(year, level),
+    queryFn: () => get("geo/map-data", { level, annee_universitaire: year }),
     enabled: !!year,
   });
 
-export const useFacultyComparison = (
-  viewType: ViewType,
-  id?: string,
-  year?: string
-) =>
-  useQuery({
-    queryKey: ["faculty", "comparison", viewType, id, year],
-    queryFn: async () => {
-      const params = new URLSearchParams({ view: viewType });
-      if (id) params.append("id", id);
-      if (year) params.append("year", year);
-      const response = await fetch(
-        `${VITE_APP_SERVER_URL}/faculty-members/comparison?${params}`
-      );
-      if (!response.ok) throw new Error("Erreur récupération comparaison");
-      return response.json();
-    },
-    enabled: !!id && !!year,
-  });
-
 export const useFacultyPositioning = (
-  viewType: ViewType,
+  view: ViewType,
   year?: string,
   cnuType?: string,
   cnuCode?: number,
   assimilCode?: string
 ) =>
   useQuery({
-    queryKey: [
-      "faculty",
-      "positioning",
-      viewType,
-      year,
-      cnuType ?? null,
-      cnuCode ?? null,
-      assimilCode ?? null,
-    ],
-    queryFn: async () => {
-      const params = new URLSearchParams({ view: viewType });
-      if (year) params.append("year", year);
-      if (cnuType) params.append("cnu_type", cnuType);
-      if (cnuCode != null) params.append("cnu_code", String(cnuCode));
-      if (assimilCode != null) params.append("assimil_code", assimilCode);
-      const response = await fetch(
-        `${VITE_APP_SERVER_URL}/faculty-members/positioning?${params}`
-      );
-      if (!response.ok) throw new Error("Erreur récupération positionnement");
-      return response.json();
-    },
+    queryKey: facultyMembersKeys.positioning(view, year, cnuType, cnuCode, assimilCode),
+    queryFn: () =>
+      get("positioning", {
+        view,
+        year,
+        cnu_type: cnuType,
+        cnu_code: cnuCode,
+        assimil_code: assimilCode,
+      }),
     enabled: !!year,
     placeholderData: keepPreviousData,
   });
 
+type CnuList = {
+  groupes: { code: number; label: string }[];
+  sections: { code: number; label: string; groupe: number }[];
+};
+
 export const useFacultyCnuList = (year?: string) =>
   useQuery({
-    queryKey: ["faculty", "cnu-list", year ?? null],
-    queryFn: async () => {
-      const params = new URLSearchParams();
-      if (year) params.append("year", year);
-      const response = await fetch(
-        `${VITE_APP_SERVER_URL}/faculty-members/cnu-list?${params}`
-      );
-      if (!response.ok) throw new Error("Erreur récupération liste CNU");
-      return response.json() as Promise<{
-        groupes: { code: number; label: string }[];
-        sections: { code: number; label: string; groupe: number }[];
-      }>;
-    },
+    queryKey: facultyMembersKeys.cnuList(year),
+    queryFn: () => get<CnuList>("cnu-list", { year }),
     enabled: !!year,
   });
 
+type AssimilationList = { categories: { code: number; label: string }[] };
+
 export const useFacultyAssimilationList = (year?: string) =>
   useQuery({
-    queryKey: ["faculty", "assimilation-list", year ?? null],
-    queryFn: async () => {
-      const params = new URLSearchParams();
-      if (year) params.append("year", year);
-      const response = await fetch(
-        `${VITE_APP_SERVER_URL}/faculty-members/assimilation-list?${params}`
-      );
-      if (!response.ok)
-        throw new Error("Erreur récupération liste assimilation");
-      return response.json() as Promise<{
-        categories: { code: number; label: string }[];
-      }>;
-    },
+    queryKey: facultyMembersKeys.assimilationList(year),
+    queryFn: () => get<AssimilationList>("assimilation-list", { year }),
     enabled: !!year,
   });
