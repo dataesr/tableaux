@@ -144,14 +144,6 @@ export default function GlobalLayout() {
         </div>
       </header>
 
-      {/* <Container className="fr-my-3w">
-        <Row>
-          <Col n="12">
-            <CustomBreadcrumb />
-          </Col>
-        </Row>
-      </Container> */}
-
       <Outlet />
       <Footer
         href="/structures-finance/accueil"

@@ -69,6 +69,7 @@ export default function StructuresFinanceRoutes() {
             />
           }
         />
+        <Route path="plan-du-site" element={<Navigate to="/plan-du-site?from=structures-finance" replace />} />
       </Route>
       <Route path="*" element={<Suspense><NotFoundPage /></Suspense>} />
     </Routes>

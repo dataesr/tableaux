@@ -24,6 +24,7 @@ export default function Footer({ href = "/", sitemapHref, title = "Accueil - Dat
   const dashboard = pathParts.length > 0 ? pathParts[0] : "general";
   const contactUrl = `/contact?from=${dashboard}`;
   const accessibilityUrl = `/accessibility?from=${dashboard}`;
+  const sitemapUrl = sitemapHref ?? `/plan-du-site?from=${dashboard}`;
   return (
     <footer className="fr-footer" role="contentinfo" id="footer">
       <div className="fr-container">
@@ -67,7 +68,7 @@ export default function Footer({ href = "/", sitemapHref, title = "Accueil - Dat
         <div className="fr-footer__bottom">
           <ul className="fr-footer__bottom-list">
             <li className="fr-footer__bottom-item">
-              <a className="fr-footer__bottom-link" href={sitemapHref ?? "#"}>
+              <a className="fr-footer__bottom-link" href={sitemapUrl}>
                 {getI18nLabel(i18n, "sitemap")}
               </a>
             </li>

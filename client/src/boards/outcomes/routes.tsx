@@ -11,9 +11,7 @@ import MethodologiePage from "./pages/methodologie/index.tsx";
 import "./styles.scss";
 import FluxPage from "./pages/flux/index.tsx";
 import RepartitionPage from "./pages/repartition/index.tsx";
-// import CroisementsPage from "./pages/croisements/index.tsx";
 import ComparaisonProfilsPage from "./pages/comparaison-profils/index.tsx";
-import PlanDuSitePage from "./pages/plan-du-site/index.tsx";
 
 const RouteWithTitle = ({ titleKey, element }) => {
   useTitle(getI18nLabel(i18n, titleKey));
@@ -29,10 +27,9 @@ export default function OutcomesRoutes() {
         <Route path="flux" element={<RouteWithTitle titleKey="flux" element={<FluxPage />} />} />
         <Route path="repartition" element={<RouteWithTitle titleKey="repartition" element={<RepartitionPage />} />} />
         <Route path="plus-haut-diplome" element={<RouteWithTitle titleKey="plusHautDiplome" element={<PlusHautDiplomePage />} />} />
-        {/* <Route path="croisements" element={<RouteWithTitle titleKey="croisements" element={<CroisementsPage />} />} /> */}
         <Route path="comparaison-profils" element={<RouteWithTitle titleKey="comparaisonProfils" element={<ComparaisonProfilsPage />} />} />
         <Route path="methodologie" element={<RouteWithTitle titleKey="methodologie" element={<MethodologiePage />} />} />
-        <Route path="plan-du-site" element={<RouteWithTitle titleKey="planDuSite" element={<PlanDuSitePage />} />} />
+        <Route path="plan-du-site" element={<Navigate to="/plan-du-site?from=devenir-etudiants" replace />} />
       </Route>
       <Route path="*" element={<NotFoundPage />} />
     </Routes>

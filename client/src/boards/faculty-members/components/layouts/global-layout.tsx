@@ -24,7 +24,7 @@ export default function GlobalLayout() {
                 <div className="fr-header__brand-top">
                   <Logo text={import.meta.env.VITE_MINISTER_NAME} />
                   <Service
-                    href="/personnel-enseignant/accueil"
+                    href="/"
                     name="#dataESR tableaux de bord"
                     tagline="Tableau de bord du personnel enseignant des établissements d'enseignement supérieur français"
                   />
@@ -130,18 +130,6 @@ export default function GlobalLayout() {
                     Académies
                   </Link>
                 </li>
-                {/* <li className="fr-nav__item">
-                  <Link
-                    to={"/personnel-enseignant/faq"}
-                    target="_self"
-                    {...(pathname === "/personnel-enseignant/faq" && {
-                      "aria-current": "page",
-                    })}
-                    className="fr-nav__link"
-                  >
-                    FAQ
-                  </Link>
-                </li> */}
                 <li className="fr-nav__item">
                   <Link
                     to={"/personnel-enseignant/definitions"}

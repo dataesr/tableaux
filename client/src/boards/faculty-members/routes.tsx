@@ -1,5 +1,5 @@
 import { lazy, Suspense } from "react";
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 
 import { useTitle } from "../../hooks/usePageTitle.tsx";
 import { getI18nLabel } from "../../utils.tsx";
@@ -86,6 +86,7 @@ export default function FacultyMembersRoutes() {
             />
           }
         />
+        <Route path="plan-du-site" element={<Navigate to="/plan-du-site?from=personnel-enseignant" replace />} />
       </Route>
       <Route path="*" element={<Suspense><NotFoundPage /></Suspense>} />
     </Routes>

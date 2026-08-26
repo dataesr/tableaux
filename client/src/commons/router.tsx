@@ -20,6 +20,7 @@ const Integration = lazy(() => import('../boards/integration/index.tsx'));
 const NotFoundPage = lazy(() => import('../components/not-found-page.tsx'));
 const OpenAlexRoutes = lazy(() => import('../boards/open-alex/routes.tsx'));
 const OutcomesRoutes = lazy(() => import('../boards/outcomes/routes.tsx'));
+const SitemapPage = lazy(() => import('../boards/sitemap-page.tsx'));
 const StructuresFinanceRoutes = lazy(() => import('../boards/structures-finance/routes.tsx'));
 const TedsRoutes = lazy(() => import('../boards/teds/routes.tsx'));
 const TemplateRoutes = lazy(() => import('../boards/template/routes.tsx'));
@@ -42,6 +43,7 @@ export default function Router() {
         <Route index element={<Suspense><AccessibilityPage /></Suspense>} />
       </Route>
       <Route path="/cookies" element={<Suspense><CookiePolicyPage /></Suspense>} />
+      <Route path="/plan-du-site" element={<RouteWithTitle titleKey="Plan du site - dataEsr" element={<Suspense><SitemapPage /></Suspense>} />} />
       <Route path="/contact" element={<Suspense><ContactLayout /></Suspense>}>
         <Route index element={<Suspense><ContactPage /></Suspense>} />
       </Route>

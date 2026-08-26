@@ -2,6 +2,7 @@ import { Logo, Service } from "@dataesr/dsfr-plus";
 import { Link, Outlet, useLocation } from "react-router-dom";
 
 import Footer from "../../../../components/footer";
+import { useDashboardVisibility } from "../../../../hooks/useDashboardVisibility";
 import { getI18nLabel } from "../../../../utils";
 import i18n from "./i18n.json";
 
@@ -16,18 +17,15 @@ const NAV_ITEMS = [
   { key: "flux", labelKey: "flux", to: `${BASE}/flux` },
   { key: "repartition", labelKey: "repartition", to: `${BASE}/repartition` },
   { key: "plus-haut-diplome", labelKey: "plusHautDiplome", to: `${BASE}/plus-haut-diplome` },
-  // { key: "croisements", labelKey: "croisements", to: `${BASE}/croisements` },
   { key: "comparaison-profils", labelKey: "comparaisonProfils", to: `${BASE}/comparaison-profils` },
   { key: "methodologie", labelKey: "methodologie", to: `${BASE}/methodologie` },
 ] as const;
 
-const ALL_BREADCRUMB_PAGES = [
-  ...NAV_ITEMS,
-  { key: "plan-du-site", labelKey: "planDuSite", to: `${BASE}/plan-du-site` },
-] as const;
+const ALL_BREADCRUMB_PAGES = NAV_ITEMS;
 
 export default function GlobalLayout() {
   const { pathname, search } = useLocation();
+  const isHomePageVisible = useDashboardVisibility("devenir-etudiants");
 
   if (!pathname) return null;
 
@@ -104,9 +102,11 @@ export default function GlobalLayout() {
             </button>
             <div className="fr-collapse" id="breadcrumb-outcomes">
               <ol className="fr-breadcrumb__list">
-                <li>
-                  <a title="Accueil" className="fr-breadcrumb__link" href="/">Accueil</a>
-                </li>
+                {isHomePageVisible && (
+                  <li>
+                    <a title="Accueil" className="fr-breadcrumb__link" href="/">Accueil</a>
+                  </li>
+                )}
                 <li>
                   <a title="Parcours des néo-bacheliers inscrits en L1 en 2019" className="fr-breadcrumb__link" href={`${BASE}/flux`}>
                     Parcours des néo-bacheliers inscrits en L1 en 2019
@@ -125,7 +125,7 @@ export default function GlobalLayout() {
         </div>
         <Outlet />
       </main>
-      <Footer href={`${BASE}/flux`} sitemapHref={`${BASE}/plan-du-site`} title="#dataESR tableaux de bord" />
+      <Footer href={`${BASE}/flux`} title="#dataESR tableaux de bord" />
     </>
   );
 }
