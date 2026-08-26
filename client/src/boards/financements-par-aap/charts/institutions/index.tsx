@@ -172,8 +172,11 @@ export default function Institutions({ name }: { name: string | undefined }) {
     },
   }
   if (region) {
-    const filters = body.query.bool.filter.filter((f) => !f?.terms?.["participant_region.keyword"])// && f?.terms?.["participant_region.keyword"]?.length === 0 && f?.terms?.["participant_region.keyword"]?.[0] === region)
+    let filters = body.query.bool.filter.filter((f) => !f?.terms?.["participant_region.keyword"])
     filters.push({ terms: { "participant_region_with_labs.keyword": [region] } })
+    // Remove "Structure de recherche" in the filters in order to remove labs
+    filters = body.query.bool.filter.filter((f) => !f?.terms?.["participant_typologie_1.keyword"])
+    filters.push({ terms: { "participant_typologie_1.keyword": ["Ecoles, instituts et assimilés", "Organismes de recherche", "Universités et assimilés"] } })
     body.query.bool.filter = filters
   }
 
