@@ -62,6 +62,11 @@ export default function Footer({ href = "/", sitemapHref, title = "Accueil - Dat
                   data.gouv.fr
                 </a>
               </li>
+              <li className="fr-footer__content-item">
+                <a className="fr-footer__content-link fr-icon-github-fill fr-link--icon-left" target="_blank" rel="noopener external" title="Github dataESR - nouvelle fenêtre" href="https://github.com/dataesr/tableaux">
+                  Github
+                </a>
+              </li>
             </ul>
           </div>
         </div>
