@@ -6,9 +6,10 @@ const COLLECTION = "faculty-members";
 
 const VALID_VIEWS = ["structure", "discipline", "region", "academie"];
 
-function buildMatchStage(view, id, year) {
+function buildMatchStage(view, id, year, scope) {
   const match = {};
   if (year) match.annee_universitaire = year;
+  if (scope === "permanents") match.is_titulaire = true;
   if (!id) return match;
 
   switch (view) {
@@ -177,12 +178,12 @@ router.get("/faculty-members/years", async (req, res) => {
 
 router.get("/faculty-members/dashboard", async (req, res) => {
   try {
-    const { view, id, year } = req.query;
+    const { view, id, year, scope } = req.query;
     if (!view || !VALID_VIEWS.includes(view)) {
       return res.status(400).json({ error: "Invalid or missing view param" });
     }
     const collection = db.collection(COLLECTION);
-    const match = buildMatchStage(view, id, year);
+    const match = buildMatchStage(view, id, year, scope);
 
     const [
       genderAgg,

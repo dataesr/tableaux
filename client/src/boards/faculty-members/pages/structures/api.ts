@@ -28,15 +28,26 @@ async function get<T = any>(path: string, query: Query = {}): Promise<T> {
   return response.json() as Promise<T>;
 }
 
-// La fabrique de clés — toutes les clés de cette ressource, au même endroit.
 export const facultyMembersKeys = {
   all: ["faculty"] as const,
   filters: (view: ViewType, year?: string) =>
     [...facultyMembersKeys.all, "filters", view, year ?? null] as const,
   years: (view: ViewType, id?: string) =>
     [...facultyMembersKeys.all, "years", view, id ?? null] as const,
-  dashboard: (view: ViewType, id?: string, year?: string) =>
-    [...facultyMembersKeys.all, "dashboard", view, id, year] as const,
+  dashboard: (
+    view: ViewType,
+    id?: string,
+    year?: string,
+    scope?: FacultyScope
+  ) =>
+    [
+      ...facultyMembersKeys.all,
+      "dashboard",
+      view,
+      id,
+      year,
+      scope ?? null,
+    ] as const,
   evolution: (view: ViewType, id?: string) =>
     [...facultyMembersKeys.all, "evolution", view, id] as const,
   analyses: (
@@ -46,7 +57,15 @@ export const facultyMembersKeys = {
     gender?: string,
     status?: string
   ) =>
-    [...facultyMembersKeys.all, "analyses", view, id, ageClass, gender, status] as const,
+    [
+      ...facultyMembersKeys.all,
+      "analyses",
+      view,
+      id,
+      ageClass,
+      gender,
+      status,
+    ] as const,
   population: (endpoint: string, view: ViewType, id?: string, year?: string) =>
     [...facultyMembersKeys.all, endpoint, view, id, year] as const,
   mapData: (year?: string, level?: MapLevel) =>
@@ -85,11 +104,17 @@ export const useFacultyYears = (view: ViewType, id?: string) =>
     queryFn: () => get("years", { view, id }),
   });
 
-export const useFacultyDashboard = (view: ViewType, id?: string, year?: string) =>
+export const useFacultyDashboard = (
+  view: ViewType,
+  id?: string,
+  year?: string,
+  scope: FacultyScope = "all"
+) =>
   useQuery({
-    queryKey: facultyMembersKeys.dashboard(view, id, year),
-    queryFn: () => get("dashboard", { view, id, year }),
+    queryKey: facultyMembersKeys.dashboard(view, id, year, scope),
+    queryFn: () => get("dashboard", { view, id, year, scope }),
     enabled: !!year,
+    placeholderData: keepPreviousData,
   });
 
 export const useFacultyEvolution = (view: ViewType, id?: string) =>
@@ -159,7 +184,13 @@ export const useFacultyPositioning = (
   assimilCode?: string
 ) =>
   useQuery({
-    queryKey: facultyMembersKeys.positioning(view, year, cnuType, cnuCode, assimilCode),
+    queryKey: facultyMembersKeys.positioning(
+      view,
+      year,
+      cnuType,
+      cnuCode,
+      assimilCode
+    ),
     queryFn: () =>
       get("positioning", {
         view,

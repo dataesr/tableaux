@@ -1,6 +1,6 @@
 import { useMemo } from "react";
-import { Row, Col, Title, Text, Button } from "@dataesr/dsfr-plus";
-import { ViewType } from "../api";
+import { Row, Col, Title, Text, Button, SegmentedControl, SegmentedElement } from "@dataesr/dsfr-plus";
+import { ViewType, FacultyScope } from "../api";
 import { getCssColor } from "../../../../../utils/colors";
 import "../styles.scss";
 
@@ -38,8 +38,10 @@ interface PageHeaderProps {
     selectedYear: string;
     totalCount: number;
     viewType: ViewType;
+    scope: FacultyScope;
     onClose: () => void;
     onSelectEntity: (id: string) => void;
+    onScopeChange: (scope: FacultyScope) => void;
 }
 
 export default function PageHeader({
@@ -49,8 +51,10 @@ export default function PageHeader({
     selectedYear,
     totalCount,
     viewType,
+    scope,
     onClose,
     onSelectEntity,
+    onScopeChange,
 }: PageHeaderProps) {
     const genderDistribution = data?.gender_distribution || [];
     const statusDistribution = data?.status_distribution || [];
@@ -128,6 +132,32 @@ export default function PageHeader({
                     >
                         {VIEW_BACK_LABELS[viewType]}
                     </Button>
+                </Col>
+            </Row>
+
+            <Row gutters className="fr-grid-row--middle fr-mb-2w">
+                <Col xs="12">
+                    <p className="fr-text--xs fr-mb-1v" style={{ color: "var(--text-mention-grey)" }}>
+                        Champ de population — le total et les répartitions ci-dessous en dépendent
+                    </p>
+                    <SegmentedControl
+                        className="fr-segmented--sm"
+                        name="fm-scope"
+                        aria-label="Champ de population"
+                    >
+                        <SegmentedElement
+                            checked={scope === "all"}
+                            label="Permanents + non permanents"
+                            onClick={() => onScopeChange("all")}
+                            value="all"
+                        />
+                        <SegmentedElement
+                            checked={scope === "permanents"}
+                            label="Permanents seulement"
+                            onClick={() => onScopeChange("permanents")}
+                            value="permanents"
+                        />
+                    </SegmentedControl>
                 </Col>
             </Row>
 

@@ -1,6 +1,6 @@
 import { useSearchParams } from "react-router-dom";
 import { Col, Container, Row } from "@dataesr/dsfr-plus";
-import { ViewType, useFacultyYears, useFacultyDashboard, useFacultyEvolution } from "../api";
+import { ViewType, FacultyScope, useFacultyYears, useFacultyDashboard, useFacultyEvolution } from "../api";
 import PageHeader from "./page-header";
 import SectionNavigation from "./section-navigation";
 import PersonnelsSection from "../sections/personnels";
@@ -10,7 +10,7 @@ import DefaultSkeleton from "../../../../../components/charts-skeletons/default"
 import Breadcrumb from "../../../components/breadcrumb";
 import { IncompleteYearWarning } from "../../../components/incomplete-year";
 import EvolutionsSection from "../sections/analyses";
-import { getParamKey } from "../utils";
+import { getParamKey, formatDisciplineLabel } from "../utils";
 
 const VIEW_LABELS: Record<ViewType, { plural: string; singular: string; basePath: string }> = {
     structure: { plural: "Établissements", singular: "établissement", basePath: "/personnel-enseignant/etablissements" },
@@ -43,13 +43,15 @@ export default function EntityView({ viewType }: Props) {
     const years: string[] = yearsData?.years || [];
     const latestCompleteYear = yearsData?.latestCompleteYear || (years.length > 0 ? years[years.length - 1] : "");
     const selectedYear = searchParams.get("year") || latestCompleteYear;
+    const scope: FacultyScope = searchParams.get("scope") === "permanents" ? "permanents" : "all";
 
     const { data: dashboardData, isLoading: isLoadingDashboard } =
-        useFacultyDashboard(viewType, selectedId, selectedYear);
+        useFacultyDashboard(viewType, selectedId, selectedYear, scope);
 
     const { data: evolutionData } = useFacultyEvolution(viewType, selectedId);
 
-    const entityName = dashboardData?.context_info?.name || selectedId;
+    const rawEntityName = dashboardData?.context_info?.name || selectedId;
+    const entityName = viewType === "discipline" ? formatDisciplineLabel(rawEntityName) : rawEntityName;
     const totalCount = dashboardData?.total_count || 0;
 
     const handleClearSelection = () => {
@@ -70,6 +72,13 @@ export default function EntityView({ viewType }: Props) {
     const handleYearChange = (year: string) => {
         const params = Object.fromEntries(searchParams);
         setSearchParams({ ...params, year });
+    };
+
+    const handleScopeChange = (newScope: FacultyScope) => {
+        const params = Object.fromEntries(searchParams);
+        if (newScope === "all") delete params.scope;
+        else params.scope = newScope;
+        setSearchParams(params);
     };
 
     const handleSelectEntity = (newId: string) => {
@@ -153,8 +162,10 @@ export default function EntityView({ viewType }: Props) {
                         selectedYear={selectedYear}
                         totalCount={totalCount}
                         viewType={viewType}
+                        scope={scope}
                         onClose={handleClearSelection}
                         onSelectEntity={handleSelectEntity}
+                        onScopeChange={handleScopeChange}
                     />
                 </Container>
             </Container>
