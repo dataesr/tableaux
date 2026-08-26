@@ -24,7 +24,7 @@ export default function AgeDistributionChart({
                 fr: (
                     <>
                         En {selectedYear}, la tranche d'âge la plus représentée
-                        chez les enseignants-chercheurs est «{" "}
+                        chez les enseignants non permanents est «{" "}
                         <strong>{largest._id}</strong> » avec{" "}
                         <strong>{largest.total.toLocaleString("fr-FR")}</strong>{" "}
                         personnes ({largestPct}% du total).
