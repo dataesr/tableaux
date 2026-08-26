@@ -1,14 +1,18 @@
 import { useMemo, useCallback } from "react";
+import { Row, Col } from "@dataesr/dsfr-plus";
 import mapDataIE from "../../../../../../assets/regions.json";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import { useFacultyMapData, MapLevel } from "../../api";
 import { createFranceMapOptions } from "./options";
+import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
+import "./styles.scss";
 
 interface FranceMapProps {
     year: string;
     level?: MapLevel;
     onRegionClick?: (geoId: string, geoName: string) => void;
     title?: string;
+    asideList?: boolean;
 }
 
 export default function FranceMap({
@@ -16,6 +20,7 @@ export default function FranceMap({
     level = "region",
     onRegionClick,
     title,
+    asideList = false,
 }: FranceMapProps) {
     const { data: mapData, isLoading } = useFacultyMapData(year, level);
 
@@ -74,6 +79,13 @@ export default function FranceMap({
         };
     }, [mapData, regionMapping, onRegionClick]);
 
+    const regionList = useMemo(() => {
+        if (!mapData?.regions?.length) return [];
+        return [...mapData.regions].sort((a: any, b: any) =>
+            (a.geo_nom || "").localeCompare(b.geo_nom || "", "fr", { sensitivity: "base" })
+        );
+    }, [mapData]);
+
     const handlePointClick = useCallback(
         (e: any) => {
             if (!onRegionClick) return;
@@ -106,9 +118,10 @@ export default function FranceMap({
         };
     }, [options, handlePointClick]);
 
-    if (isLoading || !finalOptions) return null;
+    if (isLoading) return <DefaultSkeleton height="500px" />;
+    if (!finalOptions) return null;
 
-    return (
+    const chart = (
         <ChartWrapper
             config={{
                 id: `faculty-map-france-${level}`,
@@ -129,5 +142,51 @@ export default function FranceMap({
             options={finalOptions}
             constructorType="mapChart"
         />
+    );
+
+    if (!asideList) return chart;
+
+    const total = mapData?.statistics?.total_count || 0;
+
+    return (
+        <Row gutters className="fm-map-split">
+            <Col xs="12" md="7">
+                {chart}
+            </Col>
+            <Col xs="12" md="5">
+                <nav className="fm-map-aside" aria-label="Accès aux régions">
+                    <p className="fm-map-aside__total">
+                        <strong>{total.toLocaleString("fr-FR")}</strong> enseignants,{" "}
+                        {regionList.length} régions
+                    </p>
+                    <ul className="fm-map-aside__list">
+                        {regionList.map((r: any) => {
+                            const count = (r.total_count || 0).toLocaleString("fr-FR");
+                            const content = (
+                                <>
+                                    <span className="fm-map-aside__name">{r.geo_nom}</span>
+                                    <span className="fm-map-aside__count">{count}</span>
+                                </>
+                            );
+                            return (
+                                <li key={r.geo_id}>
+                                    {onRegionClick ? (
+                                        <button
+                                            type="button"
+                                            className="fm-map-aside__item fm-map-aside__item--link"
+                                            onClick={() => onRegionClick(r.geo_id, r.geo_nom)}
+                                        >
+                                            {content}
+                                        </button>
+                                    ) : (
+                                        <span className="fm-map-aside__item">{content}</span>
+                                    )}
+                                </li>
+                            );
+                        })}
+                    </ul>
+                </nav>
+            </Col>
+        </Row>
     );
 }

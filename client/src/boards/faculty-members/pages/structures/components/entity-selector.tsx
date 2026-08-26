@@ -122,59 +122,63 @@ export default function EntitySelector({ viewType }: Props) {
                                 <DefaultSkeleton />
                             </Col>
                         </Row>
-                    ) : (
+                    ) : showMap ? (
                         <>
-                            <Row gutters className="fr-mb-2w">
-                                <Col xs="12" md="6">
-                                    <Title as="h1" look="h4" className="fr-mb-2w">
-                                        {config.title}
-                                    </Title>
-                                    <Select
-                                        label={config.searchLabel}
-                                        icon="search-line"
-                                        size="md"
-                                        fullWidth
-                                    >
-                                        <Select.Search
-                                            placeholder={config.searchPlaceholder}
-                                            value={searchQuery}
-                                            onChange={(e) => setSearchQuery(e.target.value)}
-                                        />
-                                        <Select.Content maxHeight="320px">
-                                            {filteredItems.map((item: any) => (
-                                                <Select.Option
-                                                    key={item.id}
-                                                    value={item.id}
-                                                    onClick={() => handleSelect(item.id)}
-                                                >
-                                                    {displayLabel(item)}
-                                                </Select.Option>
-                                            ))}
-                                            {filteredItems.length === 0 && (
-                                                <Select.Empty>Aucun résultat trouvé</Select.Empty>
-                                            )}
-                                        </Select.Content>
-                                    </Select>
-                                </Col>
-                            </Row>
-                            {showMap && latestYear && (
-                                <Row className="fr-mb-2w">
-                                    <Col xs="12">
-                                        <FranceMap
-                                            year={latestYear}
-                                            level="region"
-                                            onRegionClick={handleMapRegionClick}
-                                            title={`Enseignants par région du siège (${latestYear})`}
-                                        />
-                                    </Col>
-                                </Row>
+                            <Title as="h1" look="h4" className="fr-mb-1w">
+                                {config.title}
+                            </Title>
+                            <p className="fr-text--sm fr-mb-3w" style={{ color: "var(--text-mention-grey)" }}>
+                                Cliquez sur une région — sur la carte ou dans la liste — pour explorer ses données.
+                            </p>
+                            {latestYear && (
+                                <FranceMap
+                                    year={latestYear}
+                                    level="region"
+                                    onRegionClick={handleMapRegionClick}
+                                    title={`Enseignants par région du siège (${latestYear})`}
+                                    asideList
+                                />
                             )}
                         </>
+                    ) : (
+                        <Row gutters className="fr-mb-2w">
+                            <Col xs="12" md="6">
+                                <Title as="h1" look="h4" className="fr-mb-2w">
+                                    {config.title}
+                                </Title>
+                                <Select
+                                    label={config.searchLabel}
+                                    icon="search-line"
+                                    size="md"
+                                    fullWidth
+                                >
+                                    <Select.Search
+                                        placeholder={config.searchPlaceholder}
+                                        value={searchQuery}
+                                        onChange={(e) => setSearchQuery(e.target.value)}
+                                    />
+                                    <Select.Content maxHeight="320px">
+                                        {filteredItems.map((item: any) => (
+                                            <Select.Option
+                                                key={item.id}
+                                                value={item.id}
+                                                onClick={() => handleSelect(item.id)}
+                                            >
+                                                {displayLabel(item)}
+                                            </Select.Option>
+                                        ))}
+                                        {filteredItems.length === 0 && (
+                                            <Select.Empty>Aucun résultat trouvé</Select.Empty>
+                                        )}
+                                    </Select.Content>
+                                </Select>
+                            </Col>
+                        </Row>
                     )}
                 </Container>
             </Container>
 
-            {!isLoading && filteredItems.length > 0 && (
+            {!isLoading && !showMap && filteredItems.length > 0 && (
                 <Container as="section" className="fr-py-4w" aria-label="Résultats">
                     <Text size="sm" className="fr-mb-2w" aria-live="polite">
                         {filteredItems.length} {config.resultLabel}{filteredItems.length > 1 ? "s" : ""} trouvé{filteredItems.length > 1 ? "s" : ""}

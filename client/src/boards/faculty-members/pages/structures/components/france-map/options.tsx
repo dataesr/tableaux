@@ -16,67 +16,111 @@ interface MapOptionsParams {
     clickable?: boolean;
 }
 
+function niceCeil(value: number): number {
+    if (value <= 0) return 1;
+    const magnitude = Math.pow(10, Math.floor(Math.log10(value)));
+    const normalized = value / magnitude;
+    const nice =
+        normalized <= 1 ? 1 : normalized <= 2 ? 2 : normalized <= 2.5 ? 2.5 : normalized <= 5 ? 5 : 10;
+    return nice * magnitude;
+}
+
+const fmt = (n?: number) => (n ?? 0).toLocaleString("fr-FR");
+
 export function createFranceMapOptions({
     chartData,
     maxValue,
     clickable = false,
 }: MapOptionsParams): Highcharts.Options {
-    const hommesColor = getCssColor("fm-hommes");
     const femmesColor = getCssColor("fm-femmes");
-    const colorLight = getCssColor("blue-cumulus-main-526");
-    const colorMid = getCssColor("blue-france-main-525");
-    const colorDark = getCssColor("blue-ecume-main-400");
+    const hommesColor = getCssColor("fm-hommes");
+
+    const scale = [
+        getCssColor("blue-france-925-125"),
+        getCssColor("blue-france-850-200"),
+        getCssColor("blue-france-main-525"),
+        getCssColor("blue-france-sun-113-625"),
+    ];
+
     const bgColor = getCssColor("background-default-grey");
     const textColor = getCssColor("text-default-grey");
+    const textStrong = getCssColor("text-title-grey");
     const borderColor = getCssColor("border-default-grey");
+    const nullColor = getCssColor("background-contrast-grey");
+
+    const step = niceCeil(maxValue / scale.length);
+    const dataClasses = scale.map((color, i) => {
+        const from = i * step;
+        const to = (i + 1) * step;
+        const isLast = i === scale.length - 1;
+        return {
+            color,
+            from,
+            ...(isLast ? {} : { to }),
+            name: isLast
+                ? `${fmt(from)} et plus`
+                : `${fmt(from)} – ${fmt(to)}`,
+        };
+    });
 
     return {
         chart: {
             map: mapDataIE as any,
             backgroundColor: "transparent",
-            height: "520px",
-            spacing: [0, 0, 0, 0],
-            margin: [10, 0, 90, 0],
+            height: "500px",
+            spacing: [8, 0, 8, 0],
+            style: { fontFamily: "Marianne, sans-serif" },
         },
         title: { text: "" },
         exporting: { enabled: false },
         credits: { enabled: false },
-        accessibility: { enabled: false },
+        accessibility: {
+            enabled: true,
+            description:
+                "Carte choroplèthe des effectifs enseignants par région du siège de l'établissement. Les régions les plus foncées comptent le plus d'enseignants.",
+            keyboardNavigation: { enabled: true },
+            point: {
+                valueDescriptionFormat:
+                    "{point.name} : {point.value} enseignants.",
+            },
+        },
         mapNavigation: {
             enabled: true,
-            buttonOptions: { verticalAlign: "bottom" },
+            enableMouseWheelZoom: false,
+            buttonOptions: { align: "left", verticalAlign: "top" },
         },
         colorAxis: {
-            stops: [
-                [0, colorLight],
-                [0.5, colorMid],
-                [1, colorDark],
-            ],
-            min: 0,
-            max: maxValue,
-            type: "linear",
-            labels: {
-                format: "{value:,.0f}",
-                style: { fontSize: "11px", color: textColor },
+            dataClasses,
+            dataClassColor: "category",
+        },
+        legend: {
+            layout: "horizontal",
+            align: "center",
+            verticalAlign: "bottom",
+            itemStyle: { fontSize: "12px", color: textColor, fontWeight: "normal" },
+            title: {
+                text: "Nombre d'enseignants",
+                style: { fontSize: "12px", color: textColor, fontWeight: "bold" },
             },
-            layout: "horizontal" as any,
-            width: "70%",
         },
         tooltip: {
             useHTML: true,
             headerFormat: "",
             backgroundColor: bgColor,
             borderColor: borderColor,
-            shadow: true,
+            borderRadius: 6,
+            shadow: false,
+            style: { color: textColor },
             pointFormatter: function () {
                 const point = this as any;
+                const dot = (color: string) =>
+                    `<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${color};margin-right:6px;vertical-align:middle;"></span>`;
                 return `
-          <div style="padding:10px 14px; min-width:210px;">
-            <strong style="font-size:13px; color:${colorDark}">${point.name}</strong>
-            <hr style="margin:6px 0; border:none; border-top:1px solid ${borderColor};" />
-            <div style="margin-bottom:6px; font-size:12px;">Total : <strong>${point.options.value?.toLocaleString("fr-FR")}</strong> enseignants</div>
-            <div style="color:${hommesColor}; font-size:12px; margin-bottom:3px;">♂ ${point.options.male_count?.toLocaleString("fr-FR")} hommes (${point.options.male_percent}%)</div>
-            <div style="color:${femmesColor}; font-size:12px;">♀ ${point.options.female_count?.toLocaleString("fr-FR")} femmes (${point.options.female_percent}%)</div>
+          <div style="padding:8px 12px; min-width:200px; font-family:Marianne, sans-serif;">
+            <strong style="font-size:13px; color:${textStrong};">${point.name}</strong>
+            <div style="margin-top:6px; font-size:12px; color:${textColor};">Total : <strong>${fmt(point.options.value)}</strong> enseignants</div>
+            <div style="margin-top:4px; font-size:12px; color:${textColor};">${dot(femmesColor)}Femmes : <strong>${fmt(point.options.female_count)}</strong> (${point.options.female_percent} %)</div>
+            <div style="margin-top:2px; font-size:12px; color:${textColor};">${dot(hommesColor)}Hommes : <strong>${fmt(point.options.male_count)}</strong> (${point.options.male_percent} %)</div>
           </div>`;
             },
         },
@@ -91,21 +135,18 @@ export function createFranceMapOptions({
                 data: chartData,
                 joinBy: "hc-key",
                 name: "Enseignants",
-                borderColor: bgColor,
-                borderWidth: 1.5,
+                allAreas: true,
+                nullColor,
+                borderColor: borderColor,
+                borderWidth: 0.8,
                 states: {
-                    hover: { borderColor: colorDark },
-                },
-                dataLabels: {
-                    enabled: true,
-                    format: "{point.name}",
-                    style: {
-                        fontSize: "9px",
-                        fontWeight: "normal",
-                        textOutline: `2px ${bgColor}`,
-                        color: textColor,
+                    hover: {
+                        borderColor: textStrong,
+                        borderWidth: 1.5,
+                        brightness: 0.06,
                     },
                 },
+                dataLabels: { enabled: false },
             },
         ] as any,
     };

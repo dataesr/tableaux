@@ -146,17 +146,14 @@ function MapSection() {
           Répartition nationale
         </Title>
         <p className="fm-accueil-section__description">
-          Cliquez sur une région pour explorer ses données en détail
+          Cliquez sur une région — sur la carte ou dans la liste — pour explorer ses données en détail
         </p>
-        <Row>
-          <Col xs="12">
-            <FranceMap
-              year={latestYear}
-              onRegionClick={handleRegionClick}
-              title={`Répartition des enseignants par région (${latestYear})`}
-            />
-          </Col>
-        </Row>
+        <FranceMap
+          year={latestYear}
+          onRegionClick={handleRegionClick}
+          title={`Répartition des enseignants par région (${latestYear})`}
+          asideList
+        />
       </Container>
     </section>
   );
