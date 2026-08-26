@@ -171,6 +171,11 @@ export default function FmEvolutionChart({
 
     const analysisConfig = allAnalyses[selectedAnalysis];
 
+    const metricsStr = analysisConfig ? analysisConfig.metrics.join(" ") : "";
+    const isAgeDim = analysisConfig?.chartType === "pyramid" || /age/i.test(metricsStr);
+    const isGenderDim = /femmes|hommes|feminisation|_f_|_h_|_f\b|_h\b/i.test(metricsStr);
+    const isStatusDim = /cnu_|_ec\b|\bec_|perm|_tit|mcf|_pr\b|_pr_/i.test(metricsStr);
+
     const chartOptions = useMemo(() => {
         if (!analysisConfig || !records.length) return null;
         const { chartType, metrics } = analysisConfig;
@@ -219,12 +224,6 @@ export default function FmEvolutionChart({
         readingKey: readingKeyText ? { fr: <>{readingKeyText}</> } : undefined,
         sources: [{ label: { fr: <>MESRE-DGRH, traitement DND</> }, url: { fr: "https://data.enseignementsup-recherche.gouv.fr" } }],
     };
-
-    const metricsStr = metrics.join(" ");
-    // Masque un filtre quand l'analyse porte déjà sur cette dimension.
-    const isAgeDim = chartType === "pyramid" || /age/i.test(metricsStr);
-    const isGenderDim = /femmes|hommes|feminisation|_f_|_h_|_f\b|_h\b/i.test(metricsStr);
-    const isStatusDim = /cnu_|_ec\b|\bec_|perm|_tit|mcf|_pr\b|_pr_/i.test(metricsStr);
 
     const populationFilters = [
         {

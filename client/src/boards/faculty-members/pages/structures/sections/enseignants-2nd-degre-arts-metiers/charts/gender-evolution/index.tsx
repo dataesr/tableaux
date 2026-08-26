@@ -12,30 +12,28 @@ export default function GenderEvolutionChart({
     const { options, readingKey } = useMemo(() => {
         if (!genderEvolution?.length) return { options: null, readingKey: null };
 
+        const share = (e: any) => {
+            const f = e?.gender_breakdown?.find((g: any) => g.gender === "Féminin")?.count || 0;
+            const m = e?.gender_breakdown?.find((g: any) => g.gender === "Masculin")?.count || 0;
+            const t = f + m;
+            return t > 0 ? (f / t) * 100 : 0;
+        };
         const first = genderEvolution[0];
         const last = genderEvolution[genderEvolution.length - 1];
-        const firstFemale = first?.gender_breakdown?.find((g: any) => g.gender === "Féminin")?.count || 0;
-        const lastFemale = last?.gender_breakdown?.find((g: any) => g.gender === "Féminin")?.count || 0;
-        const firstMale = first?.gender_breakdown?.find((g: any) => g.gender === "Masculin")?.count || 0;
-        const lastMale = last?.gender_breakdown?.find((g: any) => g.gender === "Masculin")?.count || 0;
-        const diffFemale = lastFemale - firstFemale;
-        const diffMale = lastMale - firstMale;
-        const pctFemale = firstFemale > 0 ? ((diffFemale / firstFemale) * 100).toFixed(1) : "0";
-        const pctMale = firstMale > 0 ? ((diffMale / firstMale) * 100).toFixed(1) : "0";
-
+        const firstShare = share(first);
+        const lastShare = share(last);
+        const diff = lastShare - firstShare;
 
         return {
             options: createGenderEvolutionOptions(genderEvolution),
             readingKey: {
                 fr: (
                     <>
-                        Entre <strong>{first._id}</strong> et <strong>{last._id}</strong>,
-                        l'effectif enseignants-chercheurs des femmes est passé de{" "}
-                        <strong>{firstFemale.toLocaleString("fr-FR")}</strong> à{" "}
-                        <strong>{lastFemale.toLocaleString("fr-FR")}</strong> ({diffFemale >= 0 ? "+" : ""}{pctFemale}%).
-                        En parallèle, l'effectif enseignants-chercheurs des hommes est passé de{" "}
-                        <strong>{firstMale.toLocaleString("fr-FR")}</strong> à{" "}
-                        <strong>{lastMale.toLocaleString("fr-FR")}</strong> ({diffMale >= 0 ? "+" : ""}{pctMale}%).
+                        En <strong>{last?._id}</strong>, les femmes représentent{" "}
+                        <strong>{lastShare.toFixed(1)} %</strong> des effectifs,
+                        contre <strong>{firstShare.toFixed(1)} %</strong> en {first?._id} (
+                        {diff >= 0 ? "+" : ""}
+                        {diff.toFixed(1)} point{Math.abs(diff) >= 2 ? "s" : ""}).
                     </>
                 ),
             },
@@ -50,7 +48,7 @@ export default function GenderEvolutionChart({
                 id: "ec-gender-evolution",
                 title: {
                     fr: "Évolution de la parité femmes-hommes",
-                    size: "h3" as const,
+                    size: "h2" as const,
                     look: "h6" as const,
                 },
                 readingKey: readingKey || undefined,

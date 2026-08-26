@@ -22,7 +22,7 @@ export function createAgeDistributionOptions(
     });
     const maleData = sorted.map((a: any) => {
         const m = a.gender_breakdown?.find((g: any) => g.gender === "Masculin");
-        return m?.count || 0;
+        return -(m?.count || 0);
     });
 
     return createChartOptions("bar", {
@@ -32,12 +32,11 @@ export function createAgeDistributionOptions(
             title: { text: null },
         },
         yAxis: {
-            min: 0,
             title: { text: "Effectif" },
-            stackLabels: {
-                enabled: true,
-                format: "{total:,.0f}",
-                style: { fontSize: "10px", fontWeight: "bold" },
+            labels: {
+                formatter() {
+                    return Highcharts.numberFormat(Math.abs(this.value as number), 0, ",", " ");
+                },
             },
         },
         plotOptions: {
@@ -48,10 +47,10 @@ export function createAgeDistributionOptions(
             },
         },
         tooltip: {
-            shared: true,
-            headerFormat: "<b>{point.key}</b><br/>",
-            pointFormat:
-                '<span style="color:{series.color}">\u25CF</span> {series.name}: <b>{point.y:,.0f}</b><br/>',
+            formatter() {
+                const point: any = this;
+                return `<b>${point.key ?? point.x}</b><br/><span style="color:${point.color}">●</span> ${point.series.name}: <b>${Highcharts.numberFormat(Math.abs(point.y), 0, ",", " ")}</b>`;
+            },
         },
         legend: {
             enabled: true,

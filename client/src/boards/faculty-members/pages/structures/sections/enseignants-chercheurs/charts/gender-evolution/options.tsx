@@ -17,30 +17,35 @@ export function createGenderEvolutionOptions(
         return m?.count || 0;
     });
 
-    return createChartOptions("line", {
+    return createChartOptions("area", {
         chart: { height: 350 },
         xAxis: {
             categories,
             title: { text: null },
             labels: { rotation: -45 },
         },
-        yAxis: { min: 0, title: { text: "Effectif" } },
+        yAxis: {
+            min: 0,
+            max: 100,
+            title: { text: "Part des effectifs (%)" },
+            labels: { format: "{value} %" },
+        },
         tooltip: {
             shared: true,
             headerFormat: "<b>{point.key}</b><br/>",
+            pointFormat:
+                '<span style="color:{series.color}">●</span> {series.name}: <b>{point.percentage:.1f} %</b> ({point.y:,.0f})<br/>',
         },
         plotOptions: {
-            line: {
-                marker: { enabled: false, radius: 3 },
-            },
             area: {
-                stacking: "normal",
+                stacking: "percent",
                 marker: { enabled: false, radius: 3 },
-                fillOpacity: 0.3,
+                lineWidth: 1,
             },
         },
         legend: {
             enabled: true,
+            reversed: true,
             itemStyle: { fontSize: "11px", fontWeight: "normal" },
         },
         series: [
@@ -49,15 +54,13 @@ export function createGenderEvolutionOptions(
                 name: "Hommes",
                 data: maleData,
                 color: getCssColor("fm-hommes"),
-                yAxis: 0,
             },
             {
                 type: "area",
                 name: "Femmes",
                 data: femaleData,
                 color: getCssColor("fm-femmes"),
-                yAxis: 0,
-            }
+            },
         ],
     });
 }

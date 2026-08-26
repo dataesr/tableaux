@@ -21,7 +21,7 @@ export function createCategoryDistributionOptions(
 
     const categories = sortedData.map((item) => item.categoryName);
     const womenData = sortedData.map((item) => item.femaleCount);
-    const menData = sortedData.map((item) => item.maleCount);
+    const menData = sortedData.map((item) => -item.maleCount);
 
     return createChartOptions("bar", {
         chart: {
@@ -32,20 +32,18 @@ export function createCategoryDistributionOptions(
             title: { text: null },
         },
         yAxis: {
-            min: 0,
             title: { text: "Nombre d'enseignants" },
-            stackLabels: {
-                enabled: true,
-                format: "{total:,.0f}",
-                style: { fontSize: "10px", fontWeight: "bold" },
+            labels: {
+                formatter() {
+                    return Highcharts.numberFormat(Math.abs(this.value as number), 0, ",", " ");
+                },
             },
         },
         tooltip: {
-            shared: true,
-            headerFormat: "<b>{point.key}</b><br/>",
-            pointFormat:
-                '<span style="color:{series.color}">\u25CF</span> {series.name}: {point.y:,.0f}<br/>',
-            footerFormat: "Total: {point.total:,.0f}",
+            formatter() {
+                const point: any = this;
+                return `<b>${point.key ?? point.x}</b><br/><span style="color:${point.color}">●</span> ${point.series.name}: <b>${Highcharts.numberFormat(Math.abs(point.y), 0, ",", " ")}</b>`;
+            },
         },
         plotOptions: {
             bar: {
