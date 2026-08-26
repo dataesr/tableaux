@@ -51,6 +51,18 @@ function getAnalysisDefinitionKeys(analysis: string | null): string[] {
     return [];
 }
 
+function getAnalysisDims(key: string | null) {
+    if (!key) return { age: false, gender: false, status: false };
+    return {
+        age: /(^|[-_])age|pyramide/i.test(key),
+        gender: /genre|femi|parit|pyramide/i.test(key),
+        status:
+            /statut|permanent|categorie|cnu|disc|mcf|(^|[-_])ec([-_]|$)|(^|[-_])pr([-_]|$)/i.test(
+                key
+            ),
+    };
+}
+
 interface EvolutionsSectionProps {
     viewType: ViewType;
     selectedId: string;
@@ -63,12 +75,17 @@ export default function EvolutionsSection({ viewType, selectedId }: EvolutionsSe
     const gender = searchParams.get("fmGender") || "";
     const status = searchParams.get("fmStatus") || "";
 
+    const dims = getAnalysisDims(selectedAnalysis);
+    const effAgeClass = dims.age ? "" : ageClass;
+    const effGender = dims.gender ? "" : gender;
+    const effStatus = dims.status ? "" : status;
+
     const { data, isLoading } = useFacultyAnalyses(
         viewType,
         selectedId,
-        ageClass || undefined,
-        gender || undefined,
-        status || undefined
+        effAgeClass || undefined,
+        effGender || undefined,
+        effStatus || undefined
     );
 
     const { analysesWithData, allAnalyses, metricsConfig, records, periodText } = useMemo(() => {
@@ -77,7 +94,7 @@ export default function EvolutionsSection({ viewType, selectedId }: EvolutionsSe
         }
         const completeRecords = data.records.filter(
             (r: any) =>
-                status
+                effStatus
                     ? (r.effectif_total || 0) > 0
                     : (r.effectif_permanents || 0) > 0 && (r.effectif_non_permanents || 0) > 0
         );
@@ -100,7 +117,18 @@ export default function EvolutionsSection({ viewType, selectedId }: EvolutionsSe
         const period = years.length > 1 ? `${years[0]} — ${years[years.length - 1]}` : years[0] || "";
 
         return { analysesWithData: available, allAnalyses: analyses, metricsConfig: metrics, records: completeRecords, periodText: period };
-    }, [data, status]);
+    }, [data, effStatus]);
+
+    // Retire de l'URL les filtres devenus incompatibles avec l'analyse sélectionnée.
+    useEffect(() => {
+        if (!selectedAnalysis) return;
+        const params = new URLSearchParams(searchParams);
+        let changed = false;
+        if (dims.age && params.has("fmAgeClass")) { params.delete("fmAgeClass"); changed = true; }
+        if (dims.gender && params.has("fmGender")) { params.delete("fmGender"); changed = true; }
+        if (dims.status && params.has("fmStatus")) { params.delete("fmStatus"); changed = true; }
+        if (changed) setSearchParams(params, { replace: true });
+    }, [selectedAnalysis, dims.age, dims.gender, dims.status, searchParams, setSearchParams]);
 
     useEffect(() => {
         if (analysesWithData.size === 0) return;

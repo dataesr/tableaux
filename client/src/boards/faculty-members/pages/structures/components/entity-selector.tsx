@@ -159,7 +159,7 @@ export default function EntitySelector({ viewType }: Props) {
                                             year={latestYear}
                                             level="region"
                                             onRegionClick={handleMapRegionClick}
-                                            title={`Enseignants par région (${latestYear})`}
+                                            title={`Enseignants par région du siège (${latestYear})`}
                                         />
                                     </Col>
                                 </Row>

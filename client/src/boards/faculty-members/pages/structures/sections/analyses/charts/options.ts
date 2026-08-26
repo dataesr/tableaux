@@ -165,6 +165,8 @@ export function createFmStackedOptions(
     })
     .filter(Boolean) as Highcharts.SeriesOptionsType[];
 
+  const hidePercentLabels = showPercentage && series.length <= 1;
+
   return createChartOptions("column", {
     chart: { height: 480 },
     xAxis: {
@@ -196,7 +198,7 @@ export function createFmStackedOptions(
         borderWidth: 0,
         borderRadius: 2,
         dataLabels: {
-          enabled: true,
+          enabled: !hidePercentLabels,
           format: showPercentage ? "{point.percentage:.1f}\u00a0%" : "{y:,.0f}",
           style: {
             fontSize: "10px",
