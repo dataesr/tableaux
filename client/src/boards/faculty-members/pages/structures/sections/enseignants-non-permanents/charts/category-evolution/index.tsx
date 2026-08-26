@@ -45,8 +45,7 @@ export default function CategoryEvolutionChart({
         readingKey: readingKey || undefined,
         comment: {
           fr: (<>
-            Évolution des catégories de personnel parmi les enseignants-chercheurs
-            uniquement (professeurs, maîtres de conférences, etc.).
+            Évolution des catégories de personnel parmi les enseignants non permanents.
           </>),
         },
         sources: [
