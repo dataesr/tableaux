@@ -51,6 +51,7 @@ export default function ErcGenderByDestination() {
   const titleConfig = {
     fr: "Répartition par genre selon le type de financement ERC",
     en: "Gender distribution by ERC funding type",
+    className: "fr-mt-2w fr-ml-1w",
   };
 
   return (

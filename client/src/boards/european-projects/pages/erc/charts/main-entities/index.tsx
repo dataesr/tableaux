@@ -82,10 +82,9 @@ export default function ErcMainEntities() {
 
   const isShowingAll = displayLimit >= totalCount;
   const titleConfig = {
-    fr: isShowingAll
-      ? `Toutes les entités ERC par financement${titleSuffixFr}`
-      : `Top ${displayLimit} des entités ERC par financement${titleSuffixFr}`,
+    fr: isShowingAll ? `Toutes les entités ERC par financement${titleSuffixFr}` : `Top ${displayLimit} des entités ERC par financement${titleSuffixFr}`,
     en: isShowingAll ? `All ERC entities by funding${titleSuffixEn}` : `Top ${displayLimit} ERC entities by funding${titleSuffixEn}`,
+    className: "fr-mt-2w fr-ml-1w",
   };
 
   const config = {
@@ -106,7 +105,7 @@ export default function ErcMainEntities() {
       ) : (
         <>
           <ChartWrapper.Title config={{ title: titleConfig, id: config.id }} />
-          <div style={{ display: "flex", alignItems: "flex-end", gap: "1rem", flexWrap: "wrap" }} className="fr-m-2w">
+          <div style={{ display: "flex", alignItems: "flex-end", gap: "1rem", flexWrap: "wrap" }} className="fr-m-1w">
             <div className="fr-select-group" style={{ flex: "0 0 auto", maxWidth: "320px", marginBottom: 0 }}>
               <label className="fr-label" htmlFor="erc-destination-select">
                 {currentLang === "fr" ? "Type de financement" : "Funding type"}
@@ -129,18 +128,8 @@ export default function ErcMainEntities() {
             </div>
             <SegmentedControl className="fr-segmented--sm" name="erc-entities-limit">
               <SegmentedElement checked={displayLimit === 10 && !isShowingAll} label="Top 10" onClick={() => setDisplayLimit(10)} value="10" />
-              <SegmentedElement
-                checked={displayLimit > 10 && !isShowingAll}
-                label="+ 5"
-                onClick={() => setDisplayLimit((prev) => Math.min(prev + 5, totalCount))}
-                value="add5"
-              />
-              <SegmentedElement
-                checked={isShowingAll}
-                label={currentLang === "fr" ? `Tout voir (${totalCount})` : `Show all (${totalCount})`}
-                onClick={() => setDisplayLimit(totalCount)}
-                value="all"
-              />
+              <SegmentedElement checked={displayLimit > 10 && !isShowingAll} label="+ 5" onClick={() => setDisplayLimit((prev) => Math.min(prev + 5, totalCount))} value="add5" />
+              <SegmentedElement checked={isShowingAll} label={currentLang === "fr" ? `Tout voir (${totalCount})` : `Show all (${totalCount})`} onClick={() => setDisplayLimit(totalCount)} value="all" />
             </SegmentedControl>
           </div>
           <ChartWrapper config={config} options={Options(data, currentLang)} renderData={() => renderDataTable(data, currentLang)} />

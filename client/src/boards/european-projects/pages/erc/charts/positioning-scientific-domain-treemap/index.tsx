@@ -30,6 +30,7 @@ const getConfig = (metric: MetricType, domainCode: ScientificDomainCode, domainL
     title: {
       en: getI18nLabel(i18n, isProjects ? "title-projects" : "title-funding", "en").replace("{domain}", domainLabel),
       fr: getI18nLabel(i18n, isProjects ? "title-projects" : "title-funding", "fr").replace("{domain}", domainLabel),
+      className: "fr-mt-2w fr-ml-1w",
     },
     comment: {
       fr: <>{getI18nLabel(i18n, isProjects ? "comment-projects" : "comment-funding", "fr")}</>,

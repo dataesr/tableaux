@@ -49,20 +49,11 @@ const configWeight = {
   title: {
     en: "Share of successful projects by panel",
     fr: "Poids des projets lauréats par panel",
+    className: "fr-mt-2w fr-ml-1w",
   },
   comment: {
-    fr: (
-      <>
-        Ce graphique présente l'évolution du poids des projets lauréats du pays sélectionné par rapport au total européen, ventilé par panel ERC au
-        sein du domaine scientifique sélectionné.
-      </>
-    ),
-    en: (
-      <>
-        This chart shows the evolution of the share of successful projects from the selected country compared to the European total, broken down by
-        ERC panel within the selected scientific domain.
-      </>
-    ),
+    fr: <>Ce graphique présente l'évolution du poids des projets lauréats du pays sélectionné par rapport au total européen, ventilé par panel ERC au sein du domaine scientifique sélectionné.</>,
+    en: <>This chart shows the evolution of the share of successful projects from the selected country compared to the European total, broken down by ERC panel within the selected scientific domain.</>,
   },
   readingKey: {
     fr: <>Un poids de 10% signifie que le pays représente 10% des porteurs de projets lauréats au niveau européen pour ce panel.</>,
@@ -77,20 +68,11 @@ const configSuccessRate = {
   title: {
     en: "Success rate by panel",
     fr: "Taux de succès par panel",
+    className: "fr-mt-2w fr-ml-1w",
   },
   comment: {
-    fr: (
-      <>
-        Ce graphique présente l'évolution du taux de succès des projets du pays sélectionné, calculé comme le ratio entre projets lauréats et projets
-        évalués, ventilé par panel ERC au sein du domaine scientifique sélectionné.
-      </>
-    ),
-    en: (
-      <>
-        This chart shows the evolution of the success rate of projects from the selected country, calculated as the ratio of successful to evaluated
-        projects, broken down by ERC panel within the selected scientific domain.
-      </>
-    ),
+    fr: <>Ce graphique présente l'évolution du taux de succès des projets du pays sélectionné, calculé comme le ratio entre projets lauréats et projets évalués, ventilé par panel ERC au sein du domaine scientifique sélectionné.</>,
+    en: <>This chart shows the evolution of the success rate of projects from the selected country, calculated as the ratio of successful to evaluated projects, broken down by ERC panel within the selected scientific domain.</>,
   },
   readingKey: {
     fr: <>Un taux de succès de 20% signifie que 20% des projets soumis et évalués ont été retenus pour ce panel.</>,

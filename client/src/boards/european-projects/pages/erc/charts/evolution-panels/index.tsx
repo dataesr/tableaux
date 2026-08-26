@@ -22,18 +22,15 @@ const configWeight = {
   title: {
     en: "Share of successful projects by scientific domain",
     fr: "Poids des projets lauréats par domaine scientifique",
+    className: "fr-mt-2w fr-ml-1w",
   },
   comment: {
     fr: (
-      <>
-        Ce graphique présente l'évolution du poids des projets lauréats du pays sélectionné par rapport au total européen, ventilé par domaine
-        scientifique ERC (Sciences de la vie, Sciences physiques et ingénierie, Sciences sociales et humaines).
-      </>
+      <>Ce graphique présente l'évolution du poids des projets lauréats du pays sélectionné par rapport au total européen, ventilé par domaine scientifique ERC (Sciences de la vie, Sciences physiques et ingénierie, Sciences sociales et humaines).</>
     ),
     en: (
       <>
-        This chart shows the evolution of the share of successful projects from the selected country compared to the European total, broken down by
-        ERC scientific domain (Life Sciences, Physical Sciences & Engineering, Social Sciences & Humanities).
+        This chart shows the evolution of the share of successful projects from the selected country compared to the European total, broken down by ERC scientific domain (Life Sciences, Physical Sciences & Engineering, Social Sciences & Humanities).
       </>
     ),
   },
@@ -50,20 +47,11 @@ const configSuccessRate = {
   title: {
     en: "Success rate by scientific domain",
     fr: "Taux de succès par domaine scientifique",
+    className: "fr-mt-2w fr-ml-1w",
   },
   comment: {
-    fr: (
-      <>
-        Ce graphique présente l'évolution du taux de succès des projets du pays sélectionné, calculé comme le ratio entre projets lauréats et projets
-        évalués, ventilé par domaine scientifique ERC.
-      </>
-    ),
-    en: (
-      <>
-        This chart shows the evolution of the success rate of projects from the selected country, calculated as the ratio of successful to evaluated
-        projects, broken down by ERC scientific domain.
-      </>
-    ),
+    fr: <>Ce graphique présente l'évolution du taux de succès des projets du pays sélectionné, calculé comme le ratio entre projets lauréats et projets évalués, ventilé par domaine scientifique ERC.</>,
+    en: <>This chart shows the evolution of the success rate of projects from the selected country, calculated as the ratio of successful to evaluated projects, broken down by ERC scientific domain.</>,
   },
   readingKey: {
     fr: <>Un taux de succès de 20% signifie que 20% des projets soumis et évalués ont été retenus pour ce domaine scientifique.</>,

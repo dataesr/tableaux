@@ -28,6 +28,7 @@ const getConfig = (metric: MetricType) => {
     title: {
       en: getI18nLabel(i18n, isProjects ? "title-projects" : "title-funding", "en"),
       fr: getI18nLabel(i18n, isProjects ? "title-projects" : "title-funding", "fr"),
+      className: "fr-mt-2w fr-ml-1w",
     },
     comment: {
       fr: <>{getI18nLabel(i18n, isProjects ? "comment-projects" : "comment-funding", "fr")}</>,
@@ -37,9 +38,7 @@ const getConfig = (metric: MetricType) => {
       fr: <>{getI18nLabel(i18n, isProjects ? "reading-key-projects" : "reading-key-funding", "fr")}</>,
       en: <>{getI18nLabel(i18n, isProjects ? "reading-key-projects" : "reading-key-funding", "en")}</>,
     },
-    integrationURL: isProjects
-      ? "/european-projects/components/pages/erc/charts/positioning-global"
-      : "/european-projects/components/pages/erc/charts/positioning-global-funding",
+    integrationURL: isProjects ? "/european-projects/components/pages/erc/charts/positioning-global" : "/european-projects/components/pages/erc/charts/positioning-global-funding",
   };
 };
 

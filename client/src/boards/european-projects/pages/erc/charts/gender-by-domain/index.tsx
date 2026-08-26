@@ -103,13 +103,14 @@ export default function ErcGenderByDomain() {
   const titleConfig = {
     fr: `Répartition par genre selon le domaine scientifique ERC${detailSuffix}${destSuffix}`,
     en: `Gender distribution by ERC scientific domain${detailSuffix}${destSuffix}`,
+    className: "fr-mt-2w fr-ml-1w",
   };
 
   return (
     <div className="fr-my-5w chart-container--default">
       <ChartWrapper.Title config={{ title: titleConfig, id: config.id }} />
       <Row gutters>
-        <Col md={4}>
+        <Col md={4} className="fr-ml-1w">
           <div className="fr-select-group">
             <label className="fr-label" htmlFor="gender-domain-dest-select">
               {currentLang === "fr" ? "Type de financement" : "Funding type"}
