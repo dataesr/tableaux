@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 320" fill="none" role="img" aria-hidden="true" preserveAspectRatio="xMidYMid slice">
+  <circle cx="160" cy="150" r="92" fill="#6A6AF4" opacity="0.10" />
+  <!-- Toque : planche -->
+  <path d="M160 92 L258 138 L160 184 L62 138 Z" fill="#4343CE" />
+  <!-- Bandeau -->
+  <path d="M104 156 V196 C 104 214 216 214 216 196 V156" stroke="#6A6AF4" stroke-width="7" fill="#6A6AF4" fill-opacity="0.12" stroke-linejoin="round" />
+  <!-- Bouton + gland -->
+  <circle cx="160" cy="138" r="7" fill="#6A6AF4" />
+  <path d="M258 138 V206" stroke="#E1000F" stroke-width="4" stroke-linecap="round" />
+  <circle cx="258" cy="212" r="8" fill="#E1000F" />
+  <g fill="#00A95F" opacity="0.7"><circle cx="86" cy="216" r="4"/><circle cx="234" cy="228" r="4"/></g>
+</svg>

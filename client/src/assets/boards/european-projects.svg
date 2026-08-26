@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 320" fill="none" role="img" aria-hidden="true" preserveAspectRatio="xMidYMid slice">
+  <circle cx="160" cy="160" r="118" fill="#4343CE" opacity="0.12" />
+  <!-- Cercle des 12 étoiles européennes -->
+  <g fill="#F6C500">
+    <g transform="translate(160 65)"><path d="M0,-9 L2.1,-2.9 L8.6,-2.8 L3.4,1.1 L5.3,7.3 L0,3.6 L-5.3,7.3 L-3.4,1.1 L-8.6,-2.8 L-2.1,-2.9 Z"/></g>
+    <g transform="translate(207.5 77.7)"><path d="M0,-9 L2.1,-2.9 L8.6,-2.8 L3.4,1.1 L5.3,7.3 L0,3.6 L-5.3,7.3 L-3.4,1.1 L-8.6,-2.8 L-2.1,-2.9 Z"/></g>
+    <g transform="translate(242.3 112.5)"><path d="M0,-9 L2.1,-2.9 L8.6,-2.8 L3.4,1.1 L5.3,7.3 L0,3.6 L-5.3,7.3 L-3.4,1.1 L-8.6,-2.8 L-2.1,-2.9 Z"/></g>
+    <g transform="translate(255 160)"><path d="M0,-9 L2.1,-2.9 L8.6,-2.8 L3.4,1.1 L5.3,7.3 L0,3.6 L-5.3,7.3 L-3.4,1.1 L-8.6,-2.8 L-2.1,-2.9 Z"/></g>
+    <g transform="translate(242.3 207.5)"><path d="M0,-9 L2.1,-2.9 L8.6,-2.8 L3.4,1.1 L5.3,7.3 L0,3.6 L-5.3,7.3 L-3.4,1.1 L-8.6,-2.8 L-2.1,-2.9 Z"/></g>
+    <g transform="translate(207.5 242.3)"><path d="M0,-9 L2.1,-2.9 L8.6,-2.8 L3.4,1.1 L5.3,7.3 L0,3.6 L-5.3,7.3 L-3.4,1.1 L-8.6,-2.8 L-2.1,-2.9 Z"/></g>
+    <g transform="translate(160 255)"><path d="M0,-9 L2.1,-2.9 L8.6,-2.8 L3.4,1.1 L5.3,7.3 L0,3.6 L-5.3,7.3 L-3.4,1.1 L-8.6,-2.8 L-2.1,-2.9 Z"/></g>
+    <g transform="translate(112.5 242.3)"><path d="M0,-9 L2.1,-2.9 L8.6,-2.8 L3.4,1.1 L5.3,7.3 L0,3.6 L-5.3,7.3 L-3.4,1.1 L-8.6,-2.8 L-2.1,-2.9 Z"/></g>
+    <g transform="translate(77.7 207.5)"><path d="M0,-9 L2.1,-2.9 L8.6,-2.8 L3.4,1.1 L5.3,7.3 L0,3.6 L-5.3,7.3 L-3.4,1.1 L-8.6,-2.8 L-2.1,-2.9 Z"/></g>
+    <g transform="translate(65 160)"><path d="M0,-9 L2.1,-2.9 L8.6,-2.8 L3.4,1.1 L5.3,7.3 L0,3.6 L-5.3,7.3 L-3.4,1.1 L-8.6,-2.8 L-2.1,-2.9 Z"/></g>
+    <g transform="translate(77.7 112.5)"><path d="M0,-9 L2.1,-2.9 L8.6,-2.8 L3.4,1.1 L5.3,7.3 L0,3.6 L-5.3,7.3 L-3.4,1.1 L-8.6,-2.8 L-2.1,-2.9 Z"/></g>
+    <g transform="translate(112.5 77.7)"><path d="M0,-9 L2.1,-2.9 L8.6,-2.8 L3.4,1.1 L5.3,7.3 L0,3.6 L-5.3,7.3 L-3.4,1.1 L-8.6,-2.8 L-2.1,-2.9 Z"/></g>
+  </g>
+</svg>

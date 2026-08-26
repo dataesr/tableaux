@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 320" fill="none" role="img" aria-hidden="true" preserveAspectRatio="xMidYMid slice">
+  <circle cx="235" cy="85" r="95" fill="#6A6AF4" opacity="0.10" />
+  <!-- Carte -->
+  <rect x="72" y="88" width="176" height="150" rx="10" stroke="#4343CE" stroke-width="6" fill="#6A6AF4" fill-opacity="0.08" />
+  <g stroke="#8585F6" stroke-width="3" opacity="0.6">
+    <line x1="72" y1="138" x2="248" y2="138" /><line x1="72" y1="188" x2="248" y2="188" />
+    <line x1="128" y1="88" x2="128" y2="238" /><line x1="192" y1="88" x2="192" y2="238" />
+  </g>
+  <path d="M92 210 C 130 180, 150 200, 176 160 S 226 120, 236 110" stroke="#00A95F" stroke-width="4" stroke-linecap="round" stroke-dasharray="2 9" fill="none" />
+  <!-- Épingle -->
+  <path d="M170 118 C 158 118 151 127 151 137 C 151 152 170 172 170 172 C 170 172 189 152 189 137 C 189 127 182 118 170 118 Z" fill="#E1000F" />
+  <circle cx="170" cy="137" r="6" fill="#F5F5FE" />
+  <g fill="#6A6AF4" opacity="0.5"><circle cx="96" cy="252" r="3"/><circle cx="112" cy="252" r="3"/><circle cx="96" cy="266" r="3"/></g>
+</svg>

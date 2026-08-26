@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" fill="none" role="img" aria-hidden="true" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <pattern id="phDots" width="20" height="20" patternUnits="userSpaceOnUse">
+      <circle cx="3" cy="3" r="2.4" fill="#6A6AF4" />
+    </pattern>
+    <linearGradient id="phFade" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#6A6AF4" stop-opacity="0.55" />
+      <stop offset="100%" stop-color="#4343CE" stop-opacity="0.15" />
+    </linearGradient>
+  </defs>
+
+  <!-- Formes douces d'arrière-plan (placeholder générique, style DSFR) -->
+  <circle cx="530" cy="70" r="180" fill="url(#phFade)" opacity="0.5" />
+  <circle cx="110" cy="300" r="120" fill="#00A95F" opacity="0.14" />
+  <circle cx="470" cy="300" r="70" fill="#E3A6F5" opacity="0.20" />
+
+  <!-- Trame de points -->
+  <rect x="30" y="40" width="150" height="110" fill="url(#phDots)" opacity="0.22" />
+
+  <!-- Barres stylisées (abstrait « données ») -->
+  <g opacity="0.8">
+    <rect x="250" y="220" width="34" height="70" rx="6" fill="#8585F6" />
+    <rect x="300" y="180" width="34" height="110" rx="6" fill="#6A6AF4" />
+    <rect x="350" y="140" width="34" height="150" rx="6" fill="#4343CE" />
+  </g>
+
+  <!-- Courbe fluide -->
+  <path d="M40 250 C 160 180, 260 300, 400 150 S 600 90, 620 120"
+    fill="none" stroke="#6A6AF4" stroke-width="5" stroke-linecap="round" opacity="0.5" />
+</svg>

@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 460" fill="none" role="img" aria-hidden="true" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <pattern id="dots" width="16" height="16" patternUnits="userSpaceOnUse">
+      <circle cx="3" cy="3" r="2" fill="#6A6AF4" />
+    </pattern>
+    <pattern id="dotsGreen" width="15" height="15" patternUnits="userSpaceOnUse">
+      <circle cx="3" cy="3" r="1.8" fill="#00A95F" />
+    </pattern>
+    <linearGradient id="lineArea" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#6A6AF4" stop-opacity="0.5" />
+      <stop offset="100%" stop-color="#6A6AF4" stop-opacity="0" />
+    </linearGradient>
+  </defs>
+
+  <!-- Faint topographic contour lines flowing across the whole banner -->
+  <g stroke="#8585F6" stroke-width="1.5" fill="none" opacity="0.20">
+    <path d="M-20 120 C 220 40, 420 200, 700 130 S 1180 40, 1480 150" />
+    <path d="M-20 160 C 220 80, 420 240, 700 170 S 1180 80, 1480 190" />
+    <path d="M-20 330 C 260 260, 480 410, 760 340 S 1220 260, 1480 360" />
+    <path d="M-20 370 C 260 300, 480 450, 760 380 S 1220 300, 1480 400" />
+  </g>
+
+  <!-- Faint halftone dot field, bottom-left corner -->
+  <rect x="-10" y="330" width="190" height="150" fill="url(#dots)" opacity="0.14" />
+
+  <!-- ================= RIGHT-SIDE DASHBOARD CLUSTER ================= -->
+
+  <!-- Scatter / data grid backdrop -->
+  <rect x="1230" y="70" width="140" height="120" fill="url(#dotsGreen)" opacity="0.30" />
+
+  <!-- Line chart with area fill -->
+  <g transform="translate(850 60)">
+    <path d="M0,150 60,110 120,130 180,70 240,95 300,30 360,55 L360,180 L0,180 Z" fill="url(#lineArea)" />
+    <polyline points="0,150 60,110 120,130 180,70 240,95 300,30 360,55" fill="none" stroke="#6A6AF4" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+    <g fill="#4343CE">
+      <circle cx="60" cy="110" r="6" /><circle cx="180" cy="70" r="6" /><circle cx="300" cy="30" r="6" />
+    </g>
+    <circle cx="360" cy="55" r="8" fill="#FFFFFF" stroke="#4343CE" stroke-width="4" />
+  </g>
+
+  <!-- Ascending bar chart -->
+  <g transform="translate(880 260)">
+    <rect x="0" y="90" width="36" height="70" rx="3" fill="#8585F6" />
+    <rect x="50" y="60" width="36" height="100" rx="3" fill="#6A6AF4" />
+    <rect x="100" y="30" width="36" height="130" rx="3" fill="#4343CE" />
+    <rect x="150" y="0" width="36" height="160" rx="3" fill="#000091" />
+    <rect x="-16" y="160" width="220" height="3" fill="#6A6AF4" opacity="0.5" />
+  </g>
+
+  <!-- Donut / pie chart -->
+  <g transform="translate(1270 310)">
+    <circle cx="0" cy="0" r="54" fill="none" stroke="#E3E3FD" stroke-width="24" />
+    <circle cx="0" cy="0" r="54" fill="none" stroke="#00A95F" stroke-width="24"
+      stroke-dasharray="110 340" transform="rotate(-90)" stroke-linecap="round" />
+    <circle cx="0" cy="0" r="54" fill="none" stroke="#6A6AF4" stroke-width="24"
+      stroke-dasharray="76 340" stroke-dashoffset="-118" transform="rotate(-90)" stroke-linecap="round" />
+  </g>
+
+  <!-- Chevron accent motif (>>) -->
+  <g transform="translate(1140 250)" stroke="#00A95F" stroke-width="9" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.85">
+    <polyline points="0,0 30,30 0,60" />
+    <polyline points="34,0 64,30 34,60" />
+  </g>
+
+  <!-- Magnifier over the trend (analyse) -->
+  <g transform="translate(1080 120)">
+    <circle cx="0" cy="0" r="50" fill="#FFFFFF" fill-opacity="0.92" stroke="#000091" stroke-width="7" />
+    <g stroke="#4343CE" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="-26,14 -8,-6 6,8 28,-22" />
+    </g>
+    <circle cx="28" cy="-22" r="5" fill="#00A95F" />
+    <line x1="36" y1="36" x2="68" y2="68" stroke="#000091" stroke-width="12" stroke-linecap="round" />
+  </g>
+</svg>
