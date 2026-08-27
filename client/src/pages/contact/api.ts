@@ -18,7 +18,7 @@ async function sendContact(payload: ContactPayload): Promise<void> {
       email: payload.email,
       name: payload.name,
       message: payload.message,
-      fromApplication: "datasupr",
+      fromApplication: "tableaux",
       extra: {
         subApplication: payload.subApplication,
         ...(payload.fonction && { fonction: payload.fonction }),

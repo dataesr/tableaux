@@ -56,7 +56,7 @@ export default function Contact() {
         organisation,
         subApplication: "atlas",
       },
-      fromApplication: "datasupr",
+      fromApplication: "tableaux",
       message,
       name,
     };
