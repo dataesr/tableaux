@@ -230,6 +230,14 @@
   }
 }
 
+.menu-sticky{
+  position: sticky;
+  top: 0;
+  background-color: var(--background-default-grey);
+  z-index: 1000;
+  border-bottom: 2px solid var(--border-plain-blue-france);
+}
+
 // Animations
 @keyframes slideIn {
   from {
