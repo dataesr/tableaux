@@ -4,6 +4,7 @@ import { Row, Col, Container, Title } from "@dataesr/dsfr-plus";
 import { useFacultyFilters, useFacultyYears } from "../structures/api";
 import FranceMap from "../structures/components/france-map";
 import Select from "../../../../components/select";
+import mediaFacultyMembers from "../../../../assets/boards/faculty-members.svg";
 import "./styles.scss";
 
 function normalizeString(str: string) {
@@ -60,7 +61,7 @@ function HeroSection() {
           <Col xs="12" lg="6">
             <div className="fm-accueil-hero__illustration">
               <img
-                src="/src/assets/boards/faculty-members.svg"
+                src={mediaFacultyMembers}
                 alt=""
                 aria-hidden="true"
               />

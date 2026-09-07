@@ -7,6 +7,8 @@ import Select from "../../../../components/select";
 import "./styles.scss";
 import { normalizeString } from "../../utils/utils";
 import { DEFAULT_REFERENCE_YEAR } from "../../config/constants";
+import mediaStructuresFinance from "../../../../assets/boards/structures-finance.svg";
+
 
 function HeroSection() {
   const navigate = useNavigate();
@@ -45,7 +47,7 @@ function HeroSection() {
           <Col xs="12" lg="6">
             <div className="accueil-hero__illustration">
               <img
-                src="/src/assets/boards/structures-finance.svg"
+                src={mediaStructuresFinance}
                 alt=""
                 aria-hidden="true"
               />
