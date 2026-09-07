@@ -1,20 +1,20 @@
-import { Title } from "@dataesr/dsfr-plus";
-import { useQuery } from "@tanstack/react-query";
-import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js";
-import { useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { Title } from "@dataesr/dsfr-plus"
+import { useQuery } from "@tanstack/react-query"
+import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js"
+import { useState } from "react"
+import { useSearchParams } from "react-router-dom"
 
-import DefaultSkeleton from "../../../../components/charts-skeletons/default.tsx";
-import { useChartColor } from "../../../../hooks/useChartColor.tsx";
-import { getI18nLabel } from "../../../../utils.tsx";
-import ChartWrapperFundings from "../../components/chart-wrapper-fundings/index.tsx";
-import SegmentedControl from "../../components/segmented-control/index.tsx";
-import i18n from "../../i18n.json";
-import { formatCompactNumber, funders, getCssColor, getEsQuery, getYearRangeLabel, pattern } from "../../utils.ts";
+import DefaultSkeleton from "../../../../components/charts-skeletons/default.tsx"
+import { useChartColor } from "../../../../hooks/useChartColor.tsx"
+import { getI18nLabel } from "../../../../utils.tsx"
+import ChartWrapperFundings from "../../components/chart-wrapper-fundings/index.tsx"
+import SegmentedControl from "../../components/segmented-control/index.tsx"
+import i18n from "../../i18n.json"
+import { formatCompactNumber, funders, getCssColor, getEsQuery, getYearRangeLabel, pattern } from "../../utils.ts"
 
 const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
-export default function Regions({ name }: { name: string | undefined }) {
+export default function Regions({ name, participantSuperOrganizationChildren = [] }: { name: string | undefined, participantSuperOrganizationChildren: any[] }) {
   const [selectedControl, setSelectedControl] = useState("projects");
   const [searchParams] = useSearchParams()
   const structure = searchParams.get("structureId")
@@ -22,8 +22,10 @@ export default function Regions({ name }: { name: string | undefined }) {
   const yearMin = searchParams.get("yearMin")
   const color = useChartColor()
 
+  const structures = [structure].concat(participantSuperOrganizationChildren)
+
   const body = {
-    ...getEsQuery({ structures: [structure], yearMax, yearMin }),
+    ...getEsQuery({ structures, yearMax, yearMin }),
     aggregations: {
       by_classifications_project: {
         terms: {
@@ -130,7 +132,7 @@ export default function Regions({ name }: { name: string | undefined }) {
   };
 
   const { data, isLoading } = useQuery({
-    queryKey: ["fundings-regions", structure, yearMax, yearMin],
+    queryKey: ["fundings-regions", structures, yearMax, yearMin],
     queryFn: () =>
       fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_ES_INDEX_PARTICIPATIONS}`, {
         body: JSON.stringify(body),

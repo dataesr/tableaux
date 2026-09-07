@@ -14,15 +14,17 @@ import { formatCompactNumber, getCssColor, getEsQuery, pattern, years } from "..
 
 const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
-export default function InstrumentsOverTimeForEurope({ name }: { name: string | undefined }) {
+export default function InstrumentsOverTimeForEurope({ name, participantSuperOrganizationChildren = [] }: { name: string | undefined, participantSuperOrganizationChildren: any[] }) {
   const [selectedControl, setSelectedControl] = useState("projects")
   const [searchParams] = useSearchParams()
   const region = searchParams.get("region")
   const structure = searchParams.get("structureId")
   const color = useChartColor()
 
+  const structures = [structure].concat(participantSuperOrganizationChildren)
+
   const body = {
-    ...getEsQuery({ regions: [region], structures: [structure] }),
+    ...getEsQuery({ regions: [region], structures }),
     aggregations: {
       by_instrument: {
         terms: {
@@ -113,7 +115,7 @@ export default function InstrumentsOverTimeForEurope({ name }: { name: string | 
   body.query.bool.filter.push({ terms: { "project_type.keyword": ["Horizon 2020", "Horizon Europe"] } });
 
   const { data, isLoading } = useQuery({
-    queryKey: ["funding-instruments-over-time-for-europe", region, structure],
+    queryKey: ["funding-instruments-over-time-for-europe", region, structures],
     queryFn: () =>
       fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_ES_INDEX_PARTICIPATIONS}`, {
         body: JSON.stringify(body),

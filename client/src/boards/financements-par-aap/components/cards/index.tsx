@@ -1,23 +1,25 @@
-import { Col, Row, Text, Title } from "@dataesr/dsfr-plus";
-import { useQuery } from "@tanstack/react-query";
-import { useSearchParams } from "react-router-dom";
+import { Col, Row, Text, Title } from "@dataesr/dsfr-plus"
+import { useQuery } from "@tanstack/react-query"
+import { useSearchParams } from "react-router-dom"
 
-import DefaultSkeleton from "../../../../components/charts-skeletons/default.tsx";
-import { formatCompactNumber, funders, getCssColor, getEsQuery, getYearRangeLabel, years } from "../../utils.ts";
-import ChartCard from "../chart-card";
+import DefaultSkeleton from "../../../../components/charts-skeletons/default.tsx"
+import { formatCompactNumber, funders, getCssColor, getEsQuery, getYearRangeLabel, years } from "../../utils.ts"
+import ChartCard from "../chart-card"
 
-const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
+const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env
 
 
-export default function Cards() {
+export default function Cards({ participantSuperOrganizationChildren = [] }: { participantSuperOrganizationChildren: any[] }) {
   const [searchParams] = useSearchParams()
   const region = searchParams.get("region")
   const structure = searchParams.get("structureId")
   const yearMax = searchParams.get("yearMax")
   const yearMin = searchParams.get("yearMin")
 
+  const structures = [structure].concat(participantSuperOrganizationChildren)
+
   const body = {
-    ...getEsQuery({ regions: [region], structures: [structure] }),
+    ...getEsQuery({ regions: [region], structures }),
     aggregations: {
       by_project_type: {
         terms: {
@@ -70,7 +72,7 @@ export default function Cards() {
   };
 
   const { data, isLoading } = useQuery({
-    queryKey: ["funding-cards", structure, region],
+    queryKey: ["funding-cards", structures, region],
     queryFn: () =>
       fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_ES_INDEX_PARTICIPATIONS}`, {
         body: JSON.stringify(body),

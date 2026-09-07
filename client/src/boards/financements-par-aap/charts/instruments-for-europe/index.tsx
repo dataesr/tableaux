@@ -14,7 +14,7 @@ import { formatCompactNumber, getCssColor, getEsQuery, getYearRangeLabel, patter
 
 const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
-export default function InstrumentsForEurope({ name }: { name: string | undefined }) {
+export default function InstrumentsForEurope({ name, participantSuperOrganizationChildren = [] }: { name: string | undefined, participantSuperOrganizationChildren: any[] }) {
   const [selectedControl, setSelectedControl] = useState("projects")
   const [searchParams] = useSearchParams()
   const region = searchParams.get("region")
@@ -23,8 +23,10 @@ export default function InstrumentsForEurope({ name }: { name: string | undefine
   const yearMin = searchParams.get("yearMin")
   const color = useChartColor()
 
+  const structures = [structure].concat(participantSuperOrganizationChildren)
+
   const body = {
-    ...getEsQuery({ regions: [region], structures: [structure], yearMax, yearMin }),
+    ...getEsQuery({ regions: [region], structures, yearMax, yearMin }),
     aggregations: {
       by_instrument_project: {
         terms: {
@@ -147,7 +149,7 @@ export default function InstrumentsForEurope({ name }: { name: string | undefine
   body.query.bool.filter.push({ terms: { "project_type.keyword": ["Horizon 2020", "Horizon Europe"] } });
 
   const { data, isLoading } = useQuery({
-    queryKey: ["fundings-instruments-for-europe", region, structure, yearMax, yearMin],
+    queryKey: ["fundings-instruments-for-europe", region, structures, yearMax, yearMin],
     queryFn: () =>
       fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_ES_INDEX_PARTICIPATIONS}`, {
         body: JSON.stringify(body),

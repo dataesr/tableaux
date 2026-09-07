@@ -14,7 +14,7 @@ import { formatCompactNumber, funders, getCssColor, getEsQuery, getYearRangeLabe
 
 const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
-export default function FrenchPartners({ name }: { name: string | undefined }) {
+export default function FrenchPartners({ name, participantSuperOrganizationChildren = [] }: { name: string | undefined, participantSuperOrganizationChildren: any[] }) {
   const [selectedControl, setSelectedControl] = useState("projects")
   const [searchParams] = useSearchParams()
   const region = searchParams.get("region")
@@ -23,8 +23,10 @@ export default function FrenchPartners({ name }: { name: string | undefined }) {
   const yearMin = searchParams.get("yearMin")
   const color = useChartColor()
 
+  const structures = [structure].concat(participantSuperOrganizationChildren)
+
   const body = {
-    ...getEsQuery({ regions: [region], structures: [structure], yearMax, yearMin }),
+    ...getEsQuery({ regions: [region], structures, yearMax, yearMin }),
     aggregations: {
       by_french_partners_project: {
         terms: {
@@ -178,7 +180,7 @@ export default function FrenchPartners({ name }: { name: string | undefined }) {
   }
 
   const { data, isLoading } = useQuery({
-    queryKey: ["fundings-french-partners", region, structure, yearMax, yearMin],
+    queryKey: ["fundings-french-partners", region, structures, yearMax, yearMin],
     queryFn: () =>
       fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_ES_INDEX_PARTICIPATIONS}`, {
         body: JSON.stringify(body),

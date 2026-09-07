@@ -14,15 +14,17 @@ import { formatCompactNumber, getCssColor, getEsQuery, pattern, years } from "..
 
 const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
-export default function InstrumentsOverTimeForAnr({ name }: { name: string | undefined }) {
+export default function InstrumentsOverTimeForAnr({ name, participantSuperOrganizationChildren = [] }: { name: string | undefined, participantSuperOrganizationChildren: any[] }) {
   const [selectedControl, setSelectedControl] = useState("projects")
   const [searchParams] = useSearchParams()
   const region = searchParams.get("region")
   const structure = searchParams.get("structureId")
   const color = useChartColor()
 
+  const structures = [structure].concat(participantSuperOrganizationChildren)
+
   const body = {
-    ...getEsQuery({ regions: [region], structures: [structure] }),
+    ...getEsQuery({ regions: [region], structures }),
     aggregations: {
       by_instrument: {
         terms: {
@@ -113,7 +115,7 @@ export default function InstrumentsOverTimeForAnr({ name }: { name: string | und
   body.query.bool.filter.push({ terms: { "project_type.keyword": ["ANR", "PIA ANR", "PIA hors ANR"] } });
 
   const { data, isLoading } = useQuery({
-    queryKey: ["funding-instruments-over-time-for-anr", region, structure],
+    queryKey: ["funding-instruments-over-time-for-anr", region, structures],
     queryFn: () =>
       fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_ES_INDEX_PARTICIPATIONS}`, {
         body: JSON.stringify(body),

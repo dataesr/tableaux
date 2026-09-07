@@ -14,15 +14,17 @@ import { formatCompactNumber, funders, getCssColor, getEsQuery, pattern, years }
 
 const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
-export default function ProjectsOverTime({ name }: { name: string | undefined }) {
+export default function ProjectsOverTime({ name, participantSuperOrganizationChildren = [] }: { name: string | undefined, participantSuperOrganizationChildren: any[] }) {
   const [selectedControl, setSelectedControl] = useState("projects")
   const [searchParams] = useSearchParams()
   const region = searchParams.get("region")
   const structure = searchParams.get("structureId")
   const color = useChartColor()
 
+  const structures = [structure].concat(participantSuperOrganizationChildren)
+
   const body = {
-    ...getEsQuery({ regions: [region], structures: [structure] }),
+    ...getEsQuery({ regions: [region], structures }),
     aggregations: {
       by_project_type: {
         terms: {
@@ -121,7 +123,7 @@ export default function ProjectsOverTime({ name }: { name: string | undefined })
   };
 
   const { data, isLoading } = useQuery({
-    queryKey: ["funding-projects-over-time", region, structure],
+    queryKey: ["funding-projects-over-time", region, structures],
     queryFn: () =>
       fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_ES_INDEX_PARTICIPATIONS}`, {
         body: JSON.stringify(body),

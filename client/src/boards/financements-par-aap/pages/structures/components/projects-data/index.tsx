@@ -41,19 +41,21 @@ type Sort = {
   order: 'asc' | 'desc'
 }
 
-export default function ProjectsData() {
+export default function ProjectsData({ participantSuperOrganizationChildren = [] }: { participantSuperOrganizationChildren: any[] }) {
   const [searchParams] = useSearchParams()
   const region = searchParams.get("region")
   const structure = searchParams.get("structureId")
   const yearMax = searchParams.get("yearMax")
   const yearMin = searchParams.get("yearMin")
 
+  const structures = [structure].concat(participantSuperOrganizationChildren)
+
   const [filters, setFilters] = useState<Filter[]>([])
   const [pagination, setPagination] = useState({ from: 0, size: 10 })
   const [sorting, setSorting] = useState<Sort>({ id: 'project_budgetFinanced', order: 'desc' })
 
   const body = {
-    ...getEsQuery({ regions: [region], structures: [structure], yearMax, yearMin }),
+    ...getEsQuery({ regions: [region], structures, yearMax, yearMin }),
     from: pagination?.from ?? 0,
     size: pagination?.size ?? 10,
   }
@@ -102,7 +104,7 @@ export default function ProjectsData() {
   }
 
   const { data, isLoading } = useQuery({
-    queryKey: ["fundings-data", filters, pagination, region, sorting, structure, yearMax, yearMin],
+    queryKey: ["fundings-data", filters, pagination, region, sorting, structures, yearMax, yearMin],
     queryFn: () =>
       fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_ES_INDEX_PARTICIPATIONS}`, {
         body: JSON.stringify(body),
@@ -115,7 +117,7 @@ export default function ProjectsData() {
   })
 
   const { data: dataAll, isLoading: isLoadingAll } = useQuery({
-    queryKey: ["fundings-data-all", region, structure, yearMax, yearMin],
+    queryKey: ["fundings-data-all", region, structures, yearMax, yearMin],
     queryFn: () =>
       fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_ES_INDEX_PARTICIPATIONS}`, {
         body: JSON.stringify({ ...body, from: 0, size: 10000, aggregations }),

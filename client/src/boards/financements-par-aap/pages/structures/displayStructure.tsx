@@ -1,38 +1,40 @@
-import { Alert, Button, Col, Container, Link, Row, Text, Title } from "@dataesr/dsfr-plus";
-import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { Alert, Button, Col, Container, Link, Row, Text, Title } from "@dataesr/dsfr-plus"
+import { useQuery } from "@tanstack/react-query"
+import { useState } from "react"
+import { useNavigate, useSearchParams } from "react-router-dom"
 
-import Select from "../../../../components/select";
-import Classifications from "../../charts/classifications";
-import Classifications2 from "../../charts/classifications2";
-import FrenchPartners from "../../charts/french-partners";
-import InstrumentsForAnr from "../../charts/instruments-for-anr";
-import InstrumentsForEurope from "../../charts/instruments-for-europe";
-import InstrumentsOverTimeForAnr from "../../charts/instruments-over-time-for-anr";
-import InstrumentsOverTimeForEurope from "../../charts/instruments-over-time-for-europe";
-import InternationalPartners from "../../charts/international-partners";
-import Laboratories from "../../charts/laboratories";
-import Overview from "../../charts/overview";
-import ProjectsByFunder from "../../charts/projects-by-funder";
-import ProjectsOverTimeByStructure from "../../charts/projects-over-time";
-import Regions from "../../charts/regions";
-import Breadcrumb from "../../components/breadcrumb";
-import Cards from "../../components/cards";
-import { getEsQuery, years } from "../../utils";
-import ProjectsData from "./components/projects-data";
+import Select from "../../../../components/select"
+import Classifications from "../../charts/classifications"
+import Classifications2 from "../../charts/classifications2"
+import FrenchPartners from "../../charts/french-partners"
+import InstrumentsForAnr from "../../charts/instruments-for-anr"
+import InstrumentsForEurope from "../../charts/instruments-for-europe"
+import InstrumentsOverTimeForAnr from "../../charts/instruments-over-time-for-anr"
+import InstrumentsOverTimeForEurope from "../../charts/instruments-over-time-for-europe"
+import InternationalPartners from "../../charts/international-partners"
+import Laboratories from "../../charts/laboratories"
+import Overview from "../../charts/overview"
+import ProjectsByFunder from "../../charts/projects-by-funder"
+import ProjectsOverTimeByStructure from "../../charts/projects-over-time"
+import Regions from "../../charts/regions"
+import Breadcrumb from "../../components/breadcrumb"
+import Cards from "../../components/cards"
+import { getEsQuery, years } from "../../utils"
+import ProjectsData from "./components/projects-data"
 
 import "./styles.scss";
 
 const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
 export default function DisplayStructure() {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const navigate = useNavigate();
-  const section = searchParams.get("section");
-  const structure = searchParams.get("structureId");
-  const yearMax = searchParams.get("yearMax") ?? String(years[years.length - 2]);
-  const yearMin = searchParams.get("yearMin") ?? String(years[years.length - 2]);
+  const [searchParams, setSearchParams] = useSearchParams()
+  const navigate = useNavigate()
+  const section = searchParams.get("section")
+  const structure = searchParams.get("structureId")
+  const withComponents = !!searchParams.get("withComponents")
+  const yearMax = searchParams.get("yearMax") ?? String(years[years.length - 2])
+  const yearMin = searchParams.get("yearMin") ?? String(years[years.length - 2])
+
   const [isOpen, setIsOpen] = useState(false);
   const sections = [
     { id: "apercu", label: "Aperçu" },
@@ -78,9 +80,10 @@ export default function DisplayStructure() {
         method: "POST",
       }).then((response) => response.json()),
   });
-  const structureInfo = Object.fromEntries(new URLSearchParams(data?.hits?.hits?.[0]?._source?.participant_encoded_key ?? ""));
-  const name = structureInfo?.label ?? "";
-  const scanrUrl = `https://scanr.enseignementsup-recherche.gouv.fr/search/projects?filters=%257B%2522year%2522%253A%257B%2522values%2522%253A%255B%257B%2522value%2522%253A${yearMin}%257D%252C%257B%2522value%2522%253A${yearMax}%257D%255D%252C%2522type%2522%253A%2522range%2522%257D%252C%2522participants_id_search%2522%253A%257B%2522values%2522%253A%255B%257B%2522value%2522%253A%2522${structure}%2522%252C%2522label%2522%253A%2522${name}%2522%257D%255D%252C%2522type%2522%253A%2522terms%2522%252C%2522operator%2522%253A%2522or%2522%257D%252C%2522type%2522%253A%257B%2522values%2522%253A%255B%257B%2522value%2522%253A%2522Horizon%25202020%2522%252C%2522label%2522%253Anull%257D%252C%257B%2522value%2522%253A%2522ANR%2522%252C%2522label%2522%253Anull%257D%252C%257B%2522value%2522%253A%2522PIA%2520hors%2520ANR%2522%252C%2522label%2522%253Anull%257D%252C%257B%2522value%2522%253A%2522Horizon%2520Europe%2522%252C%2522label%2522%253Anull%257D%252C%257B%2522value%2522%253A%2522PIA%2520ANR%2522%252C%2522label%2522%253Anull%257D%255D%252C%2522type%2522%253A%2522terms%2522%252C%2522operator%2522%253A%2522or%2522%257D%257D`;
+  const participantSuperOrganizationChildren = (data?.hits?.hits?.[0]?._source?.participant_super_organization_children ?? []).map((org) => org?.id).filter((id) => !!id)
+  const structureInfo = Object.fromEntries(new URLSearchParams(data?.hits?.hits?.[0]?._source?.participant_encoded_key ?? ""))
+  const name = structureInfo?.label ?? ""
+  const scanrUrl = `https://scanr.enseignementsup-recherche.gouv.fr/search/projects?filters=%257B%2522year%2522%253A%257B%2522values%2522%253A%255B%257B%2522value%2522%253A${yearMin}%257D%252C%257B%2522value%2522%253A${yearMax}%257D%255D%252C%2522type%2522%253A%2522range%2522%257D%252C%2522participants_id_search%2522%253A%257B%2522values%2522%253A%255B%257B%2522value%2522%253A%2522${structure}%2522%252C%2522label%2522%253A%2522${name}%2522%257D%255D%252C%2522type%2522%253A%2522terms%2522%252C%2522operator%2522%253A%2522or%2522%257D%252C%2522type%2522%253A%257B%2522values%2522%253A%255B%257B%2522value%2522%253A%2522Horizon%25202020%2522%252C%2522label%2522%253Anull%257D%252C%257B%2522value%2522%253A%2522ANR%2522%252C%2522label%2522%253Anull%257D%252C%257B%2522value%2522%253A%2522PIA%2520hors%2520ANR%2522%252C%2522label%2522%253Anull%257D%252C%257B%2522value%2522%253A%2522Horizon%2520Europe%2522%252C%2522label%2522%253Anull%257D%252C%257B%2522value%2522%253A%2522PIA%2520ANR%2522%252C%2522label%2522%253Anull%257D%255D%252C%2522type%2522%253A%2522terms%2522%252C%2522operator%2522%253A%2522or%2522%257D%257D`
 
   return (
     <main>
@@ -214,18 +217,18 @@ export default function DisplayStructure() {
           (
             <>
               {(section === "apercu") && (
-                <Cards />
+                <Cards participantSuperOrganizationChildren={withComponents ? participantSuperOrganizationChildren : []} />
               )}
               {(section === "financements") && (
                 <>
                   <Row gutters style={{ clear: "both" }}>
                     <Col>
-                      <ProjectsByFunder name={name} />
+                      <ProjectsByFunder name={name} participantSuperOrganizationChildren={withComponents ? participantSuperOrganizationChildren : []} />
                     </Col>
                   </Row>
                   <Row gutters>
                     <Col>
-                      <Overview name={name} />
+                      <Overview name={name} participantSuperOrganizationChildren={withComponents ? participantSuperOrganizationChildren : []} />
                     </Col>
                   </Row>
                 </>
@@ -233,7 +236,7 @@ export default function DisplayStructure() {
               {(section === "evolution") && (
                 <Row gutters style={{ clear: "both" }}>
                   <Col>
-                    <ProjectsOverTimeByStructure name={name} />
+                    <ProjectsOverTimeByStructure name={name} participantSuperOrganizationChildren={withComponents ? participantSuperOrganizationChildren : []} />
                   </Col>
                 </Row>
               )}
@@ -241,12 +244,12 @@ export default function DisplayStructure() {
                 <>
                   <Row gutters style={{ clear: "both" }}>
                     <Col>
-                      <FrenchPartners name={name} />
+                      <FrenchPartners name={name} participantSuperOrganizationChildren={withComponents ? participantSuperOrganizationChildren : []} />
                     </Col>
                   </Row>
                   <Row gutters>
                     <Col>
-                      <InternationalPartners name={name} />
+                      <InternationalPartners name={name} participantSuperOrganizationChildren={withComponents ? participantSuperOrganizationChildren : []} />
                     </Col>
                   </Row>
                 </>
@@ -254,7 +257,7 @@ export default function DisplayStructure() {
               {(section === "laboratoires") && (
                 <Row gutters style={{ clear: "both" }}>
                   <Col>
-                    <Laboratories name={name} />
+                    <Laboratories name={name} participantSuperOrganizationChildren={withComponents ? participantSuperOrganizationChildren : []} />
                   </Col>
                 </Row>
               )}
@@ -262,12 +265,12 @@ export default function DisplayStructure() {
                 <>
                   <Row gutters style={{ clear: "both" }}>
                     <Col>
-                      <Classifications name={name} />
+                      <Classifications name={name} participantSuperOrganizationChildren={withComponents ? participantSuperOrganizationChildren : []} />
                     </Col>
                   </Row>
                   <Row gutters>
                     <Col>
-                      <Classifications2 name={name} />
+                      <Classifications2 name={name} participantSuperOrganizationChildren={withComponents ? participantSuperOrganizationChildren : []} />
                     </Col>
                   </Row>
                 </>
@@ -276,22 +279,22 @@ export default function DisplayStructure() {
                 <>
                   <Row gutters style={{ clear: "both" }}>
                     <Col>
-                      <InstrumentsForAnr name={name} />
+                      <InstrumentsForAnr name={name} participantSuperOrganizationChildren={withComponents ? participantSuperOrganizationChildren : []} />
                     </Col>
                   </Row>
                   <Row gutters>
                     <Col>
-                      <InstrumentsForEurope name={name} />
+                      <InstrumentsForEurope name={name} participantSuperOrganizationChildren={withComponents ? participantSuperOrganizationChildren : []} />
                     </Col>
                   </Row>
                   <Row gutters>
                     <Col>
-                      <InstrumentsOverTimeForAnr name={name} />
+                      <InstrumentsOverTimeForAnr name={name} participantSuperOrganizationChildren={withComponents ? participantSuperOrganizationChildren : []} />
                     </Col>
                   </Row>
                   <Row gutters>
                     <Col>
-                      <InstrumentsOverTimeForEurope name={name} />
+                      <InstrumentsOverTimeForEurope name={name} participantSuperOrganizationChildren={withComponents ? participantSuperOrganizationChildren : []} />
                     </Col>
                   </Row>
                 </>
@@ -300,13 +303,13 @@ export default function DisplayStructure() {
                 <>
                   <Row gutters style={{ clear: "both" }}>
                     <Col>
-                      <Regions name={name} />
+                      <Regions name={name} participantSuperOrganizationChildren={withComponents ? participantSuperOrganizationChildren : []} />
                     </Col>
                   </Row>
                 </>
               )}
               {(section === "donnees") && (
-                <ProjectsData />
+                <ProjectsData participantSuperOrganizationChildren={withComponents ? participantSuperOrganizationChildren : []} />
               )}
             </>
           )}

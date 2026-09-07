@@ -1,16 +1,16 @@
-import { useQuery } from "@tanstack/react-query";
-import { useSearchParams } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query"
+import { useSearchParams } from "react-router-dom"
 
-import DefaultSkeleton from "../../../../components/charts-skeletons/default.tsx";
-import { useChartColor } from "../../../../hooks/useChartColor.tsx";
-import { getI18nLabel } from "../../../../utils.tsx";
-import ChartWrapperFundings from "../../components/chart-wrapper-fundings/index.tsx";
-import i18n from "../../i18n.json";
-import { formatCompactNumber, funders, getCssColor, getEsQuery, getYearRangeLabel, pattern } from "../../utils.ts";
+import DefaultSkeleton from "../../../../components/charts-skeletons/default.tsx"
+import { useChartColor } from "../../../../hooks/useChartColor.tsx"
+import { getI18nLabel } from "../../../../utils.tsx"
+import ChartWrapperFundings from "../../components/chart-wrapper-fundings/index.tsx"
+import i18n from "../../i18n.json"
+import { formatCompactNumber, funders, getCssColor, getEsQuery, getYearRangeLabel, pattern } from "../../utils.ts"
 
 const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
-export default function Overview({ name }: { name: string | undefined }) {
+export default function Overview({ name, participantSuperOrganizationChildren = [] }: { name: string | undefined, participantSuperOrganizationChildren: any[] }) {
   const [searchParams] = useSearchParams()
   const region = searchParams.get("region")
   const structure = searchParams.get("structureId")
@@ -18,8 +18,10 @@ export default function Overview({ name }: { name: string | undefined }) {
   const yearMin = searchParams.get("yearMin")
   const color = useChartColor()
 
+  const structures = [structure].concat(participantSuperOrganizationChildren)
+
   const body = {
-    ...getEsQuery({ regions: [region], structures: [structure], yearMax, yearMin }),
+    ...getEsQuery({ regions: [region], structures, yearMax, yearMin }),
     aggregations: {
       by_project_type: {
         terms: {
@@ -71,7 +73,7 @@ export default function Overview({ name }: { name: string | undefined }) {
   };
 
   const { data, isLoading } = useQuery({
-    queryKey: ["fundings-overview", region, structure, yearMax, yearMin],
+    queryKey: ["fundings-overview", region, structures, yearMax, yearMin],
     queryFn: () =>
       fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_ES_INDEX_PARTICIPATIONS}`, {
         body: JSON.stringify(body),
