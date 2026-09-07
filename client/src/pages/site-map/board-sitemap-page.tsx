@@ -1,6 +1,6 @@
-import { Breadcrumb, Col, Container, Link, Row } from "@dataesr/dsfr-plus";
+import { Breadcrumb, Col, Container, Link, Row, Title } from "@dataesr/dsfr-plus";
 
-import { useDashboardVisibility } from "../hooks/useDashboardVisibility";
+import { useDashboardVisibility } from "../../hooks/useDashboardVisibility";
 
 import "./sitemap-styles.scss";
 
@@ -31,22 +31,21 @@ export default function BoardSitemapPage({
     <div className="sitemap-page">
       <section className="sitemap-hero">
         <Container>
-          <Row>
-            <Col xs="12" lg="8">
-              <Breadcrumb className="sitemap-hero__breadcrumb fr-mb-2w">
-                {isHomePageVisible && <Link href="/">Accueil</Link>}
-                <Link href={boardHomeHref}>{boardName}</Link>
-                <Link>Plan du site</Link>
-              </Breadcrumb>
-              <h1 className="sitemap-hero__title">Plan du site</h1>
-              <p className="sitemap-hero__description">{description}</p>
-            </Col>
-          </Row>
+          <Breadcrumb className="sitemap-hero__breadcrumb">
+            {isHomePageVisible && <Link href="/">Accueil</Link>}
+            <Link href={boardHomeHref}>{boardName}</Link>
+            <Link>Plan du site</Link>
+          </Breadcrumb>
+          <p className="sitemap-hero__label">{boardName}</p>
+          <Title as="h1" look="h1" className="sitemap-hero__title">
+            Plan du site
+          </Title>
+          <p className="sitemap-hero__description">{description}</p>
         </Container>
       </section>
 
-      <section className="sitemap-section">
-        <Container>
+      <Container as="main" id="main" className="sitemap-content fr-mt-5w">
+        <section className="sitemap-section">
           <Row gutters className="fr-mt-2w">
             <Col xs="12" md="6" lg="4">
               <nav className="fr-sitemap-group" aria-labelledby={headingId}>
@@ -63,8 +62,8 @@ export default function BoardSitemapPage({
               </nav>
             </Col>
           </Row>
-        </Container>
-      </section>
+        </section>
+      </Container>
     </div>
   );
 }

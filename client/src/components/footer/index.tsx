@@ -1,7 +1,7 @@
 import { Logo } from "@dataesr/dsfr-plus";
 import { useLocation, useSearchParams } from "react-router-dom";
 
-import { getI18nLabel } from "../../utils";
+import { getI18nLabel, isInProduction } from "../../utils";
 import SwitchLanguage from "../switch-language";
 import SwitchTheme from "../switch-theme";
 import i18n from "./i18n.json";
@@ -14,6 +14,9 @@ const LANGUAGE_LABELS: Record<string, string> = {
   fr: "Français",
   en: "English",
 };
+
+const isProd = isInProduction();
+
 
 export default function Footer({ href = "/", sitemapHref, title = "Accueil - DataSupR" }: { href?: string; sitemapHref?: string; title?: string }) {
   const location = useLocation();
@@ -77,16 +80,17 @@ export default function Footer({ href = "/", sitemapHref, title = "Accueil - Dat
                 {getI18nLabel(i18n, "sitemap")}
               </a>
             </li>
-            <li className="fr-footer__bottom-item">
-              <a className="fr-footer__bottom-link" href="#">
+            {!isProd && <li className="fr-footer__bottom-item">
+              <a className="fr-footer__bottom-link" href="/mentions-legales">
                 {getI18nLabel(i18n, "legalNotice")}
               </a>
-            </li>
-            <li className="fr-footer__bottom-item">
-              <a className="fr-footer__bottom-link" href="#">
+            </li>}
+            {!isProd && <li className="fr-footer__bottom-item">
+              <a className="fr-footer__bottom-link" href="/donnees-personnelles">
                 {getI18nLabel(i18n, "personalData")}
               </a>
-            </li>
+            </li>}
+
             <li className="fr-footer__bottom-item">
               <a className="fr-footer__bottom-link" href="/cookies">
                 {getI18nLabel(i18n, "cookies")}
@@ -96,7 +100,7 @@ export default function Footer({ href = "/", sitemapHref, title = "Accueil - Dat
               <a className="fr-footer__bottom-link" href={accessibilityUrl}>
                 {getI18nLabel(i18n, "accessibility")}
               </a>
-            </li>{" "}
+            </li>
             <li className="fr-footer__bottom-item">
               <a className="fr-footer__bottom-link" href={contactUrl}>
                 {getI18nLabel(i18n, "contact")}

@@ -1,0 +1,90 @@
+{
+  "personal-data": {
+    "fr": "Données personnelles",
+    "en": "Personal data"
+  },
+  "pageTitle": {
+    "fr": "Données personnelles",
+    "en": "Personal data"
+  },
+  "heroLabel": {
+    "fr": "PROTECTION DES DONNÉES",
+    "en": "DATA PROTECTION"
+  },
+  "heroTitle": {
+    "fr": "Données personnelles",
+    "en": "Personal data"
+  },
+  "heroDescription": {
+    "fr": "Informations sur la manière dont vos données à caractère personnel sont collectées et traitées sur les tableaux de bord #dataESR.",
+    "en": "Information on how your personal data is collected and processed on the #dataESR dashboards."
+  },
+  "controllerTitle": {
+    "fr": "Responsable du traitement",
+    "en": "Data controller"
+  },
+  "controllerOrg": {
+    "fr": "Ministère de l’Enseignement supérieur de la Recherche et de l'espace, Direction générale de l’enseignement supérieur et de l’insertion professionnelle (DGESIP) / Direction générale de la recherche et de l’innovation (DGRI).",
+    "en": "Ministry of Higher Education Research and space, Directorate-General for Higher Education and Professional Integration (DGESIP) / Directorate-General for Research and Innovation (DGRI)."
+  },
+  "controllerAddress": {
+    "fr": "1 rue Descartes — 75231 Paris Cedex 05",
+    "en": "1 rue Descartes — 75231 Paris Cedex 05"
+  },
+  "purposeTitle": {
+    "fr": "Finalités du traitement",
+    "en": "Purposes of the processing"
+  },
+  "purposeBody": {
+    "fr": "Les données sont traitées pour permettre la consultation des tableaux de bord, mesurer l’audience du site afin d’en améliorer le contenu, et répondre aux demandes transmises via le formulaire de contact.",
+    "en": "Data is processed to allow consultation of the dashboards, to measure site audience in order to improve its content, and to respond to requests submitted through the contact form."
+  },
+  "collectedTitle": {
+    "fr": "Données collectées",
+    "en": "Data collected"
+  },
+  "collectedBody": {
+    "fr": "Sont collectées des données de navigation à des fins de mesure d’audience et, le cas échéant, les informations que vous renseignez dans le formulaire de contact (nom, adresse électronique, établissement et message). Aucune donnée n’est cédée à des tiers à des fins commerciales.",
+    "en": "Browsing data is collected for audience measurement purposes and, where applicable, the information you provide in the contact form (name, email address, institution and message). No data is transferred to third parties for commercial purposes."
+  },
+  "legalBasisTitle": {
+    "fr": "Base légale et durée de conservation",
+    "en": "Legal basis and retention period"
+  },
+  "legalBasisBody": {
+    "fr": "Les traitements reposent sur l’exécution d’une mission d’intérêt public et, pour la mesure d’audience et le formulaire de contact, sur votre consentement. Les données sont conservées pour une durée n’excédant pas celle nécessaire aux finalités pour lesquelles elles sont collectées.",
+    "en": "Processing is based on the performance of a public interest task and, for audience measurement and the contact form, on your consent. Data is kept for no longer than is necessary for the purposes for which it is collected."
+  },
+  "rightsTitle": {
+    "fr": "Vos droits",
+    "en": "Your rights"
+  },
+  "rightsBody": {
+    "fr": "Conformément au règlement général sur la protection des données (RGPD) et à la loi « Informatique et Libertés », vous disposez d’un droit d’accès, de rectification, d’effacement, de limitation et d’opposition sur vos données. Vous pouvez exercer ces droits en nous contactant via notre ",
+    "en": "In accordance with the General Data Protection Regulation (GDPR) and the French Data Protection Act, you have the right to access, rectify, erase, restrict and object to the processing of your data. You can exercise these rights by contacting us through our "
+  },
+  "rightsLink": {
+    "fr": "formulaire de contact",
+    "en": "contact form"
+  },
+  "rightsBodyAfter": {
+    "fr": ".",
+    "en": "."
+  },
+  "cookiesTitle": {
+    "fr": "Cookies",
+    "en": "Cookies"
+  },
+  "cookiesBody": {
+    "fr": "Ce site utilise des traceurs pour mesurer son audience. Pour en savoir plus et gérer vos préférences, consultez la page ",
+    "en": "This site uses trackers to measure its audience. To find out more and manage your preferences, see the "
+  },
+  "cookiesLink": {
+    "fr": "Gestion des cookies",
+    "en": "Cookie management"
+  },
+  "cookiesBodyAfter": {
+    "fr": ".",
+    "en": " page."
+  }
+}

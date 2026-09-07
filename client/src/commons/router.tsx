@@ -7,7 +7,7 @@ const AccessibilityLayout = lazy(() => import("../components/accessibility/layou
 const AccessibilityPage = lazy(() => import("../components/accessibility/page.tsx"));
 const AdminRoutes = lazy(() => import('../boards/admin/routes.tsx'));
 const AtlasRoutes = lazy(() => import('../boards/atlas/routes.tsx'));
-const ContactLayout = lazy(() => import('../pages/contact/layouts/global-layout.tsx'));
+const ContactLayout = lazy(() => import('../pages/contact/global-layout.tsx'));
 const ContactPage = lazy(() => import('../pages/contact/index.tsx'));
 const CookiePolicyPage = lazy(() => import('../components/cookies/cookie-policy-page/index.tsx'));
 const DatasuprDocRoutes = lazy(() => import('../boards/datasupr-doc/routes.tsx'));
@@ -16,11 +16,16 @@ const FacultyMembersRoutes = lazy(() => import('../boards/faculty-members/routes
 const FundingsRoutes = lazy(() => import('../boards/financements-par-aap/routes.tsx'));
 const GraduatesRoutes = lazy(() => import('../boards/graduates/routes.tsx'));
 const HomePage = lazy(() => import('../boards/home-page.tsx'));
+const LegalNoticeLayout = lazy(() => import("../pages/legal-notice/global-layout.tsx"))
+const LegalNoticePage = lazy(() => import("../pages/legal-notice/index.tsx"))
+const PersonalDataLayout = lazy(() => import("../pages/personal-data/global-layout.tsx"))
+const PersonalDataPage = lazy(() => import("../pages/personal-data/index.tsx"))
 const Integration = lazy(() => import('../boards/integration/index.tsx'));
 const NotFoundPage = lazy(() => import('../components/not-found-page.tsx'));
 const OpenAlexRoutes = lazy(() => import('../boards/open-alex/routes.tsx'));
 const OutcomesRoutes = lazy(() => import('../boards/outcomes/routes.tsx'));
-const SitemapPage = lazy(() => import('../boards/sitemap-page.tsx'));
+const SitemapLayout = lazy(() => import('../pages/site-map/global-layout.tsx'));
+const SitemapPage = lazy(() => import('../pages/site-map/sitemap-page.tsx'));
 const StructuresFinanceRoutes = lazy(() => import('../boards/structures-finance/routes.tsx'));
 const TedsRoutes = lazy(() => import('../boards/teds/routes.tsx'));
 const TemplateRoutes = lazy(() => import('../boards/template/routes.tsx'));
@@ -43,7 +48,17 @@ export default function Router() {
         <Route index element={<Suspense><AccessibilityPage /></Suspense>} />
       </Route>
       <Route path="/cookies" element={<Suspense><CookiePolicyPage /></Suspense>} />
-      <Route path="/plan-du-site" element={<RouteWithTitle titleKey="Plan du site - dataEsr" element={<Suspense><SitemapPage /></Suspense>} />} />
+      <Route
+        path="/plan-du-site" element={<Suspense><SitemapLayout /></Suspense>}
+      >
+        <Route index element={<Suspense><SitemapPage /></Suspense>} />
+      </Route>
+      <Route path="/mentions-legales" element={<Suspense><LegalNoticeLayout /></Suspense>}>
+        <Route index element={<Suspense><LegalNoticePage /></Suspense>} />
+      </Route>
+      <Route path="/donnees-personnelles" element={<Suspense><PersonalDataLayout /></Suspense>}>
+        <Route index element={<Suspense><PersonalDataPage /></Suspense>} />
+      </Route>
       <Route path="/contact" element={<Suspense><ContactLayout /></Suspense>}>
         <Route index element={<Suspense><ContactPage /></Suspense>} />
       </Route>

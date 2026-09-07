@@ -1,8 +1,8 @@
-.contact-page {
+.personal-data-page {
   min-height: calc(100vh - 200px);
 }
 
-.contact-hero {
+.personal-data-hero {
   background: linear-gradient(
     135deg,
     var(--background-default-grey) 0%,
@@ -45,15 +45,17 @@
       font-size: 1rem;
     }
   }
+}
 
-  &__breadcrumb {
-    margin-top: 0;
+.personal-data-content {
+  @media (max-width: 768px) {
+    padding: 2rem 0;
   }
 }
 
-.contact-content {
-  @media (max-width: 768px) {
-    padding: 2rem 0;
+.personal-data-section {
+  &:last-child {
+    margin-bottom: 0;
   }
 }
 

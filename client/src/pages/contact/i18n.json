@@ -51,6 +51,10 @@
     "fr": "Ex: Chercheur",
     "en": "Ex: Researcher"
   },
+  "heroLabel": {
+    "fr": "Contactez nous",
+    "en": "Contact us"
+  },
   "organisationLabel": {
     "fr": "Établissement (optionnel)",
     "en": "Institution (optional)"

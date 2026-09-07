@@ -1,21 +1,20 @@
-import { Breadcrumb, Col, Container, Link, Row } from "@dataesr/dsfr-plus";
+import { Breadcrumb, Col, Container, Link, Row, Title } from "@dataesr/dsfr-plus";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 
-import Footer from "../components/footer";
-import HeaderTableaux from "../layout/header.tsx";
-import { isInProduction } from "../utils.tsx";
-import { ATLAS_SITEMAP } from "./atlas/sitemap-config";
-import BoardSitemapPage, { type BoardSitemapConfig } from "./board-sitemap-page";
-import { EUROPEAN_PROJECTS_SITEMAP } from "./european-projects/sitemap-config";
-import { FACULTY_MEMBERS_SITEMAP } from "./faculty-members/sitemap-config";
-import { FINANCEMENTS_PAR_AAP_SITEMAP } from "./financements-par-aap/sitemap-config";
-import { GRADUATES_SITEMAP } from "./graduates/sitemap-config";
-import { OPEN_ALEX_SITEMAP } from "./open-alex/sitemap-config";
-import { OUTCOMES_SITEMAP } from "./outcomes/sitemap-config";
-import { STRUCTURES_FINANCE_SITEMAP } from "./structures-finance/sitemap-config";
-import { TEDS_SITEMAP } from "./teds/sitemap-config";
-import { VALORISATION_RECHERCHE_INNOVATION_SITEMAP } from "./valorisation-recherche-innovation/sitemap-config";
+import Footer from "../../components/footer/index.tsx";
+import { isInProduction } from "../../utils.tsx";
+import { ATLAS_SITEMAP } from "../../boards/atlas/sitemap-config.ts";
+import BoardSitemapPage, { type BoardSitemapConfig } from "./board-sitemap-page.tsx";
+import { EUROPEAN_PROJECTS_SITEMAP } from "../../boards/european-projects/sitemap-config.ts";
+import { FACULTY_MEMBERS_SITEMAP } from "../../boards/faculty-members/sitemap-config.ts";
+import { FINANCEMENTS_PAR_AAP_SITEMAP } from "../../boards/financements-par-aap/sitemap-config.ts";
+import { GRADUATES_SITEMAP } from "../../boards/graduates/sitemap-config.ts";
+import { OPEN_ALEX_SITEMAP } from "../../boards/open-alex/sitemap-config.ts";
+import { OUTCOMES_SITEMAP } from "../../boards/outcomes/sitemap-config.ts";
+import { STRUCTURES_FINANCE_SITEMAP } from "../../boards/structures-finance/sitemap-config.ts";
+import { TEDS_SITEMAP } from "../../boards/teds/sitemap-config.ts";
+import { VALORISATION_RECHERCHE_INNOVATION_SITEMAP } from "../../boards/valorisation-recherche-innovation/sitemap-config.ts";
 
 import "./sitemap-styles.scss";
 
@@ -136,7 +135,6 @@ export default function SitemapPage() {
   if (boardConfig) {
     return (
       <>
-        <HeaderTableaux />
         <BoardSitemapPage {...boardConfig} />
         <Footer />
       </>
@@ -145,34 +143,28 @@ export default function SitemapPage() {
 
   return (
     <>
-      <HeaderTableaux />
-      <main id="contenu" role="main" className="sitemap-page">
+      <div className="sitemap-page">
         <section className="sitemap-hero">
           <Container>
-            <Row>
-              <Col xs="12" lg="8">
-                <Breadcrumb className="sitemap-hero__breadcrumb fr-mb-2w">
-                  <Link href="/">Accueil</Link>
-                  <Link>Plan du site</Link>
-                </Breadcrumb>
-                <h1 className="sitemap-hero__title">Plan du site</h1>
-                <p className="sitemap-hero__description">
-                  Retrouvez l'ensemble des tableaux de bord et des pages de la plateforme
-                  dataESR, organisés par thématique. Cette page facilite la navigation et
-                  l'accès direct à chaque contenu.
-                </p>
-              </Col>
-            </Row>
+            <Breadcrumb className="sitemap-hero__breadcrumb">
+              <Link href="/">Accueil</Link>
+              <Link>Plan du site</Link>
+            </Breadcrumb>
+            <p className="sitemap-hero__label">Navigation</p>
+            <Title as="h1" look="h1" className="sitemap-hero__title">
+              Plan du site
+            </Title>
+            <p className="sitemap-hero__description">
+              Retrouvez l'ensemble des tableaux de bord et des pages de la plateforme
+              dataESR, organisés par thématique. Cette page facilite la navigation et
+              l'accès direct à chaque contenu.
+            </p>
           </Container>
         </section>
 
-        <section className="sitemap-section">
-          <Container>
-            <Row>
-              <Col xs="12">
-                <h2 className="sitemap-section__title">Tableaux de bord</h2>
-              </Col>
-            </Row>
+        <Container as="main" id="main" className="sitemap-content fr-mt-5w">
+          <section className="sitemap-section">
+            <h2 className="sitemap-section__title">Tableaux de bord</h2>
             <Row gutters className="fr-mt-2w">
               {dashboardSections.map((section) => (
                 <Col key={section.id} xs="12" md="6" lg="4" className="fr-mb-3w">
@@ -180,19 +172,17 @@ export default function SitemapPage() {
                 </Col>
               ))}
             </Row>
-          </Container>
-        </section>
+          </section>
 
-        <section className="sitemap-section sitemap-section--info">
-          <Container>
+          <section className="sitemap-section sitemap-section--info">
             <Row gutters className="fr-mt-2w">
               <Col xs="12" md="6" lg="4">
                 <SitemapGroup section={INFORMATION_SECTION} headingLevel="h2" />
               </Col>
             </Row>
-          </Container>
-        </section>
-      </main>
+          </section>
+        </Container>
+      </div>
       <Footer />
     </>
   );

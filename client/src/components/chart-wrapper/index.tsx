@@ -81,7 +81,22 @@ export type HighchartsOptions = Highcharts.Options | any | null;
 
 const { VITE_APP_URL } = import.meta.env;
 
+function useEscapeKey(isOpen: boolean, onClose: () => void) {
+  React.useEffect(() => {
+    if (!isOpen) return;
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        onClose();
+      }
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen, onClose]);
+}
+
 function IntegrationModal({ graphConfig, isOpen, modalId, setIsOpen }) {
+  useEscapeKey(isOpen, () => setIsOpen(false));
   const integrationCode = `<iframe \ntitle="${graphConfig.title}" \nwidth="800" \nheight="600" \nsrc="${VITE_APP_URL}${graphConfig.integrationURL}"></iframe>`;
   return (
     <Modal
@@ -126,6 +141,7 @@ function MenuModal({
   setIsOpen,
   setIsOpenIntegration,
 }) {
+  useEscapeKey(isOpen, () => setIsOpen(false));
   const shareUrl = typeof window !== "undefined"
     ? new URL(window.location.pathname + window.location.search, VITE_APP_URL || window.location.origin).toString()
     : "";
@@ -150,6 +166,7 @@ function MenuModal({
       isOpen={isOpen}
       key={modalId}
       size="sm"
+      canClose
     >
       <ModalContent className="modal-actions">
         <Title as="h1" look="h6">

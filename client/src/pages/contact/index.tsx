@@ -5,7 +5,6 @@ import {
   Col,
   Container,
   Row,
-  Text,
   TextArea,
   TextInput,
   Title,
@@ -14,6 +13,8 @@ import {
 import { DASHBOARDS, getDashboardLabel } from "./config";
 import { useSendContact } from "./api";
 import i18n from "./i18n.json";
+import "./styles.scss"
+
 
 type FormValues = {
   name: string;
@@ -111,93 +112,96 @@ export default function ContactPage() {
     );
   };
   return (
-    <Container className="fr-py-8w">
-      <Title as="h1" look="h5" className="fr-mb-2w">
-        {t("title")}
-      </Title>
-      <Text className="fr-text--lg fr-mb-6w">{t("description")}</Text>
+    <div className="contact-page">
+      <section className="contact-hero">
+        <Container>
+          <p className="contact-hero__label">{t("heroLabel")}</p>
+          <Title as="h1" look="h1" className="contact-hero__title">
+            {t("title")}
+          </Title>
+          <p className="contact-hero__description">{t("description")}</p>
+        </Container>
+      </section>
+      <Container as="main" id="main" className="contact-content fr-mt-5w">
 
-      <form onSubmit={handleSubmit} noValidate>
-        <Row gutters>
-          <Col xs="12" md="5">
-            <TextInput
-              label={t("dashboardLabel")}
-              hint={t("dashboardHint")}
-              value={getDashboardLabel(dashboard)}
-              disabled
-              disableAutoValidation
-            />
-            <Row gutters>
-              <Col xs="6">
-                <TextInput
-                  label={t("nameLabel")}
-                  required
-                  disableAutoValidation
-                  placeholder={t("namePlaceholder")}
-                  value={values.name}
-                  onChange={set("name")}
-                  message={errors.name}
-                  messageType={errors.name ? "error" : undefined}
-                />
-              </Col>
-              <Col xs="6">
-                <TextInput
-                  label={t("emailLabel")}
-                  required
-                  disableAutoValidation
-                  type="email"
-                  placeholder={t("emailPlaceholder")}
-                  value={values.email}
-                  onChange={set("email")}
-                  message={errors.email}
-                  messageType={errors.email ? "error" : undefined}
-                />
-              </Col>
-              <Col xs="6">
-                <TextInput
-                  label={t("fonctionLabel")}
-                  disableAutoValidation
-                  placeholder={t("fonctionPlaceholder")}
-                  value={values.fonction}
-                  onChange={set("fonction")}
-                />
-              </Col>
-              <Col xs="6">
-                <TextInput
-                  label={t("organisationLabel")}
-                  disableAutoValidation
-                  placeholder={t("organisationPlaceholder")}
-                  value={values.organisation}
-                  onChange={set("organisation")}
-                />
-              </Col>
-            </Row>
-          </Col>
+        <form onSubmit={handleSubmit} noValidate>
+          <Row gutters>
+            <Col xs="12" md="5">
+              <TextInput
+                label={t("dashboardLabel")}
+                hint={t("dashboardHint")}
+                value={getDashboardLabel(dashboard)}
+                disabled
+                disableAutoValidation
+              />
+              <Row gutters>
+                <Col xs="6">
+                  <TextInput
+                    label={t("nameLabel")}
+                    required
+                    disableAutoValidation
+                    placeholder={t("namePlaceholder")}
+                    value={values.name}
+                    onChange={set("name")}
+                    message={errors.name}
+                    messageType={errors.name ? "error" : undefined}
+                  />
+                </Col>
+                <Col xs="6">
+                  <TextInput
+                    label={t("emailLabel")}
+                    required
+                    disableAutoValidation
+                    type="email"
+                    placeholder={t("emailPlaceholder")}
+                    value={values.email}
+                    onChange={set("email")}
+                    message={errors.email}
+                    messageType={errors.email ? "error" : undefined}
+                  />
+                </Col>
+                <Col xs="6">
+                  <TextInput
+                    label={t("fonctionLabel")}
+                    disableAutoValidation
+                    placeholder={t("fonctionPlaceholder")}
+                    value={values.fonction}
+                    onChange={set("fonction")}
+                  />
+                </Col>
+                <Col xs="6">
+                  <TextInput
+                    label={t("organisationLabel")}
+                    disableAutoValidation
+                    placeholder={t("organisationPlaceholder")}
+                    value={values.organisation}
+                    onChange={set("organisation")}
+                  />
+                </Col>
+              </Row>
+            </Col>
 
-          <Col xs="12" md="7">
-            <TextArea
-              label={t("messageLabel")}
-              required
-              disableAutoValidation
-              placeholder={t("messageTooShortError")}
-              value={values.message}
-              onChange={set("message")}
-              message={errors.message}
-              messageType={errors.message ? "error" : undefined}
-              rows={12}
-            />
-
-            {/* <Text className="fr-text--xs fr-mt-2w">
-              {t("privacy")} <a href="/cookies">{t("privacyLink")}</a>.
-            </Text> */}
-            <div className="fr-btns-group fr-btns-group--inline-reverse">
-              <Button type="submit" disabled={isPending}>
-                {isPending ? t("submitPending") : t("submitButton")}
-              </Button>
-            </div>
-          </Col>
-        </Row>
-      </form>
-    </Container>
+            <Col xs="12" md="7">
+              <TextArea
+                label={t("messageLabel")}
+                required
+                disableAutoValidation
+                placeholder={t("messageTooShortError")}
+                value={values.message}
+                onChange={set("message")}
+                message={errors.message}
+                messageType={errors.message ? "error" : undefined}
+                rows={12}
+              />
+              <div className="fr-btns-group fr-btns-group--inline-reverse">
+                <Button type="submit" disabled={isPending}>
+                  {isPending ? t("submitPending") : t("submitButton")}
+                </Button>
+              </div>
+            </Col>
+          </Row>
+        </form>
+      </Container>
+    </div>
   );
 }

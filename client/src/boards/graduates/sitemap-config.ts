@@ -1,4 +1,4 @@
-import type { BoardSitemapConfig } from "../board-sitemap-page";
+import type { BoardSitemapConfig } from "../../pages/site-map/board-sitemap-page";
 
 export const GRADUATES_SITEMAP: BoardSitemapConfig = {
   boardId: "graduates",

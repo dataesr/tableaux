@@ -1,8 +1,8 @@
-.contact-page {
+.legal-notice-page {
   min-height: calc(100vh - 200px);
 }
 
-.contact-hero {
+.legal-notice-hero {
   background: linear-gradient(
     135deg,
     var(--background-default-grey) 0%,
@@ -45,15 +45,19 @@
       font-size: 1rem;
     }
   }
+}
 
-  &__breadcrumb {
-    margin-top: 0;
+.legal-notice-content {
+  @media (max-width: 768px) {
+    padding: 2rem 0;
   }
 }
 
-.contact-content {
-  @media (max-width: 768px) {
-    padding: 2rem 0;
+.legal-notice-section {
+  margin-bottom: 2.5rem;
+
+  &:last-child {
+    margin-bottom: 0;
   }
 }
 

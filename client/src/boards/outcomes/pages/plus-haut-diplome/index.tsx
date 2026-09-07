@@ -209,7 +209,7 @@ export default function PlusHautDiplomePage() {
                                     </Button>
                                 </div>
                                 <div className="fr-table">
-                                    <table>
+                                    <table role="presentation">
                                         <thead>
                                             <tr>
                                                 <th scope="col">Plus haut diplôme obtenu en {lastYearLabel} dont :</th>
