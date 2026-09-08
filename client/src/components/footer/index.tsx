@@ -90,10 +90,14 @@ export default function Footer({ href = "/", sitemapHref, title = "Accueil - Dat
                 {getI18nLabel(i18n, "personalData")}
               </a>
             </li>}
-
+            {!isProd && <li className="fr-footer__bottom-item">
+              <a className="fr-footer__bottom-link" href="/cgu">
+                {getI18nLabel(i18n, "cgu")}
+              </a>
+            </li>}
             <li className="fr-footer__bottom-item">
               <a className="fr-footer__bottom-link" href="/cookies">
-                {getI18nLabel(i18n, "cookies")}
+                {getI18nLabel(i18n, "Cookies")}
               </a>
             </li>
             <li className="fr-footer__bottom-item">

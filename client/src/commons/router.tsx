@@ -7,6 +7,8 @@ const AccessibilityLayout = lazy(() => import("../components/accessibility/layou
 const AccessibilityPage = lazy(() => import("../components/accessibility/page.tsx"));
 const AdminRoutes = lazy(() => import('../boards/admin/routes.tsx'));
 const AtlasRoutes = lazy(() => import('../boards/atlas/routes.tsx'));
+const CGUPage = lazy(() => import("../pages/cgu/index.tsx"));
+const CGULayout = lazy(() => import("../pages/cgu/global-layout.tsx"))
 const ContactLayout = lazy(() => import('../pages/contact/global-layout.tsx'));
 const ContactPage = lazy(() => import('../pages/contact/index.tsx'));
 const CookiePolicyPage = lazy(() => import('../components/cookies/cookie-policy-page/index.tsx'));
@@ -55,6 +57,9 @@ export default function Router() {
       </Route>
       <Route path="/mentions-legales" element={<Suspense><LegalNoticeLayout /></Suspense>}>
         <Route index element={<Suspense><LegalNoticePage /></Suspense>} />
+      </Route>
+      <Route path="/cgu" element={<Suspense><CGULayout /></Suspense>}>
+        <Route index element={<Suspense><CGUPage /></Suspense>} />
       </Route>
       <Route path="/donnees-personnelles" element={<Suspense><PersonalDataLayout /></Suspense>}>
         <Route index element={<Suspense><PersonalDataPage /></Suspense>} />

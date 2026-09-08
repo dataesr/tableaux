@@ -1,0 +1,66 @@
+.cgu-page {
+  min-height: calc(100vh - 200px);
+}
+
+.cgu-hero {
+  background: linear-gradient(
+    135deg,
+    var(--background-default-grey) 0%,
+    var(--background-contrast-blue-france) 100%
+  );
+  padding: 4rem 0;
+  color: var(--text-default-grey);
+
+  @media (max-width: 992px) {
+    padding: 3rem 0;
+  }
+
+  &__label {
+    font-weight: 700;
+    font-size: 0.875rem;
+    color: var(--text-action-high-blue-france);
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+  }
+
+  &__title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 1rem;
+    color: var(--text-title-grey);
+
+    @media (max-width: 768px) {
+      font-size: 1.75rem;
+    }
+  }
+
+  &__description {
+    font-size: 1.125rem;
+    line-height: 1.6;
+    margin-bottom: 0;
+    color: var(--text-mention-grey);
+
+    @media (max-width: 768px) {
+      font-size: 1rem;
+    }
+  }
+}
+
+.cgu-content {
+  @media (max-width: 768px) {
+    padding: 2rem 0;
+  }
+}
+
+.cgu-section {
+  margin-bottom: 2.5rem;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.fr-header__logo {
+  order: 0;
+}
