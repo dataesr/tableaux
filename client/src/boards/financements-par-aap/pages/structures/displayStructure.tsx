@@ -22,20 +22,19 @@ import Cards from "../../components/cards"
 import { getEsQuery, years } from "../../utils"
 import ProjectsData from "./components/projects-data"
 
-import "./styles.scss";
+import "./styles.scss"
 
-const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
+const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env
 
 export default function DisplayStructure() {
   const [searchParams, setSearchParams] = useSearchParams()
   const navigate = useNavigate()
   const section = searchParams.get("section")
   const structure = searchParams.get("structureId")
-  const withComponents = !!searchParams.get("withComponents")
+  const withComponents = !!parseInt(searchParams.get("withComponents") ?? '0')
   const yearMax = searchParams.get("yearMax") ?? String(years[years.length - 2])
   const yearMin = searchParams.get("yearMin") ?? String(years[years.length - 2])
-
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false)
   const sections = [
     { id: "apercu", label: "Aperçu" },
     { id: "financements", label: "Volume et répartition des financements" },
@@ -46,28 +45,36 @@ export default function DisplayStructure() {
     { id: "instruments", label: "Instruments" },
     { id: "regions", label: "Régions" },
     { id: "donnees", label: "Données" },
-  ];
+  ]
+
+  const handleDisplayComponentsChange = (event) => {
+    searchParams.set("withComponents", event.target.checked ? '1' : '0')
+    setSearchParams(searchParams)
+    setIsOpen(false)
+  }
 
   const handleNavClick = (section: string) => {
-    searchParams.set("section", section);
-    setSearchParams(searchParams);
-    setIsOpen(false);
-  };
+    searchParams.set("section", section)
+    setSearchParams(searchParams)
+    setIsOpen(false)
+  }
 
   const handleYearMaxChange = (year: string) => {
-    searchParams.set("yearMax", year);
-    setSearchParams(searchParams);
-  };
+    searchParams.set("yearMax", year)
+    setSearchParams(searchParams)
+    setIsOpen(false)
+  }
 
   const handleYearMinChange = (year: string) => {
-    searchParams.set("yearMin", year);
-    setSearchParams(searchParams);
-  };
+    searchParams.set("yearMin", year)
+    setSearchParams(searchParams)
+    setIsOpen(false)
+  }
 
   const body = {
     ...getEsQuery({ structures: [structure] }),
     size: 1,
-  };
+  }
   const { data } = useQuery({
     queryKey: ["fundings-structure", structure],
     queryFn: () =>
@@ -83,7 +90,13 @@ export default function DisplayStructure() {
   const participantSuperOrganizationChildren = (data?.hits?.hits?.[0]?._source?.participant_super_organization_children ?? []).map((org) => org?.id).filter((id) => !!id)
   const structureInfo = Object.fromEntries(new URLSearchParams(data?.hits?.hits?.[0]?._source?.participant_encoded_key ?? ""))
   const name = structureInfo?.label ?? ""
-  const scanrUrl = `https://scanr.enseignementsup-recherche.gouv.fr/search/projects?filters=%257B%2522year%2522%253A%257B%2522values%2522%253A%255B%257B%2522value%2522%253A${yearMin}%257D%252C%257B%2522value%2522%253A${yearMax}%257D%255D%252C%2522type%2522%253A%2522range%2522%257D%252C%2522participants_id_search%2522%253A%257B%2522values%2522%253A%255B%257B%2522value%2522%253A%2522${structure}%2522%252C%2522label%2522%253A%2522${name}%2522%257D%255D%252C%2522type%2522%253A%2522terms%2522%252C%2522operator%2522%253A%2522or%2522%257D%252C%2522type%2522%253A%257B%2522values%2522%253A%255B%257B%2522value%2522%253A%2522Horizon%25202020%2522%252C%2522label%2522%253Anull%257D%252C%257B%2522value%2522%253A%2522ANR%2522%252C%2522label%2522%253Anull%257D%252C%257B%2522value%2522%253A%2522PIA%2520hors%2520ANR%2522%252C%2522label%2522%253Anull%257D%252C%257B%2522value%2522%253A%2522Horizon%2520Europe%2522%252C%2522label%2522%253Anull%257D%252C%257B%2522value%2522%253A%2522PIA%2520ANR%2522%252C%2522label%2522%253Anull%257D%255D%252C%2522type%2522%253A%2522terms%2522%252C%2522operator%2522%253A%2522or%2522%257D%257D`
+  let scanrUrl = `https://scanr.enseignementsup-recherche.gouv.fr/search/projects?filters=%257B%2522year%2522%253A%257B%2522values%2522%253A%255B%257B%2522value%2522%253A${yearMin}%257D%252C%257B%2522value%2522%253A${yearMax}%257D%255D%252C%2522type%2522%253A%2522range%2522%257D%252C%2522participants_id_search%2522%253A%257B%2522values%2522%253A%255B`;
+  (data?.hits?.hits?.[0]?._source?.participant_super_organization_children ?? []).forEach((child, index) => {
+    if (index !== 0) scanrUrl += '%252C'
+    scanrUrl += `%257B%2522value%2522%253A%2522${child?.id ?? ""}%2522%252C%2522label%2522%253A%2522${child?.displayName ?? ""}%2522%257D`
+  })
+  scanrUrl += `%255D%252C%2522type%2522%253A%2522terms%2522%252C%2522operator%2522%253A%2522or%2522%257D%252C%2522type%2522%253A%257B%2522values%2522%253A%255B%257B%2522value%2522%253A%2522Horizon%25202020%2522%252C%2522label%2522%253Anull%257D%252C%257B%2522value%2522%253A%2522ANR%2522%252C%2522label%2522%253Anull%257D%252C%257B%2522value%2522%253A%2522PIA%2520hors%2520ANR%2522%252C%2522label%2522%253Anull%257D%252C%257B%2522value%2522%253A%2522Horizon%2520Europe%2522%252C%2522label%2522%253Anull%257D%252C%257B%2522value%2522%253A%2522PIA%2520ANR%2522%252C%2522label%2522%253Anull%257D%255D%252C%2522type%2522%253A%2522terms%2522%252C%2522operator%2522%253A%2522or%2522%257D%257D`
+  const participantIsSuperOrganization = data?.hits?.hits?.[0]?._source?.participant_is_super_organization
 
   return (
     <main>
@@ -168,6 +181,14 @@ export default function DisplayStructure() {
                   ))}
                 </Select>
               </div>
+              {participantIsSuperOrganization && (
+                <div style={{ alignItems: "center", display: "flex", gap: "0.5rem" }}>
+                  <div className="fr-toggle">
+                    <input checked={withComponents} className="fr-toggle__input" onChange={handleDisplayComponentsChange} type="checkbox" />
+                    <label className="fr-toggle__label">Vision consolidée avec ses composantes</label>
+                  </div>
+                </div>
+              )}
             </Col>
           </Row>
         </Container>
@@ -315,5 +336,5 @@ export default function DisplayStructure() {
           )}
       </Container>
     </main>
-  );
+  )
 }
