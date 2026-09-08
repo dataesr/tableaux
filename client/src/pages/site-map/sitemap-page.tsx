@@ -57,18 +57,18 @@ function toSection(id: string, config: BoardSitemapConfig): SitemapSection {
 
 const PRODUCTION_SECTIONS: SitemapSection[] = [
   toSection("devenir-etudiants", OUTCOMES_SITEMAP),
+  toSection("european-projects", EUROPEAN_PROJECTS_SITEMAP),
   toSection("financements-par-aap", FINANCEMENTS_PAR_AAP_SITEMAP),
   toSection("structures-finance", STRUCTURES_FINANCE_SITEMAP),
 ];
 
 const NON_PRODUCTION_SECTIONS: SitemapSection[] = [
-  toSection("european-projects", EUROPEAN_PROJECTS_SITEMAP),
-  toSection("personnel-enseignant", FACULTY_MEMBERS_SITEMAP),
-  toSection("valorisation-recherche-innovation", VALORISATION_RECHERCHE_INNOVATION_SITEMAP),
-  toSection("teds", TEDS_SITEMAP),
   toSection("atlas", ATLAS_SITEMAP),
   toSection("graduates", GRADUATES_SITEMAP),
   toSection("open-alex", OPEN_ALEX_SITEMAP),
+  toSection("personnel-enseignant", FACULTY_MEMBERS_SITEMAP),
+  toSection("teds", TEDS_SITEMAP),
+  toSection("valorisation-recherche-innovation", VALORISATION_RECHERCHE_INNOVATION_SITEMAP),
 ];
 
 const INFORMATION_SECTION: SitemapSection = {
@@ -133,12 +133,7 @@ export default function SitemapPage() {
   const boardConfig = BOARD_SITEMAP_CONFIGS[searchParams.get("from") ?? ""];
 
   if (boardConfig) {
-    return (
-      <>
-        <BoardSitemapPage {...boardConfig} />
-        <Footer />
-      </>
-    );
+    return <BoardSitemapPage {...boardConfig} />;
   }
 
   return (

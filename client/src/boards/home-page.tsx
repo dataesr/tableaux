@@ -55,10 +55,7 @@ export default function HomePage() {
     .filter((dashboard) => {
       if (!isInProduction()) return true;
       const url = dashboard.url || "";
-      return (
-        url.startsWith("/devenir-etudiants")
-        || url.startsWith("/structures-finance") || url.startsWith("/financements-par-aap")
-      );
+      return url.startsWith("/devenir-etudiants") || url.startsWith("/structures-finance");
     });
 
   return (

@@ -5,33 +5,33 @@ import { isInProduction } from "../utils.tsx";
 
 const AccessibilityLayout = lazy(() => import("../components/accessibility/layouts/global-layout.tsx"));
 const AccessibilityPage = lazy(() => import("../components/accessibility/page.tsx"));
-const AdminRoutes = lazy(() => import('../boards/admin/routes.tsx'));
-const AtlasRoutes = lazy(() => import('../boards/atlas/routes.tsx'));
+const AdminRoutes = lazy(() => import("../boards/admin/routes.tsx"));
+const AtlasRoutes = lazy(() => import("../boards/atlas/routes.tsx"));
 const CGUPage = lazy(() => import("../pages/cgu/index.tsx"));
-const CGULayout = lazy(() => import("../pages/cgu/global-layout.tsx"))
-const ContactLayout = lazy(() => import('../pages/contact/global-layout.tsx'));
-const ContactPage = lazy(() => import('../pages/contact/index.tsx'));
-const CookiePolicyPage = lazy(() => import('../components/cookies/cookie-policy-page/index.tsx'));
-const DatasuprDocRoutes = lazy(() => import('../boards/datasupr-doc/routes.tsx'));
-const EuropeanProjectsRoutes = lazy(() => import('../boards/european-projects/routes.tsx'));
-const FacultyMembersRoutes = lazy(() => import('../boards/faculty-members/routes.tsx'));
-const FundingsRoutes = lazy(() => import('../boards/financements-par-aap/routes.tsx'));
-const GraduatesRoutes = lazy(() => import('../boards/graduates/routes.tsx'));
-const HomePage = lazy(() => import('../boards/home-page.tsx'));
-const LegalNoticeLayout = lazy(() => import("../pages/legal-notice/global-layout.tsx"))
-const LegalNoticePage = lazy(() => import("../pages/legal-notice/index.tsx"))
-const PersonalDataLayout = lazy(() => import("../pages/personal-data/global-layout.tsx"))
-const PersonalDataPage = lazy(() => import("../pages/personal-data/index.tsx"))
-const Integration = lazy(() => import('../boards/integration/index.tsx'));
-const NotFoundPage = lazy(() => import('../components/not-found-page.tsx'));
-const OpenAlexRoutes = lazy(() => import('../boards/open-alex/routes.tsx'));
-const OutcomesRoutes = lazy(() => import('../boards/outcomes/routes.tsx'));
-const SitemapLayout = lazy(() => import('../pages/site-map/global-layout.tsx'));
-const SitemapPage = lazy(() => import('../pages/site-map/sitemap-page.tsx'));
-const StructuresFinanceRoutes = lazy(() => import('../boards/structures-finance/routes.tsx'));
-const TedsRoutes = lazy(() => import('../boards/teds/routes.tsx'));
-const TemplateRoutes = lazy(() => import('../boards/template/routes.tsx'));
-const ValorisationRechercheInnovationRoutes = lazy(() => import('../boards/valorisation-recherche-innovation/routes.tsx'));
+const CGULayout = lazy(() => import("../pages/cgu/global-layout.tsx"));
+const ContactLayout = lazy(() => import("../pages/contact/global-layout.tsx"));
+const ContactPage = lazy(() => import("../pages/contact/index.tsx"));
+const CookiePolicyPage = lazy(() => import("../components/cookies/cookie-policy-page/index.tsx"));
+const DatasuprDocRoutes = lazy(() => import("../boards/datasupr-doc/routes.tsx"));
+const EuropeanProjectsRoutes = lazy(() => import("../boards/european-projects/routes.tsx"));
+const FacultyMembersRoutes = lazy(() => import("../boards/faculty-members/routes.tsx"));
+const FundingsRoutes = lazy(() => import("../boards/financements-par-aap/routes.tsx"));
+const GraduatesRoutes = lazy(() => import("../boards/graduates/routes.tsx"));
+const HomePage = lazy(() => import("../boards/home-page.tsx"));
+const LegalNoticeLayout = lazy(() => import("../pages/legal-notice/global-layout.tsx"));
+const LegalNoticePage = lazy(() => import("../pages/legal-notice/index.tsx"));
+const PersonalDataLayout = lazy(() => import("../pages/personal-data/global-layout.tsx"));
+const PersonalDataPage = lazy(() => import("../pages/personal-data/index.tsx"));
+const Integration = lazy(() => import("../boards/integration/index.tsx"));
+const NotFoundPage = lazy(() => import("../components/not-found-page.tsx"));
+const OpenAlexRoutes = lazy(() => import("../boards/open-alex/routes.tsx"));
+const OutcomesRoutes = lazy(() => import("../boards/outcomes/routes.tsx"));
+const SitemapLayout = lazy(() => import("../pages/site-map/global-layout.tsx"));
+const SitemapPage = lazy(() => import("../pages/site-map/sitemap-page.tsx"));
+const StructuresFinanceRoutes = lazy(() => import("../boards/structures-finance/routes.tsx"));
+const TedsRoutes = lazy(() => import("../boards/teds/routes.tsx"));
+const TemplateRoutes = lazy(() => import("../boards/template/routes.tsx"));
+const ValorisationRechercheInnovationRoutes = lazy(() => import("../boards/valorisation-recherche-innovation/routes.tsx"));
 
 const RouteWithTitle = ({ titleKey, element }) => {
   useTitle(titleKey);
@@ -43,63 +43,279 @@ export default function Router() {
 
   return (
     <Routes>
-      <Route path="/" element={<RouteWithTitle titleKey="Accueil - dataEsr" element={<Suspense><HomePage /></Suspense>} />} />
       <Route
-        path="/accessibility" element={<Suspense><AccessibilityLayout /></Suspense>}
-      >
-        <Route index element={<Suspense><AccessibilityPage /></Suspense>} />
-      </Route>
-      <Route path="/cookies" element={<Suspense><CookiePolicyPage /></Suspense>} />
+        path="/"
+        element={
+          <RouteWithTitle
+            titleKey="Accueil - dataEsr"
+            element={
+              <Suspense>
+                <HomePage />
+              </Suspense>
+            }
+          />
+        }
+      />
       <Route
-        path="/plan-du-site" element={<Suspense><SitemapLayout /></Suspense>}
+        path="/accessibility"
+        element={
+          <Suspense>
+            <AccessibilityLayout />
+          </Suspense>
+        }
       >
-        <Route index element={<Suspense><SitemapPage /></Suspense>} />
+        <Route
+          index
+          element={
+            <Suspense>
+              <AccessibilityPage />
+            </Suspense>
+          }
+        />
       </Route>
-      <Route path="/mentions-legales" element={<Suspense><LegalNoticeLayout /></Suspense>}>
-        <Route index element={<Suspense><LegalNoticePage /></Suspense>} />
+      <Route
+        path="/cookies"
+        element={
+          <Suspense>
+            <CookiePolicyPage />
+          </Suspense>
+        }
+      />
+      <Route
+        path="/plan-du-site"
+        element={
+          <Suspense>
+            <SitemapLayout />
+          </Suspense>
+        }
+      >
+        <Route
+          index
+          element={
+            <Suspense>
+              <SitemapPage />
+            </Suspense>
+          }
+        />
       </Route>
-      <Route path="/cgu" element={<Suspense><CGULayout /></Suspense>}>
-        <Route index element={<Suspense><CGUPage /></Suspense>} />
+      <Route
+        path="/mentions-legales"
+        element={
+          <Suspense>
+            <LegalNoticeLayout />
+          </Suspense>
+        }
+      >
+        <Route
+          index
+          element={
+            <Suspense>
+              <LegalNoticePage />
+            </Suspense>
+          }
+        />
       </Route>
-      <Route path="/donnees-personnelles" element={<Suspense><PersonalDataLayout /></Suspense>}>
-        <Route index element={<Suspense><PersonalDataPage /></Suspense>} />
+      <Route
+        path="/cgu"
+        element={
+          <Suspense>
+            <CGULayout />
+          </Suspense>
+        }
+      >
+        <Route
+          index
+          element={
+            <Suspense>
+              <CGUPage />
+            </Suspense>
+          }
+        />
       </Route>
-      <Route path="/contact" element={<Suspense><ContactLayout /></Suspense>}>
-        <Route index element={<Suspense><ContactPage /></Suspense>} />
+      <Route
+        path="/donnees-personnelles"
+        element={
+          <Suspense>
+            <PersonalDataLayout />
+          </Suspense>
+        }
+      >
+        <Route
+          index
+          element={
+            <Suspense>
+              <PersonalDataPage />
+            </Suspense>
+          }
+        />
+      </Route>
+      <Route
+        path="/contact"
+        element={
+          <Suspense>
+            <ContactLayout />
+          </Suspense>
+        }
+      >
+        <Route
+          index
+          element={
+            <Suspense>
+              <ContactPage />
+            </Suspense>
+          }
+        />
       </Route>
       <Route path="/devenir-etudiants" element={<Navigate to="/devenir-etudiants/entrants-en-L1-2019/flux" replace />} />
-      <Route path="/devenir-etudiants/*" element={<Suspense><OutcomesRoutes /></Suspense>} />
+      <Route
+        path="/devenir-etudiants/*"
+        element={
+          <Suspense>
+            <OutcomesRoutes />
+          </Suspense>
+        }
+      />
       <Route path="/financements-par-aap" element={<Navigate to="/financements-par-aap/accueil" replace />} />
-      <Route path="/financements-par-aap/*" element={<Suspense><FundingsRoutes /></Suspense>} />
+      <Route
+        path="/financements-par-aap/*"
+        element={
+          <Suspense>
+            <FundingsRoutes />
+          </Suspense>
+        }
+      />
       <Route path="/structures-finance" element={<Navigate to="/structures-finance/accueil" replace />} />
-      <Route path="/structures-finance/*" element={<Suspense><StructuresFinanceRoutes /></Suspense>} />
+      <Route
+        path="/structures-finance/*"
+        element={
+          <Suspense>
+            <StructuresFinanceRoutes />
+          </Suspense>
+        }
+      />
+      <Route path="/european-projects" element={<Navigate to="/european-projects/accueil" replace />} />
+      <Route
+        path="/european-projects/*"
+        element={
+          <Suspense>
+            <EuropeanProjectsRoutes />
+          </Suspense>
+        }
+      />
       {/* Before adding a dashboard in production, add your dashboard in the mongoDB collection "Board" */}
 
       {!isProd && (
         <>
           <Route
-            path="/accessibility" element={<Suspense><AccessibilityLayout /></Suspense>}
+            path="/accessibility"
+            element={
+              <Suspense>
+                <AccessibilityLayout />
+              </Suspense>
+            }
           >
-            <Route index element={<Suspense><AccessibilityPage /></Suspense>} />
+            <Route
+              index
+              element={
+                <Suspense>
+                  <AccessibilityPage />
+                </Suspense>
+              }
+            />
           </Route>
-          <Route path="/admin/*" element={<Suspense><AdminRoutes /></Suspense>} />
-          <Route path="/atlas/*" element={<Suspense><AtlasRoutes /></Suspense>} />
-          <Route path="/datasupr-doc/*" element={<Suspense><DatasuprDocRoutes /></Suspense>} />
-          <Route path="/european-projects" element={<Navigate to="/european-projects/accueil" replace />} />
-          <Route path="/european-projects/*" element={<Suspense><EuropeanProjectsRoutes /></Suspense>} />
-          <Route path="/graduates/*" element={<Suspense><GraduatesRoutes /></Suspense>} />
-          <Route path="/integration" element={<Suspense><Integration /></Suspense>} />
-          <Route path="/open-alex/*" element={<Suspense><OpenAlexRoutes /></Suspense>} />
+          <Route
+            path="/admin/*"
+            element={
+              <Suspense>
+                <AdminRoutes />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/atlas/*"
+            element={
+              <Suspense>
+                <AtlasRoutes />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/datasupr-doc/*"
+            element={
+              <Suspense>
+                <DatasuprDocRoutes />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/graduates/*"
+            element={
+              <Suspense>
+                <GraduatesRoutes />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/integration"
+            element={
+              <Suspense>
+                <Integration />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/open-alex/*"
+            element={
+              <Suspense>
+                <OpenAlexRoutes />
+              </Suspense>
+            }
+          />
           <Route path="/personnel-enseignant" element={<Navigate to="/personnel-enseignant/accueil" replace />} />
-          <Route path="/personnel-enseignant/*" element={<Suspense><FacultyMembersRoutes /></Suspense>} />
+          <Route
+            path="/personnel-enseignant/*"
+            element={
+              <Suspense>
+                <FacultyMembersRoutes />
+              </Suspense>
+            }
+          />
           <Route path="/teds" element={<Navigate to="/teds/home" replace />} />
-          <Route path="/teds/*" element={<Suspense><TedsRoutes /></Suspense>} />
-          <Route path="/template/*" element={<Suspense><TemplateRoutes /></Suspense>} />
+          <Route
+            path="/teds/*"
+            element={
+              <Suspense>
+                <TedsRoutes />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/template/*"
+            element={
+              <Suspense>
+                <TemplateRoutes />
+              </Suspense>
+            }
+          />
           <Route path="/valorisation-recherche-innovation" element={<Navigate to="/valorisation-recherche-innovation/accueil" replace />} />
-          <Route path="/valorisation-recherche-innovation/*" element={<Suspense><ValorisationRechercheInnovationRoutes /></Suspense>} />
+          <Route
+            path="/valorisation-recherche-innovation/*"
+            element={
+              <Suspense>
+                <ValorisationRechercheInnovationRoutes />
+              </Suspense>
+            }
+          />
         </>
       )}
-      <Route path="*" element={<Suspense><NotFoundPage /></Suspense>} />
+      <Route
+        path="*"
+        element={
+          <Suspense>
+            <NotFoundPage />
+          </Suspense>
+        }
+      />
     </Routes>
   );
 }
