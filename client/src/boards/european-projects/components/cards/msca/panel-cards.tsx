@@ -109,7 +109,7 @@ function MscaPanelCard({ data, viewMode }: { data: MscaPanelData; viewMode: View
           </div>
           <div className="stat-group">
             <div className="stat-label">Financement</div>
-            <div className="stat-value funding">{formatCurrency(data.successful?.total_funding || 0)}</div>
+            <div className="stat-value funding">{formatCurrency(data.successful?.total_funding_project || 0)}</div>
           </div>
         </div>
       )}

@@ -46,13 +46,13 @@ export interface MscaPanelData {
   panel_id: string;
   panel_name: string;
   evaluated: {
-    total_funding: number;
+    total_funding_project: number;
     total_involved: number;
     total_coordinations: number;
     total_projects: number;
   } | null;
   successful: {
-    total_funding: number;
+    total_funding_project: number;
     total_involved: number;
     total_coordinations: number;
     total_projects: number;

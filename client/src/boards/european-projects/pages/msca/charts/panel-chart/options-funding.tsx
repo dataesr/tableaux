@@ -14,11 +14,11 @@ export default function OptionsFunding({ data, currentLang = "fr" }: OptionsPara
   const sortedData = [...data].filter((d) => d.panel_id).sort((a, b) => a.panel_id.localeCompare(b.panel_id));
 
   const categories = sortedData.map((d) => d.panel_id);
-  const evaluatedData = sortedData.map((d) => (d.evaluated?.total_funding || 0) / 1_000_000);
-  const successfulData = sortedData.map((d) => (d.successful?.total_funding || 0) / 1_000_000);
+  const evaluatedData = sortedData.map((d) => (d.evaluated?.total_funding_project || 0) / 1_000_000);
+  const successfulData = sortedData.map((d) => (d.successful?.total_funding_project || 0) / 1_000_000);
   const successRates = sortedData.map((d) => {
-    const evaluated = d.evaluated?.total_funding || 0;
-    const successful = d.successful?.total_funding || 0;
+    const evaluated = d.evaluated?.total_funding_project || 0;
+    const successful = d.successful?.total_funding_project || 0;
     return evaluated > 0 ? (successful / evaluated) * 100 : 0;
   });
 
