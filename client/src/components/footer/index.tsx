@@ -6,8 +6,6 @@ import SwitchLanguage from "../switch-language";
 import SwitchTheme from "../switch-theme";
 import i18n from "./i18n.json";
 
-import "./styles.scss";
-
 const { VITE_MINISTER_NAME, VITE_VERSION } = import.meta.env;
 
 const LANGUAGE_LABELS: Record<string, string> = {
