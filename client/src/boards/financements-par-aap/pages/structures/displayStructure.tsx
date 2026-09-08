@@ -4,6 +4,7 @@ import { useState } from "react"
 import { useNavigate, useSearchParams } from "react-router-dom"
 
 import Select from "../../../../components/select"
+import { isInProduction } from "../../../../utils"
 import Classifications from "../../charts/classifications"
 import Classifications2 from "../../charts/classifications2"
 import FrenchPartners from "../../charts/french-partners"
@@ -96,7 +97,7 @@ export default function DisplayStructure() {
     scanrUrl += `%257B%2522value%2522%253A%2522${child?.id ?? ""}%2522%252C%2522label%2522%253A%2522${child?.displayName ?? ""}%2522%257D`
   })
   scanrUrl += `%255D%252C%2522type%2522%253A%2522terms%2522%252C%2522operator%2522%253A%2522or%2522%257D%252C%2522type%2522%253A%257B%2522values%2522%253A%255B%257B%2522value%2522%253A%2522Horizon%25202020%2522%252C%2522label%2522%253Anull%257D%252C%257B%2522value%2522%253A%2522ANR%2522%252C%2522label%2522%253Anull%257D%252C%257B%2522value%2522%253A%2522PIA%2520hors%2520ANR%2522%252C%2522label%2522%253Anull%257D%252C%257B%2522value%2522%253A%2522Horizon%2520Europe%2522%252C%2522label%2522%253Anull%257D%252C%257B%2522value%2522%253A%2522PIA%2520ANR%2522%252C%2522label%2522%253Anull%257D%255D%252C%2522type%2522%253A%2522terms%2522%252C%2522operator%2522%253A%2522or%2522%257D%257D`
-  const participantIsSuperOrganization = data?.hits?.hits?.[0]?._source?.participant_is_super_organization
+  const participantIsSuperOrganization = data?.hits?.hits?.[0]?._source?.participant_is_super_organization ?? 0
 
   return (
     <main>
@@ -181,7 +182,7 @@ export default function DisplayStructure() {
                   ))}
                 </Select>
               </div>
-              {participantIsSuperOrganization && (
+              {!isInProduction() && participantIsSuperOrganization && (
                 <div style={{ alignItems: "center", display: "flex", gap: "0.5rem" }}>
                   <div className="fr-toggle">
                     <input checked={withComponents} className="fr-toggle__input" onChange={handleDisplayComponentsChange} type="checkbox" />
