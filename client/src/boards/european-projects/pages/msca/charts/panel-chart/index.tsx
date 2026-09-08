@@ -139,8 +139,8 @@ function renderDataTableFunding(data: MscaPanelChartItem[], currentLang: string)
       </thead>
       <tbody>
         {sortedData.map((item) => {
-          const evaluated = item.evaluated?.total_funding || 0;
-          const successful = item.successful?.total_funding || 0;
+          const evaluated = item.evaluated?.total_funding_project || 0;
+          const successful = item.successful?.total_funding_project || 0;
           const successRate = evaluated > 0 ? successful / evaluated : 0;
           return (
             <tr key={item.panel_id}>
