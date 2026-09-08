@@ -235,7 +235,7 @@ export default function AccessibilityPage() {
                                 : audit?.tests?.find((test) => test.testId === testId)?.value === "na"
                                   ? "🔵 "
                                   : "⚪ "}
-                            {description}
+                            {`${testId} - ${description}`}
                           </Text>
 
                           <Container fluid key={`yiyji${testId}`}>
