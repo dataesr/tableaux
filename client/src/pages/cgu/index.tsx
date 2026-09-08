@@ -1,5 +1,5 @@
 import { useSearchParams } from "react-router-dom";
-import { Container, Row, Col, Title, Text, Link } from "@dataesr/dsfr-plus";
+import { Container, Row, Col, Title } from "@dataesr/dsfr-plus";
 import i18n from "./i18n.json";
 import "./styles.scss";
 
