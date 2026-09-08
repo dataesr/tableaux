@@ -4,12 +4,12 @@ export interface MscaDestinationChartItem {
   destination_code: string;
   destination_name_en: string;
   evaluated: {
-    total_funding: number;
+    total_funding_project: number;
     total_involved: number;
     total_projects: number;
   } | null;
   successful: {
-    total_funding: number;
+    total_funding_project: number;
     total_involved: number;
     total_projects: number;
   } | null;
