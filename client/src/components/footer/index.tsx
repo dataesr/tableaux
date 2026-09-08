@@ -35,12 +35,6 @@ export default function Footer({ href = "/", sitemapHref, title = "Accueil - Dat
               <Logo text={VITE_MINISTER_NAME} />
             </a>
           </div>
-          <div>
-            <svg aria-hidden="true" viewBox="0 0 1167.77 752.85" width="100%">
-              <use className="sies-logo" href="/logos/sies_logo_signature.svg#sies-logo-text" />
-              <use href="/logos/sies_logo_signature.svg#sies-logo-artwork" />
-            </svg>
-          </div>
           <div className="fr-footer__content">
             <ul className="fr-footer__content-list">
               <li className="fr-footer__content-item">
