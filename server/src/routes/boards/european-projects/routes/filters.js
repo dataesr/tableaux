@@ -180,7 +180,7 @@ router.route("/european-projects/filters-pillars").get(async (req, res) => {
           },
           {
             $sort: {
-              label_fr: 1,
+              id: 1,
             },
           },
         ],

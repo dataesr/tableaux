@@ -39,11 +39,7 @@ export default function Home() {
             </Col>
             <Col className="ep-home__hero-logo-col">
               <Link href="https://ec.europa.eu/programmes/horizon2020/" target="_blank">
-                <img
-                  src="https://commission.europa.eu/themes/contrib/oe_theme/dist/ec/images/logo/positive/logo-ec--fr.svg"
-                  alt="Lien vers la page officielle du programme Horizon Europe"
-                  className="ep-home__hero-logo"
-                />
+                <img src="https://commission.europa.eu/themes/contrib/oe_theme/dist/ec/images/logo/positive/logo-ec--fr.svg" alt="Lien vers la page officielle du programme Horizon Europe" className="ep-home__hero-logo" />
               </Link>
             </Col>
           </Row>
@@ -81,13 +77,7 @@ export default function Home() {
             {dataPillars &&
               dataPillars.map((pillar) => (
                 <Col md={6} key={pillar.id}>
-                  <PillarCard
-                    description={getI18nLabel(`${pillar.id}-description`)}
-                    title={pillar[`label_${currentLang}`]}
-                    subtitle={pillar.id}
-                    to={`/european-projects/horizon-europe?section=synthesis&pillarId=${pillar.id}`}
-                    titleAs="h3"
-                  />
+                  <PillarCard description={getI18nLabel(`${pillar.id}-description`)} title={pillar[`label_${currentLang}`]} subtitle={pillar.id} to={`/european-projects/horizon-europe?section=synthesis&pillarId=${pillar.id}`} titleAs="h3" />
                 </Col>
               ))}
           </Row>
@@ -97,7 +87,7 @@ export default function Home() {
       <section className="ep-home__section ep-home__section--alt">
         <Container>
           <Title as="h2" look="h4" className="ep-home__section-title">
-            Programmes spéciaux
+            Focus
           </Title>
           <Row gutters>
             <Col md={6}>
