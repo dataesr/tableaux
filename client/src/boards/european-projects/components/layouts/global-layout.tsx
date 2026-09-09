@@ -50,13 +50,13 @@ export default function GlobalLayout() {
               <div className="fr-header__brand fr-enlarge-link">
                 <div className="fr-header__brand-top">
                   <div className="fr-header__logo">
-                    <a href="/" title="Accueil - Nom de l’entité (ministère, secrétariat d‘état, gouvernement)">
+                    <a href="/" title="Accueil - Tableaux">
                       <p className="fr-logo">
                         Ministère
                         <br />
                         de l'Enseignement
                         <br />
-                        supérieur,
+                        Supérieur,
                         <br />
                         de la Recherche
                         <br />

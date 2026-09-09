@@ -22,7 +22,7 @@ export default function Accessibility() {
           <Title as="h2">Accessibilité</Title>
           <Title as="h3">Déclaration de conformité</Title>
           <Text>
-            Le Ministère chargé de l'Enseignement Supérieur et de la Recherche s’engage à rendre son site de l'« Atlas des effectifs étudiant-e-s » accessible conformément à l’article 47 de la loi n° 2005-102 du 11 février 2005. À cette fin, elle met en œuvre la stratégie et les actions suivantes : réalisation d'un audit de conformité en 2023.
+            Le Ministère de l'Enseignement Supérieur, de la Recherche et de l'Espace s’engage à rendre son site de l'« Atlas des effectifs étudiant-e-s » accessible conformément à l’article 47 de la loi n° 2005-102 du 11 février 2005. À cette fin, elle met en œuvre la stratégie et les actions suivantes : réalisation d'un audit de conformité en 2023.
             <br />
             <br />
             Cette déclaration d’accessibilité s’applique au site de l'« atlas des effectifs étudiant-e-s ».

@@ -41,7 +41,7 @@ export default function LegalMentions() {
           </Text>
           <Title as="h3">Conception et gestion du site</Title>
           <Text>
-            Le suivi éditorial et graphique ainsi que la conception technique du site et son ergonomie sont exclusivement assurés par le département ingénierie et science des données du Ministère chargé de l'Enseignement supérieur et de la Recherche.
+            Le suivi éditorial et graphique ainsi que la conception technique du site et son ergonomie sont exclusivement assurés par le département ingénierie et science des données du Ministère de l'Enseignement Supérieur, de la Recherche et de l'Espace.
           </Text>
           <Title as="h3">Gestionnaire des statistiques</Title>
           <Text>
@@ -59,13 +59,13 @@ export default function LegalMentions() {
           </Text>
           <Title as="h3">Clause de responsabilité</Title>
           <Text>
-            Les informations proposées sur ce site le sont à titre de service rendu au public. Malgré tout le soin apporté au traitement des référentiels, à l'alignement et à l'inter-connexion des données présentées, les éléments mis en ligne sur le site des l'atlas des effectifs étudiants ne sauraient, de quelque manière que ce soit, prétendre à l’exactitude et engager la responsabilité du Ministère chargé de l'Enseignement Supérieur et de la Recherche.
+            Les informations proposées sur ce site le sont à titre de service rendu au public. Malgré tout le soin apporté au traitement des référentiels, à l'alignement et à l'inter-connexion des données présentées, les éléments mis en ligne sur le site des l'atlas des effectifs étudiants ne sauraient, de quelque manière que ce soit, prétendre à l’exactitude et engager la responsabilité du Ministère de l'Enseignement Supérieur, de la Recherche et de l'Espace.
             <br />
             <br />
             Les informations et/ou documents disponibles sur ce site sont susceptibles d’être modifiés à tout moment, et font l’objet de mises à jour régulières.
             <br />
             <br />
-            Le Ministère chargé de l'Enseignement Supérieur et de la Recherche ne pourra en aucun cas être tenu responsable de tout dommage de quelque nature qu’il soit résultant de l’interprétation ou de l’utilisation des informations et/ou documents disponibles sur ce site.
+            Le Ministère de l'Enseignement Supérieur, de la Recherche et de l'Espace ne pourra en aucun cas être tenu responsable de tout dommage de quelque nature qu’il soit résultant de l’interprétation ou de l’utilisation des informations et/ou documents disponibles sur ce site.
           </Text>
           <Title as="h3">Accessibilité</Title>
             Le site de l'atlas des effectifs étudiants est développé selon les recommandations du Référentiel Général d'Amélioration de l'Accessibilité (RGAA). Nous nous sommes engagés à améliorer en permanence l’accessibilité de nos contenus pour que l’accès à l’information soit facilité.

@@ -1,20 +1,20 @@
-import { Badge, Col, Row } from "@dataesr/dsfr-plus";
-import { useQuery } from "@tanstack/react-query";
-import { useSearchParams } from "react-router-dom";
+import { Badge, Col, Row } from "@dataesr/dsfr-plus"
+import { useQuery } from "@tanstack/react-query"
+import { useSearchParams } from "react-router-dom"
 
-import { useEffect, useState } from "react";
-import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
-import Select from "../../../../../../components/select";
-import { getEsQuery } from "../../../../utils.ts";
+import { useEffect, useState } from "react"
+import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx"
+import Select from "../../../../../../components/select"
+import { getEsQuery } from "../../../../utils.ts"
 
-const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
+const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env
 
 
 export default function StructureSelector({ setStructures }) {
-  const [region, setRegion] = useState("*");
-  const [searchParams, setSearchParams] = useSearchParams({});
-  const [searchQuery, setSearchQuery] = useState("");
-  const [typology, setTypology] = useState("*");
+  const [region, setRegion] = useState("*")
+  const [searchParams, setSearchParams] = useSearchParams({})
+  const [searchQuery, setSearchQuery] = useState("")
+  const [typology, setTypology] = useState("*")
 
   const bodyRegions: any = {
     ...getEsQuery({}),
@@ -27,12 +27,12 @@ export default function StructureSelector({ setStructures }) {
         },
       },
     },
-  };
-  bodyRegions.query.bool.filter.push({ term: { participant_is_main_parent: 1 } });
-  bodyRegions.query.bool.filter.push({ term: { participant_type: "institution" } });
-  bodyRegions.query.bool.filter.push({ terms: { "participant_typologie_1.keyword": ["Ecoles, instituts et assimilés", "Organismes de recherche", "Universités et assimilés"] } });
+  }
+  bodyRegions.query.bool.filter.push({ term: { participant_is_main_parent: 1 } })
+  bodyRegions.query.bool.filter.push({ term: { participant_type: "institution" } })
+  bodyRegions.query.bool.filter.push({ terms: { "participant_typologie_1.keyword": ["Ecoles, instituts et assimilés", "Organismes de recherche", "Universités et assimilés"] } })
   if (typology) {
-    bodyRegions.query.bool.filter.push({ wildcard: { "participant_typologie_1.keyword": typology } });
+    bodyRegions.query.bool.filter.push({ wildcard: { "participant_typologie_1.keyword": typology } })
   }
   const { data: dataRegions, isLoading: isLoadingRegions } = useQuery({
     queryKey: ["fundings-regions", typology],
@@ -48,10 +48,10 @@ export default function StructureSelector({ setStructures }) {
           method: "POST",
         }
       ).then((response) => response.json()),
-  });
+  })
   const regions = (dataRegions?.aggregations?.by_region?.buckets ?? [])
     .map((bucket) => bucket.key)
-    .sort((a, b) => a.localeCompare(b));
+    .sort((a, b) => a.localeCompare(b))
 
   const bodyTypologies: any = {
     ...getEsQuery({}),
@@ -63,12 +63,12 @@ export default function StructureSelector({ setStructures }) {
         },
       },
     },
-  };
-  bodyTypologies.query.bool.filter.push({ term: { participant_is_main_parent: 1 } });
-  bodyTypologies.query.bool.filter.push({ term: { participant_type: "institution" } });
-  bodyTypologies.query.bool.filter.push({ terms: { "participant_typologie_1.keyword": ["Ecoles, instituts et assimilés", "Organismes de recherche", "Universités et assimilés"] } });
+  }
+  bodyTypologies.query.bool.filter.push({ term: { participant_is_main_parent: 1 } })
+  bodyTypologies.query.bool.filter.push({ term: { participant_type: "institution" } })
+  bodyTypologies.query.bool.filter.push({ terms: { "participant_typologie_1.keyword": ["Ecoles, instituts et assimilés", "Organismes de recherche", "Universités et assimilés"] } })
   if (region) {
-    bodyTypologies.query.bool.filter.push({ wildcard: { "address.region.keyword": region } });
+    bodyTypologies.query.bool.filter.push({ wildcard: { "address.region.keyword": region } })
   }
   const { data: dataTypologies, isLoading: isLoadingTypologies } = useQuery({
     queryKey: ["fundings-typologies", region],
@@ -84,8 +84,8 @@ export default function StructureSelector({ setStructures }) {
           method: "POST",
         }
       ).then((response) => response.json()),
-  });
-  const typologies = (dataTypologies?.aggregations?.by_typology?.buckets ?? []).map((bucket) => bucket.key);
+  })
+  const typologies = (dataTypologies?.aggregations?.by_typology?.buckets ?? []).map((bucket) => bucket.key)
 
   const bodyStructures: any = {
     ...getEsQuery({}),
@@ -97,15 +97,15 @@ export default function StructureSelector({ setStructures }) {
         },
       },
     },
-  };
-  bodyStructures.query.bool.filter.push({ term: { participant_is_main_parent: 1 } });
-  bodyStructures.query.bool.filter.push({ term: { participant_type: "institution" } });
-  bodyStructures.query.bool.filter.push({ terms: { "participant_typologie_1.keyword": ["Ecoles, instituts et assimilés", "Organismes de recherche", "Universités et assimilés"] } });
+  }
+  bodyStructures.query.bool.filter.push({ term: { participant_is_main_parent: 1 } })
+  bodyStructures.query.bool.filter.push({ term: { participant_type: "institution" } })
+  bodyStructures.query.bool.filter.push({ terms: { "participant_typologie_1.keyword": ["Ecoles, instituts et assimilés", "Organismes de recherche", "Universités et assimilés"] } })
   if (region) {
-    bodyStructures.query.bool.filter.push({ wildcard: { "address.region.keyword": region } });
+    bodyStructures.query.bool.filter.push({ wildcard: { "address.region.keyword": region } })
   }
   if (typology) {
-    bodyStructures.query.bool.filter.push({ wildcard: { "participant_typologie_1.keyword": typology } });
+    bodyStructures.query.bool.filter.push({ wildcard: { "participant_typologie_1.keyword": typology } })
   }
   const { data: dataStructures, isLoading: isLoadingStructures } = useQuery({
     queryKey: ["fundings-structures", region, typology],
@@ -121,29 +121,32 @@ export default function StructureSelector({ setStructures }) {
           method: "POST",
         }
       ).then((response) => response.json()),
-  });
+  })
 
   const structures =
     (dataStructures?.aggregations?.by_structure?.buckets ?? []).map((bucket) => {
-      const structureInfo = Object.fromEntries(new URLSearchParams(bucket?.key ?? ""));
-      structureInfo.searchableText = structureInfo.label.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
-      return structureInfo;
-    }) || [];
+      const structureInfo = Object.fromEntries(new URLSearchParams(bucket?.key ?? ""))
+      structureInfo.searchableText = `${structureInfo.label.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase()} ${structureInfo.acronym.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase()}`
+      let displayText = structureInfo.label
+      if (structureInfo?.acronym && structureInfo.acronym !== 'None') displayText += ` (${structureInfo.acronym})`
+      structureInfo.displayText = displayText
+      return structureInfo
+    }) || []
 
   const handleStructureChange = (selectedStructure?: string) => {
     if (selectedStructure) {
-      searchParams.set("structureId", selectedStructure);
+      searchParams.set("structureId", selectedStructure)
       searchParams.delete("region")
-      setSearchParams(searchParams);
+      setSearchParams(searchParams)
     }
-  };
+  }
 
   useEffect(() => {
     setStructures((dataStructures?.aggregations?.by_structure?.buckets ?? []).map((bucket) => {
-      const structureInfo = Object.fromEntries(new URLSearchParams(bucket?.key ?? ""));
-      structureInfo.searchableText = structureInfo.label.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
-      return structureInfo;
-    }) || []);
+      const structureInfo = Object.fromEntries(new URLSearchParams(bucket?.key ?? ""))
+      structureInfo.searchableText = structureInfo.label.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase()
+      return structureInfo
+    }) || [])
   }, [dataStructures])
 
   return (
@@ -164,14 +167,14 @@ export default function StructureSelector({ setStructures }) {
             >
               Toutes les régions
             </Select.Option>
-            {regions.map((c: string) => (
+            {regions.map((region: string) => (
               <Select.Option
-                key={c}
-                value={c}
-                selected={region === c}
-                onClick={() => setRegion(c)}
+                key={region}
+                value={region}
+                selected={region === region}
+                onClick={() => setRegion(region)}
               >
-                {c}
+                {region}
               </Select.Option>
             ))}
           </Select>
@@ -194,14 +197,14 @@ export default function StructureSelector({ setStructures }) {
             >
               Toutes les typologies
             </Select.Option>
-            {typologies.map((t: string) => (
+            {typologies.map((typology: string) => (
               <Select.Option
-                key={t}
-                value={t}
-                selected={typology === t}
-                onClick={() => setTypology(t)}
+                key={typology}
+                value={typology}
+                selected={typology === typology}
+                onClick={() => setTypology(typology)}
               >
-                {t}
+                {typology}
               </Select.Option>
             ))}
           </Select>
@@ -224,24 +227,24 @@ export default function StructureSelector({ setStructures }) {
             />
             <Select.Content maxHeight="300px">
               {structures
-                .filter((s) =>
+                .filter((structure) =>
                   searchQuery
-                    ? s.searchableText.includes(searchQuery.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase())
+                    ? structure.searchableText.includes(searchQuery.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase())
                     : true
                 )
-                .map((s) => (
+                .map((structure) => (
                   <Select.Option
-                    key={s.id}
-                    value={s.id}
-                    onClick={() => handleStructureChange(s.id)}
+                    key={structure.id}
+                    value={structure.id}
+                    onClick={() => handleStructureChange(structure.id)}
                   >
-                    {s.label}
+                    {structure.displayText}
                   </Select.Option>
                 ))}
               {structures
-                .filter((s) =>
+                .filter((structure) =>
                   searchQuery
-                    ? s.searchableText.includes(searchQuery.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase())
+                    ? structure.searchableText.includes(searchQuery.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase())
                     : true
                 )
                 .length === 0 && (
@@ -252,5 +255,5 @@ export default function StructureSelector({ setStructures }) {
         )}
       </Col>
     </Row>
-  );
+  )
 }

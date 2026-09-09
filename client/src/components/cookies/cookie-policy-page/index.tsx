@@ -188,7 +188,7 @@ export default function CookiePolicyPage() {
                 <strong>Contact :</strong>
               </p>
               <p>
-                Ministère de l'Enseignement supérieur, de la Recherche et de l'Espace
+                Ministère de l'Enseignement Supérieur, de la Recherche et de l'Espace
                 <br />
                 <Link href="/contact" target="_blank">
                   Nous contacter

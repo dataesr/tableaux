@@ -127,6 +127,6 @@ export const definitions = [
   {
     title: "Source des données",
     definition:
-      "Les données proviennent de la DGRH du MESRE (Ministère de l'Enseignement supérieur, de la Recherche et de l'Éducation), traitées via la DND. Les données de l'année la plus récente peuvent être incomplètes lorsque certaines enquêtes ne sont pas encore disponibles.",
+      "Les données proviennent de la DGRH du MESRE (Ministère de l'Enseignement Supérieur, de la Recherche et de l'Espace), traitées via la DND. Les données de l'année la plus récente peuvent être incomplètes lorsque certaines enquêtes ne sont pas encore disponibles.",
   },
 ];

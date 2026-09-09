@@ -25,7 +25,7 @@ const i18n = {
     fr: (
       <>
         {" "}
-        Le Ministère de l'Enseignement supérieur, de la Recherche et de l'Espace s’engage à rendre accessibles ses sites web conformément à l’
+        Le Ministère de l'Enseignement Supérieur, de la Recherche et de l'Espace s’engage à rendre accessibles ses sites web conformément à l’
         <Link href="https://www.legifrance.gouv.fr/loda/article_lc/LEGIARTI000037388867" target="_blank">
           {" "}
           article 47 de la loi n°2005-102 du 11 février 2005.
