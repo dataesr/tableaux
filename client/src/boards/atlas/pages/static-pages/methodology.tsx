@@ -67,7 +67,7 @@ export default function Methodology() {
         <tbody>
           <tr>
             <td>Classes préparatoires aux grandes écoles (CPGE)</td>
-            <td>MESRE – SIES MESRE– DEPP Ministère en charge de l’Agriculture et de la pêche</td>
+            <td>MESRE – SIES MESRE – DEPP Ministère en charge de l’Agriculture et de la pêche</td>
             <td>Élèves inscrits en CPGE dans les établissements publics ou privés du ministère en charge de l’Éducation nationale ou des autres ministères.</td>
           </tr>
           <tr>

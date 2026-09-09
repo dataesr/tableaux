@@ -22,10 +22,10 @@ export default function LegalMentions() {
           <Title as="h2">Mentions légales</Title>
           <Title as="h3">Éditeur du site</Title>
           <Text>
-            Ministère chargé de l'Enseignement Supérieur et de la Recherche<br />
+            Ministère de l'Enseignement Supérieur, de la Recherche et de l'Espace<br />
             Direction générale de l'enseignement supérieur<br />
-            Sous-direction des systèmes d'information et des études statistiques (SIES)<br />
-            Département ingénierie et science des données
+            Délégation au numérique et aux données (DENUM)<br />
+            Département Ingénierie et science des données
             <br />
             <br />
             1 rue Descartes<br />
