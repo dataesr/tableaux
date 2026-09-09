@@ -32,7 +32,7 @@ export default function DisplayStructure() {
   const navigate = useNavigate()
   const section = searchParams.get("section")
   const structure = searchParams.get("structureId")
-  const withComponents = !!parseInt(searchParams.get("withComponents") ?? '0')
+  const withComponents: boolean = searchParams.has("withComponents")
   const yearMax = searchParams.get("yearMax") ?? String(years[years.length - 2])
   const yearMin = searchParams.get("yearMin") ?? String(years[years.length - 2])
   const [isOpen, setIsOpen] = useState(false)
@@ -49,7 +49,7 @@ export default function DisplayStructure() {
   ]
 
   const handleDisplayComponentsChange = (event) => {
-    searchParams.set("withComponents", event.target.checked ? '1' : '0')
+    searchParams.set("withComponents", event.target.checked)
     setSearchParams(searchParams)
     setIsOpen(false)
   }
