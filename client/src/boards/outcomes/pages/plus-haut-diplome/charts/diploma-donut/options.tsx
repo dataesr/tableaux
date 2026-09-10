@@ -38,6 +38,9 @@ export function createDiplomaDonutOptions(
     ];
 
     return createChartOptions("pie", {
+        accessibility: {
+            description: "Anneau présentant la répartition des néo-bacheliers inscrits en L1 en 2019 selon le plus haut diplôme obtenu.",
+        },
         caption: {
             align: "left",
             style: { color: "var(--text-mention-grey)", fontSize: "11px" },
@@ -56,7 +59,8 @@ export function createDiplomaDonutOptions(
             },
         },
         title: {
-            "text": " ",
+            "text": "Répartition selon le plus haut diplôme obtenu",
+            style: { display: "none" },
         },
         tooltip: {
             pointFormatter() {

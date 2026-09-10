@@ -92,6 +92,7 @@ export function createRepartitionOptions(
 
     return createChartOptions("column", ({
         accessibility: {
+            description: "Colonnes empilées présentant, pour chaque année de 2019 à 2024, la répartition en pourcentage des néo-bacheliers inscrits en L1 en 2019 selon leur situation.",
             point: {
                 valueDescriptionFormat: "{series.name}: {point.percentage:.1f}%",
             },
@@ -127,7 +128,8 @@ export function createRepartitionOptions(
         },
         series,
         title: {
-            text: " ",
+            text: "Répartition des néo-bacheliers inscrits en L1 en 2019 selon les inscriptions par année",
+            style: { display: "none" },
         }, tooltip: {
             shared: false,
             useHTML: true,

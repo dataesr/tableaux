@@ -20,7 +20,9 @@ interface ProfileSeriesInput {
 
 export function createProfilesLineOptions(profiles: ProfileSeriesInput[]) {
     return createChartOptions("line", ({
-        accessibility: { enabled: false },
+        accessibility: {
+            description: "Courbes comparant, de 2019 à 2024, le taux de diplomation des profils sélectionnés.",
+        },
         caption: {
             align: "left",
             style: { color: "var(--text-mention-grey)", fontSize: "11px" },
@@ -28,7 +30,7 @@ export function createProfilesLineOptions(profiles: ProfileSeriesInput[]) {
             verticalAlign: "bottom",
         },
         chart: { type: "line", backgroundColor: "transparent", height: 380 },
-        title: { text: undefined },
+        title: { text: "Taux de diplomation par profil", style: { display: "none" } },
         legend: { enabled: true, itemStyle: { color: getCssColor("text-default-grey") } },
         xAxis: {
             categories: YEAR_LABELS,
@@ -92,7 +94,9 @@ export function createProfilesDiplomaStackOptions(profiles: ProfileStackInput[])
     });
 
     return createChartOptions("column", ({
-        accessibility: { enabled: false },
+        accessibility: {
+            description: "Colonnes empilées comparant, par profil, la part de diplômés du supérieur et de sortants sans diplôme.",
+        },
         caption: {
             align: "left",
             style: { color: "var(--text-mention-grey)", fontSize: "11px" },
@@ -100,7 +104,7 @@ export function createProfilesDiplomaStackOptions(profiles: ProfileStackInput[])
             verticalAlign: "bottom",
         },
         chart: { type: "column", backgroundColor: "transparent", height: 320 },
-        title: { text: " " },
+        title: { text: "Diplômés et sortants sans diplôme par profil", style: { display: "none" } },
         legend: { enabled: true, itemStyle: { color: getCssColor("text-default-grey") } },
         xAxis: {
             categories,

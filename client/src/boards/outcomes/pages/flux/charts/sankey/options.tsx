@@ -320,6 +320,7 @@ export function createSankeyOptions(links: OutcomesFluxLink[], totalStudents = 0
             },
         },
         accessibility: {
+            description: "Diagramme de flux (Sankey) reliant, d'une année à l'autre de 2019 à 2024, les situations d'études des néo-bacheliers inscrits en L1 en 2019.",
             point: {
                 valueDescriptionFormat: "{index}. {point.fromNode.name} vers {point.toNode.name}, {point.weight} étudiants.",
             },
@@ -366,7 +367,8 @@ export function createSankeyOptions(links: OutcomesFluxLink[], totalStudents = 0
             },
         ],
         title: {
-            text: " ",
+            text: "Parcours des néo-bacheliers inscrits en L1 en 2019 (diagramme de flux)",
+            style: { display: "none" },
         },
         tooltip: {
             useHTML: true,
