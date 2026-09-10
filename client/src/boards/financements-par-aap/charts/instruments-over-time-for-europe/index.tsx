@@ -1,18 +1,18 @@
-import { Title } from "@dataesr/dsfr-plus";
-import { useQuery } from "@tanstack/react-query";
-import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js";
-import { useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { Title } from "@dataesr/dsfr-plus"
+import { useQuery } from "@tanstack/react-query"
+import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js"
+import { useState } from "react"
+import { useSearchParams } from "react-router-dom"
 
-import DefaultSkeleton from "../../../../components/charts-skeletons/default.tsx";
-import { useChartColor } from "../../../../hooks/useChartColor.tsx";
-import { getI18nLabel } from "../../../../utils.tsx";
-import ChartWrapperFundings from "../../components/chart-wrapper-fundings/index.tsx";
-import SegmentedControl from "../../components/segmented-control/index.tsx";
-import i18n from "../../i18n.json";
-import { formatCompactNumber, getCssColor, getEsQuery, pattern, years } from "../../utils.ts";
+import DefaultSkeleton from "../../../../components/charts-skeletons/default.tsx"
+import { useChartColor } from "../../../../hooks/useChartColor.tsx"
+import { getI18nLabel } from "../../../../utils.tsx"
+import ChartWrapperFundings from "../../components/chart-wrapper-fundings/index.tsx"
+import SegmentedControl from "../../components/segmented-control/index.tsx"
+import i18n from "../../i18n.json"
+import { formatCompactNumber, getCssColor, getEsQuery, pattern, years } from "../../utils.ts"
 
-const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
+const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env
 
 export default function InstrumentsOverTimeForEurope({ name, participantSuperOrganizationChildren = [] }: { name: string | undefined, participantSuperOrganizationChildren?: any[] }) {
   const [selectedControl, setSelectedControl] = useState("projects")
@@ -112,8 +112,8 @@ export default function InstrumentsOverTimeForEurope({ name, participantSuperOrg
         },
       },
     },
-  };
-  body.query.bool.filter.push({ terms: { "project_type.keyword": ["Horizon 2020", "Horizon Europe"] } });
+  }
+  body.query.bool.filter.push({ terms: { "project_type.keyword": ["Horizon 2020", "Horizon Europe"] } })
 
   const { data, isLoading } = useQuery({
     queryKey: ["funding-instruments-over-time-for-europe", region, structures],
@@ -126,14 +126,14 @@ export default function InstrumentsOverTimeForEurope({ name, participantSuperOrg
         },
         method: "POST",
       }).then((response) => response.json()),
-  });
+  })
 
-  const seriesBudget: any = [];
-  const seriesFunding: any = [];
-  const seriesProject: any = [];
-  const seriesBudgetRegion: any = [];
-  const seriesFundingRegion: any = [];
-  const seriesProjectRegion: any = [];
+  const seriesBudget: any = []
+  const seriesFunding: any = []
+  const seriesProject: any = []
+  const seriesBudgetRegion: any = []
+  const seriesFundingRegion: any = []
+  const seriesProjectRegion: any = []
   (data?.aggregations?.by_instrument?.buckets ?? []).forEach((instrument) => {
     seriesBudget.push({
       color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: instrument.key, prefix: "instrument" }) } },
@@ -143,7 +143,7 @@ export default function InstrumentsOverTimeForEurope({ name, participantSuperOrg
         ?.find((bucket) => bucket.key.toString() === '0')?.sum_budget?.value ?? 0),
       marker: { enabled: false },
       name: [instrument.key, getI18nLabel(i18n, 'coordinator')].join(' - '),
-    });
+    })
     seriesBudget.push({
       color: getCssColor({ name: instrument.key, prefix: "instrument" }),
       data: years.map((year) => instrument?.by_project_year?.buckets
@@ -152,7 +152,7 @@ export default function InstrumentsOverTimeForEurope({ name, participantSuperOrg
         ?.find((bucket) => bucket.key.toString() === '0')?.sum_budget?.value ?? 0),
       marker: { enabled: false },
       name: [instrument.key, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
-    });
+    })
     seriesBudgetRegion.push({
       color: getCssColor({ name: instrument.key, prefix: "instrument" }),
       data: years.map((year) => instrument
@@ -160,7 +160,7 @@ export default function InstrumentsOverTimeForEurope({ name, participantSuperOrg
         ?.should_ignore_budget?.buckets?.find((bucket) => bucket.key.toString() === '0')?.sum_budget?.value ?? 0),
       marker: { enabled: false },
       name: instrument.key,
-    });
+    })
     seriesFunding.push({
       color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: instrument.key, prefix: "instrument" }) } },
       data: years.map((year) => instrument?.by_project_year?.buckets
@@ -169,7 +169,7 @@ export default function InstrumentsOverTimeForEurope({ name, participantSuperOrg
         ?.find((bucket) => bucket.key.toString() === '0')?.sum_funding?.value ?? 0),
       marker: { enabled: false },
       name: [instrument.key, getI18nLabel(i18n, 'coordinator')].join(' - '),
-    });
+    })
     seriesFunding.push({
       color: getCssColor({ name: instrument.key, prefix: "instrument" }),
       data: years.map((year) => instrument?.by_project_year?.buckets
@@ -178,7 +178,7 @@ export default function InstrumentsOverTimeForEurope({ name, participantSuperOrg
         ?.find((bucket) => bucket.key.toString() === '0')?.sum_funding?.value ?? 0),
       marker: { enabled: false },
       name: [instrument.key, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
-    });
+    })
     seriesFundingRegion.push({
       color: getCssColor({ name: instrument.key, prefix: "instrument" }),
       data: years.map((year) => instrument
@@ -186,7 +186,7 @@ export default function InstrumentsOverTimeForEurope({ name, participantSuperOrg
         ?.should_ignore_funding?.buckets?.find((bucket) => bucket.key.toString() === '0')?.sum_funding?.value ?? 0),
       marker: { enabled: false },
       name: instrument.key,
-    });
+    })
     seriesProject.push({
       color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: instrument.key, prefix: "instrument" }) } },
       data: years.map((year) => instrument?.by_project_year?.buckets
@@ -194,7 +194,7 @@ export default function InstrumentsOverTimeForEurope({ name, participantSuperOrg
         ?.find((bucket) => bucket.key === 1)?.by_unique_project?.value ?? 0),
       marker: { enabled: false },
       name: [instrument.key, getI18nLabel(i18n, 'coordinator')].join(' - '),
-    });
+    })
     seriesProject.push({
       color: getCssColor({ name: instrument.key, prefix: "instrument" }),
       data: years.map((year) => instrument?.by_project_year?.buckets
@@ -202,7 +202,7 @@ export default function InstrumentsOverTimeForEurope({ name, participantSuperOrg
         ?.find((bucket) => bucket.key === 0)?.by_unique_project?.value ?? 0),
       marker: { enabled: false },
       name: [instrument.key, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
-    });
+    })
     seriesProjectRegion.push({
       color: getCssColor({ name: instrument.key, prefix: "instrument" }),
       data: years.map((year) => instrument
@@ -210,36 +210,36 @@ export default function InstrumentsOverTimeForEurope({ name, participantSuperOrg
         ?.by_unique_project?.value ?? 0),
       marker: { enabled: false },
       name: instrument.key,
-    });
-  });
+    })
+  })
 
-  // If view by number of projects
-  let axis = getI18nLabel(i18n, 'number_of_projects_funded');
-  let series = (structure && !withComponents) ? seriesProject.reverse() : seriesProjectRegion.reverse();
-  let title = `Evolution temporelle des instruments européens (actions) dont a bénéficié ${structure ? "l'établissement" : "la région"} ${name}`;
+  // If view by number of projects, view by default
+  let axis = getI18nLabel(i18n, 'number_of_projects_funded')
+  let series = (structure && !withComponents) ? seriesProject.reverse() : seriesProjectRegion.reverse()
+  let title = `Evolution temporelle des instruments européens (actions) dont a bénéficié ${structure ? "l'établissement" : "la région"} ${name}`
   let tooltip = function (this: any) {
-    return `<b>${this.y}</b> projets <b>${this.series.name}</b> en <b>${this.x}</b> dont a bénéficié ${structure ? "l'établissement" : "la région"} <b>${name}</b>`;
-  };
+    return `<b>${this.y}</b> projets <b>${this.series.name}</b> en <b>${this.x}</b> dont a bénéficié ${structure ? "l'établissement" : "la région"} <b>${name}</b>`
+  }
   switch (selectedControl) {
     // If view by global amount
     case 'amount_global':
-      axis = getI18nLabel(i18n, 'funding_total');
-      series = (structure && !withComponents) ? seriesBudget.reverse() : seriesBudgetRegion.reverse();
-      title = `Evolution temporelle du financement global par instrument européen dont a bénéficié ${structure ? "l'établissement" : "la région"} ${name}`;
+      axis = getI18nLabel(i18n, 'funding_total')
+      series = (structure && !withComponents) ? seriesBudget.reverse() : seriesBudgetRegion.reverse()
+      title = `Evolution temporelle du financement global par instrument européen dont a bénéficié ${structure ? "l'établissement" : "la région"} ${name}`
       tooltip = function (this: any) {
-        return `<b>${formatCompactNumber(this.y)} €</b> ont été financés en <b>${this.x}</b> par l'instrument <b>${this.series.name}</b> dont a bénéficié ${structure ? "l'établissement" : "la région"} <b>${name}</b>`;
-      };
-      break;
+        return `<b>${formatCompactNumber(this.y)} €</b> ont été financés en <b>${this.x}</b> par l'instrument <b>${this.series.name}</b> dont a bénéficié ${structure ? "l'établissement" : "la région"} <b>${name}</b>`
+      }
+      break
     // If view by amount by structure
     case 'amount_by_structure':
-      axis = getI18nLabel(i18n, structure ? 'funding_by_structure' : 'funding_by_region');
-      series = (structure && !withComponents) ? seriesFunding.reverse() : seriesFundingRegion.reverse();
-      title = `Evolution temporelle du financement perçu par instrument européen dont a bénéficié ${structure ? "l'établissement" : "la région"} ${name}`;
+      axis = getI18nLabel(i18n, structure ? 'funding_by_structure' : 'funding_by_region')
+      series = (structure && !withComponents) ? seriesFunding.reverse() : seriesFundingRegion.reverse()
+      title = `Evolution temporelle du financement perçu par instrument européen dont a bénéficié ${structure ? "l'établissement" : "la région"} ${name}`
       tooltip = function (this: any) {
-        return `<b>${formatCompactNumber(this.y)} €</b> ont été perçus en <b>${this.x}</b> par l'instrument <b>${this.series.name}</b> dont a bénéficié ${structure ? "l'établissement" : "la région"} <b>${name}</b>`;
-      };
-      break;
-  };
+        return `<b>${formatCompactNumber(this.y)} €</b> ont été perçus en <b>${this.x}</b> par l'instrument <b>${this.series.name}</b> dont a bénéficié ${structure ? "l'établissement" : "la région"} <b>${name}</b>`
+      }
+      break
+  }
 
   const config = {
     comment: {
@@ -255,7 +255,7 @@ export default function InstrumentsOverTimeForEurope({ name, participantSuperOrg
     id: "instrumentsOverTimeForEurope",
     integrationURL: `/integration?chart_id=instrumentsOverTimeForEurope&${searchParams.toString()}`,
     title,
-  };
+  }
 
   const options: HighchartsInstance.Options = {
     chart: { height: "800px", type: "area" },
@@ -277,7 +277,7 @@ export default function InstrumentsOverTimeForEurope({ name, participantSuperOrg
     tooltip: { formatter: tooltip },
     xAxis: { categories: [], title: { text: "Année de début du projet" } },
     yAxis: { title: { text: axis } },
-  };
+  }
 
   return (
     <div className={`chart-container chart-container--${color}`} id="instruments-over-time-for-europe">
@@ -287,5 +287,5 @@ export default function InstrumentsOverTimeForEurope({ name, participantSuperOrg
       <SegmentedControl selectedControl={selectedControl} setSelectedControl={setSelectedControl} />
       {isLoading ? <DefaultSkeleton height="800px" /> : <ChartWrapperFundings config={config} hideTitle options={options} />}
     </div>
-  );
+  )
 }

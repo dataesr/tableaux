@@ -1,18 +1,18 @@
-import { Title } from "@dataesr/dsfr-plus";
-import { useQuery } from "@tanstack/react-query";
-import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js";
-import { useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { Title } from "@dataesr/dsfr-plus"
+import { useQuery } from "@tanstack/react-query"
+import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js"
+import { useState } from "react"
+import { useSearchParams } from "react-router-dom"
 
-import DefaultSkeleton from "../../../../components/charts-skeletons/default.tsx";
-import { useChartColor } from "../../../../hooks/useChartColor.tsx";
-import { getI18nLabel } from "../../../../utils";
-import ChartWrapperFundings from "../../components/chart-wrapper-fundings";
-import SegmentedControl from "../../components/segmented-control";
-import i18n from "../../i18n.json";
-import { formatCompactNumber, funders, getCssColor, getEsQuery, pattern, years } from "../../utils.ts";
+import DefaultSkeleton from "../../../../components/charts-skeletons/default.tsx"
+import { useChartColor } from "../../../../hooks/useChartColor.tsx"
+import { getI18nLabel } from "../../../../utils"
+import ChartWrapperFundings from "../../components/chart-wrapper-fundings"
+import SegmentedControl from "../../components/segmented-control"
+import i18n from "../../i18n.json"
+import { formatCompactNumber, funders, getCssColor, getEsQuery, pattern, years } from "../../utils.ts"
 
-const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
+const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env
 
 export default function ProjectsOverTime({ name, participantSuperOrganizationChildren = [] }: { name: string | undefined, participantSuperOrganizationChildren?: any[] }) {
   const [selectedControl, setSelectedControl] = useState("projects")
@@ -121,7 +121,7 @@ export default function ProjectsOverTime({ name, participantSuperOrganizationChi
         },
       },
     },
-  };
+  }
 
   const { data, isLoading } = useQuery({
     queryKey: ["funding-projects-over-time", region, structures],
@@ -134,14 +134,14 @@ export default function ProjectsOverTime({ name, participantSuperOrganizationChi
         },
         method: "POST",
       }).then((response) => response.json()),
-  });
+  })
 
-  const seriesBudget: any[] = [];
-  const seriesFunding: any[] = [];
-  const seriesProject: any[] = [];
-  const seriesBudgetRegion: any = [];
-  const seriesFundingRegion: any = [];
-  const seriesProjectRegion: any = [];
+  const seriesBudget: any[] = []
+  const seriesFunding: any[] = []
+  const seriesProject: any[] = []
+  const seriesBudgetRegion: any = []
+  const seriesFundingRegion: any = []
+  const seriesProjectRegion: any = []
   funders.map((funder) => {
     seriesBudget.push({
       color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } },
@@ -152,7 +152,7 @@ export default function ProjectsOverTime({ name, participantSuperOrganizationChi
         ?.find((bucket) => bucket.key.toString() === '0')?.sum_budget?.value ?? 0),
       marker: { enabled: false },
       name: [funder, getI18nLabel(i18n, 'coordinator')].join(' - '),
-    });
+    })
     seriesBudget.push({
       color: getCssColor({ name: funder, prefix: "funder" }),
       data: years.map((year) => (data?.aggregations?.by_project_type?.buckets ?? [])
@@ -162,7 +162,7 @@ export default function ProjectsOverTime({ name, participantSuperOrganizationChi
         ?.find((bucket) => bucket.key.toString() === '0')?.sum_budget?.value ?? 0),
       marker: { enabled: false },
       name: [funder, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
-    });
+    })
     seriesBudgetRegion.push({
       color: getCssColor({ name: funder, prefix: "funder" }),
       data: years.map((year) => (data?.aggregations?.by_project_type?.buckets ?? [])
@@ -171,7 +171,7 @@ export default function ProjectsOverTime({ name, participantSuperOrganizationChi
         ?.find((bucket) => bucket.key.toString() === '0')?.sum_budget?.value ?? 0),
       marker: { enabled: false },
       name: funder,
-    });
+    })
     seriesFunding.push({
       color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } },
       data: years.map((year) => (data?.aggregations?.by_project_type?.buckets ?? [])
@@ -181,7 +181,7 @@ export default function ProjectsOverTime({ name, participantSuperOrganizationChi
         ?.find((bucket) => bucket.key.toString() === '0')?.sum_funding?.value ?? 0),
       marker: { enabled: false },
       name: [funder, getI18nLabel(i18n, 'coordinator')].join(' - '),
-    });
+    })
     seriesFunding.push({
       color: getCssColor({ name: funder, prefix: "funder" }),
       data: years.map((year) => (data?.aggregations?.by_project_type?.buckets ?? [])
@@ -191,7 +191,7 @@ export default function ProjectsOverTime({ name, participantSuperOrganizationChi
         ?.find((bucket) => bucket.key.toString() === '0')?.sum_funding?.value ?? 0),
       marker: { enabled: false },
       name: [funder, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
-    });
+    })
     seriesFundingRegion.push({
       color: getCssColor({ name: funder, prefix: "funder" }),
       data: years.map((year) => (data?.aggregations?.by_project_type?.buckets ?? [])
@@ -200,7 +200,7 @@ export default function ProjectsOverTime({ name, participantSuperOrganizationChi
         ?.find((bucket) => bucket.key.toString() === '0')?.sum_funding?.value ?? 0),
       marker: { enabled: false },
       name: funder,
-    });
+    })
     seriesProject.push({
       color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } },
       data: years.map((year) => (data?.aggregations?.by_project_type?.buckets ?? [])
@@ -209,7 +209,7 @@ export default function ProjectsOverTime({ name, participantSuperOrganizationChi
         ?.find((bucket) => bucket.key === year)?.by_unique_project?.value ?? 0),
       marker: { enabled: false },
       name: [funder, getI18nLabel(i18n, 'coordinator')].join(' - '),
-    });
+    })
     seriesProject.push({
       color: getCssColor({ name: funder, prefix: "funder" }),
       data: years.map((year) => (data?.aggregations?.by_project_type?.buckets ?? [])
@@ -218,7 +218,7 @@ export default function ProjectsOverTime({ name, participantSuperOrganizationChi
         ?.find((bucket) => bucket.key === year)?.by_unique_project?.value ?? 0),
       marker: { enabled: false },
       name: [funder, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
-    });
+    })
     seriesProjectRegion.push({
       color: getCssColor({ name: funder, prefix: "funder" }),
       data: years.map((year) => (data?.aggregations?.by_project_type?.buckets ?? [])
@@ -226,36 +226,36 @@ export default function ProjectsOverTime({ name, participantSuperOrganizationChi
         ?.find((bucket) => bucket.key === year)?.by_unique_project?.value ?? 0),
       marker: { enabled: false },
       name: funder,
-    });
-  });
+    })
+  })
 
-  // If view by number of projects
-  let axis = getI18nLabel(i18n, 'number_of_projects_funded');
-  let series = (structure && !withComponents) ? seriesProject.reverse() : seriesProjectRegion.reverse();
-  let title = `Evolution temporelle du nombre de projets auxquels participe ${structure ? "l'établissement" : "la région"} ${name}`;
+  // If view by number of projects, view by default
+  let axis = getI18nLabel(i18n, 'number_of_projects_funded')
+  let series = (structure && !withComponents) ? seriesProject.reverse() : seriesProjectRegion.reverse()
+  let title = `Evolution temporelle du nombre de projets auxquels participe ${structure ? "l'établissement" : "la région"} ${name}`
   let tooltip = function (this: any) {
-    return `<b>${this.y}</b> projets <b>${this.series.name}</b> en <b>${this.x}</b> auxquels prend part ${structure ? "l'établissement" : "la région"} <b>${name}</b>`;
-  };
+    return `<b>${this.y}</b> projets <b>${this.series.name}</b> en <b>${this.x}</b> auxquels prend part ${structure ? "l'établissement" : "la région"} <b>${name}</b>`
+  }
   switch (selectedControl) {
     // If view by global amount
     case 'amount_global':
-      axis = getI18nLabel(i18n, 'funding_total');
-      series = (structure && !withComponents) ? seriesBudget.reverse() : seriesBudgetRegion.reverse();
-      title = `Evolution temporelle des financements globaux pour les projets auxquels participe ${structure ? "l'établissement" : "la région"} ${name}`;
+      axis = getI18nLabel(i18n, 'funding_total')
+      series = (structure && !withComponents) ? seriesBudget.reverse() : seriesBudgetRegion.reverse()
+      title = `Evolution temporelle des financements globaux pour les projets auxquels participe ${structure ? "l'établissement" : "la région"} ${name}`
       tooltip = function (this: any) {
-        return `<b>${formatCompactNumber(this.y)} €</b> ont été financés en <b>${this.x}</b> pour les projets <b>${this.series.name}</b> auxquels participe ${structure ? "l'établissement" : "la région"} <b>${name}</b>`;
-      };
-      break;
+        return `<b>${formatCompactNumber(this.y)} €</b> ont été financés en <b>${this.x}</b> pour les projets <b>${this.series.name}</b> auxquels participe ${structure ? "l'établissement" : "la région"} <b>${name}</b>`
+      }
+      break
     // If view by amount by structure
     case 'amount_by_structure':
-      axis = getI18nLabel(i18n, structure ? 'funding_by_structure' : 'funding_by_region');
-      series = (structure && !withComponents) ? seriesFunding.reverse() : seriesFundingRegion.reverse();
-      title = `Evolution temporelle des financements perçus pour les projets auxquels participe ${structure ? "l'établissement" : "la région"} ${name}`;
+      axis = getI18nLabel(i18n, structure ? 'funding_by_structure' : 'funding_by_region')
+      series = (structure && !withComponents) ? seriesFunding.reverse() : seriesFundingRegion.reverse()
+      title = `Evolution temporelle des financements perçus pour les projets auxquels participe ${structure ? "l'établissement" : "la région"} ${name}`
       tooltip = function (this: any) {
-        return `<b>${formatCompactNumber(this.y)} €</b> ont été perçus en <b>${this.x}</b> pour les projets <b>${this.series.name}</b> auxquels participe ${structure ? "l'établissement" : "la région"} <b>${name}</b>`;
-      };
-      break;
-  };
+        return `<b>${formatCompactNumber(this.y)} €</b> ont été perçus en <b>${this.x}</b> pour les projets <b>${this.series.name}</b> auxquels participe ${structure ? "l'établissement" : "la région"} <b>${name}</b>`
+      }
+      break
+  }
 
   const config = {
     comment: {
@@ -272,7 +272,7 @@ export default function ProjectsOverTime({ name, participantSuperOrganizationChi
     id: "projectsOverTime",
     integrationURL: `/integration?chart_id=projectsOverTime&${searchParams.toString()}`,
     title,
-  };
+  }
 
   const options: HighchartsInstance.Options = {
     chart: { type: "area" },
@@ -294,7 +294,7 @@ export default function ProjectsOverTime({ name, participantSuperOrganizationChi
     tooltip: { formatter: tooltip },
     xAxis: { categories: [], title: { text: "Année de début du projet" } },
     yAxis: { title: { text: axis } },
-  };
+  }
 
   return (
     <div className={`chart-container chart-container--${color}`} id="projects-over-time">
@@ -304,5 +304,5 @@ export default function ProjectsOverTime({ name, participantSuperOrganizationChi
       <SegmentedControl selectedControl={selectedControl} setSelectedControl={setSelectedControl} />
       {isLoading ? <DefaultSkeleton height="600px" /> : <ChartWrapperFundings config={config} hideTitle options={options} />}
     </div>
-  );
+  )
 }

@@ -1,23 +1,23 @@
-import { lazy, Suspense } from "react";
-import { Navigate, Route, Routes } from "react-router-dom";
+import { lazy, Suspense } from "react"
+import { Navigate, Route, Routes } from "react-router-dom"
 
-import { useTitle } from "../../hooks/usePageTitle.tsx";
-import { getI18nLabel } from "../../utils";
-import i18n from "./i18n.json";
+import { useTitle } from "../../hooks/usePageTitle.tsx"
+import { getI18nLabel } from "../../utils"
+import i18n from "./i18n.json"
 
-import "./styles.scss";
+import "./styles.scss"
 
-const Comparison = lazy(() => import('./pages/comparison/index.tsx'));
-const Region = lazy(() => import('./pages/region/index.tsx'));
-const GlobalLayout = lazy(() => import('./components/layouts/global-layout.tsx'));
-const Home = lazy(() => import('./pages/home/index.tsx'));
-const NotFoundPage = lazy(() => import('../../components/not-found-page.tsx'));
-const Structures = lazy(() => import('./pages/structures/index.tsx'));
+const Comparison = lazy(() => import('./pages/comparison/index.tsx'))
+const Region = lazy(() => import('./pages/region/index.tsx'))
+const GlobalLayout = lazy(() => import('./components/layouts/global-layout.tsx'))
+const Home = lazy(() => import('./pages/home/index.tsx'))
+const NotFoundPage = lazy(() => import('../../components/not-found-page.tsx'))
+const Structures = lazy(() => import('./pages/structures/index.tsx'))
 
 const RouteWithTitle = ({ titleKey, element }) => {
   useTitle(getI18nLabel(i18n, titleKey))
-  return element;
-};
+  return element
+}
 
 
 export default function FundingsRoutes() {
@@ -33,5 +33,5 @@ export default function FundingsRoutes() {
       </Route>
       <Route path="*" element={<Suspense><NotFoundPage /></Suspense>} />
     </Routes>
-  );
+  )
 }

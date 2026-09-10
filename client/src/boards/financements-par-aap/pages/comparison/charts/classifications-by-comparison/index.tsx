@@ -1,26 +1,26 @@
-import { Title } from "@dataesr/dsfr-plus";
-import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
-import { useSearchParams } from "react-router-dom";
-import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js";
+import { Title } from "@dataesr/dsfr-plus"
+import { useQuery } from "@tanstack/react-query"
+import { useState } from "react"
+import { useSearchParams } from "react-router-dom"
+import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js"
 
-import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
-import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
-import { getI18nLabel } from "../../../../../../utils";
-import ChartWrapperFundings from "../../../../components/chart-wrapper-fundings";
-import SegmentedControl from "../../../../components/segmented-control";
-import i18n from "../../../../i18n.json";
-import { formatCompactNumber, getCssColor, getEsQuery, getYearRangeLabel, pattern } from "../../../../utils.ts";
+import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx"
+import { useChartColor } from "../../../../../../hooks/useChartColor.tsx"
+import { getI18nLabel } from "../../../../../../utils"
+import ChartWrapperFundings from "../../../../components/chart-wrapper-fundings"
+import SegmentedControl from "../../../../components/segmented-control"
+import i18n from "../../../../i18n.json"
+import { formatCompactNumber, getCssColor, getEsQuery, getYearRangeLabel, pattern } from "../../../../utils.ts"
 
-const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
+const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env
 
 export default function ClassificationsByComparison() {
-  const [selectedControl, setSelectedControl] = useState("projects");
-  const [searchParams] = useSearchParams();
-  const structures = searchParams.getAll("structure");
-  const yearMax = searchParams.get("yearMax");
-  const yearMin = searchParams.get("yearMin");
-  const color = useChartColor();
+  const [selectedControl, setSelectedControl] = useState("projects")
+  const [searchParams] = useSearchParams()
+  const structures = searchParams.getAll("structure")
+  const yearMax = searchParams.get("yearMax")
+  const yearMin = searchParams.get("yearMin")
+  const color = useChartColor()
 
   const body = {
     ...getEsQuery({ structures, yearMax, yearMin }),
@@ -123,7 +123,7 @@ export default function ClassificationsByComparison() {
         },
       },
     },
-  };
+  }
 
   const { data, isLoading } = useQuery({
     queryKey: ["fundings-classifications-by-structures", structures, yearMax, yearMin],
@@ -136,102 +136,102 @@ export default function ClassificationsByComparison() {
         },
         method: "POST",
       }).then((response) => response.json()),
-  });
+  })
 
-  const seriesBudget: any[] = [];
-  const seriesParticipation: any[] = [];
-  const seriesProject: any[] = [];
-  const structuresBudget = data?.aggregations?.by_structure_budget?.buckets ?? [];
-  const structuresParticipation = data?.aggregations?.by_structure_funding?.buckets ?? [];
-  const structuresProject = data?.aggregations?.by_structure_project?.buckets ?? [];
+  const seriesBudget: any[] = []
+  const seriesParticipation: any[] = []
+  const seriesProject: any[] = []
+  const structuresBudget = data?.aggregations?.by_structure_budget?.buckets ?? []
+  const structuresParticipation = data?.aggregations?.by_structure_funding?.buckets ?? []
+  const structuresProject = data?.aggregations?.by_structure_project?.buckets ?? []
   (structuresBudget?.[0]?.by_classifications?.buckets ?? []).forEach((bucket) => {
     seriesBudget.push({
       color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: bucket.key, prefix: "classification" }) } },
       data: structuresBudget.map((sss) => sss.by_classifications.buckets.find((classification) => classification.key === bucket.key)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.sum_budget?.value ?? 0),
       name: [bucket.key, getI18nLabel(i18n, 'coordinator')].join(' - '),
-    });
+    })
     seriesBudget.push({
       color: getCssColor({ name: bucket.key, prefix: "classification" }),
       data: structuresBudget.map((sss) => sss.by_classifications.buckets.find((classification) => classification.key === bucket.key)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.sum_budget?.value ?? 0),
       name: [bucket.key, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
-    });
-  });
+    })
+  })
   (structuresParticipation?.[0]?.by_classifications?.buckets ?? []).forEach((bucket) => {
     seriesParticipation.push({
       color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: bucket.key, prefix: "classification" }) } },
       data: structuresParticipation.map((sss) => sss.by_classifications.buckets.find((classification) => classification.key === bucket.key)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.sum_funding?.value ?? 0),
       name: [bucket.key, getI18nLabel(i18n, 'coordinator')].join(' - '),
-    });
+    })
     seriesParticipation.push({
       color: getCssColor({ name: bucket.key, prefix: "classification" }),
       data: structuresParticipation.map((sss) => sss.by_classifications.buckets.find((classification) => classification.key === bucket.key)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.sum_funding?.value ?? 0),
       name: [bucket.key, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
-    });
+    })
   });
   (structuresProject?.[0]?.by_classifications?.buckets ?? []).forEach((bucket) => {
     seriesProject.push({
       color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: bucket.key, prefix: "classification" }) } },
       data: structuresProject.map((sss) => sss.by_classifications.buckets.find((classification) => classification.key === bucket.key)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.by_unique_project?.value ?? 0),
       name: [bucket.key, getI18nLabel(i18n, 'coordinator')].join(' - '),
-    });
+    })
     seriesProject.push({
       color: getCssColor({ name: bucket.key, prefix: "classification" }),
       data: structuresProject.map((sss) => sss.by_classifications.buckets.find((classification) => classification.key === bucket.key)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.by_unique_project?.value ?? 0),
       name: [bucket.key, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
-    });
-  });
-  const categoriesBudget = structuresBudget.map((bucket) => (Object.fromEntries(new URLSearchParams(bucket.key))).label);
-  const categoriesParticipation = structuresParticipation.map((bucket) => (Object.fromEntries(new URLSearchParams(bucket.key))).label);
-  const categoriesProject = structuresProject.map((bucket) => (Object.fromEntries(new URLSearchParams(bucket.key))).label);
+    })
+  })
+  const categoriesBudget = structuresBudget.map((bucket) => (Object.fromEntries(new URLSearchParams(bucket.key))).label)
+  const categoriesParticipation = structuresParticipation.map((bucket) => (Object.fromEntries(new URLSearchParams(bucket.key))).label)
+  const categoriesProject = structuresProject.map((bucket) => (Object.fromEntries(new URLSearchParams(bucket.key))).label)
 
-  // If view by number of projects
-  let axis = getI18nLabel(i18n, 'number_of_projects_funded');
-  let categories = categoriesProject;
+  // If view by number of projects, view by default
+  let axis = getI18nLabel(i18n, 'number_of_projects_funded')
+  let categories = categoriesProject
   let dataLabel = function (this: any) {
-    return `${this.y} projet${this.y > 1 ? 's' : ''}`;
-  };
-  let series = seriesProject.reverse();
+    return `${this.y} projet${this.y > 1 ? 's' : ''}`
+  }
+  let series = seriesProject.reverse()
   let stackLabel = function (this: any) {
-    return `${this.total} projet${this.total > 1 ? 's' : ''}`;
-  };
-  let title = `Profils disciplinaires des établissements via les projets financés ${getYearRangeLabel({ yearMax, yearMin })}`;
+    return `${this.total} projet${this.total > 1 ? 's' : ''}`
+  }
+  let title = `Profils disciplinaires des établissements via les projets financés ${getYearRangeLabel({ yearMax, yearMin })}`
   let tooltip = function (this: any) {
-    return `<b>${this.y}</b> projets ont débuté ${getYearRangeLabel({ isBold: true, yearMax, yearMin })} en <b>${this.series.name}</b> auxquels prend part <b>${categoriesProject[this.x]}</b>`;
-  };
+    return `<b>${this.y}</b> projets ont débuté ${getYearRangeLabel({ isBold: true, yearMax, yearMin })} en <b>${this.series.name}</b> auxquels prend part <b>${categoriesProject[this.x]}</b>`
+  }
   switch (selectedControl) {
     // If view by global amount
     case 'amount_global':
-      axis = getI18nLabel(i18n, 'funding_total');
-      categories = categoriesBudget;
+      axis = getI18nLabel(i18n, 'funding_total')
+      categories = categoriesBudget
       dataLabel = function (this: any) {
-        return `${formatCompactNumber(this.y)} €`;
-      };
-      series = seriesBudget.reverse();
+        return `${formatCompactNumber(this.y)} €`
+      }
+      series = seriesBudget.reverse()
       stackLabel = function (this: any) {
-        return `${formatCompactNumber(this.total)} €`;
-      };
-      title = `Profils disciplinaires des établissements via le montant des projets financés ${getYearRangeLabel({ yearMax, yearMin })}`;
+        return `${formatCompactNumber(this.total)} €`
+      }
+      title = `Profils disciplinaires des établissements via le montant des projets financés ${getYearRangeLabel({ yearMax, yearMin })}`
       tooltip = function (this: any) {
-        return `<b>${formatCompactNumber(this.y)} €</b> ont été financés au global en <b>${this.series.name}</b> pour des projets débutés ${getYearRangeLabel({ isBold: true, yearMax, yearMin })} auxquels prend part <b>${categoriesBudget[this.x]}</b>`;
-      };
-      break;
+        return `<b>${formatCompactNumber(this.y)} €</b> ont été financés au global en <b>${this.series.name}</b> pour des projets débutés ${getYearRangeLabel({ isBold: true, yearMax, yearMin })} auxquels prend part <b>${categoriesBudget[this.x]}</b>`
+      }
+      break
     // If view by amount by structure
     case 'amount_by_structure':
-      axis = getI18nLabel(i18n, 'funding_by_structure');
-      categories = categoriesParticipation;
+      axis = getI18nLabel(i18n, 'funding_by_structure')
+      categories = categoriesParticipation
       dataLabel = function (this: any) {
-        return `${formatCompactNumber(this.y)} €`;
-      };
-      series = seriesParticipation.reverse();
+        return `${formatCompactNumber(this.y)} €`
+      }
+      series = seriesParticipation.reverse()
       stackLabel = function (this: any) {
-        return `${formatCompactNumber(this.total)} €`;
-      };
-      title = `Profils disciplinaires des établissements via les montants perçus ${getYearRangeLabel({ yearMax, yearMin })}`;
+        return `${formatCompactNumber(this.total)} €`
+      }
+      title = `Profils disciplinaires des établissements via les montants perçus ${getYearRangeLabel({ yearMax, yearMin })}`
       tooltip = function (this: any) {
-        return `<b>${formatCompactNumber(this.y)} €</b> ont été perçus par <b>${categoriesBudget[this.x]}</b> pour des projets en <b>${this.series.name}</b> débutés ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`;
-      };
-      break;
-  };
+        return `<b>${formatCompactNumber(this.y)} €</b> ont été perçus par <b>${categoriesBudget[this.x]}</b> pour des projets en <b>${this.series.name}</b> débutés ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`
+      }
+      break
+  }
 
   const config = {
     comment: {
@@ -244,7 +244,7 @@ export default function ClassificationsByComparison() {
     id: "classificationsByComparison",
     integrationURL: `/integration?chart_id=classificationsByComparison&${searchParams.toString()}`,
     title,
-  };
+  }
 
   const options: HighchartsInstance.Options = {
     legend: { enabled: true, reversed: true },
@@ -269,7 +269,7 @@ export default function ClassificationsByComparison() {
       },
       title: { text: axis },
     },
-  };
+  }
 
   return (
     <div className={`chart-container chart-container--${color}`} id="classifications-by-comparison">
@@ -279,5 +279,5 @@ export default function ClassificationsByComparison() {
       <SegmentedControl selectedControl={selectedControl} setSelectedControl={setSelectedControl} />
       {isLoading ? <DefaultSkeleton height="600px" /> : <ChartWrapperFundings config={config} hideTitle options={options} />}
     </div>
-  );
+  )
 }

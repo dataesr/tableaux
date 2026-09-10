@@ -1,21 +1,21 @@
-import { Badge, Col, DismissibleTag, Row, TagGroup } from "@dataesr/dsfr-plus";
-import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { Badge, Col, DismissibleTag, Row, TagGroup } from "@dataesr/dsfr-plus"
+import { useQuery } from "@tanstack/react-query"
+import { useState } from "react"
+import { useSearchParams } from "react-router-dom"
 
-import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
-import Select from "../../../../../../components/select";
-import { getEsQuery } from "../../../../utils.ts";
+import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx"
+import Select from "../../../../../../components/select"
+import { getEsQuery } from "../../../../utils.ts"
 
-const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
+const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env
 
 
 export default function StructuresSelector() {
-  const [region, setRegion] = useState("*");
-  const [typology, setTypology] = useState("*");
-  const [searchQuery, setSearchQuery] = useState("");
-  const [searchParams, setSearchParams] = useSearchParams({});
-  const selectedStructures: string[] = searchParams.getAll("structure");
+  const [region, setRegion] = useState("*")
+  const [typology, setTypology] = useState("*")
+  const [searchQuery, setSearchQuery] = useState("")
+  const [searchParams, setSearchParams] = useSearchParams({})
+  const selectedStructures: string[] = searchParams.getAll("structure")
 
   const bodyRegions: any = {
     ...getEsQuery({}),
@@ -28,12 +28,12 @@ export default function StructuresSelector() {
         },
       },
     },
-  };
-  bodyRegions.query.bool.filter.push({ term: { participant_is_main_parent: 1 } });
-  bodyRegions.query.bool.filter.push({ term: { participant_type: "institution" } });
-  bodyRegions.query.bool.filter.push({ terms: { "participant_typologie_1.keyword": ["Ecoles, instituts et assimilés", "Organismes de recherche", "Universités et assimilés"] } });
+  }
+  bodyRegions.query.bool.filter.push({ term: { participant_is_main_parent: 1 } })
+  bodyRegions.query.bool.filter.push({ term: { participant_type: "institution" } })
+  bodyRegions.query.bool.filter.push({ terms: { "participant_typologie_1.keyword": ["Ecoles, instituts et assimilés", "Organismes de recherche", "Universités et assimilés"] } })
   if (typology && typology !== '*') {
-    bodyRegions.query.bool.filter.push({ term: { "participant_typologie_1.keyword": typology } });
+    bodyRegions.query.bool.filter.push({ term: { "participant_typologie_1.keyword": typology } })
   }
   const { data: dataRegions, isLoading: isLoadingRegions } = useQuery({
     queryKey: ["fundings-regions", typology],
@@ -49,8 +49,8 @@ export default function StructuresSelector() {
           method: "POST",
         }
       ).then((response) => response.json()),
-  });
-  const regions = (dataRegions?.aggregations?.by_region?.buckets ?? []).map((bucket) => bucket.key);
+  })
+  const regions = (dataRegions?.aggregations?.by_region?.buckets ?? []).map((bucket) => bucket.key)
 
   const bodyTypologies: any = {
     ...getEsQuery({}),
@@ -62,12 +62,12 @@ export default function StructuresSelector() {
         },
       },
     },
-  };
-  bodyTypologies.query.bool.filter.push({ term: { participant_is_main_parent: 1 } });
-  bodyTypologies.query.bool.filter.push({ term: { participant_type: "institution" } });
-  bodyTypologies.query.bool.filter.push({ terms: { "participant_typologie_1.keyword": ["Ecoles, instituts et assimilés", "Organismes de recherche", "Universités et assimilés"] } });
+  }
+  bodyTypologies.query.bool.filter.push({ term: { participant_is_main_parent: 1 } })
+  bodyTypologies.query.bool.filter.push({ term: { participant_type: "institution" } })
+  bodyTypologies.query.bool.filter.push({ terms: { "participant_typologie_1.keyword": ["Ecoles, instituts et assimilés", "Organismes de recherche", "Universités et assimilés"] } })
   if (region && region !== '*') {
-    bodyTypologies.query.bool.filter.push({ term: { "address.region.keyword": region } });
+    bodyTypologies.query.bool.filter.push({ term: { "address.region.keyword": region } })
   }
   const { data: dataTypologies, isLoading: isLoadingTypologies } = useQuery({
     queryKey: ["fundings-typologies", region],
@@ -83,8 +83,8 @@ export default function StructuresSelector() {
           method: "POST",
         }
       ).then((response) => response.json()),
-  });
-  const typologies = (dataTypologies?.aggregations?.by_typology?.buckets ?? []).map((bucket) => bucket.key);
+  })
+  const typologies = (dataTypologies?.aggregations?.by_typology?.buckets ?? []).map((bucket) => bucket.key)
 
   const bodyStructures: any = {
     ...getEsQuery({}),
@@ -96,12 +96,12 @@ export default function StructuresSelector() {
         },
       },
     },
-  };
-  bodyStructures.query.bool.filter.push({ term: { participant_is_main_parent: 1 } });
-  bodyStructures.query.bool.filter.push({ term: { participant_type: "institution" } });
-  bodyStructures.query.bool.filter.push({ terms: { "participant_typologie_1.keyword": ["Ecoles, instituts et assimilés", "Organismes de recherche", "Universités et assimilés"] } });
+  }
+  bodyStructures.query.bool.filter.push({ term: { participant_is_main_parent: 1 } })
+  bodyStructures.query.bool.filter.push({ term: { participant_type: "institution" } })
+  bodyStructures.query.bool.filter.push({ terms: { "participant_typologie_1.keyword": ["Ecoles, instituts et assimilés", "Organismes de recherche", "Universités et assimilés"] } })
   // Deep copy
-  const bodyStructuresAll = JSON.parse(JSON.stringify(bodyStructures));
+  const bodyStructuresAll = JSON.parse(JSON.stringify(bodyStructures))
   const { data: dataStructuresAll, isLoading: isLoadingStructuresAll } = useQuery({
     queryKey: ["fundings-structures"],
     queryFn: () =>
@@ -116,18 +116,18 @@ export default function StructuresSelector() {
           method: "POST",
         }
       ).then((response) => response.json()),
-  });
+  })
   const structuresAll = (dataStructuresAll?.aggregations?.by_structure?.buckets ?? []).map((bucket) => {
-    const structureInfo = Object.fromEntries(new URLSearchParams(bucket.key));
-    structureInfo.searchableText = structureInfo.label.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
-    return structureInfo;
-  }) || [];
+    const structureInfo = Object.fromEntries(new URLSearchParams(bucket.key))
+    structureInfo.searchableText = structureInfo.label.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
+    return structureInfo
+  }) || []
 
   if (region && region !== '*') {
-    bodyStructures.query.bool.filter.push({ wildcard: { "address.region.keyword": region } });
+    bodyStructures.query.bool.filter.push({ wildcard: { "address.region.keyword": region } })
   }
   if (typology && typology !== '*') {
-    bodyStructures.query.bool.filter.push({ term: { "participant_typologie_1.keyword": typology } });
+    bodyStructures.query.bool.filter.push({ term: { "participant_typologie_1.keyword": typology } })
   }
   const { data: dataStructures, isLoading: isLoadingStructures } = useQuery({
     queryKey: ["fundings-structures", region, typology],
@@ -143,33 +143,33 @@ export default function StructuresSelector() {
           method: "POST",
         }
       ).then((response) => response.json()),
-  });
+  })
 
   const structures =
     (dataStructures?.aggregations?.by_structure?.buckets ?? []).map((bucket) => {
-      const structureInfo = Object.fromEntries(new URLSearchParams(bucket.key));
-      structureInfo.searchableText = structureInfo.label.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
-      return structureInfo;
-    }) || [];
+      const structureInfo = Object.fromEntries(new URLSearchParams(bucket.key))
+      structureInfo.searchableText = structureInfo.label.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
+      return structureInfo
+    }) || []
 
   const handleStructureChange = (selectedStructure?: string) => {
     // If I click on only one structure, convert it into an array
     // If I click on "Add multiple structures", convert the array of structure objects into an array on string ids
-    let structureIdsToAdd = selectedStructure ? [selectedStructure] : structures.map((str) => str.id);
+    let structureIdsToAdd = selectedStructure ? [selectedStructure] : structures.map((str) => str.id)
     // Do not add duplicates as selected structures
-    structureIdsToAdd = structureIdsToAdd.filter((str: string) => !selectedStructures.includes(str));
+    structureIdsToAdd = structureIdsToAdd.filter((str: string) => !selectedStructures.includes(str))
     structureIdsToAdd.forEach((str: string) => searchParams.append("structure", str))
-    setSearchParams(searchParams);
-  };
+    setSearchParams(searchParams)
+  }
 
   const handleTagClick = (selectedStructure: string) => {
-    searchParams.delete("structure", selectedStructure);
-    setSearchParams(searchParams);
-  };
+    searchParams.delete("structure", selectedStructure)
+    setSearchParams(searchParams)
+  }
 
   const handleDeleteAll = () => {
-    searchParams.delete("structure");
-    setSearchParams(searchParams);
+    searchParams.delete("structure")
+    setSearchParams(searchParams)
   }
 
   return (
@@ -269,14 +269,14 @@ export default function StructuresSelector() {
                           searchQuery
                             ? s.searchableText.includes(searchQuery.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase())
                             : true
-                        );
+                        )
                         if (checked) {
-                          const idsToAdd = filtered.map((s) => s.id).filter((id) => !selectedStructures.includes(id));
-                          idsToAdd.forEach((id) => searchParams.append("structure", id));
+                          const idsToAdd = filtered.map((s) => s.id).filter((id) => !selectedStructures.includes(id))
+                          idsToAdd.forEach((id) => searchParams.append("structure", id))
                         } else {
-                          filtered.forEach((s) => searchParams.delete("structure", s.id));
+                          filtered.forEach((s) => searchParams.delete("structure", s.id))
                         }
-                        setSearchParams(searchParams);
+                        setSearchParams(searchParams)
                       }}
                     >
                       <strong>Tout sélectionner</strong>
@@ -295,9 +295,9 @@ export default function StructuresSelector() {
                       checked={selectedStructures.includes(s.id)}
                       onChange={(checked) => {
                         if (checked) {
-                          handleStructureChange(s.id);
+                          handleStructureChange(s.id)
                         } else {
-                          handleTagClick(s.id);
+                          handleTagClick(s.id)
                         }
                       }}
                     >
@@ -338,5 +338,5 @@ export default function StructuresSelector() {
         </Row>
       )}
     </>
-  );
+  )
 }

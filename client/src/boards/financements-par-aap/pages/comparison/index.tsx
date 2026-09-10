@@ -1,52 +1,52 @@
-import { Alert, Col, Container, Row, Text, Title } from "@dataesr/dsfr-plus";
-import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { Alert, Col, Container, Row, Text, Title } from "@dataesr/dsfr-plus"
+import { useEffect, useState } from "react"
+import { useSearchParams } from "react-router-dom"
 
-import Breadcrumb from "../../components/breadcrumb";
-import Select from "../../../../components/select";
-import { years } from "../../utils";
-import ClassificationsByComparison from "./charts/classifications-by-comparison";
-import DispersionByComparison from "./charts/dispersion-by-comparison";
-import ProjectsByComparison from "./charts/projects-by-comparison";
-import StructuresSelector from "./components/structures-selector";
+import Breadcrumb from "../../components/breadcrumb"
+import Select from "../../../../components/select"
+import { years } from "../../utils"
+import ClassificationsByComparison from "./charts/classifications-by-comparison"
+import DispersionByComparison from "./charts/dispersion-by-comparison"
+import ProjectsByComparison from "./charts/projects-by-comparison"
+import StructuresSelector from "./components/structures-selector"
 
-import "./styles.scss";
+import "./styles.scss"
 
 
 export default function Comparison() {
-  const [searchParams, setSearchParams] = useSearchParams({});
-  const section = searchParams.get("section");
-  const structures = searchParams.getAll("structure");
-  const yearMax = searchParams.get("yearMax") ?? String(years[years.length - 2]);
-  const yearMin = searchParams.get("yearMin") ?? String(years[years.length - 2]);
-  const [isOpen, setIsOpen] = useState(false);
+  const [searchParams, setSearchParams] = useSearchParams({})
+  const section = searchParams.get("section")
+  const structures = searchParams.getAll("structure")
+  const yearMax = searchParams.get("yearMax") ?? String(years[years.length - 2])
+  const yearMin = searchParams.get("yearMin") ?? String(years[years.length - 2])
+  const [isOpen, setIsOpen] = useState(false)
   const sections = [
     { id: "financements", label: "Volume et répartition des financements" },
     { id: "disciplines", label: "Disciplines" },
-  ];
+  ]
 
   const handleNavClick = (section: string) => {
-    searchParams.set("section", section);
-    setSearchParams(searchParams);
-    setIsOpen(false);
-  };
+    searchParams.set("section", section)
+    setSearchParams(searchParams)
+    setIsOpen(false)
+  }
 
   const handleYearMaxChange = (year: string) => {
-    searchParams.set("yearMax", year);
-    setSearchParams(searchParams);
-  };
+    searchParams.set("yearMax", year)
+    setSearchParams(searchParams)
+  }
 
   const handleYearMinChange = (year: string) => {
-    searchParams.set("yearMin", year);
-    setSearchParams(searchParams);
-  };
+    searchParams.set("yearMin", year)
+    setSearchParams(searchParams)
+  }
 
   useEffect(() => {
     if (!searchParams.get("section")) {
-      searchParams.set("section", "financements");
-      setSearchParams(searchParams);
+      searchParams.set("section", "financements")
+      setSearchParams(searchParams)
     }
-  }, [searchParams, setSearchParams]);
+  }, [searchParams, setSearchParams])
 
   return (
     <>

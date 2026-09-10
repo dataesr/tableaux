@@ -1,4 +1,4 @@
-import { Link } from "@dataesr/dsfr-plus";
+import { Link } from "@dataesr/dsfr-plus"
 
 
 export default function Breadcrumb({ items }) {
@@ -29,5 +29,5 @@ export default function Breadcrumb({ items }) {
         </ol>
       </div>
     </nav>
-  );
+  )
 }

@@ -1,22 +1,22 @@
-import { useQuery } from "@tanstack/react-query";
-import { useSearchParams } from "react-router-dom";
-import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js";
+import { useQuery } from "@tanstack/react-query"
+import { useSearchParams } from "react-router-dom"
+import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js"
 
-import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
-import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
-import { getI18nLabel } from "../../../../../../utils";
-import ChartWrapperFundings from "../../../../components/chart-wrapper-fundings";
-import { formatCompactNumber, getEsQuery, getYearRangeLabel } from "../../../../utils.ts";
-import i18n from "../../../../i18n.json";
+import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx"
+import { useChartColor } from "../../../../../../hooks/useChartColor.tsx"
+import { getI18nLabel } from "../../../../../../utils"
+import ChartWrapperFundings from "../../../../components/chart-wrapper-fundings"
+import { formatCompactNumber, getEsQuery, getYearRangeLabel } from "../../../../utils.ts"
+import i18n from "../../../../i18n.json"
 
-const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
+const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env
 
 export default function DispersionByComparison() {
-  const [searchParams] = useSearchParams();
-  const structures = searchParams.getAll("structure");
-  const yearMax = searchParams.get("yearMax");
-  const yearMin = searchParams.get("yearMin");
-  const color = useChartColor();
+  const [searchParams] = useSearchParams()
+  const structures = searchParams.getAll("structure")
+  const yearMax = searchParams.get("yearMax")
+  const yearMin = searchParams.get("yearMin")
+  const color = useChartColor()
 
   const body = {
     ...getEsQuery({ structures, yearMax, yearMin }),
@@ -52,7 +52,7 @@ export default function DispersionByComparison() {
         },
       },
     },
-  };
+  }
 
   const { data, isLoading } = useQuery({
     queryKey: ["fundings-dispersion", structures, yearMax, yearMin],
@@ -65,7 +65,7 @@ export default function DispersionByComparison() {
         },
         method: "POST",
       }).then((response) => response.json()),
-  });
+  })
 
   const series = (data?.aggregations?.by_typology?.buckets ?? []).map((typology) => ({
     data: (typology?.by_structure?.buckets ?? []).map((structure) => ({
@@ -76,13 +76,13 @@ export default function DispersionByComparison() {
       z: structure?.unique_labs?.value ?? 0,
     })),
     name: typology.key,
-  }));
+  }))
 
-  const xs = series.map((funder) => funder.data.map((structure) => structure.x)).flat();
-  const tickInterval = (Math.max.apply(null, xs) - Math.min.apply(null, xs)) / 10;
-  const meanX = xs.length > 0 ? xs.reduce((prev, current) => prev + current) / xs.length : undefined;
-  const ys = series.map((funder) => funder.data.map((structure) => structure.y)).flat();
-  const meanY = ys.length > 0 ? ys.reduce((prev, current) => prev + current) / ys.length : undefined;
+  const xs = series.map((funder) => funder.data.map((structure) => structure.x)).flat()
+  const tickInterval = (Math.max.apply(null, xs) - Math.min.apply(null, xs)) / 10
+  const meanX = xs.length > 0 ? xs.reduce((prev, current) => prev + current) / xs.length : undefined
+  const ys = series.map((funder) => funder.data.map((structure) => structure.y)).flat()
+  const meanY = ys.length > 0 ? ys.reduce((prev, current) => prev + current) / ys.length : undefined
 
   const config = {
     comment: { "fr": <>Ce graphique positionne chaque établissement selon deux dimensions :
@@ -96,7 +96,7 @@ Le financement perçu approxime la part réelle allouée à chaque établissemen
     id: "dispersionByComparison",
     integrationURL: `/integration?chart_id=dispersionByComparison&${searchParams.toString()}`,
     title: `Positionnement des établissements selon le nombre de projets et le financement perçu associé ${getYearRangeLabel({ yearMax, yearMin })}`,
-  };
+  }
 
   const options: HighchartsInstance.Options = {
     chart: { plotBorderWidth: 1, type: "bubble", zooming: { type: "xy" } },
@@ -132,11 +132,11 @@ Le financement perçu approxime la part réelle allouée à chaque établissemen
       title: { text: getI18nLabel(i18n, 'funding_total') },
     },
     title: { text: "" },
-  };
+  }
 
   return (
     <div className={`chart-container chart-container--${color}`} id="dispersion-by-comparison">
       {isLoading ? <DefaultSkeleton height="600px" /> : <ChartWrapperFundings config={config} options={options} />}
     </div>
-  );
+  )
 }

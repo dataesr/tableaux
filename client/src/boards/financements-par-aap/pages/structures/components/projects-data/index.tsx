@@ -239,28 +239,28 @@ export default function ProjectsData({ participantSuperOrganizationChildren = []
   ], [])
 
   const downloadCsv = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
+    e.preventDefault()
+    e.stopPropagation()
     if (dataTableAll.length > 0) {
       // Extract keys from the first object to use as headers
-      const headers = Object.keys(dataTableAll[0]);
-      const rows = dataTableAll.map((row) => headers.map((header) => row?.[header] ? `"${row[header]}"` : ""));
+      const headers = Object.keys(dataTableAll[0])
+      const rows = dataTableAll.map((row) => headers.map((header) => row?.[header] ? `"${row[header]}"` : ""))
       // Combine headers and rows into a single CSV string
       const csvContent = [
         headers.join(','),
         ...rows.map((row) => row.join(',')),
-      ].join('\n');
+      ].join('\n')
       // Create a hidden download link
-      const link = document.createElement('a');
-      link.download = `tableaux_financements_par_aap_${structure ?? region}_${yearMin}_${yearMax}.csv`;
-      link.href = URL.createObjectURL(new Blob([csvContent], { type: 'text/csv;charset=utf-8' }));
-      link.style.visibility = 'hidden';
+      const link = document.createElement('a')
+      link.download = `tableaux_financements_par_aap_${structure ?? region}_${yearMin}_${yearMax}.csv`
+      link.href = URL.createObjectURL(new Blob([csvContent], { type: 'text/csv;charset=utf-8' }))
+      link.style.visibility = 'hidden'
       // Append link to DOM, trigger click, and clean up
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
     }
-  };
+  }
 
   if (isLoading) return <DefaultSkeleton height="600px" />
 

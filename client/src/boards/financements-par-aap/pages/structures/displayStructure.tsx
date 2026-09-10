@@ -50,7 +50,7 @@ export default function DisplayStructure() {
 
   const handleDisplayComponentsChange = () => {
     if (searchParams.has("withComponents")) {
-      searchParams.delete("withComponents");
+      searchParams.delete("withComponents")
     } else {
       searchParams.set("withComponents", "")
     }
@@ -91,7 +91,7 @@ export default function DisplayStructure() {
         },
         method: "POST",
       }).then((response) => response.json()),
-  });
+  })
   const participantSuperOrganizationChildren = (data?.hits?.hits?.[0]?._source?.participant_super_organization_children ?? []).map((org) => org?.id).filter((id) => !!id)
   const structureInfo = Object.fromEntries(new URLSearchParams(data?.hits?.hits?.[0]?._source?.participant_encoded_key ?? ""))
   let name = structureInfo?.label ?? ""
