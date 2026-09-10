@@ -143,7 +143,7 @@ export default function ClassificationsByComparison() {
   const seriesProject: any[] = []
   const structuresBudget = data?.aggregations?.by_structure_budget?.buckets ?? []
   const structuresParticipation = data?.aggregations?.by_structure_funding?.buckets ?? []
-  const structuresProject = data?.aggregations?.by_structure_project?.buckets ?? []
+  const structuresProject = data?.aggregations?.by_structure_project?.buckets ?? [];
   (structuresBudget?.[0]?.by_classifications?.buckets ?? []).forEach((bucket) => {
     seriesBudget.push({
       color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: bucket.key, prefix: "classification" }) } },
