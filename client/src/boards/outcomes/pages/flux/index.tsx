@@ -260,16 +260,18 @@ export default function FluxPage() {
                                 />
                             </div>
                         )}
-                        {!isLoading && !isFetching && error && (
-                            <Callout colorFamily="pink-macaron" icon="fr-icon-error-warning-line" title="Erreur de chargement">
-                                Impossible de récupérer les flux pour cette cohorte.
-                            </Callout>
-                        )}
-                        {!isLoading && !isFetching && data && !data.links?.length && (
-                            <Callout title="Aucune transition visible" icon="fr-icon-information-line">
-                                Aucun flux ne dépasse le seuil d'affichage avec les filtres actuellement sélectionnés.
-                            </Callout>
-                        )}
+                        <div role="status">
+                            {!isLoading && !isFetching && error && (
+                                <Callout colorFamily="pink-macaron" icon="fr-icon-error-warning-line" title="Erreur de chargement">
+                                    Impossible de récupérer les flux pour cette cohorte.
+                                </Callout>
+                            )}
+                            {!isLoading && !isFetching && data && !data.links?.length && (
+                                <Callout title="Aucune transition visible" icon="fr-icon-information-line">
+                                    Aucun flux ne dépasse le seuil d'affichage avec les filtres actuellement sélectionnés.
+                                </Callout>
+                            )}
+                        </div>
                         {!isLoading && !isFetching && (data?.links?.length ?? 0) > 0 && (
                             <SankeyChart
                                 exportMetadata={{

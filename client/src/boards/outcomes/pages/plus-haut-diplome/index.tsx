@@ -190,16 +190,18 @@ export default function PlusHautDiplomePage() {
                     <div className="outcomes-flux-page__content">
                         {activeFiltersElement}
                         {isLoading && <DefaultSkeleton height="400px" />}
-                        {!isLoading && error && (
-                            <Callout colorFamily="pink-macaron" icon="fr-icon-error-warning-line" title="Erreur de chargement">
-                                Impossible de récupérer les données pour cette cohorte.
-                            </Callout>
-                        )}
-                        {!isLoading && !error && data && !data.rows.length && (
-                            <Callout title="Aucune donnée" icon="fr-icon-information-line">
-                                Aucune donnée disponible avec les filtres actuellement sélectionnés.
-                            </Callout>
-                        )}
+                        <div role="status">
+                            {!isLoading && error && (
+                                <Callout colorFamily="pink-macaron" icon="fr-icon-error-warning-line" title="Erreur de chargement">
+                                    Impossible de récupérer les données pour cette cohorte.
+                                </Callout>
+                            )}
+                            {!isLoading && !error && data && !data.rows.length && (
+                                <Callout title="Aucune donnée" icon="fr-icon-information-line">
+                                    Aucune donnée disponible avec les filtres actuellement sélectionnés.
+                                </Callout>
+                            )}
+                        </div>
 
                         {hasData && (
                             <>

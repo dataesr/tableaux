@@ -189,16 +189,18 @@ export default function RepartitionPage() {
                     <div className="outcomes-flux-page__content">
                         <ChartWrapper.Title config={{ id: "outcomes-repartition", title: { fr: "Répartition des néo-bacheliers inscrits en L1 en 2019 selon les inscriptions par année (en %)", look: "h4" as const } }} />
                         {isLoading && <DefaultSkeleton height="540px" />}
-                        {!isLoading && error && (
-                            <Callout colorFamily="pink-macaron" icon="fr-icon-error-warning-line" title="Erreur de chargement">
-                                Impossible de récupérer les données de répartition pour cette cohorte.
-                            </Callout>
-                        )}
-                        {!isLoading && !error && data && !data.distribution?.length && (
-                            <Callout title="Aucune donnée" icon="fr-icon-information-line">
-                                Aucune donnée disponible avec les filtres actuellement sélectionnés.
-                            </Callout>
-                        )}
+                        <div role="status">
+                            {!isLoading && error && (
+                                <Callout colorFamily="pink-macaron" icon="fr-icon-error-warning-line" title="Erreur de chargement">
+                                    Impossible de récupérer les données de répartition pour cette cohorte.
+                                </Callout>
+                            )}
+                            {!isLoading && !error && data && !data.distribution?.length && (
+                                <Callout title="Aucune donnée" icon="fr-icon-information-line">
+                                    Aucune donnée disponible avec les filtres actuellement sélectionnés.
+                                </Callout>
+                            )}
+                        </div>
                         {activeFiltersElement}
                         {!isLoading && !error && (data?.distribution?.length ?? 0) > 0 && (
                             <RepartitionChart hideTitle />
