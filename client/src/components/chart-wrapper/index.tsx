@@ -210,7 +210,7 @@ function MenuModal({
             <Button
               icon="file-download-line"
               onClick={downloadCSV}
-              title="Téléchargement des données du graphique"
+              title="Télécharger les données du graphique au format CSV"
               variant="text"
             >
               {getI18nLabel(i18n, "downloadCSV")}
@@ -220,7 +220,7 @@ function MenuModal({
             <Button
               icon="image-line"
               onClick={downloadPNG}
-              title="Téléchargement de l'image"
+              title="Télécharger l'image du graphique au format PNG"
               variant="text"
             >
               {getI18nLabel(i18n, "downloadPNG")}

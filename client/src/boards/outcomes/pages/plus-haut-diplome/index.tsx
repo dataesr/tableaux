@@ -206,8 +206,8 @@ export default function PlusHautDiplomePage() {
                         {hasData && (
                             <>
                                 <div className="outcomes-phd__table-actions fr-mb-1w">
-                                    <Button icon="file-download-line" onClick={exportCsv} title="Export des données" size="sm">
-                                        Export des données
+                                    <Button icon="file-download-line" onClick={exportCsv} title="Télécharger les données du tableau au format CSV" size="sm">
+                                        Télécharger les données (CSV)
                                     </Button>
                                 </div>
                                 <div className="fr-table">

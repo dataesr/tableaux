@@ -4,12 +4,12 @@
     "en": "Print"
   },
   "downloadCSV": {
-    "fr": "Télécharger CSV",
-    "en": "Download CSV"
+    "fr": "Télécharger les données (CSV)",
+    "en": "Download data (CSV)"
   },
   "downloadPNG": {
-    "fr": "Télécharger PNG",
-    "en": "Download PNG"
+    "fr": "Télécharger l'image (PNG)",
+    "en": "Download image (PNG)"
   },
   "modalTitle": {
     "fr": "Options du graphique",
