@@ -133,7 +133,7 @@ export default function InstrumentsOverTimeForEurope({ name, participantSuperOrg
   const seriesProject: any = []
   const seriesBudgetRegion: any = []
   const seriesFundingRegion: any = []
-  const seriesProjectRegion: any = []
+  const seriesProjectRegion: any = [];
   (data?.aggregations?.by_instrument?.buckets ?? []).forEach((instrument) => {
     seriesBudget.push({
       color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: instrument.key, prefix: "instrument" }) } },
