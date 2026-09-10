@@ -325,12 +325,10 @@ export default function FrenchPartners({ name, participantSuperOrganizationChild
   };
   let series = (structure && !withComponents) ? seriesProject.reverse() : seriesProjectRegion.reverse();
   let stackLabel = function (this: any) {
-    // return `${this.total} projet${this.total > 1 ? 's' : ''}`;
-    return '';
+    return `${this.total} projet${this.total > 1 ? 's' : ''}`;
   };
   let tooltip = function (this: any) {
-    // return `<b>${this.y}</b> projets <b>${this.series.name}</b> auxquels participent ${structure ? "l'établissement" : "la région"} <b>${name}</b> et <b>${this.key}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`;
-    return '';
+    return `<b>${this.y}</b> projets <b>${this.series.name}</b> auxquels participent ${structure ? "l'établissement" : "la région"} <b>${name}</b> et <b>${this.key}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`;
   };
   switch (selectedControl) {
     // If view by global amount
@@ -374,7 +372,8 @@ export default function FrenchPartners({ name, participantSuperOrganizationChild
         l'établissement est coordinateur, en couleur simple s'il est partenaire non-coordinateur.": "" } Le financement global 
         représente le volume total de financements des projets auxquels participe ${structure ? "l'établissement" : "la région"}. 
         Le financement perçu approxime la part réelle allouée à chaque ${structure ? "l'établissement" : "la région"} partenaire 
-        d’un projet (en assimilant consommation et subvention pour le PIA).`}</>,
+        d’un projet (en assimilant consommation et subvention pour le PIA).${withComponents ? " Ici, le périmètre est constitué d'une \
+        structure et de ses composantes. Le regroupement par rôle de coordinateur n'est donc pas disponible." : ""}`}</>,
     },
     id: "frenchPartners",
     integrationURL: `/integration?chart_id=frenchPartners&${searchParams.toString()}`,

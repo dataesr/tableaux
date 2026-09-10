@@ -373,7 +373,9 @@ export default function InternationalPartners({ name, participantSuperOrganizati
         participation est distingué, en pointillé quand l'établissement est coordinateur, en couleur simple s'il est partenaire \
         non-coordinateur." : ""} Le financement global représente le volume total de financements des projets auxquels participe 
         ${structure ? "l'établissement" : "la région"}. Le financement perçu approxime la part réelle allouée à chaque 
-        ${structure ? "établissement" : "région"} partenaire d’un projet (en assimilant consommation et subvention pour le PIA).`}</>,
+        ${structure ? "établissement" : "région"} partenaire d’un projet (en assimilant consommation et subvention pour le PIA).
+        ${withComponents ? " Ici, le périmètre est constitué d'une \
+        structure et de ses composantes. Le regroupement par rôle de coordinateur n'est donc pas disponible." : ""}`}</>,
     },
     id: "internationalPartners",
     integrationURL: `/integration?chart_id=internationalPartners&${searchParams.toString()}`,

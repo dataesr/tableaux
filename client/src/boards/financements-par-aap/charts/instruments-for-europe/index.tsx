@@ -263,7 +263,8 @@ export default function InstrumentsForEurope({ name, participantSuperOrganizatio
         pointillé quand l'établissement est coordinateur, en couleur simple s'il est partenaire non-coordinateur." : ""} Le 
         financement global représente le volume total de financements des projets auxquels participe ${structure ? "l'établissement" : "la région"}. 
         Le financement perçu approxime la part réelle allouée à chaque ${structure ? "l'établissement" : "la région"} partenaire 
-        d’un projet (en assimilant consommation et subvention pour le PIA).`}</>,
+        d’un projet (en assimilant consommation et subvention pour le PIA).${withComponents ? " Ici, le périmètre est constitué d'une \
+        structure et de ses composantes. Le regroupement par rôle de coordinateur n'est donc pas disponible." : ""}`}</>,
     },
     id: "instrumentsForEurope",
     integrationURL: `/integration?chart_id=instrumentsForEurope&${searchParams.toString()}`,

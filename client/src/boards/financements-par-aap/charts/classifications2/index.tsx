@@ -322,7 +322,8 @@ export default function Classifications2({ name, participantSuperOrganizationChi
         non-coordinateur." : ""} Le financement global représente le volume total de financements des projets auxquels participe 
         ${structure ? "l'établissement" : "la région"}. Le financement perçu approxime la part réelle allouée à chaque 
         ${structure ? "établissement" : "région"} partenaire d’un projet (en assimilant consommation et subvention pour le PIA). 
-        Les disciplines ont été estimées par IA, à partir du titre, résumé et mots clés des projets.`}</>,
+        Les disciplines ont été estimées par IA, à partir du titre, résumé et mots clés des projets.${withComponents ? " Ici, le périmètre est constitué d'une \
+        structure et de ses composantes. Le regroupement par rôle de coordinateur n'est donc pas disponible." : ""}`}</>,
     },
     id: "classifications2",
     integrationURL: `/integration?chart_id=classifications2&${searchParams.toString()}`,

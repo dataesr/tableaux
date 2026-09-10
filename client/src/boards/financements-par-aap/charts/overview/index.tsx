@@ -112,7 +112,8 @@ export default function Overview({ name, participantSuperOrganizationChildren = 
         représente le nombre de projets, tandis que leur hauteur correspond au financement perçu. ${structure ? "Le type de \
         participation est distingué, en pointillé quand l'établissement est coordinateur, en couleur simple s'il est partenaire \
         non-coordinateur.": ""} Le financement perçu approxime la part réelle allouée à chaque ${structure ? "établissement" : "région"} 
-        partenaire d’un projet (en assimilant consommation et subvention pour le PIA).`}</>,
+        partenaire d’un projet (en assimilant consommation et subvention pour le PIA).${withComponents ? " Ici, le périmètre est constitué d'une \
+        structure et de ses composantes. Le regroupement par rôle de coordinateur n'est donc pas disponible." : ""}`}</>,
     },
     id: "overview",
     integrationURL: `/integration?chart_id=overview&${searchParams.toString()}`,
