@@ -1,24 +1,25 @@
-import { Title } from "@dataesr/dsfr-plus";
-import { useQuery } from "@tanstack/react-query";
-import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js";
-import { useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { Title } from "@dataesr/dsfr-plus"
+import { useQuery } from "@tanstack/react-query"
+import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js"
+import { useState } from "react"
+import { useSearchParams } from "react-router-dom"
 
-import DefaultSkeleton from "../../../../components/charts-skeletons/default.tsx";
-import { useChartColor } from "../../../../hooks/useChartColor.tsx";
-import { getI18nLabel } from "../../../../utils.tsx";
-import ChartWrapperFundings from "../../components/chart-wrapper-fundings";
-import SegmentedControl from "../../components/segmented-control/index.tsx";
-import i18n from "../../i18n.json";
-import { formatCompactNumber, formatPercent, funders, getCssColor, getEsQuery, getYearRangeLabel, pattern } from "../../utils.ts";
+import DefaultSkeleton from "../../../../components/charts-skeletons/default.tsx"
+import { useChartColor } from "../../../../hooks/useChartColor.tsx"
+import { getI18nLabel } from "../../../../utils.tsx"
+import ChartWrapperFundings from "../../components/chart-wrapper-fundings"
+import SegmentedControl from "../../components/segmented-control/index.tsx"
+import i18n from "../../i18n.json"
+import { formatCompactNumber, formatPercent, funders, getCssColor, getEsQuery, getYearRangeLabel, pattern } from "../../utils.ts"
 
-const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
+const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env
 
 export default function ProjectsByFunder({ name, participantSuperOrganizationChildren = [] }: { name: string | undefined, participantSuperOrganizationChildren?: any[] }) {
   const [searchParams] = useSearchParams()
   const [selectedControl, setSelectedControl] = useState("projects")
   const region = searchParams.get("region")
   const structure = searchParams.get("structureId")
+  const withComponents: boolean = searchParams.has("withComponents")
   const yearMax = searchParams.get("yearMax")
   const yearMin = searchParams.get("yearMin")
   const color = useChartColor()
@@ -106,7 +107,7 @@ export default function ProjectsByFunder({ name, participantSuperOrganizationChi
         },
       },
     },
-  };
+  }
 
 
   const { data, isLoading } = useQuery({
@@ -120,118 +121,118 @@ export default function ProjectsByFunder({ name, participantSuperOrganizationChi
         },
         method: "POST",
       }).then((response) => response.json()),
-  });
+  })
 
-  const seriesBudget: any[] = [];
-  const seriesFunding: any[] = [];
-  const seriesProject: any[] = [];
-  const seriesBudgetRegion: any = [];
-  const seriesFundingRegion: any = [];
-  const seriesProjectRegion: any = [];
-  const categories: string[] = [];
+  const seriesBudget: any[] = []
+  const seriesFunding: any[] = []
+  const seriesProject: any[] = []
+  const seriesBudgetRegion: any = []
+  const seriesFundingRegion: any = []
+  const seriesProjectRegion: any = []
+  const categories: string[] = []
   funders.forEach((funder, index) => {
-    const funderData = (data?.aggregations?.by_project_type?.buckets ?? []).find((bucket) => bucket.key === funder);
-    const isCoord = funderData?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1);
-    const isNotCoord = funderData?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0);
-    const isCoordBudget = isCoord?.should_ignore_budget?.buckets?.find((bucket) => bucket.key.toString() === '0')?.sum_budget?.value ?? 0;
-    const isNotCoordBudget = isNotCoord?.should_ignore_budget?.buckets?.find((bucket) => bucket.key.toString() === '0')?.sum_budget?.value ?? 0;
+    const funderData = (data?.aggregations?.by_project_type?.buckets ?? []).find((bucket) => bucket.key === funder)
+    const isCoord = funderData?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)
+    const isNotCoord = funderData?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)
+    const isCoordBudget = isCoord?.should_ignore_budget?.buckets?.find((bucket) => bucket.key.toString() === '0')?.sum_budget?.value ?? 0
+    const isNotCoordBudget = isNotCoord?.should_ignore_budget?.buckets?.find((bucket) => bucket.key.toString() === '0')?.sum_budget?.value ?? 0
     seriesBudget.push({
       color: getCssColor({ name: funder, prefix: "funder" }),
       data: [{ name: funder, x: index, y: isNotCoordBudget, y_perc: isNotCoordBudget === 0 ? 0 : isNotCoordBudget / (isCoordBudget + isNotCoordBudget), total: isCoordBudget + isNotCoordBudget, color: getCssColor({ name: funder, prefix: "funder" }) }],
       name: [funder, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
-    });
+    })
     seriesBudget.push({
       color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } },
       data: [{ name: funder, x: index, y: isCoordBudget, y_perc: isCoordBudget === 0 ? 0 : isCoordBudget / (isCoordBudget + isNotCoordBudget), total: isCoordBudget + isNotCoordBudget, color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } } }],
       name: [funder, getI18nLabel(i18n, 'coordinator')].join(' - '),
-    });
+    })
     seriesBudgetRegion.push({
       color: getCssColor({ name: funder, prefix: "funder" }),
       data: [{ name: funder, x: index, y: funderData?.should_ignore_budget?.buckets?.find((bucket) => bucket.key.toString() === '0')?.sum_budget?.value ?? 0, y_perc: 0, total: 0, color: getCssColor({ name: funder, prefix: "funder" }) }],
       name: funder,
     })
-    const isCoordFunding = isCoord?.should_ignore_funding?.buckets?.find((bucket) => bucket.key.toString() === '0')?.sum_funding?.value ?? 0;
-    const isNotCoordFunding = isNotCoord?.should_ignore_funding?.buckets?.find((bucket) => bucket.key.toString() === '0')?.sum_funding?.value ?? 0;
+    const isCoordFunding = isCoord?.should_ignore_funding?.buckets?.find((bucket) => bucket.key.toString() === '0')?.sum_funding?.value ?? 0
+    const isNotCoordFunding = isNotCoord?.should_ignore_funding?.buckets?.find((bucket) => bucket.key.toString() === '0')?.sum_funding?.value ?? 0
     seriesFunding.push({
       color: getCssColor({ name: funder, prefix: "funder" }),
       data: [{ name: funder, x: index, y: isNotCoordFunding, y_perc: isNotCoordFunding === 0 ? 0 : isNotCoordFunding / (isCoordFunding + isNotCoordFunding), total: isCoordFunding + isNotCoordFunding, color: getCssColor({ name: funder, prefix: "funder" }) }],
       name: [funder, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
-    });
+    })
     seriesFunding.push({
       color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } },
       data: [{ name: funder, x: index, y: isCoordFunding, y_perc: isCoordFunding === 0 ? 0 : isCoordFunding / (isCoordFunding + isNotCoordFunding), total: isCoordFunding + isNotCoordFunding, color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } } }],
       name: [funder, getI18nLabel(i18n, 'coordinator')].join(' - '),
-    });
+    })
     seriesFundingRegion.push({
       color: getCssColor({ name: funder, prefix: "funder" }),
       data: [{ name: funder, x: index, y: funderData?.should_ignore_funding?.buckets?.find((bucket) => bucket.key.toString() === '0')?.sum_funding?.value ?? 0, y_perc: 0, total: 0, color: getCssColor({ name: funder, prefix: "funder" }) }],
       name: funder,
-    });
-    const isCoordProject = isCoord?.by_unique_project?.value ?? 0;
-    const isNotCoordProject = isNotCoord?.by_unique_project?.value ?? 0;
+    })
+    const isCoordProject = isCoord?.by_unique_project?.value ?? 0
+    const isNotCoordProject = isNotCoord?.by_unique_project?.value ?? 0
     seriesProject.push({
       color: getCssColor({ name: funder, prefix: "funder" }),
       data: [{ name: funder, x: index, y: isNotCoordProject, y_perc: isNotCoordProject === 0 ? 0 : isNotCoordProject / (isCoordProject + isNotCoordProject), total: isCoordProject + isNotCoordProject, color: getCssColor({ name: funder, prefix: "funder" }) }],
       name: [funder, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
-    });
+    })
     seriesProject.push({
       color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } },
       data: [{ name: funder, x: index, y: isCoordProject, y_perc: isCoordProject === 0 ? 0 : isCoordProject / (isCoordProject + isNotCoordProject), total: isCoordProject + isNotCoordProject, color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } } }],
       name: [funder, getI18nLabel(i18n, 'coordinator')].join(' - '),
-    });
+    })
     seriesProjectRegion.push({
       color: getCssColor({ name: funder, prefix: "funder" }),
       data: [{ name: funder, x: index, y: funderData?.by_unique_project?.value ?? 0, y_perc: 0, total: 0, color: getCssColor({ name: funder, prefix: "funder" }) }],
       name: funder,
-    });
-    categories.push(funder);
-  });
+    })
+    categories.push(funder)
+  })
 
-  // If view by number of projects
-  let axis = getI18nLabel(i18n, 'number_of_projects_funded');
+  // If view by number of projects, view by default
+  let axis = getI18nLabel(i18n, 'number_of_projects_funded')
   let dataLabel = function (this: any) {
-    return `${this.y} projet${this.y > 1 ? 's' : ''} (${formatPercent(this.y_perc)})`;
-  };
-  let series = structure ? seriesProject : seriesProjectRegion;
+    return `${this.y} projet${this.y > 1 ? 's' : ''} (${formatPercent(this.y_perc)})`
+  }
+  let series = (structure && !withComponents) ? seriesProject : seriesProjectRegion
   let stackLabel = function (this: any) {
-    return `${this.total} projet${this.total > 1 ? 's' : ''}`;
-  };
-  let title = `Nombre de projets financés auxquels ${structure ? "l'établissement" : "la région"} ${name} participe, réparti par financeur ${getYearRangeLabel({ yearMax, yearMin })}`;
+    return `${this.total} projet${this.total > 1 ? 's' : ''}`
+  }
+  let title = `Nombre de projets financés auxquels ${structure ? "l'établissement" : "la région"} ${name} participe, réparti par financeur ${getYearRangeLabel({ yearMax, yearMin })}`
   let tooltip = function (this: any) {
-    return `<b>${this.y}</b> projets <b>${this.series.name}</b> auxquels participe <b>${name}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}, soit ${formatPercent(this.y_perc)} (${this.y} / ${this.total} )`;
-  };
+    return `<b>${this.y}</b> projets <b>${this.series.name}</b> auxquels participe <b>${name}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}, soit ${formatPercent(this.y_perc)} (${this.y} / ${this.total} )`
+  }
   switch (selectedControl) {
     // If view by global amount
     case 'amount_global':
-      axis = getI18nLabel(i18n, 'funding_total');
+      axis = getI18nLabel(i18n, 'funding_total')
       dataLabel = function (this: any) {
-        return `${formatCompactNumber(this.y)} €  (${formatPercent(this.y_perc)})`;
-      };
-      series = structure ? seriesBudget : seriesBudgetRegion;
+        return `${formatCompactNumber(this.y)} €  (${formatPercent(this.y_perc)})`
+      }
+      series = (structure && !withComponents) ? seriesBudget : seriesBudgetRegion
       stackLabel = function (this: any) {
-        return `${formatCompactNumber(this.total)} €`;
-      };
-      title = `Montant total des projets auxquels ${structure ? "l'établissement" : "la région"} ${name} participe, réparti par financeur ${getYearRangeLabel({ yearMax, yearMin })}`;
+        return `${formatCompactNumber(this.total)} €`
+      }
+      title = `Montant total des projets auxquels ${structure ? "l'établissement" : "la région"} ${name} participe, réparti par financeur ${getYearRangeLabel({ yearMax, yearMin })}`
       tooltip = function (this: any) {
-        return `<b>${formatCompactNumber(this.y)} €</b> financés ${getYearRangeLabel({ isBold: true, yearMax, yearMin })} pour les projets <b>${this.series.name}</b> auxquels participe <b>${name}</b>, soit ${formatPercent(this.y_perc)} (${formatCompactNumber(this.y)} € / ${formatCompactNumber(this.total)}  €)`;
-      };
-      break;
+        return `<b>${formatCompactNumber(this.y)} €</b> financés ${getYearRangeLabel({ isBold: true, yearMax, yearMin })} pour les projets <b>${this.series.name}</b> auxquels participe <b>${name}</b>, soit ${formatPercent(this.y_perc)} (${formatCompactNumber(this.y)} € / ${formatCompactNumber(this.total)}  €)`
+      }
+      break
     // If view by amount by structure
     case 'amount_by_structure':
-      axis = getI18nLabel(i18n, structure ? 'funding_by_structure' : 'funding_by_region');
+      axis = getI18nLabel(i18n, structure ? 'funding_by_structure' : 'funding_by_region')
       dataLabel = function (this: any) {
-        return `${formatCompactNumber(this.y)} €  (${formatPercent(this.y_perc)})`;
-      };
-      series = structure ? seriesFunding : seriesFundingRegion;
+        return `${formatCompactNumber(this.y)} €  (${formatPercent(this.y_perc)})`
+      }
+      series = (structure && !withComponents) ? seriesFunding : seriesFundingRegion
       stackLabel = function (this: any) {
-        return `${formatCompactNumber(this.total)} €`;
-      };
-      title = `Financement perçu pour des projets auxquels ${structure ? "l'établissement" : "la région"} ${name} participe, réparti par financeur ${getYearRangeLabel({ yearMax, yearMin })}`;
+        return `${formatCompactNumber(this.total)} €`
+      }
+      title = `Financement perçu pour des projets auxquels ${structure ? "l'établissement" : "la région"} ${name} participe, réparti par financeur ${getYearRangeLabel({ yearMax, yearMin })}`
       tooltip = function (this: any) {
-        return `<b>${formatCompactNumber(this.y)} €</b> perçus ${getYearRangeLabel({ isBold: true, yearMax, yearMin })} pour les projets <b>${this.series.name}</b> auxquels participe <b>${name}</b>, soit ${formatPercent(this.y_perc)} (${formatCompactNumber(this.y)} € / ${formatCompactNumber(this.total)}  €)`;
-      };
-      break;
-  };
+        return `<b>${formatCompactNumber(this.y)} €</b> perçus ${getYearRangeLabel({ isBold: true, yearMax, yearMin })} pour les projets <b>${this.series.name}</b> auxquels participe <b>${name}</b>, soit ${formatPercent(this.y_perc)} (${formatCompactNumber(this.y)} € / ${formatCompactNumber(this.total)}  €)`
+      }
+      break
+  }
 
   const config = {
     comment: {
@@ -246,7 +247,7 @@ export default function ProjectsByFunder({ name, participantSuperOrganizationChi
     id: "projectsByFunder",
     integrationURL: `/integration?chart_id=projectsByFunder&${searchParams.toString()}`,
     title,
-  };
+  }
 
   const options: HighchartsInstance.Options = {
     legend: { enabled: true },
@@ -276,7 +277,7 @@ export default function ProjectsByFunder({ name, participantSuperOrganizationChi
       },
       title: { text: axis }
     },
-  };
+  }
 
   return (
     <div className={`chart-container chart-container--${color}`} id="projects-by-funder">
@@ -286,5 +287,5 @@ export default function ProjectsByFunder({ name, participantSuperOrganizationChi
       <SegmentedControl selectedControl={selectedControl} setSelectedControl={setSelectedControl} />
       {isLoading ? <DefaultSkeleton height="600px" /> : <ChartWrapperFundings config={config} hideTitle options={options} />}
     </div>
-  );
+  )
 }

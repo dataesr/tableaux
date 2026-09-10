@@ -19,6 +19,7 @@ export default function FrenchPartners({ name, participantSuperOrganizationChild
   const [searchParams] = useSearchParams()
   const region = searchParams.get("region")
   const structure = searchParams.get("structureId")
+  const withComponents: boolean = searchParams.has("withComponents")
   const yearMax = searchParams.get("yearMax")
   const yearMin = searchParams.get("yearMin")
   const color = useChartColor()
@@ -174,7 +175,7 @@ export default function FrenchPartners({ name, participantSuperOrganizationChild
     },
   }
   if (region) {
-    const filters = body.query.bool.filter.filter((f) => !f?.terms?.["participant_region.keyword"])// && f?.terms?.["participant_region.keyword"]?.length === 0 && f?.terms?.["participant_region.keyword"]?.[0] === region)
+    const filters = body.query.bool.filter.filter((f) => !f?.terms?.["participant_region.keyword"])
     filters.push({ terms: { "participant_region_with_labs.keyword": [region] } })
     body.query.bool.filter = filters
   }
@@ -202,24 +203,20 @@ export default function FrenchPartners({ name, participantSuperOrganizationChild
   const partnersFunding = data?.aggregations?.by_french_partners_funding?.buckets ?? [];
   const partnersProject = data?.aggregations?.by_french_partners_project?.buckets ?? [];
 
-    // 1. Calculer les totaux réels pour le tri (après filtrage should_ignore)
+  // 1. Calculer les totaux réels pour le tri (après filtrage should_ignore)
   const budgetTotals = partnersBudget.map((bucket) => {
     return funders.reduce((sum, funder) => {
-      const val = bucket.by_project_type.buckets
-        ?.find((bucket) => bucket.key === funder)
-        ?.should_ignore_budget?.buckets
-        ?.find((bucket) => bucket.key.toString() === '0')
-        ?.sum_budget?.value ?? 0;
+      const val = bucket?.by_project_type?.buckets
+        ?.find((bucket) => bucket.key === funder)?.should_ignore_budget?.buckets
+        ?.find((bucket) => bucket.key.toString() === '0')?.sum_budget?.value ?? 0;
       return sum + val;
     }, 0)
   })
   const fundingTotals = partnersFunding.map((bucket) => {
     return funders.reduce((sum, funder) => {
-      const val = bucket.by_project_type.buckets
-        ?.find((bucket) => bucket.key === funder)
-        ?.should_ignore_funding?.buckets
-        ?.find((bucket) => bucket.key.toString() === '0')
-        ?.sum_funding?.value ?? 0;
+      const val = bucket?.by_project_type?.buckets
+        ?.find((bucket) => bucket.key === funder)?.should_ignore_funding?.buckets
+        ?.find((bucket) => bucket.key.toString() === '0')?.sum_funding?.value ?? 0;
       return sum + val;
     }, 0)
   })
@@ -249,7 +246,7 @@ export default function FrenchPartners({ name, participantSuperOrganizationChild
   funders.forEach((funder) => {
     seriesBudget.push({
       color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } },
-      data: sortedBudgetBuckets.map((partner) => partner.by_project_type.buckets
+      data: sortedBudgetBuckets.map((partner) => partner?.by_project_type?.buckets
         ?.find((project) => project.key === funder)?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 1)?.should_ignore_budget?.buckets
         ?.find((bucket) => bucket.key.toString() === '0')?.sum_budget?.value ?? 0),
@@ -257,7 +254,7 @@ export default function FrenchPartners({ name, participantSuperOrganizationChild
     });
     seriesBudget.push({
       color: getCssColor({ name: funder, prefix: "funder" }),
-      data: sortedBudgetBuckets.map((partner) => partner.by_project_type.buckets
+      data: sortedBudgetBuckets.map((partner) => partner?.by_project_type?.buckets
         ?.find((project) => project.key === funder)?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 0)?.should_ignore_budget?.buckets
         ?.find((bucket) => bucket.key.toString() === '0')?.sum_budget?.value ?? 0),
@@ -265,14 +262,14 @@ export default function FrenchPartners({ name, participantSuperOrganizationChild
     });
     seriesBudgetRegion.push({
       color: getCssColor({ name: funder, prefix: "funder" }),
-      data: sortedBudgetBuckets.map((partner) => partner
-        ?.by_project_type.buckets?.find((project) => project.key === funder)
-        ?.should_ignore_budget?.buckets?.find((bucket) => bucket.key.toString() === '0')?.sum_budget?.value ?? 0),
+      data: sortedBudgetBuckets.map((partner) => partner?.by_project_type?.buckets
+        ?.find((project) => project.key === funder)?.should_ignore_budget?.buckets
+        ?.find((bucket) => bucket.key.toString() === '0')?.sum_budget?.value ?? 0),
       name: funder,
     });
     seriesFunding.push({
       color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } },
-      data: sortedFundingBuckets.map((partner) => partner.by_project_type.buckets
+      data: sortedFundingBuckets.map((partner) => partner?.by_project_type?.buckets
         ?.find((project) => project.key === funder)?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 1)?.should_ignore_funding?.buckets
         ?.find((bucket) => bucket.key.toString() === '0')?.sum_funding?.value ?? 0),
@@ -280,7 +277,7 @@ export default function FrenchPartners({ name, participantSuperOrganizationChild
     });
     seriesFunding.push({
       color: getCssColor({ name: funder, prefix: "funder" }),
-      data: sortedFundingBuckets.map((partner) => partner.by_project_type.buckets
+      data: sortedFundingBuckets.map((partner) => partner?.by_project_type?.buckets
         ?.find((project) => project.key === funder)?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 0)?.should_ignore_funding?.buckets
         ?.find((bucket) => bucket.key.toString() === '0')?.sum_funding?.value ?? 0),
@@ -288,30 +285,29 @@ export default function FrenchPartners({ name, participantSuperOrganizationChild
     });
     seriesFundingRegion.push({
       color: getCssColor({ name: funder, prefix: "funder" }),
-      data: sortedFundingBuckets.map((partner) => partner
-        ?.by_project_type.buckets?.find((project) => project.key === funder)
-        ?.should_ignore_funding?.buckets?.find((bucket) => bucket.key.toString() === '0')?.sum_funding?.value ?? 0),
+      data: sortedFundingBuckets.map((partner) => partner?.by_project_type?.buckets
+        ?.find((project) => project.key === funder)?.should_ignore_funding?.buckets
+        ?.find((bucket) => bucket.key.toString() === '0')?.sum_funding?.value ?? 0),
       name: funder,
     });
     seriesProject.push({
       color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } },
-      data: partnersProject.map((partner) => partner.by_project_type.buckets
+      data: partnersProject.map((partner) => partner?.by_project_type?.buckets
         ?.find((project) => project.key === funder)?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 1)?.by_unique_project?.value ?? 0),
       name: [funder, getI18nLabel(i18n, 'coordinator')].join(' - '),
     });
     seriesProject.push({
       color: getCssColor({ name: funder, prefix: "funder" }),
-      data: partnersProject.map((partner) => partner.by_project_type.buckets
+      data: partnersProject.map((partner) => partner?.by_project_type?.buckets
         ?.find((project) => project.key === funder)?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 0)?.by_unique_project?.value ?? 0),
       name: [funder, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
     });
     seriesProjectRegion.push({
       color: getCssColor({ name: funder, prefix: "funder" }),
-      data: partnersProject.map((partner) => partner
-        ?.by_project_type.buckets?.find((project) => project.key === funder)
-        ?.by_unique_project?.value, 0),
+      data: partnersProject.map((partner) => partner?.by_project_type?.buckets
+        ?.find((project) => project.key === funder)?.by_unique_project?.value ?? 0),
       name: funder,
     });
   });
@@ -327,12 +323,14 @@ export default function FrenchPartners({ name, participantSuperOrganizationChild
   let dataLabel = function (this: any) {
     return `${this.y} projet${this.y > 1 ? 's' : ''}`;
   };
-  let series = structure ? seriesProject.reverse() : seriesProjectRegion.reverse();
+  let series = (structure && !withComponents) ? seriesProject.reverse() : seriesProjectRegion.reverse();
   let stackLabel = function (this: any) {
-    return `${this.total} projet${this.total > 1 ? 's' : ''}`;
+    // return `${this.total} projet${this.total > 1 ? 's' : ''}`;
+    return '';
   };
   let tooltip = function (this: any) {
-    return `<b>${this.y}</b> projets <b>${this.series.name}</b> auxquels participent ${structure ? "l'établissement" : "la région"} <b>${name}</b> et <b>${this.key}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`;
+    // return `<b>${this.y}</b> projets <b>${this.series.name}</b> auxquels participent ${structure ? "l'établissement" : "la région"} <b>${name}</b> et <b>${this.key}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`;
+    return '';
   };
   switch (selectedControl) {
     // If view by global amount
@@ -342,7 +340,7 @@ export default function FrenchPartners({ name, participantSuperOrganizationChild
       dataLabel = function (this: any) {
         return `${formatCompactNumber(this.y)} €`;
       };
-      series = structure ? seriesBudget.reverse() : seriesBudgetRegion.reverse();
+      series = (structure && !withComponents) ? seriesBudget.reverse() : seriesBudgetRegion.reverse();
       stackLabel = function (this: any) {
         return `${formatCompactNumber(this.total)} €`;
       };
@@ -357,7 +355,7 @@ export default function FrenchPartners({ name, participantSuperOrganizationChild
       dataLabel = function (this: any) {
         return `${formatCompactNumber(this.y)} €`;
       };
-      series = structure ? seriesFunding.reverse() : seriesFundingRegion.reverse();
+      series = (structure && !withComponents) ? seriesFunding.reverse() : seriesFundingRegion.reverse();
       stackLabel = function (this: any) {
         return `${formatCompactNumber(this.total)} €`;
       };

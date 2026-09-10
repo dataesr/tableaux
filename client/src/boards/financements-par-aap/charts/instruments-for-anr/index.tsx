@@ -19,6 +19,7 @@ export default function InstrumentsForAnr({ name, participantSuperOrganizationCh
   const [searchParams] = useSearchParams()
   const region = searchParams.get("region")
   const structure = searchParams.get("structureId")
+  const withComponents: boolean = searchParams.has("withComponents")
   const yearMax = searchParams.get("yearMax")
   const yearMin = searchParams.get("yearMin")
   const color = useChartColor()
@@ -234,21 +235,21 @@ export default function InstrumentsForAnr({ name, participantSuperOrganizationCh
 
   const title = `Instruments ANR pour les projets auxquels participe ${structure ? "l'établissement" : "la région"} ${name} ${getYearRangeLabel({ yearMax, yearMin })}`;
   // If view by number of projects
-  let series = structure ? seriesProject.reverse() : seriesProjectRegion.reverse();
+  let series = (structure && !withComponents) ? seriesProject.reverse() : seriesProjectRegion.reverse();
   let tooltip = function (this: any) {
     return `<b>${this.value}</b> projets ANR auxquels participe ${structure ? "l'établissement" : "la région"} <b>${name}</b> au moyen de l'instrument <b>${this.name}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`;
   };
   switch (selectedControl) {
     // If view by global amount
     case 'amount_global':
-      series = structure ? seriesBudget.reverse() : seriesBudgetRegion.reverse();
+      series = (structure && !withComponents) ? seriesBudget.reverse() : seriesBudgetRegion.reverse();
       tooltip = function (this: any) {
         return `<b>${formatCompactNumber(this.value)} €</b> financés au global pour les projets ANR auxquels participe ${structure ? "l'établissement" : "la région"} <b>${name}</b> au moyen de l'instrument <b>${this.name}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`;
       };
       break;
     // If view by amount by structure
     case 'amount_by_structure':
-      series = structure ? seriesFunding.reverse() : seriesFundingRegion.reverse();
+      series = (structure && !withComponents) ? seriesFunding.reverse() : seriesFundingRegion.reverse();
       tooltip = function (this: any) {
         return `<b>${formatCompactNumber(this.value)} €</b> perçus par ${structure ? "l'établissement" : "la région"} <b>${name}</b> pour les projets ANR au moyen de l'instrument <b>${this.name}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`;
       };

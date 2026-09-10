@@ -3,13 +3,17 @@
     "fr": "Accessibilité",
     "en": "Accessibility"
   },
+  "cgu": {
+    "fr": "Conditions générales d'utilisation",
+    "en": "Terms of Use"
+  },
   "contact": {
     "fr": "Contact",
     "en": "Contact"
   },
-  "cgu": {
-    "fr": "Conditions générales d'utilisation",
-    "en": "Terms of Use"
+  "cookies": {
+    "fr": "Cookies",
+    "en": "Cookies"
   },
   "legalNotice": {
     "fr": "Mentions légales",
@@ -19,12 +23,12 @@
     "fr": "Données personnelles",
     "en": "Personal data"
   },
-  "sitemap": {
-    "fr": "Plan du site",
-    "en": "Sitemap"
-  },
   "rightsReserved": {
     "fr": "Sauf mention explicite de propriété intellectuelle détenue par des tiers, les contenus de ce site sont proposés sous <a href='https://github.com/etalab/licence-ouverte/blob/master/LO.md' target='_blank' rel='noopener external' title='Voir la licence Etalab-2.0 dans une nouvelle fenêtre'>licence etalab-2.0</a>",
     "en": "Unless otherwise stated, the content of this site is offered under an <a href='https://github.com/etalab/licence-ouverte/blob/master/LO.md' target='_blank' rel='noopener external' title='View etalab 2.0 licence in new tab'>etalab-2.0 licence</a> "
+  },
+  "sitemap": {
+    "fr": "Plan du site",
+    "en": "Sitemap"
   }
 }

@@ -48,8 +48,12 @@ export default function DisplayStructure() {
     { id: "donnees", label: "Données" },
   ]
 
-  const handleDisplayComponentsChange = (event) => {
-    searchParams.set("withComponents", event.target.checked)
+  const handleDisplayComponentsChange = () => {
+    if (searchParams.has("withComponents")) {
+      searchParams.delete("withComponents");
+    } else {
+      searchParams.set("withComponents", "")
+    }
     setSearchParams(searchParams)
     setIsOpen(false)
   }
@@ -90,7 +94,8 @@ export default function DisplayStructure() {
   });
   const participantSuperOrganizationChildren = (data?.hits?.hits?.[0]?._source?.participant_super_organization_children ?? []).map((org) => org?.id).filter((id) => !!id)
   const structureInfo = Object.fromEntries(new URLSearchParams(data?.hits?.hits?.[0]?._source?.participant_encoded_key ?? ""))
-  const name = structureInfo?.label ?? ""
+  let name = structureInfo?.label ?? ""
+  if (withComponents) name += " et ses composantes"
   let scanrUrl = `https://scanr.enseignementsup-recherche.gouv.fr/search/projects?filters=%257B%2522year%2522%253A%257B%2522values%2522%253A%255B%257B%2522value%2522%253A${yearMin}%257D%252C%257B%2522value%2522%253A${yearMax}%257D%255D%252C%2522type%2522%253A%2522range%2522%257D%252C%2522participants_id_search%2522%253A%257B%2522values%2522%253A%255B`;
   (data?.hits?.hits?.[0]?._source?.participant_super_organization_children ?? []).forEach((child, index) => {
     if (index !== 0) scanrUrl += '%252C'

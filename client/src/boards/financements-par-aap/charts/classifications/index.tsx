@@ -19,6 +19,7 @@ export default function Classifications({ name, participantSuperOrganizationChil
   const [searchParams] = useSearchParams()
   const region = searchParams.get("region")
   const structure = searchParams.get("structureId")
+  const withComponents: boolean = searchParams.has("withComponents")
   const yearMax = searchParams.get("yearMax")
   const yearMin = searchParams.get("yearMin")
   const color = useChartColor()
@@ -319,7 +320,7 @@ export default function Classifications({ name, participantSuperOrganizationChil
   let dataLabel = function (this: any) {
     return `${this.y} projet${this.y > 1 ? 's' : ''}`;
   };
-  let series = structure ? seriesProject.reverse() : seriesProjectRegion.reverse();
+  let series = (structure && !withComponents) ? seriesProject.reverse() : seriesProjectRegion.reverse();
   let stackLabel = function (this: any) {
     return `${this.total} projet${this.total > 1 ? 's' : ''}`;
   };
@@ -334,7 +335,7 @@ export default function Classifications({ name, participantSuperOrganizationChil
       dataLabel = function (this: any) {
         return `${formatCompactNumber(this.y)} €`;
       };
-      series = structure ? seriesBudget.reverse() : seriesBudgetRegion.reverse();
+      series = (structure && !withComponents) ? seriesBudget.reverse() : seriesBudgetRegion.reverse();
       stackLabel = function (this: any) {
         return `${formatCompactNumber(this.total)} €`;
       };
@@ -349,7 +350,7 @@ export default function Classifications({ name, participantSuperOrganizationChil
       dataLabel = function (this: any) {
         return `${formatCompactNumber(this.y)} €`;
       };
-      series = structure ? seriesFunding.reverse() : seriesFundingRegion.reverse();
+      series = (structure && !withComponents) ? seriesFunding.reverse() : seriesFundingRegion.reverse();
       stackLabel = function (this: any) {
         return `${formatCompactNumber(this.total)} €`;
       };

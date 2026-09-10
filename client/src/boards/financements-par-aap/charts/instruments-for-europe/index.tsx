@@ -19,6 +19,7 @@ export default function InstrumentsForEurope({ name, participantSuperOrganizatio
   const [searchParams] = useSearchParams()
   const region = searchParams.get("region")
   const structure = searchParams.get("structureId")
+  const withComponents: boolean = searchParams.has("withComponents")
   const yearMax = searchParams.get("yearMax")
   const yearMin = searchParams.get("yearMin")
   const color = useChartColor()
@@ -233,22 +234,22 @@ export default function InstrumentsForEurope({ name, participantSuperOrganizatio
   });
 
   const title = `Instruments de financement européen pour les projets auxquels participe ${structure ? "l'établissement" : "la région"} ${name} ${getYearRangeLabel({ yearMax, yearMin })}`;
-  // If view by number of projects
-  let series = structure ? seriesProject.reverse() : seriesProjectRegion.reverse();
+  // If view by number of projects, default view
+  let series = (structure && !withComponents) ? seriesProject.reverse() : seriesProjectRegion.reverse();
   let tooltip = function (this: any) {
     return `<b>${this.value}</b> projets européens auxquels participe ${structure ? "l'établissement" : "la région"} <b>${name}</b> au moyen de l'instrument <b>${this.name}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`;
   };
   switch (selectedControl) {
     // If view by global amount
     case 'amount_global':
-      series = structure ? seriesBudget.reverse() : seriesBudgetRegion.reverse();
+      series = (structure && !withComponents) ? seriesBudget.reverse() : seriesBudgetRegion.reverse();
       tooltip = function (this: any) {
         return `<b>${formatCompactNumber(this.value)} €</b> financés au global pour les projets européens auxquels participe ${structure ? "l'établissement" : "la région"} <b>${name}</b> au moyen de l'instrument <b>${this.name}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`;
       };
       break;
     // If view by amount by structure
     case 'amount_by_structure':
-      series = structure ? seriesFunding.reverse() : seriesFundingRegion.reverse();
+      series = (structure && !withComponents) ? seriesFunding.reverse() : seriesFundingRegion.reverse();
       tooltip = function (this: any) {
         return `<b>${formatCompactNumber(this.value)} €</b> perçus par ${structure ? "l'établissement" : "la région"} <b>${name}</b> pour les projets européens au moyen de l'instrument <b>${this.name}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`;
       };

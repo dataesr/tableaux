@@ -26,7 +26,6 @@ const SCALE_COLORS = Array.from({ length: 14 }, (_, i) => `scale-${i + 1}`);
 export default function SectionsCnuSection({ viewType, selectedId, selectedYear }: SectionsCnuSectionProps) {
     const { data: currentData, isLoading } = useFacultyResearchTeachers(viewType, selectedId, selectedYear);
     const [selectedSectionId, setSelectedSectionId] = useState<string | null>(null);
-    console.log("currentData", currentData);
     const sectionEvoMap = useMemo(() => {
         type SectionEvo = {
             total: Array<{ year: string; value: number }>;

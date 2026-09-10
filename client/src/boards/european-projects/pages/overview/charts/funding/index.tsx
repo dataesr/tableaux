@@ -15,7 +15,6 @@ const config = {
 
 export default function FundingValues() {
   const params = useGetParams();
-  console.log(params);
   const [searchParams] = useSearchParams();
   const currentLang = searchParams.get("language") || "fr";
 

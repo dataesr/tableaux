@@ -19,6 +19,7 @@ export default function InstrumentsOverTimeForAnr({ name, participantSuperOrgani
   const [searchParams] = useSearchParams()
   const region = searchParams.get("region")
   const structure = searchParams.get("structureId")
+  const withComponents: boolean = searchParams.has("withComponents")
   const color = useChartColor()
 
   const structures = [structure].concat(participantSuperOrganizationChildren)
@@ -214,7 +215,7 @@ export default function InstrumentsOverTimeForAnr({ name, participantSuperOrgani
 
   // If view by number of projects
   let axis = getI18nLabel(i18n, 'number_of_projects_funded');
-  let series = structure ? seriesProject.reverse() : seriesProjectRegion.reverse();
+  let series = (structure && !withComponents) ? seriesProject.reverse() : seriesProjectRegion.reverse();
   let title = `Evolution temporelle des instruments ANR dont a bénéficié ${structure ? "l'établissement" : "la région"} ${name}`;
   let tooltip = function (this: any) {
     return `<b>${this.y}</b> projets <b>${this.series.name}</b> en <b>${this.x}</b> dont a bénéficié ${structure ? "l'établissement" : "la région"} <b>${name}</b>`;
@@ -223,7 +224,7 @@ export default function InstrumentsOverTimeForAnr({ name, participantSuperOrgani
     // If view by global amount
     case 'amount_global':
       axis = getI18nLabel(i18n, 'funding_total');
-      series = structure ? seriesBudget.reverse() : seriesBudgetRegion.reverse();
+      series = (structure && !withComponents) ? seriesBudget.reverse() : seriesBudgetRegion.reverse();
       title = `Evolution temporelle du financement global par instrument de l'ANR dont a bénéficié ${structure ? "l'établissement" : "la région"} ${name}`;
       tooltip = function (this: any) {
         return `<b>${formatCompactNumber(this.y)} €</b> ont été financés en <b>${this.x}</b> par l'instrument <b>${this.series.name}</b> dont a bénéficié ${structure ? "l'établissement" : "la région"} <b>${name}</b>`;
@@ -232,7 +233,7 @@ export default function InstrumentsOverTimeForAnr({ name, participantSuperOrgani
     // If view by amount by structure
     case 'amount_by_structure':
       axis = getI18nLabel(i18n, structure ? 'funding_by_structure' : 'funding_by_region');
-      series = structure ? seriesFunding.reverse() : seriesFundingRegion.reverse();
+      series = (structure && !withComponents) ? seriesFunding.reverse() : seriesFundingRegion.reverse();
       title = `Evolution temporelle du financement perçu par instrument de l'ANR dont a bénéficié ${structure ? "l'établissement" : "la région"} ${name}`;
       tooltip = function (this: any) {
         return `<b>${formatCompactNumber(this.y)} €</b> ont été perçus en <b>${this.x}</b> par l'instrument <b>${this.series.name}</b> dont a bénéficié ${structure ? "l'établissement" : "la région"} <b>${name}</b>`;

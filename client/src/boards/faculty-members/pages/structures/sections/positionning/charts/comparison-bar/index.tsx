@@ -29,7 +29,6 @@ export default function ComparisonBarChart({ data, currentId, currentName, selec
     const config = FM_METRICS_CONFIG[dataKey] ?? FM_METRICS_CONFIG["total_effectif"];
     const displayLabel = labelOverride || config.label;
 
-    console.log(data)
     const options = useMemo(
         () => createFmComparisonBarOptions(data, selectedMetric, currentId, currentName, labelOverride),
         [data, selectedMetric, currentId, currentName, labelOverride]

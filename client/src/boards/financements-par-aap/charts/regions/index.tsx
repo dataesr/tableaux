@@ -18,6 +18,7 @@ export default function Regions({ name, participantSuperOrganizationChildren = [
   const [selectedControl, setSelectedControl] = useState("projects");
   const [searchParams] = useSearchParams()
   const structure = searchParams.get("structureId")
+  const withComponents: boolean = searchParams.has("withComponents")
   const yearMax = searchParams.get("yearMax")
   const yearMin = searchParams.get("yearMin")
   const color = useChartColor()
@@ -228,13 +229,13 @@ export default function Regions({ name, participantSuperOrganizationChildren = [
   const categoriesProject = classificationsProject.map((classification) => classification.key);
 
   const title = `Financements par région de ${name} ${getYearRangeLabel({ yearMax, yearMin })}`;
-  // If view by number of projects
+  // If view by number of projects, view by default
   let axis = getI18nLabel(i18n, 'number_of_projects_funded');
   let categories = categoriesProject;
   let dataLabel = function (this: any) {
     return `${this.y} projet${this.y > 1 ? 's' : ''}`;
   };
-  let series = structure ? seriesProject.reverse() : seriesProjectRegion.reverse();
+  let series = (structure && !withComponents) ? seriesProject.reverse() : seriesProjectRegion.reverse();
   let stackLabel = function (this: any) {
     return `${this.total} projet${this.total > 1 ? 's' : ''}`;
   };
@@ -249,7 +250,7 @@ export default function Regions({ name, participantSuperOrganizationChildren = [
       dataLabel = function (this: any) {
         return `${formatCompactNumber(this.y)} €`;
       };
-      series = structure ? seriesBudget.reverse() : seriesBudgetRegion.reverse();
+      series = (structure && !withComponents) ? seriesBudget.reverse() : seriesBudgetRegion.reverse();
       stackLabel = function (this: any) {
         return `${formatCompactNumber(this.total)} €`;
       };
@@ -264,7 +265,7 @@ export default function Regions({ name, participantSuperOrganizationChildren = [
       dataLabel = function (this: any) {
         return `${formatCompactNumber(this.y)} €`;
       };
-      series = structure ? seriesFunding.reverse() : seriesFundingRegion.reverse();
+      series = (structure && !withComponents) ? seriesFunding.reverse() : seriesFundingRegion.reverse();
       stackLabel = function (this: any) {
         return `${formatCompactNumber(this.total)} €`;
       };

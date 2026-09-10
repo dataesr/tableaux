@@ -14,6 +14,7 @@ export default function Overview({ name, participantSuperOrganizationChildren = 
   const [searchParams] = useSearchParams()
   const region = searchParams.get("region")
   const structure = searchParams.get("structureId")
+  const withComponents: boolean = searchParams.has("withComponents")
   const yearMax = searchParams.get("yearMax")
   const yearMin = searchParams.get("yearMin")
   const color = useChartColor()
@@ -152,8 +153,8 @@ export default function Overview({ name, participantSuperOrganizationChildren = 
     },
     series: [{
       colorByPoint: true,
-      colors: structure ? colorsWithCoordinators : colorsWithoutCoordinators,
-      data: structure ? seriesWithCoordinators : seriesWithoutCoordinators,
+      colors: (structure && !withComponents) ? colorsWithCoordinators : colorsWithoutCoordinators,
+      data: (structure && !withComponents) ? seriesWithCoordinators : seriesWithoutCoordinators,
       dataLabels: {
         enabled: true,
         formatter: function (this: any) {
