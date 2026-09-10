@@ -111,6 +111,9 @@ export default function ContactPage() {
       }
     );
   };
+
+  const submitLabel = isPending ? t("submitPending") : t("submitButton");
+
   return (
     <div className="contact-page">
       <section className="contact-hero">
@@ -194,8 +197,8 @@ export default function ContactPage() {
                 rows={12}
               />
               <div className="fr-btns-group fr-btns-group--inline-reverse">
-                <Button type="submit" disabled={isPending}>
-                  {isPending ? t("submitPending") : t("submitButton")}
+                <Button type="submit" disabled={isPending} title={submitLabel}>
+                  {submitLabel}
                 </Button>
               </div>
             </Col>

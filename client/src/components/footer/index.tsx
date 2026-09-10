@@ -108,13 +108,13 @@ export default function Footer({ href = "/", sitemapHref, title = "Accueil - Dat
               </a>
             </li>
             <li className="fr-footer__bottom-item">
-              <button className="fr-footer__bottom-link fr-fi-theme-fill fr-link--icon-left" aria-controls="fr-theme-modal" data-fr-opened="false">
+              <button type="button" title="Paramètres d'affichage" className="fr-footer__bottom-link fr-fi-theme-fill fr-link--icon-left" aria-controls="fr-theme-modal" data-fr-opened="false">
                 Paramètres d'affichage
               </button>
             </li>
             {searchParams.has("language") && (
               <li className="fr-footer__bottom-item">
-                <button className="fr-footer__bottom-link fr-icon-translate-2 fr-link--icon-left" aria-controls="fr-translate-modal" data-fr-opened="false">
+                <button type="button" title={LANGUAGE_LABELS[currentLang] || LANGUAGE_LABELS.fr} className="fr-footer__bottom-link fr-icon-translate-2 fr-link--icon-left" aria-controls="fr-translate-modal" data-fr-opened="false">
                   {LANGUAGE_LABELS[currentLang] || LANGUAGE_LABELS.fr}
                 </button>
               </li>

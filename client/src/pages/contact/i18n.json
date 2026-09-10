@@ -55,6 +55,10 @@
     "fr": "Contactez nous",
     "en": "Contact us"
   },
+  "close": {
+    "fr": "Fermer",
+    "en": "Close"
+  },
   "organisationLabel": {
     "fr": "Établissement (optionnel)",
     "en": "Institution (optional)"

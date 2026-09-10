@@ -22,7 +22,7 @@ export default function TranslateButton() {
             <div className="fr-header__tools-links">
                 <nav role="navigation" className="fr-translate fr-nav">
                     <div className="fr-nav__item">
-                        <button aria-controls="translate" aria-expanded="false" type="button" className="fr-translate__btn fr-btn">{currentLang === "en" ? "EN" : "FR"}<span className="fr-hidden-lg">&nbsp;- {currentLang === "en" ? "English" : "Français"}</span>
+                        <button aria-controls="translate" aria-expanded="false" type="button" title={currentLang === "en" ? "EN - English" : "FR - Français"} className="fr-translate__btn fr-btn">{currentLang === "en" ? "EN" : "FR"}<span className="fr-hidden-lg">&nbsp;- {currentLang === "en" ? "English" : "Français"}</span>
                         </button>
                         <div className="fr-collapse fr-translate__menu fr-menu" id="translate">
                             <ul className="fr-menu__list">

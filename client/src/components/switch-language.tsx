@@ -17,7 +17,7 @@ export default function SwitchLanguage() {
           <div className="fr-col-12 fr-col-md-6 fr-col-lg-4">
             <div className="fr-modal__body">
               <div className="fr-modal__header">
-                <button className="fr-btn--close fr-btn" aria-controls="fr-translate-modal" title="Fermer">
+                <button type="button" className="fr-btn--close fr-btn" aria-controls="fr-translate-modal" title="Fermer">
                   Fermer
                 </button>
               </div>

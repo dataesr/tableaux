@@ -26,6 +26,18 @@ export default function GlobalLayout() {
                     name="#dataESR tableaux de bord"
                     tagline="Contact"
                   />
+                  <div className="fr-header__navbar">
+                    <button
+                      data-fr-opened="false"
+                      aria-controls="modal-header"
+                      title="Menu"
+                      type="button"
+                      id="button-header"
+                      className="fr-btn--menu fr-btn"
+                    >
+                      Menu
+                    </button>
+                  </div>
                 </div>
               </div>
               <TranslateButton />
@@ -40,12 +52,12 @@ export default function GlobalLayout() {
           <div className="fr-container">
             <button
               aria-controls="modal-header"
-              title="Fermer"
+              title={getI18nLabel(i18n, "close")}
               type="button"
-              id="button-2168"
+              id="button-close-header"
               className="fr-btn--close fr-btn"
             >
-              {getI18nLabel(i18n, "heroLabel")}
+              {getI18nLabel(i18n, "close")}
             </button>
             <div className="fr-header__menu-links"></div>
           </div>

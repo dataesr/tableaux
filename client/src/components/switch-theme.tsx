@@ -6,7 +6,7 @@ export default function SwitchTheme() {
           <div className="fr-col-12 fr-col-md-6 fr-col-lg-4">
             <div className="fr-modal__body">
               <div className="fr-modal__header">
-                <button className="fr-btn--close fr-btn" aria-controls="fr-theme-modal" id="button-5622" title="Fermer">
+                <button type="button" className="fr-btn--close fr-btn" aria-controls="fr-theme-modal" id="button-5622" title="Fermer">
                   Fermer
                 </button>
               </div>
