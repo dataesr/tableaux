@@ -92,12 +92,13 @@ export default function DisplayStructure() {
         method: "POST",
       }).then((response) => response.json()),
   })
-  const participantSuperOrganizationChildren = (data?.hits?.hits?.[0]?._source?.participant_super_organization_children ?? []).map((org) => org?.id).filter((id) => !!id)
+  const participantSuperOrganizationChildren = (data?.hits?.hits?.[0]?._source?.participant_super_organization_children ?? [])
+  const participantSuperOrganizationChildrenIds = participantSuperOrganizationChildren.map((org) => org?.id).filter((id) => !!id)
   const structureInfo = Object.fromEntries(new URLSearchParams(data?.hits?.hits?.[0]?._source?.participant_encoded_key ?? ""))
   let name = structureInfo?.label ?? ""
   if (withComponents) name += " et ses composantes"
   let scanrUrl = `https://scanr.enseignementsup-recherche.gouv.fr/search/projects?filters=%257B%2522year%2522%253A%257B%2522values%2522%253A%255B%257B%2522value%2522%253A${yearMin}%257D%252C%257B%2522value%2522%253A${yearMax}%257D%255D%252C%2522type%2522%253A%2522range%2522%257D%252C%2522participants_id_search%2522%253A%257B%2522values%2522%253A%255B`;
-  (data?.hits?.hits?.[0]?._source?.participant_super_organization_children ?? []).forEach((child, index) => {
+  participantSuperOrganizationChildren.forEach((child, index) => {
     if (index !== 0) scanrUrl += '%252C'
     scanrUrl += `%257B%2522value%2522%253A%2522${child?.id ?? ""}%2522%252C%2522label%2522%253A%2522${child?.displayName ?? ""}%2522%257D`
   })
@@ -129,6 +130,16 @@ export default function DisplayStructure() {
                 <Text size="sm" className="fr-mb-0 fr-text-mention--grey">
                   <span aria-hidden="true" className="fr-icon-map-pin-2-fill fr-mr-1w" />
                   {structureInfo.region}
+                </Text>
+              )}
+              {participantIsSuperOrganization && withComponents && (
+                <Text size="xs" className="fr-mb-0 fr-text-mention--grey">
+                  {participantSuperOrganizationChildren.map((child, index) =>
+                    <>
+                      {index !== 0 ? ' - ' : ''}
+                      {child?.displayName}
+                    </>
+                  )}
                 </Text>
               )}
               <Text size="sm" className="fr-mb-0 fr-text-mention--grey">
@@ -244,18 +255,18 @@ export default function DisplayStructure() {
           (
             <>
               {(section === "apercu") && (
-                <Cards participantSuperOrganizationChildren={withComponents ? participantSuperOrganizationChildren : []} />
+                <Cards participantSuperOrganizationChildrenIds={withComponents ? participantSuperOrganizationChildrenIds : []} />
               )}
               {(section === "financements") && (
                 <>
                   <Row gutters style={{ clear: "both" }}>
                     <Col>
-                      <ProjectsByFunder name={name} participantSuperOrganizationChildren={withComponents ? participantSuperOrganizationChildren : []} />
+                      <ProjectsByFunder name={name} participantSuperOrganizationChildrenIds={withComponents ? participantSuperOrganizationChildrenIds : []} />
                     </Col>
                   </Row>
                   <Row gutters>
                     <Col>
-                      <Overview name={name} participantSuperOrganizationChildren={withComponents ? participantSuperOrganizationChildren : []} />
+                      <Overview name={name} participantSuperOrganizationChildrenIds={withComponents ? participantSuperOrganizationChildrenIds : []} />
                     </Col>
                   </Row>
                 </>
@@ -263,7 +274,7 @@ export default function DisplayStructure() {
               {(section === "evolution") && (
                 <Row gutters style={{ clear: "both" }}>
                   <Col>
-                    <ProjectsOverTimeByStructure name={name} participantSuperOrganizationChildren={withComponents ? participantSuperOrganizationChildren : []} />
+                    <ProjectsOverTimeByStructure name={name} participantSuperOrganizationChildrenIds={withComponents ? participantSuperOrganizationChildrenIds : []} />
                   </Col>
                 </Row>
               )}
@@ -271,12 +282,12 @@ export default function DisplayStructure() {
                 <>
                   <Row gutters style={{ clear: "both" }}>
                     <Col>
-                      <FrenchPartners name={name} participantSuperOrganizationChildren={withComponents ? participantSuperOrganizationChildren : []} />
+                      <FrenchPartners name={name} participantSuperOrganizationChildrenIds={withComponents ? participantSuperOrganizationChildrenIds : []} />
                     </Col>
                   </Row>
                   <Row gutters>
                     <Col>
-                      <InternationalPartners name={name} participantSuperOrganizationChildren={withComponents ? participantSuperOrganizationChildren : []} />
+                      <InternationalPartners name={name} participantSuperOrganizationChildrenIds={withComponents ? participantSuperOrganizationChildrenIds : []} />
                     </Col>
                   </Row>
                 </>
@@ -284,7 +295,7 @@ export default function DisplayStructure() {
               {(section === "laboratoires") && (
                 <Row gutters style={{ clear: "both" }}>
                   <Col>
-                    <Laboratories name={name} participantSuperOrganizationChildren={withComponents ? participantSuperOrganizationChildren : []} />
+                    <Laboratories name={name} participantSuperOrganizationChildrenIds={withComponents ? participantSuperOrganizationChildrenIds : []} />
                   </Col>
                 </Row>
               )}
@@ -292,12 +303,12 @@ export default function DisplayStructure() {
                 <>
                   <Row gutters style={{ clear: "both" }}>
                     <Col>
-                      <Classifications name={name} participantSuperOrganizationChildren={withComponents ? participantSuperOrganizationChildren : []} />
+                      <Classifications name={name} participantSuperOrganizationChildrenIds={withComponents ? participantSuperOrganizationChildrenIds : []} />
                     </Col>
                   </Row>
                   <Row gutters>
                     <Col>
-                      <Classifications2 name={name} participantSuperOrganizationChildren={withComponents ? participantSuperOrganizationChildren : []} />
+                      <Classifications2 name={name} participantSuperOrganizationChildrenIds={withComponents ? participantSuperOrganizationChildrenIds : []} />
                     </Col>
                   </Row>
                 </>
@@ -306,22 +317,22 @@ export default function DisplayStructure() {
                 <>
                   <Row gutters style={{ clear: "both" }}>
                     <Col>
-                      <InstrumentsForAnr name={name} participantSuperOrganizationChildren={withComponents ? participantSuperOrganizationChildren : []} />
+                      <InstrumentsForAnr name={name} participantSuperOrganizationChildrenIds={withComponents ? participantSuperOrganizationChildrenIds : []} />
                     </Col>
                   </Row>
                   <Row gutters>
                     <Col>
-                      <InstrumentsForEurope name={name} participantSuperOrganizationChildren={withComponents ? participantSuperOrganizationChildren : []} />
+                      <InstrumentsForEurope name={name} participantSuperOrganizationChildrenIds={withComponents ? participantSuperOrganizationChildrenIds : []} />
                     </Col>
                   </Row>
                   <Row gutters>
                     <Col>
-                      <InstrumentsOverTimeForAnr name={name} participantSuperOrganizationChildren={withComponents ? participantSuperOrganizationChildren : []} />
+                      <InstrumentsOverTimeForAnr name={name} participantSuperOrganizationChildrenIds={withComponents ? participantSuperOrganizationChildrenIds : []} />
                     </Col>
                   </Row>
                   <Row gutters>
                     <Col>
-                      <InstrumentsOverTimeForEurope name={name} participantSuperOrganizationChildren={withComponents ? participantSuperOrganizationChildren : []} />
+                      <InstrumentsOverTimeForEurope name={name} participantSuperOrganizationChildrenIds={withComponents ? participantSuperOrganizationChildrenIds : []} />
                     </Col>
                   </Row>
                 </>
@@ -330,13 +341,13 @@ export default function DisplayStructure() {
                 <>
                   <Row gutters style={{ clear: "both" }}>
                     <Col>
-                      <Regions name={name} participantSuperOrganizationChildren={withComponents ? participantSuperOrganizationChildren : []} />
+                      <Regions name={name} participantSuperOrganizationChildrenIds={withComponents ? participantSuperOrganizationChildrenIds : []} />
                     </Col>
                   </Row>
                 </>
               )}
               {(section === "donnees") && (
-                <ProjectsData participantSuperOrganizationChildren={withComponents ? participantSuperOrganizationChildren : []} />
+                <ProjectsData participantSuperOrganizationChildrenIds={withComponents ? participantSuperOrganizationChildrenIds : []} />
               )}
             </>
           )}

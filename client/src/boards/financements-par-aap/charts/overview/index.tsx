@@ -10,7 +10,7 @@ import { formatCompactNumber, funders, getCssColor, getEsQuery, getYearRangeLabe
 
 const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
-export default function Overview({ name, participantSuperOrganizationChildren = [] }: { name: string | undefined, participantSuperOrganizationChildren?: any[] }) {
+export default function Overview({ name, participantSuperOrganizationChildrenIds = [] }: { name: string | undefined, participantSuperOrganizationChildrenIds?: any[] }) {
   const [searchParams] = useSearchParams()
   const region = searchParams.get("region")
   const structure = searchParams.get("structureId")
@@ -19,7 +19,7 @@ export default function Overview({ name, participantSuperOrganizationChildren = 
   const yearMin = searchParams.get("yearMin")
   const color = useChartColor()
 
-  const structures = [structure].concat(participantSuperOrganizationChildren)
+  const structures = [structure].concat(participantSuperOrganizationChildrenIds)
 
   const body = {
     ...getEsQuery({ regions: [region], structures, yearMax, yearMin }),

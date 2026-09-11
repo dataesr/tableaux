@@ -14,7 +14,7 @@ import { formatCompactNumber, funders, getCssColor, getEsQuery, getYearRangeLabe
 
 const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env
 
-export default function Regions({ name, participantSuperOrganizationChildren = [] }: { name: string | undefined, participantSuperOrganizationChildren: any[] }) {
+export default function Regions({ name, participantSuperOrganizationChildrenIds = [] }: { name: string | undefined, participantSuperOrganizationChildrenIds: any[] }) {
   const [selectedControl, setSelectedControl] = useState("projects")
   const [searchParams] = useSearchParams()
   const structure = searchParams.get("structureId")
@@ -23,7 +23,7 @@ export default function Regions({ name, participantSuperOrganizationChildren = [
   const yearMin = searchParams.get("yearMin")
   const color = useChartColor()
 
-  const structures = [structure].concat(participantSuperOrganizationChildren)
+  const structures = [structure].concat(participantSuperOrganizationChildrenIds)
 
   const body = {
     ...getEsQuery({ structures, yearMax, yearMin }),
@@ -49,6 +49,11 @@ export default function Regions({ name, participantSuperOrganizationChildren = [
                       field: "project_id.keyword",
                     },
                   },
+                },
+              },
+              by_unique_project: {
+                cardinality: {
+                  field: "project_id.keyword",
                 },
               },
             },
@@ -91,6 +96,18 @@ export default function Regions({ name, participantSuperOrganizationChildren = [
                   },
                 },
               },
+              should_ignore_budget: {
+                terms: {
+                  field: "participant_ignore_total_budget",
+                },
+                aggregations: {
+                  sum_budget: {
+                    sum: {
+                      field: "project_budgetFinanced",
+                    },
+                  },
+                },
+              },
             },
           },
         },
@@ -123,6 +140,12 @@ export default function Regions({ name, participantSuperOrganizationChildren = [
                       field: "participation_funding",
                     },
                   },
+                },
+              },
+              // No "should_ignore_funding" needed
+              sum_funding: {
+                sum: {
+                  field: "participation_funding",
                 },
               },
             },
@@ -174,10 +197,8 @@ export default function Regions({ name, participantSuperOrganizationChildren = [
     seriesBudgetRegion.push({
       color: getCssColor({ name: funder, prefix: "funder" }),
       data: classificationsBudget.map((classification) => classification?.by_project_type?.buckets
-        ?.find((project) => project.key === funder)?.is_coordinator?.buckets
-        ?.reduce((acc, curr) => acc + (curr?.should_ignore_budget?.buckets
-        ?.find((bucket) => bucket.key.toString() === '0')?.sum_budget?.value ?? 0), 0)
-        ?? 0),
+        ?.find((project) => project.key === funder)?.should_ignore_budget?.buckets
+        ?.find((bucket) => bucket.key.toString() === '0')?.sum_budget?.value ?? 0),
       name: funder,
     })
     seriesFunding.push({
@@ -197,9 +218,7 @@ export default function Regions({ name, participantSuperOrganizationChildren = [
     seriesFundingRegion.push({
       color: getCssColor({ name: funder, prefix: "funder" }),
       data: classificationsFunding.map((classification) => classification?.by_project_type?.buckets
-        ?.find((project) => project.key === funder)?.is_coordinator?.buckets
-        ?.reduce((acc, curr) => acc + (curr?.should_ignore_funding?.buckets
-        ?.find((bucket) => bucket.key.toString() === '0')?.sum_funding?.value ?? 0), 0) ?? 0),
+        ?.find((project) => project.key === funder)?.sum_funding?.value ?? 0),
       name: funder,
     })
     seriesProject.push({
@@ -219,8 +238,7 @@ export default function Regions({ name, participantSuperOrganizationChildren = [
     seriesProjectRegion.push({
       color: getCssColor({ name: funder, prefix: "funder" }),
       data: classificationsProject.map((classification) => classification?.by_project_type?.buckets
-        ?.find((project) => project.key === funder)?.is_coordinator?.buckets
-        ?.reduce((acc, curr) => acc + (curr?.by_unique_project?.value ?? 0), 0) ?? 0),
+        ?.find((project) => project.key === funder)?.by_unique_project?.value ?? 0),
       name: funder,
     })
   })

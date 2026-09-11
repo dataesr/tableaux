@@ -14,7 +14,7 @@ import { formatCompactNumber, formatPercent, funders, getCssColor, getEsQuery, g
 
 const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env
 
-export default function ProjectsByFunder({ name, participantSuperOrganizationChildren = [] }: { name: string | undefined, participantSuperOrganizationChildren?: any[] }) {
+export default function ProjectsByFunder({ name, participantSuperOrganizationChildrenIds = [] }: { name: string | undefined, participantSuperOrganizationChildrenIds?: any[] }) {
   const [searchParams] = useSearchParams()
   const [selectedControl, setSelectedControl] = useState("projects")
   const region = searchParams.get("region")
@@ -24,7 +24,7 @@ export default function ProjectsByFunder({ name, participantSuperOrganizationChi
   const yearMin = searchParams.get("yearMin")
   const color = useChartColor()
 
-  const structures = [structure].concat(participantSuperOrganizationChildren)
+  const structures = [structure].concat(participantSuperOrganizationChildrenIds)
 
   const body = {
     ...getEsQuery({ regions: [region], structures, yearMax, yearMin }),

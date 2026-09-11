@@ -9,14 +9,14 @@ import ChartCard from "../chart-card"
 const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env
 
 
-export default function Cards({ participantSuperOrganizationChildren = [] }: { participantSuperOrganizationChildren?: any[] }) {
+export default function Cards({ participantSuperOrganizationChildrenIds = [] }: { participantSuperOrganizationChildrenIds?: any[] }) {
   const [searchParams] = useSearchParams()
   const region = searchParams.get("region")
   const structure = searchParams.get("structureId")
   const yearMax = searchParams.get("yearMax")
   const yearMin = searchParams.get("yearMin")
 
-  const structures = [structure].concat(participantSuperOrganizationChildren)
+  const structures = [structure].concat(participantSuperOrganizationChildrenIds)
 
   const body = {
     ...getEsQuery({ regions: [region], structures }),

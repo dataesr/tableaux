@@ -41,14 +41,14 @@ type Sort = {
   order: 'asc' | 'desc'
 }
 
-export default function ProjectsData({ participantSuperOrganizationChildren = [] }: { participantSuperOrganizationChildren: any[] }) {
+export default function ProjectsData({ participantSuperOrganizationChildrenIds = [] }: { participantSuperOrganizationChildrenIds: any[] }) {
   const [searchParams] = useSearchParams()
   const region = searchParams.get("region")
   const structure = searchParams.get("structureId")
   const yearMax = searchParams.get("yearMax")
   const yearMin = searchParams.get("yearMin")
 
-  const structures = [structure].concat(participantSuperOrganizationChildren)
+  const structures = [structure].concat(participantSuperOrganizationChildrenIds)
 
   const [filters, setFilters] = useState<Filter[]>([])
   const [pagination, setPagination] = useState({ from: 0, size: 10 })
