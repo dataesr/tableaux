@@ -126,20 +126,17 @@ export default function DisplayStructure() {
               <Text size="xs" className="fr-mb-0 fr-text-mention--grey">
                 {structureInfo?.typologie_2}
               </Text>
+              {participantIsSuperOrganization && withComponents && (
+                <Text size="xs" className="fr-mb-0 fr-text-mention--grey">
+                  Composantes:
+                  {' '}
+                  {participantSuperOrganizationChildren.map((child) => child.displayName).join(' - ')}
+                </Text>
+              )}
               {structureInfo?.region && (
                 <Text size="sm" className="fr-mb-0 fr-text-mention--grey">
                   <span aria-hidden="true" className="fr-icon-map-pin-2-fill fr-mr-1w" />
                   {structureInfo.region}
-                </Text>
-              )}
-              {participantIsSuperOrganization && withComponents && (
-                <Text size="xs" className="fr-mb-0 fr-text-mention--grey">
-                  {participantSuperOrganizationChildren.map((child, index) =>
-                    <>
-                      {index !== 0 ? ' - ' : ''}
-                      {child?.displayName}
-                    </>
-                  )}
                 </Text>
               )}
               <Text size="sm" className="fr-mb-0 fr-text-mention--grey">

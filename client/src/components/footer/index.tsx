@@ -89,7 +89,7 @@ export default function Footer({ href = "/", sitemapHref, title = "Accueil - Dat
             </li>}
             <li className="fr-footer__bottom-item">
               <a className="fr-footer__bottom-link" href="/cookies">
-                {getI18nLabel(i18n, "Cookies")}
+                {getI18nLabel(i18n, "cookies")}
               </a>
             </li>
             <li className="fr-footer__bottom-item">
