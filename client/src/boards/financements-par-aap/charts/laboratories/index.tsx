@@ -33,6 +33,7 @@ export default function Laboratories({ name, participantSuperOrganizationChildre
         terms: {
           field: "participant_id_name_default.keyword",
           order: { "by_unique_project": "desc" },
+          size: 50,
         },
         aggregations: {
           by_unique_project: {
@@ -70,6 +71,7 @@ export default function Laboratories({ name, participantSuperOrganizationChildre
         terms: {
           field: "participant_id_name_default.keyword",
           order: { "sum_budget": "desc" },
+          size: 50,
         },
         aggregations: {
           sum_budget: {
@@ -123,6 +125,7 @@ export default function Laboratories({ name, participantSuperOrganizationChildre
         terms: {
           field: "participant_id_name_default.keyword",
           order: { "sum_funding": "desc" },
+          size: 50,
         },
         aggregations: {
           sum_funding: {
@@ -176,14 +179,14 @@ export default function Laboratories({ name, participantSuperOrganizationChildre
   }
   if (region) {
     // Change to filter on type "laboratory" instead of "institution" and to filter on "participant_region_with_labs" instead of "participant_region"
-    const filters = body.query.bool.filter.filter((f) => !f?.terms?.["participant_region.keyword"] && !f?.term?.["participant_type"])
+    const filters = body.query.bool.filter.filter((filter) => !filter?.terms?.["participant_region.keyword"] && !filter?.term?.["participant_type"])
     filters.push({ term: { "participant_region_with_labs.keyword": region } })
     filters.push({ term: { participant_type: "laboratory" } })
     body.query.bool.filter = filters
   }
   if (structure) {
     // Change to filter on type "laboratory" instead of "institution" and to filter on "participant_institutions.structure" instead of "participant_id"
-    const filters = body.query.bool.filter.filter((f) => !f?.term?.["participant_type"] && !f?.terms?.["participant_id.keyword"] && !f?.term?.participant_is_main_parent && !f.terms?.["participant_typologie_1.keyword"])
+    const filters = body.query.bool.filter.filter((filter) => !filter?.term?.["participant_type"] && !filter?.terms?.["participant_id.keyword"] && !filter?.term?.participant_is_main_parent && !filter.terms?.["participant_typologie_1.keyword"])
     filters.push({ term: { "participant_type.keyword": "laboratory" } })
     filters.push({ term: { "participant_institutions.structure.keyword": structure } })
     body.query.bool.filter = filters
@@ -327,7 +330,7 @@ export default function Laboratories({ name, participantSuperOrganizationChildre
     return `${this.total} projet${this.total > 1 ? 's' : ''}`
   }
   let tooltip = function (this: any) {
-    return `<b>${this.y}</b> projets <b>${this.series.name}</b> auxquels participe <b>${categoriesProject[this.x]}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`
+    return `<b>${this.y}</b> projet${this.y > 1 ? 's' : ''} <b>${this.series.name}</b> ${this.y > 1 ? 'auxquels' : 'auquel'} participe <b>${categoriesProject[this.x]}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`
   }
   switch (selectedControl) {
     // If view by global amount
@@ -382,7 +385,7 @@ export default function Laboratories({ name, participantSuperOrganizationChildre
   }
 
   const options: HighchartsInstance.Options = {
-    chart: { height: "1000px" },
+    chart: { height: "2000px" },
     legend: { enabled: true, reversed: true },
     plotOptions: {
       series: {
