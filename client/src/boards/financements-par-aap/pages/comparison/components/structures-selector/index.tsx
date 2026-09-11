@@ -29,7 +29,7 @@ export default function StructuresSelector() {
       },
     },
   }
-  bodyRegions.query.bool.filter.push({ term: { participant_is_main_parent: 1 } })
+  // bodyRegions.query.bool.filter.push({ term: { participant_is_main_parent: 1 } })
   bodyRegions.query.bool.filter.push({ term: { participant_type: "institution" } })
   bodyRegions.query.bool.filter.push({ terms: { "participant_typologie_1.keyword": ["Ecoles, instituts et assimilés", "Organismes de recherche", "Universités et assimilés"] } })
   if (typology && typology !== '*') {
@@ -63,7 +63,7 @@ export default function StructuresSelector() {
       },
     },
   }
-  bodyTypologies.query.bool.filter.push({ term: { participant_is_main_parent: 1 } })
+  // bodyTypologies.query.bool.filter.push({ term: { participant_is_main_parent: 1 } })
   bodyTypologies.query.bool.filter.push({ term: { participant_type: "institution" } })
   bodyTypologies.query.bool.filter.push({ terms: { "participant_typologie_1.keyword": ["Ecoles, instituts et assimilés", "Organismes de recherche", "Universités et assimilés"] } })
   if (region && region !== '*') {
@@ -97,7 +97,7 @@ export default function StructuresSelector() {
       },
     },
   }
-  bodyStructures.query.bool.filter.push({ term: { participant_is_main_parent: 1 } })
+  // bodyStructures.query.bool.filter.push({ term: { participant_is_main_parent: 1 } })
   bodyStructures.query.bool.filter.push({ term: { participant_type: "institution" } })
   bodyStructures.query.bool.filter.push({ terms: { "participant_typologie_1.keyword": ["Ecoles, instituts et assimilés", "Organismes de recherche", "Universités et assimilés"] } })
   // Deep copy
