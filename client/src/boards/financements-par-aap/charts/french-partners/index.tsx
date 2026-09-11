@@ -33,6 +33,7 @@ export default function FrenchPartners({ name, participantSuperOrganizationChild
         terms: {
           field: "co_partners_fr_inst.keyword",
           order: { "by_unique_project": "desc" },
+          size: 10 + structures.length,
         },
         aggregations: {
           by_unique_project: {
@@ -70,6 +71,7 @@ export default function FrenchPartners({ name, participantSuperOrganizationChild
         terms: {
           field: "co_partners_fr_inst.keyword",
           order: { "sum_budget": "desc" },
+          size: 10 + structures.length,
         },
         aggregations: {
           sum_budget: {
@@ -123,6 +125,7 @@ export default function FrenchPartners({ name, participantSuperOrganizationChild
         terms: {
           field: "co_partners_fr_inst.keyword",
           order: { "sum_funding": "desc" },
+          size: 10 + structures.length,
         },
         aggregations: {
           sum_funding: {
@@ -199,9 +202,24 @@ export default function FrenchPartners({ name, participantSuperOrganizationChild
   const seriesBudgetRegion: any = []
   const seriesFundingRegion: any = []
   const seriesProjectRegion: any = []
-  const partnersBudget = data?.aggregations?.by_french_partners_budget?.buckets ?? []
-  const partnersFunding = data?.aggregations?.by_french_partners_funding?.buckets ?? []
-  const partnersProject = data?.aggregations?.by_french_partners_project?.buckets ?? []
+  const partnersBudget = (data?.aggregations?.by_french_partners_budget?.buckets ?? [])
+    .filter((partner) => {
+      const decodedKey = Object.fromEntries(new URLSearchParams(partner.key))
+      return !structures.includes(decodedKey?.id)
+    })
+    .slice(0, 10)
+  const partnersFunding = (data?.aggregations?.by_french_partners_funding?.buckets ?? [])
+    .filter((partner) => {
+      const decodedKey = Object.fromEntries(new URLSearchParams(partner.key))
+      return !structures.includes(decodedKey?.id)
+    })
+    .slice(0, 10)
+  const partnersProject = (data?.aggregations?.by_french_partners_project?.buckets ?? [])
+    .filter((partner) => {
+      const decodedKey = Object.fromEntries(new URLSearchParams(partner.key))
+      return !structures.includes(decodedKey?.id)
+    })
+    .slice(0, 10)
 
   // 1. Calculer les totaux réels pour le tri (après filtrage should_ignore)
   const budgetTotals = partnersBudget.map((bucket) => {
@@ -311,6 +329,7 @@ export default function FrenchPartners({ name, participantSuperOrganizationChild
       name: funder,
     })
   })
+  console.log("partnersProject", partnersProject)
   const categoriesProject = partnersProject.map((partner) => {
     const structure = Object.fromEntries(new URLSearchParams(partner.key))
     return `${structure.label}`
