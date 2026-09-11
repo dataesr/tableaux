@@ -195,6 +195,14 @@ function isInStaging() {
   return import.meta.env.MODE === 'staging';
 }
 
+function getResponsiveChartHeight(length) {
+  const step = 50;
+  const minHeight = 200;
+  let height = length * step;
+  if (height < minHeight) return minHeight;
+  return height;
+}
+
 export {
   clearAllfavoriteIdsInCookie,
   deepMerge,
@@ -204,6 +212,7 @@ export {
   getI18nLabel,
   getNeighbouringCountriesFromIso3,
   getParentFromLevel,
+  getResponsiveChartHeight,
   getSortedfavoriteIdsInCookie,
   getThemeFromHtmlNode,
   isInDevelopment,

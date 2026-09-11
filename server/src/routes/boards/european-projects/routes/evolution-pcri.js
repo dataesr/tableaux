@@ -37,7 +37,7 @@ async function recreateIndex(collection, indexSpec, indexName) {
 const router = new express.Router();
 const routesPrefix = "/european-projects/evolution-pcri";
 
-const collections_projects_evolution = "european-projects_evolution_staging";
+const collections_projects_evolution = "european-projects_evolution";
 
 router
   .route(routesPrefix + "/get-evolution-by-country")

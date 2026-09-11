@@ -3,9 +3,9 @@ import { db } from "../../../../services/mongo.js";
 
 const router = new express.Router();
 
-const collection_erc_projects_synthese = "european-projects_erc-projects-synthese_staging";
-const collection_projects_entities = "european-projects_projects-entities_staging";
-const collection_persons = "european-projects_erc-persons_staging";
+const collection_erc_projects_synthese = "european-projects_erc-projects-synthese";
+const collection_projects_entities = "european-projects_projects-entities";
+const collection_persons = "european-projects_erc-persons";
 
 /**
  * Route de synthèse ERC - récupère les données agrégées pour les cartes de synthèse
@@ -685,7 +685,7 @@ router.route("/european-projects/erc/main-entities").get(async (req, res) => {
         {
           $group: {
             _id: { name: "$entities_name", acronym: "$entities_acronym" },
-            total_fund_eur: { $sum: "$fund_eur" },
+            total_fund_eur: { $sum: "$calculated_fund" },
           },
         },
         {
@@ -751,7 +751,7 @@ router.route("/european-projects/erc/main-entities-by-domain").get(async (req, r
         {
           $group: {
             _id: { name: "$entities_name", acronym: "$entities_acronym" },
-            total_fund_eur: { $sum: "$fund_eur" },
+            total_fund_eur: { $sum: "$calculated_fund" },
           },
         },
         {

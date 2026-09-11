@@ -3,7 +3,7 @@ import { db } from "../../../../services/mongo.js";
 
 const router = new express.Router();
 
-const COLLECTION_NAME = "european-projects_msca-projects-synthese_staging";
+const COLLECTION_NAME = "european-projects_msca-projects-synthese";
 
 /**
  * Route de synthèse MSCA - agrège les données globales pour les cartes de synthèse

@@ -6,7 +6,7 @@ const router = new express.Router();
 
 const routesPrefix = "/european-projects/type-beneficiaries";
 
-const collection_projects_entities = "european-projects_projects-entities_staging";
+const collection_projects_entities = "european-projects_projects-entities";
 
 router.route(routesPrefix + "/top10-countries-by-type-of-beneficiaries").get(async (req, res) => {
   if (!req.query.country_code) {
@@ -52,7 +52,7 @@ router.route(routesPrefix + "/top10-countries-by-type-of-beneficiaries").get(asy
               country_name_en: "$country_name_en",
               cordis_type_entity_code: "$cordis_type_entity_code",
             },
-            total_fund_eur: { $sum: "$fund_eur" },
+            total_fund_eur: { $sum: "$calculated_fund" },
           },
         },
         {
@@ -180,6 +180,7 @@ router.route(routesPrefix + "/type-beneficiaries-evolution").get(async (req, res
 
     // Ajouter le filtre pour le type d'entité
     filters.cordis_type_entity_code = targetEntityType;
+console.log(filters);
 
     // Première étape : obtenir le top 10 des pays pour ce type d'entité
     const top10Countries = await db
@@ -195,7 +196,7 @@ router.route(routesPrefix + "/type-beneficiaries-evolution").get(async (req, res
               country_name_fr: "$country_name_fr",
               country_name_en: "$country_name_en",
             },
-            total_fund_eur: { $sum: "$fund_eur" },
+            total_fund_eur: { $sum: "$calculated_fund" },
           },
         },
         {
@@ -235,7 +236,7 @@ router.route(routesPrefix + "/type-beneficiaries-evolution").get(async (req, res
                 country_name_fr: "$country_name_fr",
                 country_name_en: "$country_name_en",
               },
-              total_fund_eur: { $sum: "$fund_eur" },
+              total_fund_eur: { $sum: "$calculated_fund" },
             },
           },
           {
@@ -301,7 +302,7 @@ router.route(routesPrefix + "/type-beneficiaries-evolution").get(async (req, res
               country_name_en: "$country_name_en",
               call_year: "$call_year",
             },
-            total_fund_eur: { $sum: "$fund_eur" },
+            total_fund_eur: { $sum: "$calculated_fund" },
           },
         },
         {

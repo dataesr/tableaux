@@ -6,7 +6,7 @@ const router = new express.Router();
 
 const routesPrefix = "/european-projects/beneficiaries";
 
-const collection_projects_entities = "european-projects_projects-entities_staging";
+const collection_projects_entities = "european-projects_projects-entities";
 
 router.route(routesPrefix + "/main-beneficiaries-pct-50").get(async (req, res) => {
   if (!req.query.country_code) {
@@ -53,7 +53,7 @@ router.route(routesPrefix + "/main-beneficiaries-pct-50").get(async (req, res) =
               name: "$entities_name",
               acronym: "$entities_acronym",
             },
-            total_fund_eur: { $sum: "$fund_eur" },
+            total_fund_eur: { $sum: "$calculated_fund" },
           },
         },
         {
@@ -166,7 +166,7 @@ router.route(routesPrefix + "/beneficiaries-by-role").get(async (req, res) => {
               country_name_en: "$country_name_en",
               role: "$role",
             },
-            total_fund_eur: { $sum: "$fund_eur" },
+            total_fund_eur: { $sum: "$calculated_fund" },
           },
         },
         {

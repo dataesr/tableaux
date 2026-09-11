@@ -34,8 +34,8 @@ async function recreateIndex(collection, indexSpec, indexName) {
 const router = new express.Router();
 const routesPrefix = "/european-projects/collaborations";
 
-const collection_projects_entities = "european-projects_projects-entities_staging";
-const collection_collaborations = "european-projects_collaborations_staging";
+const collection_projects_entities = "european-projects_projects-entities";
+const collection_collaborations = "european-projects_collaborations";
 
 router.route(routesPrefix + "/get-entities").get(async (req, res) => {
   const { entityName, country_code } = req.query;

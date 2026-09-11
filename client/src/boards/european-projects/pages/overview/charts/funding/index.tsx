@@ -4,6 +4,7 @@ import { useSearchParams } from "react-router-dom";
 import { getData } from "./query";
 import options from "./options";
 import { useGetParams, renderDataTable } from "./utils";
+
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 

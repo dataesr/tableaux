@@ -18,6 +18,17 @@ export function useGetParams() {
   if (pillarId) {
     params.push(`pillars=${pillarId}`);
   }
+  // Récupérer le paramètre programId et l'ajouter comme programs s'il existe
+  const programId = searchParams.get("programId");
+  if (programId) {
+    params.push(`programs=${programId}`);
+  }
+
+  // Récupérer le paramètre thematicIds et l'ajouter comme topics s'il existe
+  const thematicIds = searchParams.get("thematicIds");
+  if (thematicIds) {
+    params.push(`thematics=${thematicIds}`);
+  }
 
   // Récupérer le paramètre structureid s'il existe
   const structureId = searchParams.get("structureid");

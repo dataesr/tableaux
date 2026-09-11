@@ -37,9 +37,6 @@ export function useGetParams() {
     params.push(`structureid=${structureId}`);
   }
 
-  // const currentLang = searchParams.get("language") || "fr";
-
-  // return { params: params.join("&"), currentLang };
   return params.join("&");
 }
 

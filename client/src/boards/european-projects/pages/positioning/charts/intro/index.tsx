@@ -267,7 +267,7 @@ export default function Intro() {
   return (
     <>
       <Callout className="callout-style">
-        <strong>{`${top10[top10.length - 1].influence.toFixed(1)}`}</strong>
+        <strong>{`${top10[top10.length - 1]?.influence.toFixed(1)}`}</strong>
         {getI18nLabel("intro")}
         <i>{top10.map((item) => item.name_fr).join(", ")}</i>
         <>

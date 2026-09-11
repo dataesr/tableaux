@@ -4,7 +4,7 @@ import { recreateIndex } from "../../../utils.js";
 
 const router = new express.Router();
 
-const collection_projects_entities = "european-projects_projects-entities_staging";
+const collection_projects_entities = "european-projects_projects-entities";
 
 router.route("/european-projects/filters-countries").get(async (req, res) => {
   try {
@@ -189,6 +189,7 @@ router.route("/european-projects/filters-pillars").get(async (req, res) => {
         },
       )
       .toArray();
+    
 
     res.json(data);
   } catch (error) {

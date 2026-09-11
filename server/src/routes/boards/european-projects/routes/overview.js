@@ -3,7 +3,7 @@ import { db } from "../../../../services/mongo.js";
 
 const router = new express.Router();
 
-const collection_projects_synthese = "fr-esr-all-projects-synthese";
+// const collection_projects_synthese = "fr-esr-all-projects-synthese";
 const collection_projects_entities = "european-projects_projects-entities";
 
 import { checkQuery, recreateIndex } from "../../../utils.js";
@@ -187,7 +187,7 @@ router.route("/european-projects/synthesis-focus_indexes").get(async (req, res) 
 router.route("/european-projects/funded-objectives").get(async (req, res) => {
   const filters = checkQuery(req.query, ["country_code", "extra_joint_organization", "stage"], res);
   const data = await db
-    .collection(collection_projects_synthese)
+    .collection(collection_projects_entities)
     .aggregate([
       { $match: filters },
       {
@@ -198,7 +198,7 @@ router.route("/european-projects/funded-objectives").get(async (req, res) => {
             pilier_name_en: "$pilier_name_en",
             pilier_name_fr: "$pilier_name_fr",
           },
-          total_funding: { $sum: "$fund_eur" },
+          total_funding: { $sum: "$calculated_fund" },
         },
       },
       {
@@ -217,74 +217,6 @@ router.route("/european-projects/funded-objectives").get(async (req, res) => {
   res.json(data);
 });
 
-// router.route("/european-projects/overview/pillars-funding").get(async (req, res) => {
-//   const filters = checkQuery(req.query, ["country_code"], res);
-
-//   if (req.query.pillars) {
-//     const pillars = req.query.pillars.split("|");
-//     filters.pilier_code = { $in: pillars };
-//   }
-
-//   if (req.query.structureid) {
-//     filters.entities_id = req.query.structureid;
-//     delete filters.structureid;
-//   }
-//   delete filters.programs;
-//   delete filters.thematics;
-//   delete filters.destinations;
-
-//   const data = await db
-//     .collection(collection_projects_entities)
-//     .aggregate([
-//       { $match: { $and: [filters] } },
-//       {
-//         $group: {
-//           _id: {
-//             pillar: "$pilier_code",
-//             stage: "$stage",
-//             pilier_name_fr: "$pilier_name_fr",
-//             pilier_name_en: "$pilier_name_en",
-//           },
-//           total_fund_eur: { $sum: "$calculated_fund" },
-//           count: { $sum: 1 },
-//         },
-//       },
-//       {
-//         $project: {
-//           _id: 0,
-//           pillar: "$_id.pillar",
-//           pilier_name_fr: "$_id.pilier_name_fr",
-//           pilier_name_en: "$_id.pilier_name_en",
-//           stage: "$_id.stage",
-//           total_fund_eur: 1,
-//           count: 1,
-//         },
-//       },
-//       { $sort: { total_fund_eur: -1 } },
-//     ])
-//     .toArray();
-
-//   const successRates = data.reduce((acc, item) => {
-//     const pillar = item.pillar;
-//     if (!acc[pillar]) {
-//       acc[pillar] = { successful: 0, evaluated: 0 };
-//     }
-//     if (item.stage === "successful") {
-//       acc[pillar].successful += item.total_fund_eur;
-//     } else if (item.stage === "evaluated") {
-//       acc[pillar].evaluated += item.total_fund_eur;
-//     }
-//     return acc;
-//   }, {});
-
-//   const successRateByPillar = Object.entries(successRates).map(([pillar, { successful, evaluated }]) => ({
-//     pillar,
-//     successRate: evaluated > 0 ? successful / evaluated : 0,
-//   }));
-
-//   res.json({ data, successRateByPillar });
-// });
-
 router.route("/european-projects/overview/pillars-funding-proportion").get(async (req, res) => {
   const filters = checkQuery(req.query, ["country_code"], res);
 
@@ -297,7 +229,7 @@ router.route("/european-projects/overview/pillars-funding-proportion").get(async
   delete filters.destinations;
 
   const data_country = await db
-    .collection(collection_projects_synthese)
+    .collection(collection_projects_entities)
     .aggregate([
       { $match: { $and: [filters] } },
       {
@@ -308,7 +240,7 @@ router.route("/european-projects/overview/pillars-funding-proportion").get(async
             pilier_name_fr: "$pilier_name_fr",
             pilier_name_en: "$pilier_name_en",
           },
-          total_fund_eur: { $sum: "$fund_eur" },
+          total_fund_eur: { $sum: "$calculated_fund" },
         },
       },
       {
@@ -330,7 +262,7 @@ router.route("/european-projects/overview/pillars-funding-proportion").get(async
   delete filters_all.country_code;
 
   const data_all = await db
-    .collection(collection_projects_synthese)
+    .collection(collection_projects_entities)
     .aggregate([
       { $match: { $and: [filters_all] } },
       {
@@ -341,7 +273,7 @@ router.route("/european-projects/overview/pillars-funding-proportion").get(async
             pilier_name_fr: "$pilier_name_fr",
             pilier_name_en: "$pilier_name_en",
           },
-          total_fund_eur: { $sum: "$fund_eur" },
+          total_fund_eur: { $sum: "$calculated_fund" },
         },
       },
       {
@@ -373,15 +305,6 @@ router.route("/european-projects/overview/pillars-funding-proportion").get(async
   });
   // sort by proportion
   data.sort((a, b) => b.proportion - a.proportion);
-  // remove duplicates
-  // const uniquePillars = new Set();
-  // const filteredData = data.filter((item) => {
-  //   if (uniquePillars.has(item.pillar)) {
-  //     return false;
-  //   }
-  //   uniquePillars.add(item.pillar);
-  //   return true;
-  // });
 
   res.json({ data });
 });
@@ -471,7 +394,7 @@ router.route("/european-projects/overview/programs-funding-proportion").get(asyn
   delete filters.destinations;
 
   const data_country = await db
-    .collection(collection_projects_synthese)
+    .collection(collection_projects_entities)
     .aggregate([
       { $match: { $and: [filters] } },
       {
@@ -482,7 +405,7 @@ router.route("/european-projects/overview/programs-funding-proportion").get(asyn
             programme_name_fr: "$programme_name_fr",
             programme_name_en: "$programme_name_en",
           },
-          total_fund_eur: { $sum: "$fund_eur" },
+          total_fund_eur: { $sum: "$calculated_fund" },
         },
       },
       {
@@ -504,7 +427,7 @@ router.route("/european-projects/overview/programs-funding-proportion").get(asyn
   delete filters_all.country_code;
 
   const data_all = await db
-    .collection(collection_projects_synthese)
+    .collection(collection_projects_entities)
     .aggregate([
       { $match: { $and: [filters_all] } },
       {
@@ -515,7 +438,7 @@ router.route("/european-projects/overview/programs-funding-proportion").get(asyn
             programme_name_fr: "$programme_name_fr",
             programme_name_en: "$programme_name_en",
           },
-          total_fund_eur: { $sum: "$fund_eur" },
+          total_fund_eur: { $sum: "$calculated_fund" },
         },
       },
       {
@@ -644,7 +567,7 @@ router.route("/european-projects/overview/topics-funding-proportion").get(async 
   delete filters.destinations;
 
   const data_country = await db
-    .collection(collection_projects_synthese)
+    .collection(collection_projects_entities)
     .aggregate([
       { $match: { $and: [filters] } },
       {
@@ -655,7 +578,7 @@ router.route("/european-projects/overview/topics-funding-proportion").get(async 
             thema_name_fr: "$thema_name_fr",
             thema_name_en: "$thema_name_en",
           },
-          total_fund_eur: { $sum: "$fund_eur" },
+          total_fund_eur: { $sum: "$calculated_fund" },
         },
       },
       {
@@ -677,7 +600,7 @@ router.route("/european-projects/overview/topics-funding-proportion").get(async 
   delete filters_all.country_code;
 
   const data_all = await db
-    .collection(collection_projects_synthese)
+    .collection(collection_projects_entities)
     .aggregate([
       { $match: { $and: [filters_all] } },
       {
@@ -688,7 +611,7 @@ router.route("/european-projects/overview/topics-funding-proportion").get(async 
             thema_name_fr: "$thema_name_fr",
             thema_name_en: "$thema_name_en",
           },
-          total_fund_eur: { $sum: "$fund_eur" },
+          total_fund_eur: { $sum: "$calculated_fund" },
         },
       },
       {
@@ -816,7 +739,7 @@ router.route("/european-projects/overview/destination-funding-proportion").get(a
   }
 
   const data_country = await db
-    .collection(collection_projects_synthese)
+    .collection(collection_projects_entities)
     .aggregate([
       { $match: { $and: [filters] } },
       {
@@ -825,7 +748,7 @@ router.route("/european-projects/overview/destination-funding-proportion").get(a
             destination: "$destination_code",
             stage: "$stage",
           },
-          total_fund_eur: { $sum: "$fund_eur" },
+          total_fund_eur: { $sum: "$calculated_fund" },
         },
       },
       {
@@ -845,7 +768,7 @@ router.route("/european-projects/overview/destination-funding-proportion").get(a
   delete filters_all.country_code;
 
   const data_all = await db
-    .collection(collection_projects_synthese)
+    .collection(collection_projects_entities)
     .aggregate([
       { $match: { $and: [filters_all] } },
       {
@@ -854,7 +777,7 @@ router.route("/european-projects/overview/destination-funding-proportion").get(a
             destination: "$destination_code",
             stage: "$stage",
           },
-          total_fund_eur: { $sum: "$fund_eur" },
+          total_fund_eur: { $sum: "$calculated_fund" },
         },
       },
       {
@@ -1020,7 +943,7 @@ router.route("/european-projects/overview/pillars-funding-evo-3-years").get(asyn
 
   const query = () => {
     return db
-      .collection(collection_projects_synthese)
+      .collection(collection_projects_entities)
       .aggregate([
         {
           $match: { $and: [filters] },
@@ -1034,7 +957,7 @@ router.route("/european-projects/overview/pillars-funding-evo-3-years").get(asyn
               pilier_name_en: "$pilier_name_en",
               call_year: "$call_year",
             },
-            total_fund_eur: { $sum: "$fund_eur" },
+            total_fund_eur: { $sum: "$calculated_fund" },
             total_coordination_number: { $sum: "$coordination_number" },
             total_number_involved: { $sum: "$number_involved" },
           },
@@ -1122,7 +1045,7 @@ router.route("/european-projects/overview/programs-funding-evo-3-years").get(asy
 
   const query = () => {
     return db
-      .collection(collection_projects_synthese)
+      .collection(collection_projects_entities)
       .aggregate([
         {
           $match: { $and: [filters] },
@@ -1136,7 +1059,7 @@ router.route("/european-projects/overview/programs-funding-evo-3-years").get(asy
               programme_name_en: "$programme_name_en",
               call_year: "$call_year",
             },
-            total_fund_eur: { $sum: "$fund_eur" },
+            total_fund_eur: { $sum: "$calculated_fund" },
             total_coordination_number: { $sum: "$coordination_number" },
             total_number_involved: { $sum: "$number_involved" },
           },
@@ -1225,7 +1148,7 @@ router.route("/european-projects/overview/topics-funding-evo-3-years").get(async
 
   const query = () => {
     return db
-      .collection(collection_projects_synthese)
+      .collection(collection_projects_entities)
       .aggregate([
         {
           $match: { $and: [filters] },
@@ -1239,7 +1162,7 @@ router.route("/european-projects/overview/topics-funding-evo-3-years").get(async
               thema_name_en: "$thema_name_en",
               call_year: "$call_year",
             },
-            total_fund_eur: { $sum: "$fund_eur" },
+            total_fund_eur: { $sum: "$calculated_fund" },
             total_coordination_number: { $sum: "$coordination_number" },
             total_number_involved: { $sum: "$number_involved" },
           },
@@ -1327,7 +1250,7 @@ router.route("/european-projects/overview/destinations-funding-evo-3-years").get
   //TODO: ! destination_name_fr n'existe pas en base
   const query = () => {
     return db
-      .collection(collection_projects_synthese)
+      .collection(collection_projects_entities)
       .aggregate([
         {
           $match: { $and: [filters] },
@@ -1341,7 +1264,7 @@ router.route("/european-projects/overview/destinations-funding-evo-3-years").get
               destination_name_en: "$destination_name_en",
               call_year: "$call_year",
             },
-            total_fund_eur: { $sum: "$fund_eur" },
+            total_fund_eur: { $sum: "$calculated_fund" },
             total_coordination_number: { $sum: "$coordination_number" },
             total_number_involved: { $sum: "$number_involved" },
           },
@@ -1439,7 +1362,7 @@ router.route("/european-projects/overview/projects-types-1").get(async (req, res
   }
 
   const data_country = await db
-    .collection(collection_projects_synthese)
+    .collection(collection_projects_entities)
     .aggregate([
       { $match: { $and: [filters] } },
       {
@@ -1449,7 +1372,7 @@ router.route("/european-projects/overview/projects-types-1").get(async (req, res
             action_id: "$action_group_code",
             action_name: "$action_group_name",
           },
-          total_fund_eur: { $sum: "$fund_eur" },
+          total_fund_eur: { $sum: "$calculated_fund" },
         },
       },
       {
@@ -1494,7 +1417,7 @@ router.route("/european-projects/overview/projects-types-1").get(async (req, res
 
   delete filters.country_code;
   const data_all = await db
-    .collection(collection_projects_synthese)
+    .collection(collection_projects_entities)
     .aggregate([
       { $match: { $and: [filters] } },
       {
@@ -1504,7 +1427,7 @@ router.route("/european-projects/overview/projects-types-1").get(async (req, res
             action_id: "$action_group_code",
             action_name: "$action_group_name",
           },
-          total_fund_eur: { $sum: "$fund_eur" },
+          total_fund_eur: { $sum: "$calculated_fund" },
         },
       },
       {
@@ -1596,7 +1519,7 @@ router.route("/european-projects/overview/projects-types-2").get(async (req, res
   //TODO: get the range of years from the database
   filters.call_year = { $in: rangeOfYears };
   const data_country = await db
-    .collection(collection_projects_synthese)
+    .collection(collection_projects_entities)
     .aggregate([
       { $match: { $and: [filters] } },
       {
@@ -1607,7 +1530,7 @@ router.route("/european-projects/overview/projects-types-2").get(async (req, res
             action_name: "$action_group_name",
             call_year: "$call_year",
           },
-          total_fund_eur: { $sum: "$fund_eur" },
+          total_fund_eur: { $sum: "$calculated_fund" },
         },
       },
       {
@@ -1654,7 +1577,7 @@ router.route("/european-projects/overview/projects-types-2").get(async (req, res
     .toArray();
 
   const data_all = await db
-    .collection(collection_projects_synthese)
+    .collection(collection_projects_entities)
     .aggregate([
       {
         $group: {
@@ -1664,7 +1587,7 @@ router.route("/european-projects/overview/projects-types-2").get(async (req, res
             action_name: "$action_group_name",
             call_year: "$call_year",
           },
-          total_fund_eur: { $sum: "$fund_eur" },
+          total_fund_eur: { $sum: "$calculated_fund" },
         },
       },
       {
@@ -1748,7 +1671,7 @@ router.route("/european-projects/overview/projects-types-3").get(async (req, res
   }
 
   const dataSelectedCountry = await db
-    .collection(collection_projects_synthese)
+    .collection(collection_projects_entities)
     .aggregate([
       { $match: { $and: [filters] } },
       {
@@ -1758,7 +1681,7 @@ router.route("/european-projects/overview/projects-types-3").get(async (req, res
             action_id: "$action_group_code",
             action_name: "$action_group_name",
           },
-          total_fund_eur: { $sum: "$fund_eur" },
+          total_fund_eur: { $sum: "$calculated_fund" },
         },
       },
       {
@@ -1805,7 +1728,7 @@ router.route("/european-projects/overview/projects-types-3").get(async (req, res
   filters.country_association_code = "MEMBER-ASSOCIATED";
 
   const otherCountries = await db
-    .collection(collection_projects_synthese)
+    .collection(collection_projects_entities)
     .aggregate([
       { $match: { $and: [filters] } },
       {
@@ -1815,7 +1738,7 @@ router.route("/european-projects/overview/projects-types-3").get(async (req, res
             action_id: "$action_group_code",
             action_name: "$action_group_name",
           },
-          total_fund_eur: { $sum: "$fund_eur" },
+          total_fund_eur: { $sum: "$calculated_fund" },
         },
       },
       {

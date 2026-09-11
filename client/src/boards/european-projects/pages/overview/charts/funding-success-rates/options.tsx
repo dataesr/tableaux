@@ -3,16 +3,14 @@ import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.sr
 import { CreateChartOptions } from "../../../../components/chart-ep";
 import { formatToRates } from "../../../../../../utils/format";
 import { getCssColor } from "../../../../../../utils/colors";
-import { getI18nLabel } from "../../../../../../utils";
+import { getI18nLabel, getResponsiveChartHeight } from "../../../../../../utils";
 import i18n from "../../i18n-charts.json";
 
 export default function Options(data, title) {
   if (!data) return null;
 
-  const height = data.data.length * 50;
-
   const newOptions: HighchartsInstance.Options = {
-    chart: { height: height },
+    chart: { height: getResponsiveChartHeight(data.data.length) },
     title: { text: title },
     xAxis: {
       labels: {

@@ -133,19 +133,16 @@ export default function SyntheseContent() {
               <ProgramsOverview />
             </Col>
           </Row>
-
           <Title as="h2" className="fr-mt-5w">
             {getI18nLabel(i18n, "program-detail-title", currentLang)}
           </Title>
           <Callout className="callout-style">{getI18nLabel(i18n, "program-detail-callout", currentLang)}</Callout>
           <ProgramsFundingEvo3Years />
-
           <Title as="h2" className="fr-mt-5w">
             {getI18nLabel(i18n, "program-composition", currentLang)}
           </Title>
           <Callout className="callout-style">{getI18nLabel(i18n, "program-composition-callout", currentLang)}</Callout>
           <TopicsFunding />
-
           <BoardsSuggestComponent />
         </Container>
       );

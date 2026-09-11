@@ -4,7 +4,7 @@ import { db } from "../../../../services/mongo.js";
 
 const router = new express.Router();
 
-const collection_projects_entities = "european-projects_projects-entities_staging";
+const collection_projects_entities = "european-projects_projects-entities";
 const collection_projects_synthese = "fr-esr-all-projects-synthese";
 
 router.route("/european-projects/positioning/top-10-funding-ranking").get(async (req, res) => {
@@ -28,7 +28,7 @@ router.route("/european-projects/positioning/top-10-funding-ranking").get(async 
   filters.country_code = { $nin: ["ZOE", "ZOI"] };
 
   const data = await db
-    .collection(collection_projects_synthese)
+    .collection(collection_projects_entities)
     .aggregate([
       { $match: filters },
       {
@@ -39,7 +39,7 @@ router.route("/european-projects/positioning/top-10-funding-ranking").get(async 
             name_en: "$country_name_en",
             stage: "$stage",
           },
-          total_fund_eur: { $sum: "$fund_eur" },
+          total_fund_eur: { $sum: "$calculated_fund" },
           total_coordination_number: { $sum: "$coordination_number" },
           total_number_involved: { $sum: "$number_involved" },
         },
@@ -205,7 +205,7 @@ router.route("/european-projects/positioning/top-10-beneficiaries").get(async (r
             name_en: "$country_name_en",
             id: "$country_code",
           },
-          total_fund_eur: { $sum: "$fund_eur" },
+          total_fund_eur: { $sum: "$calculated_fund" },
         },
       },
       {
@@ -266,7 +266,7 @@ router.route("/european-projects/positionning/funding-evo-3-years").get(async (r
 
   const query = () => {
     return db
-      .collection(collection_projects_synthese)
+      .collection(collection_projects_entities)
       .aggregate([
         {
           $match: { $and: [filters] },
@@ -280,7 +280,7 @@ router.route("/european-projects/positionning/funding-evo-3-years").get(async (r
               name_fr: "$country_name_fr",
               name_en: "$country_name_en",
             },
-            total_fund_eur: { $sum: "$fund_eur" },
+            total_fund_eur: { $sum: "$calculated_fund" },
             total_coordination_number: { $sum: "$coordination_number" },
             total_number_involved: { $sum: "$number_involved" },
           },
