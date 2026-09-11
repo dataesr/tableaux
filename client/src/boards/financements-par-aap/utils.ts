@@ -51,7 +51,7 @@ const getEsQuery = ({ regions, structures, yearMax = years[years.length - 1], ye
   }
   const structuresNotNull = structures?.filter((structure) => structure !== null)
   if (structuresNotNull?.length ?? 0 > 0) {
-    query.query.bool.filter.push({ term: { participant_is_main_parent: 1 } })
+    // query.query.bool.filter.push({ term: { participant_is_main_parent: 1 } })
     query.query.bool.filter.push({ term: { participant_type: "institution" } })
     query.query.bool.filter.push({ terms: { "participant_typologie_1.keyword": ["Ecoles, instituts et assimilés", "Organismes de recherche", "Universités et assimilés"] } })
     query.query.bool.filter.push({ terms: { "participant_id.keyword": structuresNotNull } })

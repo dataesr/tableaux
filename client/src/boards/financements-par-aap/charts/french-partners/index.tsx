@@ -178,7 +178,7 @@ export default function FrenchPartners({ name, participantSuperOrganizationChild
     },
   }
   if (region) {
-    const filters = body.query.bool.filter.filter((f) => !f?.terms?.["participant_region.keyword"])
+    const filters = body.query.bool.filter.filter((filter) => !filter?.terms?.["participant_region.keyword"])
     filters.push({ terms: { "participant_region_with_labs.keyword": [region] } })
     body.query.bool.filter = filters
   }
