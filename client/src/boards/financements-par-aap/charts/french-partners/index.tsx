@@ -329,7 +329,6 @@ export default function FrenchPartners({ name, participantSuperOrganizationChild
       name: funder,
     })
   })
-  console.log("partnersProject", partnersProject)
   const categoriesProject = partnersProject.map((partner) => {
     const structure = Object.fromEntries(new URLSearchParams(partner.key))
     return `${structure.label}`

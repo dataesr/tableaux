@@ -97,8 +97,8 @@ export default function Overview({ name, participantSuperOrganizationChildrenIds
     .flat();
   const seriesWithoutCoordinators = funders
     .map((funder) => (data?.aggregations?.by_project_type?.buckets ?? []).find((bucket) => bucket.key === funder))
-    // Filter on not empty bucket
-    .filter((bucket) => !!bucket)
+    // Replace undefined bucket in case funder is not found
+    .map((bucket, index) => bucket === undefined ? { key: funders[index] } : bucket)
     .map((bucket) => [
       [bucket.key, bucket?.should_ignore_funding?.buckets?.find((bucket) => bucket.key.toString() === '0')?.sum_funding?.value ?? 0, bucket?.by_unique_project?.value ?? 0],
     ])
