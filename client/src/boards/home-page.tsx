@@ -2,9 +2,6 @@ import { Col, Container, Row } from "@dataesr/dsfr-plus";
 import { useQuery } from "@tanstack/react-query";
 import { Link as RouterLink } from "react-router-dom";
 
-import Footer from "../components/footer";
-import HeaderTableaux from "../layout/header.tsx";
-
 import boardMediaPlaceholder from "../assets/board-media-placeholder.svg";
 import mediaAtlas from "../assets/boards/atlas.svg";
 import mediaDevenirEtudiants from "../assets/boards/devenir-etudiants.svg";
@@ -16,6 +13,8 @@ import mediaOpenAlex from "../assets/boards/open-alex.svg";
 import mediaStructuresFinance from "../assets/boards/structures-finance.svg";
 import mediaTeds from "../assets/boards/teds.svg";
 import mediaValorisation from "../assets/boards/valorisation-recherche-innovation.svg";
+import Footer from "../components/footer";
+import HeaderTableaux from "../layout/header.tsx";
 
 import "./home-styles.scss";
 

@@ -1,5 +1,3 @@
-import { useState } from "react";
-import { useSearchParams } from "react-router-dom";
 import {
   Button,
   Col,
@@ -10,10 +8,16 @@ import {
   Title,
   useToast,
 } from "@dataesr/dsfr-plus";
-import { DASHBOARDS, getDashboardLabel } from "./config";
+import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
+import { useSearchParams } from "react-router-dom";
+
 import { useSendContact } from "./api";
 import i18n from "./i18n.json";
-import "./styles.scss"
+
+import "./styles.scss";
+
+const { VITE_APP_SERVER_URL } = import.meta.env;
 
 
 type FormValues = {
@@ -32,14 +36,25 @@ export default function ContactPage() {
   const { toast } = useToast();
   const { mutate: sendContact, isPending } = useSendContact();
 
-  function t(key: keyof typeof i18n): string {
+  const { data: dashboards, isLoading } = useQuery({
+    queryKey: ["list-dashboards"],
+    queryFn: () => fetch(`${VITE_APP_SERVER_URL}/admin/list-dashboards`).then((response) => response.json()),
+  });
+
+  if (isLoading) {
+    return (
+      <Container className="fr-py-5w" role="main">
+        <p>Chargement...</p>
+      </Container>
+    );
+  }
+
+  function translate(key: keyof typeof i18n): string {
     return i18n[key][currentLang] ?? i18n[key]["fr"];
   }
 
   const fromParam = searchParams.get("from") ?? "general";
-  const dashboard = DASHBOARDS.some((d) => d.value === fromParam)
-    ? fromParam
-    : "general";
+  const dashboard = dashboards.filter((dashboard) => dashboard.homePageVisible).find((dashboard) => dashboard.id === fromParam) ?? fromParam;
 
   const [values, setValues] = useState<FormValues>({
     name: "",
@@ -59,13 +74,13 @@ export default function ContactPage() {
 
   const validate = (): boolean => {
     const newErrors: FormErrors = {};
-    if (!values.name.trim()) newErrors.name = t("nameError");
-    if (!values.email.trim()) newErrors.email = t("emailRequiredError");
+    if (!values.name.trim()) newErrors.name = translate("nameError");
+    if (!values.email.trim()) newErrors.email = translate("emailRequiredError");
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email))
-      newErrors.email = t("emailInvalidError");
-    if (!values.message.trim()) newErrors.message = t("messageRequiredError");
+      newErrors.email = translate("emailInvalidError");
+    if (!values.message.trim()) newErrors.message = translate("messageRequiredError");
     else if (values.message.trim().length < 20)
-      newErrors.message = t("messageTooShortError");
+      newErrors.message = translate("messageTooShortError");
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -88,8 +103,8 @@ export default function ContactPage() {
         onSuccess: () => {
           toast?.({
             id: "contact-success",
-            title: t("successTitle"),
-            description: t("successDescription"),
+            title: translate("successTitle"),
+            description: translate("successDescription"),
             type: "success",
           });
           setValues({
@@ -103,8 +118,8 @@ export default function ContactPage() {
         onError: () => {
           toast?.({
             id: "contact-error",
-            title: t("errorTitle"),
-            description: t("errorDescription"),
+            title: translate("errorTitle"),
+            description: translate("errorDescription"),
             type: "error",
           });
         },
@@ -112,17 +127,17 @@ export default function ContactPage() {
     );
   };
 
-  const submitLabel = isPending ? t("submitPending") : t("submitButton");
+  const submitLabel = isPending ? translate("submitPending") : translate("submitButton");
 
   return (
     <div className="contact-page">
       <section className="contact-hero">
         <Container>
-          <p className="contact-hero__label">{t("heroLabel")}</p>
+          <p className="contact-hero__label">{translate("heroLabel")}</p>
           <Title as="h1" look="h1" className="contact-hero__title">
-            {t("title")}
+            {translate("title")}
           </Title>
-          <p className="contact-hero__description">{t("description")}</p>
+          <p className="contact-hero__description">{translate("description")}</p>
         </Container>
       </section>
       <Container as="main" id="main" className="contact-content fr-mt-5w">
@@ -131,19 +146,19 @@ export default function ContactPage() {
           <Row gutters>
             <Col xs="12" md="5">
               <TextInput
-                label={t("dashboardLabel")}
-                hint={t("dashboardHint")}
-                value={getDashboardLabel(dashboard)}
+                label={translate("dashboardLabel")}
+                hint={translate("dashboardHint")}
+                value={dashboard?.name_fr}
                 disabled
                 disableAutoValidation
               />
               <Row gutters>
                 <Col xs="6">
                   <TextInput
-                    label={t("nameLabel")}
+                    label={translate("nameLabel")}
                     required
                     disableAutoValidation
-                    placeholder={t("namePlaceholder")}
+                    placeholder={translate("namePlaceholder")}
                     value={values.name}
                     onChange={set("name")}
                     message={errors.name}
@@ -152,11 +167,11 @@ export default function ContactPage() {
                 </Col>
                 <Col xs="6">
                   <TextInput
-                    label={t("emailLabel")}
+                    label={translate("emailLabel")}
                     required
                     disableAutoValidation
                     type="email"
-                    placeholder={t("emailPlaceholder")}
+                    placeholder={translate("emailPlaceholder")}
                     value={values.email}
                     onChange={set("email")}
                     message={errors.email}
@@ -165,18 +180,18 @@ export default function ContactPage() {
                 </Col>
                 <Col xs="6">
                   <TextInput
-                    label={t("fonctionLabel")}
+                    label={translate("fonctionLabel")}
                     disableAutoValidation
-                    placeholder={t("fonctionPlaceholder")}
+                    placeholder={translate("fonctionPlaceholder")}
                     value={values.fonction}
                     onChange={set("fonction")}
                   />
                 </Col>
                 <Col xs="6">
                   <TextInput
-                    label={t("organisationLabel")}
+                    label={translate("organisationLabel")}
                     disableAutoValidation
-                    placeholder={t("organisationPlaceholder")}
+                    placeholder={translate("organisationPlaceholder")}
                     value={values.organisation}
                     onChange={set("organisation")}
                   />
@@ -186,10 +201,10 @@ export default function ContactPage() {
 
             <Col xs="12" md="7">
               <TextArea
-                label={t("messageLabel")}
+                label={translate("messageLabel")}
                 required
                 disableAutoValidation
-                placeholder={t("messageTooShortError")}
+                placeholder={translate("messageTooShortError")}
                 value={values.message}
                 onChange={set("message")}
                 message={errors.message}
