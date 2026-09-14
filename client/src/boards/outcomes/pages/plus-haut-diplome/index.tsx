@@ -210,8 +210,12 @@ export default function PlusHautDiplomePage() {
                                         Télécharger les données (CSV)
                                     </Button>
                                 </div>
+
                                 <div className="fr-table">
-                                    <table role="presentation">
+                                    <table aria-describedby="outcomes-phd-table-summary">
+                                        <caption className="fr-sr-only">
+                                            Plus haut diplôme obtenu en {lastYearLabel} par les néo-bacheliers inscrits en L1 en 2019
+                                        </caption>
                                         <thead>
                                             <tr>
                                                 <th scope="col">Plus haut diplôme obtenu en {lastYearLabel} dont :</th>
@@ -224,7 +228,7 @@ export default function PlusHautDiplomePage() {
                                         <tbody>
                                             {data.rows.map((row) => (
                                                 <tr key={row.diplome}>
-                                                    <td>{row.diplome}</td>
+                                                    <th scope="row">{row.diplome}</th>
                                                     <td className="outcomes-phd__cell--right">{formatNumber(row.effectif)}</td>
                                                     <td className="outcomes-phd__cell--right">{row.pourcentage}</td>
                                                     <td className="outcomes-phd__cell--right">{row.dontInscrits}</td>
@@ -232,14 +236,14 @@ export default function PlusHautDiplomePage() {
                                                 </tr>
                                             ))}
                                             <tr className="fr-text--bold">
-                                                <td>Total de diplômés</td>
+                                                <th scope="row">Total de diplômés</th>
                                                 <td className="outcomes-phd__cell--right">{formatNumber(data.totals.diplomes.effectif)}</td>
                                                 <td className="outcomes-phd__cell--right">{data.totals.diplomes.pourcentage}</td>
                                                 <td className="outcomes-phd__cell--right">{data.totals.diplomes.dontInscrits}</td>
                                                 <td className="outcomes-phd__cell--right">{data.totals.diplomes.dontSortants}</td>
                                             </tr>
                                             <tr className="fr-text--bold">
-                                                <td>Total de non diplômés</td>
+                                                <th scope="row">Total de non diplômés</th>
                                                 <td className="outcomes-phd__cell--right">{formatNumber(data.totals.nonDiplomes.effectif)}</td>
                                                 <td className="outcomes-phd__cell--right">{data.totals.nonDiplomes.pourcentage}</td>
                                                 <td className="outcomes-phd__cell--right">{data.totals.nonDiplomes.dontInscrits}</td>
@@ -247,6 +251,9 @@ export default function PlusHautDiplomePage() {
                                             </tr>
                                         </tbody>
                                     </table>
+                                    <p id="outcomes-phd-table-summary" className="fr-text--sm fr-mt-2w">
+                                        Ce tableau répartit les néo-bacheliers inscrits en L1 en 2019 selon leur situation en 2023-2024.
+                                        Les deux premières colonnes permettent de savoir s'ils sont ou non diplômés de l'enseignement supérieur, et si c'est le cas, connaître le plus haut diplôme obtenu à la rentrée 2023. Les deux dernières colonnes permettent de distinguer les personnes encore étudiants à la rentrée 2023 de ceux sorti du système de l'enseignement supérieur français.                                    </p>
                                 </div>
 
                                 <Row gutters className="fr-mb-2w fr-mt-3w">
