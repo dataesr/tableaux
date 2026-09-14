@@ -3,16 +3,6 @@ import { useQuery } from "@tanstack/react-query";
 import { Link as RouterLink } from "react-router-dom";
 
 import boardMediaPlaceholder from "../assets/board-media-placeholder.svg";
-import mediaAtlas from "../assets/boards/atlas.svg";
-import mediaDevenirEtudiants from "../assets/boards/devenir-etudiants.svg";
-import mediaEuropeanProjects from "../assets/boards/european-projects.svg";
-import mediaFacultyMembers from "../assets/boards/faculty-members.svg";
-import mediaFinancementsParAap from "../assets/boards/financements-par-aap.svg";
-import mediaGraduates from "../assets/boards/graduates.svg";
-import mediaOpenAlex from "../assets/boards/open-alex.svg";
-import mediaStructuresFinance from "../assets/boards/structures-finance.svg";
-import mediaTeds from "../assets/boards/teds.svg";
-import mediaValorisation from "../assets/boards/valorisation-recherche-innovation.svg";
 import Footer from "../components/footer";
 import HeaderTableaux from "../layout/header.tsx";
 
@@ -20,24 +10,7 @@ import "./home-styles.scss";
 
 const { VITE_APP_SERVER_URL } = import.meta.env;
 
-const BOARD_MEDIA: Record<string, string> = {
-  atlas: mediaAtlas,
-  "devenir-etudiants": mediaDevenirEtudiants,
-  "european-projects": mediaEuropeanProjects,
-  "faculty-members-v2": mediaFacultyMembers,
-  "financements-par-aap": mediaFinancementsParAap,
-  graduates: mediaGraduates,
-  "open-alex": mediaOpenAlex,
-  "structures-finance": mediaStructuresFinance,
-  teds: mediaTeds,
-  "valorisation-recherche-innovation": mediaValorisation,
-};
-
-function getBoardMedia(dashboard: { id?: string }): string {
-  return BOARD_MEDIA[dashboard.id ?? ""] ?? boardMediaPlaceholder;
-}
-
-export default function HomePage() {
+export default async function HomePage() {
 
   const { data: dashboards, isLoading } = useQuery({
     queryKey: ["list-dashboards"],
@@ -48,7 +21,13 @@ export default function HomePage() {
     return <div>Loading...</div>;
   }
 
-  const visibleDashboards = dashboards.filter((dashboard) => dashboard.homePageVisible);
+  const visibleDashboards = dashboards.filter((dashboard) => dashboard.homePageVisible)
+  // Asynchronously load each media to display on the dashboard tile on the home page
+  const allResponses = await Promise.all(visibleDashboards.map((dashboard) => import(`../assets/boards/${dashboard.id}.svg`).catch(() => {})))
+  visibleDashboards.map((dashboard, index) => {
+    dashboard.media = allResponses[index]?.default ?? boardMediaPlaceholder
+    return dashboard
+  })
 
   return (
     <>
@@ -79,7 +58,6 @@ export default function HomePage() {
             </Row>
             <Row gutters className="fr-grid-row--gutters">
               {visibleDashboards.map((dashboard) => {
-                const media = getBoardMedia(dashboard);
                 return (
                   <Col key={dashboard.url} xs="12" md="6" className="fr-mb-3w ">
                     <div className="fr-tile fr-tile--horizontal fr-enlarge-link home-tile">
@@ -96,7 +74,7 @@ export default function HomePage() {
                       </div>
                       <div className="fr-tile__header">
                         <div className="fr-tile__img">
-                          <img className="fr-responsive-img" src={media} alt="" aria-hidden="true" />
+                          <img className="fr-responsive-img" src={dashboard.media} alt="" aria-hidden="true" />
                         </div>
                       </div>
                     </div>

@@ -1,8 +1,8 @@
-import type { BoardSitemapConfig } from "../../pages/site-map/board-sitemap-page";
+import type { BoardSitemapConfig } from "../../pages/site-map/board-sitemap-page"
 
-const BASE = "/personnel-enseignant";
+const BASE = "/personnel-enseignant"
 
-export const FACULTY_MEMBERS_SITEMAP: BoardSitemapConfig = {
+const FACULTY_MEMBERS_SITEMAP: BoardSitemapConfig = {
   boardId: "faculty-members-v2",
   boardName: "Personnel enseignant",
   boardHomeHref: `${BASE}/accueil`,
@@ -16,4 +16,6 @@ export const FACULTY_MEMBERS_SITEMAP: BoardSitemapConfig = {
     { label: "Académies", href: `${BASE}/academies` },
     { label: "Définitions", href: `${BASE}/definitions` },
   ],
-};
+}
+
+export default FACULTY_MEMBERS_SITEMAP

@@ -2,7 +2,7 @@ import type { BoardSitemapConfig } from "../../pages/site-map/board-sitemap-page
 
 const BASE = "/financements-par-aap"
 
-export const FINANCEMENTS_PAR_AAP_SITEMAP: BoardSitemapConfig = {
+const FINANCEMENTS_PAR_AAP_SITEMAP: BoardSitemapConfig = {
   boardId: "financements-par-aap",
   boardName: "Financements par appels à projets",
   boardHomeHref: `${BASE}/accueil`,
@@ -15,3 +15,5 @@ export const FINANCEMENTS_PAR_AAP_SITEMAP: BoardSitemapConfig = {
     { label: "Par établissement", href: `${BASE}/etablissement` },
   ],
 }
+
+export default FINANCEMENTS_PAR_AAP_SITEMAP

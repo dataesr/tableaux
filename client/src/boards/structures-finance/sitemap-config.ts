@@ -1,8 +1,8 @@
-import type { BoardSitemapConfig } from "../../pages/site-map/board-sitemap-page";
+import type { BoardSitemapConfig } from "../../pages/site-map/board-sitemap-page"
 
-const BASE = "/structures-finance";
+const BASE = "/structures-finance"
 
-export const STRUCTURES_FINANCE_SITEMAP: BoardSitemapConfig = {
+const STRUCTURES_FINANCE_SITEMAP: BoardSitemapConfig = {
   boardId: "structures-finance",
   boardName: "Finance des établissements",
   boardHomeHref: `${BASE}/accueil`,
@@ -16,4 +16,6 @@ export const STRUCTURES_FINANCE_SITEMAP: BoardSitemapConfig = {
     { label: "Foire aux questions", href: `${BASE}/faq` },
     { label: "Plan du site", href: "/plan-du-site?from=structures-finance" },
   ],
-};
+}
+
+export default STRUCTURES_FINANCE_SITEMAP

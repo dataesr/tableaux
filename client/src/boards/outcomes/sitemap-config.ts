@@ -1,8 +1,8 @@
-import type { BoardSitemapConfig } from "../../pages/site-map/board-sitemap-page";
+import type { BoardSitemapConfig } from "../../pages/site-map/board-sitemap-page"
 
-const BASE = "/devenir-etudiants/entrants-en-L1-2019";
+const BASE = "/devenir-etudiants/entrants-en-L1-2019"
 
-export const OUTCOMES_SITEMAP: BoardSitemapConfig = {
+const OUTCOMES_SITEMAP: BoardSitemapConfig = {
   boardId: "devenir-etudiants",
   boardName: "Le devenir des étudiants",
   boardHomeHref: `${BASE}/flux`,
@@ -15,4 +15,6 @@ export const OUTCOMES_SITEMAP: BoardSitemapConfig = {
     { label: "Comparaison de profils", href: `${BASE}/comparaison-profils` },
     { label: "Méthodologie", href: `${BASE}/methodologie` },
   ],
-};
+}
+
+export default OUTCOMES_SITEMAP

@@ -3,34 +3,11 @@ import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 
 import Footer from "../../components/footer/index.tsx";
-import { ATLAS_SITEMAP } from "../../boards/atlas/sitemap-config.ts";
 import BoardSitemapPage, { type BoardSitemapConfig } from "./board-sitemap-page.tsx";
-import { EUROPEAN_PROJECTS_SITEMAP } from "../../boards/european-projects/sitemap-config.ts";
-import { FACULTY_MEMBERS_SITEMAP } from "../../boards/faculty-members/sitemap-config.ts";
-import { FINANCEMENTS_PAR_AAP_SITEMAP } from "../../boards/financements-par-aap/sitemap-config.ts";
-import { GRADUATES_SITEMAP } from "../../boards/graduates/sitemap-config.ts";
-import { OPEN_ALEX_SITEMAP } from "../../boards/open-alex/sitemap-config.ts";
-import { OUTCOMES_SITEMAP } from "../../boards/outcomes/sitemap-config.ts";
-import { STRUCTURES_FINANCE_SITEMAP } from "../../boards/structures-finance/sitemap-config.ts";
-import { TEDS_SITEMAP } from "../../boards/teds/sitemap-config.ts";
-import { VALORISATION_RECHERCHE_INNOVATION_SITEMAP } from "../../boards/valorisation-recherche-innovation/sitemap-config.ts";
 
 import "./sitemap-styles.scss";
 
 const { VITE_APP_SERVER_URL } = import.meta.env;
-
-const BOARD_SITEMAP_CONFIGS: Record<string, BoardSitemapConfig> = {
-  atlas: ATLAS_SITEMAP,
-  "devenir-etudiants": OUTCOMES_SITEMAP,
-  "european-projects": EUROPEAN_PROJECTS_SITEMAP,
-  "faculty-members-v2": FACULTY_MEMBERS_SITEMAP,
-  "financements-par-aap": FINANCEMENTS_PAR_AAP_SITEMAP,
-  graduates: GRADUATES_SITEMAP,
-  "open-alex": OPEN_ALEX_SITEMAP,
-  "structures-finance": STRUCTURES_FINANCE_SITEMAP,
-  teds: TEDS_SITEMAP,
-  "valorisation-recherche-innovation": VALORISATION_RECHERCHE_INNOVATION_SITEMAP,
-};
 
 type SitemapLink = {
   label: string;
@@ -96,17 +73,17 @@ function SitemapGroup({
   );
 }
 
-export default function SitemapPage() {
+export default async function SitemapPage() {
   const [searchParams] = useSearchParams();
   const { data: dashboards } = useQuery<{ id: string; homePageVisible?: boolean }[]>({
     queryKey: ["list-dashboards"],
     queryFn: () => fetch(`${VITE_APP_SERVER_URL}/admin/list-dashboards`).then((response) => response.json()),
   });
 
-  const boardConfig = BOARD_SITEMAP_CONFIGS[searchParams.get("from") ?? ""];
+  const boardConfig = await import(`../../boards/${searchParams.get("from")}/sitemap-config.ts`)
 
-  if (boardConfig) {
-    return <BoardSitemapPage {...boardConfig} />;
+  if (boardConfig?.default) {
+    return <BoardSitemapPage {...boardConfig.default} />;
   }
 
   return (
@@ -134,7 +111,7 @@ export default function SitemapPage() {
           <section className="sitemap-section">
             <h2 className="sitemap-section__title">Tableaux de bord</h2>
             <Row gutters className="fr-mt-2w">
-              {dashboards?.filter((dashboard) => dashboard?.homePageVisible).map((dashboard) => toSection(dashboard.id, BOARD_SITEMAP_CONFIGS[dashboard.id])).map((section) => (
+              {dashboards?.filter((dashboard) => dashboard?.homePageVisible).map((dashboard) => toSection(dashboard.id, boardConfig.default)).map((section) => (
                 <Col key={section.id} xs="12" md="6" lg="4" className="fr-mb-3w">
                   <SitemapGroup section={section} />
                 </Col>

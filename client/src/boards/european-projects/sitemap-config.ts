@@ -1,8 +1,8 @@
-import type { BoardSitemapConfig } from "../../pages/site-map/board-sitemap-page";
+import type { BoardSitemapConfig } from "../../pages/site-map/board-sitemap-page"
 
-const BASE = "/european-projects";
+const BASE = "/european-projects"
 
-export const EUROPEAN_PROJECTS_SITEMAP: BoardSitemapConfig = {
+const EUROPEAN_PROJECTS_SITEMAP: BoardSitemapConfig = {
   boardId: "european-projects",
   boardName: "Projets européens",
   boardHomeHref: `${BASE}/accueil`,
@@ -22,4 +22,6 @@ export const EUROPEAN_PROJECTS_SITEMAP: BoardSitemapConfig = {
     // { label: "Données de référence", href: `${BASE}/donnees-reference` },
     { label: "Informations", href: `${BASE}/informations` },
   ],
-};
+}
+
+export default EUROPEAN_PROJECTS_SITEMAP

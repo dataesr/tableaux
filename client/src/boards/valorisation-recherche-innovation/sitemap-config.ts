@@ -1,8 +1,8 @@
-import type { BoardSitemapConfig } from "../../pages/site-map/board-sitemap-page";
+import type { BoardSitemapConfig } from "../../pages/site-map/board-sitemap-page"
 
-const BASE = "/valorisation-recherche-innovation";
+const BASE = "/valorisation-recherche-innovation"
 
-export const VALORISATION_RECHERCHE_INNOVATION_SITEMAP: BoardSitemapConfig = {
+const VALORISATION_RECHERCHE_INNOVATION_SITEMAP: BoardSitemapConfig = {
   boardId: "valorisation-recherche-innovation",
   boardName: "Valorisation, recherche et innovation",
   boardHomeHref: `${BASE}/accueil`,
@@ -12,4 +12,6 @@ export const VALORISATION_RECHERCHE_INNOVATION_SITEMAP: BoardSitemapConfig = {
     { label: "Accueil", href: `${BASE}/accueil` },
     { label: "Par établissement", href: `${BASE}/etablissement` },
   ],
-};
+}
+
+export default VALORISATION_RECHERCHE_INNOVATION_SITEMAP
