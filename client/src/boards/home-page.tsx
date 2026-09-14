@@ -4,7 +4,6 @@ import { Link as RouterLink } from "react-router-dom";
 
 import Footer from "../components/footer";
 import HeaderTableaux from "../layout/header.tsx";
-import { isInProduction } from "../utils.tsx";
 
 import boardMediaPlaceholder from "../assets/board-media-placeholder.svg";
 import mediaAtlas from "../assets/boards/atlas.svg";
@@ -24,15 +23,15 @@ const { VITE_APP_SERVER_URL } = import.meta.env;
 
 const BOARD_MEDIA: Record<string, string> = {
   atlas: mediaAtlas,
-  teds: mediaTeds,
-  "structures-finance": mediaStructuresFinance,
-  "open-alex": mediaOpenAlex,
+  "devenir-etudiants": mediaDevenirEtudiants,
+  "european-projects": mediaEuropeanProjects,
+  "faculty-members-v2": mediaFacultyMembers,
   "financements-par-aap": mediaFinancementsParAap,
   graduates: mediaGraduates,
-  "european-projects": mediaEuropeanProjects,
+  "open-alex": mediaOpenAlex,
+  "structures-finance": mediaStructuresFinance,
+  teds: mediaTeds,
   "valorisation-recherche-innovation": mediaValorisation,
-  "faculty-members-v2": mediaFacultyMembers,
-  "devenir-etudiants": mediaDevenirEtudiants,
 };
 
 function getBoardMedia(dashboard: { id?: string }): string {
@@ -41,22 +40,16 @@ function getBoardMedia(dashboard: { id?: string }): string {
 
 export default function HomePage() {
 
-  const { isLoading, data } = useQuery({
+  const { data: dashboards, isLoading } = useQuery({
     queryKey: ["list-dashboards"],
     queryFn: () => fetch(`${VITE_APP_SERVER_URL}/admin/list-dashboards`).then((response) => response.json()),
   });
 
-  if (isLoading || !data) {
+  if (isLoading || !dashboards) {
     return <div>Loading...</div>;
   }
 
-  const filteredData = data
-    .filter((dashboard) => dashboard.homePageVisible)
-    .filter((dashboard) => {
-      if (!isInProduction()) return true;
-      const url = dashboard.url || "";
-      return url.startsWith("/devenir-etudiants") || url.startsWith("/structures-finance");
-    });
+  const visibleDashboards = dashboards.filter((dashboard) => dashboard.homePageVisible);
 
   return (
     <>
@@ -86,7 +79,7 @@ export default function HomePage() {
               </Col>
             </Row>
             <Row gutters className="fr-grid-row--gutters">
-              {filteredData.map((dashboard) => {
+              {visibleDashboards.map((dashboard) => {
                 const media = getBoardMedia(dashboard);
                 return (
                   <Col key={dashboard.url} xs="12" md="6" className="fr-mb-3w ">

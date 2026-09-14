@@ -175,6 +175,15 @@ export default function Router() {
           </Suspense>
         }
       />
+      <Route path="/european-projects" element={<Navigate to="/european-projects/accueil" replace />} />
+      <Route
+        path="/european-projects/*"
+        element={
+          <Suspense>
+            <EuropeanProjectsRoutes />
+          </Suspense>
+        }
+      />
       <Route path="/financements-par-aap" element={<Navigate to="/financements-par-aap/accueil" replace />} />
       <Route
         path="/financements-par-aap/*"
@@ -193,36 +202,10 @@ export default function Router() {
           </Suspense>
         }
       />
-      <Route path="/european-projects" element={<Navigate to="/european-projects/accueil" replace />} />
-      <Route
-        path="/european-projects/*"
-        element={
-          <Suspense>
-            <EuropeanProjectsRoutes />
-          </Suspense>
-        }
-      />
       {/* Before adding a dashboard in production, add your dashboard in the mongoDB collection "Board" */}
 
       {!isProd && (
         <>
-          <Route
-            path="/accessibility"
-            element={
-              <Suspense>
-                <AccessibilityLayout />
-              </Suspense>
-            }
-          >
-            <Route
-              index
-              element={
-                <Suspense>
-                  <AccessibilityPage />
-                </Suspense>
-              }
-            />
-          </Route>
           <Route
             path="/admin/*"
             element={

@@ -3,7 +3,6 @@ import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 
 import Footer from "../../components/footer/index.tsx";
-import { isInProduction } from "../../utils.tsx";
 import { ATLAS_SITEMAP } from "../../boards/atlas/sitemap-config.ts";
 import BoardSitemapPage, { type BoardSitemapConfig } from "./board-sitemap-page.tsx";
 import { EUROPEAN_PROJECTS_SITEMAP } from "../../boards/european-projects/sitemap-config.ts";
@@ -21,15 +20,16 @@ import "./sitemap-styles.scss";
 const { VITE_APP_SERVER_URL } = import.meta.env;
 
 const BOARD_SITEMAP_CONFIGS: Record<string, BoardSitemapConfig> = {
+  atlas: ATLAS_SITEMAP,
   "devenir-etudiants": OUTCOMES_SITEMAP,
-  "personnel-enseignant": FACULTY_MEMBERS_SITEMAP,
-  "structures-finance": STRUCTURES_FINANCE_SITEMAP,
-  "financements-par-aap": FINANCEMENTS_PAR_AAP_SITEMAP,
   "european-projects": EUROPEAN_PROJECTS_SITEMAP,
-  "valorisation-recherche-innovation": VALORISATION_RECHERCHE_INNOVATION_SITEMAP,
-  teds: TEDS_SITEMAP,
+  "faculty-members-v2": FACULTY_MEMBERS_SITEMAP,
+  "financements-par-aap": FINANCEMENTS_PAR_AAP_SITEMAP,
   graduates: GRADUATES_SITEMAP,
   "open-alex": OPEN_ALEX_SITEMAP,
+  "structures-finance": STRUCTURES_FINANCE_SITEMAP,
+  teds: TEDS_SITEMAP,
+  "valorisation-recherche-innovation": VALORISATION_RECHERCHE_INNOVATION_SITEMAP,
 };
 
 type SitemapLink = {
@@ -54,22 +54,6 @@ function toSection(id: string, config: BoardSitemapConfig): SitemapSection {
     links: config.links,
   };
 }
-
-const PRODUCTION_SECTIONS: SitemapSection[] = [
-  toSection("devenir-etudiants", OUTCOMES_SITEMAP),
-  toSection("european-projects", EUROPEAN_PROJECTS_SITEMAP),
-  toSection("financements-par-aap", FINANCEMENTS_PAR_AAP_SITEMAP),
-  toSection("structures-finance", STRUCTURES_FINANCE_SITEMAP),
-];
-
-const NON_PRODUCTION_SECTIONS: SitemapSection[] = [
-  toSection("atlas", ATLAS_SITEMAP),
-  toSection("graduates", GRADUATES_SITEMAP),
-  toSection("open-alex", OPEN_ALEX_SITEMAP),
-  toSection("personnel-enseignant", FACULTY_MEMBERS_SITEMAP),
-  toSection("teds", TEDS_SITEMAP),
-  toSection("valorisation-recherche-innovation", VALORISATION_RECHERCHE_INNOVATION_SITEMAP),
-];
 
 const INFORMATION_SECTION: SitemapSection = {
   id: "informations",
@@ -114,21 +98,10 @@ function SitemapGroup({
 
 export default function SitemapPage() {
   const [searchParams] = useSearchParams();
-  const { data: boards } = useQuery<{ id: string; homePageVisible?: boolean }[]>({
+  const { data: dashboards } = useQuery<{ id: string; homePageVisible?: boolean }[]>({
     queryKey: ["list-dashboards"],
     queryFn: () => fetch(`${VITE_APP_SERVER_URL}/admin/list-dashboards`).then((response) => response.json()),
   });
-
-  const isSectionVisible = (section: SitemapSection) => {
-    const board = boards?.find((b) => b.id === (section.boardId ?? section.id));
-    return board ? board.homePageVisible !== false : true;
-  };
-
-  const dashboardSections = (
-    isInProduction()
-      ? PRODUCTION_SECTIONS
-      : [...PRODUCTION_SECTIONS, ...NON_PRODUCTION_SECTIONS]
-  ).filter(isSectionVisible);
 
   const boardConfig = BOARD_SITEMAP_CONFIGS[searchParams.get("from") ?? ""];
 
@@ -161,7 +134,7 @@ export default function SitemapPage() {
           <section className="sitemap-section">
             <h2 className="sitemap-section__title">Tableaux de bord</h2>
             <Row gutters className="fr-mt-2w">
-              {dashboardSections.map((section) => (
+              {dashboards?.filter((dashboard) => dashboard?.homePageVisible).map((dashboard) => toSection(dashboard.id, BOARD_SITEMAP_CONFIGS[dashboard.id])).map((section) => (
                 <Col key={section.id} xs="12" md="6" lg="4" className="fr-mb-3w">
                   <SitemapGroup section={section} />
                 </Col>
