@@ -68,42 +68,42 @@ export default function Footer({ href = "/", sitemapHref, title = "Accueil - Dat
         <div className="fr-footer__bottom">
           <ul className="fr-footer__bottom-list">
             <li className="fr-footer__bottom-item">
-              <a className="fr-footer__bottom-link" href={sitemapUrl}>
+              <a className="fr-footer__bottom-link" href={sitemapUrl} title={getI18nLabel(i18n, "sitemap")}>
                 {getI18nLabel(i18n, "sitemap")}
               </a>
             </li>
             {!isProd && <li className="fr-footer__bottom-item">
-              <a className="fr-footer__bottom-link" href="/mentions-legales">
+              <a className="fr-footer__bottom-link" href="/mentions-legales" title={getI18nLabel(i18n, "legalNotice")}>
                 {getI18nLabel(i18n, "legalNotice")}
               </a>
             </li>}
             {!isProd && <li className="fr-footer__bottom-item">
-              <a className="fr-footer__bottom-link" href="/donnees-personnelles">
+              <a className="fr-footer__bottom-link" href="/donnees-personnelles" title={getI18nLabel(i18n, "personalData")}>
                 {getI18nLabel(i18n, "personalData")}
               </a>
             </li>}
             {!isProd && <li className="fr-footer__bottom-item">
-              <a className="fr-footer__bottom-link" href="/cgu">
+              <a className="fr-footer__bottom-link" href="/cgu" title={getI18nLabel(i18n, "cgu")}>
                 {getI18nLabel(i18n, "cgu")}
               </a>
             </li>}
             <li className="fr-footer__bottom-item">
-              <a className="fr-footer__bottom-link" href="/cookies">
+              <a className="fr-footer__bottom-link" href="/cookies" title={getI18nLabel(i18n, "cookies")}>
                 {getI18nLabel(i18n, "cookies")}
               </a>
             </li>
             <li className="fr-footer__bottom-item">
-              <a className="fr-footer__bottom-link" href={accessibilityUrl}>
+              <a className="fr-footer__bottom-link" href={accessibilityUrl} title={getI18nLabel(i18n, "accessibility")}>
                 {getI18nLabel(i18n, "accessibility")}
               </a>
             </li>
             <li className="fr-footer__bottom-item">
-              <a className="fr-footer__bottom-link" href={contactUrl}>
+              <a className="fr-footer__bottom-link" href={contactUrl} title={getI18nLabel(i18n, "contact")}>
                 {getI18nLabel(i18n, "contact")}
               </a>
             </li>
             <li className="fr-footer__bottom-item">
-              <a className="fr-footer__bottom-link" href={`https://github.com/dataesr/datasupr/releases/tag/v${VITE_VERSION}`} rel="noreferer noopenner" target="_blank">
+              <a className="fr-footer__bottom-link" href={`https://github.com/dataesr/datasupr/releases/tag/v${VITE_VERSION}`} title={`v${VITE_VERSION} - nouvelle fenêtre`} rel="noreferrer noopener external" target="_blank">
                 {`v${VITE_VERSION}`}
               </a>
             </li>
