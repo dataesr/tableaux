@@ -47,52 +47,53 @@ export default function OutcomesDefinitionsTable({
             </button>
 
             {isOpen && (
-                <div className="definitions-grid">
+                <dl className="definitions-grid">
                     {definitions.map((def) => (
                         <div key={def.key} className="definition-card">
-                            <div className="definition-card-header">
-                                <Title as="h3" look="h6" className="definition-title">{def.libelle}</Title>
-                            </div>
-
-                            {def.definition && (
-                                <div className="definition-section">
-                                    <span className="section-icon fr-icon-file-text-line" aria-hidden="true" />
-                                    <div className="section-content">
-                                        <strong className="section-label">Définition</strong>
-                                        <div className="fr-mb-2w fr-text--sm">{def.definition}</div>
+                            <dt className="definition-card-header">
+                                <span className="definition-title">{def.libelle}</span>
+                            </dt>
+                            <dd>
+                                {def.definition && (
+                                    <div className="definition-section">
+                                        <span className="section-icon fr-icon-file-text-line" aria-hidden="true" />
+                                        <div className="section-content">
+                                            <strong className="section-label">Définition</strong>
+                                            <div className="fr-mb-2w fr-text--sm">{def.definition}</div>
+                                        </div>
                                     </div>
-                                </div>
-                            )}
+                                )}
 
-                            {def.calcul && (
-                                <div className="definition-section">
-                                    <span className="section-icon fr-icon-line-chart-fill" aria-hidden="true" />
-                                    <div className="section-content">
-                                        <strong className="section-label">Calcul</strong>
-                                        <div className="fr-mb-2w fr-text--sm">{def.calcul}</div>
+                                {def.calcul && (
+                                    <div className="definition-section">
+                                        <span className="section-icon fr-icon-line-chart-fill" aria-hidden="true" />
+                                        <div className="section-content">
+                                            <strong className="section-label">Calcul</strong>
+                                            <div className="fr-mb-2w fr-text--sm">{def.calcul}</div>
+                                        </div>
                                     </div>
-                                </div>
-                            )}
+                                )}
 
-                            {def.interpretation && (
-                                <div className="definition-section">
-                                    <span className="section-icon fr-icon-lightbulb-line" aria-hidden="true" />
-                                    <div className="section-content">
-                                        <strong className="section-label">Interprétation</strong>
-                                        <div className="section-text">{def.interpretation}</div>
+                                {def.interpretation && (
+                                    <div className="definition-section">
+                                        <span className="section-icon fr-icon-lightbulb-line" aria-hidden="true" />
+                                        <div className="section-content">
+                                            <strong className="section-label">Interprétation</strong>
+                                            <div className="section-text">{def.interpretation}</div>
+                                        </div>
                                     </div>
-                                </div>
-                            )}
+                                )}
 
-                            {def.source && (
-                                <div className="definition-footer">
-                                    <span className="fr-icon-database-line" aria-hidden="true" />
-                                    <div className="source-content fr-text--sm">{def.source}</div>
-                                </div>
-                            )}
+                                {def.source && (
+                                    <div className="definition-footer">
+                                        <span className="fr-icon-database-line" aria-hidden="true" />
+                                        <div className="fr-text--sm">{def.source}</div>
+                                    </div>
+                                )}
+                            </dd>
                         </div>
                     ))}
-                </div>
+                </dl>
             )}
         </div>
     );
