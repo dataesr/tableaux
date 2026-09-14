@@ -449,7 +449,7 @@ export default function Home() {
           <Breadcrumb className="fr-m-0 fr-mt-1w">
             <Link href="/">Accueil</Link>
             <Link>
-              <strong>Administration de dataSupR</strong>
+              <strong>Administration de Tableaux</strong>
             </Link>
           </Breadcrumb>
         </Col>

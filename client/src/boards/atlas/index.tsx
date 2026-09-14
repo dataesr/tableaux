@@ -20,7 +20,7 @@ export default function AtlasHeader() {
   const isdatasupr = searchParams.get("datasupr") === "true";
 
 
-  useTitle("dataSupR - Atlas des effectifs étudiant-e-s");
+  useTitle("Tableaux - Atlas des effectifs étudiant-e-s");
 
   useEffect(() => {
     if (searchParams.get("geo_id")) {

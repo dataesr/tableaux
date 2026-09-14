@@ -30,10 +30,7 @@ export default function NotFoundPage() {
     <>
       <Header>
         <Logo text={import.meta.env.VITE_MINISTER_NAME} />
-        <Service
-          name="dataSupR"
-          // tagline="Si c'était pas super ça s'appellerait juste data"
-        />
+        <Service name="Tableaux" />
         <FastAccess>
           <Button as="a" href="/" icon="github-fill" size="sm" variant="text">
             {searchParams.get("language") === "EN"

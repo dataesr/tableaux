@@ -12,7 +12,7 @@ export default function Id6Css() {
           <Callout>
             Il existe un fichier général à tous les tableaux de bord pour gérer les styles CSS : <code>boards/styles.scss</code>.
             <br />
-            Ce fichier contient les styles globaux utilisés par tous les tableaux de bord de datasupR. Toutes les variables de couleurs y sont
+            Ce fichier contient les styles globaux utilisés par tous les tableaux de bord de Tableaux. Toutes les variables de couleurs y sont
             définies.
             <br />
             <br />

@@ -4,7 +4,7 @@ const client = new MongoClient("mongodb://localhost:27017/");
 
 async function run() {
   try {
-    const database = client.db('datasupr');
+    const database = client.db('tableaux-dev');
     const atlasCollection = database.collection('atlas2024');
     const similarElementsCollection = database.collection('similar-elements');
 

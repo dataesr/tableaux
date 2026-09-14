@@ -25,7 +25,7 @@ export default function Id4Components() {
           </Title>
           <Callout>
             Voici la liste des composants réutilisables disponibles dans la
-            bibliothèque de composants Datasupr&nbsp;:
+            bibliothèque de composants Tableaux :
             <ul className="components-list">
               <li id="id4-board-suggest">
                 <Badge color="purple-glycine">BoardSuggestComponent</Badge>

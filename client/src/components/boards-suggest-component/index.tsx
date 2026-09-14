@@ -213,10 +213,10 @@ export default function BoardsSuggestComponent() {
         <Row gutters>
           <Col xs="12" className="fr-pb-0">
             <Title as="h5" look="h5" className="fr-mb-0">
-              datasupR
+              Tableaux
             </Title>
             <Text className="fr-mb-1w">
-              datasupR est un ensemble de tableaux de bord. Nous avons détecté que d'autres tableaux de bord pourraient vous intéresser en fonction
+              Tableaux est un ensemble de tableaux de bord. Nous avons détecté que d'autres tableaux de bord pourraient vous intéresser en fonction
               des paramètres que vous avez sélectionnés. Cliquez sur le bouton + pour voir les suggestions complètes.
             </Text>
             <div className="inline-suggest__header" onClick={() => setIsExpanded(!isExpanded)}>

@@ -5,7 +5,7 @@ export default function Home() {
     <Container>
       <Row>
         <Col>
-          <Title as="h1">DatasuprDoc Home Page</Title>
+          <Title as="h1">TableauxDoc Home Page</Title>
         </Col>
       </Row>
     </Container>

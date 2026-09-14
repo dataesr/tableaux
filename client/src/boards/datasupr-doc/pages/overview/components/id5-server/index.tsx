@@ -10,7 +10,7 @@ export default function Id5Server() {
             Serveur
           </Title>
           <Callout>
-            Le serveur de DataSupR est une application Node.js basée sur le framework Express. Il est responsable de la gestion des requêtes
+            Le serveur de Tableaux est une application Node.js basée sur le framework Express. Il est responsable de la gestion des requêtes
             entrantes, de la communication avec la base de données, et de la fourniture des données nécessaires aux tableaux de bord.
             <br />
             <br />

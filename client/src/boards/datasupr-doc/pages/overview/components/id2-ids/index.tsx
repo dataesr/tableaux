@@ -7,10 +7,10 @@ export default function Id2Ids() {
       <Col>
         <div id="id2">
           <Title as="h2" look="h4">
-            Liste des ids datasupR
+            Liste des ids Tableaux
           </Title>
           <Callout>
-            Les ids sont des paramètres d'URL utilisés dans les tableaux de bord datasupR pour filtrer les données affichées. Ils permettent de
+            Les ids sont des paramètres d'URL utilisés dans les tableaux de bord Tableaux pour filtrer les données affichées. Ils permettent de
             personnaliser les vues en fonction des besoins spécifiques des utilisateurs. Ils permettent également de partager des liens directs vers
             des vues filtrées spécifiques et de passer d'un tableau de bord à un autre. Au ids ci-dessous s'ajoute le paramètre "language" pour
             l'internationalisation en fonction du site.

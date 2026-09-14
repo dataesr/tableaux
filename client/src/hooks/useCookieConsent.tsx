@@ -1,5 +1,7 @@
-import { useState } from "react";
-import Cookies from "js-cookie";
+import Cookies from "js-cookie"
+import { useState } from "react"
+
+import { COOKIE_CONSENT_NAME, COOKIE_CONSENT_VERSION } from "../utils/cookieUtils"
 
 export interface CookieCategories {
   necessary: boolean;
@@ -16,9 +18,6 @@ export interface CookieConsentHook {
   savePreferences: (preferences: CookieCategories) => void;
   resetConsent: () => void;
 }
-
-const COOKIE_CONSENT_NAME = "datasupr-cookie-consent";
-const COOKIE_CONSENT_VERSION = "1.0";
 
 const defaultConsent: CookieCategories = {
   necessary: true, // Les cookies nécessaires sont toujours acceptés

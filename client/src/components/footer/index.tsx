@@ -16,7 +16,7 @@ const LANGUAGE_LABELS: Record<string, string> = {
 const isProd = isInProduction();
 
 
-export default function Footer({ href = "/", sitemapHref, title = "Accueil - DataSupR" }: { href?: string; sitemapHref?: string; title?: string }) {
+export default function Footer({ href = "/", sitemapHref, title = "Accueil - Tableaux" }: { href?: string; sitemapHref?: string; title?: string }) {
   const location = useLocation();
   const [searchParams] = useSearchParams();
   const currentLang = searchParams.get("language") || "fr";
@@ -103,7 +103,7 @@ export default function Footer({ href = "/", sitemapHref, title = "Accueil - Dat
               </a>
             </li>
             <li className="fr-footer__bottom-item">
-              <a className="fr-footer__bottom-link" href={`https://github.com/dataesr/datasupr/releases/tag/v${VITE_VERSION}`} title={`v${VITE_VERSION} - nouvelle fenêtre`} rel="noreferrer noopener external" target="_blank">
+              <a className="fr-footer__bottom-link" href={`https://github.com/dataesr/tableaux/releases/tag/v${VITE_VERSION}`} title={`v${VITE_VERSION} - nouvelle fenêtre`} rel="noreferrer noopener external" target="_blank">
                 {`v${VITE_VERSION}`}
               </a>
             </li>

@@ -23,7 +23,7 @@ export function Layout({ languageSelector = false }) {
     <>
       <Header>
         <Logo text={import.meta.env.VITE_MINISTER_NAME} />
-        <Service name="dataSupR" tagline={getI18nLabel(i18n, "tagline")} />
+        <Service name="Tableaux" tagline={getI18nLabel(i18n, "tagline")} />
         <FastAccess>
           <Button as="a" href="/" icon="github-fill" size="sm" variant="text">
             {getI18nLabel(i18n, "explore")}

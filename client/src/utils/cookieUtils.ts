@@ -1,4 +1,7 @@
-import Cookies from 'js-cookie';
+import Cookies from "js-cookie"
+
+export const COOKIE_CONSENT_NAME = "tableaux-cookie-consent";
+export const COOKIE_CONSENT_VERSION = "1.0";
 
 interface ConsentData {
   version: string;
@@ -15,7 +18,7 @@ interface ConsentData {
  */
 export function hasConsentFor(category: 'necessary' | 'functional' | 'analytics'): boolean {
   try {
-    const consentCookie = Cookies.get('datasupr-cookie-consent');
+    const consentCookie = Cookies.get(COOKIE_CONSENT_NAME);
     if (!consentCookie) {
       // Si pas de consentement, seuls les cookies nécessaires sont autorisés
       return category === 'necessary';
