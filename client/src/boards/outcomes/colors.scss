@@ -2,27 +2,27 @@
   // =========================================================================
   // COULEURS SÉMANTIQUES — Outcomes (Devenir des étudiants)
   // =========================================================================
-  --outcomes-l1: #b8cde8;
+  --outcomes-l1: var(--blue-cumulus-sun-368-moon-732);
   --outcomes-l2: var(--blue-france-main-525);
-  --outcomes-l3: var(--blue-ecume-main-400);
+  --outcomes-l3: var(--blue-ecume-sun-247-moon-675);
 
   --outcomes-lp: var(--green-archipel-main-557);
 
   --outcomes-m1: var(--green-emeraude-main-632);
-  --outcomes-m2: #1a5c3a;
+  --outcomes-m2: var(--green-bourgeon-sun-425-moon-759);
 
   --outcomes-sts: var(--red-marianne-main-472);
-  --outcomes-iut: #ea7fdd;
+  --outcomes-iut: var(--pink-macaron-sun-406-moon-833);
 
   --outcomes-cpge: var(--purple-glycine-main-494);
 
-  --outcomes-ecoles: var(--yellow-moutarde-main-679);
+  --outcomes-ecoles: var(--green-menthe-sun-373-moon-652);
 
   --outcomes-sante: var(--pink-tuile-main-556);
-  --outcomes-autres: var(--brown-cafe-creme-main-782);
+  --outcomes-autres: var(--brown-cafe-creme-sun-383-moon-885);
 
-  --outcomes-sortants-diplomes: var(--beige-gris-galet-main-702);
-  --outcomes-sortants-non-diplomes: #9b969166;
+  --outcomes-sortants-diplomes: var(--beige-gris-galet-sun-407-moon-821);
+  --outcomes-sortants-non-diplomes: var(--grey-425-625);
 }
 
 // L1 — #b8cde8 (contraste 3.65:1 vs L2)

@@ -1,5 +1,6 @@
 import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js";
 import { createChartOptions } from "../../../../../components/chart-wrapper/default-options";
+import { getCssColor } from "../../../../../utils/colors";
 
 
 export type HeatmapCell = { pct: number; count: number; dipl: number } | null;
@@ -105,11 +106,9 @@ export function createHeatmapOptions({
             min: 0,
             max: 100,
             stops: [
-                [0, "#ce614a"],
-                [0.25, "#fcbfb7"],
-                [0.45, "var(--background-alt-grey)"],
-                [0.6, "#6fe49d"],
-                [0.75, "#00a95f"],
+                [0, getCssColor("red-marianne-850-200")],
+                [0.45, getCssColor("background-alt-grey")],
+                [1, getCssColor("green-emeraude-850-200")],
             ],
             labels: { format: "{value}%" },
         },
@@ -145,7 +144,12 @@ export function createHeatmapOptions({
             dataLabels: {
                 enabled: true,
                 format: "{point.value:.0f}%",
-                style: { fontSize: "13px", fontWeight: "600", textOutline: "none" },
+                style: {
+                    color: "var(--text-default-grey)",
+                    fontSize: "13px",
+                    fontWeight: "600",
+                    textOutline: "none",
+                },
                 nullFormat: "n/a",
             },
         }],

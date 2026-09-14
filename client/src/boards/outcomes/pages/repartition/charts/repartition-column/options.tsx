@@ -111,12 +111,13 @@ export function createRepartitionOptions(
         legend: { enabled: true, reversed: false, itemStyle: { color: getCssColor("text-default-grey") } },
         plotOptions: {
             column: {
-                borderWidth: 0,
+                borderWidth: 1,
+                borderColor: "var(--background-default-grey)",
                 dataLabels: {
                     enabled: true,
                     format: "{point.percentage:.0f} %",
                     style: {
-                        color: getCssColor("text-default-grey"),
+                        color: "var(--text-title-grey)",
                         fontSize: "11px",
                         textOutline: "none",
                     },
