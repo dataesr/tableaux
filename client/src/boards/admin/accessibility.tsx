@@ -142,6 +142,10 @@ export default function AccessibilityPage() {
 
   const changesDetected = formResponses.some((response) => response.modified);
 
+  const lastUpdatedDate = audit?.tests?.sort((a, b) => a?.updatedAt - b?.updatedAt)?.[0]?.updatedAt;
+  const updatedDate = lastUpdatedDate ? new Date(lastUpdatedDate) : undefined;
+  const date = updatedDate?.toLocaleDateString("fr-FR", { year: "numeric", month: "long", day: "numeric" });
+
   return (
     <>
       <div className="menu-sticky">
@@ -149,7 +153,7 @@ export default function AccessibilityPage() {
           <Row>
             <Col>
               <Title as="h2">Audit d'accessibilité pour {dashboardId}</Title>
-              <Text>Date du dernier audit : 01/01/2024</Text>
+              <Text>Date du dernier audit : {date ?? ""}</Text>
               <Text>Version du RGAA testée : {rgaa?.rgaaId} </Text>
             </Col>
             <Col md={3}>
@@ -271,10 +275,10 @@ export default function AccessibilityPage() {
                               <Col>
                                 {audit?.tests?.find((t) => t.testId === testId)?.updatedAt
                                   ? new Date(audit.tests.find((t) => t.testId === testId).updatedAt).toLocaleDateString("fr-FR", {
-                                      year: "numeric",
-                                      month: "long",
-                                      day: "numeric",
-                                    })
+                                    year: "numeric",
+                                    month: "long",
+                                    day: "numeric",
+                                  })
                                   : ""}
                               </Col>
                             </Row>
