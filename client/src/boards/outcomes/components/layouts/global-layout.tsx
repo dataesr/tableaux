@@ -37,10 +37,10 @@ export default function GlobalLayout() {
         <nav className="fr-container" role="navigation" aria-label="Accès rapide">
           <ul className="fr-skiplinks__list">
             <li>
-              <a className="fr-link" href="#main-content">Contenu principal</a>
+              <a className="fr-link" title="Contenu principal" href="#main-content">Contenu principal</a>
             </li>
             <li>
-              <a className="fr-link" href="#footer">Pied de page</a>
+              <a className="fr-link" title="Pied de page" href="#footer">Pied de page</a>
             </li>
           </ul>
         </nav>
