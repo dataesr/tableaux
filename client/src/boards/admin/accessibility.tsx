@@ -75,7 +75,7 @@ export default function AccessibilityPage() {
     return { testMap, hierarchyMap, raw: rgaa };
   }, [rgaa]);
 
-  // Structure plate des réponses du formulaire indexée par testId
+  // Structure plate des réponses du formulaire indexées par testId
   const formResponsesMap = useMemo(() => {
     const map = new Map<string, FormResponse>();
     formResponses.forEach((response) => {
@@ -155,7 +155,24 @@ export default function AccessibilityPage() {
             <Col md={3}>
               <fieldset className="fr-m-0">
                 <legend className="fr-mb-2w">Stats</legend>
-                <div>...</div>
+                <div>
+                  {audit?.tests?.filter((test) => test.value === "ok").length} tests réussis
+                  {' '}
+                  ({Math.floor(audit?.tests?.filter((test) => test.value === "ok").length / audit?.tests?.filter((test) => test.value !== "na").length * 100)} %)
+                </div>
+                <div>
+                  {audit?.tests?.filter((test) => test.value === "fail").length} tests échoués
+                  {' '}
+                  ({Math.floor(audit?.tests?.filter((test) => test.value === "fail").length / audit?.tests?.filter((test) => test.value !== "na").length * 100)} %)
+                </div>
+                <div>
+                  {audit?.tests?.filter((test) => test.value === "na").length} tests non applicables
+                </div>
+                <div>
+                  {audit?.tests?.filter((test) => test.value === "initial").length} tests non testés
+                  {' '}
+                  ({Math.floor(audit?.tests?.filter((test) => test.value === "initial").length / audit?.tests?.filter((test) => test.value !== "na").length * 100)} %)
+                </div>
               </fieldset>
               <Button
                 className="fr-mt-1w"
@@ -197,11 +214,11 @@ export default function AccessibilityPage() {
       <Container className="fr-py-5w" role="main">
         <Row className="fr-mt-3w">
           <section className="fr-accordion">
-            {rgaaFlat.raw?.criteria?.map(({ thematique_id, thematique, criteres }) => (
+            {rgaaFlat.raw?.criteria?.sort((a, b) => a?.thematique_id - b?.thematique_id)?.map(({ thematique_id, thematique, criteres }) => (
               <div key={thematique_id}>
                 <Title as="h3" className="fr-accordion__title">
                   <button type="button" className="fr-accordion__btn" aria-expanded="false" aria-controls={`accordion-${thematique_id}`}>
-                    {thematique}
+                    {thematique_id}. {thematique}
                     <Badge className="fr-ml-2w">
                       {
                         // nombre de tests réussis 🟢, nombre de tests échoués 🔴, nombre de tests non-applcables 🔵, non-testés ⚪ pour cette thématique
@@ -220,12 +237,12 @@ export default function AccessibilityPage() {
                   </button>
                 </Title>
                 <div id={`accordion-${thematique_id}`} className="fr-collapse">
-                  {criteres?.map(({ id: critereId, titre, tests }) => (
+                  {criteres?.sort((a, b) => a?.critereId - b?.critereId)?.map(({ id: critereId, titre, tests }) => (
                     <div key={critereId} className="fr-mt-2w">
                       <Title as="h4" look="h6">
-                        {titre}
+                        {critereId}. {titre}
                       </Title>
-                      {tests?.map(({ id: testId, description }) => (
+                      {tests?.sort((a, b) => a?.id - b?.id)?.map(({ id: testId, description }) => (
                         <div key={testId}>
                           <Text className="fr-mb-0 fr-mt-4w">
                             {audit?.tests?.find((test) => test.testId === testId)?.value === "ok"
@@ -235,7 +252,7 @@ export default function AccessibilityPage() {
                                 : audit?.tests?.find((test) => test.testId === testId)?.value === "na"
                                   ? "🔵 "
                                   : "⚪ "}
-                            {`${testId} - ${description}`}
+                            {`${testId}. ${description}`}
                           </Text>
 
                           <Container fluid key={`yiyji${testId}`}>
@@ -249,11 +266,11 @@ export default function AccessibilityPage() {
                                 </select>
                               </Col>
                               <Col md={7}>
-                                <input type="text" className="fr-input" value={getValueFromState(testId, "comment")} onChange={(e) => setValueInState(testId, "comment", e.target.value)} />
+                                <textarea className="fr-input" value={getValueFromState(testId, "comment")} onChange={(e) => setValueInState(testId, "comment", e.target.value)} />
                               </Col>
                               <Col>
-                                {audit?.tests?.find((t) => t.testId === testId)?.date
-                                  ? new Date(audit.tests.find((t) => t.testId === testId).date).toLocaleDateString("fr-FR", {
+                                {audit?.tests?.find((t) => t.testId === testId)?.updatedAt
+                                  ? new Date(audit.tests.find((t) => t.testId === testId).updatedAt).toLocaleDateString("fr-FR", {
                                       year: "numeric",
                                       month: "long",
                                       day: "numeric",
