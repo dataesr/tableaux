@@ -1,5 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
-import { CONTACT_API } from "./config";
+
+const { VITE_APP_SERVER_URL } = import.meta.env;
 
 export type ContactPayload = {
   email: string;
@@ -11,7 +12,7 @@ export type ContactPayload = {
 };
 
 async function sendContact(payload: ContactPayload): Promise<void> {
-  const response = await fetch(CONTACT_API, {
+  const response = await fetch(`${VITE_APP_SERVER_URL}/contact`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
