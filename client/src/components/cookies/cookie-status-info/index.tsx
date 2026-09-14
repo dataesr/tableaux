@@ -1,5 +1,5 @@
 import { useSearchParams } from "react-router-dom";
-import { hasConsentFor } from "../../../utils/cookieUtils";
+import { hasConsentFor } from "../../../utils/cookies";
 import { useCookieConsent } from "../../../hooks/useCookieConsent";
 
 interface CookieStatusInfoProps {

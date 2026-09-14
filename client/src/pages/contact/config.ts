@@ -2,7 +2,6 @@ export const CONTACT_API = `${import.meta.env.VITE_APP_SERVER_URL}/contact`;
 
 export const DASHBOARDS = [
   { value: "atlas", label: "Atlas" },
-  { value: "datasupr-doc", label: "Documentation" },
   { value: "financements-par-aap", label: "Financements par AAP" },
   { value: "general", label: "Général" },
   { value: "graduates", label: "Graduates" },
@@ -15,6 +14,7 @@ export const DASHBOARDS = [
   },
   { value: "personnel-enseignant", label: "Personnel enseignant" },
   { value: "structures-finance", label: "Structures finance" },
+  { value: "tableaux-doc", label: "Documentation" },
   { value: "teds", label: "TEDS" },
   {
     value: "valorisation-recherche-innovation",

@@ -2,7 +2,7 @@ import { Navigate, Route, Routes } from "react-router-dom";
 
 import NotFoundPage from "../../components/not-found-page.tsx";
 import { useTitle } from "../../hooks/usePageTitle.tsx";
-import { getI18nLabel } from "../../utils";
+import { getI18nLabel } from "../../utils.tsx";
 import GlobalLayout from "./components/layouts/global-layout.tsx";
 import SidemenuLayout from "./components/layouts/sidemenu-layout.tsx";
 import Home from "./pages/home/index.tsx";

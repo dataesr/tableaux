@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getConsentedCookie, setConsentedCookie, hasConsentFor } from "../utils/cookieUtils";
+import { getConsentedCookie, setConsentedCookie, hasConsentFor } from "../utils/cookies";
 
 /**
  * Hook personnalisé pour gérer les filtres avec vérification du consentement aux cookies

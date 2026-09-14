@@ -1,7 +1,7 @@
 import Cookies from "js-cookie"
 import { useState } from "react"
 
-import { COOKIE_CONSENT_NAME, COOKIE_CONSENT_VERSION } from "../utils/cookieUtils"
+import { COOKIE_CONSENT_NAME, COOKIE_CONSENT_VERSION } from "../utils/cookies"
 
 export interface CookieCategories {
   necessary: boolean;

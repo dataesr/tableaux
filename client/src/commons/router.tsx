@@ -7,28 +7,28 @@ const AccessibilityLayout = lazy(() => import("../components/accessibility/layou
 const AccessibilityPage = lazy(() => import("../components/accessibility/page.tsx"));
 const AdminRoutes = lazy(() => import("../boards/admin/routes.tsx"));
 const AtlasRoutes = lazy(() => import("../boards/atlas/routes.tsx"));
-const CGUPage = lazy(() => import("../pages/cgu/index.tsx"));
 const CGULayout = lazy(() => import("../pages/cgu/global-layout.tsx"));
+const CGUPage = lazy(() => import("../pages/cgu/index.tsx"));
 const ContactLayout = lazy(() => import("../pages/contact/global-layout.tsx"));
 const ContactPage = lazy(() => import("../pages/contact/index.tsx"));
 const CookiePolicyPage = lazy(() => import("../components/cookies/cookie-policy-page/index.tsx"));
-const DatasuprDocRoutes = lazy(() => import("../boards/datasupr-doc/routes.tsx"));
 const EuropeanProjectsRoutes = lazy(() => import("../boards/european-projects/routes.tsx"));
 const FacultyMembersRoutes = lazy(() => import("../boards/faculty-members/routes.tsx"));
 const FundingsRoutes = lazy(() => import("../boards/financements-par-aap/routes.tsx"));
 const GraduatesRoutes = lazy(() => import("../boards/graduates/routes.tsx"));
 const HomePage = lazy(() => import("../boards/home-page.tsx"));
+const Integration = lazy(() => import("../boards/integration/index.tsx"));
 const LegalNoticeLayout = lazy(() => import("../pages/legal-notice/global-layout.tsx"));
 const LegalNoticePage = lazy(() => import("../pages/legal-notice/index.tsx"));
-const PersonalDataLayout = lazy(() => import("../pages/personal-data/global-layout.tsx"));
-const PersonalDataPage = lazy(() => import("../pages/personal-data/index.tsx"));
-const Integration = lazy(() => import("../boards/integration/index.tsx"));
 const NotFoundPage = lazy(() => import("../components/not-found-page.tsx"));
 const OpenAlexRoutes = lazy(() => import("../boards/open-alex/routes.tsx"));
 const OutcomesRoutes = lazy(() => import("../boards/outcomes/routes.tsx"));
+const PersonalDataLayout = lazy(() => import("../pages/personal-data/global-layout.tsx"));
+const PersonalDataPage = lazy(() => import("../pages/personal-data/index.tsx"));
 const SitemapLayout = lazy(() => import("../pages/site-map/global-layout.tsx"));
 const SitemapPage = lazy(() => import("../pages/site-map/sitemap-page.tsx"));
 const StructuresFinanceRoutes = lazy(() => import("../boards/structures-finance/routes.tsx"));
+const TableauxDocRoutes = lazy(() => import("../boards/tableaux-doc/routes.tsx"));
 const TedsRoutes = lazy(() => import("../boards/teds/routes.tsx"));
 const TemplateRoutes = lazy(() => import("../boards/template/routes.tsx"));
 const ValorisationRechercheInnovationRoutes = lazy(() => import("../boards/valorisation-recherche-innovation/routes.tsx"));
@@ -223,14 +223,6 @@ export default function Router() {
             }
           />
           <Route
-            path="/datasupr-doc/*"
-            element={
-              <Suspense>
-                <DatasuprDocRoutes />
-              </Suspense>
-            }
-          />
-          <Route
             path="/graduates/*"
             element={
               <Suspense>
@@ -260,6 +252,14 @@ export default function Router() {
             element={
               <Suspense>
                 <FacultyMembersRoutes />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/tableaux-doc/*"
+            element={
+              <Suspense>
+                <TableauxDocRoutes />
               </Suspense>
             }
           />
