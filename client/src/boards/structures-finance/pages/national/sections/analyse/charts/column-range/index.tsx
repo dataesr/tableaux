@@ -1,9 +1,8 @@
 import { useMemo, useState } from "react";
 import type Highcharts from "highcharts/es-modules/masters/highcharts.src.js";
 import "../../../../styles.scss";
-import { Text, Row, Col } from "@dataesr/dsfr-plus";
+import { Row, Col } from "@dataesr/dsfr-plus";
 import ChartWrapper from "../../../../../../../../components/chart-wrapper/index.tsx";
-import Select from "../../../../../../../../components/select";
 import DefaultSkeleton from "../../../../../../../../components/charts-skeletons/default";
 import MetricDefinitionsTable from "../../../../../../components/metric-definitions/metric-definitions-table.tsx";
 import { useMetricLabel } from "../../../../../../utils/metrics";
@@ -149,88 +148,87 @@ export default function ColumnRangeChart({
     <div>
       <Row gutters className="fr-mb-3w">
         <Col xs="12" md="3">
-          <Text className="fr-text--sm fr-text--bold fr-mb-1w">
-            Année de départ
-          </Text>
-          <Select label={yearFrom} size="sm" fullWidth className="fr-mb-0">
-            {sortedYears.map((year) => (
-              <Select.Checkbox
-                key={String(year)}
-                value={String(year)}
-                checked={yearFrom === String(year)}
-                onChange={() => setYearFrom(String(year))}
-              >
-                {year}
-              </Select.Checkbox>
-            ))}
-          </Select>
-        </Col>
-
-        <Col xs="12" md="3">
-          <Text className="fr-text--sm fr-text--bold fr-mb-1w">
-            Année d'arrivée
-          </Text>
-          <Select label={yearTo} size="sm" fullWidth className="fr-mb-0">
-            {sortedYears.map((year) => (
-              <Select.Checkbox
-                key={String(year)}
-                value={String(year)}
-                checked={yearTo === String(year)}
-                onChange={() => setYearTo(String(year))}
-              >
-                {year}
-              </Select.Checkbox>
-            ))}
-          </Select>
-        </Col>
-
-
-
-        <Col xs="12" md="3">
-          <Text className="fr-text--sm fr-text--bold fr-mb-1w">Tri</Text>
-          <Select
-            label={sortMode === "variation" ? "Par variation" : "Alphabétique"}
-            size="sm"
-            fullWidth
-            className="fr-mb-0"
-          >
-            <Select.Checkbox
-              value="variation"
-              checked={sortMode === "variation"}
-              onChange={() => setSortMode("variation")}
+          <div className="fr-select-group fr-mb-0">
+            <label className="fr-label" htmlFor="national-year-from">
+              Année de départ
+            </label>
+            <select
+              className="fr-select"
+              id="national-year-from"
+              name="national-year-from"
+              value={yearFrom}
+              onChange={(e) => setYearFrom(e.target.value)}
             >
-              Par variation
-            </Select.Checkbox>
-            <Select.Checkbox
-              value="alphabetical"
-              checked={sortMode === "alphabetical"}
-              onChange={() => setSortMode("alphabetical")}
+              {sortedYears.map((year) => (
+                <option key={String(year)} value={String(year)}>
+                  {year}
+                </option>
+              ))}
+            </select>
+          </div>
+        </Col>
+
+        <Col xs="12" md="3">
+          <div className="fr-select-group fr-mb-0">
+            <label className="fr-label" htmlFor="national-year-to">
+              Année d'arrivée
+            </label>
+            <select
+              className="fr-select"
+              id="national-year-to"
+              name="national-year-to"
+              value={yearTo}
+              onChange={(e) => setYearTo(e.target.value)}
             >
-              Alphabétique
-            </Select.Checkbox>
-          </Select>
+              {sortedYears.map((year) => (
+                <option key={String(year)} value={String(year)}>
+                  {year}
+                </option>
+              ))}
+            </select>
+          </div>
+        </Col>
+
+
+
+        <Col xs="12" md="3">
+          <div className="fr-select-group fr-mb-0">
+            <label className="fr-label" htmlFor="national-sort-mode">
+              Tri
+            </label>
+            <select
+              className="fr-select"
+              id="national-sort-mode"
+              name="national-sort-mode"
+              value={sortMode}
+              onChange={(e) => setSortMode(e.target.value as typeof sortMode)}
+            >
+              <option value="variation">Par variation</option>
+              <option value="alphabetical">Alphabétique</option>
+            </select>
+          </div>
         </Col>
         <Col xs="12" md="3">
-          <Text className="fr-text--sm fr-text--bold fr-mb-1w">
-            Nombre d'établissements
-          </Text>
-          <Select
-            label={getTopNLabel(topN)}
-            size="sm"
-            fullWidth
-            className="fr-mb-0"
-          >
-            {TOP_N_OPTIONS.map((n) => (
-              <Select.Checkbox
-                key={String(n)}
-                value={String(n)}
-                checked={topN === n}
-                onChange={() => setTopN(n)}
-              >
-                {getTopNLabel(n)}
-              </Select.Checkbox>
-            ))}
-          </Select>
+          <div className="fr-select-group fr-mb-0">
+            <label className="fr-label" htmlFor="national-column-range-top-n">
+              Nombre d'établissements
+            </label>
+            <select
+              className="fr-select"
+              id="national-column-range-top-n"
+              name="national-column-range-top-n"
+              value={String(topN)}
+              onChange={(e) =>
+                setTopN(e.target.value === "null" ? null : Number(e.target.value))
+              }
+            >
+              {TOP_N_OPTIONS.map((n) => (
+                <option key={String(n)} value={String(n)}>
+                  {getTopNLabel(n)}
+                </option>
+              ))}
+            </select>
+          </div>
         </Col>
       </Row>
 

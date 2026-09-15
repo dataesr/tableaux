@@ -4,6 +4,7 @@ import { MetricChartCard } from "../../components/metric-chart-card";
 import "../styles.scss";
 import MetricDefinitionsTable from "../../../../components/metric-definitions/metric-definitions-table";
 import { getCssColor } from "../../../../../../utils/colors";
+import SectionYearSelect from "../../../../../../components/section-year-select";
 
 interface MoyensHumainsSectionProps {
   data: any;
@@ -81,9 +82,17 @@ export function MoyensHumainsSection({ data }: MoyensHumainsSectionProps) {
       </div> */}
 
       <div>
-        <Title as="h2" look="h5" className="fr-mb-3w">
-          La masse salariale
-        </Title>
+        <div className="section-header section-header--year fr-mb-3w">
+          <Title
+            as="h2"
+            look="h5"
+            id="section-moyens-humains-title"
+            className="section-header__title"
+          >
+            La masse salariale
+          </Title>
+          <SectionYearSelect />
+        </div>
         <Row gutters>
           <Col xs="12" sm="6" md="4">
             <MetricChartCard

@@ -1,6 +1,5 @@
 import { Container, Row, Col, Button } from "@dataesr/dsfr-plus";
 import Breadcrumb from "../../../components/breadcrumb";
-import Select from "../../../../../components/select";
 
 interface NoDataForYearAlertProps {
     etablissementLib: string;
@@ -43,25 +42,28 @@ export default function NoDataForYearAlert({
                         </Col>
 
                         <Col xs="12" md="4" className="text-right">
-                            <div className="fr-mb-1w">
-                                <Select
-                                    label={selectedYear}
-                                    icon="calendar-line"
-                                    aria-label="Sélectionner une année disponible"
+                            <div className="fr-select-group fr-mb-1w">
+                                <label className="fr-label" htmlFor="no-data-year">
+                                    Année disponible
+                                </label>
+                                <select
+                                    className="fr-select"
+                                    id="no-data-year"
+                                    name="year"
+                                    value={selectedYear}
+                                    onChange={(e) => onYearChange(e.target.value)}
                                 >
-                                    <Select.Content>
-                                        {availableYears.map((year) => (
-                                            <Select.Option
-                                                key={year}
-                                                value={year.toString()}
-                                                selected={selectedYear === year.toString()}
-                                                onClick={() => onYearChange(year.toString())}
-                                            >
-                                                {year}
-                                            </Select.Option>
-                                        ))}
-                                    </Select.Content>
-                                </Select>
+                                    {!availableYears.map(String).includes(selectedYear) && (
+                                        <option value={selectedYear} disabled>
+                                            {selectedYear}
+                                        </option>
+                                    )}
+                                    {availableYears.map((year) => (
+                                        <option key={year} value={year.toString()}>
+                                            {year}
+                                        </option>
+                                    ))}
+                                </select>
                             </div>
                             <Button
                                 variant="tertiary"

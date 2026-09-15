@@ -9,7 +9,6 @@ import {
 } from "@dataesr/dsfr-plus";
 import ChartWrapper from "../../../../../../../components/chart-wrapper/index.tsx";
 import { createComparisonBarOptions } from "./options.tsx";
-import Select from "../../../../../../../components/select";
 import DefaultSkeleton from "../../../../../../../components/charts-skeletons/default";
 import MetricDefinitionsTable from "../../../../../components/metric-definitions/metric-definitions-table.tsx";
 import { useMetricLabel, useMetricThreshold } from "../../../../../utils/metrics";
@@ -197,24 +196,24 @@ export default function NationalChart({
         <>
           <Row gutters className="fr-mb-3w">
             <Col xs="12" md="4">
-              <Text className="fr-text--sm fr-text--bold fr-mb-1w">Année</Text>
-              <Select
-                label={selectedYear}
-                size="sm"
-                fullWidth
-                className="fr-mb-0"
-              >
-                {availableYears.map((year) => (
-                  <Select.Checkbox
-                    key={year}
-                    value={String(year)}
-                    checked={selectedYear === String(year)}
-                    onChange={() => onYearChange(String(year))}
-                  >
-                    {year}
-                  </Select.Checkbox>
-                ))}
-              </Select>
+              <div className="fr-select-group fr-mb-0">
+                <label className="fr-label" htmlFor="national-year">
+                  Année
+                </label>
+                <select
+                  className="fr-select"
+                  id="national-year"
+                  name="national-year"
+                  value={selectedYear}
+                  onChange={(e) => onYearChange(e.target.value)}
+                >
+                  {availableYears.map((year) => (
+                    <option key={year} value={String(year)}>
+                      {year}
+                    </option>
+                  ))}
+                </select>
+              </div>
               {hasPartVersion && (
                 <Row gutters className="fr-mt-2w">
                   <Col xs="12" md="6">
@@ -244,66 +243,56 @@ export default function NationalChart({
             </Col>
 
             <Col xs="12" md="4" offsetMd="4">
-              <Text className="fr-text--sm fr-text--bold fr-mb-1w">
-                Nombre d'établissements
-              </Text>
-              <Select
-                label={getTopNLabel(topN)}
-                size="sm"
-                fullWidth
-                className="fr-mb-0"
-              >
-                {TOP_N_OPTIONS.map((n) => (
-                  <Select.Checkbox
-                    key={String(n)}
-                    value={String(n)}
-                    checked={topN === n}
-                    onChange={() => setTopN(n)}
-                  >
-                    {getTopNLabel(n)}
-                  </Select.Checkbox>
-                ))}
-              </Select>
+              <div className="fr-select-group fr-mb-0">
+                <label className="fr-label" htmlFor="national-top-n">
+                  Nombre d'établissements
+                </label>
+                <select
+                  className="fr-select"
+                  id="national-top-n"
+                  name="national-top-n"
+                  value={String(topN)}
+                  onChange={(e) =>
+                    setTopN(e.target.value === "null" ? null : Number(e.target.value))
+                  }
+                >
+                  {TOP_N_OPTIONS.map((n) => (
+                    <option key={String(n)} value={String(n)}>
+                      {getTopNLabel(n)}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </Col>
           </Row>
 
           {isStacked && analysisConfig && (
             <Row gutters className="fr-mb-3w">
               <Col xs="12" md="6">
-                <Text className="fr-text--sm fr-text--bold fr-mb-1w">
-                  Métrique
-                </Text>
-                <Select
-                  label={
-                    METRICS_CONFIG[
-                      analysisConfig.metrics.filter(
+                <div className="fr-select-group fr-mb-0">
+                  <label className="fr-label" htmlFor="national-metric">
+                    Métrique
+                  </label>
+                  <select
+                    className="fr-select"
+                    id="national-metric"
+                    name="national-metric"
+                    value={selectedMetricIndex}
+                    onChange={(e) => setSelectedMetricIndex(Number(e.target.value))}
+                  >
+                    {analysisConfig.metrics
+                      .filter(
                         (metric) =>
                           !metric.includes("_ipc") &&
                           metric !== "effectif_sans_cpge_veto"
-                      )[selectedMetricIndex] as MetricKey
-                    ]?.label || "Sélectionner"
-                  }
-                  size="sm"
-                  fullWidth
-                  className="fr-mb-0"
-                >
-                  {analysisConfig.metrics
-                    .filter(
-                      (metric) =>
-                        !metric.includes("_ipc") &&
-                        metric !== "effectif_sans_cpge_veto"
-                    )
-                    .map((metric, index) => (
-                      <Select.Checkbox
-                        key={metric}
-                        value={String(index)}
-                        checked={selectedMetricIndex === index}
-                        onChange={() => setSelectedMetricIndex(index)}
-                      >
-                        {METRICS_CONFIG[metric as MetricKey]?.label || metric}
-                      </Select.Checkbox>
-                    ))}
-                </Select>
+                      )
+                      .map((metric, index) => (
+                        <option key={metric} value={index}>
+                          {METRICS_CONFIG[metric as MetricKey]?.label || metric}
+                        </option>
+                      ))}
+                  </select>
+                </div>
               </Col>
             </Row>
           )}

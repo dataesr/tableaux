@@ -5,6 +5,7 @@ import "../styles.scss";
 import MetricDefinitionsTable from "../../../../components/metric-definitions/metric-definitions-table";
 import { getCssColor } from "../../../../../../utils/colors";
 import { useMetricEvolution } from "../../api";
+import SectionYearSelect from "../../../../../../components/section-year-select";
 
 interface EtudiantsSectionProps {
   data: any;
@@ -28,7 +29,7 @@ export function EtudiantsSection({
       aria-labelledby="section-etudiants-title"
       className="section-container"
     >
-      <div className="section-header fr-mb-4w">
+      <div className="section-header section-header--year fr-mb-4w">
         <Title
           as="h2"
           look="h5"
@@ -37,6 +38,7 @@ export function EtudiantsSection({
         >
           Les étudiants inscrits en {`${data.anuniv}`}
         </Title>
+        <SectionYearSelect />
       </div>
 
       <div className="fr-mb-4w">

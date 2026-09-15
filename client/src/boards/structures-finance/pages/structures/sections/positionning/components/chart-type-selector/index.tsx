@@ -1,6 +1,13 @@
-import { Row, Col, Text } from "@dataesr/dsfr-plus";
-import { Select } from "../../../../../../../../components/select";
+import { Row, Col } from "@dataesr/dsfr-plus";
 import { type ChartView } from "../../charts";
+
+const CHART_OPTIONS: { value: ChartView; label: string }[] = [
+  { value: "comparison", label: "Comparaison par analyse" },
+  { value: "column-range", label: "Variation entre deux années" },
+  { value: "scatter-1", label: "Produits vs Effectifs" },
+  { value: "scatter-2", label: "SCSP vs Encadrement" },
+  { value: "scatter-3", label: "SCSP vs Ressources" },
+];
 
 interface ChartTypeSelectorProps {
   activeChart: ChartView;
@@ -11,58 +18,27 @@ export default function ChartTypeSelector({
   activeChart,
   onChartChange,
 }: ChartTypeSelectorProps) {
-  const getChartLabel = () => {
-    if (activeChart === "comparison") return "Comparaison par analyse";
-    if (activeChart === "column-range") return "Variation entre deux années";
-    if (activeChart === "scatter-1") return "Produits vs Effectifs";
-    if (activeChart === "scatter-2") return "SCSP vs Encadrement";
-    if (activeChart === "scatter-3") return "SCSP vs Ressources";
-    return "Comparaison par analyse";
-  };
-
   return (
     <Row gutters className="fr-mb-3w">
-      <Col xs="12" md="4" offsetMd="8" className="text-right">
-        <Text className="fr-text--sm fr-text--bold fr-mb-1w">
-          Type de graphique
-        </Text>
-        <Select label={getChartLabel()} icon="line-chart-line" size="sm">
-          <Select.Checkbox
-            value="comparison"
-            checked={activeChart === "comparison"}
-            onChange={() => onChartChange("comparison")}
+      <Col xs="12" md="4" offsetMd="8">
+        <div className="fr-select-group">
+          <label className="fr-label" htmlFor="positionnement-chart-type">
+            Type de graphique
+          </label>
+          <select
+            className="fr-select"
+            id="positionnement-chart-type"
+            name="chart-type"
+            value={activeChart}
+            onChange={(e) => onChartChange(e.target.value as ChartView)}
           >
-            Comparaison par analyse
-          </Select.Checkbox>
-          <Select.Checkbox
-            value="column-range"
-            checked={activeChart === "column-range"}
-            onChange={() => onChartChange("column-range")}
-          >
-            Variation entre deux années
-          </Select.Checkbox>
-          <Select.Checkbox
-            value="scatter-1"
-            checked={activeChart === "scatter-1"}
-            onChange={() => onChartChange("scatter-1")}
-          >
-            Produits vs Effectifs
-          </Select.Checkbox>
-          <Select.Checkbox
-            value="scatter-2"
-            checked={activeChart === "scatter-2"}
-            onChange={() => onChartChange("scatter-2")}
-          >
-            SCSP vs Encadrement
-          </Select.Checkbox>
-          <Select.Checkbox
-            value="scatter-3"
-            checked={activeChart === "scatter-3"}
-            onChange={() => onChartChange("scatter-3")}
-          >
-            SCSP vs Ressources
-          </Select.Checkbox>
-        </Select>
+            {CHART_OPTIONS.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        </div>
       </Col>
     </Row>
   );

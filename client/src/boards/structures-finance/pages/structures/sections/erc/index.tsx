@@ -4,6 +4,7 @@ import { useMetricEvolution } from "../../api";
 import "../styles.scss";
 import MetricDefinitionsTable from "../../../../components/metric-definitions/metric-definitions-table";
 import { getCssColor } from "../../../../../../utils/colors";
+import SectionYearSelect from "../../../../../../components/section-year-select";
 
 interface ErcSectionProps {
   data: any;
@@ -18,7 +19,7 @@ export function ErcSection({ data }: ErcSectionProps) {
       aria-labelledby="section-erc-title"
       className="section-container"
     >
-      <div className="section-header fr-mb-5w">
+      <div className="section-header section-header--year fr-mb-5w">
         <Title
           as="h2"
           look="h5"
@@ -27,6 +28,7 @@ export function ErcSection({ data }: ErcSectionProps) {
         >
           Subvention des projets de recherche exploratoire d'excellence (ERC)
         </Title>
+        <SectionYearSelect />
       </div>
 
       <div className="fr-mb-5w">

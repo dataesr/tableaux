@@ -1,7 +1,6 @@
 import { useState, useMemo } from "react";
-import { Text, Row, Col } from "@dataesr/dsfr-plus";
+import { Row, Col } from "@dataesr/dsfr-plus";
 import ChartWrapper from "../../../../../../../components/chart-wrapper";
-import Select from "../../../../../../../components/select";
 import {
   createColumnRangeOptions,
   type ColumnRangePoint,
@@ -163,38 +162,44 @@ export default function StructureColumnRangeChart({
     <div>
       <Row gutters className="fr-mb-3w">
         <Col xs="12" md="6">
-          <Text className="fr-text--sm fr-text--bold fr-mb-1w">
-            Année de départ
-          </Text>
-          <Select label={yearFrom} size="sm" fullWidth className="fr-mb-0">
-            {sortedYears.map((year) => (
-              <Select.Checkbox
-                key={String(year)}
-                value={String(year)}
-                checked={yearFrom === String(year)}
-                onChange={() => setYearFrom(String(year))}
-              >
-                {year}
-              </Select.Checkbox>
-            ))}
-          </Select>
+          <div className="fr-select-group fr-mb-0">
+            <label className="fr-label" htmlFor="analyses-year-from">
+              Année de départ
+            </label>
+            <select
+              className="fr-select"
+              id="analyses-year-from"
+              name="analyses-year-from"
+              value={yearFrom}
+              onChange={(e) => setYearFrom(e.target.value)}
+            >
+              {sortedYears.map((year) => (
+                <option key={String(year)} value={String(year)}>
+                  {year}
+                </option>
+              ))}
+            </select>
+          </div>
         </Col>
         <Col xs="12" md="6">
-          <Text className="fr-text--sm fr-text--bold fr-mb-1w">
-            Année d'arrivée
-          </Text>
-          <Select label={yearTo} size="sm" fullWidth className="fr-mb-0">
-            {sortedYears.map((year) => (
-              <Select.Checkbox
-                key={String(year)}
-                value={String(year)}
-                checked={yearTo === String(year)}
-                onChange={() => setYearTo(String(year))}
-              >
-                {year}
-              </Select.Checkbox>
-            ))}
-          </Select>
+          <div className="fr-select-group fr-mb-0">
+            <label className="fr-label" htmlFor="analyses-year-to">
+              Année d'arrivée
+            </label>
+            <select
+              className="fr-select"
+              id="analyses-year-to"
+              name="analyses-year-to"
+              value={yearTo}
+              onChange={(e) => setYearTo(e.target.value)}
+            >
+              {sortedYears.map((year) => (
+                <option key={String(year)} value={String(year)}>
+                  {year}
+                </option>
+              ))}
+            </select>
+          </div>
         </Col>
       </Row>
 

@@ -12,6 +12,7 @@ import AgeCategoryHeatmapChart from "./charts/age-category-heatmap";
 import QuotiteByCategoryChart from "./charts/quotite-by-category";
 import PartTimeEvolutionChart from "./charts/part-time-evolution";
 import FmMetricDefinitionsTable from "../../../../components/metric-definitions";
+import SectionYearSelect from "../../../../../../components/section-year-select";
 
 interface EnseignantsChercheursSectionProps {
     viewType: ViewType;
@@ -91,10 +92,11 @@ export default function EnseignantsChercheurSection({
 
     return (
         <>
-            <div className="section-header fr-mb-4w">
+            <div className="section-header section-header--year fr-mb-4w">
                 <Title as="h2" look="h5" id="section-ec-title" className="section-header__title">
                     Les enseignants-chercheurs en détail
                 </Title>
+                <SectionYearSelect />
             </div>
             <div className="fr-callout fr-mb-4w">
                 <Text className="fr-callout__text fr-text--sm">

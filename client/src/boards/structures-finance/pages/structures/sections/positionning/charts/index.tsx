@@ -2,7 +2,6 @@ import { useState } from "react";
 import {
   Row,
   Col,
-  Text,
   SegmentedControl,
   SegmentedElement,
 } from "@dataesr/dsfr-plus";
@@ -10,7 +9,6 @@ import ComparisonBarChart from "./comparison-bar";
 import ComparisonOverviewChart from "./comparison-overview";
 import ScatterChart from "./scatter";
 import AnalysisFilter from "../components/analysis-filter";
-import Select from "../../../../../../../components/select";
 import {
   PREDEFINED_ANALYSES,
   METRICS_CONFIG,
@@ -170,30 +168,24 @@ export default function PositioningCharts({
             {isStacked && displayMetrics.length > 1 && (
               <Row gutters className="fr-mb-3w">
                 <Col xs="12" md="6">
-                  <Text className="fr-text--sm fr-text--bold fr-mb-1w">
-                    Métrique
-                  </Text>
-                  <Select
-                    label={
-                      METRICS_CONFIG[
-                        displayMetrics[selectedMetricIndex] as MetricKey
-                      ]?.label || "Sélectionner"
-                    }
-                    size="sm"
-                    fullWidth
-                    className="fr-mb-0"
-                  >
-                    {displayMetrics.map((metric, index) => (
-                      <Select.Checkbox
-                        key={metric}
-                        value={String(index)}
-                        checked={selectedMetricIndex === index}
-                        onChange={() => setSelectedMetricIndex(index)}
-                      >
-                        {METRICS_CONFIG[metric as MetricKey]?.label || metric}
-                      </Select.Checkbox>
-                    ))}
-                  </Select>
+                  <div className="fr-select-group fr-mb-0">
+                    <label className="fr-label" htmlFor="positionnement-metric">
+                      Métrique
+                    </label>
+                    <select
+                      className="fr-select"
+                      id="positionnement-metric"
+                      name="metric"
+                      value={selectedMetricIndex}
+                      onChange={(e) => setSelectedMetricIndex(Number(e.target.value))}
+                    >
+                      {displayMetrics.map((metric, index) => (
+                        <option key={metric} value={index}>
+                          {METRICS_CONFIG[metric as MetricKey]?.label || metric}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
                 </Col>
               </Row>
             )}

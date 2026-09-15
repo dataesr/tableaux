@@ -1,0 +1,18 @@
+.section-header.section-header--year {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+
+  .section-header__title {
+    flex: 1 1 20rem;
+    margin: 0;
+  }
+}
+
+.section-year-select {
+  flex: 0 0 auto;
+  min-width: 9rem;
+  margin-left: auto;
+}

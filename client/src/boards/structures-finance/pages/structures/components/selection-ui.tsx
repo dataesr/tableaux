@@ -1,10 +1,8 @@
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { Row, Col, Title, Button } from "@dataesr/dsfr-plus";
-import Select from "../../../../../components/select";
 import { useFilters } from "../../../utils/useFilters";
 import "../../national/styles.scss";
 import Dropdown from "../../../../../components/dropdown";
-import { normalizeString } from "../../../utils/utils";
 
 interface SelectionUIProps {
   availableTypes: string[];
@@ -21,8 +19,6 @@ export default function SelectionUI({
   filteredStructures,
   onStructureSelect,
 }: SelectionUIProps) {
-  const [searchQuery, setSearchQuery] = useState("");
-
   const {
     selectedType,
     selectedTypologie,
@@ -44,18 +40,6 @@ export default function SelectionUI({
         .map((etab: any) => {
           const displayName =
             etab.etablissement_actuel_lib || etab.etablissement_lib || etab.nom;
-          const searchText = normalizeString(
-            [
-              displayName,
-              etab.etablissement_lib,
-              etab.etablissement_actuel_lib,
-              etab.nom,
-              etab.champ_recherche,
-              etab.etablissement_actuel_region || etab.region,
-            ]
-              .filter(Boolean)
-              .join(" ")
-          );
 
           const id =
             etab.etablissement_id_paysage ||
@@ -69,7 +53,6 @@ export default function SelectionUI({
                 ? ` — ${etab.etablissement_actuel_region || etab.region}`
                 : ""
               }`,
-            searchableText: searchText,
             subtitle: etab.champ_recherche,
             data: etab,
           };
@@ -231,42 +214,27 @@ export default function SelectionUI({
         </div>
 
         <div className="fr-mb-3w">
-          <Select
-            label="Rechercher une structure..."
-            icon="search-line"
-            size="md"
-            fullWidth
-          >
-            <Select.Search
-              placeholder="Rechercher par nom ou ville..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-            <Select.Content maxHeight="300px">
-              {structureOptions
-                .filter((opt) =>
-                  searchQuery
-                    ? opt.searchableText.includes(normalizeString(searchQuery))
-                    : true
-                )
-                .map((opt) => (
-                  <Select.Option
-                    key={opt.id}
-                    value={opt.id}
-                    onClick={() => handleStructureSelect(opt.id)}
-                  >
-                    {opt.label}
-                  </Select.Option>
-                ))}
-              {structureOptions.filter((opt) =>
-                searchQuery
-                  ? opt.searchableText.includes(normalizeString(searchQuery))
-                  : true
-              ).length === 0 && (
-                  <Select.Empty>Aucune structure trouvée</Select.Empty>
-                )}
-            </Select.Content>
-          </Select>
+          <div className="fr-select-group">
+            <label className="fr-label" htmlFor="structure-select">
+              Accéder à une structure
+            </label>
+            <select
+              className="fr-select"
+              id="structure-select"
+              name="structure"
+              value=""
+              onChange={(e) => handleStructureSelect(e.target.value)}
+            >
+              <option value="" disabled>
+                Sélectionner une structure
+              </option>
+              {structureOptions.map((opt) => (
+                <option key={opt.id} value={opt.id}>
+                  {opt.label}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
       </Col>
       <Col xs="12" md="4" className="fr-mt-4w text-center">

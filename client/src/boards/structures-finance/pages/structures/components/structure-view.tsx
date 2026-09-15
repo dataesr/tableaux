@@ -23,6 +23,7 @@ import StructureNotExistsAlert from "./structure-not-exists-alert";
 import NoDataForYearAlert from "./no-data-for-year-alert";
 import MultipleStructuresSelector from "./multiple-structures-selector";
 import DefaultSkeleton from "../../../../../components/charts-skeletons/default";
+import { SectionYearProvider } from "../../../../../components/section-year-select";
 import Breadcrumb from "../../../components/breadcrumb";
 import { DEFAULT_REFERENCE_YEAR } from "../../../config/constants";
 
@@ -260,16 +261,20 @@ export default function StructureView() {
       <Container>
         <SectionNavigation
           activeSection={section}
-          years={years}
-          selectedYear={selectedYear}
           onSectionChange={handleSectionChange}
-          onYearChange={handleYearChange}
           data={detailData}
         />
       </Container>
 
       <Container as="section" className="fr-mt-4w" aria-label={section}>
-        {renderSectionContent()}
+        <SectionYearProvider
+          label="Année"
+          years={years.map(String)}
+          selectedYear={selectedYear}
+          onYearChange={handleYearChange}
+        >
+          {renderSectionContent()}
+        </SectionYearProvider>
       </Container>
     </main>
   );

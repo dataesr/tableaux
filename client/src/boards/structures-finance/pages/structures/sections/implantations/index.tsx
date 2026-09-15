@@ -7,6 +7,7 @@ import "leaflet/dist/leaflet.css";
 import { getCssColor } from "../../../../../../utils/colors";
 import "../styles.scss";
 import MetricDefinitionsTable from "../../../../components/metric-definitions/metric-definitions-table";
+import SectionYearSelect from "../../../../../../components/section-year-select";
 
 interface ImplantationsSectionProps {
   data: any;
@@ -110,10 +111,11 @@ export function ImplantationsSection({ data }: ImplantationsSectionProps) {
 
   return (
     <section id="section-implantations" aria-labelledby="section-implantations-title" className="section-container">
-      <div className="section-header fr-mb-4w">
+      <div className="section-header section-header--year fr-mb-4w">
         <Title as="h2" look="h5" id="section-implantations-title" className="section-header__title">
           Implantations géographiques
         </Title>
+        <SectionYearSelect />
       </div>
 
       {points.length > 0 && bounds && (

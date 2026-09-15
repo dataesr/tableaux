@@ -1,11 +1,9 @@
 import { useNavigate } from "react-router-dom";
 import { Row, Col, Container, Title } from "@dataesr/dsfr-plus";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { useFinanceYears } from "../../api";
 import { useFinanceEtablissements } from "./api";
-import Select from "../../../../components/select";
 import "./styles.scss";
-import { normalizeString } from "../../utils/utils";
 import { DEFAULT_REFERENCE_YEAR } from "../../config/constants";
 import mediaStructuresFinance from "../../../../assets/boards/structures-finance.svg";
 
@@ -61,7 +59,6 @@ function HeroSection() {
 
 function QuickAccessSection() {
   const navigate = useNavigate();
-  const [searchValue, setSearchValue] = useState("");
   const { data: yearsData } = useFinanceYears();
   const latestYear = (yearsData?.years || [])[0] || DEFAULT_REFERENCE_YEAR;
   const { data: etablissementsData } = useFinanceEtablissements(
@@ -74,17 +71,10 @@ function QuickAccessSection() {
     return etablissementsData
       .map((etab: any) => {
         const displayName = etab.nom || "";
-        const searchText = normalizeString(
-          [displayName, etab.champ_recherche, etab.type, etab.region]
-            .filter(Boolean)
-            .join(" ")
-        );
 
         return {
           id: etab.id,
           label: `${displayName}${etab.region ? ` — ${etab.region}` : ""}`,
-          searchableText: searchText,
-          subtitle: etab.type,
         };
       })
       .sort((a, b) => {
@@ -97,7 +87,6 @@ function QuickAccessSection() {
       navigate(
         `/structures-finance/etablissements?year=${DEFAULT_REFERENCE_YEAR}&type=tous&region=toutes&structureId=${etablissementId}`
       );
-      setSearchValue("");
     }
   };
 
@@ -115,46 +104,27 @@ function QuickAccessSection() {
                 établissement
               </p>
               <div className="accueil-quick-access__search">
-                <Select
-                  label="Rechercher un établissement..."
-                  icon="search-line"
-                  size="md"
-                  fullWidth
-                >
-                  <Select.Search
-                    placeholder="Rechercher un établissement..."
-                    value={searchValue}
-                    onChange={(e) => setSearchValue(e.target.value)}
-                  />
-                  <Select.Content maxHeight="300px">
-                    {etablissementOptions
-                      .filter((opt) =>
-                        searchValue
-                          ? opt.searchableText.includes(
-                            normalizeString(searchValue)
-                          )
-                          : true
-                      )
-                      .map((opt) => (
-                        <Select.Option
-                          key={opt.id}
-                          value={opt.id}
-                          onClick={() => handleEtablissementSelect(opt.id)}
-                        >
-                          {opt.label}
-                        </Select.Option>
-                      ))}
-                    {etablissementOptions.filter((opt) =>
-                      searchValue
-                        ? opt.searchableText.includes(
-                          normalizeString(searchValue)
-                        )
-                        : true
-                    ).length === 0 && (
-                        <Select.Empty>Aucun établissement trouvé</Select.Empty>
-                      )}
-                  </Select.Content>
-                </Select>
+                <div className="fr-select-group">
+                  <label className="fr-label" htmlFor="accueil-etablissement">
+                    Accéder à un établissement
+                  </label>
+                  <select
+                    className="fr-select"
+                    id="accueil-etablissement"
+                    name="etablissement"
+                    value=""
+                    onChange={(e) => handleEtablissementSelect(e.target.value)}
+                  >
+                    <option value="" disabled>
+                      Sélectionner un établissement
+                    </option>
+                    {etablissementOptions.map((opt) => (
+                      <option key={opt.id} value={opt.id}>
+                        {opt.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               </div>
             </div>
           </Col>

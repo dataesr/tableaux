@@ -8,6 +8,7 @@ import TreemapSectionsChart from "./charts/treemap-sections";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 import FmMetricDefinitionsTable from "../../../../components/metric-definitions";
 import { CNU_GROUPS } from "../../../definitions/cnu-data";
+import SectionYearSelect from "../../../../../../components/section-year-select";
 
 interface GroupesCnuSectionProps {
     viewType: ViewType;
@@ -75,10 +76,11 @@ export default function GroupesCnuSection({ viewType, selectedId, selectedYear }
 
     return (
         <>
-            <div className="section-header fr-mb-5w">
+            <div className="section-header section-header--year fr-mb-5w">
                 <Title as="h2" look="h5" id="section-groupes-cnu-title" className="section-header__title">
                     Groupes CNU
                 </Title>
+                <SectionYearSelect />
             </div>
 
             {Array.from({ length: Math.ceil(groups.length / 4) }, (_, rowIdx) => {

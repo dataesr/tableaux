@@ -6,6 +6,7 @@ import "../styles.scss";
 import MetricDefinitionsTable from "../../../../components/metric-definitions/metric-definitions-table";
 import { SectionBudgetWarning } from "../../../../components/budget-warning";
 import { getCssColor } from "../../../../../../utils/colors";
+import SectionYearSelect from "../../../../../../components/section-year-select";
 
 const euro = (n?: number) =>
   n != null ? n.toLocaleString("fr-FR", { maximumFractionDigits: 0 }) : "—";
@@ -25,7 +26,7 @@ export function FinancementsSection({
       aria-labelledby="section-financements-title"
       className="section-container"
     >
-      <div className="section-header fr-mb-4w">
+      <div className="section-header section-header--year fr-mb-4w">
         <Title
           as="h2"
           look="h5"
@@ -34,6 +35,7 @@ export function FinancementsSection({
         >
           Les ressources de l'établissement
         </Title>
+        <SectionYearSelect />
       </div>
 
       <SectionBudgetWarning

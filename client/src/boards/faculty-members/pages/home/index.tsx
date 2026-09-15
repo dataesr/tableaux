@@ -1,19 +1,13 @@
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Row, Col, Container, Title } from "@dataesr/dsfr-plus";
 import { useFacultyFilters, useFacultyYears } from "../structures/api";
 import FranceMap from "../structures/components/france-map";
-import Select from "../../../../components/select";
 import mediaFacultyMembers from "../../../../assets/boards/faculty-members.svg";
 import "./styles.scss";
 
-function normalizeString(str: string) {
-  return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
-}
-
 function HeroSection() {
   const navigate = useNavigate();
-  const [searchValue, setSearchValue] = useState("");
 
   const { data: structuresData } = useFacultyFilters("structure");
 
@@ -27,18 +21,11 @@ function HeroSection() {
         return true;
       })
       .sort((a: any, b: any) => a.label.localeCompare(b.label, "fr", { sensitivity: "base" }))
-      .map((s: any) => ({ id: s.id, label: s.label, searchable: normalizeString(s.label) }));
+      .map((s: any) => ({ id: s.id, label: s.label }));
   }, [structuresData]);
-
-  const filtered = useMemo(() => {
-    if (!searchValue.trim()) return etablissementOptions;
-    const q = normalizeString(searchValue);
-    return etablissementOptions.filter((o) => o.searchable.includes(q));
-  }, [etablissementOptions, searchValue]);
 
   const handleSelect = (id: string) => {
     navigate(`/personnel-enseignant/etablissements?structureId=${encodeURIComponent(id)}&section=enseignants-chercheurs`);
-    setSearchValue("");
   };
 
   return (
@@ -70,32 +57,24 @@ function HeroSection() {
         </Row>
         <Row gutters>
           <Col xs="12" lg="6">
-            <Select
-              label="Rechercher un établissement..."
-              icon="search-line"
-              size="md"
-              fullWidth
-            >
-              <Select.Search
-                placeholder="Rechercher un établissement..."
-                value={searchValue}
-                onChange={(e) => setSearchValue(e.target.value)}
-              />
-              <Select.Content maxHeight="300px">
-                {filtered.map((opt) => (
-                  <Select.Option
-                    key={opt.id}
-                    value={opt.id}
-                    onClick={() => handleSelect(opt.id)}
-                  >
+            <div className="fr-select-group">
+              <select
+                className="fr-select"
+                id="fm-accueil-etablissement"
+                name="etablissement"
+                value=""
+                onChange={(e) => handleSelect(e.target.value)}
+              >
+                <option value="" disabled>
+                  Sélectionner un établissement
+                </option>
+                {etablissementOptions.map((opt) => (
+                  <option key={opt.id} value={opt.id}>
                     {opt.label}
-                  </Select.Option>
+                  </option>
                 ))}
-                {filtered.length === 0 && (
-                  <Select.Empty>Aucun établissement trouvé</Select.Empty>
-                )}
-              </Select.Content>
-            </Select>
+              </select>
+            </div>
           </Col>
           <Col xs="12" lg="6">
             <div className="fm-accueil-hero__cta">

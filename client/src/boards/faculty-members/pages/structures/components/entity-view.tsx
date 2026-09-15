@@ -7,6 +7,7 @@ import PersonnelsSection from "../sections/personnels";
 import GroupesCnuSection from "../sections/groupes-cnu";
 import ComparaisonSection from "../sections/positionning";
 import DefaultSkeleton from "../../../../../components/charts-skeletons/default";
+import { SectionYearProvider } from "../../../../../components/section-year-select";
 import Breadcrumb from "../../../components/breadcrumb";
 import { IncompleteYearWarning } from "../../../components/incomplete-year";
 import EvolutionsSection from "../sections/analyses";
@@ -174,16 +175,20 @@ export default function EntityView({ viewType }: Props) {
                 <SectionNavigation
                     activeSection={section}
                     viewType={viewType}
-                    years={years}
-                    selectedYear={selectedYear}
                     onSectionChange={handleSectionChange}
-                    onYearChange={handleYearChange}
                 />
             </Container>
 
             <Container className="fr-py-4w">
                 <IncompleteYearWarning selectedYear={selectedYear} latestCompleteYear={latestCompleteYear} />
-                {renderSectionContent()}
+                <SectionYearProvider
+                    label="Année universitaire"
+                    years={years}
+                    selectedYear={selectedYear}
+                    onYearChange={handleYearChange}
+                >
+                    {renderSectionContent()}
+                </SectionYearProvider>
             </Container>
         </main>
     );

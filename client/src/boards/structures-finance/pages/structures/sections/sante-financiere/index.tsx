@@ -7,6 +7,7 @@ import MetricDefinitionsTable from "../../../../components/metric-definitions/me
 import { useBudgetInfo } from "../../../../components/budget-warning";
 import { getCssColor } from "../../../../../../utils/colors";
 import { useMetricEvolution } from "../../api";
+import SectionYearSelect from "../../../../../../components/section-year-select";
 
 type FinanceStatus = "alerte" | "vigilance" | "normal";
 
@@ -111,7 +112,7 @@ export function SanteFinancierSection({ data }: SanteFinancierSectionProps) {
       aria-labelledby="section-sante-financier-title"
       className="section-container"
     >
-      <div className="section-header fr-mb-4w">
+      <div className="section-header section-header--year fr-mb-4w">
         <Title
           as="h2"
           look="h5"
@@ -120,6 +121,7 @@ export function SanteFinancierSection({ data }: SanteFinancierSectionProps) {
         >
           Equilibre financier
         </Title>
+        <SectionYearSelect />
       </div>
 
       {(hasBudgetData || data?.is_rce || data?.contexte_etab) && (

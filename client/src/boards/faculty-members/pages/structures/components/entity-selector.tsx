@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { Col, Container, Row, Text, Title } from "@dataesr/dsfr-plus";
 import CardSimple from "../../../../../components/card-simple";
@@ -6,43 +6,34 @@ import { ViewType, useFacultyFilters, useFacultyYears } from "../api";
 import Breadcrumb from "../../../components/breadcrumb";
 import DefaultSkeleton from "../../../../../components/charts-skeletons/default";
 import FranceMap from "./france-map";
-import Select from "../../../../../components/select";
 import { getParamKey, formatDisciplineLabel } from "../utils";
 
-const VIEW_CONFIG: Record<ViewType, { title: string; searchLabel: string; searchPlaceholder: string; resultLabel: string }> = {
+const VIEW_CONFIG: Record<ViewType, { title: string; selectLabel: string; selectPlaceholder: string; resultLabel: string }> = {
     structure: {
         title: "Sélectionnez un établissement",
-        searchLabel: "Rechercher un établissement",
-        searchPlaceholder: "Rechercher un établissement...",
+        selectLabel: "Accéder à un établissement",
+        selectPlaceholder: "Sélectionner un établissement",
         resultLabel: "établissement",
     },
     discipline: {
         title: "Sélectionnez une discipline",
-        searchLabel: "Rechercher une discipline",
-        searchPlaceholder: "Rechercher une discipline...",
+        selectLabel: "Accéder à une discipline",
+        selectPlaceholder: "Sélectionner une discipline",
         resultLabel: "discipline",
     },
     region: {
         title: "Sélectionnez une région",
-        searchLabel: "Rechercher une région",
-        searchPlaceholder: "Rechercher une région...",
+        selectLabel: "Accéder à une région",
+        selectPlaceholder: "Sélectionner une région",
         resultLabel: "région",
     },
     academie: {
         title: "Sélectionnez une académie",
-        searchLabel: "Rechercher une académie",
-        searchPlaceholder: "Rechercher une académie...",
+        selectLabel: "Accéder à une académie",
+        selectPlaceholder: "Sélectionner une académie",
         resultLabel: "académie",
     },
 };
-
-function normalizeString(str: string) {
-    return str
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
-        .toLowerCase()
-        .trim();
-}
 
 interface Props {
     viewType: ViewType;
@@ -51,7 +42,6 @@ interface Props {
 export default function EntitySelector({ viewType }: Props) {
     const [, setSearchParams] = useSearchParams();
     const navigate = useNavigate();
-    const [searchQuery, setSearchQuery] = useState("");
     const config = VIEW_CONFIG[viewType];
 
     const showMap = viewType === "region";
@@ -78,16 +68,6 @@ export default function EntitySelector({ viewType }: Props) {
     const displayLabel = (s: any): string =>
         viewType === "discipline" ? formatDisciplineLabel(s.label) : s.label;
 
-    const filteredItems = useMemo(() => {
-        const query = searchQuery.trim();
-        if (!query) return items;
-        const tokens = normalizeString(query).split(/\s+/).filter(Boolean);
-        return items.filter((s: any) => {
-            const haystack = normalizeString(displayLabel(s));
-            return tokens.every((t) => haystack.includes(t));
-        });
-    }, [items, searchQuery, viewType]);
-
     const handleSelect = (id: string) => {
         const paramKey = getParamKey(viewType);
 
@@ -95,8 +75,6 @@ export default function EntitySelector({ viewType }: Props) {
             [paramKey]: id,
             section: "enseignants-chercheurs",
         });
-
-        setSearchQuery("");
     };
 
     const handleMapRegionClick = (_geoId: string) => {
@@ -146,45 +124,40 @@ export default function EntitySelector({ viewType }: Props) {
                                 <Title as="h1" look="h4" className="fr-mb-2w">
                                     {config.title}
                                 </Title>
-                                <Select
-                                    label={config.searchLabel}
-                                    icon="search-line"
-                                    size="md"
-                                    fullWidth
-                                >
-                                    <Select.Search
-                                        placeholder={config.searchPlaceholder}
-                                        value={searchQuery}
-                                        onChange={(e) => setSearchQuery(e.target.value)}
-                                    />
-                                    <Select.Content maxHeight="320px">
-                                        {filteredItems.map((item: any) => (
-                                            <Select.Option
-                                                key={item.id}
-                                                value={item.id}
-                                                onClick={() => handleSelect(item.id)}
-                                            >
+                                <div className="fr-select-group">
+                                    <label className="fr-label" htmlFor="fm-entity-select">
+                                        {config.selectLabel}
+                                    </label>
+                                    <select
+                                        className="fr-select"
+                                        id="fm-entity-select"
+                                        name="entity"
+                                        value=""
+                                        onChange={(e) => handleSelect(e.target.value)}
+                                    >
+                                        <option value="" disabled>
+                                            {config.selectPlaceholder}
+                                        </option>
+                                        {items.map((item: any) => (
+                                            <option key={item.id} value={item.id}>
                                                 {displayLabel(item)}
-                                            </Select.Option>
+                                            </option>
                                         ))}
-                                        {filteredItems.length === 0 && (
-                                            <Select.Empty>Aucun résultat trouvé</Select.Empty>
-                                        )}
-                                    </Select.Content>
-                                </Select>
+                                    </select>
+                                </div>
                             </Col>
                         </Row>
                     )}
                 </Container>
             </Container>
 
-            {!isLoading && !showMap && filteredItems.length > 0 && (
+            {!isLoading && !showMap && items.length > 0 && (
                 <Container as="section" className="fr-py-4w" aria-label="Résultats">
                     <Text size="sm" className="fr-mb-2w" aria-live="polite">
-                        {filteredItems.length} {config.resultLabel}{filteredItems.length > 1 ? "s" : ""} trouvé{filteredItems.length > 1 ? "s" : ""}
+                        {items.length} {config.resultLabel}{items.length > 1 ? "s" : ""} trouvé{items.length > 1 ? "s" : ""}
                     </Text>
                     <Row gutters>
-                        {filteredItems.map((item: any) => (
+                        {items.map((item: any) => (
                             <Col key={item.id} xs="12" md="6" lg="4">
                                 <CardSimple
                                     title={displayLabel(item)}

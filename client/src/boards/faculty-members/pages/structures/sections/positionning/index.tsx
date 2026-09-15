@@ -1,6 +1,7 @@
 import { Col, Row, Text, Title } from "@dataesr/dsfr-plus";
 import { type ViewType } from "../../api";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
+import SectionYearSelect from "../../../../../../components/section-year-select";
 import { usePositioningParams } from "./hooks/usePositioningParams";
 import { useFacultyPositioningData } from "./hooks/useFacultyPositioningData";
 import AnalysisFilter from "./components/analysis-filter";
@@ -38,10 +39,11 @@ export default function ComparaisonSection({ viewType, selectedId, selectedYear 
     if (!allItems.length) {
         return (
             <section id="section-comparaison" aria-labelledby="section-comparaison-title">
-                <div className="section-header fr-mb-4w">
+                <div className="section-header section-header--year fr-mb-4w">
                     <Title as="h2" look="h5" id="section-comparaison-title" className="section-header__title">
                         Positionnement de {entityName}
                     </Title>
+                    <SectionYearSelect />
                 </div>
                 <div className="fr-alert fr-alert--warning">
                     <Text>Les données de comparaison ne sont pas disponibles pour l'année sélectionnée.</Text>
@@ -52,13 +54,16 @@ export default function ComparaisonSection({ viewType, selectedId, selectedYear 
 
     return (
         <section id="section-comparaison" aria-labelledby="section-comparaison-title">
-            <div className="section-header fr-mb-4w">
-                <Title as="h2" look="h5" id="section-comparaison-title" className="section-header__title">
-                    Positionnement de {entityName}
-                </Title>
-                <Text className="fr-text--sm" style={{ color: "var(--text-mention-grey)" }}>
-                    Comparez {entityLabel} avec d'autres entités de même nature.
-                </Text>
+            <div className="section-header section-header--year fr-mb-4w">
+                <div className="section-header__title">
+                    <Title as="h2" look="h5" id="section-comparaison-title" className="fr-mb-1w">
+                        Positionnement de {entityName}
+                    </Title>
+                    <Text className="fr-text--sm fr-mb-0" style={{ color: "var(--text-mention-grey)" }}>
+                        Comparez {entityLabel} avec d'autres entités de même nature.
+                    </Text>
+                </div>
+                <SectionYearSelect />
             </div>
 
             <Row gutters>
