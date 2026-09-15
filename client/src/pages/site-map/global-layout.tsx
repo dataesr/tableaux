@@ -14,7 +14,7 @@ export default function GlobalLayout() {
   const [searchParams, setSearchParams] = useSearchParams();
   const currentLang = searchParams.get("language") || "fr";
 
-  useTitle(getI18nLabel(i18n, "pageTitle", currentLang));
+  useTitle(getI18nLabel(i18n, "site-map", currentLang));
 
   useEffect(() => {
     if (!searchParams.get("language")) {
@@ -35,7 +35,7 @@ export default function GlobalLayout() {
                   <Service
                     href="/"
                     name="#dataESR tableaux de bord"
-                    tagline={getI18nLabel(i18n, "pageTitle", currentLang)}
+                    tagline={getI18nLabel(i18n, "site-map", currentLang)}
                   />
                 </div>
               </div>
@@ -55,7 +55,7 @@ export default function GlobalLayout() {
               id="button-2168"
               className="fr-btn--close fr-btn"
             >
-              {getI18nLabel(i18n, "legal-notice", currentLang)}
+              {getI18nLabel(i18n, "site-map", currentLang)}
             </button>
             <div className="fr-header__menu-links"></div>
           </div>
