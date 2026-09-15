@@ -32,3 +32,10 @@ To deploy in production, simply run this command from your staging branch :
 
 `npm run deploy:[patch|minor|major]`
 ⚠️ Obviously, only members of the [dataesr organization](https://github.com/dataesr/) have rights to push on the repo.
+
+## How to push a new boards in prod
+
+1. Add the new board in the Mongo of prod, in the database "tableaux-prod", in the collection "board".
+2. Move the dedicated part in the router /client/src/commons/router.tsx, out of the `!isInProduction()` section.
+3. Add the needed charts into /client/src/boards/integration/charts-registry.tsx
+4. Push in prod (cf. previous paragraph)
