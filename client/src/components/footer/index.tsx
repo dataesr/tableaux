@@ -13,8 +13,6 @@ const LANGUAGE_LABELS: Record<string, string> = {
   en: "English",
 };
 
-const isProd = isInProduction();
-
 
 export default function Footer({ href = "/", sitemapHref, title = "Accueil - Tableaux" }: { href?: string; sitemapHref?: string; title?: string }) {
   const location = useLocation();
@@ -72,17 +70,17 @@ export default function Footer({ href = "/", sitemapHref, title = "Accueil - Tab
                 {getI18nLabel(i18n, "sitemap")}
               </a>
             </li>
-            {!isProd && <li className="fr-footer__bottom-item">
+            {!isInProduction() && <li className="fr-footer__bottom-item">
               <a className="fr-footer__bottom-link" href="/mentions-legales" title={getI18nLabel(i18n, "legalNotice")}>
                 {getI18nLabel(i18n, "legalNotice")}
               </a>
             </li>}
-            {!isProd && <li className="fr-footer__bottom-item">
+            {!isInProduction() && <li className="fr-footer__bottom-item">
               <a className="fr-footer__bottom-link" href="/donnees-personnelles" title={getI18nLabel(i18n, "personalData")}>
                 {getI18nLabel(i18n, "personalData")}
               </a>
             </li>}
-            {!isProd && <li className="fr-footer__bottom-item">
+            {!isInProduction() && <li className="fr-footer__bottom-item">
               <a className="fr-footer__bottom-link" href="/cgu" title={getI18nLabel(i18n, "cgu")}>
                 {getI18nLabel(i18n, "cgu")}
               </a>

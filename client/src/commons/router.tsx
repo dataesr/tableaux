@@ -1,46 +1,45 @@
-import { lazy, Suspense } from "react";
-import { Navigate, Route, Routes } from "react-router-dom";
-import { useTitle } from "../hooks/usePageTitle.tsx";
-import { isInProduction } from "../utils.tsx";
+import { lazy, Suspense } from "react"
+import { Navigate, Route, Routes } from "react-router-dom"
 
-const AccessibilityLayout = lazy(() => import("../components/accessibility/layouts/global-layout.tsx"));
-const AccessibilityPage = lazy(() => import("../components/accessibility/page.tsx"));
-const AdminRoutes = lazy(() => import("../boards/admin/routes.tsx"));
-const AtlasRoutes = lazy(() => import("../boards/atlas/routes.tsx"));
-const CGULayout = lazy(() => import("../pages/cgu/global-layout.tsx"));
-const CGUPage = lazy(() => import("../pages/cgu/index.tsx"));
-const ContactLayout = lazy(() => import("../pages/contact/global-layout.tsx"));
-const ContactPage = lazy(() => import("../pages/contact/index.tsx"));
-const CookiePolicyPage = lazy(() => import("../components/cookies/cookie-policy-page/index.tsx"));
-const EuropeanProjectsRoutes = lazy(() => import("../boards/european-projects/routes.tsx"));
-const FacultyMembersRoutes = lazy(() => import("../boards/faculty-members/routes.tsx"));
-const FundingsRoutes = lazy(() => import("../boards/financements-par-aap/routes.tsx"));
-const GraduatesRoutes = lazy(() => import("../boards/graduates/routes.tsx"));
-const HomePage = lazy(() => import("../boards/home-page.tsx"));
-const Integration = lazy(() => import("../boards/integration/index.tsx"));
-const LegalNoticeLayout = lazy(() => import("../pages/legal-notice/global-layout.tsx"));
-const LegalNoticePage = lazy(() => import("../pages/legal-notice/index.tsx"));
-const NotFoundPage = lazy(() => import("../components/not-found-page.tsx"));
-const OpenAlexRoutes = lazy(() => import("../boards/open-alex/routes.tsx"));
-const OutcomesRoutes = lazy(() => import("../boards/outcomes/routes.tsx"));
-const PersonalDataLayout = lazy(() => import("../pages/personal-data/global-layout.tsx"));
-const PersonalDataPage = lazy(() => import("../pages/personal-data/index.tsx"));
-const SitemapLayout = lazy(() => import("../pages/site-map/global-layout.tsx"));
-const SitemapPage = lazy(() => import("../pages/site-map/sitemap-page.tsx"));
-const StructuresFinanceRoutes = lazy(() => import("../boards/structures-finance/routes.tsx"));
-const TableauxDocRoutes = lazy(() => import("../boards/tableaux-doc/routes.tsx"));
-const TedsRoutes = lazy(() => import("../boards/teds/routes.tsx"));
-const TemplateRoutes = lazy(() => import("../boards/template/routes.tsx"));
-const ValorisationRechercheInnovationRoutes = lazy(() => import("../boards/valorisation-recherche-innovation/routes.tsx"));
+import { useTitle } from "../hooks/usePageTitle.tsx"
+import { isInProduction } from "../utils.tsx"
+
+const AccessibilityLayout = lazy(() => import("../components/accessibility/layouts/global-layout.tsx"))
+const AccessibilityPage = lazy(() => import("../components/accessibility/page.tsx"))
+const AdminRoutes = lazy(() => import("../boards/admin/routes.tsx"))
+const AtlasRoutes = lazy(() => import("../boards/atlas/routes.tsx"))
+const CGULayout = lazy(() => import("../pages/cgu/global-layout.tsx"))
+const CGUPage = lazy(() => import("../pages/cgu/index.tsx"))
+const ContactLayout = lazy(() => import("../pages/contact/global-layout.tsx"))
+const ContactPage = lazy(() => import("../pages/contact/index.tsx"))
+const CookiePolicyPage = lazy(() => import("../components/cookies/cookie-policy-page/index.tsx"))
+const DevenirEtudiantsRoutes = lazy(() => import("../boards/devenir-etudiants/routes.tsx"))
+const EuropeanProjectsRoutes = lazy(() => import("../boards/european-projects/routes.tsx"))
+const FundingsRoutes = lazy(() => import("../boards/financements-par-aap/routes.tsx"))
+const GraduatesRoutes = lazy(() => import("../boards/graduates/routes.tsx"))
+const HomePage = lazy(() => import("../boards/home-page.tsx"))
+const Integration = lazy(() => import("../boards/integration/index.tsx"))
+const LegalNoticeLayout = lazy(() => import("../pages/legal-notice/global-layout.tsx"))
+const LegalNoticePage = lazy(() => import("../pages/legal-notice/index.tsx"))
+const NotFoundPage = lazy(() => import("../components/not-found-page.tsx"))
+const OpenAlexRoutes = lazy(() => import("../boards/open-alex/routes.tsx"))
+const PersonalDataLayout = lazy(() => import("../pages/personal-data/global-layout.tsx"))
+const PersonalDataPage = lazy(() => import("../pages/personal-data/index.tsx"))
+const PersonnelEnseignantRoutes = lazy(() => import("../boards/personnel-enseignant/routes.tsx"))
+const SitemapLayout = lazy(() => import("../pages/site-map/global-layout.tsx"))
+const SitemapPage = lazy(() => import("../pages/site-map/sitemap-page.tsx"))
+const StructuresFinanceRoutes = lazy(() => import("../boards/structures-finance/routes.tsx"))
+const TableauxDocRoutes = lazy(() => import("../boards/tableaux-doc/routes.tsx"))
+const TedsRoutes = lazy(() => import("../boards/teds/routes.tsx"))
+const TemplateRoutes = lazy(() => import("../boards/template/routes.tsx"))
+const ValorisationRechercheInnovationRoutes = lazy(() => import("../boards/valorisation-recherche-innovation/routes.tsx"))
 
 const RouteWithTitle = ({ titleKey, element }) => {
-  useTitle(titleKey);
-  return element;
-};
+  useTitle(titleKey)
+  return element
+}
 
 export default function Router() {
-  const isProd = isInProduction();
-
   return (
     <Routes>
       <Route
@@ -171,7 +170,7 @@ export default function Router() {
         path="/devenir-etudiants/*"
         element={
           <Suspense>
-            <OutcomesRoutes />
+            <DevenirEtudiantsRoutes />
           </Suspense>
         }
       />
@@ -202,9 +201,8 @@ export default function Router() {
           </Suspense>
         }
       />
-      {/* Before adding a dashboard in production, add your dashboard in the mongoDB collection "Board" */}
 
-      {!isProd && (
+      {!isInProduction() && (
         <>
           <Route
             path="/admin/*"
@@ -251,7 +249,7 @@ export default function Router() {
             path="/personnel-enseignant/*"
             element={
               <Suspense>
-                <FacultyMembersRoutes />
+                <PersonnelEnseignantRoutes />
               </Suspense>
             }
           />
@@ -300,5 +298,5 @@ export default function Router() {
         }
       />
     </Routes>
-  );
+  )
 }
