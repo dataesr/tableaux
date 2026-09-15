@@ -179,19 +179,19 @@ export const chartsRegistry = {
 
   // Outcomes
   outcomesFluxSankey: lazy(
-    () => import("../outcomes/pages/flux/charts/sankey")
+    () => import("../devenir-etudiants/pages/flux/charts/sankey")
   ),
   outcomesPhdDonut: lazy(
-    () => import("../outcomes/pages/plus-haut-diplome/charts/diploma-donut")
+    () => import("../devenir-etudiants/pages/plus-haut-diplome/charts/diploma-donut")
   ),
   outcomesRepartition: lazy(
-    () => import("../outcomes/pages/repartition/charts/repartition-column")
+    () => import("../devenir-etudiants/pages/repartition/charts/repartition-column")
   ),
   outcomesCroisementsHeatmap: lazy(
-    () => import("../outcomes/pages/croisements/heatmap")
+    () => import("../devenir-etudiants/pages/croisements/heatmap")
   ),
   outcomesComparaisonProfils: lazy(
-    () => import("../outcomes/pages/comparaison-profils")
+    () => import("../devenir-etudiants/pages/comparaison-profils")
   ),
 };
 
