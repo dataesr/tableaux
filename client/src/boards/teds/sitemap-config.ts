@@ -2,7 +2,7 @@ import type { BoardSitemapConfig } from "../../pages/site-map/board-sitemap-page
 
 const BASE = "/teds"
 
-const TEDS_SITEMAP: BoardSitemapConfig = {
+export const SITEMAP: BoardSitemapConfig = {
   boardId: "teds",
   boardName: "TEDS",
   boardHomeHref: `${BASE}/home`,
@@ -14,5 +14,3 @@ const TEDS_SITEMAP: BoardSitemapConfig = {
     { label: "Plan du site", href: "/plan-du-site?from=teds" },
   ],
 }
-
-export default TEDS_SITEMAP

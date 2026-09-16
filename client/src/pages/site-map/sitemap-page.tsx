@@ -82,8 +82,8 @@ export default async function SitemapPage() {
 
   const boardConfig = await import(`../../boards/${searchParams.get("from")}/sitemap-config.ts`)
 
-  if (boardConfig?.default) {
-    return <BoardSitemapPage {...boardConfig.default} />;
+  if (boardConfig?.SITEMAP) {
+    return <BoardSitemapPage {...boardConfig.SITEMAP} />
   }
 
   return (

@@ -1,6 +1,6 @@
 import type { BoardSitemapConfig } from "../../pages/site-map/board-sitemap-page"
 
-const GRADUATES_SITEMAP: BoardSitemapConfig = {
+export const SITEMAP: BoardSitemapConfig = {
   boardId: "graduates",
   boardName: "Diplômés",
   boardHomeHref: "/graduates",
@@ -8,5 +8,3 @@ const GRADUATES_SITEMAP: BoardSitemapConfig = {
     "Retrouvez l'ensemble des pages du tableau de bord des diplômés.",
   links: [{ label: "Tableau de bord", href: "/graduates" }],
 }
-
-export default GRADUATES_SITEMAP

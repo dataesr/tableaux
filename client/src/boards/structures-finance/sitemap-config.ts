@@ -2,7 +2,7 @@ import type { BoardSitemapConfig } from "../../pages/site-map/board-sitemap-page
 
 const BASE = "/structures-finance"
 
-const STRUCTURES_FINANCE_SITEMAP: BoardSitemapConfig = {
+export const SITEMAP: BoardSitemapConfig = {
   boardId: "structures-finance",
   boardName: "Finance des établissements",
   boardHomeHref: `${BASE}/accueil`,
@@ -17,5 +17,3 @@ const STRUCTURES_FINANCE_SITEMAP: BoardSitemapConfig = {
     { label: "Plan du site", href: "/plan-du-site?from=structures-finance" },
   ],
 }
-
-export default STRUCTURES_FINANCE_SITEMAP

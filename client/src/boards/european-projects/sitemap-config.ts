@@ -2,7 +2,7 @@ import type { BoardSitemapConfig } from "../../pages/site-map/board-sitemap-page
 
 const BASE = "/european-projects"
 
-const EUROPEAN_PROJECTS_SITEMAP: BoardSitemapConfig = {
+export const SITEMAP: BoardSitemapConfig = {
   boardId: "european-projects",
   boardName: "Projets européens",
   boardHomeHref: `${BASE}/accueil`,
@@ -23,5 +23,3 @@ const EUROPEAN_PROJECTS_SITEMAP: BoardSitemapConfig = {
     { label: "Informations", href: `${BASE}/informations` },
   ],
 }
-
-export default EUROPEAN_PROJECTS_SITEMAP

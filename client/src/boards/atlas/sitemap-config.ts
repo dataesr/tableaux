@@ -2,7 +2,7 @@ import type { BoardSitemapConfig } from "../../pages/site-map/board-sitemap-page
 
 const BASE = "/atlas"
 
-const ATLAS_SITEMAP: BoardSitemapConfig = {
+export const SITEMAP: BoardSitemapConfig = {
   boardId: "atlas",
   boardName: "Atlas des effectifs étudiants",
   boardHomeHref: `${BASE}/general`,
@@ -20,5 +20,3 @@ const ATLAS_SITEMAP: BoardSitemapConfig = {
     { label: "Méthodologie", href: `${BASE}/methodologie` },
   ],
 }
-
-export default ATLAS_SITEMAP

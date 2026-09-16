@@ -2,7 +2,7 @@ import type { BoardSitemapConfig } from "../../pages/site-map/board-sitemap-page
 
 const BASE = "/valorisation-recherche-innovation"
 
-const VALORISATION_RECHERCHE_INNOVATION_SITEMAP: BoardSitemapConfig = {
+export const SITEMAP: BoardSitemapConfig = {
   boardId: "valorisation-recherche-innovation",
   boardName: "Valorisation, recherche et innovation",
   boardHomeHref: `${BASE}/accueil`,
@@ -13,5 +13,3 @@ const VALORISATION_RECHERCHE_INNOVATION_SITEMAP: BoardSitemapConfig = {
     { label: "Par établissement", href: `${BASE}/etablissement` },
   ],
 }
-
-export default VALORISATION_RECHERCHE_INNOVATION_SITEMAP

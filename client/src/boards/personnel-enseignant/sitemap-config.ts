@@ -2,7 +2,7 @@ import type { BoardSitemapConfig } from "../../pages/site-map/board-sitemap-page
 
 const BASE = "/personnel-enseignant"
 
-const FACULTY_MEMBERS_SITEMAP: BoardSitemapConfig = {
+export const SITEMAP: BoardSitemapConfig = {
   boardId: "faculty-members-v2",
   boardName: "Personnel enseignant",
   boardHomeHref: `${BASE}/accueil`,
@@ -17,5 +17,3 @@ const FACULTY_MEMBERS_SITEMAP: BoardSitemapConfig = {
     { label: "Définitions", href: `${BASE}/definitions` },
   ],
 }
-
-export default FACULTY_MEMBERS_SITEMAP

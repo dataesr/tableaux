@@ -2,7 +2,7 @@ import type { BoardSitemapConfig } from "../../pages/site-map/board-sitemap-page
 
 const BASE = "/devenir-etudiants/entrants-en-L1-2019"
 
-const OUTCOMES_SITEMAP: BoardSitemapConfig = {
+export const SITEMAP: BoardSitemapConfig = {
   boardId: "devenir-etudiants",
   boardName: "Le devenir des étudiants",
   boardHomeHref: `${BASE}/flux`,
@@ -16,5 +16,3 @@ const OUTCOMES_SITEMAP: BoardSitemapConfig = {
     { label: "Méthodologie", href: `${BASE}/methodologie` },
   ],
 }
-
-export default OUTCOMES_SITEMAP
