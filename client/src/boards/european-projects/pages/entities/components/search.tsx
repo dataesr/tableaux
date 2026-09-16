@@ -18,7 +18,7 @@ export default function SearchEntities() {
   const { data = [], isLoading } = useQuery({
     queryKey: ["ep/get-entities", "pillars", query, country_code],
     queryFn: async () => {
-      const response = await fetch(`http://localhost:3000/api/european-projects/collaborations/get-entities?entityName=${query}&country_code=${country_code}`);
+      const response = await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/european-projects/collaborations/get-entities?entityName=${query}&country_code=${country_code}`);
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }

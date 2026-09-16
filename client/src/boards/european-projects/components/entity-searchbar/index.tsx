@@ -21,7 +21,7 @@ export default function EntitySearchBar({ setEntityId }) {
   const { data: suggestedEntities = [] } = useQuery({
     queryKey: ["ep/get-suggested-entities", country_code],
     queryFn: async () => {
-      const response = await fetch(`http://localhost:3000/api/european-projects/collaborations/get-suggested-entities?country_code=${country_code}`);
+      const response = await fetch(`${import.meta.env.VITE_APP_SERVER_URL}/european-projects/collaborations/get-suggested-entities?country_code=${country_code}`);
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
@@ -33,7 +33,7 @@ export default function EntitySearchBar({ setEntityId }) {
     queryKey: ["ep/get-entities", "pillars", query, country_code],
     queryFn: async () => {
       const response = await fetch(
-        `http://localhost:3000/api/european-projects/collaborations/get-entities?entityName=${query}&country_code=${country_code}`
+        `${import.meta.env.VITE_APP_SERVER_URL}/european-projects/collaborations/get-entities?entityName=${query}&country_code=${country_code}`
       );
       if (!response.ok) {
         throw new Error("Network response was not ok");
