@@ -14,6 +14,6 @@ await client.connect().catch((e) => {
 });
 
 logger.info(`Connected to mongo database : ${mongoDbName}`);
-const db = client.db("accessibility");
+const db = client.db(mongoDbName);
 
 export { db as dbAccessibility };
