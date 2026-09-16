@@ -668,7 +668,7 @@ router.route("/admin/list-collection-fields").get(async (req, res) => {
   }
 });
 
-// Characterize a field - store all distinct values in cross-boards collection
+// Characterize a field - store all distinct values in shared collection
 router.route("/admin/characterize-field").post(async (req, res) => {
   const filters = checkQuery(
     req.body,
@@ -697,13 +697,13 @@ router.route("/admin/characterize-field").post(async (req, res) => {
       .distinct(field);
 
     // Supprimer les anciennes entrées pour ce champ
-    await db.collection("cross-boards").deleteMany({
+    await db.collection("shared").deleteMany({
       boardId,
       collectionId,
       field,
     });
 
-    // Insérer chaque valeur distincte dans la collection cross-boards
+    // Insérer chaque valeur distincte dans la collection "shared"
     const documents = distinctValues.map((value) => ({
       boardId,
       collectionId,
@@ -714,7 +714,7 @@ router.route("/admin/characterize-field").post(async (req, res) => {
     }));
 
     if (documents.length > 0) {
-      await db.collection("cross-boards").insertMany(documents);
+      await db.collection("shared").insertMany(documents);
     }
 
     res.json({
@@ -733,7 +733,7 @@ router.route("/admin/characterize-field").post(async (req, res) => {
   }
 });
 
-// Add manual characterization - add a single value to cross-boards collection
+// Add manual characterization - add a single value to "shared" collection
 router.route("/admin/add-manual-characterization").post(async (req, res) => {
   const filters = checkQuery(
     req.body,
@@ -743,7 +743,7 @@ router.route("/admin/add-manual-characterization").post(async (req, res) => {
   const { boardId, field, value, associatedRoute } = filters;
 
   try {
-    // Insérer la valeur dans la collection cross-boards
+    // Insérer la valeur dans la collection "shared"
     const document = {
       boardId,
       collectionId: null, // Pas de collection spécifique pour les champs manuels
@@ -754,7 +754,7 @@ router.route("/admin/add-manual-characterization").post(async (req, res) => {
       isManual: true, // Marquer comme ajout manuel
     };
 
-    await db.collection("cross-boards").insertOne(document);
+    await db.collection("shared").insertOne(document);
 
     res.json({
       message: "Manual characterization added successfully",
@@ -776,7 +776,7 @@ router.route("/admin/list-characterizations").get(async (req, res) => {
   try {
     // Récupérer toutes les caractérisations avec leurs valeurs
     const characterizations = await db
-      .collection("cross-boards")
+      .collection("shared")
       .aggregate([
         {
           $group: {
@@ -819,8 +819,8 @@ router.route("/admin/list-characterizations").get(async (req, res) => {
   }
 });
 
-// Search cross-boards by URL parameters
-router.route("/admin/search-cross-boards").get(async (req, res) => {
+// Search shared by URL parameters
+router.route("/admin/search-shared").get(async (req, res) => {
   try {
     // Récupérer tous les paramètres de l'URL
     const urlParams = req.query;
@@ -840,9 +840,9 @@ router.route("/admin/search-cross-boards").get(async (req, res) => {
       ],
     );
 
-    // Rechercher dans cross-boards toutes les correspondances
+    // Rechercher dans la collection "shared" toutes les correspondances
     const results = await db
-      .collection("cross-boards")
+      .collection("shared")
       .find({
         $or: searchQueries,
       })
@@ -874,9 +874,9 @@ router.route("/admin/search-cross-boards").get(async (req, res) => {
 
     res.json(Object.values(grouped));
   } catch (error) {
-    console.error("Error searching cross-boards:", error);
+    console.error("Error searching shared:", error);
     res.status(500).json({
-      error: "Unable to search cross-boards",
+      error: "Unable to search shared",
       details: error.message,
     });
   }
@@ -906,7 +906,7 @@ router.route("/admin/refresh-characterization").post(async (req, res) => {
     }
 
     // Supprimer les anciennes entrées pour ce champ
-    await db.collection("cross-boards").deleteMany({
+    await db.collection("shared").deleteMany({
       boardId,
       collectionId,
       field,
@@ -917,7 +917,7 @@ router.route("/admin/refresh-characterization").post(async (req, res) => {
       .collection(fullCollectionName)
       .distinct(field);
 
-    // Insérer chaque valeur distincte dans la collection cross-boards
+    // Insérer chaque valeur distincte dans la collection "shared"
     const documents = distinctValues.map((value) => ({
       boardId,
       collectionId,
@@ -928,7 +928,7 @@ router.route("/admin/refresh-characterization").post(async (req, res) => {
     }));
 
     if (documents.length > 0) {
-      await db.collection("cross-boards").insertMany(documents);
+      await db.collection("shared").insertMany(documents);
     }
 
     res.json({

@@ -57,10 +57,10 @@ export default function BoardsSuggestComponent() {
     queryFn: () => fetch(`${VITE_APP_SERVER_URL}/admin/list-dashboards`).then((response) => response.json()),
   });
 
-  // Rechercher dans cross-boards
+  // Rechercher dans shared
   const { data: suggestionsData, isLoading } = useQuery<CrossBoardResult[]>({
-    queryKey: ["search-cross-boards", queryString],
-    queryFn: () => fetch(`${VITE_APP_SERVER_URL}/admin/search-cross-boards?${queryString}`).then((response) => response.json()),
+    queryKey: ["search-shared", queryString],
+    queryFn: () => fetch(`${VITE_APP_SERVER_URL}/admin/search-shared?${queryString}`).then((response) => response.json()),
     enabled: !!queryString, // Ne faire la requête que si on a des paramètres
   });
 
