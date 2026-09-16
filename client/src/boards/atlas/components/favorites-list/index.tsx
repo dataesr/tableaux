@@ -44,7 +44,7 @@ function getTerritoiresList(
 export default function FavoritesList({ territoiresList }: { territoiresList: TerritoiresListProps[] }) {
   const [refresh, setRefresh] = useState(0);
   const urlParams = new URLSearchParams(window.location.search);
-  const shared = urlParams.get('shared') === 'true';
+  const shared: boolean = urlParams.has("shared");
   // get favorites from cookie
   const favorites = getSortedfavoriteIdsInCookie();
   const territoires = getTerritoiresList(territoiresList, favorites);
