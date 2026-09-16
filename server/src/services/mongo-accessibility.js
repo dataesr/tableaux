@@ -2,6 +2,7 @@ import { MongoClient } from "mongodb";
 
 import logger from "./logger.js";
 
+const mongoDbName = process.env.MONGO_DB_NAME_ACCESSIBILITY || "accessibility";
 const mongoUri = process.env.MONGO_URI || "mongodb://localhost:27017/";
 
 const client = new MongoClient(mongoUri);
@@ -12,7 +13,7 @@ await client.connect().catch((e) => {
   process.kill(process.pid, "SIGTERM");
 });
 
-logger.info("Connected to mongo database - accessibility");
+logger.info(`Connected to mongo database : ${mongoDbName}`);
 const db = client.db("accessibility");
 
-export { client, db };
+export { db as dbAccessibility };
