@@ -1,19 +1,21 @@
 import { Button, Col, Container, Modal, ModalContent, ModalTitle, Radio, Row, Title } from "@dataesr/dsfr-plus"
+import Highcharts from "highcharts/es-modules/masters/highcharts.src.js"
 import HighchartsReact from "highcharts-react-official"
 import "highcharts/es-modules/masters/highcharts-more.src.js"
-import Highcharts from "highcharts/es-modules/masters/highcharts.src.js"
-import "highcharts/es-modules/masters/modules/accessibility.src.js"
-import "highcharts/es-modules/masters/modules/export-data.src.js"
+import "highcharts/es-modules/masters/modules/heatmap.src.js";
 import "highcharts/es-modules/masters/modules/exporting.src.js"
-import "highcharts/es-modules/masters/modules/flowmap.src.js"
-import "highcharts/es-modules/masters/modules/heatmap.src.js"
+import "highcharts/es-modules/masters/modules/export-data.src.js"
 import "highcharts/es-modules/masters/modules/map.src.js"
+import "highcharts/es-modules/masters/modules/flowmap.src.js"
 import "highcharts/es-modules/masters/modules/offline-exporting.src.js"
-import "highcharts/es-modules/masters/modules/pattern-fill.src.js"
+import "highcharts/es-modules/masters/modules/variable-pie.src.js"
 import "highcharts/es-modules/masters/modules/sankey.src.js"
 import "highcharts/es-modules/masters/modules/treemap.src.js"
-import "highcharts/es-modules/masters/modules/variable-pie.src.js"
+import "highcharts/es-modules/masters/modules/pattern-fill.src.js"
 import "highcharts/es-modules/masters/modules/variwide.src.js"
+
+import "highcharts/es-modules/masters/modules/accessibility.src.js"
+
 import React, { useId, useRef, useState } from "react"
 import SyntaxHighlighter from "react-syntax-highlighter"
 import { a11yDark } from "react-syntax-highlighter/dist/esm/styles/hljs"
@@ -24,7 +26,7 @@ import ChartFooter from "../chart-footer"
 import CopyButton from "../copy-button"
 import i18n from "./i18n.json"
 
-import "./styles.scss"
+import "./styles.scss";
 
 
 // Configuration globale pour l'export offline
@@ -140,7 +142,6 @@ function MenuModal({
   setIsOpenIntegration,
 }) {
   useEscapeKey(isOpen, () => setIsOpen(false));
-  const [searchParams] = useSearchParams();
   const shareUrl = typeof window !== "undefined"
     ? new URL(window.location.pathname + window.location.search, VITE_APP_URL || window.location.origin).toString()
     : "";
@@ -149,7 +150,7 @@ function MenuModal({
     if (typeof config.title === "string") return config.title;
     if (typeof window === "undefined" || !config.title || typeof config.title !== "object") return "";
 
-    const language = searchParams.get("language") || "fr";
+    const language = new URLSearchParams(window.location.search).get("language") || "fr";
     const localizedTitle = config.title[language] ?? config.title.fr;
     return typeof localizedTitle === "string" ? localizedTitle : "";
   })();

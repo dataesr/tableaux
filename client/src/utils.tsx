@@ -121,7 +121,7 @@ function getFlagEmoji(countryCode) {
 async function getNeighbouringCountriesFromIso3(iso3: string) {
   if (!iso3) return [];
   try {
-    const baseUrl = VITE_APP_SERVER_URL || "http://localhost:3000/api";
+    const baseUrl = VITE_APP_SERVER_URL || "http://localhost:3000";
     const response = await fetch(`${baseUrl}/geo/get-from-iso3?iso3=${iso3}`);
     const data = await response.json();
     return data.borders ? data.borders.split(",") : [];

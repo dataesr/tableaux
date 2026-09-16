@@ -17,7 +17,7 @@ import "./styles.scss";
 export default function AtlasHeader() {
   const [searchParams] = useSearchParams();
   const geoId = searchParams.get("geo_id") || "";
-  const shared: Boolean = searchParams.has("shared");
+  const shared = searchParams.get("shared") === "true";
 
 
   useTitle("Tableaux - Atlas des effectifs étudiant-e-s");

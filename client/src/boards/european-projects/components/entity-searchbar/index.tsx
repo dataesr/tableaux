@@ -1,164 +1,165 @@
-import { Badge, BadgeGroup, Button, Col, Row, TextInput } from "@dataesr/dsfr-plus"
-import { useQuery } from "@tanstack/react-query"
-import { KeyboardEvent, useEffect, useRef, useState } from "react"
-import { useSearchParams } from "react-router-dom"
+import { useState, useEffect, useRef, KeyboardEvent } from "react";
+import { useSearchParams } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { Row, Col, TextInput, Button, Badge, BadgeGroup } from "@dataesr/dsfr-plus";
 
-import i18n from "./i18n.json"
-
-import "./styles.scss"
-
-const { VITE_APP_SERVER_URL } = import.meta.env
+import i18n from "./i18n.json";
+import "./styles.scss";
 
 export default function EntitySearchBar({ setEntityId }) {
-  const [searchParams] = useSearchParams()
-  const currentLang = searchParams.get("language") || "fr"
-  const country_code = searchParams.get("country_code") || "FRA"
-  const [query, setQuery] = useState("")
-  const [isVisible, setIsVisible] = useState(false)
-  const [selectedIndex, setSelectedIndex] = useState(-1)
-  const [selectedEntity, setSelectedEntity] = useState<{ entities_id: string; entities_name: string } | null>(null)
-  const resultsRef = useRef<HTMLDivElement>(null)
-  const inputRef = useRef<HTMLInputElement>(null)
+  const [searchParams] = useSearchParams();
+  const currentLang = searchParams.get("language") || "fr";
+  const country_code = searchParams.get("country_code") || "FRA";
+  const [query, setQuery] = useState("");
+  const [isVisible, setIsVisible] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState(-1);
+  const [selectedEntity, setSelectedEntity] = useState<{ entities_id: string; entities_name: string } | null>(null);
+  const resultsRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   // Récupération des suggestions depuis la base de données
   const { data: suggestedEntities = [] } = useQuery({
     queryKey: ["ep/get-suggested-entities", country_code],
     queryFn: async () => {
-      const response = await fetch(`${VITE_APP_SERVER_URL}/european-projects/collaborations/get-suggested-entities?country_code=${country_code}`)
+      const response = await fetch(`http://localhost:3000/api/european-projects/collaborations/get-suggested-entities?country_code=${country_code}`);
       if (!response.ok) {
-        throw new Error("Network response was not ok")
+        throw new Error("Network response was not ok");
       }
-      return response.json()
+      return response.json();
     },
-  })
+  });
 
   const { data = [], isLoading } = useQuery({
     queryKey: ["ep/get-entities", "pillars", query, country_code],
     queryFn: async () => {
       const response = await fetch(
-        `${VITE_APP_SERVER_URL}/european-projects/collaborations/get-entities?entityName=${query}&country_code=${country_code}`
-      )
+        `http://localhost:3000/api/european-projects/collaborations/get-entities?entityName=${query}&country_code=${country_code}`
+      );
       if (!response.ok) {
-        throw new Error("Network response was not ok")
+        throw new Error("Network response was not ok");
       }
-      return response.json()
+      return response.json();
     },
     enabled: query.length >= 3,
-  })
+  });
 
   useEffect(() => {
-    setIsVisible(query.length >= 3 && !selectedEntity)
-  }, [query, selectedEntity])
+    if (query.length >= 3 && !selectedEntity) {
+      setIsVisible(true);
+    } else {
+      setIsVisible(false);
+    }
+  }, [query, selectedEntity]);
 
   useEffect(() => {
     function handleClickOutside(event) {
       if (resultsRef.current && !resultsRef.current.contains(event.target)) {
-        setIsVisible(false)
+        setIsVisible(false);
       }
     }
 
-    document.addEventListener("mousedown", handleClickOutside)
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside)
-    }
-  }, [])
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   function getI18nLabel(key) {
-    return i18n[key][currentLang]
+    return i18n[key][currentLang];
   }
 
   const selectEntity = (entity) => {
-    setSelectedEntity(entity)
-    setQuery(entity.entities_name)
-    setEntityId(entity.entities_id)
-    setIsVisible(false)
-    setSelectedIndex(-1)
-  }
+    setSelectedEntity(entity);
+    setQuery(entity.entities_name);
+    setEntityId(entity.entities_id);
+    setIsVisible(false);
+    setSelectedIndex(-1);
+  };
 
   const scrollSelectedIntoView = (index: number) => {
-    if (index === -1) return
+    if (index === -1) return;
 
-    const resultsElement = resultsRef.current
-    const selectedElement = resultsElement?.querySelector(`li:nth-child(${index + 1})`)
+    const resultsElement = resultsRef.current;
+    const selectedElement = resultsElement?.querySelector(`li:nth-child(${index + 1})`);
 
     if (selectedElement && resultsElement) {
-      const containerRect = resultsElement.getBoundingClientRect()
-      const elementRect = selectedElement.getBoundingClientRect()
+      const containerRect = resultsElement.getBoundingClientRect();
+      const elementRect = selectedElement.getBoundingClientRect();
 
       if (elementRect.bottom > containerRect.bottom) {
         // Scroll vers le bas si l'élément est en dessous
-        selectedElement.scrollIntoView({ block: "nearest" })
+        selectedElement.scrollIntoView({ block: "nearest" });
       } else if (elementRect.top < containerRect.top) {
         // Scroll vers le haut si l'élément est au-dessus
-        selectedElement.scrollIntoView({ block: "nearest" })
+        selectedElement.scrollIntoView({ block: "nearest" });
       }
     }
-  }
+  };
 
   const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
-    if (!data || !isVisible) return
+    if (!data || !isVisible) return;
 
     switch (event.key) {
       case "ArrowDown":
-        event.preventDefault()
+        event.preventDefault();
         setSelectedIndex((prev) => {
-          const newIndex = prev < data.length - 1 ? prev + 1 : prev
-          setTimeout(() => scrollSelectedIntoView(newIndex), 0)
-          return newIndex
-        })
-        break
+          const newIndex = prev < data.length - 1 ? prev + 1 : prev;
+          setTimeout(() => scrollSelectedIntoView(newIndex), 0);
+          return newIndex;
+        });
+        break;
       case "ArrowUp":
-        event.preventDefault()
+        event.preventDefault();
         if (selectedIndex <= 0) {
           // Retour au champ de saisie
-          setSelectedIndex(-1)
-          inputRef.current?.focus()
+          setSelectedIndex(-1);
+          inputRef.current?.focus();
         } else {
           setSelectedIndex((prev) => {
-            const newIndex = prev - 1
-            setTimeout(() => scrollSelectedIntoView(newIndex), 0)
-            return newIndex
-          })
+            const newIndex = prev - 1;
+            setTimeout(() => scrollSelectedIntoView(newIndex), 0);
+            return newIndex;
+          });
         }
-        break
+        break;
       case "Enter":
         if (selectedIndex >= 0) {
-          const entity = data[selectedIndex]
-          selectEntity(entity)
+          const entity = data[selectedIndex];
+          selectEntity(entity);
         }
-        break
+        break;
       case "Escape":
-        setIsVisible(false)
-        setSelectedIndex(-1)
-        break
+        setIsVisible(false);
+        setSelectedIndex(-1);
+        break;
     }
-  }
+  };
 
   // Réinitialiser l'index sélectionné quand la requête change
   useEffect(() => {
-    setSelectedIndex(-1)
-  }, [query])
+    setSelectedIndex(-1);
+  }, [query]);
 
   const handleInputChange = (e) => {
-    const newQuery = e.target.value
-    setQuery(newQuery)
+    const newQuery = e.target.value;
+    setQuery(newQuery);
 
     // Si l'utilisateur commence à taper quelque chose de différent
     // de l'entité sélectionnée, on réinitialise la sélection
     if (selectedEntity && newQuery !== selectedEntity.entities_name) {
-      setSelectedEntity(null)
-      setEntityId(null)
+      setSelectedEntity(null);
+      setEntityId(null);
     }
-  }
+  };
 
   const handleResetClick = () => {
-    setQuery("")
-    setIsVisible(false)
-    setSelectedIndex(-1)
-    setSelectedEntity(null)
-    setEntityId(null)
-    inputRef.current?.focus()
-  }
+    setQuery("");
+    setIsVisible(false);
+    setSelectedIndex(-1);
+    setSelectedEntity(null);
+    setEntityId(null);
+    inputRef.current?.focus();
+  };
 
   return (
     <div style={{ position: "relative" }}>
@@ -204,7 +205,7 @@ export default function EntitySearchBar({ setEntityId }) {
                   onMouseOver={() => setSelectedIndex(index)}
                   onMouseOut={() => {
                     if (index !== selectedIndex) {
-                      setSelectedIndex(-1)
+                      setSelectedIndex(-1);
                     }
                   }}
                   onClick={() => selectEntity(entity)}
@@ -237,5 +238,5 @@ export default function EntitySearchBar({ setEntityId }) {
         </>
       )}
     </div>
-  )
+  );
 }
