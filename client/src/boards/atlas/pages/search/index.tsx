@@ -36,8 +36,7 @@ export function Search() {
   const [territoiresType, setTerritoiresType] = useState("all");
   const [searchValue, setSearchValue] = useState("");
   const navigate = useNavigate();
-  const params = new URLSearchParams(window.location.search);
-  const shared: boolean = params.has("shared");
+  const shared: boolean = searchParams.has("shared");
   const { DEFAULT_CURRENT_YEAR } = useAtlas();
   const currentYear =
     searchParams.get("annee_universitaire") || DEFAULT_CURRENT_YEAR;
@@ -48,7 +47,7 @@ export function Search() {
   });
 
   const { data: dataByYear } = useQuery({
-    queryKey: ["atlas/number-of-students-by-year", params],
+    queryKey: ["atlas/number-of-students-by-year", searchParams],
     queryFn: () =>
       getNumberOfStudentsByYear(`?annee_universitaire=${currentYear}`),
   });

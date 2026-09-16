@@ -1,151 +1,147 @@
-import { useState, useEffect, useRef, KeyboardEvent } from "react";
-import { useSearchParams } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
-import { Button, TextInput } from "@dataesr/dsfr-plus";
-import ResultsWithPagination from "./results";
+import { Button, TextInput } from "@dataesr/dsfr-plus"
+import { useQuery } from "@tanstack/react-query"
+import { KeyboardEvent, useEffect, useRef, useState } from "react"
+import { useSearchParams } from "react-router-dom"
+
+import ResultsWithPagination from "./results"
+
+const { VITE_APP_SERVER_URL } = import.meta.env
 
 export default function SearchEntities() {
-  const [searchParams] = useSearchParams();
-  const country_code = searchParams.get("country_code") || "FRA";
-  const [query, setQuery] = useState("");
-  const [isVisible, setIsVisible] = useState(false);
-  const [selectedIndex, setSelectedIndex] = useState(-1);
-  const [selectedEntity, setSelectedEntity] = useState<{ entities_id: string; entities_name: string } | null>(null);
-  const [currentPage, setCurrentPage] = useState(1);
-  const resultsRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const [searchParams] = useSearchParams()
+  const country_code = searchParams.get("country_code") || "FRA"
+  const [query, setQuery] = useState("")
+  const [isVisible, setIsVisible] = useState(false)
+  const [selectedIndex, setSelectedIndex] = useState(-1)
+  const [selectedEntity, setSelectedEntity] = useState<{ entities_id: string; entities_name: string } | null>(null)
+  const [currentPage, setCurrentPage] = useState(1)
+  const resultsRef = useRef<HTMLDivElement>(null)
+  const inputRef = useRef<HTMLInputElement>(null)
 
   const { data = [], isLoading } = useQuery({
     queryKey: ["ep/get-entities", "pillars", query, country_code],
     queryFn: async () => {
-      const response = await fetch(`http://localhost:3000/api/european-projects/collaborations/get-entities?entityName=${query}&country_code=${country_code}`);
+      const response = await fetch(`${VITE_APP_SERVER_URL}/european-projects/collaborations/get-entities?entityName=${query}&country_code=${country_code}`)
       if (!response.ok) {
-        throw new Error("Network response was not ok");
+        throw new Error("Network response was not ok")
       }
-      return response.json();
+      return response.json()
     },
     enabled: query.length >= 3,
-  });
+  })
 
   useEffect(() => {
     if (query.length >= 3 && !selectedEntity) {
-      setIsVisible(true);
+      setIsVisible(true)
     } else {
-      setIsVisible(false);
+      setIsVisible(false)
     }
-  }, [query, selectedEntity]);
+  }, [query, selectedEntity])
 
   useEffect(() => {
     function handleClickOutside(event) {
       if (resultsRef.current && !resultsRef.current.contains(event.target)) {
-        setIsVisible(false);
+        setIsVisible(false)
       }
     }
 
-    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside)
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-
-  // function getI18nLabel(key) {
-  //   return i18n[key][currentLang];
-  // }
+      document.removeEventListener("mousedown", handleClickOutside)
+    }
+  }, [])
 
   const selectEntity = (entity) => {
-    setSelectedEntity(entity);
-    setQuery(entity.entities_name);
-    // setEntityId(entity.entities_id);
-    setIsVisible(false);
-    setSelectedIndex(-1);
-  };
+    setSelectedEntity(entity)
+    setQuery(entity.entities_name)
+    setIsVisible(false)
+    setSelectedIndex(-1)
+  }
 
   const scrollSelectedIntoView = (index: number) => {
-    if (index === -1) return;
+    if (index === -1) return
 
-    const resultsElement = resultsRef.current;
-    const selectedElement = resultsElement?.querySelector(`li:nth-child(${index + 1})`);
+    const resultsElement = resultsRef.current
+    const selectedElement = resultsElement?.querySelector(`li:nth-child(${index + 1})`)
 
     if (selectedElement && resultsElement) {
-      const containerRect = resultsElement.getBoundingClientRect();
-      const elementRect = selectedElement.getBoundingClientRect();
+      const containerRect = resultsElement.getBoundingClientRect()
+      const elementRect = selectedElement.getBoundingClientRect()
 
       if (elementRect.bottom > containerRect.bottom) {
         // Scroll vers le bas si l'élément est en dessous
-        selectedElement.scrollIntoView({ block: "nearest" });
+        selectedElement.scrollIntoView({ block: "nearest" })
       } else if (elementRect.top < containerRect.top) {
         // Scroll vers le haut si l'élément est au-dessus
-        selectedElement.scrollIntoView({ block: "nearest" });
+        selectedElement.scrollIntoView({ block: "nearest" })
       }
     }
-  };
+  }
 
   const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
-    if (!data || !isVisible) return;
+    if (!data || !isVisible) return
 
     switch (event.key) {
       case "ArrowDown":
-        event.preventDefault();
+        event.preventDefault()
         setSelectedIndex((prev) => {
-          const newIndex = prev < data.length - 1 ? prev + 1 : prev;
-          setTimeout(() => scrollSelectedIntoView(newIndex), 0);
-          return newIndex;
-        });
-        break;
+          const newIndex = prev < data.length - 1 ? prev + 1 : prev
+          setTimeout(() => scrollSelectedIntoView(newIndex), 0)
+          return newIndex
+        })
+        break
       case "ArrowUp":
-        event.preventDefault();
+        event.preventDefault()
         if (selectedIndex <= 0) {
           // Retour au champ de saisie
-          setSelectedIndex(-1);
-          inputRef.current?.focus();
+          setSelectedIndex(-1)
+          inputRef.current?.focus()
         } else {
           setSelectedIndex((prev) => {
-            const newIndex = prev - 1;
-            setTimeout(() => scrollSelectedIntoView(newIndex), 0);
-            return newIndex;
-          });
+            const newIndex = prev - 1
+            setTimeout(() => scrollSelectedIntoView(newIndex), 0)
+            return newIndex
+          })
         }
-        break;
+        break
       case "Enter":
         if (selectedIndex >= 0) {
-          const entity = data[selectedIndex];
-          selectEntity(entity);
+          const entity = data[selectedIndex]
+          selectEntity(entity)
         }
-        break;
+        break
       case "Escape":
-        setIsVisible(false);
-        setSelectedIndex(-1);
-        break;
+        setIsVisible(false)
+        setSelectedIndex(-1)
+        break
     }
-  };
+  }
 
   // Réinitialiser l'index sélectionné quand la requête change
   useEffect(() => {
-    setSelectedIndex(-1);
-  }, [query]);
+    setSelectedIndex(-1)
+  }, [query])
 
   const handleInputChange = (e) => {
-    const newQuery = e.target.value;
-    setQuery(newQuery);
-    setCurrentPage(1);
+    const newQuery = e.target.value
+    setQuery(newQuery)
+    setCurrentPage(1)
 
     // Si l'utilisateur commence à taper quelque chose de différent
     // de l'entité sélectionnée, on réinitialise la sélection
     if (selectedEntity && newQuery !== selectedEntity.entities_name) {
-      setSelectedEntity(null);
-      // setEntityId(null);
+      setSelectedEntity(null)
     }
-  };
+  }
 
   const handleResetClick = () => {
-    setQuery("");
-    setIsVisible(false);
-    setSelectedIndex(-1);
-    setSelectedEntity(null);
-    setCurrentPage(1);
-    // setEntityId(null);
-    inputRef.current?.focus();
-  };
+    setQuery("")
+    setIsVisible(false)
+    setSelectedIndex(-1)
+    setSelectedEntity(null)
+    setCurrentPage(1)
+    inputRef.current?.focus()
+  }
 
   return (
     <section className="fr-mt-2w">
@@ -228,5 +224,5 @@ export default function SearchEntities() {
         </ul>
       </nav> */}
     </section>
-  );
+  )
 }
