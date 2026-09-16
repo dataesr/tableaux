@@ -17,7 +17,7 @@ const RouteWithTitle = ({ titleKey, element }) => {
 };
 
 
-export default function DatasuprDocRoutes() {
+export default function TableauxDocRoutes() {
   return (
     <Routes>
       <Route element={<GlobalLayout languageSelector />}>

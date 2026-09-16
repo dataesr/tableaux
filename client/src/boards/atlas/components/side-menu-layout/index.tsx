@@ -24,7 +24,7 @@ export function AtlasSideMenu({
   const currentYear =
     searchParams.get("annee_universitaire") || DEFAULT_CURRENT_YEAR;
   const geoId = searchParams.get("geo_id") || "";
-  const isdatasupr = searchParams.get("datasupr") === "true";
+  const shared: boolean = searchParams.has("shared");
   const navigate = useNavigate();
 
   const [showAlertMessage, setShowAlertMessage] = useState(false);
@@ -73,7 +73,7 @@ export function AtlasSideMenu({
                   Menu de navigation
                 </p>
                 {geoId && (
-                  <Button icon="home-4-line" onClick={() => navigate(`/atlas${isdatasupr ? "?datasupr" : ""}`)} size="sm">
+                  <Button icon="home-4-line" onClick={() => navigate(`/atlas${shared ? "?shared" : ""}`)} size="sm">
                     Revenir à la page de sélection des territoires
                   </Button>
                 )}
@@ -81,7 +81,7 @@ export function AtlasSideMenu({
                 <br />
 
                 {geoId && !isLoadingParents && dataParents && parent && (
-                  <Button className="fr-mt-1w" icon="arrow-up-line" onClick={() => navigate(`/atlas/general?geo_id=${parent.geo_id}&annee_universitaire=${currentYear}${isdatasupr ? "&datasupr" : ""}`)} size="sm">
+                  <Button className="fr-mt-1w" icon="arrow-up-line" onClick={() => navigate(`/atlas/general?geo_id=${parent.geo_id}&annee_universitaire=${currentYear}${shared ? "&shared" : ""}`)} size="sm">
                     Revenir au territoire parent ({parent.geo_nom})
                   </Button>
                 )}

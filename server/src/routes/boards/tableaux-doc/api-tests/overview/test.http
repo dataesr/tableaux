@@ -1,1 +1,1 @@
-GET http://localhost:3000/api/datasupr-doc/overview/test?name=example
+GET http://localhost:3000/api/tableaux-doc/overview/test?name=example

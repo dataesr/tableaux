@@ -4,7 +4,7 @@ import { useLocation, useSearchParams } from "react-router-dom";
 export default function Breadcrumb({ config }) {
   const [searchParams] = useSearchParams();
   const location = useLocation();
-  const isDatasupr: boolean = searchParams.has("datasupr");
+  const shared: boolean = searchParams.has("shared");
   const currentLang = searchParams.get("language") || "fr";
   const currentSection = searchParams.get("section");
 
@@ -19,7 +19,7 @@ export default function Breadcrumb({ config }) {
       </button>
       <div className="fr-collapse" id="breadcrumb-1">
         <ol className="fr-breadcrumb__list">
-          {isDatasupr && (
+          {shared && (
             <li>
               <Link href={`${config[parent].link}?${searchParams.toString()}`}>
                 {currentLang === "fr" ? "Sélectionner un tableau de bord" : "Select a dashboard"}

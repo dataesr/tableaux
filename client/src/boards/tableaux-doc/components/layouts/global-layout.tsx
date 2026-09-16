@@ -109,19 +109,19 @@ export default function GlobalLayout({ languageSelector = false }) {
             <div className={`dd-nav-wrapper ${menuOpen ? "dd-nav-open" : ""}`} id="dd-main-nav">
               <Nav aria-label="Main navigation">
                 <Link
-                  {...(pathname === "/datasupr-doc/home" && { "aria-current": "page" })}
+                  {...(pathname === "/tableaux-doc/home" && { "aria-current": "page" })}
                   className="fr-nav__link"
                   target="_self"
-                  to="/datasupr-doc/home"
+                  to="/tableaux-doc/home"
                 >
                   <span className="fr-icon-home-4-line fr-mr-1w" aria-hidden="true" />
                   {getI18nLabel(i18n, "home")}
                 </Link>
                 <Link
-                  {...(is("/datasupr-doc/overview") && { "aria-current": "page" })}
+                  {...(is("/tableaux-doc/overview") && { "aria-current": "page" })}
                   className="fr-nav__link"
                   target="_self"
-                  to="/datasupr-doc/overview"
+                  to="/tableaux-doc/overview"
                 >
                   {getI18nLabel(i18n, "overview")}
                 </Link>

@@ -17,7 +17,7 @@ import "./styles.scss";
 export default function AtlasHeader() {
   const [searchParams] = useSearchParams();
   const geoId = searchParams.get("geo_id") || "";
-  const isdatasupr = searchParams.get("datasupr") === "true";
+  const shared = searchParams.get("shared") === "true";
 
 
   useTitle("Tableaux - Atlas des effectifs étudiant-e-s");
@@ -40,7 +40,7 @@ export default function AtlasHeader() {
     return (
       <Container as="main">
         <Breadcrumb>
-          {isdatasupr && <Link href="/">Accueil</Link>}
+          {shared && <Link href="/">Accueil</Link>}
           <Link href="/atlas">Atlas des effectifs étudiant-e-s</Link>
           <Link>Chargement des filtres en cours ...</Link>
         </Breadcrumb>
@@ -65,8 +65,8 @@ export default function AtlasHeader() {
       </Row>
 
       <Breadcrumb>
-        {isdatasupr && <Link href={`/${isdatasupr ? "?datasupr" : ""}`}>Accueil</Link>}
-        <Link href={`/atlas${isdatasupr ? "?datasupr" : ""}`}>{isdatasupr ? "Atlas des effectifs étudiant-e-s" : "Accueil"}</Link>
+        {shared && <Link href={`/${shared ? "?shared" : ""}`}>Accueil</Link>}
+        <Link href={`/atlas${shared ? "?shared" : ""}`}>{shared ? "Atlas des effectifs étudiant-e-s" : "Accueil"}</Link>
         {geoId && <Link>{geoLabel}</Link>}
       </Breadcrumb>
 

@@ -37,7 +37,7 @@ export function Search() {
   const [searchValue, setSearchValue] = useState("");
   const navigate = useNavigate();
   const params = new URLSearchParams(window.location.search);
-  const datasupr = params.get("datasupr") === "true";
+  const shared: boolean = params.has("shared");
   const { DEFAULT_CURRENT_YEAR } = useAtlas();
   const currentYear =
     searchParams.get("annee_universitaire") || DEFAULT_CURRENT_YEAR;
@@ -201,7 +201,7 @@ export function Search() {
                       <li
                         key={result.geo_id}
                         onClick={() => {
-                          navigate(`/atlas/general?geo_id=${result.geo_id}&annee_universitaire=${currentYear}${datasupr ? "&datasupr" : ""}`);
+                          navigate(`/atlas/general?geo_id=${result.geo_id}&annee_universitaire=${currentYear}${shared ? "&shared" : ""}`);
                         }}
                       >
                         <span

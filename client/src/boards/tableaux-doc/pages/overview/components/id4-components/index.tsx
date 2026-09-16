@@ -177,14 +177,14 @@ export default function Id4Components() {
                 <GenericCard
                   description="Tableau de bord du personnel enseignant"
                   title="Personnel enseignant"
-                  to="/personnel-enseignant?datasupr"
+                  to="/personnel-enseignant?shared"
                 />
                 <br />
                 <code>
                   {`<GenericCard
   description="Tableau de bord du personnel enseignant"
   title="Personnel enseignant"
-  to="/personnel-enseignant?datasupr"
+  to="/personnel-enseignant?shared"
 />`}
                 </code>
               </li>

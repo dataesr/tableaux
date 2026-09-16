@@ -4,7 +4,7 @@ import { checkQuery } from "../../../utils.js";
 
 const router = new express.Router();
 
-router.route("/datasupr-doc/overview/test").get(async (req, res) => {
+router.route("/tableaux-doc/overview/test").get(async (req, res) => {
   const filters = checkQuery(req.query, ["name"], res);
 
   res.json({

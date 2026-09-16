@@ -44,7 +44,7 @@ function getTerritoiresList(
 export default function FavoritesList({ territoiresList }: { territoiresList: TerritoiresListProps[] }) {
   const [refresh, setRefresh] = useState(0);
   const urlParams = new URLSearchParams(window.location.search);
-  const datasupr = urlParams.get('datasupr') === 'true';
+  const shared = urlParams.get('shared') === 'true';
   // get favorites from cookie
   const favorites = getSortedfavoriteIdsInCookie();
   const territoires = getTerritoiresList(territoiresList, favorites);
@@ -70,7 +70,7 @@ export default function FavoritesList({ territoiresList }: { territoiresList: Te
         <li 
         className="fr-py-1w" 
         >
-          <Link href={`/atlas/general?geo_id=PAYS_100&annee_universitaire=${DEFAULT_CURRENT_YEAR}${datasupr ? '&datasupr' : ''}`}>
+          <Link href={`/atlas/general?geo_id=PAYS_100&annee_universitaire=${DEFAULT_CURRENT_YEAR}${shared ? '&shared' : ''}`}>
             France
           </Link>
           {GetLevelBadgeFromId({ id: "PAYS_100" })}
@@ -83,7 +83,7 @@ export default function FavoritesList({ territoiresList }: { territoiresList: Te
             style={{ borderBottom: "solid 1px #ddd" }}
           >
             <Link
-              href={`/atlas/general?geo_id=${territoire.id}&annee_universitaire=${DEFAULT_CURRENT_YEAR}${datasupr ? '&datasupr' : ''}`}
+              href={`/atlas/general?geo_id=${territoire.id}&annee_universitaire=${DEFAULT_CURRENT_YEAR}${shared ? '&shared' : ''}`}
             >
               {territoire.label}
             </Link>
