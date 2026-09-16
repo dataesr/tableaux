@@ -150,7 +150,8 @@ function MenuModal({
     if (typeof config.title === "string") return config.title;
     if (typeof window === "undefined" || !config.title || typeof config.title !== "object") return "";
 
-    const language = new URLSearchParams(window.location.search).get("language") || "fr";
+    const [searchParams] = useSearchParams();
+    const language = searchParams.get("language") || "fr";
     const localizedTitle = config.title[language] ?? config.title.fr;
     return typeof localizedTitle === "string" ? localizedTitle : "";
   })();

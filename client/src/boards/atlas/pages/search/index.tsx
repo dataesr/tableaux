@@ -1,30 +1,30 @@
-import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { useNavigate, useSearchParams } from "react-router-dom";
 import {
   Badge,
   Button,
+  Col,
   Container,
   Row,
-  Col,
   Spinner,
   Text,
   Title,
 } from "@dataesr/dsfr-plus";
+import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
-import StudentsCardWithTrend from "../../../../components/cards/students-card-with-trend/index.js";
-import TrendCard from "../../charts/trend.tsx";
 import {
   getFiltersValues,
   getGeoIdsFromSearch,
   getNumberOfStudentsByYear,
 } from "../../../../api/atlas.js";
+import StudentsCardWithTrend from "../../../../components/cards/students-card-with-trend/index.js";
+import { DataByYear } from "../../../../types/atlas.ts";
+import TrendCard from "../../charts/trend.tsx";
 import FavoritesList from "../../components/favorites-list/index.tsx";
+import { useAtlas } from "../../useAtlas.tsx";
 import { GetLevelBadgeFromItem } from "../../utils/badges.js";
 
 import "./styles.scss";
-import { DataByYear } from "../../../../types/atlas.ts";
-import { useAtlas } from "../../useAtlas.tsx";
 
 type SearchTypes = {
   geo_id: string;
@@ -36,8 +36,7 @@ export function Search() {
   const [territoiresType, setTerritoiresType] = useState("all");
   const [searchValue, setSearchValue] = useState("");
   const navigate = useNavigate();
-  const params = new URLSearchParams(window.location.search);
-  const shared: boolean = params.has("shared");
+  const shared: boolean = searchParams.has("shared");
   const { DEFAULT_CURRENT_YEAR } = useAtlas();
   const currentYear =
     searchParams.get("annee_universitaire") || DEFAULT_CURRENT_YEAR;
@@ -48,7 +47,7 @@ export function Search() {
   });
 
   const { data: dataByYear } = useQuery({
-    queryKey: ["atlas/number-of-students-by-year", params],
+    queryKey: ["atlas/number-of-students-by-year", searchParams],
     queryFn: () =>
       getNumberOfStudentsByYear(`?annee_universitaire=${currentYear}`),
   });

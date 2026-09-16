@@ -1,19 +1,20 @@
-import { Button, Title, Text, Link } from "@dataesr/dsfr-plus";
+import { Button, Link, Text, Title } from "@dataesr/dsfr-plus";
+import { useState } from "react";
+import { useSearchParams } from "react-router-dom";
+
+import { DEFAULT_CURRENT_YEAR } from "../../../../constants.tsx";
 import {
   clearAllfavoriteIdsInCookie,
   getSortedfavoriteIdsInCookie,
   getThemeFromHtmlNode,
 } from "../../../../utils.tsx";
+import { GetLevelBadgeFromId } from "../../utils/badges.tsx";
 
 type TerritoiresListProps = {
   id: string;
   label: string;
   type: string;
 };
-
-import { GetLevelBadgeFromId } from "../../utils/badges.tsx";
-import { DEFAULT_CURRENT_YEAR } from "../../../../constants.tsx";
-import { useState } from "react";
 
 function getRandomElementsFromArray(
   territoiresList: TerritoiresListProps[],
@@ -43,8 +44,8 @@ function getTerritoiresList(
 
 export default function FavoritesList({ territoiresList }: { territoiresList: TerritoiresListProps[] }) {
   const [refresh, setRefresh] = useState(0);
-  const urlParams = new URLSearchParams(window.location.search);
-  const shared: boolean = urlParams.has("shared");
+  const [searchParams] = useSearchParams();
+  const shared: boolean = searchParams.has("shared");
   // get favorites from cookie
   const favorites = getSortedfavoriteIdsInCookie();
   const territoires = getTerritoiresList(territoiresList, favorites);
