@@ -3,7 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { getFilters, getPrograms, getThematics, getDestinations } from "../../api";
 
-import { Container, Row, Col, Checkbox, Button } from "@dataesr/dsfr-plus";
+import { Container, Row, Col, Checkbox } from "@dataesr/dsfr-plus";
 
 import i18nLocal from "./i18n.json";
 import i18nGlobal from "../../i18n-global.json";
@@ -22,23 +22,6 @@ interface FilterItem {
   id: string;
   label_fr?: string;
   label_en?: string;
-}
-
-function FloatingFilters() {
-  // Récupération des paramètres d'url
-
-  // Suppression des paramètres à ne pas afficher
-
-  // test du scroll pour afficher le bouton uniquement si ep-navigateur est replié
-  const showButton = true;
-
-  return (
-    <>
-      Modale
-      <br />
-      {showButton && <Button>Filtres actifs</Button>}
-    </>
-  );
 }
 
 export default function EpNavigator() {
@@ -354,7 +337,6 @@ export default function EpNavigator() {
           </Col>
         </Row>
       </Container>
-      <FloatingFilters />
     </>
   );
 }
