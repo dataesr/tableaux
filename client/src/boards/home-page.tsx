@@ -12,7 +12,7 @@ import "./home-styles.scss"
 const { VITE_APP_SERVER_URL } = import.meta.env
 
 export default function HomePage() {
-  const [dashboards, setDashboards] = useState(null)
+  const [dashboards, setDashboards] = useState<any[]>()
 
   const { data, isLoading } = useQuery({
     queryKey: ["list-dashboards"],
