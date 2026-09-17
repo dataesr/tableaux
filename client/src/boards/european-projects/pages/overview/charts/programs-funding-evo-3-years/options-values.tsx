@@ -54,9 +54,6 @@ export default function Options(data, displayType, currentLang): HighchartsOptio
         gridLineWidth: 0.5,
       },
     ],
-    legend: {
-      enabled: true,
-    },
     tooltip: {
       shared: true,
     },

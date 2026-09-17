@@ -3,9 +3,11 @@ import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.sr
 import { CreateChartOptions } from "../../../../components/chart-ep";
 import { formatToMillions } from "../../../../../../utils/format";
 import type { HighchartsOptions } from "../../../../../../components/chart-wrapper";
+import { getCssColor } from "../../../../../../utils/colors";
+
 import { getI18nLabel } from "../../../../../../utils";
 import i18n from "../../i18n-charts.json";
-import { normalizeIdForCssColorNames } from "../../../../utils";
+// import { normalizeIdForCssColorNames } from "../../../../utils";
 
 export default function Options(data, displayType, currentLang): HighchartsOptions {
   if (!data || !Array.isArray(data)) return null;
@@ -66,9 +68,6 @@ export default function Options(data, displayType, currentLang): HighchartsOptio
         gridLineWidth: 0.5,
       },
     ],
-    legend: {
-      enabled: true,
-    },
     tooltip: {
       shared: true,
     },
@@ -91,6 +90,7 @@ export default function Options(data, displayType, currentLang): HighchartsOptio
       {
         type: "column",
         name: getI18nLabel(i18n, "evaluatedProjects", currentLang),
+        color: getCssColor("evaluated-project"),
         data: (() => {
           const dataPoints: { y: number; color: string }[] = [];
           sortedYears.forEach((year) => {
@@ -98,7 +98,7 @@ export default function Options(data, displayType, currentLang): HighchartsOptio
               const yearData = topic.years.find((y) => y.year === year);
               dataPoints.push({
                 y: yearData ? yearData[displayType] : 0,
-                color: rootStyles.getPropertyValue(`--topic-${normalizeIdForCssColorNames(topic.thema_code)}-color`),
+                color: getCssColor("evaluated-project"),
               });
             });
           });
@@ -111,6 +111,7 @@ export default function Options(data, displayType, currentLang): HighchartsOptio
       {
         type: "column",
         name: getI18nLabel(i18n, "successfulProjects", currentLang),
+        color: getCssColor("successful-project"),
         data: (() => {
           const dataPoints: { y: number; color: string }[] = [];
           sortedYears.forEach((year) => {
@@ -118,7 +119,7 @@ export default function Options(data, displayType, currentLang): HighchartsOptio
               const yearData = topic.years.find((y) => y.year === year);
               dataPoints.push({
                 y: yearData ? yearData[displayType] : 0,
-                color: rootStyles.getPropertyValue(`--topic-${normalizeIdForCssColorNames(topic.thema_code)}-color`),
+                color: getCssColor("successful-project"),
               });
             });
           });
