@@ -18,37 +18,35 @@ const copyProgress = new Map();
 
 router.use(uploadVersionRoute);
 
-// list all dashboards from server
+// List all dashboards from server
 router.route("/admin/list-dashboards").get(async (req, res) => {
   const response = await db.collection("boards").find({}).toArray();
   res.json(response);
 });
 
-// add a new dashboard
+// Add a new dashboard
 router.route("/admin/add-dashboard").post(async (req, res) => {
   const filters = checkQuery(
     req.body,
     [
-      "name_fr",
-      "name_en",
-      "id",
-      "description_fr",
       "description_en",
+      "description_fr",
+      "id",
+      "name_en",
+      "name_fr",
       "url",
-      "api_url",
     ],
     res,
   );
   const {
-    name_fr,
-    name_en,
-    id,
-    description_fr,
     description_en,
-    url,
-    api_url,
-    isMultilingual,
+    description_fr,
     homePageVisible,
+    id,
+    isMultilingual,
+    name_en,
+    name_fr,
+    url,
   } = req.body;
 
   getEmbeddings([name_fr, name_en, description_fr, description_en]).catch(
@@ -66,19 +64,18 @@ router.route("/admin/add-dashboard").post(async (req, res) => {
 
     // Créer le nouveau dashboard
     const newDashboard = {
-      name_fr,
-      name_en,
-      id,
-      description_fr,
-      description_en,
-      url,
-      api_url,
-      isMultilingual: isMultilingual || false,
-      homePageVisible: homePageVisible !== undefined ? homePageVisible : true,
-      data: [],
       constants: [],
       createdAt: new Date().toISOString(),
+      data: [],
+      description_en,
+      description_fr,
+      homePageVisible: homePageVisible !== undefined ? homePageVisible : true,
       icon: "question-mark",
+      id,
+      isMultilingual: isMultilingual || false,
+      name_en,
+      name_fr,
+      url,
     };
 
     await db.collection("boards").insertOne(newDashboard);

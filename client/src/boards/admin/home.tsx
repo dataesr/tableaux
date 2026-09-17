@@ -59,15 +59,14 @@ export default function Home() {
   } | null>(null);
   const [searchValue, setSearchValue] = useState<string>("");
   const [newDashboard, setNewDashboard] = useState({
-    name_fr: "",
-    name_en: "",
-    id: "",
-    description_fr: "",
     description_en: "",
-    url: "",
-    api_url: "",
-    isMultilingual: false,
+    description_fr: "",
     homePageVisible: true,
+    id: "",
+    isMultilingual: false,
+    name_en: "",
+    name_fr: "",
+    url: "",
   });
 
   const { data, isLoading } = useQuery({
@@ -165,15 +164,14 @@ export default function Home() {
       }
 
       setNewDashboard({
-        name_fr: "",
-        name_en: "",
-        id: "",
-        description_fr: "",
         description_en: "",
-        url: "",
-        api_url: "",
-        isMultilingual: false,
+        description_fr: "",
         homePageVisible: true,
+        id: "",
+        isMultilingual: false,
+        name_en: "",
+        name_fr: "",
+        url: "",
       });
     },
     onError: (error: Error) => {
@@ -425,18 +423,16 @@ export default function Home() {
   const add_dashboard = () => {
     // Vérifier que tous les champs sont remplis
     if (
-      !newDashboard.name_fr ||
-      !newDashboard.name_en ||
-      !newDashboard.id ||
-      !newDashboard.description_fr ||
       !newDashboard.description_en ||
-      !newDashboard.url ||
-      !newDashboard.api_url
+      !newDashboard.description_fr ||
+      !newDashboard.id ||
+      !newDashboard.name_en ||
+      !newDashboard.name_fr ||
+      !newDashboard.url
     ) {
       alert("Tous les champs sont obligatoires");
       return;
     }
-
     addDashboardMutation.mutate(newDashboard);
   };
 
@@ -495,9 +491,6 @@ export default function Home() {
             <Col>
               <input type="text" className="fr-input fr-mb-2w" placeholder="URL du tableau" value={newDashboard.url} onChange={(e) => setNewDashboard({ ...newDashboard, url: e.target.value })} />
             </Col>
-            <Col>
-              <input type="text" className="fr-input fr-mb-2w" placeholder="URL de l'API" value={newDashboard.api_url} onChange={(e) => setNewDashboard({ ...newDashboard, api_url: e.target.value })} />
-            </Col>
             <Col md={1} className="text-right">
               <Button color="blue-cumulus" onClick={() => add_dashboard()} disabled={addDashboardMutation.isPending}>
                 {addDashboardMutation.isPending ? "..." : "Ajouter"}
@@ -518,7 +511,6 @@ export default function Home() {
                   <th>Description (FR)</th>
                   <th>Description (EN)</th>
                   <th>URL du tableau</th>
-                  <th>URL de l'API</th>
                   <th>Multilingue</th>
                   <th>Visible page d'accueil</th>
                 </tr>
@@ -540,7 +532,6 @@ export default function Home() {
                     <td>{dashboard.description_fr}</td>
                     <td>{dashboard.description_en}</td>
                     <td>{dashboard.url}</td>
-                    <td>{dashboard.api_url}</td>
                     <td>
                       <Badge color={dashboard.isMultilingual ? "success" : "error"}>{dashboard.isMultilingual ? "Oui" : "Non"}</Badge>
                     </td>
