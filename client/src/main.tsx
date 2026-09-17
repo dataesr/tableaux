@@ -6,7 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import "remixicon/fonts/remixicon.css";
 
-import AppRoutes from "./commons/router.js";
+import AppRoutes from "./router.js";
 import RouterLink from "./components/router-link.js";
 import { ScrollToTop } from "./components/scroll-to-top.js";
 import CookieConsent from "./components/cookies/cookie-consent/index.js";
