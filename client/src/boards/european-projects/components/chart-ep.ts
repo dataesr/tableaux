@@ -10,7 +10,7 @@ export function CreateChartOptions(type: NonNullable<HighchartsInstance.Options[
       backgroundColor: "var(--background-default-grey)",
     },
     title: { text: "" },
-    legend: { enabled: false },
+    legend: { enabled: true },
     exporting: { enabled: false },
     credits: { enabled: false },
     accessibility: { enabled: true },
