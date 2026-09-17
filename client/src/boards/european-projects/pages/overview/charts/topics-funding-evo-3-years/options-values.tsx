@@ -7,12 +7,10 @@ import { getCssColor } from "../../../../../../utils/colors";
 
 import { getI18nLabel } from "../../../../../../utils";
 import i18n from "../../i18n-charts.json";
-// import { normalizeIdForCssColorNames } from "../../../../utils";
 
 export default function Options(data, displayType, currentLang): HighchartsOptions {
   if (!data || !Array.isArray(data)) return null;
 
-  const rootStyles = getComputedStyle(document.documentElement);
   const years = new Set();
   const countryData = data.filter((item) => item.country !== "all")[0];
   if (!countryData?.data) return null;
