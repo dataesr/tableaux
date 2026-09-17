@@ -35,7 +35,6 @@ To deploy in production, simply run this command from your staging branch :
 
 ## How to push a new boards in prod
 
-1. Add the new board in the Mongo of prod, in the database "tableaux-prod", in the collection "board".
-2. Move the dedicated part in the router /client/src/commons/router.tsx, out of the `!isInProduction()` section.
-3. Add the needed charts into /client/src/boards/integration/charts-registry.tsx
-4. Push in prod (cf. previous paragraph)
+1. Add the new board in the Mongo of prod, in the database "tableaux-prod", in the collection "board". A simple copy / paste trough MongoDB Compass should be enough
+2. Add the needed charts into /client/src/boards/integration/charts-registry.tsx
+3. Push in prod (cf. previous paragraph)

@@ -186,6 +186,7 @@ export default function Router() {
       {/* Boards */}
       {dashboards.map((board) => {
         return (<>
+          {/* No idea why but "board?.url !== `/${board.id}`" is needed */}
           {(board?.url && board?.url !== `/${board.id}`) && <Route path={`/${board.id}`} element={<Navigate to={board?.url ?? ""} replace />} />}
           {board?.routes && <Route
             path={`/${board.id}/*`}
