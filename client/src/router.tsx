@@ -1,4 +1,4 @@
-import { lazy, Suspense } from "react"
+import React, { lazy, Suspense } from "react"
 import { Navigate, Route, Routes } from "react-router-dom"
 
 import { useTitle } from "./hooks/usePageTitle.tsx"
@@ -40,13 +40,33 @@ const RouteWithTitle = ({ titleKey, element }) => {
 }
 
 export default function Router() {
+  const BOARDS = [
+    { id: "devenir-etudiants", routes: DevenirEtudiantsRoutes, to: "/devenir-etudiants/entrants-en-L1-2019/flux" },
+    { id: "european-projects", routes: EuropeanProjectsRoutes, to: "/european-projects/accueil" },
+    { id: "financements-par-aap", routes: FundingsRoutes, to: "/financements-par-aap/accueil" },
+    { id: "structures-finance", routes: StructuresFinanceRoutes, to: "/structures-finance/accueil" },
+  ]
+
+  const BOARDS_STAGING = [
+    { id: "admin", routes: AdminRoutes },
+    { id: "atlas", routes: AtlasRoutes, to: "/atlas/general" },
+    { id: "graduates", routes: GraduatesRoutes },
+    { id: "integration", page: Integration },
+    { id: "open-alex", routes: OpenAlexRoutes },
+    { id: "personnel-enseignant", routes: PersonnelEnseignantRoutes, to: "/personnel-enseignant/accueil" },
+    { id: "tableaux-doc", routes: TableauxDocRoutes },
+    { id: "teds", routes: TedsRoutes, to: "/teds/home" },
+    { id: "template", routes: TemplateRoutes },
+    { id: "valorisation-recherche-innovation", routes: ValorisationRechercheInnovationRoutes, to: "/valorisation-recherche-innovation/accueil" },
+  ]
+
   return (
     <Routes>
       <Route
         path="/"
         element={
           <RouteWithTitle
-            titleKey="Accueil - dataEsr"
+            titleKey="Accueil - Tableaux"
             element={
               <Suspense>
                 <HomePage />
@@ -55,6 +75,7 @@ export default function Router() {
           />
         }
       />
+      {/* Cold pages */}
       <Route
         path="/accessibility"
         element={
@@ -68,48 +89,6 @@ export default function Router() {
           element={
             <Suspense>
               <AccessibilityPage />
-            </Suspense>
-          }
-        />
-      </Route>
-      <Route
-        path="/cookies"
-        element={
-          <Suspense>
-            <CookiePolicyPage />
-          </Suspense>
-        }
-      />
-      <Route
-        path="/plan-du-site"
-        element={
-          <Suspense>
-            <SitemapLayout />
-          </Suspense>
-        }
-      >
-        <Route
-          index
-          element={
-            <Suspense>
-              <SitemapPage />
-            </Suspense>
-          }
-        />
-      </Route>
-      <Route
-        path="/mentions-legales"
-        element={
-          <Suspense>
-            <LegalNoticeLayout />
-          </Suspense>
-        }
-      >
-        <Route
-          index
-          element={
-            <Suspense>
-              <LegalNoticePage />
             </Suspense>
           }
         />
@@ -132,6 +111,31 @@ export default function Router() {
         />
       </Route>
       <Route
+        path="/contact"
+        element={
+          <Suspense>
+            <ContactLayout />
+          </Suspense>
+        }
+      >
+        <Route
+          index
+          element={
+            <Suspense>
+              <ContactPage />
+            </Suspense>
+          }
+        />
+      </Route>
+      <Route
+        path="/cookies"
+        element={
+          <Suspense>
+            <CookiePolicyPage />
+          </Suspense>
+        }
+      />
+      <Route
         path="/donnees-personnelles"
         element={
           <Suspense>
@@ -149,10 +153,10 @@ export default function Router() {
         />
       </Route>
       <Route
-        path="/contact"
+        path="/mentions-legales"
         element={
           <Suspense>
-            <ContactLayout />
+            <LegalNoticeLayout />
           </Suspense>
         }
       >
@@ -160,135 +164,70 @@ export default function Router() {
           index
           element={
             <Suspense>
-              <ContactPage />
+              <LegalNoticePage />
             </Suspense>
           }
         />
       </Route>
-      <Route path="/devenir-etudiants" element={<Navigate to="/devenir-etudiants/entrants-en-L1-2019/flux" replace />} />
       <Route
-        path="/devenir-etudiants/*"
+        path="/plan-du-site"
         element={
           <Suspense>
-            <DevenirEtudiantsRoutes />
+            <SitemapLayout />
           </Suspense>
         }
-      />
-      <Route path="/european-projects" element={<Navigate to="/european-projects/accueil" replace />} />
-      <Route
-        path="/european-projects/*"
-        element={
-          <Suspense>
-            <EuropeanProjectsRoutes />
-          </Suspense>
-        }
-      />
-      <Route path="/financements-par-aap" element={<Navigate to="/financements-par-aap/accueil" replace />} />
-      <Route
-        path="/financements-par-aap/*"
-        element={
-          <Suspense>
-            <FundingsRoutes />
-          </Suspense>
-        }
-      />
-      <Route path="/structures-finance" element={<Navigate to="/structures-finance/accueil" replace />} />
-      <Route
-        path="/structures-finance/*"
-        element={
-          <Suspense>
-            <StructuresFinanceRoutes />
-          </Suspense>
-        }
-      />
-
-      {!isInProduction() && (
+      >
+        <Route
+          index
+          element={
+            <Suspense>
+              <SitemapPage />
+            </Suspense>
+          }
+        />
+      </Route>
+      {/* Boards */}
+      {BOARDS.map((board) => (
         <>
+          <Route path={`/${board.id}`} element={<Navigate to={board.to} replace />} />
           <Route
-            path="/admin/*"
+            path={`/${board.id}/*`}
             element={
-              <Suspense>
-                <AdminRoutes />
-              </Suspense>
-            }
-          />
-          <Route
-            path="/atlas/*"
-            element={
-              <Suspense>
-                <AtlasRoutes />
-              </Suspense>
-            }
-          />
-          <Route
-            path="/graduates/*"
-            element={
-              <Suspense>
-                <GraduatesRoutes />
-              </Suspense>
-            }
-          />
-          <Route
-            path="/integration"
-            element={
-              <Suspense>
-                <Integration />
-              </Suspense>
-            }
-          />
-          <Route
-            path="/open-alex/*"
-            element={
-              <Suspense>
-                <OpenAlexRoutes />
-              </Suspense>
-            }
-          />
-          <Route path="/personnel-enseignant" element={<Navigate to="/personnel-enseignant/accueil" replace />} />
-          <Route
-            path="/personnel-enseignant/*"
-            element={
-              <Suspense>
-                <PersonnelEnseignantRoutes />
-              </Suspense>
-            }
-          />
-          <Route
-            path="/tableaux-doc/*"
-            element={
-              <Suspense>
-                <TableauxDocRoutes />
-              </Suspense>
-            }
-          />
-          <Route path="/teds" element={<Navigate to="/teds/home" replace />} />
-          <Route
-            path="/teds/*"
-            element={
-              <Suspense>
-                <TedsRoutes />
-              </Suspense>
-            }
-          />
-          <Route
-            path="/template/*"
-            element={
-              <Suspense>
-                <TemplateRoutes />
-              </Suspense>
-            }
-          />
-          <Route path="/valorisation-recherche-innovation" element={<Navigate to="/valorisation-recherche-innovation/accueil" replace />} />
-          <Route
-            path="/valorisation-recherche-innovation/*"
-            element={
-              <Suspense>
-                <ValorisationRechercheInnovationRoutes />
+              <Suspense fallback={<div>Loading...</div>}>
+                {React.createElement(board.routes)}
               </Suspense>
             }
           />
         </>
+      ))}
+
+      {!isInProduction() && (
+        <>
+          {/* Board available in staging only */}
+          {BOARDS_STAGING.map((board) => {
+            return (<>
+              {board?.to && <Route path={`/${board.id}`} element={<Navigate to={board?.to ?? ""} replace />} />}
+              {board?.routes && <Route
+                path={`/${board.id}/*`}
+                element={
+                  <Suspense fallback={<div>Loading...</div>}>
+                    {React.createElement(board?.routes ?? "")}
+                  </Suspense>
+                }
+              />}
+              {board?.page && <Route
+                path={`/${board.id}`}
+                element={
+                  <Suspense fallback={<div>Loading...</div>}>
+                    {React.createElement(board?.page ?? "")}
+                  </Suspense>
+                }
+              />}
+            </>)
+          })}
+        </>
       )}
+      {/* Fallback */}
       <Route
         path="*"
         element={

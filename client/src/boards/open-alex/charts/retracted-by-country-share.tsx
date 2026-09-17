@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import Highcharts from 'highcharts';
+import * as Highcharts from "highcharts";
 import HighchartsReact from 'highcharts-react-official';
 
 export default function RetractedByCountryShare() {
