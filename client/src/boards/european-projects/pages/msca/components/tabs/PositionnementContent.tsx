@@ -9,8 +9,6 @@ export default function PositionnementContent() {
   const countryCode = searchParams.get("country_code") || "FRA";
   const currentLang = searchParams.get("language") || "fr";
 
-  console.log(countryCode, currentLang);
-
   return (
     <div>
       {/* Graphique global de positionnement par rapport au top 10 des pays */}

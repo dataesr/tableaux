@@ -180,7 +180,6 @@ router.route(routesPrefix + "/type-beneficiaries-evolution").get(async (req, res
 
     // Ajouter le filtre pour le type d'entité
     filters.cordis_type_entity_code = targetEntityType;
-console.log(filters);
 
     // Première étape : obtenir le top 10 des pays pour ce type d'entité
     const top10Countries = await db

@@ -11,7 +11,6 @@ import "./home-styles.scss";
 const { VITE_APP_SERVER_URL } = import.meta.env;
 
 export default async function HomePage() {
-
   const { data: dashboards, isLoading } = useQuery({
     queryKey: ["list-dashboards"],
     queryFn: () => fetch(`${VITE_APP_SERVER_URL}/admin/list-dashboards`).then((response) => response.json()),
@@ -25,8 +24,8 @@ export default async function HomePage() {
   // Asynchronously load each media to display on the dashboard tile on the home page
   const allResponses = await Promise.all(visibleDashboards.map((dashboard) => import(`../assets/boards/${dashboard.id}.svg`).catch(() => {})))
   visibleDashboards.map((dashboard, index) => {
-    dashboard.media = allResponses[index]?.default ?? boardMediaPlaceholder
-    return dashboard
+    const media = allResponses[index]?.default ?? boardMediaPlaceholder
+    return { ...dashboard, media }
   })
 
   return (
