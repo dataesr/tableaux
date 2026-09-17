@@ -67,7 +67,7 @@ export default function HomePage() {
             <Row gutters className="fr-grid-row--gutters">
               {dashboards.map((dashboard) => {
                 return (
-                  <Col key={dashboard.url} xs="12" md="6" className="fr-mb-3w ">
+                  <Col key={dashboard.id} xs="12" md="6" className="fr-mb-3w ">
                     <div className="fr-tile fr-tile--horizontal fr-enlarge-link home-tile">
                       <div className="fr-tile__body">
                         <div className="fr-tile__content">
