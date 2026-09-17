@@ -1,32 +1,41 @@
-import { Col, Container, Row } from "@dataesr/dsfr-plus";
-import { useQuery } from "@tanstack/react-query";
-import { Link as RouterLink } from "react-router-dom";
+import { Col, Container, Row } from "@dataesr/dsfr-plus"
+import { useQuery } from "@tanstack/react-query"
+import { useEffect, useState } from "react"
+import { Link as RouterLink } from "react-router-dom"
 
-import boardMediaPlaceholder from "../assets/board-media-placeholder.svg";
-import Footer from "../components/footer";
-import HeaderTableaux from "../layout/header.tsx";
+import boardMediaPlaceholder from "../assets/board-media-placeholder.svg"
+import Footer from "../components/footer"
+import HeaderTableaux from "../layout/header.tsx"
 
-import "./home-styles.scss";
+import "./home-styles.scss"
 
-const { VITE_APP_SERVER_URL } = import.meta.env;
+const { VITE_APP_SERVER_URL } = import.meta.env
 
-export default async function HomePage() {
-  const { data: dashboards, isLoading } = useQuery({
+export default function HomePage() {
+  const [dashboards, setDashboards] = useState(null)
+
+  const { data, isLoading } = useQuery({
     queryKey: ["list-dashboards"],
     queryFn: () => fetch(`${VITE_APP_SERVER_URL}/admin/list-dashboards`).then((response) => response.json()),
-  });
-
-  if (isLoading || !dashboards) {
-    return <div>Loading...</div>;
-  }
-
-  const visibleDashboards = dashboards.filter((dashboard) => dashboard.homePageVisible)
-  // Asynchronously load each media to display on the dashboard tile on the home page
-  const allResponses = await Promise.all(visibleDashboards.map((dashboard) => import(`../assets/boards/${dashboard.id}.svg`).catch(() => {})))
-  visibleDashboards.map((dashboard, index) => {
-    const media = allResponses[index]?.default ?? boardMediaPlaceholder
-    return { ...dashboard, media }
   })
+
+  useEffect(() => {
+    async function getData() {
+      let visibleDashboards = (data ?? []).filter((dashboard) => dashboard.homePageVisible)
+      // Asynchronously load each media to display on the dashboard tile on the home page
+      const allResponses = await Promise.all(visibleDashboards.map((dashboard) => import(`../assets/boards/${dashboard.id}.svg`).catch(() => { })))
+      visibleDashboards = visibleDashboards.map((dashboard, index) => {
+        const media = allResponses[index]?.default ?? boardMediaPlaceholder
+        return { ...dashboard, media }
+      })
+      setDashboards(visibleDashboards)
+    }
+    getData()
+  }, [data])
+
+  if (isLoading || !data || !dashboards) {
+    return <div>Loading...</div>
+  }
 
   return (
     <>
@@ -56,7 +65,7 @@ export default async function HomePage() {
               </Col>
             </Row>
             <Row gutters className="fr-grid-row--gutters">
-              {visibleDashboards.map((dashboard) => {
+              {dashboards.map((dashboard) => {
                 return (
                   <Col key={dashboard.url} xs="12" md="6" className="fr-mb-3w ">
                     <div className="fr-tile fr-tile--horizontal fr-enlarge-link home-tile">
@@ -78,7 +87,7 @@ export default async function HomePage() {
                       </div>
                     </div>
                   </Col>
-                );
+                )
               })}
             </Row>
           </Container>
@@ -86,5 +95,5 @@ export default async function HomePage() {
       </div>
       <Footer />
     </>
-  );
+  )
 }
