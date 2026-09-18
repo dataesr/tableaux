@@ -1,9 +1,10 @@
 import { useQuery } from "@tanstack/react-query"
-import React, { lazy, Suspense, useEffect, useState } from "react"
+import React, { lazy, Suspense } from "react"
 import { Navigate, Route, Routes } from "react-router-dom"
 
 import { useTitle } from "./hooks/usePageTitle.tsx"
 import { isInProduction } from "./utils.tsx"
+import LoadingPage from "./pages/loading"
 
 const AccessibilityLayout = lazy(() => import("./components/accessibility/layouts/global-layout.tsx"))
 const AccessibilityPage = lazy(() => import("./components/accessibility/page.tsx"))
@@ -32,29 +33,30 @@ const RouteWithTitle = ({ titleKey, element }) => {
 }
 
 export default function Router() {
-  const [dashboards, setDashboards] = useState<any[]>()
-
-  const { data, isLoading } = useQuery({
+  const { data: dashboards, isLoading } = useQuery({
     queryKey: ["list-dashboards"],
-    queryFn: () => fetch(`${VITE_APP_SERVER_URL}/admin/list-dashboards`).then((response) => response.json()),
-  })
-
-  useEffect(() => {
-    async function getData() {
-      let visibleDashboards = (data ?? []).filter((dashboard) => dashboard.homePageVisible)
+    queryFn: async () => {
+      const response = await fetch(`${VITE_APP_SERVER_URL}/admin/list-dashboards`)
+      const json = await response.json()
+      const visibleDashboards = (json ?? []).filter((dashboard) => dashboard.homePageVisible)
       // Asynchronously load each media to display on the dashboard tile on the home page
       const allResponses = await Promise.all(visibleDashboards.map((dashboard) => import(`./boards/${dashboard.id}/routes.tsx`).catch(() => { })))
-      visibleDashboards = visibleDashboards.map((dashboard, index) => {
+      return visibleDashboards.map((dashboard, index) => {
         const routes = allResponses[index]?.default ?? ""
         return { ...dashboard, routes }
       })
-      setDashboards(visibleDashboards)
-    }
-    getData()
-  }, [data])
+    },
+  })
 
-  if (isLoading || !data || !dashboards) {
-    return <div>Loading...</div>
+  if (isLoading || !dashboards) {
+    return (
+      <Routes>
+        <Route
+          path="*"
+          element={<LoadingPage />}
+        />
+      </Routes>
+    )
   }
 
   return (
