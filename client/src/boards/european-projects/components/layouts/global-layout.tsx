@@ -118,6 +118,11 @@ export default function GlobalLayout() {
                 {getI18nLabel("entities")}
               </Link>
             </li>
+            <li>
+              <Link to={`/european-projects/methodology?${filtersParams}`} target="_self" {...(is("/european-projects/methodology") && { "aria-current": "page" })} className="fr-nav__link">
+                {getI18nLabel("methodology")}
+              </Link>
+            </li>
             <li className="fr-nav__item" style={{ marginLeft: "auto" }}>
               <CountrySelector />
             </li>

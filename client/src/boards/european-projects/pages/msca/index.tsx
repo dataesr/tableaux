@@ -7,7 +7,7 @@ import RangeOfYears from "../../../../components/range-of-years";
 import { getMscaFilters } from "../../api/msca";
 import { cleanUrlParams, needsUrlCleaning } from "./url-utils";
 import TabsContent from "./components/TabsContent";
-import navigationConfig from "./navigation-config.json";
+import navigationConfig from "../../navigation-config.json";
 
 import "./styles.scss";
 

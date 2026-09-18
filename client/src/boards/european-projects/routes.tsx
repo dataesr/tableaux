@@ -11,7 +11,7 @@ const EvolutionPcri = lazy(() => import("./pages/evolution-pcri/index.tsx"));
 const GlobalLayout = lazy(() => import("./components/layouts/global-layout.tsx"));
 const Home = lazy(() => import("./pages/home/index.tsx"));
 const HorizonEurope = lazy(() => import("./pages/horizon-europe/index.tsx"));
-const Informations = lazy(() => import("./pages/informations.tsx"));
+const Methodology = lazy(() => import("./pages/metodology/index.tsx"));
 const NotFoundPage = lazy(() => import("../../components/not-found-page.tsx"));
 const Overview = lazy(() => import("./pages/overview/index.tsx"));
 const Positioning = lazy(() => import("./pages/positioning/index.tsx"));
@@ -224,13 +224,13 @@ export default function EuropeanProjectsRoutes() {
         <Route path="appel-a-projets" element={<RouteWithTitle titleKey="appel-a-projets" element={<div>Appel à projets</div>} />} />
         <Route path="donnees-reference" element={<RouteWithTitle titleKey="donnees-reference" element={<div>Données de référence</div>} />} />
         <Route
-          path="informations"
+          path="methodology"
           element={
             <RouteWithTitle
-              titleKey="informations"
+              titleKey="methodology"
               element={
                 <Suspense>
-                  <Informations />
+                  <Methodology />
                 </Suspense>
               }
             />

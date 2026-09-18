@@ -41,14 +41,50 @@
       "fr": "MSCA",
       "en": "MSCA"
     },
-    "link": "/european-projects/msca"
+    "link": "/european-projects/msca",
+    "synthesis": {
+      "label": { "fr": "Synthèse", "en": "Synthesis" },
+      "link": "/european-projects/msca?section=synthesis"
+    },
+    "positioning": {
+      "label": { "fr": "Positionnement", "en": "Positioning" },
+      "link": "/european-projects/msca?section=positioning"
+    },
+    "evolution": {
+      "label": { "fr": "Evolution", "en": "Evolution" },
+      "link": "/european-projects/msca?section=evolution"
+    }
   },
   "erc": {
     "label": { "fr": "ERC", "en": "ERC" },
-    "link": "/european-projects/erc"
+    "link": "/european-projects/erc",
+    "synthesis": {
+      "label": { "fr": "Synthèse", "en": "Synthesis" },
+      "link": "/european-projects/erc?section=synthesis"
+    },
+    "positioning": {
+      "label": { "fr": "Positionnement", "en": "Positioning" },
+      "link": "/european-projects/erc?section=positioning"
+    },
+    "entities": {
+      "label": { "fr": "Entités", "en": "Entities" },
+      "link": "/european-projects/erc?section=entities"
+    },
+    "pi": {
+      "label": { "fr": "Porteurs de projets", "en": "Principal investigators" },
+      "link": "/european-projects/erc?section=pi"
+    },
+    "evolution": {
+      "label": { "fr": "Evolution", "en": "Evolution" },
+      "link": "/european-projects/erc?section=evolution"
+    }
   },
   "evolution-pcri": {
     "label": { "fr": "Evolution des PCRI", "en": "Evolution of R&I programs" },
     "link": "/european-projects/evolution-pcri"
+  },
+  "methodology": {
+    "label": { "fr": "Méthodologie", "en": "Methodology" },
+    "link": "/european-projects/methodology"
   }
 }

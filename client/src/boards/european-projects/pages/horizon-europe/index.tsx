@@ -5,7 +5,7 @@ import EpNavigator from "../../components/ep-navigator/index";
 import TabsContent from "./components/TabsContent";
 import { getCountryInfo } from "../../../../components/country-selector/utils";
 
-import navigationConfig from "./navigation-config.json";
+import navigationConfig from "../../navigation-config.json";
 
 import "./styles.scss";
 import Breadcrumb from "../../../../components/breadcrumb";
