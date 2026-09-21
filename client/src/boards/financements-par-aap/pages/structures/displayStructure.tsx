@@ -96,7 +96,7 @@ export default function DisplayStructure() {
   const participantSuperOrganizationChildrenIds = participantSuperOrganizationChildren.map((org) => org?.id).filter((id) => !!id)
   const structureInfo = Object.fromEntries(new URLSearchParams(data?.hits?.hits?.[0]?._source?.participant_encoded_key ?? ""))
   let name = structureInfo?.label ?? ""
-  if (withComponents) name += " et ses composantes"
+  if (withComponents) name += " et ses établissements composantes"
   let scanrUrl = `https://scanr.enseignementsup-recherche.gouv.fr/search/projects?filters=%257B%2522year%2522%253A%257B%2522values%2522%253A%255B%257B%2522value%2522%253A${yearMin}%257D%252C%257B%2522value%2522%253A${yearMax}%257D%255D%252C%2522type%2522%253A%2522range%2522%257D%252C%2522participants_id_search%2522%253A%257B%2522values%2522%253A%255B`;
   participantSuperOrganizationChildren.forEach((child, index) => {
     if (index !== 0) scanrUrl += '%252C'
@@ -199,7 +199,7 @@ export default function DisplayStructure() {
                 <div style={{ alignItems: "center", display: "flex", gap: "0.5rem" }}>
                   <div className="fr-toggle">
                     <input checked={withComponents} className="fr-toggle__input" onChange={handleDisplayComponentsChange} type="checkbox" />
-                    <label className="fr-toggle__label">Vision consolidée avec ses composantes</label>
+                    <label className="fr-toggle__label">Vision consolidée avec ses établissements composantes</label>
                   </div>
                 </div>
               )}
