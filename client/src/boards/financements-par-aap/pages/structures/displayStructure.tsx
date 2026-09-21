@@ -128,7 +128,7 @@ export default function DisplayStructure() {
                   {structureInfo?.typologie_2}
                 </Text>
               )}
-              {participantIsSuperOrganization && withComponents && (
+              {!!participantIsSuperOrganization && withComponents && (
                 <Text size="xs" className="fr-mb-0 fr-text-mention--grey">
                   Composantes:
                   {' '}
