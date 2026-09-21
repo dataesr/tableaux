@@ -12,7 +12,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@dataesr/dsfr-plus": "^0.5.1",
+    "@dataesr/dsfr-plus": "^0.6.0",
     "@highcharts/map-collection": "^2.3.2",
     "@tanstack/react-query": "^5.90.12",
     "@tanstack/react-table": "^8.21.3",
