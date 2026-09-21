@@ -123,9 +123,11 @@ export default function DisplayStructure() {
               <Title as="h1" className="fr-mb-1v" look="h4">
                 {name}
               </Title>
-              <Text size="xs" className="fr-mb-0 fr-text-mention--grey">
-                {structureInfo?.typologie_2}
-              </Text>
+              {structureInfo?.typologie_2 && (
+                <Text size="xs" className="fr-mb-0 fr-text-mention--grey">
+                  {structureInfo?.typologie_2}
+                </Text>
+              )}
               {participantIsSuperOrganization && withComponents && (
                 <Text size="xs" className="fr-mb-0 fr-text-mention--grey">
                   Composantes:
