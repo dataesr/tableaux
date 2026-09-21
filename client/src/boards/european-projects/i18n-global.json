@@ -398,5 +398,9 @@
   "pi": {
     "fr": "Porteurs de projets",
     "en": "Project holders"
+  },
+  "calls": {
+    "fr": "Appels à projets",
+    "en": "Calls"
   }
 }

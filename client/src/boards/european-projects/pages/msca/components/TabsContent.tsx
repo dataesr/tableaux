@@ -1,10 +1,11 @@
 import { useSearchParams } from "react-router-dom";
 
 import i18n from "../../../i18n-global.json";
-import SyntheseContent from "./tabs/SyntheseContent";
-import PositionnementContent from "./tabs/PositionnementContent";
-import EvolutionContent from "./tabs/EvolutionContent";
 // import EntitiesContent from "./tabs/EntitiesContent";
+import CallsContent from "./tabs/CallsContent";
+import EvolutionContent from "./tabs/EvolutionContent";
+import PositionnementContent from "./tabs/PositionnementContent";
+import SyntheseContent from "./tabs/SyntheseContent";
 
 export default function TabsContent() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -15,7 +16,7 @@ export default function TabsContent() {
     return i18n[key][currentLang as "fr" | "en"] || i18n[key]["en"];
   }
 
-  const handleTabChange = (newTab: "synthesis" | "positioning" | "evolution" | "entities") => {
+  const handleTabChange = (newTab: "synthesis" | "positioning" | "evolution" | "entities" | "calls") => {
     const newParams = new URLSearchParams(searchParams);
     newParams.set("section", newTab);
     setSearchParams(newParams);
@@ -74,6 +75,18 @@ export default function TabsContent() {
               {getIntlLabel("evolution")}
             </button>
           </li>
+          <li className="fr-nav__item">
+            <button
+              className="fr-nav__link"
+              onClick={(e) => {
+                e.preventDefault();
+                handleTabChange("calls");
+              }}
+              aria-current={activeTab === "calls" ? "page" : undefined}
+            >
+              {getIntlLabel("calls")}
+            </button>
+          </li>
         </ul>
       </nav>
       <div className="fr-mt-3w">
@@ -81,6 +94,7 @@ export default function TabsContent() {
         {activeTab === "positioning" && <PositionnementContent />}
         {/* {activeTab === "entities" && <EntitiesContent />} */}
         {activeTab === "evolution" && <EvolutionContent />}
+        {activeTab === "calls" && <CallsContent />}
       </div>
     </div>
   );

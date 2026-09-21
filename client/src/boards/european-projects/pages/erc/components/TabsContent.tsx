@@ -1,11 +1,12 @@
 import { useSearchParams } from "react-router-dom";
 
 import i18n from "../../../i18n-global.json";
-import SyntheseContent from "./tabs/SyntheseContent";
-import PositionnementContent from "./tabs/PositionnementContent";
-import EvolutionContent from "./tabs/EvolutionContent";
+import CallsContent from "./tabs/CallsContent";
 import EntitiesContent from "./tabs/EntitiesContent";
+import EvolutionContent from "./tabs/EvolutionContent";
 import PiContent from "./tabs/PiContent";
+import PositionnementContent from "./tabs/PositionnementContent";
+import SyntheseContent from "./tabs/SyntheseContent";
 
 export default function TabsContent() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -18,7 +19,7 @@ export default function TabsContent() {
   }
 
   // Fonction pour changer d'onglet
-  const handleTabChange = (newTab: "synthesis" | "positioning" | "evolution" | "entities" | "pi") => {
+  const handleTabChange = (newTab: "synthesis" | "positioning" | "evolution" | "entities" | "pi" | "calls") => {
     const newParams = new URLSearchParams(searchParams);
     newParams.set("section", newTab);
     setSearchParams(newParams);
@@ -88,6 +89,18 @@ export default function TabsContent() {
               {getIntlLabel("evolution")}
             </button>
           </li>
+          <li className="fr-nav__item">
+            <button
+              className="fr-nav__link"
+              onClick={(e) => {
+                e.preventDefault();
+                handleTabChange("calls");
+              }}
+              aria-current={activeTab === "calls" ? "page" : undefined}
+            >
+              {getIntlLabel("calls")}
+            </button>
+          </li>
         </ul>
       </nav>
       <div className="fr-mt-3w">
@@ -96,6 +109,7 @@ export default function TabsContent() {
         {activeTab === "entities" && <EntitiesContent />}
         {activeTab === "pi" && <PiContent />}
         {activeTab === "evolution" && <EvolutionContent />}
+        {activeTab === "calls" && <CallsContent />}
       </div>
     </div>
   );

@@ -1,12 +1,13 @@
 import { useSearchParams } from "react-router-dom";
 
 import i18n from "../../../i18n-global.json";
-import SyntheseContent from "./tabs/SyntheseContent";
-import PositionnementContent from "./tabs/PositionnementContent";
-import CollaborationsContent from "./tabs/CollaborationsContent";
+import CallsContent from "./tabs/CallsContent";
 import CheckEICAccelerator from "../../../components/check-eic-accelerator";
+import CollaborationsContent from "./tabs/CollaborationsContent";
 import EntitiesContent from "./tabs/EntitiesContent";
+import PositionnementContent from "./tabs/PositionnementContent";
 import StructureIdentity from "./structure-identity";
+import SyntheseContent from "./tabs/SyntheseContent";
 
 export default function TabsContent() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -19,7 +20,7 @@ export default function TabsContent() {
   }
 
   // Fonction pour changer d'onglet
-  const handleTabChange = (newTab: "synthesis" | "positioning" | "collaborations" | "entities") => {
+  const handleTabChange = (newTab: "synthesis" | "positioning" | "collaborations" | "entities" | "calls") => {
     const newParams = new URLSearchParams(searchParams);
     newParams.set("section", newTab);
     setSearchParams(newParams);
@@ -79,6 +80,18 @@ export default function TabsContent() {
               {getIntlLabel("country-entities")}
             </button>
           </li>
+          <li className="fr-nav__item">
+            <button
+              className="fr-nav__link"
+              onClick={(e) => {
+                e.preventDefault();
+                handleTabChange("calls");
+              }}
+              aria-current={activeTab === "calls" ? "page" : undefined}
+            >
+              {getIntlLabel("calls")}
+            </button>
+          </li>
         </ul>
       </nav>
       <div className="fr-mt-3w">
@@ -86,6 +99,7 @@ export default function TabsContent() {
         {activeTab === "positioning" && <PositionnementContent />}
         {activeTab === "collaborations" && <CollaborationsContent />}
         {activeTab === "entities" && <EntitiesContent />}
+        {activeTab === "calls" && <CallsContent />}
       </div>
     </div>
   );
