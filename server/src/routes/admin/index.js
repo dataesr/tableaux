@@ -563,7 +563,7 @@ router.route("/admin/get-constants").get(async (req, res) => {
 //     });
 
 //     const response = await fetch(
-//       `https://ticket-office.dataesr.ovh/api/contacts?${params}`,
+//       `${VITE_APP_TICKETOFFICE_URL}/api/contacts?${params}`,
 //       {
 //         method: "GET",
 //         headers: {

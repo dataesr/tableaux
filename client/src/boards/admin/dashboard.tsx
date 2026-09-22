@@ -20,7 +20,7 @@ import SyntaxHighlighter from "react-syntax-highlighter";
 import { queryClient } from "../../main";
 import UploadVersion from "./upload-version";
 
-const { VITE_APP_SERVER_URL } = import.meta.env;
+const { VITE_APP_SERVER_URL, VITE_APP_TICKETOFFICE_URL } = import.meta.env;
 
 export default function Dashboard() {
   const { dashboardId } = useParams();
@@ -165,7 +165,7 @@ export default function Dashboard() {
             </Link>
           </Breadcrumb>
           <Link
-            href="https://ticket-office.staging.dataesr.ovh/datasupr-contact?page=1&query=&searchInMessage=true&sort=DESC&status=choose"
+            href={`${VITE_APP_TICKETOFFICE_URL}/tableaux-contact?page=1&query=&searchInMessage=true&sort=DESC&status=choose`}
             target="_blank"
           >
             Accéder à ticket office
