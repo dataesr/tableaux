@@ -12,7 +12,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@dataesr/dsfr-plus": "^0.6.0",
+    "@dataesr/dsfr-plus": "^0.6.3",
     "@highcharts/map-collection": "^2.3.2",
     "@tanstack/react-query": "^5.90.12",
     "@tanstack/react-table": "^8.21.3",
@@ -44,10 +44,5 @@
     "eslint-plugin-react-refresh": "^0.4.26",
     "typescript": "^5.9.3",
     "vite": "^7.3.0"
-  },
-  "overrides": {
-    "react": "^19.2.3",
-    "react-dom": "^19.2.3"
-  },
-  "//overrides": "Force tous les packages (y compris @dataesr/dsfr-plus) à utiliser React 19 au lieu de React 18, pour éviter les conflits de versions multiples qui causent l'erreur 'Cannot read properties of null (reading useRef)'"
+  }
 }
