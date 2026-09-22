@@ -17,6 +17,7 @@ import ProgramsFundingEvo3Years from "../../../overview/charts/programs-funding-
 import TopicsFundingEvo3Years from "../../../overview/charts/topics-funding-evo-3-years";
 
 import { getI18nLabel } from "../../../../../../utils";
+import FundingValuesPrograms from "../../../overview/charts/funding-programs";
 
 const i18n = {
   "synthesis-title": { fr: "Synthèse", en: "Synthesis" },
@@ -30,6 +31,10 @@ const i18n = {
   "pillar-composition-callout": {
     fr: "Visualisez la répartition des subventions du pilier sélectionné par programme. Cela vous permet d'identifier les programmes les plus financés et de comprendre leur contribution au sein du pilier.",
     en: "Visualize the grant distribution of the selected pillar by program. This allows you to identify the most funded programs and understand their contribution within the pillar.",
+  },
+  "pillar-programs-title": {
+    fr: "Cumul des financements obtenus de chaque programme par pilier",
+    en: "Total of successful funding for each program by pillar",
   },
   "main-partner-title": { fr: "Qui sont les bénéficiaires ?", en: "Who are the beneficiaries?" },
 
@@ -88,6 +93,11 @@ export default function SyntheseContent() {
             {getI18nLabel(i18n, "pillar-comparison-title", currentLang)}
           </Title>
           <PillarsFunding />
+
+          <Title as="h2" className="fr-mt-5w">
+            {getI18nLabel(i18n, "pillar-programs-title", currentLang)}
+          </Title>
+          <FundingValuesPrograms />
         </section>
       );
 

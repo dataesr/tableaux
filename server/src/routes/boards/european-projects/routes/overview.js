@@ -821,56 +821,65 @@ router.route("/european-projects/overview/destination-funding-proportion").get(a
 
 router.route("/european-projects/overview/funding").get(async (req, res) => {
   const filters = checkQuery(req.query, ["country_code"], res);
+  const groupBy = { code: "$pilier_code", name_fr: "$pilier_name_fr", name_en: "$pilier_name_en" };
 
-  // test filters (thematics, programs, thematics, destinations)
+  // Depending on the filter selected, we want to group at the lowest level
   if (req.query.pillars) {
     const pillars = req.query.pillars.split("|");
     filters.pilier_code = { $in: pillars };
+
+    groupBy.code = "$programme_code";
+    groupBy.name_fr = "$programme_name_fr";
+    groupBy.name_en = "$programme_name_en";
   }
+
   if (req.query.programs) {
     const programs = req.query.programs.split("|");
     filters.programme_code = { $in: programs };
     delete filters.pilier_code;
+
+    groupBy.code = "$thema_code";
+    groupBy.name_fr = "$thema_name_fr";
+    groupBy.name_en = "$thema_name_en";
   }
+
   if (req.query.thematics) {
     const thematics = req.query.thematics.split(",");
     const filteredThematics = thematics.filter((thematic) => !["ERC", "MSCA"].includes(thematic));
     filters.thema_code = { $in: filteredThematics };
     delete filters.pilier_code;
     delete filters.programme_code;
+
+    groupBy.code = "$destination_code";
+    groupBy.name_fr = "$destination_name_fr";
+    groupBy.name_en = "$destination_name_en";
   }
+
   if (req.query.destinations) {
     const destinations = req.query.destinations.split(",");
     filters.destination_code = { $in: destinations };
     delete filters.pilier_code;
     delete filters.programme_code;
     delete filters.thematics;
+
+    groupBy.code = "$destination_code";
+    groupBy.name_fr = "$destination_name_fr";
+    groupBy.name_en = "$destination_name_en";
   }
+
   if (req.query.structureid) {
     filters.entities_id = req.query.structureid;
     delete filters.structureid;
   }
 
-  // test filters (thematics, programs, thematics, destinations)
-  const groupBy = { code: "$pilier_code", name_fr: "$pilier_name_fr", name_en: "$pilier_name_en" };
-  if (filters.pilier_code) {
+  // group by exception: if no pilar, we want to show all programs too. This query will be call two times. One without grouBy params en one with
+  if (req.query.showAllPrograms === "true") {
     groupBy.code = "$programme_code";
     groupBy.name_fr = "$programme_name_fr";
     groupBy.name_en = "$programme_name_en";
-  } else if (filters.programme_code) {
-    groupBy.code = "$thema_code";
-    groupBy.name_fr = "$thema_name_fr";
-    groupBy.name_en = "$thema_name_en";
-  } else if (filters.thema_code) {
-    groupBy.code = "$destination_code";
-    groupBy.name_fr = "$destination_name_fr";
-    groupBy.name_en = "$destination_name_en";
-  } else if (filters.destination_code) {
-    // todo ???
-    groupBy.code = "$destination_code";
-    groupBy.name_fr = "$destination_name_fr";
-    groupBy.name_en = "$destination_name_en";
   }
+  console.log(filters);
+  console.log(groupBy);
 
   const data = await db
     .collection(collection_projects_entities)
