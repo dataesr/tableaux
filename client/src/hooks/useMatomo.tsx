@@ -7,29 +7,24 @@ declare global {
   }
 }
 
-const MATOMO_URL = import.meta.env.VITE_APP_MATOMO_PROD_URL;
-
-const SITE_ID =
-  import.meta.env.MODE === "production"
-    ? import.meta.env.VITE_APP_MATOMO_PROD_SITE_ID
-    : import.meta.env.VITE_APP_MATOMO_STAGING_SITE_ID;
+const { VITE_APP_MATOMO_SITE_ID, VITE_APP_MATOMO_URL } = import.meta.env;
 
 export function useMatomo() {
   const { pathname, search } = useLocation();
   const initialized = useRef(false);
 
   useEffect(() => {
-    if (!MATOMO_URL || !SITE_ID) return;
+    if (!VITE_APP_MATOMO_URL || !VITE_APP_MATOMO_SITE_ID) return;
 
     if (!initialized.current) {
       initialized.current = true;
       window._paq = window._paq || [];
-      window._paq.push(["setTrackerUrl", `${MATOMO_URL}matomo.php`]);
-      window._paq.push(["setSiteId", SITE_ID]);
+      window._paq.push(["setTrackerUrl", `${VITE_APP_MATOMO_URL}/matomo.php`]);
+      window._paq.push(["setSiteId", VITE_APP_MATOMO_SITE_ID]);
       window._paq.push(["enableLinkTracking"]);
       const g = document.createElement("script");
       g.async = true;
-      g.src = `${MATOMO_URL}matomo.js`;
+      g.src = `${VITE_APP_MATOMO_URL}/matomo.js`;
       document.head.appendChild(g);
     }
 
