@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query"
 import { useSearchParams } from "react-router-dom"
 
 import DefaultSkeleton from "../../../../components/charts-skeletons/default.tsx"
+import { isInProduction } from "../../../../utils.tsx"
 import { formatCompactNumber, funders, getCssColor, getEsQuery, getYearRangeLabel, years } from "../../utils.ts"
 import ChartCard from "../chart-card"
 
@@ -17,6 +18,17 @@ export default function Cards({ participantSuperOrganizationChildrenIds = [] }: 
   const yearMin = searchParams.get("yearMin")
 
   const structures = [structure].concat(participantSuperOrganizationChildrenIds)
+
+  let shouldIgnoreBudgetField = structure ? "participant_ignore_total_budget" : "region_ignore_total_budget"
+  let shouldIgnoreFundingField = structure ? "participant_ignore_funding" : "region_ignore_funding"
+  if (!isInProduction()) {
+    shouldIgnoreBudgetField = structure
+      ? (participantSuperOrganizationChildrenIds.length > 0 ? "participant_ignore_total_budget_super_organization" : "participant_ignore_total_budget")
+      : "region_ignore_total_budget"
+    shouldIgnoreFundingField = structure
+      ? (participantSuperOrganizationChildrenIds.length > 0 ? "participant_ignore_funding_super_organization" : "participant_ignore_funding")
+      : "region_ignore_funding"
+  }
 
   const body = {
     ...getEsQuery({ regions: [region], structures }),
@@ -40,7 +52,7 @@ export default function Cards({ participantSuperOrganizationChildrenIds = [] }: 
               },
               should_ignore_budget: {
                 terms: {
-                  field: structure ? "participant_ignore_total_budget" : "region_ignore_total_budget",
+                  field: shouldIgnoreBudgetField,
                   missing: 0,
                 },
                 aggregations: {
@@ -53,7 +65,7 @@ export default function Cards({ participantSuperOrganizationChildrenIds = [] }: 
               },
               should_ignore_funding: {
                 terms: {
-                  field: structure ? "participant_ignore_funding" : "region_ignore_funding",
+                  field: shouldIgnoreFundingField,
                   missing: 0,
                 },
                 aggregations: {
