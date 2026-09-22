@@ -38,8 +38,8 @@ Highcharts.setOptions({
 
 // Import des types pour ChartFooter
 interface LocalizedContent {
-  fr: JSX.Element;
-  en?: JSX.Element;
+  fr: React.JSX.Element;
+  en?: React.JSX.Element;
 }
 
 interface LocalizedUrl {

@@ -1,4 +1,6 @@
+import React from "react";
 import { useSearchParams } from "react-router-dom";
+
 import { rangeOfYearsToApiFormat } from "../../url-utils";
 import type { PositioningData, CountryData } from "./query";
 
@@ -105,7 +107,7 @@ export function processPositioningData(
 /**
  * Génère le tableau de données pour l'accessibilité
  */
-export function renderDataTable(processedData: ProcessedPositioningData, currentLang: string = "fr"): JSX.Element {
+export function renderDataTable(processedData: ProcessedPositioningData, currentLang: string = "fr"): React.JSX.Element {
   const headers =
     currentLang === "fr"
       ? ["Rang", "Pays", processedData.metric === "projects" ? "Nombre de projets" : "Financements (M€)"]

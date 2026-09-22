@@ -1,6 +1,7 @@
 import { useSearchParams } from "react-router-dom";
 import { rangeOfYearsToApiFormat } from "../../url-utils";
 import type { PositioningByDomainData, CountryData } from "./query";
+import React from "react";
 
 export interface ProcessedPositioningMultiPanelData {
   countries: {
@@ -134,7 +135,7 @@ export function processData(
   return { countries: formattedCountries, selectedCountry, metric, domainCode, avgTop10, avgAll };
 }
 
-export function renderDataTable(processedData: ProcessedPositioningByDomainData, currentLang: string = "fr"): JSX.Element {
+export function renderDataTable(processedData: ProcessedPositioningByDomainData, currentLang: string = "fr"): React.JSX.Element {
   const headers =
     currentLang === "fr"
       ? ["Rang", "Pays", processedData.metric === "projects" ? "Nombre de projets" : "Financements (M€)"]
@@ -224,7 +225,7 @@ export function processDataMultiPanel(
   return { countries, panels, metric, domainCode };
 }
 
-export function renderDataTableMultiPanel(multiPanelData: ProcessedPositioningMultiPanelData, currentLang: string = "fr"): JSX.Element {
+export function renderDataTableMultiPanel(multiPanelData: ProcessedPositioningMultiPanelData, currentLang: string = "fr"): React.JSX.Element {
   const countryHeader = currentLang === "fr" ? "Pays" : "Country";
   const headers = [countryHeader, ...multiPanelData.panels.map((p) => p.panelName || p.panelId)];
 

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { SegmentedControl, SegmentedElement } from "@dataesr/dsfr-plus";
 import { useFinanceEtablissementEvolution } from "../../../../../api";
@@ -162,7 +162,7 @@ export default function EvolutionChart({
   const createChartConfig = (
     chartId: string,
     titleOverride?: string,
-    commentOverride?: JSX.Element
+    commentOverride?: React.JSX.Element
   ) => ({
     id: chartId,
     integrationURL: `/integration?chart_id=${chartId}&structureId=${activeEtablissementId}&analysis=${activeSelectedAnalysis}`,

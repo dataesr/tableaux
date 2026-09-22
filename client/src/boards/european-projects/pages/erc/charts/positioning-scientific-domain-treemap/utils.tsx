@@ -2,6 +2,7 @@ import { useSearchParams } from "react-router-dom";
 import { rangeOfYearsToApiFormat } from "../../url-utils";
 import type { PositioningByDomainData, CountryData } from "./query";
 import { SCIENTIFIC_DOMAINS, type ScientificDomainCode } from "../positioning-scientific-domain/utils";
+import React from "react";
 
 export { SCIENTIFIC_DOMAINS, type ScientificDomainCode };
 
@@ -159,7 +160,7 @@ export function processTreemapData(
   return { european, others, otherTotal, otherCount, selectedCountry, metric, domainCode };
 }
 
-export function renderDataTable(processedData: ProcessedTreemapData, currentLang: string = "fr", showOthersDetail: boolean = false): JSX.Element {
+export function renderDataTable(processedData: ProcessedTreemapData, currentLang: string = "fr", showOthersDetail: boolean = false): React.JSX.Element {
   const headers =
     currentLang === "fr"
       ? ["Pays", processedData.metric === "projects" ? "Porteurs de projets" : "Financements (M€)"]

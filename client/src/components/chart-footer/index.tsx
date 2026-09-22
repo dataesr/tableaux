@@ -5,8 +5,8 @@ import { getI18nLabel } from "../../utils";
 import i18n from "./i18n.json";
 
 interface LocalizedContent {
-  en?: JSX.Element;
-  fr: JSX.Element;
+  en?: React.JSX.Element;
+  fr: React.JSX.Element;
 }
 
 interface LocalizedUrl {

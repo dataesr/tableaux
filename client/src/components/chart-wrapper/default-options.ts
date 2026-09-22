@@ -40,7 +40,6 @@ export function createChartOptions(
           style: {
             textOutline: "none",
           },
-          zIndex: 1,
         },
       },
     },

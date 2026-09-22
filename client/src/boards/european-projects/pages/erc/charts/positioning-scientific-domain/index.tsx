@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useQuery, useQueries } from "@tanstack/react-query";
 import { SegmentedControl, SegmentedElement } from "@dataesr/dsfr-plus";
 
@@ -145,7 +145,7 @@ function PositioningScientificDomainChartInner({ countryCode: propCountryCode, c
 
   // --- Calcul des données et options du graphique (uniquement si chargé) ---
   let chartOptions: ReturnType<typeof Options> = null;
-  let renderDataFn: () => JSX.Element | null = () => null;
+  let renderDataFn: () => React.JSX.Element | null = () => null;
   let hasNoData = false;
 
   if (!isChartLoading) {

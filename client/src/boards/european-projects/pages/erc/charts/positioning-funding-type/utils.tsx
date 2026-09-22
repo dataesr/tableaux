@@ -1,4 +1,6 @@
+import React from "react"
 import { useSearchParams } from "react-router-dom";
+
 import { rangeOfYearsToApiFormat } from "../../url-utils";
 import type { PositioningByFundingTypeData, CountryData } from "./query";
 
@@ -103,7 +105,7 @@ export function processData(
   return { countries: formattedCountries, selectedCountry, metric, fundingType, avgTop10, avgAll };
 }
 
-export function renderDataTable(processedData: ProcessedPositioningByFundingTypeData, currentLang: string = "fr"): JSX.Element {
+export function renderDataTable(processedData: ProcessedPositioningByFundingTypeData, currentLang: string = "fr"): React.JSX.Element {
   const headers =
     currentLang === "fr"
       ? ["Rang", "Pays", processedData.metric === "projects" ? "Nombre de projets" : "Financements (M€)"]

@@ -3,10 +3,10 @@ import { Col, Container, Link, Row, Title } from "@dataesr/dsfr-plus";
 import "./styles.scss";
 
 type CardProps = {
-  descriptionNode?: JSX.Element;
+  descriptionNode?: React.JSX.Element;
   label?: string;
   number: number | string;
-  tagsNode?: JSX.Element;
+  tagsNode?: React.JSX.Element;
   to?: string;
 };
 
