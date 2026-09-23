@@ -2,7 +2,8 @@ import { Container, Row, Col } from "@dataesr/dsfr-plus";
 import { useSearchParams } from "react-router-dom";
 import FAQ from "./component/faq-display";
 import { useFinanceFAQ } from "./api";
-import Breadcrumb from "../../components/breadcrumb";
+import navigationConfig from "../../components/layouts/navigation-config.json";
+import Breadcrumb from "../../../../components/breadcrumb";
 
 export default function FAQView() {
   const [searchParams] = useSearchParams();
@@ -46,12 +47,7 @@ export default function FAQView() {
         <Container as="section">
           <Row>
             <Col>
-              <Breadcrumb
-                items={[
-                  { label: "Accueil", href: "/structures-finance/accueil" },
-                  { label: "FAQ" },
-                ]}
-              />
+              <Breadcrumb config={navigationConfig} />
             </Col>
           </Row>
           <Row>

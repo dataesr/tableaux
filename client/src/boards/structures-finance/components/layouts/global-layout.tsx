@@ -92,7 +92,7 @@ export default function GlobalLayout() {
                 <li className="fr-nav__item">
                   <Link
                     to={`/structures-finance/etablissements?${cleanParams}${cleanParams ? "&" : ""
-                      }section=ressources`}
+                      }onglet=ressources`}
                     target="_self"
                     {...(is("/structures-finance/etablissements") && {
                       "aria-current": "page",

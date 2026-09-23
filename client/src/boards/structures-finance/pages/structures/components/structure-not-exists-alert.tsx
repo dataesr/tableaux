@@ -1,7 +1,8 @@
 import { Container, Row, Col } from "@dataesr/dsfr-plus";
 import { useSearchParams } from "react-router-dom";
 import CardSimple from "../../../../../components/card-simple";
-import Breadcrumb from "../../../components/breadcrumb";
+import navigationConfig from "../../../components/layouts/navigation-config.json";
+import Breadcrumb from "../../../../../components/breadcrumb";
 
 interface StructureNotExistsAlertProps {
   etablissementLibHistorique: string;
@@ -33,17 +34,10 @@ export default function StructureNotExistsAlert({
         <Container as="section">
           <Row>
             <Col>
-              <Breadcrumb
-                items={[
-                  {
-                    label: "Sélectionner un établissement",
-                    href: "/structures-finance/",
-                  },
-                  {
-                    label: "Établissement introuvable",
-                  },
-                ]}
-              />
+              <Breadcrumb config={{
+                  ...navigationConfig,
+                  etablissements: { ...navigationConfig.etablissements, label: { fr: "Établissement introuvable" } },
+                }} />
             </Col>
           </Row>
         </Container>

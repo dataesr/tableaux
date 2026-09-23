@@ -8,6 +8,7 @@ import { DEFAULT_REFERENCE_YEAR } from "../../config/constants";
 import mediaStructuresFinance from "../../../../assets/boards/structures-finance.svg";
 
 
+
 function HeroSection() {
   const navigate = useNavigate();
 

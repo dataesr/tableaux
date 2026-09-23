@@ -24,8 +24,9 @@ import NoDataForYearAlert from "./no-data-for-year-alert";
 import MultipleStructuresSelector from "./multiple-structures-selector";
 import DefaultSkeleton from "../../../../../components/charts-skeletons/default";
 import { SectionYearProvider } from "../../../../../components/section-year-select";
-import Breadcrumb from "../../../components/breadcrumb";
+import navigationConfig from "../../../components/layouts/navigation-config.json";
 import { DEFAULT_REFERENCE_YEAR } from "../../../config/constants";
+import Breadcrumb from "../../../../../components/breadcrumb";
 
 export default function StructureView() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -33,7 +34,7 @@ export default function StructureView() {
   const selectedYear = searchParams.get("year") || DEFAULT_REFERENCE_YEAR;
   const selectedStructure = searchParams.get("structureId") || "";
   const useHistorical = searchParams.get("useHistorical") === "true";
-  const section = searchParams.get("section") || "ressources";
+  const section = searchParams.get("onglet") || "ressources";
 
   const { data: yearsData, isLoading: isLoadingYears } = useFinanceYears();
   const years = yearsData?.years || [];
@@ -88,6 +89,7 @@ export default function StructureView() {
     const params = Object.fromEntries(searchParams);
     delete params.structureId;
     delete params.useHistorical;
+    delete params.onglet;
     setSearchParams(params);
   };
 
@@ -104,7 +106,7 @@ export default function StructureView() {
     delete params.filterRce;
     delete params.filterDevimmo;
     delete params.positioningChart;
-    setSearchParams({ ...params, section: newSection });
+    setSearchParams({ ...params, onglet: newSection });
   };
 
   const handleYearChange = (year: string) => {
@@ -203,14 +205,13 @@ export default function StructureView() {
             <Row>
               <Col>
                 <Breadcrumb
-                  items={[
-                    { label: "Accueil", href: "/structures-finance/accueil" },
-                    {
-                      label:
-                        multiplesData.etablissements[0]
-                          ?.etablissement_actuel_lib || "Établissement",
+                  config={{
+                    ...navigationConfig,
+                    etablissements: {
+                      ...navigationConfig.etablissements,
+                      label: { fr: multiplesData.etablissements[0]?.etablissement_actuel_lib || "Établissement" },
                     },
-                  ]}
+                  }}
                 />
               </Col>
             </Row>
@@ -238,15 +239,13 @@ export default function StructureView() {
           <Row>
             <Col>
               <Breadcrumb
-                items={[
-                  { label: "Accueil", href: "/structures-finance/accueil" },
-                  {
-                    label:
-                      detailData?.etablissement_lib ||
-                      detailData?.etablissement_actuel_lib ||
-                      "Établissement",
+                config={{
+                  ...navigationConfig,
+                  etablissements: {
+                    ...navigationConfig.etablissements,
+                    label: { fr: detailData?.etablissement_lib || detailData?.etablissement_actuel_lib || "Établissement" },
                   },
-                ]}
+                }}
               />
             </Col>
           </Row>

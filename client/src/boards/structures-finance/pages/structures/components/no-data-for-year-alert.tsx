@@ -1,5 +1,6 @@
 import { Container, Row, Col, Button } from "@dataesr/dsfr-plus";
-import Breadcrumb from "../../../components/breadcrumb";
+import navigationConfig from "../../../components/layouts/navigation-config.json";
+import Breadcrumb from "../../../../../components/breadcrumb";
 
 interface NoDataForYearAlertProps {
     etablissementLib: string;
@@ -22,12 +23,10 @@ export default function NoDataForYearAlert({
                 <Container as="section">
                     <Row>
                         <Col>
-                            <Breadcrumb
-                                items={[
-                                    { label: "Accueil", href: "/structures-finance/accueil" },
-                                    { label: etablissementLib || "Établissement" },
-                                ]}
-                            />
+                            <Breadcrumb config={{
+                                    ...navigationConfig,
+                                    etablissements: { ...navigationConfig.etablissements, label: { fr: etablissementLib || "Établissement" } },
+                                }} />
                         </Col>
                     </Row>
                 </Container>

@@ -1,30 +1,38 @@
 {
   "structures-finance": {
     "label": {
-      "fr": "Tableau de bord des financements des structures",
-      "en": "Structures Finance Dashboard"
+      "fr": "Tableau de bord des financements des structures"
     },
-    "link": "/structures-finance"
+    "link": "/structures-finance/accueil"
   },
   "accueil": {
     "label": {
-      "fr": "Accueil",
-      "en": "Home"
+      "fr": "Accueil"
     },
     "link": "/structures-finance/accueil"
   },
   "etablissements": {
     "label": {
-      "fr": "Vue par établissement",
-      "en": "Structure view"
+      "fr": "Vue par établissement"
     },
     "link": "/structures-finance/etablissements"
   },
   "national": {
     "label": {
-      "fr": "Vue nationale",
-      "en": "National view"
+      "fr": "Vue nationale"
     },
     "link": "/structures-finance/national"
+  },
+  "definitions": {
+    "label": {
+      "fr": "Définitions"
+    },
+    "link": "/structures-finance/definitions"
+  },
+  "faq": {
+    "label": {
+      "fr": "Foire aux questions"
+    },
+    "link": "/structures-finance/faq"
   }
 }

@@ -11,8 +11,9 @@ import { useFilteredNationalData } from "../hooks/useFilteredNationalData";
 import { useFilters } from "../../../utils/useFilters";
 import "../styles.scss";
 import Dropdown from "../../../../../components/dropdown";
-import Breadcrumb from "../../../components/breadcrumb";
 import { DEFAULT_REFERENCE_YEAR } from "../../../config/constants";
+import navigationConfig from "../../../components/layouts/navigation-config.json";
+import Breadcrumb from "../../../../../components/breadcrumb";
 
 const DEFAULT_YEAR = DEFAULT_REFERENCE_YEAR;
 
@@ -31,8 +32,8 @@ export default function NationalSelector() {
       searchParams.delete("structureId");
       hasChanges = true;
     }
-    if (searchParams.has("section")) {
-      searchParams.delete("section");
+    if (searchParams.has("onglet")) {
+      searchParams.delete("onglet");
       hasChanges = true;
     }
 
@@ -105,12 +106,7 @@ export default function NationalSelector() {
       <Container as="section">
         <Row>
           <Col xs="12">
-            <Breadcrumb
-              items={[
-                { label: "Accueil", href: "/structures-finance/accueil" },
-                { label: "Vue nationale" },
-              ]}
-            />
+            <Breadcrumb config={navigationConfig} />
           </Col>
         </Row>
 

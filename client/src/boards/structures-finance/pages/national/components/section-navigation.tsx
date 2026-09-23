@@ -6,10 +6,10 @@ import "../styles.scss";
 export default function SectionNavigation() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [isOpen, setIsOpen] = useState(false);
-  const activeSection = searchParams.get("section") || "comparison";
+  const activeSection = searchParams.get("onglet") || "comparison";
 
   const handleSectionChange = (section: string) => {
-    searchParams.set("section", section);
+    searchParams.set("onglet", section);
     setSearchParams(searchParams);
     setIsOpen(false);
   };

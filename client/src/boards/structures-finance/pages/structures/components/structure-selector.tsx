@@ -7,7 +7,8 @@ import { useFilters } from "../../../utils/useFilters";
 import SelectionUI from "./selection-ui";
 import CardSimple from "../../../../../components/card-simple";
 import DefaultSkeleton from "../../../../../components/charts-skeletons/default";
-import Breadcrumb from "../../../components/breadcrumb";
+import navigationConfig from "../../../components/layouts/navigation-config.json";
+import Breadcrumb from "../../../../../components/breadcrumb";
 
 export default function StructureSelection() {
   const [, setSearchParams] = useSearchParams();
@@ -46,7 +47,7 @@ export default function StructureSelection() {
   const handleStructureSelect = (id: string) => {
     setSearchParams({
       structureId: id,
-      section: "ressources",
+      onglet: "ressources",
       year: DEFAULT_REFERENCE_YEAR,
     });
   };
@@ -57,12 +58,10 @@ export default function StructureSelection() {
         <Container as="section">
           <Row>
             <Col>
-              <Breadcrumb
-                items={[
-                  { label: "Accueil", href: "/structures-finance/accueil" },
-                  { label: "Sélectionner un établissement" },
-                ]}
-              />
+              <Breadcrumb config={{
+                  ...navigationConfig,
+                  etablissements: { ...navigationConfig.etablissements, label: { fr: "Sélectionner un établissement" } },
+                }} />
             </Col>
           </Row>
           {isLoading ? (
