@@ -29,7 +29,7 @@ export default function SectionYearSelect() {
 
   return (
     <div className="section-year-select fr-select-group fr-mb-0">
-      <label className="fr-label" htmlFor="section-year-select">
+      <label className="fr-label text-center" htmlFor="section-year-select">
         {label}
       </label>
       <select

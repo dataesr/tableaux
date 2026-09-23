@@ -1,6 +1,5 @@
 @use "./colors.scss";
 
-
 .search {
   .search-results {
     background-color: #fff;
@@ -45,6 +44,10 @@ ul {
 
 .text-right {
   text-align: right;
+}
+
+.text-center {
+  text-align: center;
 }
 
 .legend {
