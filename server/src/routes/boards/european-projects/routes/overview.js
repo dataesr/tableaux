@@ -878,8 +878,6 @@ router.route("/european-projects/overview/funding").get(async (req, res) => {
     groupBy.name_fr = "$programme_name_fr";
     groupBy.name_en = "$programme_name_en";
   }
-  console.log(filters);
-  console.log(groupBy);
 
   const data = await db
     .collection(collection_projects_entities)
