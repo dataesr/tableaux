@@ -37,11 +37,10 @@ export default function Router() {
     queryKey: ["list-dashboards"],
     queryFn: async () => {
       const response = await fetch(`${VITE_APP_SERVER_URL}/admin/list-dashboards`)
-      const json = await response.json()
-      const visibleDashboards = (json ?? []).filter((dashboard) => dashboard.homePageVisible)
+      const allDashboards = await response.json()
       // Asynchronously load each media to display on the dashboard tile on the home page
-      const allResponses = await Promise.all(visibleDashboards.map((dashboard) => import(`./boards/${dashboard.id}/routes.tsx`).catch(() => { })))
-      return visibleDashboards.map((dashboard, index) => {
+      const allResponses = await Promise.all(allDashboards.map((dashboard) => import(`./boards/${dashboard.id}/routes.tsx`).catch(() => { })))
+      return allDashboards.map((dashboard, index) => {
         const routes = allResponses[index]?.default ?? ""
         return { ...dashboard, routes }
       })
