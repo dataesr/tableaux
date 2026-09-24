@@ -13,7 +13,7 @@ import { getI18nLabel } from "../../../../../../utils";
 
 const i18n = { ...i18nGlobal, ...i18nLocal };
 
-export default function CountriesCollaborationsBubble({ nbToShow }) {
+export default function CountriesCollaborationsBubble({ nbToShow = 5 }) {
   const [searchParams] = useSearchParams();
   const params = useGetParams();
   const currentLang = searchParams.get("language") || "fr";
