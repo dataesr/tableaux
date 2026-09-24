@@ -4,7 +4,6 @@ import { useState } from "react"
 import { useNavigate, useSearchParams } from "react-router-dom"
 
 import Select from "../../../../components/select"
-import { isInProduction } from "../../../../utils"
 import Classifications from "../../charts/classifications"
 import Classifications2 from "../../charts/classifications2"
 import FrenchPartners from "../../charts/french-partners"
@@ -197,7 +196,7 @@ export default function DisplayStructure() {
                   ))}
                 </Select>
               </div>
-              {!isInProduction() && participantIsSuperOrganization && (
+              {participantIsSuperOrganization && (
                 <div style={{ alignItems: "center", display: "flex", gap: "0.5rem" }}>
                   <div className="fr-toggle">
                     <input checked={withComponents} className="fr-toggle__input" onChange={handleDisplayComponentsChange} type="checkbox" />

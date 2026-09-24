@@ -3,7 +3,6 @@ import { useQuery } from "@tanstack/react-query"
 import { useSearchParams } from "react-router-dom"
 
 import DefaultSkeleton from "../../../../components/charts-skeletons/default.tsx"
-import { isInProduction } from "../../../../utils.tsx"
 import { formatCompactNumber, funders, getCssColor, getEsQuery, getYearRangeLabel, years } from "../../utils.ts"
 import ChartCard from "../chart-card"
 
@@ -19,16 +18,12 @@ export default function Cards({ participantSuperOrganizationChildrenIds = [] }: 
 
   const structures = [structure].concat(participantSuperOrganizationChildrenIds)
 
-  let shouldIgnoreBudgetField = structure ? "participant_ignore_total_budget" : "region_ignore_total_budget"
-  let shouldIgnoreFundingField = structure ? "participant_ignore_funding" : "region_ignore_funding"
-  if (!isInProduction()) {
-    shouldIgnoreBudgetField = structure
-      ? (participantSuperOrganizationChildrenIds.length > 0 ? "participant_ignore_total_budget_super_organization" : "participant_ignore_total_budget")
-      : "region_ignore_total_budget"
-    shouldIgnoreFundingField = structure
-      ? (participantSuperOrganizationChildrenIds.length > 0 ? "participant_ignore_funding_super_organization" : "participant_ignore_funding")
-      : "region_ignore_funding"
-  }
+  const shouldIgnoreBudgetField = structure
+    ? (participantSuperOrganizationChildrenIds.length > 0 ? "participant_ignore_total_budget_super_organization" : "participant_ignore_total_budget")
+    : "region_ignore_total_budget"
+  const shouldIgnoreFundingField = structure
+    ? (participantSuperOrganizationChildrenIds.length > 0 ? "participant_ignore_funding_super_organization" : "participant_ignore_funding")
+    : "region_ignore_funding"
 
   const body = {
     ...getEsQuery({ regions: [region], structures }),
