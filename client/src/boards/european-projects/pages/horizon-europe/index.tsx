@@ -28,6 +28,7 @@ function FloatingFilters() {
     programId: { fr: "Programme", en: "Program" },
     thematicIds: { fr: "Thématiques", en: "Thematics" },
     destinationIds: { fr: "Destinations", en: "Destinations" },
+    structureid: { fr: "Identifiant Paysage de la structure", en: "Paysage ID" },
   };
 
   function showParam(param) {
