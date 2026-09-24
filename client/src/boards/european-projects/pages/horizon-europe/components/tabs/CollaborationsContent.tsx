@@ -1,5 +1,6 @@
+import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { Row, Col, Title } from "@dataesr/dsfr-plus";
+import { Button, Row, Col, Title } from "@dataesr/dsfr-plus";
 
 import BoardsSuggestComponent from "../../../../../../components/boards-suggest-component";
 import Callout from "../../../../../../components/callout";
@@ -17,6 +18,14 @@ import EuropeanCards from "../../../collaborations/charts/european-cards";
 import CollaborationsByContinent from "../../../collaborations/charts/collaborations-by-continent";
 
 const i18n = {
+  "collaboration-title": {
+    fr: "Ensemble des collaborations du pays",
+    en: "All collaborations of country",
+  },
+  "collaboration-callout": {
+    fr: "Le graphique représente les pays ayant collaboré avec le pays sélectionné. La taille des bulles est proportionnelle au nombre de collaborations réussies entre les pays. Vous pouvez augmenter le nombre de pays affichés en cliquant sur le bouton Afficher plus de pays.",
+    en: "english version of callout",
+  },
   "collaborations-by-entity-title": {
     fr: "Répartition des collaborations par entité",
     en: "Collaboration distribution by entity",
@@ -32,19 +41,39 @@ const i18n = {
 };
 
 export default function CollaborationsContent() {
+  const [nbToShow, setNbToShow] = useState(10); // Default number of countries to show
+
   const [searchParams] = useSearchParams();
   const currentLang = searchParams.get("language") || "fr";
 
   return (
     <>
-      <Row>
-        <Col>
-          <MapOfEuropeCollaborationsFlow />
+      <Row gutters className="fr-mt-5w">
+        <Col md={6}>
+          <Title as="h2" look="h4">
+            {getI18nLabel(i18n, "collaboration-title", currentLang)}
+          </Title>
+        </Col>
+        <Col md={6} className="text-right">
+          <Button disabled={nbToShow <= 10} onClick={() => setNbToShow((prev) => prev - 5)} size="sm" variant="secondary">
+            - 5
+          </Button>
+          <Button onClick={() => setNbToShow((prev) => prev + 5)} size="sm" variant="secondary">
+            + 5
+          </Button>
         </Col>
       </Row>
       <Row>
         <Col>
-          <CountriesCollaborationsBubble />
+          <Callout className="callout-style">{getI18nLabel(i18n, "collaboration-callout", currentLang)}</Callout>
+        </Col>
+      </Row>
+      <Row>
+        <Col md={6}>
+          <MapOfEuropeCollaborationsFlow nbToShow={nbToShow} />
+        </Col>
+        <Col md={6}>
+          <CountriesCollaborationsBubble nbToShow={nbToShow} />
         </Col>
       </Row>
       <Row gutters>

@@ -12,6 +12,10 @@ export default function Options(data, currentLang, nbToShow = 10) {
   }
 
   const newOptions: HighchartsInstance.Options = {
+    chart: {
+      borderWidth: 1,
+      borderColor: "var(--border-default-grey)",
+    },
     tooltip: {
       pointFormat: "<b>{point.y}</b>",
     },
