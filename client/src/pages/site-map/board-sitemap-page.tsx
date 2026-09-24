@@ -5,14 +5,14 @@ import { useDashboardVisibility } from "../../hooks/useDashboardVisibility";
 import "./sitemap-styles.scss";
 
 export type BoardSitemapLink = {
-  label: string;
   href: string;
+  label: string;
 };
 
 export type BoardSitemapConfig = {
+  boardHomeHref: string;
   boardId: string;
   boardName: string;
-  boardHomeHref: string;
   description: string;
   links: BoardSitemapLink[];
 };

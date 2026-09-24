@@ -78,9 +78,10 @@ export default async function SitemapPage() {
   const { data: dashboards } = useQuery<{ id: string; homePageVisible?: boolean }[]>({
     queryKey: ["list-dashboards"],
     queryFn: () => fetch(`${VITE_APP_SERVER_URL}/admin/list-dashboards`).then((response) => response.json()),
-  });
+  })
 
-  const boardConfig = await import(`../../boards/${searchParams.get("from")}/sitemap-config.ts`)
+  const from = searchParams.get("from")
+  const boardConfig = await import (from === "general" ? "./sitemap-config.ts" : `../../boards/${from}/sitemap-config.ts`)
 
   if (boardConfig?.SITEMAP) {
     return <BoardSitemapPage {...boardConfig.SITEMAP} />
