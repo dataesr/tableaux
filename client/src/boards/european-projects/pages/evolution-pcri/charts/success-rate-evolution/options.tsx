@@ -79,7 +79,6 @@ export default function Options(data: EvolutionDataItem[], currentLang: string =
       },
     };
   });
-console.log("evo series", series);
 
   const newOptions: HighchartsInstance.Options = {
     chart: {
