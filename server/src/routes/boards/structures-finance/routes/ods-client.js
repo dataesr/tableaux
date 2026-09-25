@@ -1,6 +1,3 @@
-const BASE_ENDPOINT =
-  "https://data.enseignementsup-recherche.gouv.fr/api/explore/v2.1/catalog/datasets";
-
 const DATASETS = {
   finance: "fr_esr_datasupr_finance",
   faq: "fr_esr_datasupr_finance-faq",
@@ -38,8 +35,6 @@ async function fetchRecords({
   offset = 0,
 }) {
   const datasetId = DATASETS[dataset] || dataset;
-  const endpoint = `${BASE_ENDPOINT}/${datasetId}/records`;
-
   const queryParams = new URLSearchParams();
   if (select?.length) queryParams.set("select", select.join(","));
   const whereClause = buildWhereClause(where);
@@ -49,7 +44,7 @@ async function fetchRecords({
   queryParams.set("limit", limit);
   queryParams.set("offset", offset);
 
-  const response = await fetch(`${endpoint}?${queryParams}`, {
+  const response = await fetch(`${process.env.ODS_API_URL}/${datasetId}/records?${queryParams}`, {
     headers: { Authorization: `Apikey ${process.env.ODS_API_KEY}` },
   });
 
