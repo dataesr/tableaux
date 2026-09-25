@@ -1,6 +1,7 @@
 import express from "express";
+
 import { db } from "../../../services/mongo.js";
-import { dbPaysage } from "../../../services/mongo-paysage.js";
+
 const router = new express.Router();
 
 const mappingRegion = [
@@ -45,7 +46,7 @@ const filieresOrder = [
 const getCurrentCollectionName = async (idCollection) => {
   const data = await db.collection("boards").find({ id: "atlas" }).toArray();
   const currentCollection = data[0].data.find(
-    (item) => item.id === idCollection
+    (item) => item.id === idCollection,
   ).current;
 
   if (currentCollection) {
@@ -203,21 +204,22 @@ router.route("/atlas/get-geo-polygons").get(async (req, res) => {
       .collection(currentCollectionName)
       .distinct("geo_id", filters);
     if (geoId.startsWith("P") || geoId === "R00") {
-      ids.push("D988"); //Nouvelle-Caledonie
-      ids.push("D987"); //Polynesie-Francaise
-      ids.push("D986"); //Wallis-et-Futuna
-      ids.push("D985"); //Saint-Pierre-et-Miquelon
-      ids.push("D984"); //Saint-Barthelemy
-      ids.push("D978"); //Saint-Martin
+      ids.push("D988"); // Nouvelle-Caledonie
+      ids.push("D987"); // Polynesie-Francaise
+      ids.push("D986"); // Wallis-et-Futuna
+      ids.push("D985"); // Saint-Pierre-et-Miquelon
+      ids.push("D984"); // Saint-Barthelemy
+      ids.push("D978"); // Saint-Martin
     }
     const polygons = [];
     for (let i = 0; i < ids.length; i++) {
-      const polygon = await dbPaysage
-        .collection("geographicalcategories")
-        .find({ originalId: ids[i] })
-        .toArray();
-      if (polygon[0]) {
-        polygons.push(polygon[0]);
+      const response = await fetch(
+        `${process.env.PAYSAGE_API_URL}/geographical-categories/${ids[i]}`,
+        { headers: { "X-API-KEY": process.env.PAYSAGE_API_KEY } },
+      );
+      const geographicalCategory = await response.json();
+      if (geographicalCategory?.geometry) {
+        polygons.push(geographicalCategory?.geometry);
       }
     }
     res.json(polygons);
@@ -270,7 +272,7 @@ router.route("/atlas/number-of-students-map").get(async (req, res) => {
       mappingRegion.map((regionObject) => {
         const regionKey = Object.keys(regionObject)[0];
         const regionData = allData?.data.filter(
-          (item) => item.geo_id === regionKey
+          (item) => item.geo_id === regionKey,
         );
         let effectif = 0;
         regionData?.map((item) => {
@@ -481,7 +483,7 @@ router
                     (item) =>
                       item.annee_universitaire === year &&
                       item.geo_id === geo_id &&
-                      item.regroupement === "TOTAL"
+                      item.regroupement === "TOTAL",
                   )
                   ?.reduce((acc, item) => acc + item.effectif, 0),
               };
@@ -502,7 +504,7 @@ router
     const filters = { ...req.query };
     const constants = await getConstants();
     const DEFAULT_CURRENT_YEAR = constants.find(
-      (el) => el.key === "DEFAULT_CURRENT_YEAR"
+      (el) => el.key === "DEFAULT_CURRENT_YEAR",
     )?.value;
 
     if (!req.query.annee_universitaire) {
@@ -577,7 +579,7 @@ router
     const filters = { ...req.query };
     const constants = await getConstants();
     const DEFAULT_CURRENT_YEAR = constants.find(
-      (el) => el.key === "DEFAULT_CURRENT_YEAR"
+      (el) => el.key === "DEFAULT_CURRENT_YEAR",
     )?.value;
 
     if (!req.query.annee_universitaire) {
@@ -644,7 +646,7 @@ router
     const filters = { ...req.query };
     const constants = await getConstants();
     const DEFAULT_CURRENT_YEAR = constants.find(
-      (el) => el.key === "DEFAULT_CURRENT_YEAR"
+      (el) => el.key === "DEFAULT_CURRENT_YEAR",
     )?.value;
 
     if (!req.query.annee_universitaire) {
@@ -710,7 +712,7 @@ router
     const filters = { ...req.query };
     const constants = await getConstants();
     const DEFAULT_CURRENT_YEAR = constants.find(
-      (el) => el.key === "DEFAULT_CURRENT_YEAR"
+      (el) => el.key === "DEFAULT_CURRENT_YEAR",
     )?.value;
 
     if (!req.query.annee_universitaire) {
@@ -764,7 +766,7 @@ router.route("/atlas/number-of-students").get(async (req, res) => {
   const filters = { ...req.query };
   const constants = await getConstants();
   const DEFAULT_CURRENT_YEAR = constants.find(
-    (el) => el.key === "DEFAULT_CURRENT_YEAR"
+    (el) => el.key === "DEFAULT_CURRENT_YEAR",
   )?.value;
 
   if (!req.query.annee_universitaire) {
@@ -827,7 +829,7 @@ router.route("/atlas/number-of-students").get(async (req, res) => {
         data.filieres = [];
         filieresOrder.map((regroupementId) => {
           const datRegroupement = allData.data.filter(
-            (item) => item.regroupement === regroupementId
+            (item) => item.regroupement === regroupementId,
           );
           datRegroupement
             .filter((item) => item.regroupement !== "TOTAL")
@@ -845,7 +847,7 @@ router.route("/atlas/number-of-students").get(async (req, res) => {
                   data.filieres.find(
                     (el) =>
                       el.id === item.regroupement &&
-                      el[`effectif_${item.secteur}`]
+                      el[`effectif_${item.secteur}`],
                   )
                 ) {
                   data.filieres.find((el) => el.id === item.regroupement)[
@@ -884,23 +886,23 @@ router.route("/atlas/number-of-students").get(async (req, res) => {
         // Effectif ing
         data.effectif_ing = allData.data.reduce(
           (acc, item) => acc + item.effectif_ing,
-          0
+          0,
         );
 
         // Effectif dut
         data.effectif_dut = allData.data.reduce(
           (acc, item) => acc + item.effectif_dut,
-          0
+          0,
         );
 
         // Effectif form ens
         data.effectif_form_ens = allData.data.reduce(
           (acc, item) => acc + item.effectif_form_ens,
-          0
+          0,
         );
 
         res.json(data);
-      }
+      },
       // }
     );
 });
@@ -930,7 +932,7 @@ router.route("/atlas/number-of-students-by-year").get(async (req, res) => {
       const dataByYear = [];
       data.map((item) => {
         const index = dataByYear.findIndex(
-          (el) => el.annee_universitaire === item.annee_universitaire
+          (el) => el.annee_universitaire === item.annee_universitaire,
         );
         if (index === -1) {
           dataByYear.push({
@@ -990,7 +992,7 @@ router.route("/atlas/number-of-students-by-year").get(async (req, res) => {
           });
         } else {
           dataByYearFull.push(
-            dataByYear.find((el) => el.annee_universitaire === currentYear)
+            dataByYear.find((el) => el.annee_universitaire === currentYear),
           );
         }
       }
@@ -1052,7 +1054,7 @@ router.route("/atlas/get-filters-values").get(async (req, res) => {
     (year) => {
       const yearNum = parseInt(year.substring(0, 4));
       return yearNum >= START_YEAR && yearNum <= END_YEAR;
-    }
+    },
   );
 
   const temp = await db
@@ -1171,9 +1173,8 @@ router.route("/atlas/get-similar-elements").get(async (req, res) => {
     $lt: parseInt(req.query.lt),
   };
 
-  const currentCollectionName = await getCurrentCollectionName(
-    "similar-elements"
-  );
+  const currentCollectionName =
+    await getCurrentCollectionName("similar-elements");
 
   db.collection(currentCollectionName)
     .find(filters)
@@ -1185,7 +1186,7 @@ router.route("/atlas/get-similar-elements").get(async (req, res) => {
 
 router.route("/atlas/get-indexes").get(async (req, res) => {
   const currentCollectionName = await getCurrentCollectionName(
-    req.query.collectionId
+    req.query.collectionId,
   );
 
   const response = await db.collection(currentCollectionName).indexes();
