@@ -22,8 +22,10 @@ export default function Footer({ href = "/", sitemapHref, title = "Accueil - Tab
   const currentLang = searchParams.get("language") || "fr";
 
   const pathParts = location.pathname.split("/").filter(Boolean);
-  const board = pathParts[0];
-  const dashboard = board && `../../boards/${board}/sitemap-config.ts` in BOARD_CONFIGS ? board : "general";
+  const isBoard = (id?: string | null): id is string =>
+    !!id && `../../boards/${id}/sitemap-config.ts` in BOARD_CONFIGS;
+  const from = searchParams.get("from");
+  const dashboard = isBoard(from) ? from : isBoard(pathParts[0]) ? pathParts[0] : "general";
   const contactUrl = `/contact?from=${dashboard}`;
   const accessibilityUrl = `/accessibility?from=${dashboard}`;
   const sitemapUrl = sitemapHref ?? `/plan-du-site?from=${dashboard}`;

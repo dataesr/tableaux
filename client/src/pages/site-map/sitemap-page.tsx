@@ -2,7 +2,6 @@ import { Breadcrumb, Col, Container, Link, Row, Title } from "@dataesr/dsfr-plus
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 
-import Footer from "../../components/footer/index.tsx";
 import BoardSitemapPage, { type BoardSitemapConfig } from "./board-sitemap-page.tsx";
 
 import "./sitemap-styles.scss";
@@ -81,55 +80,63 @@ export default async function SitemapPage() {
   })
 
   const from = searchParams.get("from")
-  const boardConfig = await import (from === "general" ? "./sitemap-config.ts" : `../../boards/${from}/sitemap-config.ts`)
-
-  if (boardConfig?.SITEMAP) {
-    return <BoardSitemapPage {...boardConfig.SITEMAP} />
+  if (from && from !== "general") {
+    const boardConfig = await import(`../../boards/${from}/sitemap-config.ts`)
+    if (boardConfig?.SITEMAP) {
+      return <BoardSitemapPage {...boardConfig.SITEMAP} />
+    }
   }
 
+  const boardSections = (
+    await Promise.all(
+      (dashboards?.filter((dashboard) => dashboard?.homePageVisible) ?? []).map((dashboard) =>
+        import(`../../boards/${dashboard.id}/sitemap-config.ts`)
+          .then((module) => module.SITEMAP as BoardSitemapConfig)
+          .catch(() => null),
+      ),
+    )
+  ).filter((section) => section) as BoardSitemapConfig[]
+
   return (
-    <>
-      <div className="sitemap-page">
-        <section className="sitemap-hero">
-          <Container>
-            <Breadcrumb className="sitemap-hero__breadcrumb">
-              <Link href="/">Accueil</Link>
-              <Link>Plan du site</Link>
-            </Breadcrumb>
-            <p className="sitemap-hero__label">Navigation</p>
-            <Title as="h1" look="h1" className="sitemap-hero__title">
-              Plan du site
-            </Title>
-            <p className="sitemap-hero__description">
-              Retrouvez l'ensemble des tableaux de bord et des pages de la plateforme
-              dataESR, organisés par thématique. Cette page facilite la navigation et
-              l'accès direct à chaque contenu.
-            </p>
-          </Container>
+    <div className="sitemap-page">
+      <section className="sitemap-hero">
+        <Container>
+          <Breadcrumb className="sitemap-hero__breadcrumb">
+            <Link href="/">Accueil</Link>
+            <Link>Plan du site</Link>
+          </Breadcrumb>
+          <p className="sitemap-hero__label">Navigation</p>
+          <Title as="h1" look="h1" className="sitemap-hero__title">
+            Plan du site
+          </Title>
+          <p className="sitemap-hero__description">
+            Retrouvez l'ensemble des tableaux de bord et des pages de la plateforme
+            dataESR, organisés par thématique. Cette page facilite la navigation et
+            l'accès direct à chaque contenu.
+          </p>
+        </Container>
+      </section>
+
+      <Container as="main" id="main" className="sitemap-content fr-mt-5w">
+        <section className="sitemap-section">
+          <h2 className="sitemap-section__title">Tableaux de bord</h2>
+          <Row gutters className="fr-mt-2w">
+            {boardSections.map((config) => toSection(config.boardId, config)).map((section) => (
+              <Col key={section.id} xs="12" md="6" lg="4" className="fr-mb-3w">
+                <SitemapGroup section={section} />
+              </Col>
+            ))}
+          </Row>
         </section>
 
-        <Container as="main" id="main" className="sitemap-content fr-mt-5w">
-          <section className="sitemap-section">
-            <h2 className="sitemap-section__title">Tableaux de bord</h2>
-            <Row gutters className="fr-mt-2w">
-              {dashboards?.filter((dashboard) => dashboard?.homePageVisible).map((dashboard) => toSection(dashboard.id, boardConfig.default)).map((section) => (
-                <Col key={section.id} xs="12" md="6" lg="4" className="fr-mb-3w">
-                  <SitemapGroup section={section} />
-                </Col>
-              ))}
-            </Row>
-          </section>
-
-          <section className="sitemap-section sitemap-section--info">
-            <Row gutters className="fr-mt-2w">
-              <Col xs="12" md="6" lg="4">
-                <SitemapGroup section={INFORMATION_SECTION} headingLevel="h2" />
-              </Col>
-            </Row>
-          </section>
-        </Container>
-      </div>
-      <Footer />
-    </>
+        <section className="sitemap-section sitemap-section--info">
+          <Row gutters className="fr-mt-2w fr-mb-5w">
+            <Col xs="12" md="6" lg="4">
+              <SitemapGroup section={INFORMATION_SECTION} headingLevel="h2" />
+            </Col>
+          </Row>
+        </section>
+      </Container>
+    </div>
   );
 }
