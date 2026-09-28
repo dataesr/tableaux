@@ -2,8 +2,8 @@ import { Logo, Service } from "@dataesr/dsfr-plus";
 import { useEffect } from "react";
 import { Outlet, useSearchParams } from "react-router-dom";
 
-import Footer from "../../../components/footer";
-import { useTitle } from "../../../hooks/usePageTitle";
+import Footer from "../../components/footer";
+import { useTitle } from "../../hooks/usePageTitle";
 
 export default function GlobalLayout() {
   const [searchParams, setSearchParams] = useSearchParams();
