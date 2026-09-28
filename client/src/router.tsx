@@ -7,7 +7,7 @@ import { isInProduction } from "./utils.tsx"
 import LoadingPage from "./pages/loading"
 
 const AccessibilityLayout = lazy(() => import("./components/accessibility/layouts/global-layout.tsx"))
-const AccessibilityPage = lazy(() => import("./pages/accessibility/page.tsx"))
+const AccessibilityPage = lazy(() => import("./pages/accessibility/index.tsx"))
 const AdminRoutes = lazy(() => import("./boards/admin/routes.tsx"))
 const CGULayout = lazy(() => import("./pages/cgu/global-layout.tsx"))
 const CGUPage = lazy(() => import("./pages/cgu/index.tsx"))
@@ -18,7 +18,7 @@ const HomePage = lazy(() => import("./boards/home-page.tsx"))
 const Integration = lazy(() => import("./boards/integration/index.tsx"))
 const LegalNoticeLayout = lazy(() => import("./pages/legal-notice/global-layout.tsx"))
 const LegalNoticePage = lazy(() => import("./pages/legal-notice/index.tsx"))
-const NotFoundPage = lazy(() => import("./components/not-found-page.tsx"))
+const NotFoundPage = lazy(() => import("./pages/not-found/index.tsx"))
 const PersonalDataLayout = lazy(() => import("./pages/personal-data/global-layout.tsx"))
 const PersonalDataPage = lazy(() => import("./pages/personal-data/index.tsx"))
 const SitemapLayout = lazy(() => import("./pages/site-map/global-layout.tsx"))

@@ -1,6 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 
-import NotFoundPage from "../../components/not-found-page.tsx";
+import NotFoundPage from "../../pages/not-found/index.tsx";
 import { Layout } from "../../layout/layout.tsx";
 import Dashboard from "./dashboard.tsx";
 import Home from "./home.tsx";

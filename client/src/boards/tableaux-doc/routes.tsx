@@ -1,6 +1,6 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 
-import NotFoundPage from "../../components/not-found-page.tsx";
+import NotFoundPage from "../../pages/not-found/index.tsx";
 import { useTitle } from "../../hooks/usePageTitle.tsx";
 import { getI18nLabel } from "../../utils.tsx";
 import GlobalLayout from "./components/layouts/global-layout.tsx";

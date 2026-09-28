@@ -9,7 +9,7 @@ import "./styles.scss";
 
 const GlobalLayout = lazy(() => import('./components/layouts/global-layout.tsx'));
 const Home = lazy(() => import('./pages/home'));
-const NotFoundPage = lazy(() => import('../../components/not-found-page.tsx'));
+const NotFoundPage = lazy(() => import('../../pages/not-found/index.tsx'));
 const Structures = lazy(() => import('./pages/structures'));
 
 const RouteWithTitle = ({ titleKey, element }) => {

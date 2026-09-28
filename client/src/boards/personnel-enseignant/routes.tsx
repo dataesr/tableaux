@@ -8,7 +8,7 @@ import i18n from "./title-i18n.json";
 import "./styles.scss";
 import GlobalLayout from "./components/layouts/global-layout.tsx";
 
-const NotFoundPage = lazy(() => import("../../components/not-found-page.tsx"));
+const NotFoundPage = lazy(() => import("../../pages/not-found/index.tsx"));
 const Home = lazy(() => import("./pages/home/index.tsx"));
 const DataView = lazy(() => import("./pages/structures/index.tsx"));
 const DefinitionsPage = lazy(() => import("./pages/definitions/index.tsx"));

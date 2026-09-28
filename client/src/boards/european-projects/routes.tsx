@@ -12,7 +12,7 @@ const GlobalLayout = lazy(() => import("./components/layouts/global-layout.tsx")
 const Home = lazy(() => import("./pages/home/index.tsx"));
 const HorizonEurope = lazy(() => import("./pages/horizon-europe/index.tsx"));
 const Methodology = lazy(() => import("./pages/metodology/index.tsx"));
-const NotFoundPage = lazy(() => import("../../components/not-found-page.tsx"));
+const NotFoundPage = lazy(() => import("../../pages/not-found/index.tsx"));
 const Overview = lazy(() => import("./pages/overview/index.tsx"));
 const Positioning = lazy(() => import("./pages/positioning/index.tsx"));
 const ProjectsTypes = lazy(() => import("./pages/projects-types/index.tsx"));

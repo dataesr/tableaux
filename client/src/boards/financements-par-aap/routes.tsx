@@ -11,7 +11,7 @@ const Comparison = lazy(() => import('./pages/comparison/index.tsx'))
 const Region = lazy(() => import('./pages/region/index.tsx'))
 const GlobalLayout = lazy(() => import('./components/layouts/global-layout.tsx'))
 const Home = lazy(() => import('./pages/home/index.tsx'))
-const NotFoundPage = lazy(() => import('../../components/not-found-page.tsx'))
+const NotFoundPage = lazy(() => import('../../pages/not-found/index.tsx'))
 const Structures = lazy(() => import('./pages/structures/index.tsx'))
 
 const RouteWithTitle = ({ titleKey, element }) => {

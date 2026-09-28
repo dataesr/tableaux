@@ -12,8 +12,8 @@ import {
 import { useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 
-import Footer from "./footer";
-import SwitchTheme from "./switch-theme";
+import Footer from "../../components/footer";
+import SwitchTheme from "../../components/switch-theme";
 
 
 export default function NotFoundPage() {

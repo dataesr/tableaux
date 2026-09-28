@@ -16,7 +16,7 @@ const Contact = lazy(() => import("./pages/static-pages/contact.tsx"));
 const CookieManagement = lazy(() => import("./pages/static-pages/cookie-management.tsx"));
 const LegalMentions = lazy(() => import("./pages/static-pages/legal-mentions.tsx"));
 const Methodology = lazy(() => import("./pages/static-pages/methodology.tsx"));
-const NotFoundPage = lazy(() => import("../../components/not-found-page.tsx"));
+const NotFoundPage = lazy(() => import("../../pages/not-found/index.tsx"));
 const SiteMap = lazy(() => import("./pages/static-pages/site-map.tsx"));
 
 export default function AtlasRoutes() {

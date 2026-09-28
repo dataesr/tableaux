@@ -3,7 +3,7 @@ import { Navigate, Route, Routes } from "react-router-dom";
 
 import GlobalLayout from "./components/layouts/global-layout.tsx";
 
-const NotFoundPage = lazy(() => import("../../components/not-found-page.tsx"));
+const NotFoundPage = lazy(() => import("../../pages/not-found/index.tsx"));
 const AccueilView = lazy(() => import("./pages/accueil/index.tsx"));
 const DefinitionsView = lazy(() => import("./pages/definitions/index.tsx"));
 const FAQView = lazy(() => import("./pages/faq/index.tsx"));
