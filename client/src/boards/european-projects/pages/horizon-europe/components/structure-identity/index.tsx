@@ -1,27 +1,27 @@
-import { useSearchParams } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query"
+import { useSearchParams } from "react-router-dom"
 
-import { Container, Row, Col, Title, Badge, Text, Link } from "@dataesr/dsfr-plus";
+import { Badge, Col, Container, Row, Text, Title } from "@dataesr/dsfr-plus"
 
-const { VITE_APP_SERVER_URL } = import.meta.env;
+const { VITE_APP_SERVER_URL } = import.meta.env
 
 async function GetData(structureId: string) {
-  const baseUrl = `${VITE_APP_SERVER_URL}/european-projects/get-structure-from-paysage`;
-  return fetch(`${baseUrl}?structureId=${structureId}`).then((response) => response.json());
+  const baseUrl = `${VITE_APP_SERVER_URL}/european-projects/get-structure-from-paysage`
+  return fetch(`${baseUrl}?structureId=${structureId}`).then((response) => response.json())
 }
 
 export default function StructureIdentity() {
-  const [searchParams] = useSearchParams();
-  const currentLang = searchParams.get("language") || "en";
-  const structureId = searchParams.get("structureid");
+  const [searchParams] = useSearchParams()
+  const currentLang = searchParams.get("language") || "en"
+  const structureId = searchParams.get("structureid")
 
   const { data, isLoading } = useQuery({
     queryKey: ["getStructureFromPaysage", structureId],
     queryFn: () => GetData(structureId as string),
-  });
+  })
   
   if (!structureId) {
-    return null;
+    return null
   }
 
   if (isLoading || !data) {
@@ -31,11 +31,11 @@ export default function StructureIdentity() {
           <Col>{currentLang === "fr" ? "Chargement des informations de la structure..." : "Loading structure information..."}</Col>
         </Row>
       </Container>
-    );
+    )
   }
 
   if (!data) {
-    return null;
+    return null
   }
 
   return (
@@ -60,5 +60,5 @@ export default function StructureIdentity() {
       </Row>
       <hr className="fr-mt-1w" />
     </Container>
-  );
+  )
 }
