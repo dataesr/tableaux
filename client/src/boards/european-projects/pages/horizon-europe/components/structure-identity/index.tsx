@@ -42,21 +42,21 @@ export default function StructureIdentity() {
     <Container fluid>
       <Row>
         <Col md={8} xs={12}>
-          <Title className="fr-mb-0">{data.names[0].usualName}</Title>
+          <Title className="fr-mb-0">{data?.currentName?.usualName}</Title>
           <Text size="sm" className="fr-hint-text">
-            {data.names[0].nameEn}
+            {data?.currentName?.nameEn}
           </Text>
           <Badge className="fr-mr-2w">{structureId}</Badge>
         </Col>
         <Col md={4} xs={12}>
           <div>
-            {data.localisations[0].address}
+            {data?.currentLocalisation?.address}
             <br />
-            {data.localisations[0].locality}, {data.localisations[0].postalCode}
+            {data?.currentLocalisation?.locality}, {data?.currentLocalisation?.postalCode}
             <br />
-            {data.localisations[0].country}
+            {data?.currentLocalisation?.country}
             <br />
-            <Link href={data.websites[0].url} target="_blank" rel="noopener noreferrer">
+            <Link href={data?.websites?.[0]?.url} target="_blank" rel="noopener noreferrer">
               site web
             </Link>
           </div>
