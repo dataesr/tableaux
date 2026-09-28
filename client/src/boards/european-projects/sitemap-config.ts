@@ -21,5 +21,6 @@ export const SITEMAP: BoardSitemapConfig = {
     { label: "Évolution PCRI", href: `${BASE}/evolution-pcri` },
     // { label: "Données de référence", href: `${BASE}/donnees-reference` },
     { label: "Informations", href: `${BASE}/informations` },
+    { label: "Méthodologie", href: `${BASE}/methodology` },
   ],
 }
