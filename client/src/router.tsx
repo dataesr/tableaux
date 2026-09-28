@@ -7,7 +7,7 @@ import { isInProduction } from "./utils.tsx"
 import LoadingPage from "./pages/loading"
 
 const AccessibilityLayout = lazy(() => import("./components/accessibility/layouts/global-layout.tsx"))
-const AccessibilityPage = lazy(() => import("./components/accessibility/page.tsx"))
+const AccessibilityPage = lazy(() => import("./pages/accessibility/page.tsx"))
 const AdminRoutes = lazy(() => import("./boards/admin/routes.tsx"))
 const CGULayout = lazy(() => import("./pages/cgu/global-layout.tsx"))
 const CGUPage = lazy(() => import("./pages/cgu/index.tsx"))

@@ -1,11 +1,23 @@
+import { Badge, Button, Text, Title } from "@dataesr/dsfr-plus";
+import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
-import { Badge, Button, Text, Title } from "@dataesr/dsfr-plus";
+
+import Callout from "../../components/callout";
+
 const { VITE_APP_SERVER_URL } = import.meta.env;
 
-import { rgaa_tests_list_type } from "./types";
-import Callout from "../callout";
+type rgaa_tests_list_type = {
+  thematiqueId: number;
+  thematique: string;
+  critereId: number;
+  title: string;
+  testId: number;
+  description: string;
+  status: "ok" | "fail" | "initial";
+  comment?: string;
+  date?: string;
+}[];
 
 const i18n = {
   title: {

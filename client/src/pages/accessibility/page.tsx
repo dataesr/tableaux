@@ -2,7 +2,7 @@ import { Breadcrumb, Container, Link, Text, Title } from "@dataesr/dsfr-plus";
 import { useSearchParams } from "react-router-dom";
 
 import AuditComponent from "./audit-component";
-import Callout from "../callout";
+import Callout from "../../components/callout";
 
 const i18n = {
   home: {
