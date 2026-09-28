@@ -1,6 +1,5 @@
-import { useState } from "react";
 import { Text } from "@dataesr/dsfr-plus";
-import ItemFilter, { type FilterItem } from "../../../../../../../components/item-filter";
+import { ItemFilterPanel, type FilterItem } from "../../../../../../../components/item-filter";
 import { FM_ANALYSES } from "../config";
 import { useFacultyCnuList, useFacultyAssimilationList } from "../../../api";
 import type { FmPositioningFilters } from "../hooks/usePositioningParams";
@@ -46,10 +45,6 @@ export default function AnalysisFilter({ selectedMetric, onSelectMetric, year, v
 
     const items: FilterItem[] = [...staticItems, ...cnuGroupItems, ...cnuSectionItems, ...assimilItems];
     const allKeys = new Set(items.map((i) => i.key));
-    const categories = [...new Set(items.map((i) => i.category))];
-    const [selectedCategory, setSelectedCategory] = useState(
-        FM_ANALYSES[selectedMetric]?.category ?? categories[0]
-    );
 
     const toggle = (key: keyof FmPositioningFilters, value: string) => {
         onFiltersChange({ ...filters, [key]: filters[key] === value ? "" : value });
@@ -96,17 +91,15 @@ export default function AnalysisFilter({ selectedMetric, onSelectMetric, year, v
     ) : undefined;
 
     return (
-        <ItemFilter
+        <ItemFilterPanel
             title="Analyses disponibles"
             items={items}
             availableKeys={allKeys}
             selectedKey={selectedMetric}
-            selectedCategory={selectedCategory}
-            onSelectItem={(key) => {
+            onSelect={(key) => {
                 const found = items.find((i) => i.key === key);
                 onSelectMetric(key, found?.label);
             }}
-            onSelectCategory={setSelectedCategory}
             footer={footer}
         />
     );

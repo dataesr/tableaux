@@ -33,9 +33,6 @@ export function AnalyseSection({
   const [selectedAnalysis, setSelectedAnalysis] = useState<AnalysisKey | null>(
     null
   );
-  const [selectedCategory, setSelectedCategory] = useState<string>(
-    "Ressources financières"
-  );
 
   const { data: yearsData } = useFinanceYears();
   const years = yearsData?.years || [];
@@ -104,9 +101,7 @@ export function AnalyseSection({
           <AnalysisFilter
             data={data}
             selectedAnalysis={selectedAnalysis}
-            selectedCategory={selectedCategory}
             onSelectAnalysis={setSelectedAnalysis}
-            onSelectCategory={setSelectedCategory}
           />
         </Col>
 

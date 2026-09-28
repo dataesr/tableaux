@@ -7,7 +7,7 @@ import {
     type OutcomesFilterField,
     useOutcomesPlusHautDiplome,
 } from "../../api";
-import OutcomesFilterSelect from "../../components/filter-select/index.tsx";
+import ItemFilter from "../../../../components/item-filter";
 import OutcomesDefinitionsTable from "../../components/definitions-table/index.tsx";
 import { OUTCOMES_DEFINITIONS } from "../../components/definitions-table/data.tsx";
 import DiplomaDonut from "./charts/diploma-donut";
@@ -168,16 +168,19 @@ export default function PlusHautDiplomePage() {
             <Row gutters>
                 <Col lg={4}>
                     <section className="outcomes-flux-page__filters" aria-label="Filtres du tableau plus haut diplôme">
-                        <Title as="h2" look="h4" className="fr-mb-3w">Filtres à sélectionner</Title>
+                        <Title as="h2" look="h6" className="outcomes-flux-page__filters-title fr-mb-2w">
+                            Filtres à sélectionner
+                        </Title>
                         {FILTER_SECTIONS.map((section) => (
                             <section key={section.title} className="outcomes-flux-page__filters-section">
                                 <Title as="h3" look="h5" className="fr-mb-2w">{section.title}</Title>
                                 {section.fields.map(({ field, label }) => (
-                                    <OutcomesFilterSelect
+                                    <ItemFilter
                                         key={field}
                                         label={label}
-                                        options={data?.filterOptions?.[field] || []}
+                                        items={data?.filterOptions?.[field] || []}
                                         selectedKey={filters[field] ?? null}
+                                        emptyLabel="Ensemble"
                                         onSelect={(value) => updateFilter(field, value)}
                                     />
                                 ))}

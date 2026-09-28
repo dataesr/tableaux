@@ -1,5 +1,6 @@
-import { useMemo, useState } from "react";
-import ItemFilter, {
+import { useMemo } from "react";
+import {
+  ItemFilterPanel,
   type FilterItem,
 } from "../../../../../../../../components/item-filter";
 import {
@@ -20,10 +21,6 @@ export default function AnalysisFilter({
   selectedAnalysis,
   onSelectAnalysis,
 }: AnalysisFilterProps) {
-  const [selectedCategory, setSelectedCategory] = useState<string>(
-    "Ressources financières"
-  );
-
   const items: FilterItem[] = Object.entries(PREDEFINED_ANALYSES)
     .filter(([, analysis]) => !analysis.showBase100)
     .map(([key, analysis]) => ({
@@ -49,23 +46,13 @@ export default function AnalysisFilter({
     return new Set(available);
   }, [data, currentStructure]);
 
-  const availableItems = items.filter((item) => availableKeys.has(item.key));
-  const availableCategories = [
-    ...new Set(availableItems.map((item) => item.category)),
-  ];
-  const activeCategory = availableCategories.includes(selectedCategory)
-    ? selectedCategory
-    : (availableCategories[0] ?? "");
-
   return (
-    <ItemFilter
+    <ItemFilterPanel
       title="Analyses disponibles"
       items={items}
       availableKeys={availableKeys}
       selectedKey={selectedAnalysis}
-      selectedCategory={activeCategory}
-      onSelectItem={(key) => onSelectAnalysis(key as AnalysisKey)}
-      onSelectCategory={setSelectedCategory}
+      onSelect={(key) => onSelectAnalysis(key as AnalysisKey)}
     />
   );
 }

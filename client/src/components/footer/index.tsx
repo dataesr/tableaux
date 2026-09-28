@@ -8,6 +8,8 @@ import i18n from "./i18n.json";
 
 const { VITE_MINISTER_NAME, VITE_VERSION } = import.meta.env;
 
+const BOARD_CONFIGS = import.meta.glob("../../boards/*/sitemap-config.ts");
+
 const LANGUAGE_LABELS: Record<string, string> = {
   fr: "Français",
   en: "English",
@@ -20,7 +22,8 @@ export default function Footer({ href = "/", sitemapHref, title = "Accueil - Tab
   const currentLang = searchParams.get("language") || "fr";
 
   const pathParts = location.pathname.split("/").filter(Boolean);
-  const dashboard = pathParts.length > 0 ? pathParts[0] : "general";
+  const board = pathParts[0];
+  const dashboard = board && `../../boards/${board}/sitemap-config.ts` in BOARD_CONFIGS ? board : "general";
   const contactUrl = `/contact?from=${dashboard}`;
   const accessibilityUrl = `/accessibility?from=${dashboard}`;
   const sitemapUrl = sitemapHref ?? `/plan-du-site?from=${dashboard}`;

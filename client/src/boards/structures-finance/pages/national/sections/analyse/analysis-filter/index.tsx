@@ -1,5 +1,6 @@
 import { useMemo } from "react";
-import ItemFilter, {
+import {
+  ItemFilterPanel,
   type FilterItem,
 } from "../../../../../../../components/item-filter";
 import {
@@ -10,17 +11,13 @@ import {
 interface AnalysisFilterProps {
   data: any[];
   selectedAnalysis: AnalysisKey | null;
-  selectedCategory: string;
   onSelectAnalysis: (analysis: AnalysisKey) => void;
-  onSelectCategory: (category: string) => void;
 }
 
 export default function AnalysisFilter({
   data,
   selectedAnalysis,
-  selectedCategory,
   onSelectAnalysis,
-  onSelectCategory,
 }: AnalysisFilterProps) {
   const items: FilterItem[] = Object.entries(PREDEFINED_ANALYSES)
     .filter(([_, analysis]) => {
@@ -50,14 +47,12 @@ export default function AnalysisFilter({
   }, [items, data]);
 
   return (
-    <ItemFilter
+    <ItemFilterPanel
       title="Analyses disponibles"
       items={items}
       availableKeys={availableKeys}
       selectedKey={selectedAnalysis}
-      selectedCategory={selectedCategory}
-      onSelectItem={(key) => onSelectAnalysis(key as AnalysisKey)}
-      onSelectCategory={onSelectCategory}
+      onSelect={(key) => onSelectAnalysis(key as AnalysisKey)}
     />
   );
 }

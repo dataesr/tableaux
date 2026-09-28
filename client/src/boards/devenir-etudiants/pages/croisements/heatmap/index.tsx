@@ -6,7 +6,7 @@ import { useSearchParams } from "react-router-dom";
 import Callout from "../../../../../components/callout.tsx";
 import ChartWrapper from "../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../components/charts-skeletons/default";
-import OutcomesFilterSelect from "../../../components/filter-select/index.tsx";
+import ItemFilter from "../../../../../components/item-filter";
 import { type OutcomesFilterField, useOutcomesPlusHautDiplome } from "../../../api";
 import { createHeatmapOptions, type HeatmapCell } from "./options";
 
@@ -120,9 +120,9 @@ export default function HeatmapTab() {
         excluded: OutcomesFilterField,
         onChange: (next: OutcomesFilterField) => void,
     ) => (
-        <OutcomesFilterSelect
+        <ItemFilter
             label={label}
-            options={AXIS_FIELDS.filter((f) => f.field !== excluded).map((f) => ({ key: f.field, label: f.label }))}
+            items={AXIS_FIELDS.filter((f) => f.field !== excluded).map((f) => ({ key: f.field, label: f.label }))}
             selectedKey={value}
             emptyLabel="Choisir un axe"
             onSelect={(v) => { if (v) onChange(v as OutcomesFilterField); }}

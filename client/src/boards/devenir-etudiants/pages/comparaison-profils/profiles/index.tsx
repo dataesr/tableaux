@@ -5,7 +5,7 @@ import { useSearchParams } from "react-router-dom";
 
 import ChartWrapper from "../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../components/charts-skeletons/default";
-import OutcomesFilterSelect from "../../../components/filter-select";
+import ItemFilter from "../../../../../components/item-filter";
 import type { OutcomesFilterField, OutcomesFilterOption } from "../../../api";
 import { createDiplomaDonutOptions } from "../../plus-haut-diplome/charts/diploma-donut/options";
 import { createProfilesDiplomaStackOptions } from "./options";
@@ -130,11 +130,12 @@ function ProfileCard({ badge, profile, axisOptions, canRemove, tauxDipl, total, 
             </Row>
             <div className="outcomes-croisements__fields">
                 {PROFILE_FIELDS.map(({ field, label }) => (
-                    <OutcomesFilterSelect
+                    <ItemFilter
                         key={field}
                         label={label}
-                        options={axisOptions[field] || []}
+                        items={axisOptions[field] || []}
                         selectedKey={profile[field] ?? null}
+                        emptyLabel="Ensemble"
                         onSelect={(value) => onChange({ ...profile, [field]: value })}
                     />
                 ))}

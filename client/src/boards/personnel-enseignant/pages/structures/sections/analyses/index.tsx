@@ -190,8 +190,8 @@ export default function EvolutionsSection({ viewType, selectedId }: EvolutionsSe
             )}
 
             {!isLoading && analysesWithData.size > 0 && (
-                <Row gutters className="analyses-row">
-                    <Col xs="12" md="4" className="analyses-filter-col">
+                <Row gutters>
+                    <Col xs="12" md="4">
                         <FmAnalysisFilter
                             allAnalyses={allAnalyses}
                             analysesWithData={analysesWithData}

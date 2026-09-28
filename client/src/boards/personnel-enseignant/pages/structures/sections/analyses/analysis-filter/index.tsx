@@ -1,5 +1,4 @@
-import { useState } from "react";
-import ItemFilter, { type FilterItem } from "../../../../../../../components/item-filter";
+import { ItemFilterPanel, type FilterItem } from "../../../../../../../components/item-filter";
 import type { FmAnalysisConfig } from "../../../../../config/analyses-config";
 
 interface FmAnalysisFilterProps {
@@ -15,8 +14,6 @@ export default function FmAnalysisFilter({
     selectedAnalysis,
     onSelectAnalysis,
 }: FmAnalysisFilterProps) {
-    const [selectedCategory, setSelectedCategory] = useState<string>("Vue d'ensemble");
-
     const items: FilterItem[] = Object.entries(allAnalyses).map(([key, analysis]) => ({
         key,
         label: analysis.label,
@@ -24,14 +21,12 @@ export default function FmAnalysisFilter({
     }));
 
     return (
-        <ItemFilter
+        <ItemFilterPanel
             title="Analyses disponibles"
             items={items}
             availableKeys={analysesWithData}
             selectedKey={selectedAnalysis}
-            selectedCategory={selectedCategory}
-            onSelectItem={onSelectAnalysis}
-            onSelectCategory={setSelectedCategory}
+            onSelect={onSelectAnalysis}
         />
     );
 }

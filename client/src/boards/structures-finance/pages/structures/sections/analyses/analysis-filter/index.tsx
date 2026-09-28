@@ -1,5 +1,5 @@
-import { useState } from "react";
-import ItemFilter, {
+import {
+  ItemFilterPanel,
   type FilterItem,
 } from "../../../../../../../components/item-filter";
 import {
@@ -18,9 +18,6 @@ export default function AnalysisFilter({
   selectedAnalysis,
   onSelectAnalysis,
 }: AnalysisFilterProps) {
-  const [selectedCategory, setSelectedCategory] = useState<string>(
-    "Ressources financières"
-  );
   const items: FilterItem[] = Object.entries(PREDEFINED_ANALYSES).map(
     ([key, analysis]) => ({
       key,
@@ -30,14 +27,12 @@ export default function AnalysisFilter({
   );
 
   return (
-    <ItemFilter
+    <ItemFilterPanel
       title="Analyses disponibles"
       items={items}
       availableKeys={analysesWithData as Set<string>}
       selectedKey={selectedAnalysis}
-      selectedCategory={selectedCategory}
-      onSelectItem={(key) => onSelectAnalysis(key as AnalysisKey)}
-      onSelectCategory={setSelectedCategory}
+      onSelect={(key) => onSelectAnalysis(key as AnalysisKey)}
     />
   );
 }

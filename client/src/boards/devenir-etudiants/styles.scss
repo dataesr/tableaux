@@ -4,13 +4,16 @@
   border: 1px solid var(--border-default-grey);
 }
 
-.outcomes-flux-page__filters .fx-select__popover,
-.outcomes-flux-page__filters .fx-dropdown__popover {
-  z-index: 1000;
+.outcomes-flux-page__filters-title {
+  color: var(--text-mention-grey);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
 }
 
 .outcomes-flux-page__filters-section + .outcomes-flux-page__filters-section {
-  margin-top: 2rem;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border-default-grey);
 }
 
 .outcomes-flux-page__content {

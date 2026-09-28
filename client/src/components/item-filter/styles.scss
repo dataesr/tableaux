@@ -1,16 +1,6 @@
 .item-filter {
   position: sticky;
   top: 1rem;
-  overflow-y: auto;
-  background-color: var(--background-alt-grey);
-  padding: 1.5rem;
-
-  &__count {
-    font-weight: 400;
-    font-size: 0.75rem;
-    color: var(--text-mention-grey);
-    margin-left: 0.5rem;
-  }
 
   &__list-container {
     border: none;
