@@ -1,12 +1,12 @@
 import { Button, ButtonGroup, Col, Container, Link, Modal, ModalContent, ModalTitle, Row, Text, Title } from "@dataesr/dsfr-plus";
 import { useState } from "react";
 
-import { useCookieConsent } from "../../../hooks/useCookieConsent";
-import HeaderTableaux from "../../../layout/header";
-import { getI18nLabel } from "../../../utils";
-import Footer from "../../footer";
-import i18n from "../cookie-consent/i18n.json";
-import { CookieConsentModalContent } from "../cookie-consent/index";
+import { useCookieConsent } from "../../hooks/useCookieConsent";
+import HeaderTableaux from "../../layout/header";
+import { getI18nLabel } from "../../utils";
+import Footer from "../../components/footer";
+import i18n from "../../components/cookies/cookie-consent/i18n.json";
+import { CookieConsentModalContent } from "../../components/cookies/cookie-consent/index";
 
 export default function CookiePolicyPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
