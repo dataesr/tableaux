@@ -39,9 +39,9 @@ export default function Router() {
       const response = await fetch(`${VITE_APP_SERVER_URL}/admin/list-dashboards`)
       const allDashboards = await response.json()
       // Asynchronously load each media to display on the dashboard tile on the home page
-      const allResponses = await Promise.all(allDashboards.map((dashboard) => import(`./boards/${dashboard.id}/routes.tsx`).catch(() => { })))
+      const allResponses = await Promise.all(allDashboards.map((dashboard) => lazy(() => import(`./boards/${dashboard.id}/routes.tsx`).catch(() => { }))))
       return allDashboards.map((dashboard, index) => {
-        const routes = allResponses[index]?.default ?? ""
+        const routes = allResponses[index] ?? ""
         return { ...dashboard, routes }
       })
     },
@@ -66,7 +66,7 @@ export default function Router() {
           <RouteWithTitle
             titleKey="Accueil - Tableaux"
             element={
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<LoadingPage />}>
                 <HomePage />
               </Suspense>
             }
@@ -77,7 +77,7 @@ export default function Router() {
       <Route
         path="/accessibility"
         element={
-          <Suspense>
+          <Suspense fallback={<LoadingPage />}>
             <AccessibilityLayout />
           </Suspense>
         }
@@ -85,7 +85,7 @@ export default function Router() {
         <Route
           index
           element={
-            <Suspense>
+            <Suspense fallback={<LoadingPage />}>
               <AccessibilityPage />
             </Suspense>
           }
@@ -94,7 +94,7 @@ export default function Router() {
       <Route
         path="/cgu"
         element={
-          <Suspense>
+          <Suspense fallback={<LoadingPage />}>
             <CGULayout />
           </Suspense>
         }
@@ -102,7 +102,7 @@ export default function Router() {
         <Route
           index
           element={
-            <Suspense>
+            <Suspense fallback={<LoadingPage />}>
               <CGUPage />
             </Suspense>
           }
@@ -111,7 +111,7 @@ export default function Router() {
       <Route
         path="/contact"
         element={
-          <Suspense>
+          <Suspense fallback={<LoadingPage />}>
             <ContactLayout />
           </Suspense>
         }
@@ -119,7 +119,7 @@ export default function Router() {
         <Route
           index
           element={
-            <Suspense>
+            <Suspense fallback={<LoadingPage />}>
               <ContactPage />
             </Suspense>
           }
@@ -128,7 +128,7 @@ export default function Router() {
       <Route
         path="/cookies"
         element={
-          <Suspense>
+          <Suspense fallback={<LoadingPage />}>
             <CookiePolicyPage />
           </Suspense>
         }
@@ -136,7 +136,7 @@ export default function Router() {
       <Route
         path="/donnees-personnelles"
         element={
-          <Suspense>
+          <Suspense fallback={<LoadingPage />}>
             <PersonalDataLayout />
           </Suspense>
         }
@@ -144,7 +144,7 @@ export default function Router() {
         <Route
           index
           element={
-            <Suspense>
+            <Suspense fallback={<LoadingPage />}>
               <PersonalDataPage />
             </Suspense>
           }
@@ -153,7 +153,7 @@ export default function Router() {
       <Route
         path="/mentions-legales"
         element={
-          <Suspense>
+          <Suspense fallback={<LoadingPage />}>
             <LegalNoticeLayout />
           </Suspense>
         }
@@ -161,7 +161,7 @@ export default function Router() {
         <Route
           index
           element={
-            <Suspense>
+            <Suspense fallback={<LoadingPage />}>
               <LegalNoticePage />
             </Suspense>
           }
@@ -170,7 +170,7 @@ export default function Router() {
       <Route
         path="/plan-du-site"
         element={
-          <Suspense>
+          <Suspense fallback={<LoadingPage />}>
             <SitemapLayout />
           </Suspense>
         }
@@ -178,7 +178,7 @@ export default function Router() {
         <Route
           index
           element={
-            <Suspense>
+            <Suspense fallback={<LoadingPage />}>
               <SitemapPage />
             </Suspense>
           }
@@ -192,7 +192,7 @@ export default function Router() {
           {board?.routes && <Route
             path={`/${board.id}/*`}
             element={
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<LoadingPage />}>
                 {React.createElement(board?.routes ?? "")}
               </Suspense>
             }
@@ -204,7 +204,7 @@ export default function Router() {
           <Route
             path="/admin/*"
             element={
-              <Suspense>
+              <Suspense fallback={<LoadingPage />}>
                 <AdminRoutes />
               </Suspense>
             }
@@ -212,7 +212,7 @@ export default function Router() {
           <Route
             path="/integration"
             element={
-              <Suspense>
+              <Suspense fallback={<LoadingPage />}>
                 <Integration />
               </Suspense>
             }
@@ -220,7 +220,7 @@ export default function Router() {
           <Route
             path="/template/*"
             element={
-              <Suspense>
+              <Suspense fallback={<LoadingPage />}>
                 <TemplateRoutes />
               </Suspense>
             }
@@ -231,7 +231,7 @@ export default function Router() {
       <Route
         path="*"
         element={
-          <Suspense>
+          <Suspense fallback={<LoadingPage />}>
             <NotFoundPage />
           </Suspense>
         }
