@@ -55,10 +55,6 @@ export default function StructureIdentity() {
             {data?.currentLocalisation?.locality}, {data?.currentLocalisation?.postalCode}
             <br />
             {data?.currentLocalisation?.country}
-            <br />
-            <Link href={data?.websites?.[0]?.url} target="_blank" rel="noopener noreferrer">
-              site web
-            </Link>
           </div>
         </Col>
       </Row>
