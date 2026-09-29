@@ -17,6 +17,12 @@ const AGE_COLORS: Record<string, string> = {
     "56 ans et plus": "fm-age-56-et-plus-ec",
 };
 
+const STATUS_ROWS: { key: string; label: string; color: string }[] = [
+    { key: "enseignant_chercheur", label: "Enseignants-chercheurs", color: "fm-statut-ec" },
+    { key: "titulaire_non_chercheur", label: "Autres permanents", color: "fm-statut-titulaire" },
+    { key: "non_titulaire", label: "Non permanents", color: "fm-statut-non-permanent" },
+];
+
 const VIEW_NEIGHBOR_LABELS: Record<ViewType, string> = {
     structure: "Établissements de taille comparable",
     discipline: "Disciplines d'effectif comparable",
@@ -223,30 +229,43 @@ export default function PageHeader({
             <Row gutters>
                 <Col xs="12" md="4">
                     <div className="fr-card fr-card--shadow fr-px-3v fr-py-2w page-header__detail-card">
-                        <Text size="sm" bold className="fr-mb-1w">Statuts</Text>
-                        <ul className="page-header__detail-list">
-                            {(() => {
-                                const ecCount = statusDistribution.find((s: any) => s._id === "enseignant_chercheur")?.count || 0;
-                                const titNonEcCount = statusDistribution.find((s: any) => s._id === "titulaire_non_chercheur")?.count || 0;
-                                const nonTitCount = statusDistribution.find((s: any) => s._id === "non_titulaire")?.count || 0;
-                                const rows = [
-                                    { key: "enseignant_chercheur", label: "Enseignants-chercheurs", count: ecCount },
-                                    { key: "titulaire_non_chercheur", label: "Autres permanents", count: titNonEcCount },
-                                    { key: "non_titulaire", label: "Non permanents", count: nonTitCount },
-                                ];
-                                return rows.map(({ key, label, count }) => {
-                                    const pct = totalCount > 0 ? ((count / totalCount) * 100).toFixed(0) : "0";
-                                    return (
-                                        <li key={key} className="page-header__detail-row">
-                                            <span className="page-header__detail-label">{label}</span>
-                                            <span className="page-header__detail-value">
-                                                {count.toLocaleString("fr-FR")}
-                                                <span className="page-header__detail-pct"> ({pct}%)</span>
-                                            </span>
-                                        </li>
-                                    );
-                                });
-                            })()}
+                        <Text size="sm" bold className="fr-mb-2w">Statuts</Text>
+                        <div className="page-header__age-stacked-bar" role="presentation">
+                            {STATUS_ROWS.map(({ key, color }) => {
+                                const count = statusDistribution.find((s: any) => s._id === key)?.count || 0;
+                                const pct = totalCount > 0 ? (count / totalCount) * 100 : 0;
+                                if (pct <= 0) return null;
+                                return (
+                                    <div
+                                        key={key}
+                                        className="page-header__age-stacked-segment"
+                                        style={{ flex: pct, backgroundColor: getCssColor(color) }}
+                                        aria-hidden="true"
+                                    />
+                                );
+                            })}
+                        </div>
+                        <ul className="page-header__detail-list fr-mt-2w">
+                            {STATUS_ROWS.map(({ key, label, color }) => {
+                                const status = statusDistribution.find((s: any) => s._id === key);
+                                const count = status?.count || 0;
+                                const pct = totalCount > 0 ? ((count / totalCount) * 100).toFixed(0) : "0";
+                                const { f: fPct, h: hPct } = genderSplitOf(status?.gender_breakdown || []);
+                                return (
+                                    <li key={key} className="page-header__detail-row">
+                                        <span
+                                            className="page-header__age-dot"
+                                            style={{ backgroundColor: getCssColor(color) }}
+                                            aria-hidden="true"
+                                        />
+                                        <span className="page-header__detail-label">{label}</span>
+                                        <span className="page-header__detail-value">
+                                            {count.toLocaleString("fr-FR")}
+                                            <span className="page-header__detail-pct"> · {pct}% ({fPct}% F · {hPct}% H)</span>
+                                        </span>
+                                    </li>
+                                );
+                            })}
                         </ul>
                     </div>
                 </Col>
