@@ -37,7 +37,6 @@ export default function EffectifsSection({
 }: EffectifsSectionProps) {
     const genderDist = dashboardData?.gender_distribution || [];
     const statusDist = dashboardData?.status_distribution || [];
-    const quotiteByGender = dashboardData?.quotite_by_gender || [];
     const ageDist: any[] = [...(dashboardData?.age_distribution || [])].sort((a, b) =>
         (a._id || "").localeCompare(b._id || "")
     );
@@ -45,13 +44,9 @@ export default function EffectifsSection({
     const globalEvo = evolutionData?.global_evolution || [];
     const statusEvo = evolutionData?.status_evolution || [];
     const ageEvo = evolutionData?.age_evolution || [];
-    const quotiteEvo = evolutionData?.quotite_evolution || [];
 
     const femaleCount = genderDist.find((g: any) => g._id === "Féminin")?.count || 0;
     const maleCount = genderDist.find((g: any) => g._id === "Masculin")?.count || 0;
-    const fullTimeCount = quotiteByGender.reduce((acc: number, g: any) =>
-        acc + (g.quotite_breakdown?.find((q: any) => q.quotite === "Temps plein")?.count || 0), 0);
-    const partTimeCount = Math.max(0, totalCount - fullTimeCount);
 
     const toSpark = (evo: any[], getter: (e: any) => number) =>
         evo.map((e: any) => ({ year: String(e._id), value: getter(e) }));
@@ -122,32 +117,6 @@ export default function EffectifsSection({
             </div>
 
             <div className="fr-mb-4w">
-                <Title as="h3" look="h6" className="fr-mb-3w">Quotité</Title>
-                <Row gutters>
-                    <Col xs="12" md="6">
-                        <MetricCard
-                            title="Temps plein"
-                            value={fullTimeCount.toLocaleString("fr-FR")}
-                            detail={pct(fullTimeCount)}
-                            color={getCssColor("fm-quotite-temps-plein")}
-                            evolutionData={toSpark(quotiteEvo, (e) =>
-                                e.quotite_breakdown?.find((q: any) => q.quotite === "Temps plein")?.count || 0)}
-                        />
-                    </Col>
-                    <Col xs="12" md="6">
-                        <MetricCard
-                            title="Temps partiel"
-                            value={partTimeCount.toLocaleString("fr-FR")}
-                            detail={pct(partTimeCount)}
-                            color={getCssColor("fm-quotite-temps-partiel")}
-                            evolutionData={toSpark(quotiteEvo, (e) =>
-                                Math.max(0, (e.total || 0) - (e.quotite_breakdown?.find((q: any) => q.quotite === "Temps plein")?.count || 0)))}
-                        />
-                    </Col>
-                </Row>
-            </div>
-
-            <div className="fr-mb-4w">
                 <Title as="h3" look="h6" className="fr-mb-3w">Âge</Title>
                 <Row gutters>
                     {ageDist.map((ag: any) => (
@@ -171,9 +140,6 @@ export default function EffectifsSection({
                     "Statut : 3 catégories mutuellement exclusives",
                     "Enseignant-chercheur (EC)",
                     "Permanent / Non permanent",
-                    "Quotité de travail",
-                    "Temps plein",
-                    "Temps partiel",
                     "Classe d'\u00e2ge",
                 ]}
             />
