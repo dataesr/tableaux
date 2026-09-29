@@ -24,10 +24,15 @@ const VIEW_NEIGHBOR_LABELS: Record<ViewType, string> = {
     academie: "Académies d'effectif comparable",
 };
 
-function femalePctOf(items: any[]): string {
+function genderSplitOf(items: any[]): { f: string; h: string } {
     const total = items.reduce((s: number, i: any) => s + (i.count || 0), 0);
+    if (total <= 0) return { f: "–", h: "–" };
     const female = items.find((i: any) => i.gender === "Féminin")?.count || 0;
-    return total > 0 ? ((female / total) * 100).toFixed(0) : "–";
+    const male = items.find((i: any) => i.gender === "Masculin")?.count || 0;
+    return {
+        f: ((female / total) * 100).toFixed(0),
+        h: ((male / total) * 100).toFixed(0),
+    };
 }
 
 interface PageHeaderProps {
@@ -267,7 +272,7 @@ export default function PageHeader({
                         <ul className="page-header__detail-list fr-mt-2w">
                             {ageDistribution.map((age: any) => {
                                 const pct = totalCount > 0 ? ((age.total / totalCount) * 100).toFixed(0) : "0";
-                                const fPct = femalePctOf(age.gender_breakdown || []);
+                                const { f: fPct, h: hPct } = genderSplitOf(age.gender_breakdown || []);
                                 return (
                                     <li key={age._id} className="page-header__detail-row">
                                         <span
@@ -278,7 +283,7 @@ export default function PageHeader({
                                         <span className="page-header__detail-label">{age._id || "Âge non renseigné"}</span>
                                         <span className="page-header__detail-value">
                                             {age.total.toLocaleString("fr-FR")}
-                                            <span className="page-header__detail-pct"> · {pct}% ({fPct}% F)</span>
+                                            <span className="page-header__detail-pct"> · {pct}% ({fPct}% F · {hPct}% H)</span>
                                         </span>
                                     </li>
                                 );
