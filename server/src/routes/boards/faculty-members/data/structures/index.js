@@ -3182,11 +3182,6 @@ router.get("/faculty-members/positioning", async (req, res) => {
                 ],
               },
             },
-            temps_plein: {
-              $sum: {
-                $cond: [{ $eq: ["$quotite", "Temps plein"] }, "$effectif", 0],
-              },
-            },
             pers_2nd_degre: {
               $sum: {
                 $cond: [
@@ -3234,8 +3229,6 @@ router.get("/faculty-members/positioning", async (req, res) => {
           item.total > 0 ? (item.age_36_55 / item.total) * 100 : 0,
         taux_age_56_plus:
           item.total > 0 ? (item.age_56_plus / item.total) * 100 : 0,
-        taux_temps_plein:
-          item.total > 0 ? (item.temps_plein / item.total) * 100 : 0,
         taux_2nd_degre:
           item.total > 0 ? (item.pers_2nd_degre / item.total) * 100 : 0,
         total_titulaires: item.titulaires,
@@ -3352,15 +3345,13 @@ router.get("/faculty-members/analyses", async (req, res) => {
     const [
       globalAgg,
       statusGenderAgg,
-      quotiteGenderAgg,
       ageAgg,
       discYearAgg,
       discGenderAgg,
       cnuGroupYearAgg,
       cnuSectionTopAgg,
       gradeGenderAgg,
-      ageGenderQuotiteAgg,
-      statusQuotiteAgg,
+      ageGenderAgg,
     ] = await Promise.all([
       collection
         .aggregate([
@@ -3420,25 +3411,6 @@ router.get("/faculty-members/analyses", async (req, res) => {
               breakdown: {
                 $push: { g: "$_id.g", status: "$_id.status", c: "$c" },
               },
-            },
-          },
-          { $sort: { _id: 1 } },
-        ])
-        .toArray(),
-
-      collection
-        .aggregate([
-          { $match: matchAge },
-          {
-            $group: {
-              _id: { year: "$annee_universitaire", g: "$sexe", q: "$quotite" },
-              c: { $sum: "$effectif" },
-            },
-          },
-          {
-            $group: {
-              _id: "$_id.year",
-              breakdown: { $push: { g: "$_id.g", q: "$_id.q", c: "$c" } },
             },
           },
           { $sort: { _id: 1 } },
@@ -3628,7 +3600,6 @@ router.get("/faculty-members/analyses", async (req, res) => {
                 year: "$annee_universitaire",
                 age: "$classe_age3",
                 g: "$sexe",
-                q: "$quotite",
               },
               c: { $sum: "$effectif" },
             },
@@ -3640,7 +3611,6 @@ router.get("/faculty-members/analyses", async (req, res) => {
                 $push: {
                   age: "$_id.age",
                   g: "$_id.g",
-                  q: "$_id.q",
                   c: "$c",
                 },
               },
@@ -3650,47 +3620,6 @@ router.get("/faculty-members/analyses", async (req, res) => {
         ])
         .toArray(),
 
-      collection
-        .aggregate([
-          { $match: matchAge },
-          {
-            $group: {
-              _id: {
-                year: "$annee_universitaire",
-                status: {
-                  $switch: {
-                    branches: [
-                      {
-                        case: { $eq: ["$is_enseignant_chercheur", true] },
-                        then: "ec",
-                      },
-                      {
-                        case: {
-                          $and: [
-                            { $eq: ["$is_titulaire", true] },
-                            { $eq: ["$is_enseignant_chercheur", false] },
-                          ],
-                        },
-                        then: "tit",
-                      },
-                    ],
-                    default: "non_tit",
-                  },
-                },
-                q: "$quotite",
-              },
-              c: { $sum: "$effectif" },
-            },
-          },
-          {
-            $group: {
-              _id: "$_id.year",
-              rows: { $push: { status: "$_id.status", q: "$_id.q", c: "$c" } },
-            },
-          },
-          { $sort: { _id: 1 } },
-        ])
-        .toArray(),
     ]);
 
     const discCodesMap = new Map();
@@ -3744,9 +3673,6 @@ router.get("/faculty-members/analyses", async (req, res) => {
     const statusByYear = Object.fromEntries(
       statusGenderAgg.map((e) => [e._id, e])
     );
-    const quotiteByYear = Object.fromEntries(
-      quotiteGenderAgg.map((e) => [e._id, e])
-    );
     const ageByYear = Object.fromEntries(ageAgg.map((e) => [e._id, e]));
     const discByYear = Object.fromEntries(discYearAgg.map((e) => [e._id, e]));
     const discGenderByYear = Object.fromEntries(
@@ -3759,16 +3685,12 @@ router.get("/faculty-members/analyses", async (req, res) => {
       gradeGenderAgg.map((e) => [e._id, e])
     );
     const ageGQByYear = Object.fromEntries(
-      ageGenderQuotiteAgg.map((e) => [e._id, e])
-    );
-    const statusQByYear = Object.fromEntries(
-      statusQuotiteAgg.map((e) => [e._id, e])
+      ageGenderAgg.map((e) => [e._id, e])
     );
 
     const records = allYears.map((year) => {
       const g = globalByYear[year] || {};
       const s = statusByYear[year] || {};
-      const q = quotiteByYear[year] || {};
       const a = ageByYear[year] || {};
       const d = discByYear[year] || {};
       const dg = discGenderByYear[year] || {};
@@ -3791,19 +3713,6 @@ router.get("/faculty-members/analyses", async (req, res) => {
       const femmes_perm =
         sumStatus("ec", "Féminin") + sumStatus("tit", "Féminin");
       const femmes_non_tit = sumStatus("non_tit", "Féminin");
-
-      const sumQ = (isPlein, gender) =>
-        (q.breakdown || [])
-          .filter(
-            (x) =>
-              (isPlein ? x.q === "Temps plein" : x.q !== "Temps plein") &&
-              (!gender || x.g === gender)
-          )
-          .reduce((acc, x) => acc + x.c, 0);
-      const effectif_temps_plein = sumQ(true);
-      const effectif_temps_partiel = sumQ(false);
-      const tp_femmes = sumQ(true, "Féminin");
-      const tp_hommes = sumQ(true, "Masculin");
 
       const AGE_LABELS = {
         "35 ans et moins": "effectif_age_35_moins",
@@ -3877,29 +3786,17 @@ router.get("/faculty-members/analyses", async (req, res) => {
       };
       const agq = ageGQByYear[year] || {};
       const ageStat = {
-        "35_moins": { total: 0, femmes: 0, partiel: 0 },
-        "36_55": { total: 0, femmes: 0, partiel: 0 },
-        "56_plus": { total: 0, femmes: 0, partiel: 0 },
+        "35_moins": { total: 0, femmes: 0 },
+        "36_55": { total: 0, femmes: 0 },
+        "56_plus": { total: 0, femmes: 0 },
       };
       (agq.rows || []).forEach((x) => {
         const k = AGE_KEYS[x.age];
         if (!k) return;
         ageStat[k].total += x.c;
         if (x.g === "Féminin") ageStat[k].femmes += x.c;
-        if (x.q !== "Temps plein") ageStat[k].partiel += x.c;
       });
 
-      const sq = statusQByYear[year] || {};
-      const statusStat = {
-        ec: { total: 0, partiel: 0 },
-        tit: { total: 0, partiel: 0 },
-        non_tit: { total: 0, partiel: 0 },
-      };
-      (sq.rows || []).forEach((x) => {
-        if (!statusStat[x.status]) return;
-        statusStat[x.status].total += x.c;
-        if (x.q !== "Temps plein") statusStat[x.status].partiel += x.c;
-      });
       const rate = (num, den) => (den > 0 ? (num / den) * 100 : 0);
 
       return {
@@ -3928,28 +3825,11 @@ router.get("/faculty-members/analyses", async (req, res) => {
           effectif_non_permanents > 0
             ? (femmes_non_tit / effectif_non_permanents) * 100
             : 0,
-        effectif_temps_plein,
-        effectif_temps_partiel,
-        taux_temps_partiel:
-          total > 0 ? (effectif_temps_partiel / total) * 100 : 0,
-        taux_temps_partiel_femmes:
-          femmes > 0 ? ((femmes - tp_femmes) / femmes) * 100 : 0,
-        taux_temps_partiel_hommes:
-          hommes > 0 ? ((hommes - tp_hommes) / hommes) * 100 : 0,
         effectif_mcf,
         effectif_pr,
         taux_feminisation_mcf: rate(femmes_mcf, effectif_mcf),
         taux_feminisation_pr: rate(femmes_pr, effectif_pr),
         taux_pr_sur_ec: rate(effectif_pr, effectif_ec),
-        taux_temps_partiel_ec: rate(statusStat.ec.partiel, statusStat.ec.total),
-        taux_temps_partiel_tit: rate(
-          statusStat.tit.partiel,
-          statusStat.tit.total
-        ),
-        taux_temps_partiel_non_perm: rate(
-          statusStat.non_tit.partiel,
-          statusStat.non_tit.total
-        ),
         taux_feminisation_age_35_moins: rate(
           ageStat["35_moins"].femmes,
           ageStat["35_moins"].total
@@ -3960,18 +3840,6 @@ router.get("/faculty-members/analyses", async (req, res) => {
         ),
         taux_feminisation_age_56_plus: rate(
           ageStat["56_plus"].femmes,
-          ageStat["56_plus"].total
-        ),
-        taux_temps_partiel_age_35_moins: rate(
-          ageStat["35_moins"].partiel,
-          ageStat["35_moins"].total
-        ),
-        taux_temps_partiel_age_36_55: rate(
-          ageStat["36_55"].partiel,
-          ageStat["36_55"].total
-        ),
-        taux_temps_partiel_age_56_plus: rate(
-          ageStat["56_plus"].partiel,
           ageStat["56_plus"].total
         ),
         ...ageFields,
