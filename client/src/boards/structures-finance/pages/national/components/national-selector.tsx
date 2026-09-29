@@ -10,7 +10,6 @@ import {
 import { useFilteredNationalData } from "../hooks/useFilteredNationalData";
 import { useFilters } from "../../../utils/useFilters";
 import "../styles.scss";
-import Dropdown from "../../../../../components/dropdown";
 import { DEFAULT_REFERENCE_YEAR } from "../../../config/constants";
 import navigationConfig from "../../../components/layouts/navigation-config.json";
 import Breadcrumb from "../../../../../components/breadcrumb";
@@ -67,7 +66,6 @@ export default function NationalSelector() {
     handleDevimmoChange,
     handleResetFilters,
     hasActiveFilters,
-    labels,
   } = useFilters();
 
   const { types: availableTypes, typologies: availableTypologies, regions: availableRegions } =
@@ -130,138 +128,107 @@ export default function NationalSelector() {
               )}
             </div>
 
-            <div className="filter-bar fr-mb-2w">
-              <Dropdown
-                label={selectedYear}
-                icon="calendar-line"
-                size="sm"
-                className="filter-bar__year"
-              >
-                {years.map((year) => (
-                  <Dropdown.Item
-                    key={year}
-                    active={selectedYear === String(year)}
-                    onClick={() => handleYearChange(String(year))}
+            <Row gutters className="fr-mb-2w">
+              <Col xs="12" md="6" lg="4">
+                <div className="fr-select-group">
+                  <label className="fr-label" htmlFor="filter-year">Année</label>
+                  <select
+                    className="fr-select"
+                    id="filter-year"
+                    name="year"
+                    value={selectedYear}
+                    onChange={(e) => handleYearChange(e.target.value)}
                   >
-                    {year}
-                  </Dropdown.Item>
-                ))}
-              </Dropdown>
-
-              <Dropdown label={labels.type} icon="building-line" size="sm">
-                <Dropdown.Item
-                  active={!selectedType}
-                  onClick={() => handleTypeChange("")}
-                >
-                  Tous les types
-                </Dropdown.Item>
-                {availableTypes.map((type: string) => (
-                  <Dropdown.Item
-                    key={type}
-                    active={selectedType === type}
-                    onClick={() => handleTypeChange(type)}
+                    {years.map((year) => (
+                      <option key={year} value={String(year)}>{year}</option>
+                    ))}
+                  </select>
+                </div>
+              </Col>
+              <Col xs="12" md="6" lg="4">
+                <div className="fr-select-group">
+                  <label className="fr-label" htmlFor="filter-type">Type d'établissement</label>
+                  <select
+                    className="fr-select"
+                    id="filter-type"
+                    name="type"
+                    value={selectedType}
+                    onChange={(e) => handleTypeChange(e.target.value)}
                   >
-                    {type}
-                  </Dropdown.Item>
-                ))}
-              </Dropdown>
-
-              <Dropdown label={labels.region} icon="map-pin-2-line" size="sm">
-                <Dropdown.Item
-                  active={!selectedRegion}
-                  onClick={() => handleRegionChange("")}
-                >
-                  Toutes les régions
-                </Dropdown.Item>
-                {availableRegions.map((region: string) => (
-                  <Dropdown.Item
-                    key={region}
-                    active={selectedRegion === region}
-                    onClick={() => handleRegionChange(region)}
+                    <option value="">Tous les types</option>
+                    {availableTypes.map((type: string) => (
+                      <option key={type} value={type}>{type}</option>
+                    ))}
+                  </select>
+                </div>
+              </Col>
+              <Col xs="12" md="6" lg="4">
+                <div className="fr-select-group">
+                  <label className="fr-label" htmlFor="filter-region">Région</label>
+                  <select
+                    className="fr-select"
+                    id="filter-region"
+                    name="region"
+                    value={selectedRegion}
+                    onChange={(e) => handleRegionChange(e.target.value)}
                   >
-                    {region}
-                  </Dropdown.Item>
-                ))}
-              </Dropdown>
-            </div>
-
-            <div className="filter-bar fr-mb-2w">
-              <Dropdown
-                label={labels.rce}
-                icon="bank-line"
-                size="sm"
-                className="filter-bar__rce"
-              >
-                <Dropdown.Item
-                  active={!selectedRce}
-                  onClick={() => handleRceChange("")}
-                >
-                  RCE et non RCE
-                </Dropdown.Item>
-                <Dropdown.Item
-                  active={selectedRce === "rce"}
-                  onClick={() => handleRceChange("rce")}
-                >
-                  RCE uniquement
-                </Dropdown.Item>
-                <Dropdown.Item
-                  active={selectedRce === "non-rce"}
-                  onClick={() => handleRceChange("non-rce")}
-                >
-                  Non RCE uniquement
-                </Dropdown.Item>
-              </Dropdown>
-              <Dropdown
-                label={labels.devimmo}
-                icon="home-4-line"
-                size="sm"
-                className="filter-bar__devimmo"
-              >
-                <Dropdown.Item
-                  active={!selectedDevimmo}
-                  onClick={() => handleDevimmoChange("")}
-                >
-                  Avec ou sans dévolution immobilière
-                </Dropdown.Item>
-                <Dropdown.Item
-                  active={selectedDevimmo === "devimmo"}
-                  onClick={() => handleDevimmoChange("devimmo")}
-                >
-                  Avec dévolution immobilière
-                </Dropdown.Item>
-                <Dropdown.Item
-                  active={selectedDevimmo === "non-devimmo"}
-                  onClick={() => handleDevimmoChange("non-devimmo")}
-                >
-                  Sans dévolution immobilière
-                </Dropdown.Item>
-              </Dropdown>
-            </div>
-
-            <div className="filter-bar fr-mb-3w">
-              <Dropdown
-                label={labels.typologie}
-                icon="layout-grid-line"
-                size="sm"
-                className="filter-bar__typologie"
-              >
-                <Dropdown.Item
-                  active={!selectedTypologie}
-                  onClick={() => handleTypologieChange("")}
-                >
-                  Toutes les typologies
-                </Dropdown.Item>
-                {availableTypologies.map((typo: string) => (
-                  <Dropdown.Item
-                    key={typo}
-                    active={selectedTypologie === typo}
-                    onClick={() => handleTypologieChange(typo)}
+                    <option value="">Toutes les régions</option>
+                    {availableRegions.map((region: string) => (
+                      <option key={region} value={region}>{region}</option>
+                    ))}
+                  </select>
+                </div>
+              </Col>
+              <Col xs="12" md="6" lg="4">
+                <div className="fr-select-group">
+                  <label className="fr-label" htmlFor="filter-rce">RCE</label>
+                  <select
+                    className="fr-select"
+                    id="filter-rce"
+                    name="rce"
+                    value={selectedRce}
+                    onChange={(e) => handleRceChange(e.target.value)}
                   >
-                    {typo}
-                  </Dropdown.Item>
-                ))}
-              </Dropdown>
-            </div>
+                    <option value="">RCE et non RCE</option>
+                    <option value="rce">RCE uniquement</option>
+                    <option value="non-rce">Non RCE uniquement</option>
+                  </select>
+                </div>
+              </Col>
+              <Col xs="12" md="6" lg="4">
+                <div className="fr-select-group">
+                  <label className="fr-label" htmlFor="filter-devimmo">Dévolution immobilière</label>
+                  <select
+                    className="fr-select"
+                    id="filter-devimmo"
+                    name="devimmo"
+                    value={selectedDevimmo}
+                    onChange={(e) => handleDevimmoChange(e.target.value)}
+                  >
+                    <option value="">Avec ou sans dévolution immobilière</option>
+                    <option value="devimmo">Avec dévolution immobilière</option>
+                    <option value="non-devimmo">Sans dévolution immobilière</option>
+                  </select>
+                </div>
+              </Col>
+              <Col xs="12" md="6" lg="4">
+                <div className="fr-select-group">
+                  <label className="fr-label" htmlFor="filter-typologie">Typologie</label>
+                  <select
+                    className="fr-select"
+                    id="filter-typologie"
+                    name="typologie"
+                    value={selectedTypologie}
+                    onChange={(e) => handleTypologieChange(e.target.value)}
+                  >
+                    <option value="">Toutes les typologies</option>
+                    {availableTypologies.map((typo: string) => (
+                      <option key={typo} value={typo}>{typo}</option>
+                    ))}
+                  </select>
+                </div>
+              </Col>
+            </Row>
             <Text size="sm" className="fr-mb-0 fr-text--bold">
               {etablissementCount} établissement
               {etablissementCount > 1 ? "s" : ""}

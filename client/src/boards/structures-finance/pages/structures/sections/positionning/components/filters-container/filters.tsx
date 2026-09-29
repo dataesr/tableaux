@@ -2,7 +2,6 @@ import { Row, Col, Text, DismissibleTag } from "@dataesr/dsfr-plus";
 import type { PositioningFilters } from "../../hooks";
 import "../../charts/shared.scss";
 import "./filters.scss";
-import Dropdown from "../../../../../../../../components/dropdown";
 
 interface PositioningFiltersProps {
   data: any[];
@@ -33,33 +32,6 @@ export default function PositioningFilters({
     onFiltersChange({ ...filters, [key]: value });
   };
 
-  const getTypeLabel = () => {
-    if (!filters.type) return "Tous les types";
-    return `Même type (${structureType})`;
-  };
-
-  const getTypologieLabel = () => {
-    if (!filters.typologie) return "Toutes les typologies";
-    return `Même typologie (${structureTypologie})`;
-  };
-
-  const getRegionLabel = () => {
-    if (!filters.region) return "Toutes les régions";
-    return `Même région (${structureRegion})`;
-  };
-
-  const getRceLabel = () => {
-    if (!filters.rce) return "RCE et non RCE";
-    if (structureIsRce) return "RCE uniquement";
-    return "Non RCE uniquement";
-  };
-
-  const getDevimmoLabel = () => {
-    if (!filters.devimmo) return "Avec ou sans dévolution immobilière";
-    if (structureIsDevimmo) return "Avec dévolution immobilière";
-    return "Sans dévolution immobilière";
-  };
-
   return (
     <div className="positioning-filters fr-mb-3w">
       <Row gutters>
@@ -77,48 +49,34 @@ export default function PositioningFilters({
             <div className="fr-mb-2w">
               <Row gutters>
                 <Col xs="12" md="6">
-                  <Dropdown
-                    label={getTypeLabel()}
-                    icon="building-line"
-                    size="sm"
-                    fullWidth
-                  >
-                    <Dropdown.Item
-                      active={!filters.type}
-                      onClick={() => handleFilterChange("type", "")}
+                  <div className="fr-select-group">
+                    <label className="fr-label" htmlFor="pos-filter-type">Type</label>
+                    <select
+                      className="fr-select"
+                      id="pos-filter-type"
+                      name="type"
+                      value={filters.type}
+                      onChange={(e) => handleFilterChange("type", e.target.value)}
                     >
-                      Tous les types
-                    </Dropdown.Item>
-                    <Dropdown.Item
-                      active={filters.type === "same-type"}
-                      onClick={() => handleFilterChange("type", "same-type")}
-                    >
-                      Même type ({structureType})
-                    </Dropdown.Item>
-                  </Dropdown>
+                      <option value="">Tous les types</option>
+                      <option value="same-type">Même type ({structureType})</option>
+                    </select>
+                  </div>
                 </Col>
                 <Col xs="12" md="6">
-                  <Dropdown
-                    label={getRegionLabel()}
-                    icon="map-pin-2-line"
-                    size="sm"
-                    fullWidth
-                  >
-                    <Dropdown.Item
-                      active={!filters.region}
-                      onClick={() => handleFilterChange("region", "")}
+                  <div className="fr-select-group">
+                    <label className="fr-label" htmlFor="pos-filter-region">Région</label>
+                    <select
+                      className="fr-select"
+                      id="pos-filter-region"
+                      name="region"
+                      value={filters.region}
+                      onChange={(e) => handleFilterChange("region", e.target.value)}
                     >
-                      Toutes les régions
-                    </Dropdown.Item>
-                    <Dropdown.Item
-                      active={filters.region === "same-region"}
-                      onClick={() =>
-                        handleFilterChange("region", "same-region")
-                      }
-                    >
-                      Même région ({structureRegion})
-                    </Dropdown.Item>
-                  </Dropdown>
+                      <option value="">Toutes les régions</option>
+                      <option value="same-region">Même région ({structureRegion})</option>
+                    </select>
+                  </div>
                 </Col>
               </Row>
             </div>
@@ -126,55 +84,36 @@ export default function PositioningFilters({
             <div className="fr-mb-2w">
               <Row gutters>
                 <Col xs="12" md="6">
-                  <Dropdown
-                    label={getTypologieLabel()}
-                    icon="layout-grid-line"
-                    size="sm"
-                    fullWidth
-                  >
-                    <Dropdown.Item
-                      active={!filters.typologie}
-                      onClick={() => handleFilterChange("typologie", "")}
+                  <div className="fr-select-group">
+                    <label className="fr-label" htmlFor="pos-filter-typologie">Typologie</label>
+                    <select
+                      className="fr-select"
+                      id="pos-filter-typologie"
+                      name="typologie"
+                      value={filters.typologie}
+                      onChange={(e) => handleFilterChange("typologie", e.target.value)}
                     >
-                      Toutes les typologies
-                    </Dropdown.Item>
-                    <Dropdown.Item
-                      active={filters.typologie === "same-typologie"}
-                      onClick={() =>
-                        handleFilterChange("typologie", "same-typologie")
-                      }
-                    >
-                      Même typologie ({structureTypologie})
-                    </Dropdown.Item>
-                  </Dropdown>
+                      <option value="">Toutes les typologies</option>
+                      <option value="same-typologie">Même typologie ({structureTypologie})</option>
+                    </select>
+                  </div>
                 </Col>
                 <Col xs="12" md="6">
-                  <Dropdown
-                    label={getRceLabel()}
-                    icon="link"
-                    size="sm"
-                    fullWidth
-                  >
-                    <Dropdown.Item
-                      active={!filters.rce}
-                      onClick={() => handleFilterChange("rce", "")}
+                  <div className="fr-select-group">
+                    <label className="fr-label" htmlFor="pos-filter-rce">RCE</label>
+                    <select
+                      className="fr-select"
+                      id="pos-filter-rce"
+                      name="rce"
+                      value={filters.rce}
+                      onChange={(e) => handleFilterChange("rce", e.target.value)}
                     >
-                      RCE et non RCE
-                    </Dropdown.Item>
-                    <Dropdown.Item
-                      active={
-                        filters.rce === (structureIsRce ? "rce" : "non-rce")
-                      }
-                      onClick={() =>
-                        handleFilterChange(
-                          "rce",
-                          structureIsRce ? "rce" : "non-rce"
-                        )
-                      }
-                    >
-                      {structureIsRce ? "RCE uniquement" : "Non RCE uniquement"}
-                    </Dropdown.Item>
-                  </Dropdown>
+                      <option value="">RCE et non RCE</option>
+                      <option value={structureIsRce ? "rce" : "non-rce"}>
+                        {structureIsRce ? "RCE uniquement" : "Non RCE uniquement"}
+                      </option>
+                    </select>
+                  </div>
                 </Col>
               </Row>
             </div>
@@ -182,35 +121,23 @@ export default function PositioningFilters({
             <div>
               <Row gutters>
                 <Col xs="12" md="6">
-                  <Dropdown
-                    label={getDevimmoLabel()}
-                    icon="home-4-line"
-                    size="sm"
-                    fullWidth
-                  >
-                    <Dropdown.Item
-                      active={!filters.devimmo}
-                      onClick={() => handleFilterChange("devimmo", "")}
+                  <div className="fr-select-group">
+                    <label className="fr-label" htmlFor="pos-filter-devimmo">Dévolution immobilière</label>
+                    <select
+                      className="fr-select"
+                      id="pos-filter-devimmo"
+                      name="devimmo"
+                      value={filters.devimmo}
+                      onChange={(e) => handleFilterChange("devimmo", e.target.value)}
                     >
-                      Avec ou sans dévolution immobilière
-                    </Dropdown.Item>
-                    <Dropdown.Item
-                      active={
-                        filters.devimmo ===
-                        (structureIsDevimmo ? "devimmo" : "non-devimmo")
-                      }
-                      onClick={() =>
-                        handleFilterChange(
-                          "devimmo",
-                          structureIsDevimmo ? "devimmo" : "non-devimmo"
-                        )
-                      }
-                    >
-                      {structureIsDevimmo
-                        ? "Avec dévolution immobilière"
-                        : "Sans dévolution immobilière"}
-                    </Dropdown.Item>
-                  </Dropdown>
+                      <option value="">Avec ou sans dévolution immobilière</option>
+                      <option value={structureIsDevimmo ? "devimmo" : "non-devimmo"}>
+                        {structureIsDevimmo
+                          ? "Avec dévolution immobilière"
+                          : "Sans dévolution immobilière"}
+                      </option>
+                    </select>
+                  </div>
                 </Col>
               </Row>
             </div>

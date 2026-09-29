@@ -2,7 +2,6 @@ import { useMemo } from "react";
 import { Row, Col, Title, Button } from "@dataesr/dsfr-plus";
 import { useFilters } from "../../../utils/useFilters";
 import "../../national/styles.scss";
-import Dropdown from "../../../../../components/dropdown";
 
 interface SelectionUIProps {
   availableTypes: string[];
@@ -32,7 +31,6 @@ export default function SelectionUI({
     handleDevimmoChange,
     handleResetFilters,
     hasActiveFilters,
-    labels,
   } = useFilters();
   const structureOptions = useMemo(
     () =>
@@ -50,8 +48,8 @@ export default function SelectionUI({
             id,
             hasValidPaysageId: !!etab.etablissement_id_paysage,
             label: `${displayName}${etab.etablissement_actuel_region || etab.region
-                ? ` — ${etab.etablissement_actuel_region || etab.region}`
-                : ""
+              ? ` — ${etab.etablissement_actuel_region || etab.region}`
+              : ""
               }`,
             subtitle: etab.champ_recherche,
             data: etab,
@@ -97,121 +95,91 @@ export default function SelectionUI({
           )}
         </div>
 
-        <div className="filter-bar fr-mb-2w">
-          <Dropdown label={labels.type} icon="building-line" size="sm">
-            <Dropdown.Item
-              active={!selectedType}
-              onClick={() => handleTypeChange("")}
-            >
-              Tous les types
-            </Dropdown.Item>
-            {availableTypes.map((type: string) => (
-              <Dropdown.Item
-                key={type}
-                active={selectedType === type}
-                onClick={() => handleTypeChange(type)}
+        <Row gutters className="fr-mb-3w">
+          <Col xs="12" md="6" lg="4">
+            <div className="fr-select-group">
+              <label className="fr-label" htmlFor="filter-type">Type d'établissement</label>
+              <select
+                className="fr-select"
+                id="filter-type"
+                name="type"
+                value={selectedType}
+                onChange={(e) => handleTypeChange(e.target.value)}
               >
-                {type}
-              </Dropdown.Item>
-            ))}
-          </Dropdown>
-
-          <Dropdown label={labels.region} icon="map-pin-2-line" size="sm">
-            <Dropdown.Item
-              active={!selectedRegion}
-              onClick={() => handleRegionChange("")}
-            >
-              Toutes les régions
-            </Dropdown.Item>
-            {availableRegions.map((region) => (
-              <Dropdown.Item
-                key={region}
-                active={selectedRegion === region}
-                onClick={() => handleRegionChange(region)}
+                <option value="">Tous les types</option>
+                {availableTypes.map((type: string) => (
+                  <option key={type} value={type}>{type}</option>
+                ))}
+              </select>
+            </div>
+          </Col>
+          <Col xs="12" md="6" lg="4">
+            <div className="fr-select-group">
+              <label className="fr-label" htmlFor="filter-region">Région</label>
+              <select
+                className="fr-select"
+                id="filter-region"
+                name="region"
+                value={selectedRegion}
+                onChange={(e) => handleRegionChange(e.target.value)}
               >
-                {region}
-              </Dropdown.Item>
-            ))}
-          </Dropdown>
-        </div>
-
-        <div className="filter-bar fr-mb-2w">
-          <Dropdown
-            label={labels.rce}
-            icon="bank-line"
-            size="sm"
-            className="filter-bar__rce"
-          >
-            <Dropdown.Item
-              active={!selectedRce}
-              onClick={() => handleRceChange("")}
-            >
-              RCE et non RCE
-            </Dropdown.Item>
-            <Dropdown.Item
-              active={selectedRce === "rce"}
-              onClick={() => handleRceChange("rce")}
-            >
-              RCE uniquement
-            </Dropdown.Item>
-            <Dropdown.Item
-              active={selectedRce === "non-rce"}
-              onClick={() => handleRceChange("non-rce")}
-            >
-              Non RCE uniquement
-            </Dropdown.Item>
-          </Dropdown>
-          <Dropdown
-            label={labels.devimmo}
-            icon="home-4-line"
-            size="sm"
-            className="filter-bar__devimmo"
-          >
-            <Dropdown.Item
-              active={!selectedDevimmo}
-              onClick={() => handleDevimmoChange("")}
-            >
-              Avec ou sans dévolution immobilière
-            </Dropdown.Item>
-            <Dropdown.Item
-              active={selectedDevimmo === "devimmo"}
-              onClick={() => handleDevimmoChange("devimmo")}
-            >
-              Avec dévolution immobilière
-            </Dropdown.Item>
-            <Dropdown.Item
-              active={selectedDevimmo === "non-devimmo"}
-              onClick={() => handleDevimmoChange("non-devimmo")}
-            >
-              Sans dévolution immobilière
-            </Dropdown.Item>
-          </Dropdown>
-        </div>
-
-        <div className="filter-bar fr-mb-3w">
-          <Dropdown
-            label={labels.typologie}
-            icon="layout-grid-line"
-            size="sm"
-            className="filter-bar__typologie"
-          >
-            <Dropdown.Item
-              active={!selectedTypologie}
-              onClick={() => handleTypologieChange("")}
-            >
-              Toutes les typologies
-            </Dropdown.Item>
-            {availableTypologies.map((typo) => (
-              <Dropdown.Item
-                key={typo}
-                active={selectedTypologie === typo}
-                onClick={() => handleTypologieChange(typo)}
+                <option value="">Toutes les régions</option>
+                {availableRegions.map((region) => (
+                  <option key={region} value={region}>{region}</option>
+                ))}
+              </select>
+            </div>
+          </Col>
+          <Col xs="12" md="6" lg="4">
+            <div className="fr-select-group">
+              <label className="fr-label" htmlFor="filter-rce">RCE</label>
+              <select
+                className="fr-select"
+                id="filter-rce"
+                name="rce"
+                value={selectedRce}
+                onChange={(e) => handleRceChange(e.target.value)}
               >
-                {typo}
-              </Dropdown.Item>
-            ))}
-          </Dropdown>
-        </div>
+                <option value="">RCE et non RCE</option>
+                <option value="rce">RCE uniquement</option>
+                <option value="non-rce">Non RCE uniquement</option>
+              </select>
+            </div>
+          </Col>
+          <Col xs="12" md="6" lg="4">
+            <div className="fr-select-group">
+              <label className="fr-label" htmlFor="filter-devimmo">Dévolution immobilière</label>
+              <select
+                className="fr-select"
+                id="filter-devimmo"
+                name="devimmo"
+                value={selectedDevimmo}
+                onChange={(e) => handleDevimmoChange(e.target.value)}
+              >
+                <option value="">Avec ou sans dévolution immobilière</option>
+                <option value="devimmo">Avec dévolution immobilière</option>
+                <option value="non-devimmo">Sans dévolution immobilière</option>
+              </select>
+            </div>
+          </Col>
+          <Col xs="12" md="6" lg="4">
+            <div className="fr-select-group">
+              <label className="fr-label" htmlFor="filter-typologie">Typologie</label>
+              <select
+                className="fr-select"
+                id="filter-typologie"
+                name="typologie"
+                value={selectedTypologie}
+                onChange={(e) => handleTypologieChange(e.target.value)}
+              >
+                <option value="">Toutes les typologies</option>
+                {availableTypologies.map((typo) => (
+                  <option key={typo} value={typo}>{typo}</option>
+                ))}
+              </select>
+            </div>
+          </Col>
+        </Row>
 
         <div className="fr-mb-3w">
           <div className="fr-select-group">
