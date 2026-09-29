@@ -77,13 +77,6 @@ export const FM_METRICS_CONFIG = {
     category: "Âge",
     suffix: "%",
   },
-  taux_temps_plein: {
-    label: "Part temps plein",
-    format: "percent" as const,
-    color: getCssColor("fm-quotite-temps-plein"),
-    category: "Temps de travail",
-    suffix: "%",
-  },
   total_titulaires: {
     label: "Titulaires",
     format: "number" as const,
@@ -160,10 +153,5 @@ export const FM_ANALYSES: Record<
     label: "56 ans et plus",
     metrics: ["taux_age_56_plus"],
     category: "Âge",
-  },
-  taux_temps_plein: {
-    label: "Temps plein",
-    metrics: ["taux_temps_plein"],
-    category: "Temps de travail",
   },
 };

@@ -85,21 +85,6 @@ export const definitions = [
       "Part des femmes dans l'effectif total ou dans une sous-population donnée, exprimée en pourcentage. Calculé comme : (nombre de femmes / effectif total) × 100.",
   },
   {
-    title: "Quotité de travail",
-    definition:
-      "Proportion du temps de travail effectuée par rapport à un temps complet. Un agent à temps plein a une quotité de 100 %. Un agent à temps partiel travaille une fraction de ce temps (80 %, 50 %, etc.).",
-  },
-  {
-    title: "Temps plein",
-    definition:
-      "Régime de travail où l'agent effectue la totalité de son service statutaire. Pour les enseignants-chercheurs, cela correspond à 192 heures équivalent TD annuelles.",
-  },
-  {
-    title: "Temps partiel",
-    definition:
-      "Régime de travail où l'agent effectue une fraction de son service statutaire (inférieure à 100 %). Il peut être accordé de droit (pour raisons familiales) ou sur autorisation.",
-  },
-  {
     title: "Classe d'âge",
     definition:
       "Regroupement des personnels par tranche d'âge. Le tableau de bord distingue trois classes : 35 ans et moins, 36 à 55 ans, et 56 ans et plus.",

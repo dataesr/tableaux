@@ -214,81 +214,6 @@ export const FM_STATIC_METRICS: Record<string, FmMetricConfig> = {
     suffix: "%",
   },
 
-  effectif_temps_plein: {
-    label: "Temps plein",
-    format: "number",
-    color: getCssColor("fm-quotite-temps-plein"),
-    category: "Quotité",
-  },
-  effectif_temps_partiel: {
-    label: "Temps partiel",
-    format: "number",
-    color: getCssColor("fm-quotite-temps-partiel"),
-    category: "Quotité",
-  },
-  taux_temps_partiel: {
-    label: "Part du temps partiel",
-    format: "percent",
-    color: getCssColor("fm-quotite-temps-partiel"),
-    category: "Quotité",
-    suffix: "%",
-  },
-  taux_temps_partiel_femmes: {
-    label: "Femmes",
-    format: "percent",
-    color: getCssColor("fm-femmes"),
-    category: "Quotité",
-    suffix: "%",
-  },
-  taux_temps_partiel_hommes: {
-    label: "Hommes",
-    format: "percent",
-    color: getCssColor("fm-hommes"),
-    category: "Quotité",
-    suffix: "%",
-  },
-  taux_temps_partiel_ec: {
-    label: "Enseignants-chercheurs",
-    format: "percent",
-    color: getCssColor("fm-statut-ec"),
-    category: "Quotité",
-    suffix: "%",
-  },
-  taux_temps_partiel_tit: {
-    label: "Titulaires non-EC",
-    format: "percent",
-    color: getCssColor("fm-statut-titulaire"),
-    category: "Quotité",
-    suffix: "%",
-  },
-  taux_temps_partiel_non_perm: {
-    label: "Non-permanents",
-    format: "percent",
-    color: getCssColor("fm-statut-non-permanent"),
-    category: "Quotité",
-    suffix: "%",
-  },
-  taux_temps_partiel_age_35_moins: {
-    label: "≤ 35 ans",
-    format: "percent",
-    color: getCssColor("fm-age-35-et-moins-ec"),
-    category: "Quotité",
-    suffix: "%",
-  },
-  taux_temps_partiel_age_36_55: {
-    label: "36–55 ans",
-    format: "percent",
-    color: getCssColor("fm-age-36-55-ec"),
-    category: "Quotité",
-    suffix: "%",
-  },
-  taux_temps_partiel_age_56_plus: {
-    label: "≥ 56 ans",
-    format: "percent",
-    color: getCssColor("fm-age-56-et-plus-ec"),
-    category: "Quotité",
-    suffix: "%",
-  },
   taux_feminisation_age_35_moins: {
     label: "≤ 35 ans",
     format: "percent",
@@ -592,20 +517,6 @@ export const PREDEFINED_FM_STATIC_ANALYSES: Record<string, FmAnalysisConfig> = {
     chartType: "base100",
   },
 
-  // === Quotité ===
-  "tp-global": {
-    label: "Part du temps partiel",
-    metrics: ["taux_temps_partiel"],
-    category: "Quotité",
-    chartType: "single",
-  },
-  "tp-effectifs": {
-    label: "Temps plein / temps partiel (effectifs)",
-    metrics: ["effectif_temps_partiel", "effectif_temps_plein"],
-    category: "Quotité",
-    chartType: "stacked",
-  },
-
   // === Croisements avancés ===
   "femi-par-statut": {
     label: "Féminisation par statut",
@@ -634,32 +545,6 @@ export const PREDEFINED_FM_STATIC_ANALYSES: Record<string, FmAnalysisConfig> = {
       "taux_feminisation_age_35_moins",
       "taux_feminisation_age_36_55",
       "taux_feminisation_age_56_plus",
-    ],
-    category: "Croisements avancés",
-    chartType: "lines",
-  },
-  "tp-par-genre": {
-    label: "Temps partiel femmes vs hommes",
-    metrics: ["taux_temps_partiel_femmes", "taux_temps_partiel_hommes"],
-    category: "Croisements avancés",
-    chartType: "lines",
-  },
-  "tp-par-age": {
-    label: "Temps partiel par tranche d'âge",
-    metrics: [
-      "taux_temps_partiel_age_35_moins",
-      "taux_temps_partiel_age_36_55",
-      "taux_temps_partiel_age_56_plus",
-    ],
-    category: "Croisements avancés",
-    chartType: "lines",
-  },
-  "tp-par-statut": {
-    label: "Temps partiel par statut",
-    metrics: [
-      "taux_temps_partiel_ec",
-      "taux_temps_partiel_tit",
-      "taux_temps_partiel_non_perm",
     ],
     category: "Croisements avancés",
     chartType: "lines",

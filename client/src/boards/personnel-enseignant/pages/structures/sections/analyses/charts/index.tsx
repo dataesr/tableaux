@@ -59,14 +59,9 @@ const ANALYSIS_COMMENTS: Record<string, string> = {
     "taux-age-35-moins": "Part des personnels âgés de 35 ans ou moins.",
     "taux-age-56-plus": "Part des personnels âgés de 56 ans ou plus.",
     "age-structure-base100": "Indices base 100 : compare les vitesses d'évolution des effectifs jeunes (≤ 35 ans) et âgés (≥ 56 ans).",
-    "tp-global": "Part des personnels exerçant à temps partiel.",
-    "tp-effectifs": "Effectifs à temps plein et à temps partiel.",
     "femi-par-statut": "Taux de féminisation comparé selon le statut (global, EC, permanents, non-permanents).",
     "femi-mcf-pr": "Taux de féminisation comparé entre MCF, PR et l'ensemble des EC.",
     "femi-par-age": "Taux de féminisation par tranche d'âge.",
-    "tp-par-genre": "Part du temps partiel chez les femmes et chez les hommes.",
-    "tp-par-age": "Part du temps partiel par tranche d'âge.",
-    "tp-par-statut": "Part du temps partiel selon le statut (EC, titulaires non-EC, non-permanents).",
 };
 
 const ANALYSIS_READING_KEYS: Record<string, string> = {
@@ -101,14 +96,9 @@ const ANALYSIS_READING_KEYS: Record<string, string> = {
     "taux-age-35-moins": "Une hausse traduit un rajeunissement par recrutement.",
     "taux-age-56-plus": "Une hausse traduit un vieillissement de la structure.",
     "age-structure-base100": "Si la courbe ≥ 56 ans domine, la population vieillit plus vite qu'elle ne se renouvelle.",
-    "tp-global": "Un temps partiel élevé peut signaler une part importante de vacataires ou de quotités réduites.",
-    "tp-effectifs": "Observer si la hausse des effectifs s'appuie surtout sur des temps partiels.",
     "femi-par-statut": "Un écart durable entre EC et non-permanents révèle une féminisation concentrée sur les emplois précaires.",
     "femi-mcf-pr": "L'écart entre MCF et PR quantifie le plafond de verre ; une convergence indique un rattrapage.",
     "femi-par-age": "Une féminisation plus forte chez les jeunes annonce un rééquilibrage à venir de l'ensemble.",
-    "tp-par-genre": "Un temps partiel nettement plus féminin signale une inégalité des conditions d'emploi.",
-    "tp-par-age": "Le temps partiel plus fréquent aux âges élevés peut traduire des fins de carrière aménagées.",
-    "tp-par-statut": "Le temps partiel très élevé chez les non-permanents reflète le poids des vacataires.",
 };
 
 function getAnalysisComment(key: string, ageClass: string, periodText: string): string {
