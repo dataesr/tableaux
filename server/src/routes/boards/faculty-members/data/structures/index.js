@@ -192,8 +192,6 @@ router.get("/faculty-members/dashboard", async (req, res) => {
       ageAgg,
       categoryAgg,
       establishmentTypeAgg,
-      quotiteByGenderAgg,
-      quotiteByAgeAgg,
       rankedItems,
       contextInfo,
     ] = await Promise.all([
@@ -332,68 +330,6 @@ router.get("/faculty-members/dashboard", async (req, res) => {
         ])
         .toArray(),
 
-      collection
-        .aggregate([
-          { $match: match },
-          {
-            $group: {
-              _id: { quotite: "$quotite", gender: "$sexe" },
-              count: { $sum: "$effectif" },
-            },
-          },
-          {
-            $group: {
-              _id: "$_id.gender",
-              total: { $sum: "$count" },
-              quotite_breakdown: {
-                $push: { quotite: "$_id.quotite", count: "$count" },
-              },
-            },
-          },
-          { $match: { _id: { $ne: null } } },
-        ])
-        .toArray(),
-
-      collection
-        .aggregate([
-          { $match: match },
-          {
-            $group: {
-              _id: {
-                age: "$classe_age3",
-                gender: "$sexe",
-                quotite: "$quotite",
-              },
-              count: { $sum: "$effectif" },
-            },
-          },
-          {
-            $group: {
-              _id: { age: "$_id.age", gender: "$_id.gender" },
-              total: { $sum: "$count" },
-              quotite_breakdown: {
-                $push: { quotite: "$_id.quotite", count: "$count" },
-              },
-            },
-          },
-          {
-            $group: {
-              _id: "$_id.age",
-              total: { $sum: "$total" },
-              by_gender: {
-                $push: {
-                  gender: "$_id.gender",
-                  total: "$total",
-                  quotite_breakdown: "$quotite_breakdown",
-                },
-              },
-            },
-          },
-          { $match: { _id: { $ne: null } } },
-          { $sort: { _id: 1 } },
-        ])
-        .toArray(),
-
       (() => {
         const topGroupConfig = {
           structure: {
@@ -461,8 +397,6 @@ router.get("/faculty-members/dashboard", async (req, res) => {
       age_distribution: ageAgg,
       category_distribution: categoryAgg,
       establishment_type_distribution: establishmentTypeAgg,
-      quotite_by_gender: quotiteByGenderAgg,
-      quotite_by_age: quotiteByAgeAgg,
       neighbors,
     });
   } catch (error) {
@@ -483,7 +417,6 @@ router.get("/faculty-members/evolution", async (req, res) => {
       ageEvolution,
       categoryEvolution,
       disciplineEvolution,
-      quotiteEvolution,
       contextInfo,
     ] = await Promise.all([
       collection
@@ -628,28 +561,6 @@ router.get("/faculty-members/evolution", async (req, res) => {
         ])
         .toArray(),
 
-      collection
-        .aggregate([
-          { $match: match },
-          {
-            $group: {
-              _id: { year: "$annee_universitaire", quotite: "$quotite" },
-              count: { $sum: "$effectif" },
-            },
-          },
-          {
-            $group: {
-              _id: "$_id.year",
-              total: { $sum: "$count" },
-              quotite_breakdown: {
-                $push: { quotite: "$_id.quotite", count: "$count" },
-              },
-            },
-          },
-          { $sort: { _id: 1 } },
-        ])
-        .toArray(),
-
       getContextInfo(collection, view, id),
     ]);
 
@@ -660,78 +571,12 @@ router.get("/faculty-members/evolution", async (req, res) => {
       age_evolution: ageEvolution,
       category_evolution: categoryEvolution,
       discipline_evolution: disciplineEvolution,
-      quotite_evolution: quotiteEvolution,
     });
   } catch (error) {
     console.error("Error fetching evolution:", error);
     res.status(500).json({ error: "Server error" });
   }
 });
-
-async function buildQuotiteData(collection, match, matchAllYears) {
-  const [quotiteByCategory, quotiteEvolution] = await Promise.all([
-    collection
-      .aggregate([
-        { $match: match },
-        {
-          $group: {
-            _id: {
-              category_code: "$code_categorie_assimil",
-              category_name: "$categorie_assimilation",
-              quotite: "$quotite",
-            },
-            count: { $sum: "$effectif" },
-          },
-        },
-        {
-          $group: {
-            _id: {
-              category_code: "$_id.category_code",
-              category_name: "$_id.category_name",
-            },
-            totalCount: { $sum: "$count" },
-            quotite_breakdown: {
-              $push: { quotite: "$_id.quotite", count: "$count" },
-            },
-          },
-        },
-        { $sort: { totalCount: -1 } },
-      ])
-      .toArray(),
-
-    collection
-      .aggregate([
-        { $match: matchAllYears },
-        {
-          $group: {
-            _id: {
-              year: "$annee_universitaire",
-              quotite: "$quotite",
-              gender: "$sexe",
-            },
-            count: { $sum: "$effectif" },
-          },
-        },
-        {
-          $group: {
-            _id: "$_id.year",
-            total: { $sum: "$count" },
-            quotite_breakdown: {
-              $push: {
-                quotite: "$_id.quotite",
-                gender: "$_id.gender",
-                count: "$count",
-              },
-            },
-          },
-        },
-        { $sort: { _id: 1 } },
-      ])
-      .toArray(),
-  ]);
-
-  return { quotiteByCategory, quotiteEvolution };
-}
 
 router.get("/faculty-members/research-teachers", async (req, res) => {
   try {
@@ -1499,7 +1344,6 @@ router.get("/faculty-members/research-teachers", async (req, res) => {
       ageDistribution,
       cnuGroupEvolution,
       cnuSectionEvolution,
-      ...(await buildQuotiteData(collection, match, matchAllYears)),
     });
   } catch (error) {
     console.error("Error fetching research teachers:", error);
@@ -2275,7 +2119,6 @@ router.get("/faculty-members/2nd-degree-teachers", async (req, res) => {
       ageDistribution,
       cnuGroupEvolution,
       cnuSectionEvolution,
-      ...(await buildQuotiteData(collection, match, matchAllYears)),
     });
   } catch (error) {
     console.error("Error fetching 2nd degree teachers:", error);
@@ -3019,7 +2862,6 @@ router.get("/faculty-members/non-permanents-teachers", async (req, res) => {
       genderEvolution,
       ageDistribution,
       cnuGroupEvolution,
-      ...(await buildQuotiteData(collection, match, matchAllYears)),
     });
   } catch (error) {
     console.error("Error fetching non permanents teachers:", error);
