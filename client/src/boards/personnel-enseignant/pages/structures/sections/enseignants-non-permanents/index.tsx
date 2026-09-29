@@ -9,8 +9,6 @@ import DefaultSkeleton from "../../../../../../components/charts-skeletons/defau
 import AgeDistributionChart from "./charts/age-distribution";
 import CategoryDistributionChart from "./charts/category-distribution";
 import AgeCategoryHeatmapChart from "./charts/age-category-heatmap";
-import QuotiteByCategoryChart from "./charts/quotite-by-category";
-import PartTimeEvolutionChart from "./charts/part-time-evolution";
 import FmMetricDefinitionsTable from "../../../../components/metric-definitions";
 import SectionYearSelect from "../../../../../../components/section-year-select";
 
@@ -152,16 +150,6 @@ export default function EnseignantsNonPermanentsSection({
                         </Col>
                         <Col xs="12" md="6">
                             <AgeCategoryHeatmapChart categoryDistribution={currentData?.categoryDistribution} selectedYear={selectedYear} />
-                        </Col>
-                    </Row>
-                </Tab>
-                <Tab label="Quotité">
-                    <Row gutters>
-                        <Col xs="12" md="6">
-                            <QuotiteByCategoryChart quotiteByCategory={currentData?.quotiteByCategory} selectedYear={selectedYear} />
-                        </Col>
-                        <Col xs="12" md="6">
-                            <PartTimeEvolutionChart quotiteEvolution={currentData?.quotiteEvolution} />
                         </Col>
                     </Row>
                 </Tab>
