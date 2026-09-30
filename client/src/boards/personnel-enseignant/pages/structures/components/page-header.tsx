@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import { Row, Col, Title, Text, Button, SegmentedControl, SegmentedElement } from "@dataesr/dsfr-plus";
 import { ViewType, FacultyScope } from "../api";
 import { getCssColor } from "../../../../../utils/colors";
+import DistributionBarChart from "./charts/distribution-bar";
 import "../styles.scss";
 
 const VIEW_BACK_LABELS: Record<ViewType, string> = {
@@ -17,6 +18,8 @@ const AGE_COLORS: Record<string, string> = {
     "56 ans et plus": "fm-age-56-et-plus-ec",
 };
 
+const AGE_ORDER = ["35 ans et moins", "36 à 55 ans", "56 ans et plus"];
+
 const STATUS_ROWS: { key: string; label: string; color: string }[] = [
     { key: "enseignant_chercheur", label: "Enseignants-chercheurs", color: "fm-statut-ec" },
     { key: "titulaire_non_chercheur", label: "Autres permanents", color: "fm-statut-titulaire" },
@@ -29,17 +32,6 @@ const VIEW_NEIGHBOR_LABELS: Record<ViewType, string> = {
     region: "Régions d'effectif comparable",
     academie: "Académies d'effectif comparable",
 };
-
-function genderSplitOf(items: any[]): { f: string; h: string } {
-    const total = items.reduce((s: number, i: any) => s + (i.count || 0), 0);
-    if (total <= 0) return { f: "–", h: "–" };
-    const female = items.find((i: any) => i.gender === "Féminin")?.count || 0;
-    const male = items.find((i: any) => i.gender === "Masculin")?.count || 0;
-    return {
-        f: ((female / total) * 100).toFixed(0),
-        h: ((male / total) * 100).toFixed(0),
-    };
-}
 
 interface PageHeaderProps {
     data: any;
@@ -72,6 +64,30 @@ export default function PageHeader({
     const ageDistribution = data?.age_distribution || [];
     const neighbors = data?.neighbors || [];
     const ranking = data?.ranking || null;
+
+    const ageSegments = AGE_ORDER.map((id) => {
+        const a = ageDistribution.find((x: any) => x._id === id);
+        const gb = a?.gender_breakdown || [];
+        return {
+            name: id,
+            value: a?.total || 0,
+            color: getCssColor(AGE_COLORS[id] ?? "blue-france-main-525"),
+            female: gb.find((g: any) => g.gender === "Féminin")?.count || 0,
+            male: gb.find((g: any) => g.gender === "Masculin")?.count || 0,
+        };
+    });
+
+    const statusSegments = STATUS_ROWS.map(({ key, label, color }) => {
+        const s = statusDistribution.find((x: any) => x._id === key);
+        const gb = s?.gender_breakdown || [];
+        return {
+            name: label,
+            value: s?.count || 0,
+            color: getCssColor(color),
+            female: gb.find((g: any) => g.gender === "Féminin")?.count || 0,
+            male: gb.find((g: any) => g.gender === "Masculin")?.count || 0,
+        };
+    });
 
     const maleCount =
         genderDistribution.find((g: any) => g._id === "Masculin")?.count || 0;
@@ -149,7 +165,7 @@ export default function PageHeader({
 
             <Row gutters className="fr-grid-row--middle fr-mb-2w">
                 <Col xs="12">
-                    <p className="fr-text--xs fr-mb-1v" style={{ color: "var(--text-mention-grey)" }}>
+                    <p className="fr-text--xs fr-mb-1v fr-text-mention--grey">
                         Champ de population — le total et les répartitions ci-dessous en dépendent
                     </p>
                     <SegmentedControl
@@ -173,167 +189,153 @@ export default function PageHeader({
                 </Col>
             </Row>
 
-            <Row gutters className="fr-mb-2w">
-                <Col xs="12">
-                    <ul className="page-header__stats-list">
-                        <li>
-                            <div className="fr-card fr-card--shadow fr-px-3v fr-py-2w page-header__stat-card">
-                                <div className="page-header__stat-card-content">
-                                    <span className="page-header__stat-icon page-header__stat-icon--blue-france" aria-hidden="true">
-                                        <span className="fr-icon-team-fill" aria-hidden="true" />
-                                    </span>
-                                    <div>
-                                        <Text size="lg" bold className="fr-mb-0">
-                                            {totalCount.toLocaleString("fr-FR")} enseignants en {selectedYear}
+            <Row gutters className="page-header__stats-row">
+                {/* COLONNE GAUCHE */}
+                <Col xs="12" md="4">
+                    <div className="page-header__stack">
+                        <div className="fr-card fr-card--shadow fr-px-3v fr-py-2w">
+                            <div className="page-header__stat-card-content">
+                                <span
+                                    className="page-header__stat-icon page-header__stat-icon--blue-france"
+                                    aria-hidden="true"
+                                >
+                                    <span className="fr-icon-team-fill" aria-hidden="true" />
+                                </span>
+
+                                <div>
+                                    <Text size="lg" bold className="fr-mb-0">
+                                        {totalCount.toLocaleString("fr-FR")} enseignants en {selectedYear}
+                                    </Text>
+
+                                    {trends?.totalPct && (
+                                        <Text
+                                            size="xs"
+                                            className="fr-mb-0 fr-text-mention--grey"
+                                        >
+                                            <span
+                                                className={`page-header__trend ${Number(trends.totalDiff) >= 0
+                                                    ? "page-header__trend--up"
+                                                    : "page-header__trend--down"
+                                                    }`}
+                                            >
+                                                {Number(trends.totalDiff) >= 0 ? "↑" : "↓"}{" "}
+                                                {trends.totalDiff >= 0 ? "+" : ""}
+                                                {trends.totalPct}%
+                                            </span>{" "}
+                                            vs {trends.prevYear}
                                         </Text>
-                                        {trends?.totalPct && (
-                                            <Text size="xs" className="fr-mb-0 fr-text-mention--grey">
-                                                <span className={`page-header__trend ${Number(trends.totalDiff) >= 0 ? "page-header__trend--up" : "page-header__trend--down"}`}>
-                                                    {Number(trends.totalDiff) >= 0 ? "↑" : "↓"} {trends.totalDiff >= 0 ? "+" : ""}{trends.totalPct}%
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="fr-card fr-card--shadow fr-px-3v fr-py-2w fr-mt-2w">
+                            <DistributionBarChart
+                                id="fm-status-summary"
+                                title="Statuts"
+                                segments={statusSegments}
+                                description="Répartition des effectifs par statut (enseignants-chercheurs, autres permanents, non-permanents), en part du total, avec le détail femmes-hommes en infobulle."
+                            />
+                        </div>
+                    </div>
+                </Col>
+
+                {/* COLONNE MILIEU */}
+                <Col xs="12" md="4">
+                    <div className="page-header__stack">
+                        <div className="fr-card fr-card--shadow fr-px-3v fr-py-2w ">
+                            <div className="page-header__stat-card-content">
+                                <span
+                                    className="page-header__stat-icon page-header__stat-icon--pink-tuile"
+                                    aria-hidden="true"
+                                >
+                                    <span className="fr-icon-user-fill" aria-hidden="true" />
+                                </span>
+
+                                <div>
+                                    <Text size="lg" bold className="fr-mb-0">
+                                        {femalePct}% de femmes
+                                    </Text>
+
+                                    <Text
+                                        size="xs"
+                                        className="fr-mb-0 fr-text-mention--grey"
+                                    >
+                                        {femaleCount.toLocaleString("fr-FR")} F ·{" "}
+                                        {maleCount.toLocaleString("fr-FR")} H ({malePct}%)
+
+                                        {trends && (
+                                            <>
+                                                {" · "}
+                                                <span
+                                                    className={`page-header__trend ${Number(trends.femalePctDiff) >= 0
+                                                        ? "page-header__trend--up"
+                                                        : "page-header__trend--down"
+                                                        }`}
+                                                >
+                                                    {Number(trends.femalePctDiff) >= 0 ? "↑" : "↓"}{" "}
+                                                    {Number(trends.femalePctDiff) >= 0 ? "+" : ""}
+                                                    {trends.femalePctDiff} pts
                                                 </span>
-                                                {" "}vs {trends.prevYear}
-                                            </Text>
+                                            </>
                                         )}
-                                    </div>
+                                    </Text>
                                 </div>
                             </div>
-                        </li>
-                        <li>
-                            <div className="fr-card fr-card--shadow fr-px-3v fr-py-2w page-header__stat-card">
-                                <div className="page-header__stat-card-content">
-                                    <span className="page-header__stat-icon page-header__stat-icon--pink-tuile" aria-hidden="true">
-                                        <span className="fr-icon-user-fill" aria-hidden="true" />
-                                    </span>
-                                    <div>
-                                        <Text size="lg" bold className="fr-mb-0">
-                                            {femalePct}% de femmes
-                                        </Text>
-                                        <Text size="xs" className="fr-mb-0 fr-text-mention--grey">
-                                            {femaleCount.toLocaleString("fr-FR")} F · {maleCount.toLocaleString("fr-FR")} H ({malePct}%)
-                                            {trends && (
-                                                <>
-                                                    {" · "}
-                                                    <span className={`page-header__trend ${Number(trends.femalePctDiff) >= 0 ? "page-header__trend--up" : "page-header__trend--down"}`}>
-                                                        {Number(trends.femalePctDiff) >= 0 ? "↑" : "↓"} {Number(trends.femalePctDiff) >= 0 ? "+" : ""}{trends.femalePctDiff} pts
-                                                    </span>
-                                                </>
-                                            )}
-                                        </Text>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
-                </Col>
-            </Row>
-
-            <Row gutters>
-                <Col xs="12" md="4">
-                    <div className="fr-card fr-card--shadow fr-px-3v fr-py-2w page-header__detail-card">
-                        <Text size="sm" bold className="fr-mb-2w">Statuts</Text>
-                        <div className="page-header__age-stacked-bar" role="presentation">
-                            {STATUS_ROWS.map(({ key, color }) => {
-                                const count = statusDistribution.find((s: any) => s._id === key)?.count || 0;
-                                const pct = totalCount > 0 ? (count / totalCount) * 100 : 0;
-                                if (pct <= 0) return null;
-                                return (
-                                    <div
-                                        key={key}
-                                        className="page-header__age-stacked-segment"
-                                        style={{ flex: pct, backgroundColor: getCssColor(color) }}
-                                        aria-hidden="true"
-                                    />
-                                );
-                            })}
                         </div>
-                        <ul className="page-header__detail-list fr-mt-2w">
-                            {STATUS_ROWS.map(({ key, label, color }) => {
-                                const status = statusDistribution.find((s: any) => s._id === key);
-                                const count = status?.count || 0;
-                                const pct = totalCount > 0 ? ((count / totalCount) * 100).toFixed(0) : "0";
-                                const { f: fPct, h: hPct } = genderSplitOf(status?.gender_breakdown || []);
-                                return (
-                                    <li key={key} className="page-header__detail-row">
-                                        <span
-                                            className="page-header__age-dot"
-                                            style={{ backgroundColor: getCssColor(color) }}
-                                            aria-hidden="true"
-                                        />
-                                        <span className="page-header__detail-label">{label}</span>
-                                        <span className="page-header__detail-value">
-                                            {count.toLocaleString("fr-FR")}
-                                            <span className="page-header__detail-pct"> · {pct}% ({fPct}% F · {hPct}% H)</span>
-                                        </span>
-                                    </li>
-                                );
-                            })}
-                        </ul>
+
+                        <div className="fr-card fr-card--shadow fr-px-3v fr-py-2w fr-mt-2w">
+                            <DistributionBarChart
+                                id="fm-age-summary"
+                                title="Répartition par âge"
+                                segments={ageSegments}
+                                description="Répartition des effectifs par tranche d'âge, en part du total, avec le détail femmes-hommes en infobulle."
+                            />
+                        </div>
                     </div>
                 </Col>
 
-                <Col xs="12" md="4">
-                    <div className="fr-card fr-card--shadow fr-px-3v fr-py-2w page-header__detail-card">
-                        <Text size="sm" bold className="fr-mb-2w">Répartition par âge</Text>
-                        <div className="page-header__age-stacked-bar" role="presentation">
-                            {ageDistribution
-                                .filter((a: any) => a._id && a._id !== "Non précisé")
-                                .map((age: any) => {
-                                    const pct = totalCount > 0 ? (age.total / totalCount) * 100 : 0;
-                                    return (
-                                        <div
-                                            key={age._id}
-                                            className="page-header__age-stacked-segment"
-                                            style={{ flex: pct, backgroundColor: getCssColor(AGE_COLORS[age._id] ?? "blue-france-main-525") }}
-                                            aria-hidden="true"
-                                        />
-                                    );
-                                })}
-                        </div>
-                        <ul className="page-header__detail-list fr-mt-2w">
-                            {ageDistribution.map((age: any) => {
-                                const pct = totalCount > 0 ? ((age.total / totalCount) * 100).toFixed(0) : "0";
-                                const { f: fPct, h: hPct } = genderSplitOf(age.gender_breakdown || []);
-                                return (
-                                    <li key={age._id} className="page-header__detail-row">
-                                        <span
-                                            className="page-header__age-dot"
-                                            style={{ backgroundColor: getCssColor(AGE_COLORS[age._id] ?? "blue-france-main-525") }}
-                                            aria-hidden="true"
-                                        />
-                                        <span className="page-header__detail-label">{age._id || "Âge non renseigné"}</span>
-                                        <span className="page-header__detail-value">
-                                            {age.total.toLocaleString("fr-FR")}
-                                            <span className="page-header__detail-pct"> · {pct}% ({fPct}% F · {hPct}% H)</span>
-                                        </span>
-                                    </li>
-                                );
-                            })}
-                        </ul>
-                    </div>
-                </Col>
+                <Col xs="12" md="4" className="page-header__ranking-col">
+                    <div className="fr-card fr-card--shadow fr-px-3v fr-py-2w page-header__ranking-card">
+                        <Text size="sm" bold className="fr-mb-1v">
+                            {VIEW_NEIGHBOR_LABELS[viewType]}
+                        </Text>
 
-                <Col xs="12" md="4">
-                    <div className="fr-card fr-card--shadow fr-px-3v fr-py-2w page-header__detail-card">
-                        <Text size="sm" bold className="fr-mb-1v">{VIEW_NEIGHBOR_LABELS[viewType]}</Text>
                         {ranking && (
-                            <Text size="xs" className="fr-mb-2w fr-text-mention--grey">
+                            <Text
+                                size="xs"
+                                className="fr-mb-2w fr-text-mention--grey"
+                            >
                                 Rang {ranking.rank} sur {ranking.count} · de{" "}
                                 {ranking.min.toLocaleString("fr-FR")} à{" "}
                                 {ranking.max.toLocaleString("fr-FR")} enseignants
                             </Text>
                         )}
+
                         <ul className="page-header__detail-list">
                             {neighbors.map((item: any, idx: number) => (
                                 <li key={item.id || idx}>
                                     <button
                                         type="button"
-                                        className={`page-header__neighbor-btn${item.is_current ? " page-header__neighbor-btn--current" : ""}`}
+                                        className={`page-header__neighbor-btn${item.is_current
+                                            ? " page-header__neighbor-btn--current"
+                                            : ""
+                                            }`}
                                         onClick={() => onSelectEntity(item.id)}
                                         disabled={item.is_current}
-                                        title={item.is_current ? item.label : `Voir ${item.label}`}
+                                        title={
+                                            item.is_current
+                                                ? item.label
+                                                : `Voir ${item.label}`
+                                        }
                                     >
-                                        <span className="page-header__detail-label">{item.label}</span>
-                                        <span className="page-header__detail-value">{item.total.toLocaleString("fr-FR")}</span>
+                                        <span className="page-header__detail-label">
+                                            {item.label}
+                                        </span>
+
+                                        <span className="page-header__detail-value">
+                                            {item.total.toLocaleString("fr-FR")}
+                                        </span>
                                     </button>
                                 </li>
                             ))}

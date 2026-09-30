@@ -39,7 +39,7 @@ export default function GroupesCnuSection({ viewType, selectedId, selectedYear }
         const map = new Map<string, GroupEvo>();
         (currentData?.cnuGroupEvolution || []).forEach((e: any) => {
             const code = e._id?.group_code;
-            if (!code) return;
+            if (code == null) return;
             const yearly = [...(e.yearly || [])].sort((a: any, b: any) =>
                 String(a.year).localeCompare(String(b.year))
             );
@@ -65,12 +65,30 @@ export default function GroupesCnuSection({ viewType, selectedId, selectedYear }
     }, [currentData]);
 
     if (isLoading) return <DefaultSkeleton />;
-    if (!currentData?.cnuGroups?.length) return null;
 
-    const groups = [...currentData.cnuGroups].sort(
-        (a: any, b: any) => (b.totalCount || 0) - (a.totalCount || 0)
-    );
-    const totalEC = groups.reduce((s: number, g: any) => s + (g.totalCount || 0), 0);
+    const groups = (currentData?.cnuGroupEvolution || [])
+        .map((e: any) => {
+            const current = e.yearly?.find((y: any) => String(y.year) === selectedYear);
+            return {
+                cnuGroupId: e._id?.group_code,
+                cnuGroupLabel: e._id?.group_name,
+                totalCount: current?.count || 0,
+                femaleCount: current?.gender_breakdown?.find((g: any) => g.gender === "Féminin")?.count || 0,
+                maleCount: current?.gender_breakdown?.find((g: any) => g.gender === "Masculin")?.count || 0,
+                ageDistribution: (current?.age_breakdown || []).map((a: any) => ({
+                    ageClass: a.age_class,
+                    count: a.count,
+                })),
+            };
+        })
+        .filter((g: any) => g.totalCount > 0)
+        .sort((a: any, b: any) => b.totalCount - a.totalCount);
+    if (!groups.length) return null;
+    const totalGroups = groups.reduce((s: number, g: any) => s + (g.totalCount || 0), 0);
+    const sections = (currentData.cnuGroups || [])
+        .flatMap((g: any) => g.cnuSections || [])
+        .filter((s: any) => (s.totalCount || 0) > 0);
+    const sectionsTotal = sections.reduce((s: number, sec: any) => s + sec.totalCount, 0);
     const pct = (count: number, total: number) =>
         total > 0 ? `${((count / total) * 100).toFixed(1)} %` : "";
 
@@ -81,6 +99,22 @@ export default function GroupesCnuSection({ viewType, selectedId, selectedYear }
                     Groupes CNU
                 </Title>
                 <SectionYearSelect />
+                <div className="fr-highlight fr-highlight--blue-ecume fr-mb-4w">
+                    <p className="fr-badge fr-badge--blue-ecume fr-mb-1w">Toutes les populations</p>
+                    <p className="fr-mb-0">
+                        Les <strong>{totalGroups.toLocaleString("fr-FR")}</strong> enseignants se répartissent
+                        sur <strong>{groups.length}</strong> groupes. Aux groupes CNU s'ajoutent des regroupements
+                        propres aux données, par exemple « Sans discipline » ou « Non spécifié ».
+                    </p>
+                </div>
+                <div className="fr-callout fr-mb-4w">
+                    <Text className="fr-callout__text fr-text--sm">
+                        <strong>Qu'est-ce que le Conseil national des universités (CNU) ?</strong>
+                        <br />
+                        Le Conseil national des universités est une instance nationale régie par le décret n° 92-70 du 16 janvier 1992. Il se prononce sur les mesures individuelles relatives à la qualification, au recrutement et à la carrière des professeurs des universités et des maîtres de conférences régis par le décret n°84-431 du 6 juin 1984 fixant les dispositions statutaires communes applicables aux enseignants-chercheurs et portant statut particulier du corps des professeurs des universités et du corps des maîtres de conférences.
+                        Il est composé de 11 groupes, eux-mêmes divisés en 52 sections, dont chacune correspond à une discipline. Chaque section comprend deux collèges où siègent en nombre égal d’une part, des représentants des professeurs des universités et personnels assimilés et, d’autre part, des représentants des maîtres de conférences et personnels assimilés.
+                    </Text>
+                </div>
             </div>
 
             {Array.from({ length: Math.ceil(groups.length / 4) }, (_, rowIdx) => {
@@ -117,7 +151,7 @@ export default function GroupesCnuSection({ viewType, selectedId, selectedYear }
                                             <MetricCard
                                                 title={`${g.cnuGroupId} — ${g.cnuGroupLabel}`}
                                                 value={total.toLocaleString("fr-FR")}
-                                                detail={`${pct(total, totalEC)} des enseignants-chercheurs · ${pct(g.femaleCount || 0, total)} de femmes`}
+                                                detail={`${pct(total, totalGroups)} des enseignants · ${pct(g.femaleCount || 0, total)} de femmes`}
                                                 color={color}
                                                 evolutionData={evo?.total}
                                             />
@@ -152,7 +186,7 @@ export default function GroupesCnuSection({ viewType, selectedId, selectedYear }
                                             <MetricCard
                                                 title="Effectif total"
                                                 value={sgTotal.toLocaleString("fr-FR")}
-                                                detail={`soit ${pct(sgTotal, totalEC)} des enseignants-chercheurs`}
+                                                detail={`soit ${pct(sgTotal, totalGroups)} des enseignants`}
                                                 color={sgColor}
                                                 evolutionData={sgEvo?.total}
                                             />
@@ -209,6 +243,13 @@ export default function GroupesCnuSection({ viewType, selectedId, selectedYear }
                 <Title as="h2" look="h5" id="section-ec-title" className="section-header__title">
                     Sections CNU
                 </Title>
+            </div>
+            <div className="fr-highlight fr-highlight--purple-glycine fr-mb-4w">
+                <p className="fr-badge fr-badge--purple-glycine fr-mb-1w">Enseignants-chercheurs titulaires uniquement</p>
+                <p className="fr-mb-0">
+                    Les <strong>{sectionsTotal.toLocaleString("fr-FR")}</strong> enseignants-chercheurs titulaires
+                    se répartissent sur <strong>{sections.length}</strong> sections CNU.
+                </p>
             </div>
             <div className="fr-callout fr-mb-4w">
                 <Text className="fr-callout__text fr-text--sm">

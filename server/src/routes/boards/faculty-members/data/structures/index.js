@@ -1114,7 +1114,7 @@ router.get("/faculty-members/research-teachers", async (req, res) => {
 
       collection
         .aggregate([
-          { $match: matchAllYears },
+          { $match: buildMatchStage(view, id) },
           {
             $group: {
               _id: {
