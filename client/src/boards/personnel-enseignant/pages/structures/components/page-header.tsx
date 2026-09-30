@@ -71,6 +71,7 @@ export default function PageHeader({
     const statusDistribution = data?.status_distribution || [];
     const ageDistribution = data?.age_distribution || [];
     const neighbors = data?.neighbors || [];
+    const ranking = data?.ranking || null;
 
     const maleCount =
         genderDistribution.find((g: any) => g._id === "Masculin")?.count || 0;
@@ -313,7 +314,14 @@ export default function PageHeader({
 
                 <Col xs="12" md="4">
                     <div className="fr-card fr-card--shadow fr-px-3v fr-py-2w page-header__detail-card">
-                        <Text size="sm" bold className="fr-mb-1w">{VIEW_NEIGHBOR_LABELS[viewType]}</Text>
+                        <Text size="sm" bold className="fr-mb-1v">{VIEW_NEIGHBOR_LABELS[viewType]}</Text>
+                        {ranking && (
+                            <Text size="xs" className="fr-mb-2w fr-text-mention--grey">
+                                Rang {ranking.rank} sur {ranking.count} · de{" "}
+                                {ranking.min.toLocaleString("fr-FR")} à{" "}
+                                {ranking.max.toLocaleString("fr-FR")} enseignants
+                            </Text>
+                        )}
                         <ul className="page-header__detail-list">
                             {neighbors.map((item: any, idx: number) => (
                                 <li key={item.id || idx}>

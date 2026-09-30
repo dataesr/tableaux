@@ -388,6 +388,17 @@ router.get("/faculty-members/dashboard", async (req, res) => {
       }));
     }
 
+    let ranking = null;
+    if (currentIndex >= 0 && rankedItems.length > 0) {
+      ranking = {
+        rank: currentIndex + 1,
+        count: rankedItems.length,
+        current: rankedItems[currentIndex].total,
+        max: rankedItems[0].total,
+        min: rankedItems[rankedItems.length - 1].total,
+      };
+    }
+
     res.json({
       context_info: contextInfo,
       total_count,
@@ -398,6 +409,7 @@ router.get("/faculty-members/dashboard", async (req, res) => {
       category_distribution: categoryAgg,
       establishment_type_distribution: establishmentTypeAgg,
       neighbors,
+      ranking,
     });
   } catch (error) {
     console.error("Error fetching dashboard:", error);
@@ -3619,7 +3631,6 @@ router.get("/faculty-members/analyses", async (req, res) => {
           { $sort: { _id: 1 } },
         ])
         .toArray(),
-
     ]);
 
     const discCodesMap = new Map();
@@ -3684,9 +3695,7 @@ router.get("/faculty-members/analyses", async (req, res) => {
     const gradeByYear = Object.fromEntries(
       gradeGenderAgg.map((e) => [e._id, e])
     );
-    const ageGQByYear = Object.fromEntries(
-      ageGenderAgg.map((e) => [e._id, e])
-    );
+    const ageGQByYear = Object.fromEntries(ageGenderAgg.map((e) => [e._id, e]));
 
     const records = allYears.map((year) => {
       const g = globalByYear[year] || {};

@@ -25,6 +25,13 @@ export function createAgeDistributionOptions(
         return -(m?.count || 0);
     });
 
+    const maxAbs =
+        Math.max(
+            0,
+            ...femaleData.map((v) => Math.abs(v)),
+            ...maleData.map((v) => Math.abs(v))
+        ) || 1;
+
     return createChartOptions("bar", {
         chart: { height: 280 },
         xAxis: {
@@ -32,6 +39,8 @@ export function createAgeDistributionOptions(
             title: { text: null },
         },
         yAxis: {
+            min: -maxAbs,
+            max: maxAbs,
             title: { text: "Effectif" },
             labels: {
                 formatter() {

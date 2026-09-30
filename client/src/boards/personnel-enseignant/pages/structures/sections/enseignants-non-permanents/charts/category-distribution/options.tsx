@@ -23,6 +23,13 @@ export function createCategoryDistributionOptions(
     const womenData = sortedData.map((item) => item.femaleCount);
     const menData = sortedData.map((item) => -item.maleCount);
 
+    const maxAbs =
+        Math.max(
+            0,
+            ...womenData.map((v) => Math.abs(v)),
+            ...menData.map((v) => Math.abs(v))
+        ) || 1;
+
     return createChartOptions("bar", {
         chart: {
             height: Math.max(250, 80 + categories.length * 40),
@@ -32,6 +39,8 @@ export function createCategoryDistributionOptions(
             title: { text: null },
         },
         yAxis: {
+            min: -maxAbs,
+            max: maxAbs,
             title: { text: "Nombre d'enseignants" },
             labels: {
                 formatter() {
