@@ -218,7 +218,7 @@ router.route("/european-projects/msca/synthesis-by-panel").get(async (req, res) 
       {
         $group: {
           _id: {
-            panel_id: "$panel_id",
+            panel_id: "$panel_code",
             panel_name: "$panel_name",
             country_code: "$country_code",
             country_name_fr: "$country_name_fr",
@@ -439,12 +439,12 @@ router.route("/european-projects/msca/evolution-by-panel").get(async (req, res) 
 
   // Agrégation par domaine scientifique
   const aggregationPipeline = (filters, stage) => [
-    { $match: { ...filters, stage, "panel_id": {$ne:null}} },
+    { $match: { ...filters, stage, panel_id: { $ne: null } } },
     {
       $group: {
         _id: {
           call_year: "$call_year",
-          panel_id: "$panel_id",
+          panel_id: "$panel_code",
           panel_name: "$panel_name",
         },
         total_funding: { $sum: "$fund_eur" },

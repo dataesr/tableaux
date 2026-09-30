@@ -31,7 +31,6 @@ export default function SyntheseContent() {
       <ErcDestinationCards countryCode={countryCode} callYear={callYear} />
       {/* Graphique par type de financement */}
       <DestinationChart countryCode={countryCode} callYear={callYear} currentLang={currentLang} />
-
       {/* Cartes par panel ERC */}
       <Title as="h3" className="fr-mt-4w">
         {getI18nLabel(i18n, "panelFunding.sectionTitle", currentLang)}
@@ -41,7 +40,6 @@ export default function SyntheseContent() {
       <PanelChart countryCode={countryCode} callYear={callYear} currentLang={currentLang} />
       {/* Graphique détaillé par panel ERC */}
       <PanelDetailChart countryCode={countryCode} callYear={callYear} currentLang={currentLang} />
-
       <PanelFundingChart countryAdjective={countryAdj.m} currentLang={currentLang} />
       {/* TODO: Graph de performance avec croisement d'indicateurs Par panel, type de financement */}
       {/* TODO: Stats par type de financement + genre du porteur + tranche age du porteur */}

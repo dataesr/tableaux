@@ -28,10 +28,10 @@ router.route("/european-projects/erc/synthesis").get(async (req, res) => {
   }
   if (req.query.panel_id) {
     const panels = req.query.panel_id.split(",");
-    filters.panel_id = { $in: panels };
+    filters.panel_code = { $in: panels };
   }
   if (req.query.domaine_scientifique) {
-    filters.domaine_scientifique = req.query.domaine_scientifique.toUpperCase();
+    filters.panel_regroupement_code = req.query.domaine_scientifique.toUpperCase();
   }
   if (req.query.framework) {
     filters.framework = req.query.framework;
@@ -45,10 +45,10 @@ router.route("/european-projects/erc/synthesis").get(async (req, res) => {
       {
         $group: {
           _id: "$country_code",
-          total_funding_project: { $sum: "$funding_project" },
-          total_funding_entity: { $sum: "$funding_entity" },
+          total_funding_project: { $sum: "$calculated_fund" },
+          total_funding_entity: { $sum: "$fund_ent_erc" },
           total_involved: { $sum: "$number_involved" },
-          total_pi: { $sum: { $cond: [{ $eq: ["$role_entity", "PI"] }, "$number_involved", 0] } },
+          total_pi: { $sum: { $cond: [{ $eq: ["$role", "PI"] }, "$number_involved", 0] } },
           country_name_fr: { $first: "$country_name_fr" },
           country_name_en: { $first: "$country_name_en" },
         },
@@ -96,10 +96,10 @@ router.route("/european-projects/erc/synthesis").get(async (req, res) => {
       {
         $group: {
           _id: "$country_code",
-          total_funding_project: { $sum: "$funding_project" },
-          total_funding_entity: { $sum: "$funding_entity" },
+          total_funding_project: { $sum: "$calculated_fund" },
+          total_funding_entity: { $sum: "$fund_ent_erc" },
           total_involved: { $sum: "$number_involved" },
-          total_pi: { $sum: { $cond: [{ $eq: ["$role_entity", "PI"] }, "$number_involved", 0] } },
+          total_pi: { $sum: { $cond: [{ $eq: ["$role", "PI"] }, "$number_involved", 0] } },
           country_name_fr: { $first: "$country_name_fr" },
           country_name_en: { $first: "$country_name_en" },
         },
@@ -183,7 +183,7 @@ router.route("/european-projects/erc/synthesis-by-destination").get(async (req, 
   }
   if (req.query.panel_id) {
     const panels = req.query.panel_id.split(",");
-    filters.panel_id = { $in: panels };
+    filters.panel_code = { $in: panels };
   }
   if (req.query.framework) {
     filters.framework = req.query.framework;
@@ -203,10 +203,10 @@ router.route("/european-projects/erc/synthesis-by-destination").get(async (req, 
             destination_name_en: "$destination_name_en",
             stage: "$stage",
           },
-          total_funding_project: { $sum: "$funding_project" },
-          total_funding_entity: { $sum: "$funding_entity" },
+          total_funding_project: { $sum: "$calculated_fund" },
+          total_funding_entity: { $sum: "$fund_ent_erc" },
           total_involved: { $sum: "$number_involved" },
-          total_pi: { $sum: { $cond: [{ $eq: ["$role_entity", "PI"] }, "$number_involved", 0] } },
+          total_pi: { $sum: { $cond: [{ $eq: ["$role", "PI"] }, "$number_involved", 0] } },
         },
       },
       {
@@ -286,16 +286,16 @@ router.route("/european-projects/erc/synthesis-by-panel").get(async (req, res) =
       {
         $group: {
           _id: {
-            panel_id: "$panel_id",
+            panel_id: "$panel_code",
             panel_name: "$panel_name",
             panel_lib: "$panel_lib",
-            domaine_scientifique: "$domaine_scientifique",
-            domaine_name_scientifique: "$domaine_name_scientifique",
+            domaine_scientifique: "$panel_regroupement_code",
+            domaine_name_scientifique: "$panel_regroupement_name",
             stage: "$stage",
           },
-          total_funding_entity: { $sum: "$funding_entity" },
+          total_funding_entity: { $sum: "$fund_ent_erc" },
           total_involved: { $sum: "$number_involved" },
-          total_pi: { $sum: { $cond: [{ $eq: ["$role_entity", "PI"] }, "$number_involved", 0] } },
+          total_pi: { $sum: { $cond: [{ $eq: ["$role", "PI"] }, "$number_involved", 0] } },
         },
       },
       {
@@ -372,17 +372,17 @@ router.route("/european-projects/erc/panel-funding").get(async (req, res) => {
       {
         $group: {
           _id: {
-            panel_id: "$panel_id",
+            panel_id: "$panel_code",
             panel_name: "$panel_name",
             panel_lib: "$panel_lib",
-            domaine_scientifique: "$domaine_scientifique",
-            domaine_name_scientifique: "$domaine_name_scientifique",
+            domaine_scientifique: "$panel_regroupement_code",
+            domaine_name_scientifique: "$panel_regroupement_name",
             destination_code: "$destination_code",
             destination_name_en: "$destination_name_en",
           },
-          total_funding_entity: { $sum: "$funding_entity" },
+          total_funding_entity: { $sum: "$fund_ent_erc" },
           total_involved: { $sum: "$number_involved" },
-          total_pi: { $sum: { $cond: [{ $eq: ["$role_entity", "PI"] }, "$number_involved", 0] } },
+          total_pi: { $sum: { $cond: [{ $eq: ["$role", "PI"] }, "$number_involved", 0] } },
         },
       },
       {
@@ -444,9 +444,9 @@ router.route("/european-projects/erc/evolution").get(async (req, res) => {
           destination_code: "$destination_code",
           destination_name_en: "$destination_name_en",
         },
-        total_funding_project: { $sum: "$funding_project" },
+        total_funding_project: { $sum: "$calculated_fund" },
         total_involved: { $sum: "$number_involved" },
-        total_pi: { $sum: { $cond: [{ $eq: ["$role_entity", "PI"] }, "$number_involved", 0] } },
+        total_pi: { $sum: { $cond: [{ $eq: ["$role", "PI"] }, "$number_involved", 0] } },
       },
     },
     {
@@ -521,12 +521,12 @@ router.route("/european-projects/erc/evolution-by-domain").get(async (req, res) 
       $group: {
         _id: {
           call_year: "$call_year",
-          domaine_scientifique: "$domaine_scientifique",
-          domaine_name_scientifique: "$domaine_name_scientifique",
+          domaine_scientifique: "$panel_regroupement_code",
+          domaine_name_scientifique: "$panel_regroupement_name",
         },
-        total_funding_project: { $sum: "$funding_project" },
+        total_funding_project: { $sum: "$calculated_fund" },
         total_involved: { $sum: "$number_involved" },
-        total_pi: { $sum: { $cond: [{ $eq: ["$role_entity", "PI"] }, "$number_involved", 0] } },
+        total_pi: { $sum: { $cond: [{ $eq: ["$role", "PI"] }, "$number_involved", 0] } },
       },
     },
     {
@@ -600,16 +600,16 @@ router.route("/european-projects/erc/evolution-by-panel").get(async (req, res) =
       $group: {
         _id: {
           call_year: "$call_year",
-          panel_id: "$panel_id",
+          panel_id: "$panel_code",
           panel_name: "$panel_name",
           panel_lib: "$panel_lib",
-          domaine_scientifique: "$domaine_scientifique",
-          domaine_name_scientifique: "$domaine_name_scientifique",
+          domaine_scientifique: "$panel_regroupement_code",
+          domaine_name_scientifique: "$panel_regroupement_name",
         },
-        total_funding_project: { $sum: "$funding_project" },
-        total_funding_entity: { $sum: "$funding_entity" },
+        total_funding_project: { $sum: "$calculated_fund" },
+        total_funding_entity: { $sum: "$fund_ent_erc" },
         total_involved: { $sum: "$number_involved" },
-        total_pi: { $sum: { $cond: [{ $eq: ["$role_entity", "PI"] }, "$number_involved", 0] } },
+        total_pi: { $sum: { $cond: [{ $eq: ["$role", "PI"] }, "$number_involved", 0] } },
       },
     },
     {
@@ -731,9 +731,9 @@ router.route("/european-projects/erc/main-entities-by-domain").get(async (req, r
     }
     if (req.query.panel_id) {
       const panels = req.query.panel_id.split(",");
-      filters.panel_id = { $in: panels };
+      filters.panel_code = { $in: panels };
     } else if (req.query.domaine_scientifique) {
-      filters.domaine_scientifique = req.query.domaine_scientifique.toUpperCase();
+      filters.panel_regroupement_code = req.query.domaine_scientifique.toUpperCase();
     }
 
     // Récup des project_id correspondants aux filtres
@@ -793,11 +793,11 @@ router.route("/european-projects/erc/filters").get(async (req, res) => {
         {
           $group: {
             _id: {
-              id: "$panel_id",
+              id: "$panel_code",
               name: "$panel_name",
               lib: "$panel_lib",
-              domaine: "$domaine_scientifique",
-              domaine_name: "$domaine_name_scientifique",
+              domaine: "$panel_regroupement_code",
+              domaine_name: "$panel_regroupement_name",
             },
           },
         },
