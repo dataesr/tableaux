@@ -188,10 +188,7 @@ router.get("/faculty-members/dashboard", async (req, res) => {
     const [
       genderAgg,
       statusAgg,
-      disciplineAgg,
       ageAgg,
-      categoryAgg,
-      establishmentTypeAgg,
       rankedItems,
       contextInfo,
     ] = await Promise.all([
@@ -250,32 +247,6 @@ router.get("/faculty-members/dashboard", async (req, res) => {
           { $match: match },
           {
             $group: {
-              _id: {
-                code: "$code_grande_discipline",
-                name: "$grande_discipline",
-                gender: "$sexe",
-              },
-              count: { $sum: "$effectif" },
-            },
-          },
-          {
-            $group: {
-              _id: { code: "$_id.code", name: "$_id.name" },
-              total: { $sum: "$count" },
-              gender_breakdown: {
-                $push: { gender: "$_id.gender", count: "$count" },
-              },
-            },
-          },
-          { $sort: { total: -1 } },
-        ])
-        .toArray(),
-
-      collection
-        .aggregate([
-          { $match: match },
-          {
-            $group: {
               _id: { age_class: "$classe_age3", gender: "$sexe" },
               count: { $sum: "$effectif" },
             },
@@ -290,43 +261,6 @@ router.get("/faculty-members/dashboard", async (req, res) => {
             },
           },
           { $sort: { _id: 1 } },
-        ])
-        .toArray(),
-
-      collection
-        .aggregate([
-          { $match: match },
-          {
-            $group: {
-              _id: { category: "$categorie_assimilation", gender: "$sexe" },
-              count: { $sum: "$effectif" },
-            },
-          },
-          {
-            $group: {
-              _id: "$_id.category",
-              total: { $sum: "$count" },
-              gender_breakdown: {
-                $push: { gender: "$_id.gender", count: "$count" },
-              },
-            },
-          },
-          { $match: { _id: { $ne: null } } },
-          { $sort: { total: -1 } },
-        ])
-        .toArray(),
-
-      collection
-        .aggregate([
-          { $match: match },
-          {
-            $group: {
-              _id: "$etablissement_type",
-              total_count: { $sum: "$effectif" },
-            },
-          },
-          { $match: { _id: { $ne: null } } },
-          { $sort: { total_count: -1 } },
         ])
         .toArray(),
 
@@ -404,10 +338,7 @@ router.get("/faculty-members/dashboard", async (req, res) => {
       total_count,
       gender_distribution: genderAgg,
       status_distribution: statusAgg,
-      discipline_distribution: disciplineAgg,
       age_distribution: ageAgg,
-      category_distribution: categoryAgg,
-      establishment_type_distribution: establishmentTypeAgg,
       neighbors,
       ranking,
     });
@@ -425,10 +356,6 @@ router.get("/faculty-members/evolution", async (req, res) => {
 
     const [
       globalEvolution,
-      statusEvolution,
-      ageEvolution,
-      categoryEvolution,
-      disciplineEvolution,
       contextInfo,
     ] = await Promise.all([
       collection
@@ -453,136 +380,12 @@ router.get("/faculty-members/evolution", async (req, res) => {
         ])
         .toArray(),
 
-      collection
-        .aggregate([
-          { $match: match },
-          {
-            $group: {
-              _id: {
-                year: "$annee_universitaire",
-                status: {
-                  $switch: {
-                    branches: [
-                      {
-                        case: { $eq: ["$is_enseignant_chercheur", true] },
-                        then: "enseignant_chercheur",
-                      },
-                      {
-                        case: {
-                          $and: [
-                            { $eq: ["$is_titulaire", true] },
-                            { $eq: ["$is_enseignant_chercheur", false] },
-                          ],
-                        },
-                        then: "titulaire_non_chercheur",
-                      },
-                    ],
-                    default: "non_titulaire",
-                  },
-                },
-              },
-              count: { $sum: "$effectif" },
-            },
-          },
-          {
-            $group: {
-              _id: "$_id.year",
-              total: { $sum: "$count" },
-              status_breakdown: {
-                $push: { status: "$_id.status", count: "$count" },
-              },
-            },
-          },
-          { $sort: { _id: 1 } },
-        ])
-        .toArray(),
-
-      collection
-        .aggregate([
-          { $match: match },
-          {
-            $group: {
-              _id: {
-                year: "$annee_universitaire",
-                age_class: "$classe_age3",
-              },
-              count: { $sum: "$effectif" },
-            },
-          },
-          {
-            $group: {
-              _id: "$_id.year",
-              total: { $sum: "$count" },
-              age_breakdown: {
-                $push: { age_class: "$_id.age_class", count: "$count" },
-              },
-            },
-          },
-          { $sort: { _id: 1 } },
-        ])
-        .toArray(),
-
-      collection
-        .aggregate([
-          { $match: match },
-          {
-            $group: {
-              _id: {
-                year: "$annee_universitaire",
-                category: "$categorie_personnels",
-              },
-              count: { $sum: "$effectif" },
-            },
-          },
-          {
-            $group: {
-              _id: "$_id.year",
-              total: { $sum: "$count" },
-              category_breakdown: {
-                $push: { category: "$_id.category", count: "$count" },
-              },
-            },
-          },
-          { $sort: { _id: 1 } },
-        ])
-        .toArray(),
-
-      collection
-        .aggregate([
-          { $match: match },
-          {
-            $group: {
-              _id: {
-                year: "$annee_universitaire",
-                code: "$code_grande_discipline",
-                name: "$grande_discipline",
-              },
-              count: { $sum: "$effectif" },
-            },
-          },
-          {
-            $group: {
-              _id: { code: "$_id.code", name: "$_id.name" },
-              total: { $sum: "$count" },
-              yearly: {
-                $push: { year: "$_id.year", count: "$count" },
-              },
-            },
-          },
-          { $sort: { total: -1 } },
-        ])
-        .toArray(),
-
       getContextInfo(collection, view, id),
     ]);
 
     res.json({
       context_info: contextInfo,
       global_evolution: globalEvolution,
-      status_evolution: statusEvolution,
-      age_evolution: ageEvolution,
-      category_evolution: categoryEvolution,
-      discipline_evolution: disciplineEvolution,
     });
   } catch (error) {
     console.error("Error fetching evolution:", error);
@@ -622,7 +425,6 @@ router.get("/faculty-members/research-teachers", async (req, res) => {
       genderEvolution,
       ageDistribution,
       cnuGroupEvolution,
-      cnuSectionEvolution,
       contextInfo,
     ] = await Promise.all([
       collection
@@ -1208,106 +1010,6 @@ router.get("/faculty-members/research-teachers", async (req, res) => {
         ])
         .toArray(),
 
-      collection
-        .aggregate([
-          { $match: matchAllYears },
-          {
-            $group: {
-              _id: {
-                year: "$annee_universitaire",
-                group_code: "$code_groupe_cnu",
-                section_code: "$code_section_cnu",
-                section_name: "$section_cnu",
-                gender: "$sexe",
-                age_class: "$classe_age3",
-              },
-              count: { $sum: "$effectif" },
-            },
-          },
-          {
-            $group: {
-              _id: {
-                year: "$_id.year",
-                group_code: "$_id.group_code",
-                section_code: "$_id.section_code",
-                section_name: "$_id.section_name",
-                age_class: "$_id.age_class",
-              },
-              total: { $sum: "$count" },
-              gender_breakdown: {
-                $push: { gender: "$_id.gender", count: "$count" },
-              },
-            },
-          },
-          {
-            $group: {
-              _id: {
-                year: "$_id.year",
-                group_code: "$_id.group_code",
-                section_code: "$_id.section_code",
-                section_name: "$_id.section_name",
-              },
-              total: { $sum: "$total" },
-              age_breakdown: {
-                $push: { age_class: "$_id.age_class", count: "$total" },
-              },
-              gender_rows: { $push: "$gender_breakdown" },
-            },
-          },
-          {
-            $addFields: {
-              gender_breakdown: {
-                $map: {
-                  input: ["Féminin", "Masculin"],
-                  as: "g",
-                  in: {
-                    gender: "$$g",
-                    count: {
-                      $sum: {
-                        $map: {
-                          input: {
-                            $reduce: {
-                              input: "$gender_rows",
-                              initialValue: [],
-                              in: { $concatArrays: ["$$value", "$$this"] },
-                            },
-                          },
-                          as: "row",
-                          in: {
-                            $cond: [
-                              { $eq: ["$$row.gender", "$$g"] },
-                              "$$row.count",
-                              0,
-                            ],
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          },
-          {
-            $group: {
-              _id: {
-                group_code: "$_id.group_code",
-                section_code: "$_id.section_code",
-                section_name: "$_id.section_name",
-              },
-              yearly: {
-                $push: {
-                  year: "$_id.year",
-                  count: "$total",
-                  gender_breakdown: "$gender_breakdown",
-                  age_breakdown: "$age_breakdown",
-                },
-              },
-            },
-          },
-        ])
-        .toArray(),
-
       getContextInfo(collection, view, id),
     ]);
 
@@ -1355,7 +1057,6 @@ router.get("/faculty-members/research-teachers", async (req, res) => {
       genderEvolution,
       ageDistribution,
       cnuGroupEvolution,
-      cnuSectionEvolution,
     });
   } catch (error) {
     console.error("Error fetching research teachers:", error);
@@ -1397,7 +1098,6 @@ router.get("/faculty-members/2nd-degree-teachers", async (req, res) => {
       genderEvolution,
       ageDistribution,
       cnuGroupEvolution,
-      cnuSectionEvolution,
       contextInfo,
     ] = await Promise.all([
       collection
@@ -1983,106 +1683,6 @@ router.get("/faculty-members/2nd-degree-teachers", async (req, res) => {
         ])
         .toArray(),
 
-      collection
-        .aggregate([
-          { $match: matchAllYears },
-          {
-            $group: {
-              _id: {
-                year: "$annee_universitaire",
-                group_code: "$code_groupe_cnu",
-                section_code: "$code_section_cnu",
-                section_name: "$section_cnu",
-                gender: "$sexe",
-                age_class: "$classe_age3",
-              },
-              count: { $sum: "$effectif" },
-            },
-          },
-          {
-            $group: {
-              _id: {
-                year: "$_id.year",
-                group_code: "$_id.group_code",
-                section_code: "$_id.section_code",
-                section_name: "$_id.section_name",
-                age_class: "$_id.age_class",
-              },
-              total: { $sum: "$count" },
-              gender_breakdown: {
-                $push: { gender: "$_id.gender", count: "$count" },
-              },
-            },
-          },
-          {
-            $group: {
-              _id: {
-                year: "$_id.year",
-                group_code: "$_id.group_code",
-                section_code: "$_id.section_code",
-                section_name: "$_id.section_name",
-              },
-              total: { $sum: "$total" },
-              age_breakdown: {
-                $push: { age_class: "$_id.age_class", count: "$total" },
-              },
-              gender_rows: { $push: "$gender_breakdown" },
-            },
-          },
-          {
-            $addFields: {
-              gender_breakdown: {
-                $map: {
-                  input: ["Féminin", "Masculin"],
-                  as: "g",
-                  in: {
-                    gender: "$$g",
-                    count: {
-                      $sum: {
-                        $map: {
-                          input: {
-                            $reduce: {
-                              input: "$gender_rows",
-                              initialValue: [],
-                              in: { $concatArrays: ["$$value", "$$this"] },
-                            },
-                          },
-                          as: "row",
-                          in: {
-                            $cond: [
-                              { $eq: ["$$row.gender", "$$g"] },
-                              "$$row.count",
-                              0,
-                            ],
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          },
-          {
-            $group: {
-              _id: {
-                group_code: "$_id.group_code",
-                section_code: "$_id.section_code",
-                section_name: "$_id.section_name",
-              },
-              yearly: {
-                $push: {
-                  year: "$_id.year",
-                  count: "$total",
-                  gender_breakdown: "$gender_breakdown",
-                  age_breakdown: "$age_breakdown",
-                },
-              },
-            },
-          },
-        ])
-        .toArray(),
-
       getContextInfo(collection, view, id),
     ]);
 
@@ -2130,7 +1730,6 @@ router.get("/faculty-members/2nd-degree-teachers", async (req, res) => {
       genderEvolution,
       ageDistribution,
       cnuGroupEvolution,
-      cnuSectionEvolution,
     });
   } catch (error) {
     console.error("Error fetching 2nd degree teachers:", error);
@@ -2746,100 +2345,6 @@ router.get("/faculty-members/non-permanents-teachers", async (req, res) => {
           },
         ])
         .toArray(),
-
-      /* collection
-        .aggregate([
-          { $match: matchAllYears },
-          {
-            $group: {
-              _id: {
-                year: "$annee_universitaire",
-                group_code: "$code_groupe_cnu",
-                gender: "$sexe",
-                age_class: "$classe_age3",
-              },
-              count: { $sum: "$effectif" },
-            },
-          },
-          {
-            $group: {
-              _id: {
-                year: "$_id.year",
-                group_code: "$_id.group_code",
-                age_class: "$_id.age_class",
-              },
-              total: { $sum: "$count" },
-              gender_breakdown: {
-                $push: { gender: "$_id.gender", count: "$count" },
-              },
-            },
-          },
-          {
-            $group: {
-              _id: {
-                year: "$_id.year",
-                group_code: "$_id.group_code",
-              },
-              total: { $sum: "$total" },
-              age_breakdown: {
-                $push: { age_class: "$_id.age_class", count: "$total" },
-              },
-              gender_rows: { $push: "$gender_breakdown" },
-            },
-          },
-          {
-            $addFields: {
-              gender_breakdown: {
-                $map: {
-                  input: ["Féminin", "Masculin"],
-                  as: "g",
-                  in: {
-                    gender: "$$g",
-                    count: {
-                      $sum: {
-                        $map: {
-                          input: {
-                            $reduce: {
-                              input: "$gender_rows",
-                              initialValue: [],
-                              in: { $concatArrays: ["$$value", "$$this"] },
-                            },
-                          },
-                          as: "row",
-                          in: {
-                            $cond: [
-                              { $eq: ["$$row.gender", "$$g"] },
-                              "$$row.count",
-                              0,
-                            ],
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          },
-          {
-            $group: {
-              _id: {
-                group_code: "$_id.group_code",
-                section_code: "$_id.section_code",
-                section_name: "$_id.section_name",
-              },
-              yearly: {
-                $push: {
-                  year: "$_id.year",
-                  count: "$total",
-                  gender_breakdown: "$gender_breakdown",
-                  age_breakdown: "$age_breakdown",
-                },
-              },
-            },
-          },
-        ])
-        .toArray(), */
 
       getContextInfo(collection, view, id),
     ]);
