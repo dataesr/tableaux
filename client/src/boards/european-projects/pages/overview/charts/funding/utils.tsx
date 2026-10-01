@@ -1,5 +1,6 @@
 import { useSearchParams } from "react-router-dom";
 import { getI18nLabel } from "../../../../../../utils";
+import { isEjoParam } from "../../../../utils/params";
 import i18n from "../../../../i18n-global.json";
 
 export function useGetParams() {
@@ -35,6 +36,9 @@ export function useGetParams() {
   const structureId = searchParams.get("structureid");
   if (structureId) {
     params.push(`structureid=${structureId}`);
+  }
+  if (searchParams.has("isEjo")) {
+    params.push(isEjoParam());
   }
 
   return params.join("&");

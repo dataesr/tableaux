@@ -1,7 +1,6 @@
 import { useSearchParams } from "react-router-dom";
 import { rangeOfYearsToApiFormat } from "../../url-utils";
 import type { PositioningByScientificDomainData, CountryData } from "./query";
-import React from "react";
 
 // Domaines scientifiques MSCA (simplifiés)
 export const SCIENTIFIC_DOMAINS = [

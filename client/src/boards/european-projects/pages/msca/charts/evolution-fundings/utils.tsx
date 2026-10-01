@@ -1,6 +1,7 @@
 import { useSearchParams } from "react-router-dom";
-import type { EvolutionData, EvolutionItem } from "./query";
 import { getCssColor } from "../../../../../../utils/colors";
+import { isEjoParam } from "../../../../utils/params";
+import type { EvolutionData, EvolutionItem } from "./query";
 
 export function useGetParams() {
   const [searchParams] = useSearchParams();
@@ -12,6 +13,10 @@ export function useGetParams() {
   params.push(`country_code=${countryCode}`);
 
   const currentLang = searchParams.get("language") || "fr";
+
+  if (searchParams.has("isEjo")) {
+    params.push(isEjoParam());
+  }
 
   return { params: params.join("&"), currentLang };
 }
@@ -127,14 +132,7 @@ export function renderDataTable(processedData: ProcessedEvolutionData, chartType
   const series = chartType === "weight" ? processedData.weightSeries : processedData.successRateSeries;
 
   const labels = {
-    caption:
-      chartType === "weight"
-        ? currentLang === "fr"
-          ? "Poids des projets lauréats"
-          : "Share of successful projects"
-        : currentLang === "fr"
-          ? "Taux de succès"
-          : "Success rate",
+    caption: chartType === "weight" ? (currentLang === "fr" ? "Poids des projets lauréats" : "Share of successful projects") : currentLang === "fr" ? "Taux de succès" : "Success rate",
     year: currentLang === "fr" ? "Année" : "Year",
     type: currentLang === "fr" ? "Type de financement" : "Funding type",
     value: chartType === "weight" ? (currentLang === "fr" ? "Poids (%)" : "Share (%)") : currentLang === "fr" ? "Taux (%)" : "Rate (%)",

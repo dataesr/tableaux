@@ -29,6 +29,10 @@ export default function GlobalLayout() {
       searchParams.set("range_of_years", "2021|2022|2023|2024|2025"); // default value
       setSearchParams(searchParams);
     }
+    if (!searchParams.get("isEjo")) {
+      searchParams.set("isEjo", "true"); // default value
+      setSearchParams(searchParams);
+    }
   }, [searchParams, setSearchParams]);
 
   useEffect(() => {

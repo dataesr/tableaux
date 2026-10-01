@@ -3,7 +3,7 @@
  * Les paramètres autorisés sont : country_code, range_of_years, language, section
  */
 
-const ALLOWED_PARAMS = ["country_code", "range_of_years", "language", "section"];
+const ALLOWED_PARAMS = ["country_code", "range_of_years", "language", "section", "isEjo"];
 
 /**
  * Nettoie les paramètres d'URL pour ne garder que ceux autorisés

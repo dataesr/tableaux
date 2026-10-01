@@ -1,4 +1,5 @@
 import { useSearchParams } from "react-router-dom";
+import { isEjoParam } from "../../../../utils/params";
 import { rangeOfYearsToApiFormat } from "../../url-utils";
 
 export function useGetParams() {
@@ -21,6 +22,10 @@ export function useGetParams() {
   const framework = searchParams.get("framework");
   if (framework) {
     params.push(`framework=${framework}`);
+  }
+
+  if (searchParams.has("isEjo")) {
+    params.push(isEjoParam());
   }
 
   const currentLang = searchParams.get("language") || "fr";

@@ -1,6 +1,5 @@
-import React from "react";
 import { useSearchParams } from "react-router-dom";
-
+import { isEjoParam } from "../../../../utils/params";
 import { rangeOfYearsToApiFormat } from "../../url-utils";
 import type { PositioningData, CountryData } from "./query";
 
@@ -33,6 +32,10 @@ export function useGetParams() {
 
   const currentLang = searchParams.get("language") || "fr";
 
+  if (searchParams.has("isEjo")) {
+    params.push(isEjoParam());
+  }
+
   return { params: params.join("&"), currentLang, countryCode };
 }
 
@@ -63,12 +66,7 @@ export interface ProcessedPositioningData {
 /**
  * Traite les données pour créer le classement des pays
  */
-export function processPositioningData(
-  data: PositioningData,
-  countryCode: string,
-  currentLang: string = "fr",
-  metric: "projects" | "funding" = "projects",
-): ProcessedPositioningData {
+export function processPositioningData(data: PositioningData, countryCode: string, currentLang: string = "fr", metric: "projects" | "funding" = "projects"): ProcessedPositioningData {
   if (!data || !data.successful || !data.successful.countries) {
     return { countries: [], selectedCountry: null, metric, avgTop10: 0, avgAll: 0 };
   }
@@ -108,10 +106,7 @@ export function processPositioningData(
  * Génère le tableau de données pour l'accessibilité
  */
 export function renderDataTable(processedData: ProcessedPositioningData, currentLang: string = "fr"): React.JSX.Element {
-  const headers =
-    currentLang === "fr"
-      ? ["Rang", "Pays", processedData.metric === "projects" ? "Nombre de projets" : "Financements (M€)"]
-      : ["Rank", "Country", processedData.metric === "projects" ? "Number of projects" : "Funding (M€)"];
+  const headers = currentLang === "fr" ? ["Rang", "Pays", processedData.metric === "projects" ? "Nombre de projets" : "Financements (M€)"] : ["Rank", "Country", processedData.metric === "projects" ? "Number of projects" : "Funding (M€)"];
 
   return (
     <table className="fr-table">

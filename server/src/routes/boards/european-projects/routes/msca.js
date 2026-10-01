@@ -24,6 +24,9 @@ router.route("/european-projects/msca/synthesis").get(async (req, res) => {
   if (req.query.framework) {
     filters.framework = req.query.framework;
   }
+  if (req.query.isEjo) {
+    filters["is_ejo"] = { $eq: req.query.isEjo === "true" ? true : false };
+  }
 
   const buildPipeline = (stage) => [
     { $match: { ...filters, stage } },
@@ -110,6 +113,9 @@ router.route("/european-projects/msca/synthesis-by-destination").get(async (req,
   }
   if (req.query.country_code) {
     filters.country_code = req.query.country_code.toUpperCase();
+  }
+  if (req.query.isEjo) {
+    filters["is_ejo"] = { $eq: req.query.isEjo === "true" ? true : false };
   }
 
   const data = await db
@@ -209,6 +215,9 @@ router.route("/european-projects/msca/synthesis-by-panel").get(async (req, res) 
   }
   if (req.query.country_code) {
     filters.country_code = req.query.country_code.toUpperCase();
+  }
+  if (req.query.isEjo) {
+    filters["is_ejo"] = { $eq: req.query.isEjo === "true" ? true : false };
   }
 
   const data = await db
@@ -354,6 +363,10 @@ router.route("/european-projects/msca/evolution").get(async (req, res) => {
   if (req.query.country_code) {
     countryFilters.country_code = req.query.country_code.toUpperCase();
   }
+  if (req.query.isEjo) {
+    baseFilters["is_ejo"] = { $eq: req.query.isEjo === "true" ? true : false };
+    countryFilters["is_ejo"] = { $eq: req.query.isEjo === "true" ? true : false };
+  }
 
   countryFilters.call_year = { $ne: null, $exists: true, $nin: ["2002", "2003", "2004", "2005", "2006"] };
   baseFilters.call_year = { $ne: null, $exists: true, $nin: ["2002", "2003", "2004", "2005", "2006"] };
@@ -435,6 +448,10 @@ router.route("/european-projects/msca/evolution-by-panel").get(async (req, res) 
   }
   if (req.query.country_code) {
     countryFilters.country_code = req.query.country_code.toUpperCase();
+  }
+  if (req.query.isEjo) {
+    baseFilters["is_ejo"] = { $eq: req.query.isEjo === "true" ? true : false };
+    countryFilters["is_ejo"] = { $eq: req.query.isEjo === "true" ? true : false };
   }
 
   // Agrégation par domaine scientifique

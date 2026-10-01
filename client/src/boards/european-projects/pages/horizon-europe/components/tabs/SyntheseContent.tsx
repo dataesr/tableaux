@@ -84,11 +84,12 @@ export default function SyntheseContent() {
   switch (contentType) {
     case "pillar-comparison":
       return (
-        <section className="fr-pb-3w">
-          <Title as="h1" look="h2">
-            {getI18nLabel(i18n, "synthesis-title", currentLang)}
-          </Title>
-          <SynthesisFocus />
+        <Container fluid className="fr-pb-3w" as="section">
+          <Row>
+            <Col>
+              <SynthesisFocus />
+            </Col>
+          </Row>
           <Title as="h2" className="fr-mt-5w">
             {getI18nLabel(i18n, "pillar-comparison-title", currentLang)}
           </Title>
@@ -98,12 +99,12 @@ export default function SyntheseContent() {
             {getI18nLabel(i18n, "pillar-programs-title", currentLang)}
           </Title>
           <FundingValuesPrograms />
-        </section>
+        </Container>
       );
 
     case "pillar-detail":
       return (
-        <Container fluid className="fr-pb-3w">
+        <Container fluid className="fr-pb-3w" as="section">
           <Row>
             <Col>
               <SynthesisFocus />
@@ -132,7 +133,7 @@ export default function SyntheseContent() {
 
     case "program-detail":
       return (
-        <Container fluid className="fr-pb-3w">
+        <Container fluid className="fr-pb-3w" as="section">
           <Row>
             <Col>
               <SynthesisFocus />
@@ -159,7 +160,7 @@ export default function SyntheseContent() {
 
     case "thematic-detail":
       return (
-        <Container fluid className="fr-pb-3w">
+        <Container fluid className="fr-pb-3w" as="section">
           <Row>
             <Col>
               <SynthesisFocus />
@@ -170,7 +171,6 @@ export default function SyntheseContent() {
               <ThematicsOverview />
             </Col>
           </Row>
-
 
           <Title as="h2" className="fr-mt-5w">
             {getI18nLabel(i18n, "thematic-detail-title", currentLang)}
@@ -190,8 +190,12 @@ export default function SyntheseContent() {
 
     case "destination-detail":
       return (
-        <Container fluid className="fr-pb-3w">
-          <SynthesisFocus />
+        <Container fluid className="fr-pb-3w" as="section">
+          <Row>
+            <Col>
+              <SynthesisFocus />
+            </Col>
+          </Row>
           <DestinationsOverview />
 
           <BoardsSuggestComponent />

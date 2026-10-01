@@ -1,8 +1,8 @@
 import { useSearchParams } from "react-router-dom";
+import { isEjoParam } from "../../../../utils/params";
 import { rangeOfYearsToApiFormat } from "../../url-utils";
-import type { PositioningByDomainData, CountryData } from "./query";
 import { SCIENTIFIC_DOMAINS, type ScientificDomainCode } from "../positioning-scientific-domain/utils";
-import React from "react";
+import type { PositioningByDomainData, CountryData } from "./query";
 
 export { SCIENTIFIC_DOMAINS, type ScientificDomainCode };
 
@@ -92,6 +92,10 @@ export function useGetParams() {
   }
 
   const currentLang = searchParams.get("language") || "fr";
+
+  if (searchParams.has("isEjo")) {
+    params.push(isEjoParam());
+  }
 
   return { params: params.join("&"), currentLang, countryCode };
 }

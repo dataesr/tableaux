@@ -1,6 +1,7 @@
 import { useSearchParams } from "react-router-dom";
-import { getI18nLabel } from "../../../../../../utils";
 import { formatToMillions } from "../../../../../../utils/format";
+import { getI18nLabel } from "../../../../../../utils";
+import { isEjoParam } from "../../../../utils/params";
 import i18n from "../../../../i18n-global.json";
 
 export function useGetParams() {
@@ -38,6 +39,10 @@ export function useGetParams() {
     params.push(`destinations=${destinationIds}`);
   }
 
+  if (searchParams.has("isEjo")) {
+    params.push(isEjoParam());
+  }
+
   // Ajouter le paramètre stage par défaut
   params.push("stage=successful");
 
@@ -59,15 +64,13 @@ export function readingKey(data) {
   return {
     fr: (
       <>
-        Le pays "{topCountry.name_fr}" se place en 1ère position du classement avec <strong>{formatToMillions(topCountry.total_fund_eur)}</strong> de
-        subventions reçues
+        Le pays "{topCountry.name_fr}" se place en 1ère position du classement avec <strong>{formatToMillions(topCountry.total_fund_eur)}</strong> de subventions reçues
         {secondCountry && (
           <>
             , suivi par "{secondCountry.name_fr}" avec <strong>{formatToMillions(secondCountry.total_fund_eur)}</strong>
           </>
         )}
-        . {data.top10.length >= 10 ? "Les 10 premiers" : `Les ${data.top10.length}`} bénéficiaires représentent{" "}
-        <strong>{tenthCountry.influence?.toFixed(1)}%</strong> du cumul total des subventions allouées.
+        . {data.top10.length >= 10 ? "Les 10 premiers" : `Les ${data.top10.length}`} bénéficiaires représentent <strong>{tenthCountry.influence?.toFixed(1)}%</strong> du cumul total des subventions allouées.
       </>
     ),
     en: (
@@ -78,8 +81,7 @@ export function readingKey(data) {
             , followed by "{secondCountry.name_en}" with <strong>{formatToMillions(secondCountry.total_fund_eur)}</strong>
           </>
         )}
-        . The top {data.top10.length >= 10 ? "10" : data.top10.length} beneficiaries represent <strong>{tenthCountry.influence?.toFixed(1)}%</strong>{" "}
-        of the cumulative total subsidies allocated.
+        . The top {data.top10.length >= 10 ? "10" : data.top10.length} beneficiaries represent <strong>{tenthCountry.influence?.toFixed(1)}%</strong> of the cumulative total subsidies allocated.
       </>
     ),
   };

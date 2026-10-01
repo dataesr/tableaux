@@ -1,6 +1,5 @@
-import React from "react"
 import { useSearchParams } from "react-router-dom";
-
+import { isEjoParam } from "../../../../utils/params";
 import { rangeOfYearsToApiFormat } from "../../url-utils";
 import type { PositioningByFundingTypeData, CountryData } from "./query";
 
@@ -61,16 +60,14 @@ export function useGetParams() {
 
   const currentLang = searchParams.get("language") || "fr";
 
+  if (searchParams.has("isEjo")) {
+    params.push(isEjoParam());
+  }
+
   return { params: params.join("&"), currentLang, countryCode };
 }
 
-export function processData(
-  data: PositioningByFundingTypeData,
-  countryCode: string,
-  currentLang: string = "fr",
-  metric: "projects" | "funding" = "projects",
-  fundingType: FundingTypeCode = "STG",
-): ProcessedPositioningByFundingTypeData {
+export function processData(data: PositioningByFundingTypeData, countryCode: string, currentLang: string = "fr", metric: "projects" | "funding" = "projects", fundingType: FundingTypeCode = "STG"): ProcessedPositioningByFundingTypeData {
   if (!data || !data.successful || !data.successful.countries) {
     return { countries: [], selectedCountry: null, metric, fundingType, avgTop10: 0, avgAll: 0 };
   }
@@ -106,16 +103,9 @@ export function processData(
 }
 
 export function renderDataTable(processedData: ProcessedPositioningByFundingTypeData, currentLang: string = "fr"): React.JSX.Element {
-  const headers =
-    currentLang === "fr"
-      ? ["Rang", "Pays", processedData.metric === "projects" ? "Nombre de projets" : "Financements (M€)"]
-      : ["Rank", "Country", processedData.metric === "projects" ? "Number of projects" : "Funding (M€)"];
+  const headers = currentLang === "fr" ? ["Rang", "Pays", processedData.metric === "projects" ? "Nombre de projets" : "Financements (M€)"] : ["Rank", "Country", processedData.metric === "projects" ? "Number of projects" : "Funding (M€)"];
 
-  const rows = processedData.countries.map((c, i) => [
-    String(i + 1),
-    c.name,
-    processedData.metric === "funding" ? `${(c.value / 1_000_000).toFixed(1)} M€` : String(c.value),
-  ]);
+  const rows = processedData.countries.map((c, i) => [String(i + 1), c.name, processedData.metric === "funding" ? `${(c.value / 1_000_000).toFixed(1)} M€` : String(c.value)]);
 
   return (
     <table className="fr-table">

@@ -1,6 +1,8 @@
 import { useSearchParams } from "react-router-dom";
 import { formatToMillions } from "../../../../../../../utils/format";
-
+  import { getI18nLabel } from "../../../../../../../utils";
+  import i18n from "../../../../../i18n-global.json";
+  
 export function useGetParams() {
   const [searchParams] = useSearchParams();
 
@@ -128,8 +130,7 @@ export function readingKey(data) {
 }
 
 export function renderDataTableSubsidies(data, currentLang, selectedCountryCode) {
-  const { getI18nLabel } = require("../../../../../../../utils");
-  const i18n = require("../../../../../i18n-global.json");
+
   
   if (!data || data.length === 0) return null;
 
@@ -198,9 +199,6 @@ export function renderDataTableSubsidies(data, currentLang, selectedCountryCode)
 }
 
 export function renderDataTableSuccessRate(data, currentLang, selectedCountryCode) {
-  const { getI18nLabel } = require("../../../../../../../utils");
-  const i18n = require("../../../../../i18n-global.json");
-  
   if (!data || data.length === 0) return null;
 
   // Calculer le taux moyen
@@ -243,11 +241,7 @@ export function renderDataTableSuccessRate(data, currentLang, selectedCountryCod
                   const diffSign = diff >= 0 ? "+" : "";
 
                   return (
-                    <tr
-                      key={item.id}
-                      style={isSelectedCountry ? { fontWeight: "bold" } : undefined}
-                      aria-current={isSelectedCountry ? "true" : undefined}
-                    >
+                    <tr key={item.id} style={isSelectedCountry ? { fontWeight: "bold" } : undefined} aria-current={isSelectedCountry ? "true" : undefined}>
                       <th scope="row">{index + 1}</th>
                       <td>{countryName}</td>
                       <td style={{ textAlign: "right" }}>{item.ratio.toFixed(1)} %</td>

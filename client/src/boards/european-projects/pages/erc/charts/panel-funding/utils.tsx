@@ -1,6 +1,7 @@
 import { useSearchParams } from "react-router-dom";
-import type { PanelFundingItem } from "./query";
 import { formatToMillions } from "../../../../../../utils/format";
+import { isEjoParam } from "../../../../utils/params";
+import type { PanelFundingItem } from "./query";
 
 export function useGetParams(stage: string = "successful") {
   const [searchParams] = useSearchParams();
@@ -29,6 +30,10 @@ export function useGetParams(stage: string = "successful") {
   params.push(`stage=${stage}`);
 
   const currentLang = searchParams.get("language") || "fr";
+
+  if (searchParams.has("isEjo")) {
+    params.push(isEjoParam());
+  }
 
   return { params: params.join("&"), currentLang };
 }

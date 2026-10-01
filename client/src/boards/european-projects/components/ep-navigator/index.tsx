@@ -16,6 +16,7 @@ import { getI18nLabel } from "../../../../utils";
 const i18nFilters = {
   "more-filters": { fr: "Plus de filtres", en: "More filters" },
   "less-filters": { fr: "Afficher moins", en: "Show less" },
+  isEjo: { fr: "Organismes externes associés", en: "External joint organisations" },
 };
 
 interface FilterItem {
@@ -47,6 +48,7 @@ export default function EpNavigator() {
   const pillarId = searchParams.get("pillarId") || undefined;
   const programId = searchParams.get("programId") || undefined;
   const thematicIds = searchParams.get("thematicIds") || undefined;
+  const isEjo = searchParams.get("isEjo") || true;
 
   // récupération de tous les piliers de la base de données
   const { data: pillarsData } = useQuery({
@@ -163,6 +165,11 @@ export default function EpNavigator() {
       ? `${selectedDestinations.size} ${getI18nLabel(i18n, "n_selected", currentLang)}`
       : getI18nLabel(i18n, "no-selection", currentLang);
 
+    function handleIsEjoToggle(isEjoChk: boolean) {
+      searchParams.set("isEjo", isEjoChk ? "true" : "false");
+      setSearchParams(searchParams);
+    }
+  
   return (
     <>
       <Container>
@@ -325,14 +332,26 @@ export default function EpNavigator() {
               </button>
             )}
             {isMoreFiltersOpen && (
-              <div className={styles.moreFiltersContainer}>
-                <RangeOfYears availableYears={["2021", "2022", "2023", "2024", "2025"]} defaultYears={["2021", "2022", "2023", "2024", "2025"]} />
-                <div className={styles.moreFiltersFooter}>
+              <Container className={styles.moreFiltersContainer}>
+                <Row>
+                  <Col>
+                    <RangeOfYears availableYears={["2021", "2022", "2023", "2024", "2025"]} defaultYears={["2021", "2022", "2023", "2024", "2025"]} />
+                  </Col>
+                  <Col>
+                    <div className="fr-checkbox-group fr-checkbox-group--sm">
+                      <input onChange={() => handleIsEjoToggle(isEjo === "true" ? false : true)} checked={isEjo === "true"} id="isEjo-checkbox" type="checkbox" aria-describedby="Prendre en compte tous les organismes ou non" />
+                      <label className="fr-label" htmlFor="isEjo-checkbox">
+                        {i18nFilters["isEjo"][currentLang]}
+                      </label>
+                    </div>
+                  </Col>
+                </Row>
+                <Row className={styles.moreFiltersFooter}>
                   <button type="button" className="fr-btn fr-btn--tertiary-no-outline fr-btn--sm" onClick={() => setIsMoreFiltersOpen(false)}>
                     {i18nFilters["less-filters"][currentLang]}
                   </button>
-                </div>
-              </div>
+                </Row>
+              </Container>
             )}
           </Col>
         </Row>

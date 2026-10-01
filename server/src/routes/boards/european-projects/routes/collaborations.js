@@ -177,6 +177,9 @@ router.route(routesPrefix + "/get-collaborations").get(async (req, res) => {
     const callYears = req.query.call_year.split(",");
     filters.call_year = { $in: callYears };
   }
+  if (req.query.isEjo) {
+    filters["is_ejo"] = { $eq: req.query.isEjo === "true" ? true : false };
+  }
 
   try {
     const collaborations = await db
@@ -299,6 +302,9 @@ router.route(routesPrefix + "/get-collaborations-by-country").get(async (req, re
     const callYears = req.query.call_year.split(",");
     filters.call_year = { $in: callYears };
   }
+  if (req.query.isEjo) {
+    filters["is_ejo"] = { $eq: req.query.isEjo === "true" ? true : false };
+  }
 
   try {
     const collaborations = await db
@@ -406,6 +412,9 @@ router.route(routesPrefix + "/get-collaborations-by-entity").get(async (req, res
     filters.call_year = { $in: callYears };
     additionalFilters.call_year = { $in: callYears };
   }
+  if (req.query.isEjo) {
+    filters["is_ejo"] = { $eq: req.query.isEjo === "true" ? true : false };
+  }
 
   // Construire le match pour le lookup total_projects
   const totalProjectsMatchConditions = [{ $eq: ["$entities_id", "$$entityId"] }];
@@ -428,6 +437,9 @@ router.route(routesPrefix + "/get-collaborations-by-entity").get(async (req, res
   if (req.query.destinations) {
     const destinations = req.query.destinations.split(",");
     totalProjectsMatchConditions.push({ $in: ["$destination_code", destinations] });
+  }
+  if (req.query.isEjo) {
+    totalProjectsMatchConditions["is_ejo"] = { $eq: req.query.isEjo === "true" ? true : false };
   }
 
   try {

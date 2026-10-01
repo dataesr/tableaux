@@ -1,4 +1,5 @@
 import { useSearchParams } from "react-router-dom";
+import { isEjoParam } from "../../../../utils/params";
 
 export function useGetParams() {
   const [searchParams] = useSearchParams();
@@ -34,6 +35,10 @@ export function useGetParams() {
   if (structureId) {
     params.push(`structureid=${structureId}`);
   }
+
+    if (searchParams.has("isEjo")) {
+      params.push(isEjoParam());
+    }
 
   return params.join("&");
 }

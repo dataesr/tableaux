@@ -1,6 +1,7 @@
 import { useSearchParams } from "react-router-dom";
-import { getI18nLabel } from "../../../../../../utils";
 import { formatToMillions } from "../../../../../../utils/format";
+import { getI18nLabel } from "../../../../../../utils";
+import { isEjoParam } from "../../../../utils/params";
 import i18n from "../../../../i18n-global.json";
 
 export function useGetParams() {
@@ -30,6 +31,10 @@ export function useGetParams() {
   const thematicIds = searchParams.get("thematicIds");
   if (thematicIds) {
     params.push(`thematics=${thematicIds}`);
+  }
+
+  if (searchParams.has("isEjo")) {
+    params.push(isEjoParam());
   }
 
   const currentLang = searchParams.get("language") || "fr";

@@ -1,6 +1,7 @@
 import { useSearchParams } from "react-router-dom";
-import { getI18nLabel } from "../../../../../../utils";
 import { formatToPercent } from "../../../../../../utils/format";
+import { getI18nLabel } from "../../../../../../utils";
+import { isEjoParam } from "../../../../utils/params";
 import i18n from "../../../../i18n-global.json";
 
 export function useGetParams() {
@@ -21,6 +22,10 @@ export function useGetParams() {
   }
 
   const currentLang = searchParams.get("language") || "fr";
+
+  if (searchParams.has("isEjo")) {
+    params.push(isEjoParam());
+  }
 
   return { params: params.join("&"), currentLang };
 }
@@ -78,7 +83,6 @@ export function renderDataTable(data, currentLang) {
   );
 }
 
-
 export function readingKey(data, isLoading) {
   if (isLoading || !data?.data || data.data.length === 0) {
     return { fr: <></>, en: <></> };
@@ -86,10 +90,7 @@ export function readingKey(data, isLoading) {
 
   // Trouver le programme avec la plus forte proportion pour les projets lauréats (successful)
   const successfulProjects = data.data.filter((item) => item.stage === "successful");
-  const topSuccessfulProgram = successfulProjects.reduce(
-    (max, current) => (current.proportion > max.proportion ? current : max),
-    successfulProjects[0]
-  );
+  const topSuccessfulProgram = successfulProjects.reduce((max, current) => (current.proportion > max.proportion ? current : max), successfulProjects[0]);
 
   // Trouver les données correspondantes pour les projets évalués
   const evaluatedData = data.data.find((item) => item.program === topSuccessfulProgram.program && item.stage === "evaluated");
@@ -106,9 +107,8 @@ export function readingKey(data, isLoading) {
 
   const fr = (
     <>
-      Le programme <strong>{programNameFr}</strong> présente la plus forte proportion de subventions lauréats avec{" "}
-      <strong>{successfulProportion.toFixed(2)}%</strong>, contre <strong>{evaluatedProportion.toFixed(2)}%</strong> pour les projets évalués, soit
-      une différence de{" "}
+      Le programme <strong>{programNameFr}</strong> présente la plus forte proportion de subventions lauréats avec <strong>{successfulProportion.toFixed(2)}%</strong>, contre <strong>{evaluatedProportion.toFixed(2)}%</strong> pour les projets
+      évalués, soit une différence de{" "}
       <strong>
         {difference > 0 ? "+" : ""}
         {difference.toFixed(2)} points de pourcentage
@@ -119,8 +119,7 @@ export function readingKey(data, isLoading) {
 
   const en = (
     <>
-      The <strong>{programNameEn}</strong> program shows the highest proportion of successful funding at{" "}
-      <strong>{successfulProportion.toFixed(2)}%</strong>, compared to <strong>{evaluatedProportion.toFixed(2)}%</strong> for evaluated projects,
+      The <strong>{programNameEn}</strong> program shows the highest proportion of successful funding at <strong>{successfulProportion.toFixed(2)}%</strong>, compared to <strong>{evaluatedProportion.toFixed(2)}%</strong> for evaluated projects,
       representing a difference of{" "}
       <strong>
         {difference > 0 ? "+" : ""}

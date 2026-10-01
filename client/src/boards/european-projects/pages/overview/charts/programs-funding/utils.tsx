@@ -1,6 +1,7 @@
 import { useSearchParams } from "react-router-dom";
-import { getI18nLabel } from "../../../../../../utils";
 import { formatToMillions, formatToRates } from "../../../../../../utils/format";
+import { getI18nLabel } from "../../../../../../utils";
+import { isEjoParam } from "../../../../utils/params";
 import i18n from "../../../../i18n-global.json";
 
 export function useGetParams() {
@@ -21,6 +22,10 @@ export function useGetParams() {
   }
 
   const currentLang = searchParams.get("language") || "fr";
+
+  if (searchParams.has("isEjo")) {
+    params.push(isEjoParam());
+  }
 
   return { params: params.join("&"), currentLang };
 }
@@ -78,7 +83,6 @@ export function renderDataTable(data, currentLang) {
   );
 }
 
-
 export function readingKey(data, isLoading) {
   if (isLoading || !data) {
     return { fr: <></>, en: <></> };
@@ -108,17 +112,16 @@ export function readingKey(data, isLoading) {
 
   const fr = (
     <>
-      Le programme <strong>{programNameFr}</strong> présente le meilleur taux de succès avec <strong>{formatToRates(successRate)}</strong>. Sur les{" "}
-      <strong>{evaluatedCount}</strong> projets évalués représentant <strong>{formatToMillions(evaluatedFunding)}</strong> de financement demandé,
+      Le programme <strong>{programNameFr}</strong> présente le meilleur taux de succès avec <strong>{formatToRates(successRate)}</strong>. Sur les <strong>{evaluatedCount}</strong> projets évalués représentant{" "}
+      <strong>{formatToMillions(evaluatedFunding)}</strong> de financement demandé,
       <strong> {successfulCount}</strong> projets ont été lauréats pour un montant total de <strong>{formatToMillions(successfulFunding)}</strong>.
     </>
   );
 
   const en = (
     <>
-      The <strong>{programNameEn}</strong> program has the highest success rate at <strong>{formatToRates(successRate)}</strong>. Out of{" "}
-      <strong>{evaluatedCount}</strong> evaluated projects representing <strong>{formatToMillions(evaluatedFunding)}</strong> in requested funding,{" "}
-      <strong>{successfulCount}</strong> projects were successful for a total amount of <strong>{formatToMillions(successfulFunding)}</strong>.
+      The <strong>{programNameEn}</strong> program has the highest success rate at <strong>{formatToRates(successRate)}</strong>. Out of <strong>{evaluatedCount}</strong> evaluated projects representing{" "}
+      <strong>{formatToMillions(evaluatedFunding)}</strong> in requested funding, <strong>{successfulCount}</strong> projects were successful for a total amount of <strong>{formatToMillions(successfulFunding)}</strong>.
     </>
   );
 

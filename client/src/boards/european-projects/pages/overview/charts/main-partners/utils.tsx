@@ -1,6 +1,7 @@
 import { useSearchParams } from "react-router-dom";
-import { getI18nLabel } from "../../../../../../utils";
 import { formatToMillions } from "../../../../../../utils/format";
+import { getI18nLabel } from "../../../../../../utils";
+import { isEjoParam } from "../../../../utils/params";
 import i18n from "../../../../i18n-global.json";
 
 export function useGetParams() {
@@ -44,6 +45,9 @@ export function useGetParams() {
     params.push(`years=${rangeOfYears}`);
   }
 
+  if (searchParams.has("isEjo")) {
+    params.push(isEjoParam());
+  }
   // Ajouter le paramètre stage=successful
   // TODO: voir avec ZOE
   // params.push("stage=successful");
@@ -110,19 +114,13 @@ export function renderDataTable(data: { list: Array<{ id: string; name: string; 
     acronym: getI18nLabel(i18n, "acronym"),
     funding: getI18nLabel(i18n, "total-funding"),
     unit: "M€",
-    caption:
-      currentLang === "fr"
-        ? "Liste des principaux bénéficiaires récupérant 50% des financements (en millions d'euros)"
-        : "List of main beneficiaries receiving 50% of funding (in millions of euros)",
+    caption: currentLang === "fr" ? "Liste des principaux bénéficiaires récupérant 50% des financements (en millions d'euros)" : "List of main beneficiaries receiving 50% of funding (in millions of euros)",
   };
 
   return (
     <div style={{ width: "100%" }}>
       <div className="fr-table-responsive">
-        <table
-          className="fr-table fr-table--bordered fr-table--sm"
-          style={{ width: "100%" }}
-        >
+        <table className="fr-table fr-table--bordered fr-table--sm" style={{ width: "100%" }}>
           <caption className="fr-sr-only">{labels.caption}</caption>
           <thead>
             <tr>
@@ -136,7 +134,11 @@ export function renderDataTable(data: { list: Array<{ id: string; name: string; 
               <tr key={item.id || index}>
                 <th scope="row">{item.acronym || "—"}</th>
                 <td>{item.name}</td>
-                <td><strong>{formatToMillions(item.total_fund_eur)} {labels.unit}</strong></td>
+                <td>
+                  <strong>
+                    {formatToMillions(item.total_fund_eur)} {labels.unit}
+                  </strong>
+                </td>
               </tr>
             ))}
           </tbody>

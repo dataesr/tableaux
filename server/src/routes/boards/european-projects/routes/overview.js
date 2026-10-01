@@ -30,6 +30,9 @@ router.route("/european-projects/synthesis-focus").get(async (req, res) => {
   if (req.query.range_of_years) {
     filters.call_year = { $in: req.query.range_of_years.split(",") };
   }
+  if (req.query.isEjo) {
+    filters["is_ejo"] = { $eq: req.query.isEjo === "true" ? true : false };
+  }
 
   const entityId = req.query.structureid || null;
   const countryCodeFilter = req.query.country_code ? req.query.country_code.toLowerCase() : null;
@@ -186,6 +189,9 @@ router.route("/european-projects/synthesis-focus_indexes").get(async (req, res) 
 
 router.route("/european-projects/funded-objectives").get(async (req, res) => {
   const filters = checkQuery(req.query, ["country_code", "extra_joint_organization", "stage"], res);
+  if (req.query.isEjo) {
+    filters["is_ejo"] = { $eq: req.query.isEjo === "true" ? true : false };
+  }
   const data = await db
     .collection(collection_projects_entities)
     .aggregate([
@@ -227,6 +233,10 @@ router.route("/european-projects/overview/pillars-funding-proportion").get(async
   delete filters.programs;
   delete filters.thematics;
   delete filters.destinations;
+
+  if (req.query.isEjo) {
+    filters["is_ejo"] = { $eq: req.query.isEjo === "true" ? true : false };
+  }
 
   const data_country = await db
     .collection(collection_projects_entities)
@@ -325,6 +335,10 @@ router.route("/european-projects/overview/programs-funding").get(async (req, res
   delete filters.thematics;
   delete filters.destinations;
 
+  if (req.query.isEjo) {
+    filters["is_ejo"] = { $eq: req.query.isEjo === "true" ? true : false };
+  }
+
   const data = await db
     .collection(collection_projects_entities)
     .aggregate([
@@ -392,6 +406,10 @@ router.route("/european-projects/overview/programs-funding-proportion").get(asyn
   delete filters.pillars;
   delete filters.thematics;
   delete filters.destinations;
+
+  if (req.query.isEjo) {
+    filters["is_ejo"] = { $eq: req.query.isEjo === "true" ? true : false };
+  }
 
   const data_country = await db
     .collection(collection_projects_entities)
@@ -492,6 +510,10 @@ router.route("/european-projects/overview/topics-funding").get(async (req, res) 
   delete filters.programs;
   delete filters.destinations;
 
+  if (req.query.isEjo) {
+    filters["is_ejo"] = { $eq: req.query.isEjo === "true" ? true : false };
+  }
+
   const data = await db
     .collection(collection_projects_entities)
     .aggregate([
@@ -565,6 +587,10 @@ router.route("/european-projects/overview/topics-funding-proportion").get(async 
   delete filters.pillars;
   delete filters.programs;
   delete filters.destinations;
+
+  if (req.query.isEjo) {
+    filters["is_ejo"] = { $eq: req.query.isEjo === "true" ? true : false };
+  }
 
   const data_country = await db
     .collection(collection_projects_entities)
@@ -669,6 +695,10 @@ router.route("/european-projects/overview/destination-funding").get(async (req, 
     filters.destination_code = { $in: destinations };
   }
 
+  if (req.query.isEjo) {
+    filters["is_ejo"] = { $eq: req.query.isEjo === "true" ? true : false };
+  }
+
   const data = await db
     .collection(collection_projects_entities)
     .aggregate([
@@ -736,6 +766,9 @@ router.route("/european-projects/overview/destination-funding-proportion").get(a
   if (req.query.destinations) {
     const destinations = req.query.destinations.split(",");
     filters.destination_code = { $in: destinations };
+  }
+  if (req.query.isEjo) {
+    filters["is_ejo"] = { $eq: req.query.isEjo === "true" ? true : false };
   }
 
   const data_country = await db
@@ -879,6 +912,10 @@ router.route("/european-projects/overview/funding").get(async (req, res) => {
     groupBy.name_en = "$programme_name_en";
   }
 
+  if (req.query.isEjo) {
+    filters["is_ejo"] = { $eq: req.query.isEjo === "true" ? true : false };
+  }
+
   const data = await db
     .collection(collection_projects_entities)
     .aggregate([
@@ -947,6 +984,10 @@ router.route("/european-projects/overview/pillars-funding-evo-3-years").get(asyn
   delete filters.thema_code;
   delete filters.programme_code;
   delete filters.destination_code;
+
+  if (req.query.isEjo) {
+    filters["is_ejo"] = { $eq: req.query.isEjo === "true" ? true : false };
+  }  
 
   const query = () => {
     return db
@@ -1049,6 +1090,10 @@ router.route("/european-projects/overview/programs-funding-evo-3-years").get(asy
   delete filters.pilier_code;
   delete filters.thema_code;
   delete filters.destination_code;
+
+  if (req.query.isEjo) {
+    filters["is_ejo"] = { $eq: req.query.isEjo === "true" ? true : false };
+  }
 
   const query = () => {
     return db
@@ -1153,6 +1198,10 @@ router.route("/european-projects/overview/topics-funding-evo-3-years").get(async
   delete filters.programme_code;
   delete filters.destination_code;
 
+  if (req.query.isEjo) {
+    filters["is_ejo"] = { $eq: req.query.isEjo === "true" ? true : false };
+  }
+
   const query = () => {
     return db
       .collection(collection_projects_entities)
@@ -1255,6 +1304,10 @@ router.route("/european-projects/overview/destinations-funding-evo-3-years").get
   delete filters.programme_code;
   delete filters.thema_code;
   //TODO: ! destination_name_fr n'existe pas en base
+  if (req.query.isEjo) {
+    filters["is_ejo"] = { $eq: req.query.isEjo === "true" ? true : false };
+  }
+
   const query = () => {
     return db
       .collection(collection_projects_entities)
@@ -1366,6 +1419,9 @@ router.route("/european-projects/overview/projects-types-1").get(async (req, res
     filters.destination_code = { $in: req.query.destination_code.split("|") };
   } else if (req.query.destination_code?.split("|").length === 1) {
     filters.destination_code = req.query.destination_code;
+  }
+  if (req.query.isEjo) {
+    filters["is_ejo"] = { $eq: req.query.isEjo === "true" ? true : false };
   }
 
   const data_country = await db
@@ -1522,6 +1578,10 @@ router.route("/european-projects/overview/projects-types-2").get(async (req, res
   } else if (req.query.destination_code?.split("|").length === 1) {
     filters.destination_code = req.query.destination_code;
   }
+  if (req.query.isEjo) {
+    filters["is_ejo"] = { $eq: req.query.isEjo === "true" ? true : false };
+  }
+
 
   //TODO: get the range of years from the database
   filters.call_year = { $in: rangeOfYears };
@@ -1675,6 +1735,9 @@ router.route("/european-projects/overview/projects-types-3").get(async (req, res
     filters.destination_code = { $in: req.query.destination_code.split("|") };
   } else if (req.query.destination_code?.split("|").length === 1) {
     filters.destination_code = req.query.destination_code;
+  }
+  if (req.query.isEjo) {
+    filters["is_ejo"] = { $eq: req.query.isEjo === "true" ? true : false };
   }
 
   const dataSelectedCountry = await db

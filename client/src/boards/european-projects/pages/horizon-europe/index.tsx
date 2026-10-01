@@ -29,6 +29,7 @@ function FloatingFilters() {
     thematicIds: { fr: "Thématiques", en: "Thematics" },
     destinationIds: { fr: "Destinations", en: "Destinations" },
     structureid: { fr: "Identifiant Paysage de la structure", en: "Paysage ID" },
+    isEjo: { fr: "Organismes externes associés", en: "External joint organisations" },
   };
 
   function showParam(param) {
@@ -43,8 +44,8 @@ function FloatingFilters() {
               {countryInfo[`name_${currentLang}`]} {getFlagEmoji(countryInfo.iso2)}
             </Badge>
           </>
-        );
-        break;
+        )
+        break
       case "range_of_years":
         ret = (
           <>
@@ -55,6 +56,23 @@ function FloatingFilters() {
               </Badge>
             ))}
           </>
+        )
+        break
+      // cas particulier car boolean
+      case "isEjo":
+        ret = (
+          <>
+            <span>{i18n[param[0]][currentLang]}</span>
+            {param[1] === "true" ? (
+              <Badge color="success" className="fr-mx-1w">
+                {currentLang === "fr" ? "activé" : "enabled"}
+              </Badge>
+            ) : (
+              <Badge color="orange-terre-battue" className="fr-mx-1w">
+                {currentLang === "fr" ? "désactivé" : "disabled"}
+              </Badge>
+            )}
+          </>
         );
         break;
 
@@ -64,8 +82,8 @@ function FloatingFilters() {
             <span>{i18n[param[0]][currentLang]}</span>
             <Badge>{param[1]}</Badge>
           </>
-        );
-        break;
+        )
+        break
     }
     return <li key={param[1]}>{ret}</li>;
   }
@@ -94,9 +112,7 @@ function FloatingFilters() {
                     <span className="fr-icon-arrow-right-line fr-icon--lg" aria-hidden="true" />
                     Filtres actifs
                   </Title>
-                  <p>
-                    <ul>{filteredEntries.map((param) => showParam(param))}</ul>
-                  </p>
+                  <ul>{filteredEntries.map((param) => showParam(param))}</ul>
                 </div>
               </div>
             </div>

@@ -1,4 +1,5 @@
 import { useSearchParams } from "react-router-dom";
+import { isEjoParam } from "../../../../utils/params";
 
 export function useGetParams() {
   const [searchParams] = useSearchParams();
@@ -35,19 +36,19 @@ export function useGetParams() {
     params.push(`destinations=${destinationIds}`);
   }
 
+  // Parametre utilisé si une entiité est sélectionée
   const structureId = searchParams.get("structureid");
   if (structureId) {
     params.push(`structureid=${structureId}`);
   }
 
-  // Ajouter le paramètre stage=successful
-  // params.push("stage=successful");
+  if (searchParams.has("isEjo")) {
+    params.push(isEjoParam());
+  }
 
   return params.join("&");
 }
 
 export function getDefaultParams(searchParams) {
-  const params = [...searchParams].map(([key, value]) => `${key}=${value}`).join("&");
-
-  return params + "&stage=successful";
+  return [...searchParams].map(([key, value]) => `${key}=${value}`).join("&");
 }

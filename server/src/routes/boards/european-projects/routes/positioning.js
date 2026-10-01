@@ -25,8 +25,11 @@ router.route("/european-projects/positioning/top-10-funding-ranking").get(async 
     const destinations = req.query.destinations.split(",");
     filters.destination_code = { $in: destinations };
   }
-  filters.country_code = { $nin: ["ZOE", "ZOI"] };
+  filters.country_code = { $nin: ["ZOE", "ZOI"] }; // TODO: A clarifier
 
+  if (req.query.isEjo) {
+    filters["is_ejo"] = { $eq: req.query.isEjo === "true" ? true : false };
+  }
   const data = await db
     .collection(collection_projects_entities)
     .aggregate([
@@ -142,17 +145,13 @@ router.route("/european-projects/positioning/top-10-funding-ranking").get(async 
   }
 
   // add coordination_number_successful rank to returned data
-  const dataSortedCoordinationNumberSuccessful = dataWithRatio.sort(
-    (a, b) => b.total_coordination_number_successful - a.total_coordination_number_successful
-  ); // sort by total_coordination_number_successful
+  const dataSortedCoordinationNumberSuccessful = dataWithRatio.sort((a, b) => b.total_coordination_number_successful - a.total_coordination_number_successful); // sort by total_coordination_number_successful
   for (let i = 0; i < dataSortedCoordinationNumberSuccessful.length; i++) {
     dataWithRatio.find((el) => el.id === dataSortedCoordinationNumberSuccessful[i].id).rank_coordination_number_successful = i + 1;
   }
 
   // add coordination_number_evaluated rank to returned data
-  const dataSortedCoordinationNumberEvaluated = dataWithRatio.sort(
-    (a, b) => b.total_coordination_number_evaluated - a.total_coordination_number_evaluated
-  ); // sort by total_coordination_number_evaluated
+  const dataSortedCoordinationNumberEvaluated = dataWithRatio.sort((a, b) => b.total_coordination_number_evaluated - a.total_coordination_number_evaluated); // sort by total_coordination_number_evaluated
   for (let i = 0; i < dataSortedCoordinationNumberEvaluated.length; i++) {
     dataWithRatio.find((el) => el.id === dataSortedCoordinationNumberEvaluated[i].id).rank_coordination_number_evaluated = i + 1;
   }
@@ -192,6 +191,9 @@ router.route("/european-projects/positioning/top-10-beneficiaries").get(async (r
   if (req.query.destinations) {
     const destinations = req.query.destinations.split(",");
     filters.destination_code = { $in: destinations };
+  }
+  if (req.query.isEjo) {
+    filters["is_ejo"] = { $eq: req.query.isEjo === "true" ? true : false };
   }
 
   const data = await db
@@ -263,6 +265,9 @@ router.route("/european-projects/positionning/funding-evo-3-years").get(async (r
   }
   filters.country_code = { $nin: ["ZOE", "ZOI"] };
   filters.call_year = { $in: ["2021", "2022", "2023"] };
+  if (req.query.isEjo) {
+    filters["is_ejo"] = { $eq: req.query.isEjo === "true" ? true : false };
+  }
 
   const query = () => {
     return db

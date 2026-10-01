@@ -36,6 +36,9 @@ router.route("/european-projects/erc/synthesis").get(async (req, res) => {
   if (req.query.framework) {
     filters.framework = req.query.framework;
   }
+  if (req.query.isEjo) {
+    filters["is_ejo"] = { $eq: req.query.isEjo === "true" ? true : false };
+  }
 
   // Données pour les projets lauréats (successful)
   const dataSuccessful = await db
@@ -191,6 +194,9 @@ router.route("/european-projects/erc/synthesis-by-destination").get(async (req, 
   if (req.query.country_code) {
     filters.country_code = req.query.country_code.toUpperCase();
   }
+  if (req.query.isEjo) {
+    filters["is_ejo"] = { $eq: req.query.isEjo === "true" ? true : false };
+  }
 
   const data = await db
     .collection(collection_erc_projects_synthese)
@@ -278,6 +284,9 @@ router.route("/european-projects/erc/synthesis-by-panel").get(async (req, res) =
   if (req.query.country_code) {
     filters.country_code = req.query.country_code.toUpperCase();
   }
+  if (req.query.isEjo) {
+    filters["is_ejo"] = { $eq: req.query.isEjo === "true" ? true : false };
+  }
 
   const data = await db
     .collection(collection_erc_projects_synthese)
@@ -364,6 +373,9 @@ router.route("/european-projects/erc/panel-funding").get(async (req, res) => {
   if (req.query.stage) {
     filters.stage = req.query.stage;
   }
+  if (req.query.isEjo) {
+    filters["is_ejo"] = { $eq: req.query.isEjo === "true" ? true : false };
+  }
 
   const data = await db
     .collection(collection_erc_projects_synthese)
@@ -432,6 +444,9 @@ router.route("/european-projects/erc/evolution").get(async (req, res) => {
   }
   if (req.query.country_code) {
     countryFilters.country_code = req.query.country_code.toUpperCase();
+  }
+  if (req.query.isEjo) {
+    filters["is_ejo"] = { $eq: req.query.isEjo === "true" ? true : false };
   }
 
   // Agrégation commune
@@ -513,6 +528,9 @@ router.route("/european-projects/erc/evolution-by-domain").get(async (req, res) 
   if (req.query.country_code) {
     countryFilters.country_code = req.query.country_code.toUpperCase();
   }
+  if (req.query.isEjo) {
+    filters["is_ejo"] = { $eq: req.query.isEjo === "true" ? true : false };
+  }
 
   // Agrégation par domaine scientifique
   const aggregationPipeline = (filters, stage) => [
@@ -591,6 +609,9 @@ router.route("/european-projects/erc/evolution-by-panel").get(async (req, res) =
   }
   if (req.query.country_code) {
     countryFilters.country_code = req.query.country_code.toUpperCase();
+  }
+  if (req.query.isEjo) {
+    filters["is_ejo"] = { $eq: req.query.isEjo === "true" ? true : false };
   }
 
   // Agrégation par panel
@@ -678,6 +699,10 @@ router.route("/european-projects/erc/main-entities").get(async (req, res) => {
       const years = req.query.call_year.split(",");
       filters.call_year = { $in: years };
     }
+    if (req.query.isEjo) {
+      filters["is_ejo"] = { $eq: req.query.isEjo === "true" ? true : false };
+    }
+
     const data = await db
       .collection(collection_projects_entities)
       .aggregate([
@@ -734,6 +759,9 @@ router.route("/european-projects/erc/main-entities-by-domain").get(async (req, r
       filters.panel_code = { $in: panels };
     } else if (req.query.domaine_scientifique) {
       filters.panel_regroupement_code = req.query.domaine_scientifique.toUpperCase();
+    }
+    if (req.query.isEjo) {
+      filters["is_ejo"] = { $eq: req.query.isEjo === "true" ? true : false };
     }
 
     // Récup des project_id correspondants aux filtres
@@ -854,6 +882,9 @@ router.route("/european-projects/erc/gender-by-destination").get(async (req, res
     } else if (req.query.domaine_scientifique) {
       filters.panel_regroupement_code = req.query.domaine_scientifique.toUpperCase();
     }
+    if (req.query.isEjo) {
+      filters["is_ejo"] = { $eq: req.query.isEjo === "true" ? true : false };
+    }
 
     const data = await db
       .collection(collection_persons)
@@ -927,6 +958,9 @@ router.route("/european-projects/erc/gender-evolution").get(async (req, res) => 
     } else if (req.query.domaine_scientifique) {
       filters.panel_regroupement_code = req.query.domaine_scientifique.toUpperCase();
     }
+    if (req.query.isEjo) {
+      filters["is_ejo"] = { $eq: req.query.isEjo === "true" ? true : false };
+    }
 
     const data = await db
       .collection(collection_persons)
@@ -993,6 +1027,9 @@ router.route("/european-projects/erc/gender-by-domain").get(async (req, res) => 
     }
     if (req.query.destination_code) {
       filters.destination_code = { $in: req.query.destination_code.split(",") };
+    }
+    if (req.query.isEjo) {
+      filters["is_ejo"] = { $eq: req.query.isEjo === "true" ? true : false };
     }
 
     const groupBy = req.query.panel_id ? "panel_code" : req.query.domaine_scientifique ? "panel_code" : "panel_regroupement_code";

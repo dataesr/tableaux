@@ -1,4 +1,5 @@
 import { useSearchParams } from "react-router-dom";
+import { isEjoParam } from "../../../../utils/params";
 import type { EvolutionPanelData, EvolutionPanelItem } from "./query";
 
 export function useGetParams() {
@@ -11,6 +12,10 @@ export function useGetParams() {
   params.push(`country_code=${countryCode}`);
 
   const currentLang = searchParams.get("language") || "fr";
+
+   if (searchParams.has("isEjo")) {
+     params.push(isEjoParam());
+   } 
 
   return { params: params.join("&"), currentLang };
 }
