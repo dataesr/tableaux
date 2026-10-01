@@ -1,6 +1,6 @@
 import { Text } from "@dataesr/dsfr-plus";
 import { ItemFilterPanel, type FilterItem } from "../../../../../../../components/item-filter";
-import { FM_ANALYSES } from "../config";
+import { FM_ANALYSES, getAvailablePositioningFilters } from "../config";
 import { useFacultyCnuList, useFacultyAssimilationList } from "../../../api";
 import type { FmPositioningFilters } from "../hooks/usePositioningParams";
 import type { ViewType } from "../../../api";
@@ -50,37 +50,38 @@ export default function AnalysisFilter({ selectedMetric, onSelectMetric, year, v
         onFiltersChange({ ...filters, [key]: filters[key] === value ? "" : value });
     };
 
-    const showType = viewType === "structure" && currentItem?.etablissement_type;
-    const showAcademie = viewType === "structure" && currentItem?.etablissement_code_academie;
-    const showRegion = (viewType === "structure" || viewType === "academie") && currentItem?.etablissement_code_region;
-    const hasFilters = showType || showAcademie || showRegion;
+    const available = getAvailablePositioningFilters(viewType, currentItem);
+    const hasFilters = available.type || available.academie || available.region;
 
     const footer = hasFilters ? (
         <>
-            <Text className="fr-text--sm fr-text--bold fr-mb-1w" style={{ color: "var(--text-mention-grey)" }}>
+            <Text className="fr-text--sm fr-text--bold fr-mb-1w fr-text-mention--grey">
                 Filtrer la comparaison
             </Text>
-            {showType && (
+            {available.type && (
                 <button
                     type="button"
+                    aria-pressed={filters.type === "same-type"}
                     className={`fr-btn fr-btn--sm ${filters.type === "same-type" ? "" : "fr-btn--secondary"}`}
                     onClick={() => toggle("type", "same-type")}
                 >
                     Même type ({currentItem.etablissement_type})
                 </button>
             )}
-            {showRegion && (
+            {available.region && (
                 <button
                     type="button"
+                    aria-pressed={filters.region === "same-region"}
                     className={`fr-btn fr-btn--sm ${filters.region === "same-region" ? "" : "fr-btn--secondary"}`}
                     onClick={() => toggle("region", "same-region")}
                 >
                     Même région ({currentItem.etablissement_region})
                 </button>
             )}
-            {showAcademie && (
+            {available.academie && (
                 <button
                     type="button"
+                    aria-pressed={filters.academie === "same-academie"}
                     className={`fr-btn fr-btn--sm ${filters.academie === "same-academie" ? "" : "fr-btn--secondary"}`}
                     onClick={() => toggle("academie", "same-academie")}
                 >

@@ -1,4 +1,5 @@
 import { getCssColor } from "../../../../../../utils/colors";
+import type { ViewType } from "../../api";
 
 export const FM_METRICS_CONFIG = {
   total_effectif: {
@@ -155,3 +156,15 @@ export const FM_ANALYSES: Record<
     category: "Âge",
   },
 };
+
+// Filtres de comparaison proposés pour l'entité courante.
+// Règle unique : sert à afficher les boutons et à appliquer les filtres.
+export function getAvailablePositioningFilters(viewType: ViewType, currentItem: any) {
+  return {
+    type: viewType === "structure" && !!currentItem?.etablissement_type,
+    academie: viewType === "structure" && !!currentItem?.etablissement_code_academie,
+    region:
+      (viewType === "structure" || viewType === "academie") &&
+      !!currentItem?.etablissement_code_region,
+  };
+}

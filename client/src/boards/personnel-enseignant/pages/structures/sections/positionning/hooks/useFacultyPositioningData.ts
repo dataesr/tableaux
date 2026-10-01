@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import { useFacultyPositioning, type ViewType } from "../../../api";
 import type { FmPositioningFilters } from "./usePositioningParams";
+import { getAvailablePositioningFilters } from "../config";
 
 function parseDynamicMetric(metric: string): {
   cnuType?: string;
@@ -49,15 +50,17 @@ export function useFacultyPositioningData(
   }, [allItems, selectedId, viewType]);
 
   const filteredItems = useMemo(() => {
+    // Un filtre n'est appliqué que s'il est proposé (donc visible) pour l'entité courante.
+    const available = getAvailablePositioningFilters(viewType, currentItem);
     return allItems.filter((item) => {
       if (item.etablissement_id_paysage_actuel === selectedId) return true;
 
-      if (filters.type === "same-type" && currentItem) {
+      if (available.type && filters.type === "same-type") {
         if (item.etablissement_type !== currentItem.etablissement_type)
           return false;
       }
 
-      if (filters.region === "same-region" && currentItem) {
+      if (available.region && filters.region === "same-region") {
         if (
           item.etablissement_code_region !==
           currentItem.etablissement_code_region
@@ -65,7 +68,7 @@ export function useFacultyPositioningData(
           return false;
       }
 
-      if (filters.academie === "same-academie" && currentItem) {
+      if (available.academie && filters.academie === "same-academie") {
         if (
           item.etablissement_code_academie !==
           currentItem.etablissement_code_academie
@@ -75,7 +78,7 @@ export function useFacultyPositioningData(
 
       return true;
     });
-  }, [allItems, selectedId, currentItem, filters]);
+  }, [allItems, selectedId, currentItem, filters, viewType]);
 
   return { allItems, filteredItems, currentItem, isLoading };
 }
