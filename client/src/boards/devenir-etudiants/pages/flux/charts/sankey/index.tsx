@@ -122,7 +122,7 @@ function SankeyRenderData({ links, totalStudents = 0 }: { links: OutcomesFluxLin
                 <div className="fr-table__container">
                     <div className="fr-table__content">
                         <table id="outcomes-flux-sankey-data-table" style={{ width: "100%" }}>
-                            <caption>Détail des flux entre situations et années universitaires</caption>
+                            <caption>Parcours des néo-bacheliers inscrits en L1 en 2019</caption>
                             <thead>
                                 <tr>
                                     <th>Année source</th>
@@ -224,7 +224,7 @@ function SankeyChartView({
                 title: "Parcours des néo-bacheliers inscrits en L1 en 2019",
             }}
             options={options}
-            renderData={() => <SankeyRenderData links={links} totalStudents={totalStudents} />}
+        // renderData={() => <SankeyRenderData links={links} totalStudents={totalStudents} />}
         />
     );
 }
