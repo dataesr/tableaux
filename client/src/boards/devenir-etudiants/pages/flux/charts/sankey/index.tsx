@@ -224,7 +224,7 @@ function SankeyChartView({
                 title: "Parcours des néo-bacheliers inscrits en L1 en 2019",
             }}
             options={options}
-        // renderData={() => <SankeyRenderData links={links} totalStudents={totalStudents} />}
+            renderData={() => <SankeyRenderData links={links} totalStudents={totalStudents} />}
         />
     );
 }
