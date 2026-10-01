@@ -10,19 +10,13 @@ import DefaultSkeleton from "../../../../../../components/charts-skeletons/defau
 import FmMetricDefinitionsTable from "../../../../components/metric-definitions";
 import { CNU_GROUPS } from "../../../definitions/cnu-data";
 import SectionYearSelect from "../../../../../../components/section-year-select";
+import { AGE_CLASSES_WITH_UNSPECIFIED } from "../../../../config/age-classes";
 
 interface GroupesCnuSectionProps {
     viewType: ViewType;
     selectedId: string;
     selectedYear: string;
 }
-
-const AGE_CLASSES = [
-    { key: "35 ans et moins", label: "≤ 35 ans", color: "fm-age-35-et-moins-ec" },
-    { key: "36 à 55 ans", label: "36 – 55 ans", color: "fm-age-36-55-ec" },
-    { key: "56 ans et plus", label: "≥ 56 ans", color: "fm-age-56-et-plus-ec" },
-    { key: "Non précisé", label: "Non précisé", color: "blue-france-main-525" },
-];
 
 const SCALE_COLORS = Array.from({ length: 14 }, (_, i) => `scale-${i + 1}`);
 
@@ -54,7 +48,7 @@ export default function GroupesCnuSection({ viewType, selectedId, selectedYear }
                 value: y.gender_breakdown?.find((g: any) => g.gender === "Masculin")?.count || 0,
             }));
             const age: Record<string, Array<{ year: string; value: number }>> = {};
-            AGE_CLASSES.forEach(({ key }) => {
+            AGE_CLASSES_WITH_UNSPECIFIED.forEach(({ key }) => {
                 age[key] = yearly.map((y: any) => ({
                     year: String(y.year),
                     value: y.age_breakdown?.find((a: any) => a.age_class === key)?.count || 0,
@@ -212,7 +206,7 @@ export default function GroupesCnuSection({ viewType, selectedId, selectedYear }
                                         </Col>
                                     </Row>
                                     <Row gutters>
-                                        {AGE_CLASSES.map(({ key, label, color: ageColor }) => {
+                                        {AGE_CLASSES_WITH_UNSPECIFIED.map(({ key, label, color: ageColor }) => {
                                             const count = sg.ageDistribution?.find((a: any) => a.ageClass === key)?.count || 0;
                                             return (
                                                 <Col xs="12" md="3" key={key}>

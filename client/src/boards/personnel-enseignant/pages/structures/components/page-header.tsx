@@ -3,6 +3,7 @@ import { Row, Col, Title, Text, Button, SegmentedControl, SegmentedElement } fro
 import { ViewType, FacultyScope } from "../api";
 import { getCssColor } from "../../../../../utils/colors";
 import DistributionBarChart from "./charts/distribution-bar";
+import { AGE_CLASSES } from "../../../config/age-classes";
 import "../styles.scss";
 
 const VIEW_BACK_LABELS: Record<ViewType, string> = {
@@ -11,14 +12,6 @@ const VIEW_BACK_LABELS: Record<ViewType, string> = {
     region: "Changer de région",
     academie: "Changer d'académie",
 };
-
-const AGE_COLORS: Record<string, string> = {
-    "35 ans et moins": "fm-age-35-et-moins-ec",
-    "36 à 55 ans": "fm-age-36-55-ec",
-    "56 ans et plus": "fm-age-56-et-plus-ec",
-};
-
-const AGE_ORDER = ["35 ans et moins", "36 à 55 ans", "56 ans et plus"];
 
 const STATUS_ROWS: { key: string; label: string; color: string }[] = [
     { key: "enseignant_chercheur", label: "Enseignants-chercheurs", color: "fm-statut-ec" },
@@ -65,13 +58,13 @@ export default function PageHeader({
     const neighbors = data?.neighbors || [];
     const ranking = data?.ranking || null;
 
-    const ageSegments = AGE_ORDER.map((id) => {
-        const a = ageDistribution.find((x: any) => x._id === id);
+    const ageSegments = AGE_CLASSES.map(({ key, color }) => {
+        const a = ageDistribution.find((x: any) => x._id === key);
         const gb = a?.gender_breakdown || [];
         return {
-            name: id,
+            name: key,
             value: a?.total || 0,
-            color: getCssColor(AGE_COLORS[id] ?? "blue-france-main-525"),
+            color: getCssColor(color),
             female: gb.find((g: any) => g.gender === "Féminin")?.count || 0,
             male: gb.find((g: any) => g.gender === "Masculin")?.count || 0,
         };

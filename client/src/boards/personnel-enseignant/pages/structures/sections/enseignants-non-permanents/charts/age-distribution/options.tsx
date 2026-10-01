@@ -1,17 +1,12 @@
 import Highcharts from "highcharts/es-modules/masters/highcharts.src.js";
 import { createChartOptions } from "../../../../../../../../components/chart-wrapper/default-options";
 import { getCssColor } from "../../../../../../../../utils/colors";
-
-const AGE_ORDER = [
-    "35 ans et moins",
-    "36 à 55 ans",
-    "56 ans et plus",
-];
+import { AGE_CLASSES } from "../../../../../../config/age-classes";
 
 export function createAgeDistributionOptions(
     ageDistribution: any[]
 ): Highcharts.Options {
-    const sorted = AGE_ORDER
+    const sorted = AGE_CLASSES.map((a) => a.key)
         .map((age) => ageDistribution.find((a: any) => a._id === age))
         .filter(Boolean);
 

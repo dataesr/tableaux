@@ -2,6 +2,7 @@ import Highcharts from "highcharts/es-modules/masters/highcharts.src.js";
 import { createChartOptions } from "../../../../../../../components/chart-wrapper/default-options";
 import { getCssColor } from "../../../../../../../utils/colors";
 import type { FmMetricConfig } from "../../../../../config/analyses-config";
+import { AGE_CLASSES } from "../../../../../config/age-classes";
 
 type Records = Record<string, any>[];
 
@@ -382,7 +383,7 @@ export function createFmBase100Options(
   });
 }
 
-const AGE_CATEGORIES = ["≤ 35 ans", "36 – 55 ans", "≥ 56 ans"];
+const AGE_CATEGORIES = AGE_CLASSES.map((a) => a.label);
 const AGE_H_KEYS = ["age_35_moins_h", "age_36_55_h", "age_56_plus_h"];
 const AGE_F_KEYS = ["age_35_moins_f", "age_36_55_f", "age_56_plus_f"];
 

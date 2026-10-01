@@ -1,12 +1,7 @@
 import Highcharts from "highcharts/es-modules/masters/highcharts.src.js";
 import { createChartOptions } from "../../../../../../../../components/chart-wrapper/default-options";
 import { getCssColor } from "../../../../../../../../utils/colors";
-
-const AGE_ORDER = [
-    { key: "35 ans et moins", label: "≤ 35 ans", color: "fm-age-35-et-moins-ec" },
-    { key: "36 à 55 ans", label: "36 – 55 ans", color: "fm-age-36-55-ec" },
-    { key: "56 ans et plus", label: "≥ 56 ans", color: "fm-age-56-et-plus-ec" },
-];
+import { AGE_CLASSES } from "../../../../../../config/age-classes";
 
 export function createAgeCategoryHeatmapOptions(
     categoryDistribution: any[]
@@ -18,7 +13,7 @@ export function createAgeCategoryHeatmapOptions(
     );
     const categories = cats.map((c) => c.categoryName || c.categoryCode);
 
-    const series: Highcharts.SeriesOptionsType[] = AGE_ORDER.map((a) => ({
+    const series: Highcharts.SeriesOptionsType[] = AGE_CLASSES.map((a) => ({
         type: "bar" as const,
         name: a.label,
         color: getCssColor(a.color),

@@ -3,6 +3,7 @@ import { SegmentedControl, SegmentedElement } from "@dataesr/dsfr-plus";
 import ChartWrapper from "../../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../../components/charts-skeletons/default";
 import { getAnalysisDims, type FmAnalysisConfig, type FmMetricConfig } from "../../../../../config/analyses-config";
+import { AGE_CLASSES } from "../../../../../config/age-classes";
 import {
     createFmSingleOptions,
     createFmVariationOptions,
@@ -222,9 +223,7 @@ export default function FmEvolutionChart({
             visible: !dims.age,
             options: [
                 { label: "Tous âges", value: "" },
-                { label: "≤ 35 ans", value: "35 ans et moins" },
-                { label: "36 – 55 ans", value: "36 à 55 ans" },
-                { label: "≥ 56 ans", value: "56 ans et plus" },
+                ...AGE_CLASSES.map(({ key, label }) => ({ label, value: key })),
             ],
         },
         {
