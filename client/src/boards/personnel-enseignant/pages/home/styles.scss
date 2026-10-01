@@ -36,15 +36,6 @@
     margin-bottom: 0.5rem;
   }
 
-  &__separator {
-    width: 60px;
-    height: 3px;
-    background-color: var(--text-default-grey);
-    border: none;
-    margin: 0 0 1.5rem 0;
-    opacity: 0.8;
-  }
-
   &__title {
     font-size: 2.5rem;
     font-weight: 700;
@@ -108,10 +99,6 @@
     background: var(--background-default-grey);
   }
 
-  &--alt {
-    background: var(--background-alt-grey);
-  }
-
   &__title {
     font-size: 1.75rem;
     font-weight: 700;
@@ -125,98 +112,5 @@
     color: var(--text-mention-grey);
     margin-bottom: 2.5rem;
     text-align: center;
-  }
-}
-
-.fm-accueil-quick-access {
-  text-align: center;
-
-  &__search {
-    margin-top: 2rem;
-  }
-}
-
-.fm-accueil-card {
-  background: var(--background-default-grey);
-  border: 1px solid var(--border-default-grey);
-  padding: 2rem;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  cursor: pointer;
-  text-align: left;
-  width: 100%;
-  box-shadow: 0 1px 3px var(--background-overlap-grey);
-
-  &:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 12px 24px var(--background-overlap-grey);
-    border-color: var(--border-plain-blue-france);
-  }
-
-  &__icon {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    background-color: var(--background-contrast-blue-france);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    margin-bottom: 1.5rem;
-    padding: 1.25rem;
-
-    img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-    }
-  }
-
-  &__title {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--text-title-grey);
-    margin-bottom: 1rem;
-  }
-
-  &__description {
-    color: var(--text-mention-grey);
-    font-size: 1rem;
-    line-height: 1.6;
-    margin-bottom: 1.5rem;
-    flex: 1;
-  }
-
-  &__footer {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 0.5rem;
-    color: var(--text-action-high-blue-france);
-    font-weight: 600;
-    font-size: 1rem;
-    transition: gap 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-
-    i {
-      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-  }
-
-  &:hover &__footer {
-    gap: 0.75rem;
-
-    i {
-      transform: translateX(4px);
-    }
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .fm-accueil-card,
-  .fm-accueil-card__footer,
-  .fm-accueil-card__footer i {
-    transition: none;
   }
 }
