@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { SegmentedControl, SegmentedElement } from "@dataesr/dsfr-plus";
 import ChartWrapper from "../../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../../components/charts-skeletons/default";
-import type { FmAnalysisConfig, FmMetricConfig } from "../../../../../config/analyses-config";
+import { getAnalysisDims, type FmAnalysisConfig, type FmMetricConfig } from "../../../../../config/analyses-config";
 import {
     createFmSingleOptions,
     createFmVariationOptions,
@@ -30,13 +30,13 @@ interface FmEvolutionChartProps {
 const ANALYSIS_COMMENTS: Record<string, string> = {
     "effectif-total": "Nombre total de personnels enseignants, tous statuts confondus.",
     "genre-effectifs": "Effectifs ventilés par genre (femmes et hommes).",
-    "statut-effectifs": "Répartition selon trois statuts exclusifs : enseignants-chercheurs (PR + MCF), titulaires non-EC (2nd degré, etc.) et non-permanents (contractuels, ATER, etc.).",
+    "statut-effectifs": "Répartition selon trois statuts exclusifs : enseignants-chercheurs (PR + MCF), autres permanents (2nd degré, etc.) et non-permanents (contractuels, ATER, etc.).",
     "age-effectifs": "Répartition par tranche d'âge (≤ 35 ans, 36–55 ans, ≥ 56 ans).",
     "pyramide-ages": "Structure démographique croisant genre et classe d'âge pour l'année sélectionnée. Hommes à gauche, femmes à droite.",
     "effectifs-base100": "Chaque courbe démarre à 100 (= effectif de la première année disponible). Les valeurs suivantes expriment l'évolution relative : 110 = +10 %, 90 = −10 %. Comparaison des trajectoires EC, permanents, non-permanents et effectif total.",
     "taux-feminisation": "Part des femmes dans l'effectif total.",
     "femi-ec": "Part des femmes parmi les seuls enseignants-chercheurs (PR + MCF).",
-    "femi-permanents": "Part des femmes parmi les personnels permanents (EC + titulaires non-EC).",
+    "femi-permanents": "Part des femmes parmi les personnels permanents (EC + autres permanents).",
     "femi-non-permanents": "Part des femmes parmi les non-permanents (contractuels, ATER, etc.).",
     "femi-par-statut-base100": "Chaque courbe démarre à 100 (= taux de féminisation de la première année). Une valeur de 115 signifie que le taux a crû de 15 % par rapport à l'année de référence. Compare la vitesse de féminisation entre les différents statuts.",
     "genre-base100": "Chaque courbe démarre à 100 (= effectif de la première année). Permet de comparer la vitesse de croissance des effectifs femmes vs hommes, indépendamment de leurs niveaux absolus.",
@@ -44,7 +44,7 @@ const ANALYSIS_COMMENTS: Record<string, string> = {
     "taux-ec": "Part des enseignants-chercheurs dans l'effectif total.",
     "taux-ec-sur-permanents": "Part des EC parmi les seuls permanents (hors 2nd degré et assimilés au dénominateur).",
     "effectif-ec-seul": "Effectif des enseignants-chercheurs (PR + MCF et assimilés).",
-    "effectif-permanents-seul": "Effectif total des permanents (EC + titulaires non-EC).",
+    "effectif-permanents-seul": "Effectif total des permanents (EC + autres permanents).",
     "statut-base100": "Chaque courbe démarre à 100. Permet de comparer les vitesses d'évolution des EC, permanents et non-permanents, même si leurs effectifs de départ sont très différents.",
     "ec-mcf-pr": "Répartition des EC entre maîtres de conférences (MCF) et professeurs des universités (PR).",
     "effectif-mcf-seul": "Effectif des maîtres de conférences et assimilés.",
@@ -54,8 +54,8 @@ const ANALYSIS_COMMENTS: Record<string, string> = {
     "femi-pr": "Part des femmes parmi les PR et assimilés.",
     "femi-mcf-pr-compare": "Chaque courbe démarre à 100 (= taux de féminisation de la première année). Compare la vitesse de féminisation des MCF, des PR et du taux global.",
     "ec-mcf-pr-base100": "Chaque courbe démarre à 100. Compare la vitesse de croissance des effectifs MCF et PR, indépendamment de leurs niveaux de départ.",
-    "categories-personnel": "Répartition détaillée en 4 catégories : PR, MCF, titulaires non-EC et non-permanents.",
-    "categories-base100": "Chaque courbe démarre à 100 (= effectif de la première année disponible pour cette catégorie). Une valeur de 120 signifie +20 % par rapport au départ. Compare les trajectoires des PR, MCF, titulaires non-EC et non-permanents, même si leurs effectifs de départ sont très différents.",
+    "categories-personnel": "Répartition détaillée en 4 catégories : PR, MCF, autres permanents et non-permanents.",
+    "categories-base100": "Chaque courbe démarre à 100 (= effectif de la première année disponible pour cette catégorie). Une valeur de 120 signifie +20 % par rapport au départ. Compare les trajectoires des PR, MCF, autres permanents et non-permanents, même si leurs effectifs de départ sont très différents.",
     "taux-age-35-moins": "Part des personnels âgés de 35 ans ou moins.",
     "taux-age-56-plus": "Part des personnels âgés de 56 ans ou plus.",
     "age-structure-base100": "Indices base 100 : compare les vitesses d'évolution des effectifs jeunes (≤ 35 ans) et âgés (≥ 56 ans).",
@@ -99,6 +99,7 @@ const ANALYSIS_READING_KEYS: Record<string, string> = {
     "femi-par-statut": "Un écart durable entre EC et non-permanents révèle une féminisation concentrée sur les emplois précaires.",
     "femi-mcf-pr": "L'écart entre MCF et PR quantifie le plafond de verre ; une convergence indique un rattrapage.",
     "femi-par-age": "Une féminisation plus forte chez les jeunes annonce un rééquilibrage à venir de l'ensemble.",
+    "femi-par-discipline": "L'écart entre les courbes mesure les différences de parité entre grandes disciplines ; une convergence indique un rééquilibrage.",
 };
 
 function getAnalysisComment(key: string, ageClass: string, periodText: string): string {
@@ -161,10 +162,7 @@ export default function FmEvolutionChart({
 
     const analysisConfig = allAnalyses[selectedAnalysis];
 
-    const metricsStr = analysisConfig ? analysisConfig.metrics.join(" ") : "";
-    const isAgeDim = analysisConfig?.chartType === "pyramid" || /age/i.test(metricsStr);
-    const isGenderDim = /femmes|hommes|feminisation|_f_|_h_|_f\b|_h\b/i.test(metricsStr);
-    const isStatusDim = /cnu_|_ec\b|\bec_|perm|_tit|mcf|_pr\b|_pr_/i.test(metricsStr);
+    const dims = getAnalysisDims(analysisConfig);
 
     const chartOptions = useMemo(() => {
         if (!analysisConfig || !records.length) return null;
@@ -221,7 +219,7 @@ export default function FmEvolutionChart({
             label: "Âge",
             value: ageClass,
             onChange: onAgeClassChange,
-            visible: !isAgeDim,
+            visible: !dims.age,
             options: [
                 { label: "Tous âges", value: "" },
                 { label: "≤ 35 ans", value: "35 ans et moins" },
@@ -234,7 +232,7 @@ export default function FmEvolutionChart({
             label: "Genre",
             value: gender,
             onChange: onGenderChange,
-            visible: !isGenderDim,
+            visible: !dims.gender,
             options: [
                 { label: "Tous", value: "" },
                 { label: "Femmes", value: "Féminin" },
@@ -246,12 +244,12 @@ export default function FmEvolutionChart({
             label: "Statut",
             value: status,
             onChange: onStatusChange,
-            visible: !isStatusDim,
+            visible: !dims.status,
             options: [
                 { label: "Tous", value: "" },
-                { label: "EC", value: "ec" },
-                { label: "Titulaires non-EC", value: "tit_non_ec" },
-                { label: "Non-permanents", value: "non_permanent" },
+                { label: "Enseignants-chercheurs", value: "ec" },
+                { label: "Autres permanents", value: "tit_non_ec" },
+                { label: "Non permanents", value: "non_permanent" },
             ],
         },
     ].filter((f) => f.visible);

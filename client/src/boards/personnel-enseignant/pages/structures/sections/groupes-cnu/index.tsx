@@ -4,6 +4,7 @@ import { ViewType, useFacultyResearchTeachers } from "../../api";
 import { getCssColor } from "../../../../../../utils/colors";
 import MetricCard from "../../components/metric-card";
 import TreemapSectionsChart from "./charts/treemap-sections";
+import RatioProfMcfChart from "./charts/ratio-prof-mcf";
 
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 import FmMetricDefinitionsTable from "../../../../components/metric-definitions";
@@ -266,6 +267,11 @@ export default function GroupesCnuSection({ viewType, selectedId, selectedYear }
             <Row className="fr-mb-5w">
                 <Col>
                     <TreemapSectionsChart cnuGroups={currentData.cnuGroups} selectedYear={selectedYear} />
+                </Col>
+            </Row>
+            <Row className="fr-mb-5w">
+                <Col>
+                    <RatioProfMcfChart cnuGroups={currentData.cnuGroups} selectedYear={selectedYear} />
                 </Col>
             </Row>
 

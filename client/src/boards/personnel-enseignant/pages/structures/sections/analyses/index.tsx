@@ -3,7 +3,12 @@ import { useSearchParams } from "react-router-dom";
 import { Col, Row, Title } from "@dataesr/dsfr-plus";
 import { ViewType, useFacultyAnalyses } from "../../api";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
-import { buildAllFmAnalyses, buildAllFmMetricsConfig } from "../../../../config/analyses-config";
+import {
+    buildAllFmAnalyses,
+    buildAllFmMetricsConfig,
+    getAnalysisDims,
+    type FmAnalysisConfig,
+} from "../../../../config/analyses-config";
 import FmAnalysisFilter from "./analysis-filter";
 import FmEvolutionChart from "./charts";
 import FmMetricDefinitionsTable from "../../../../components/metric-definitions";
@@ -28,6 +33,7 @@ const ANALYSIS_DEFINITION_KEYS: Record<string, string[]> = {
     "effectif-permanents-seul": ["Permanent / Non permanent"],
     "statut-base100": ["Statut : 3 catégories mutuellement exclusives", "Enseignant-chercheur (EC)"],
     "disciplines-evolution": ["Grande discipline"],
+    "femi-par-discipline": ["Taux de féminisation", "Grande discipline"],
     "cnu-groups-evolution": ["Groupe CNU"],
     "ec-mcf-pr": ["Enseignant-chercheur (EC)", "MCF et assimilés", "PR et assimilés"],
     "effectif-mcf-seul": ["MCF et assimilés"],
@@ -51,18 +57,6 @@ function getAnalysisDefinitionKeys(analysis: string | null): string[] {
     return [];
 }
 
-function getAnalysisDims(key: string | null) {
-    if (!key) return { age: false, gender: false, status: false };
-    return {
-        age: /(^|[-_])age|pyramide/i.test(key),
-        gender: /genre|femi|parit|pyramide/i.test(key),
-        status:
-            /statut|permanent|categorie|cnu|disc|mcf|(^|[-_])ec([-_]|$)|(^|[-_])pr([-_]|$)/i.test(
-                key
-            ),
-    };
-}
-
 interface EvolutionsSectionProps {
     viewType: ViewType;
     selectedId: string;
@@ -75,32 +69,30 @@ export default function EvolutionsSection({ viewType, selectedId }: EvolutionsSe
     const gender = searchParams.get("fmGender") || "";
     const status = searchParams.get("fmStatus") || "";
 
-    const dims = getAnalysisDims(selectedAnalysis);
-    const effAgeClass = dims.age ? "" : ageClass;
-    const effGender = dims.gender ? "" : gender;
-    const effStatus = dims.status ? "" : status;
-
     const { data, isLoading } = useFacultyAnalyses(
         viewType,
         selectedId,
-        effAgeClass || undefined,
-        effGender || undefined,
-        effStatus || undefined
+        ageClass || undefined,
+        gender || undefined,
+        status || undefined
     );
 
     const { analysesWithData, allAnalyses, metricsConfig, records, periodText } = useMemo(() => {
-        if (!data?.records?.length) {
-            return { analysesWithData: new Set<string>(), allAnalyses: {}, metricsConfig: {}, records: [], periodText: "" };
-        }
+        const empty = {
+            analysesWithData: new Set<string>(),
+            allAnalyses: {} as Record<string, FmAnalysisConfig>,
+            metricsConfig: {},
+            records: [],
+            periodText: "",
+        };
+        if (!data?.records?.length) return empty;
         const completeRecords = data.records.filter(
             (r: any) =>
-                effStatus
+                status
                     ? (r.effectif_total || 0) > 0
                     : (r.effectif_permanents || 0) > 0 && (r.effectif_non_permanents || 0) > 0
         );
-        if (!completeRecords.length) {
-            return { analysesWithData: new Set<string>(), allAnalyses: {}, metricsConfig: {}, records: [], periodText: "" };
-        }
+        if (!completeRecords.length) return empty;
         const dataComplete = { ...data, records: completeRecords };
         const analyses = buildAllFmAnalyses(dataComplete);
         const metrics = buildAllFmMetricsConfig(dataComplete);
@@ -117,9 +109,12 @@ export default function EvolutionsSection({ viewType, selectedId }: EvolutionsSe
         const period = years.length > 1 ? `${years[0]} — ${years[years.length - 1]}` : years[0] || "";
 
         return { analysesWithData: available, allAnalyses: analyses, metricsConfig: metrics, records: completeRecords, periodText: period };
-    }, [data, effStatus]);
+    }, [data, status]);
 
-    // Retire de l'URL les filtres devenus incompatibles avec l'analyse sélectionnée.
+    const dims = getAnalysisDims(selectedAnalysis ? allAnalyses[selectedAnalysis] : undefined);
+
+    // Filet de sécurité (lien partagé, analyse choisie automatiquement) :
+    // retire de l'URL les filtres incompatibles avec l'analyse sélectionnée.
     useEffect(() => {
         if (!selectedAnalysis) return;
         const params = new URLSearchParams(searchParams);
@@ -143,6 +138,10 @@ export default function EvolutionsSection({ viewType, selectedId }: EvolutionsSe
     const handleSelectAnalysis = (key: string) => {
         const params = new URLSearchParams(searchParams);
         params.set("fmAnalysis", key);
+        const nextDims = getAnalysisDims(allAnalyses[key]);
+        if (nextDims.age) params.delete("fmAgeClass");
+        if (nextDims.gender) params.delete("fmGender");
+        if (nextDims.status) params.delete("fmStatus");
         setSearchParams(params, { replace: true });
     };
 

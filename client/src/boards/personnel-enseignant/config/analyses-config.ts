@@ -15,6 +15,15 @@ export interface FmAnalysisConfig {
   chartType: "single" | "stacked" | "area" | "pyramid" | "base100" | "lines";
 }
 
+export function getAnalysisDims(analysis?: FmAnalysisConfig) {
+  const metrics = analysis ? analysis.metrics.join(" ") : "";
+  return {
+    age: analysis?.chartType === "pyramid" || /age/i.test(metrics),
+    gender: /femmes|hommes|feminisation|_f_|_h_|_f\b|_h\b/i.test(metrics),
+    status: /cnu_|_ec\b|\bec_|perm|_tit|mcf|_pr\b|_pr_/i.test(metrics),
+  };
+}
+
 export const FM_STATIC_METRICS: Record<string, FmMetricConfig> = {
   effectif_total: {
     label: "Effectif total",
@@ -41,19 +50,19 @@ export const FM_STATIC_METRICS: Record<string, FmMetricConfig> = {
     category: "Effectifs globaux",
   },
   effectif_tit_non_ec: {
-    label: "Titulaires non-EC",
+    label: "Autres permanents",
     format: "number",
     color: getCssColor("fm-statut-titulaire"),
     category: "Effectifs globaux",
   },
   effectif_non_permanents: {
-    label: "Non-permanents",
+    label: "Non permanents",
     format: "number",
     color: getCssColor("fm-statut-non-permanent"),
     category: "Effectifs globaux",
   },
   effectif_permanents: {
-    label: "Permanents (EC + tit. non-EC)",
+    label: "Permanents (EC + autres permanents)",
     format: "number",
     color: getCssColor("fm-statut-titulaire"),
     category: "Effectifs globaux",
@@ -265,6 +274,13 @@ export function buildDiscMetrics(
       color: getCssColor("fm-hommes"),
       category: "Disciplines",
     };
+    metrics[`taux_feminisation_disc_${code}`] = {
+      label: name,
+      format: "percent",
+      color,
+      category: "Disciplines",
+      suffix: "%",
+    };
   });
   return metrics;
 }
@@ -335,13 +351,15 @@ export const PREDEFINED_FM_STATIC_ANALYSES: Record<string, FmAnalysisConfig> = {
     chartType: "area",
   },
   "statut-effectifs": {
-    label: "Effectifs par statut (EC, titulaires, non-permanents)",
+    label:
+      "Effectifs par statut (enseignants-chercheurs, autres permanents, non permanents)",
     metrics: ["effectif_non_permanents", "effectif_tit_non_ec", "effectif_ec"],
     category: "Vue d'ensemble",
     chartType: "stacked",
   },
   "categories-personnel": {
-    label: "Effectifs par catégorie (PR, MCF, titulaires, non-permanents)",
+    label:
+      "Effectifs par catégorie (PR, MCF, autres permanents, non permanents)",
     metrics: [
       "effectif_non_permanents",
       "effectif_tit_non_ec",
@@ -362,7 +380,7 @@ export const PREDEFINED_FM_STATIC_ANALYSES: Record<string, FmAnalysisConfig> = {
     chartType: "area",
   },
   "effectifs-base100": {
-    label: "EC, permanents et non-permanents (base 100)",
+    label: "EC, permanents et non permanents (base 100)",
     metrics: [
       "effectif_ec",
       "effectif_permanents",
@@ -448,7 +466,7 @@ export const PREDEFINED_FM_STATIC_ANALYSES: Record<string, FmAnalysisConfig> = {
     chartType: "single",
   },
   "statut-base100": {
-    label: "EC, permanents, non-permanents (base 100)",
+    label: "EC, permanents, non permanents (base 100)",
     metrics: ["effectif_ec", "effectif_permanents", "effectif_non_permanents"],
     category: "Statuts & carrières",
     chartType: "base100",
@@ -573,6 +591,12 @@ export function buildDiscAnalyses(
       metrics: discCodes.map((c) => `disc_${c}`),
       category: "Disciplines",
       chartType: "stacked",
+    },
+    "femi-par-discipline": {
+      label: "Taux de féminisation par grande discipline",
+      metrics: discCodes.map((c) => `taux_feminisation_disc_${c}`),
+      category: "Disciplines",
+      chartType: "lines",
     },
   };
   discCodes.forEach((code) => {

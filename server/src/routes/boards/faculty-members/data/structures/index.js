@@ -3748,6 +3748,9 @@ router.get("/faculty-members/analyses", async (req, res) => {
           .reduce((acc, x) => acc + x.c, 0);
         discGenderFields[`disc_f_${code}`] = femmesDisc;
         discGenderFields[`disc_h_${code}`] = hommesDisc;
+        const totalDisc = femmesDisc + hommesDisc;
+        discGenderFields[`taux_feminisation_disc_${code}`] =
+          totalDisc > 0 ? (femmesDisc / totalDisc) * 100 : null;
       });
 
       const cnuGroupsByCode = {};
