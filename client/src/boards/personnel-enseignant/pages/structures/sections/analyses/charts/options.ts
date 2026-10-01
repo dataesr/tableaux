@@ -340,6 +340,7 @@ export function createFmBase100Options(
       data: normalized,
     };
   });
+  const dipsBelow100 = series.some((s) => s.data.some((v) => v != null && v < 100));
 
   return createChartOptions("line", {
     chart: { height: 480 },
@@ -349,6 +350,7 @@ export function createFmBase100Options(
       crosshair: true,
     },
     yAxis: {
+      min: dipsBelow100 ? undefined : 100,
       title: { text: "Indice (base 100)" },
       plotLines: [
         {

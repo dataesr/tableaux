@@ -68,6 +68,7 @@ export default function EvolutionsSection({ viewType, selectedId }: EvolutionsSe
     const ageClass = searchParams.get("fmAgeClass") || "";
     const gender = searchParams.get("fmGender") || "";
     const status = searchParams.get("fmStatus") || "";
+    const startsIn2018 = status !== "ec" && status !== "tit_non_ec";
 
     const { data, isLoading } = useFacultyAnalyses(
         viewType,
@@ -86,11 +87,9 @@ export default function EvolutionsSection({ viewType, selectedId }: EvolutionsSe
             periodText: "",
         };
         if (!data?.records?.length) return empty;
+        const firstYear = startsIn2018 ? "2018-19" : "";
         const completeRecords = data.records.filter(
-            (r: any) =>
-                status
-                    ? (r.effectif_total || 0) > 0
-                    : (r.effectif_permanents || 0) > 0 && (r.effectif_non_permanents || 0) > 0
+            (r: any) => (r.effectif_total || 0) > 0 && r.annee_universitaire >= firstYear
         );
         if (!completeRecords.length) return empty;
         const dataComplete = { ...data, records: completeRecords };
@@ -216,6 +215,7 @@ export default function EvolutionsSection({ viewType, selectedId }: EvolutionsSe
                                 onGenderChange={handleGender}
                                 status={status}
                                 onStatusChange={handleStatus}
+                                startsIn2018={startsIn2018}
                             />
                         )}
                     </Col>

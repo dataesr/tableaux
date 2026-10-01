@@ -26,6 +26,7 @@ interface FmEvolutionChartProps {
     onGenderChange: (val: string) => void;
     status: string;
     onStatusChange: (val: string) => void;
+    startsIn2018: boolean;
 }
 
 const ANALYSIS_COMMENTS: Record<string, string> = {
@@ -156,6 +157,7 @@ export default function FmEvolutionChart({
     onGenderChange,
     status,
     onStatusChange,
+    startsIn2018,
 }: FmEvolutionChartProps) {
     const [displayMode, setDisplayMode] = useState<"values" | "percentage">("values");
     const [viewMode, setViewMode] = useState<"evolution" | "variation">("evolution");
@@ -316,6 +318,16 @@ export default function FmEvolutionChart({
                             </SegmentedControl>
                         </div>
                     ))}
+                </div>
+            )}
+
+            {startsIn2018 && (
+                <div className="fr-alert fr-alert--info fr-alert--sm fr-mb-2w">
+                    <p>
+                        L'historique commence en 2018-19 : avant cette année, les données des
+                        enseignants non permanents sont incomplètes.
+                        {!dims.status && " Pour remonter jusqu'en 2010-11, choisissez le statut « Enseignants-chercheurs » ou « Autres permanents »."}
+                    </p>
                 </div>
             )}
 
