@@ -14,7 +14,7 @@ import DefaultSkeleton from "../../../../../../components/charts-skeletons/defau
 const configChart1 = {
   id: "typeOfFinancingSubsidiesRequestedByProjects",
   title: "",
-  subtitle: "Subventions demandées et obtenues (M€)",
+  subtitle: "Financements demandés et obtenus (M€)",
   description: null,
   integrationURL: "/european-projects/components/pages/analysis/overview/charts/projects-types-1",
 };
@@ -22,7 +22,7 @@ const configChart1 = {
 const configChart2 = {
   id: "typeOfFinancingSubsidiesRequestedByProjectsRates",
   title: "",
-  subtitle: "Part des subventions demandées et obtenues sur HE",
+  subtitle: "Part des financements demandés et obtenus sur HE",
   description: null,
   integrationURL: "/european-projects/components/pages/analysis/overview/charts/projects-types-1",
 };

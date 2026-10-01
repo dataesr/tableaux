@@ -10,7 +10,7 @@ import DefaultSkeleton from "../../../../../../components/charts-skeletons/defau
 
 const config = {
   id: "fundedObjectives",
-  title: "Subventions obtenues",
+  title: "Financements obtenus",
   integrationURL: "/european-projects/components/pages/analysis/overview/charts/funded-objectives",
 };
 

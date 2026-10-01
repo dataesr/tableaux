@@ -62,11 +62,11 @@ export default function Methodology() {
             Sont exclus du décompte des coordinations de projets individuels (les ERC sauf SyG, les projets Postdoctoral Fellowships (Maris-Curie), les projets EIC Accelerator et les projets portés par l'association COST).
           </li>
           <li>
-            <strong>Subvention obtenue dans les projets (ou subventions demandées ou obtenues)</strong>
+            <strong>Financement obtenu dans les projets (ou financements demandés ou obtenus)</strong>
             <br />
             Chaque participant déclare le coût total qu'il doit assumer dans un projet proposé et sollicite un financement de la part de l'Union Européenne. C'est ce dernier qui est repris dans ce document d'analyse.
             <br />
-            Subvention allouée par la commission européenne pour le financement d'une participation dans un projet donné.
+            Financement alloué par la commission européenne pour le financement d'une participation dans un projet donné.
           </li>
         </ul>
       </Text>

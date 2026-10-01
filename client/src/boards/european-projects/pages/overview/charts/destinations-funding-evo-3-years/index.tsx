@@ -22,7 +22,7 @@ import { normalizeIdForCssColorNames } from "../../../../utils";
 const configChart1 = {
   id: "destinationsEvolutionFundingLines",
   title: {
-    fr: "Destinations - Evolution des suventions demandées et obtenues (M€)",
+    fr: "Destinations - Evolution des financements demandés et obtenus (M€)",
     en: "Destinations - Financing applied for and obtained (€m)",
   },
   description: {
@@ -35,7 +35,7 @@ const configChart1 = {
 const configChart2 = {
   id: "destinationsEvolutionFundingLinesRates",
   title: {
-    fr: "Destinations - Evolution du taux de succès des subventions demandées et obtenues",
+    fr: "Destinations - Evolution du taux de succès des financements demandés et obtenus",
     en: "Destinations - Trend in the success rate of financing applications and grants",
   },
   description: {
@@ -48,7 +48,7 @@ const configChart2 = {
 const configChart3 = {
   id: "destinationsEvolutionFundingLinesSuccessRate",
   title: {
-    fr: "Destinations - Part des subventions du pays demandées et obtenues par rapport au total des participants",
+    fr: "Destinations - Part des subventions du pays demandées et obtenus par rapport au total des participants",
     en: "Destinations - Percentage of country funding applied for and obtained as a proportion of total participants",
   },
   description: {

@@ -116,7 +116,7 @@
     "en": "Program"
   },
   "funding-by-program": {
-    "fr": "Subventions par programme",
+    "fr": "Financements par programme",
     "en": "Funding by program"
   },
   "pillar": {
@@ -124,7 +124,7 @@
     "en": "Pillar"
   },
   "funding-by-pillar": {
-    "fr": "Subventions par pilier",
+    "fr": "Financements par pilier",
     "en": "Funding by pillar"
   },
   "topic": {
@@ -132,7 +132,7 @@
     "en": "Topic"
   },
   "funding-by-topic": {
-    "fr": "Subventions par thématique",
+    "fr": "Financements par thématique",
     "en": "Funding by topic"
   },
   "destination": {
@@ -140,7 +140,7 @@
     "en": "Destination"
   },
   "funding-by-destination": {
-    "fr": "Subventions par destination",
+    "fr": "Financements par destination",
     "en": "Funding by destination"
   },
   "share-evaluated-projects": {
@@ -152,7 +152,7 @@
     "en": "Successful projects share"
   },
   "funding-proportion-by-country": {
-    "fr": "Part des subventions demandées et obtenues par le pays",
+    "fr": "Part des financements demandés et obtenus par le pays",
     "en": "Percentage of funding requested and obtained by the country"
   },
   "no-data-table": {

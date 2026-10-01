@@ -20,22 +20,20 @@ const config = {
     en: "Evolution of funding by country (in millions of euros)",
   },
   description: {
-    fr: "Évolution des subventions obtenues par type d'entités selon les pays du top 10.",
+    fr: "Évolution des financements obtenus par type d'entités selon les pays du top 10.",
     en: "Temporal evolution of funding obtained by entity types across top 10 countries.",
   },
   comment: {
     fr: (
       <>
-        Ce graphique montre l'évolution des subventions obtenues par type de bénéficiaires (Recherche, Organisme public, Organisme privé,
-        Etablissements d'enseignement supérieur, Auttres) selon les pays du top 10. Il permet d'analyser les tendances de financement pour chaque type
-        de bénéficiares au fil du temps et de comparer les performances des différents pays dans le contexte des projets européens.
+        Ce graphique montre l'évolution des financements obtenus par type de bénéficiaires (Recherche, Organisme public, Organisme privé, Etablissements d'enseignement supérieur, Auttres) selon les pays du top 10. Il permet d'analyser les tendances
+        de financement pour chaque type de bénéficiares au fil du temps et de comparer les performances des différents pays dans le contexte des projets européens.
       </>
     ),
     en: (
       <>
-        This chart illustrates the evolution of funding obtained by beneficiary types (Research, Public bodies, Private bodies, Higher education
-        establishments, Others) across the top 10 countries. It allows for analyzing funding trends for each beneficiary type over time and comparing
-        the performance of different countries in the context of European projects.
+        This chart illustrates the evolution of funding obtained by beneficiary types (Research, Public bodies, Private bodies, Higher education establishments, Others) across the top 10 countries. It allows for analyzing funding trends for each
+        beneficiary type over time and comparing the performance of different countries in the context of European projects.
       </>
     ),
   },

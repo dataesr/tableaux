@@ -18,7 +18,7 @@ export default function TopicsFunding() {
         <Col md={12} className="chart-footer">
           <ChartFooter
             comment={{
-              fr: <>Ce graphique affiche la répartition des subventions demandées et obtenues (en M€) par thématique, ainsi que le taux de succès associé (montants obtenus / montants demandés).</>,
+              fr: <>Ce graphique affiche la répartition des financements demandés et obtenus (en M€) par thématique, ainsi que le taux de succès associé (montants obtenus / montants demandés).</>,
               en: <>This chart displays the distribution of requested and obtained funding (in M€) by topic, as well as the associated success rate (amounts obtained / amounts requested).</>,
             }}
             readingKey={{

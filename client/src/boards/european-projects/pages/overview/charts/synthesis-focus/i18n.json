@@ -5,7 +5,7 @@
       "en": "share captured by participants from the country"
     },
     "tooltip": {
-      "fr": "Part des subventions obtenues par les participants du pays par rapport au total des subventions obtenues par tous les participants (toutes nationalités confondues).",
+      "fr": "Part des financements obtenus par les participants du pays par rapport au total des financements obtenus par tous les participants (toutes nationalités confondues).",
       "en": "Share of funding obtained by participants from the country compared to the total funding obtained by all participants (all nationalities combined)."
     }
   },
@@ -145,7 +145,7 @@
       "en": "share captured by the entity"
     },
     "tooltip": {
-      "fr": "Part des subventions obtenues par la structure pays par rapport au total des subventions obtenues par toutes les structures du pays.",
+      "fr": "Part des financements obtenus par la structure pays par rapport au total des financements obtenus par toutes les structures du pays.",
       "en": "Share of funding obtained by the entity from the country compared to the total funding obtained by all entities from the country."
     }
   },

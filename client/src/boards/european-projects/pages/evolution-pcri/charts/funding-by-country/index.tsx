@@ -45,7 +45,7 @@ export default function FundingByCountry() {
       className: "fr-pt-2w fr-pl-1w",
     },
     comment: {
-      fr: <>Evolution des subventions cumuleés obtenues par les pays depuis FP6 jusqu'à Horizon Europe.</>,
+      fr: <>Evolution des financements cumulés obtenus par les pays depuis FP6 jusqu'à Horizon Europe.</>,
       en: <>Evolution of cumulative funding obtained by countries from FP6 to Horizon Europe.</>,
     },
     readingKey: readingKey(data, isLoading),

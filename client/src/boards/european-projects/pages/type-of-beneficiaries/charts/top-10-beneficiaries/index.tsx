@@ -52,36 +52,32 @@ export default function Top10CountriesByTypeOfBeneficiaries() {
   const config = {
     id: "top10beneficiaries",
     title: {
-      fr: "Subventions obtenues par type d'entités (en millions d'euros)",
+      fr: "Financements obtenus par type d'entités (en millions d'euros)",
       en: "Funding obtained by type of entities (in millions of euros)",
     },
     comment: {
       fr: (
         <>
-          Ce graphique présente la répartition des subventions Horizon Europe obtenues par <strong>{countryNameFrLower}</strong> selon le type
-          d'entités bénéficiaires : organismes de recherche (REC), organismes publics (PUB), entreprises privées (PRC), établissements d'enseignement
-          supérieur (HES) et autres (OTH). Les montants sont exprimés en millions d'euros.
+          Ce graphique présente la répartition des subventions Horizon Europe obtenus par <strong>{countryNameFrLower}</strong> selon le type d'entités bénéficiaires : organismes de recherche (REC), organismes publics (PUB), entreprises privées
+          (PRC), établissements d'enseignement supérieur (HES) et autres (OTH). Les montants sont exprimés en millions d'euros.
         </>
       ),
       en: (
         <>
-          This chart shows the distribution of Horizon Europe grants obtained by <strong>{countryNameEn}</strong> by type of beneficiary entity:
-          research organisations (REC), public bodies (PUB), private companies (PRC), higher education institutions (HES) and others (OTH). Amounts
-          are expressed in millions of euros.
+          This chart shows the distribution of Horizon Europe grants obtained by <strong>{countryNameEn}</strong> by type of beneficiary entity: research organisations (REC), public bodies (PUB), private companies (PRC), higher education institutions
+          (HES) and others (OTH). Amounts are expressed in millions of euros.
         </>
       ),
     },
     readingKey: {
       fr: (
         <>
-          Pour <strong>{countryNameFrLower}</strong>, le type d'entité ayant reçu le plus de financements est <strong>{dominantLabel}</strong> avec{" "}
-          <strong>{dominantAmount} M€</strong> alloués.
+          Pour <strong>{countryNameFrLower}</strong>, le type d'entité ayant reçu le plus de financements est <strong>{dominantLabel}</strong> avec <strong>{dominantAmount} M€</strong> alloués.
         </>
       ),
       en: (
         <>
-          For <strong>{countryNameEn}</strong>, the entity type receiving the most Horizon Europe funding is <strong>{dominantLabel}</strong> with{" "}
-          <strong>{dominantAmount} M€</strong> awarded.
+          For <strong>{countryNameEn}</strong>, the entity type receiving the most Horizon Europe funding is <strong>{dominantLabel}</strong> with <strong>{dominantAmount} M€</strong> awarded.
         </>
       ),
     },

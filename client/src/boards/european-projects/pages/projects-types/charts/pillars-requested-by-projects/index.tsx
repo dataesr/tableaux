@@ -22,17 +22,16 @@ import {
   const configChart1a = {
     id: "pillarsSubsidiesRequestedByProjects",
     title: "",
-    subtitle: "Subventions demandées et obtenues (M€)<br />&nbsp;",
+    subtitle: "Financements demandés et obtenus (M€)<br />&nbsp;",
     description: null,
     integrationURL: "/european-projects/components/pages/analysis/overview/charts/projects-types-1",
   };
   const configChart1b = {
     id: "pillarsSubsidiesRequestedByProjectsRates",
     title: "",
-    subtitle: "Part des subventions demandées et obtenues sur HE",
+    subtitle: "Part des financements demandés et obtenus sur HE",
     description: null,
-    integrationURL:
-      "/european-projects/components/pages/analysis/overview/charts/projects-types-1",
+    integrationURL: "/european-projects/components/pages/analysis/overview/charts/projects-types-1",
   };
   const configChart2a = {
     id: "pillarsProjectCoordinationRequestedByProjects",

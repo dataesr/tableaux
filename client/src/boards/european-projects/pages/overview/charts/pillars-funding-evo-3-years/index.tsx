@@ -40,20 +40,20 @@ export default function PillarsFundingEvo3Years() {
   const configChart1 = {
     id: "pillarsEvolutionFundingLines",
     title: {
-      fr: "Evolution des financements demandées et obtenues (M€) sur Horizon Europe - 3 dernières années",
+      fr: "Evolution des financements demandés et obtenus (M€) sur Horizon Europe - 3 dernières années",
       en: "Financing applied for and obtained (€m) evolution on Horizon Europe - last 3 years",
     },
     comment: {
       fr: (
         <>
-          Ce graphique montre l'évolution des financements demandés et obtenus pour les piliers du programme Horizon Europe sur les trois dernières
-          années. Les barres représentent les montants demandés et obtenus. La ligne verte indique le taux de succès correspondant.
+          Ce graphique montre l'évolution des financements demandés et obtenus pour les piliers du programme Horizon Europe sur les trois dernières années. Les barres représentent les montants demandés et obtenus. La ligne verte indique le taux de
+          succès correspondant.
         </>
       ),
       en: (
         <>
-          This chart shows the evolution of funding applied for and obtained for the pillars of the Horizon Europe programme over the last three
-          years. The bars represent the amounts applied for and obtained. The line indicates the corresponding success rate.
+          This chart shows the evolution of funding applied for and obtained for the pillars of the Horizon Europe programme over the last three years. The bars represent the amounts applied for and obtained. The line indicates the corresponding
+          success rate.
         </>
       ),
     },

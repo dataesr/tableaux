@@ -12,7 +12,7 @@ const config = {
   idQuery: "programsFunding",
   title: {
     en: "Funding (M€)",
-    fr: "Subventions (M€)",
+    fr: "Financements (M€)",
   },
   integrationURL: "/european-projects/components/pages/analysis/overview/charts/destination-funding",
 };

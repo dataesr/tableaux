@@ -19,7 +19,7 @@ import i18nGlobal from "../../../../i18n-global.json";
 const configChart1 = {
   id: "EvolutionFundingLines",
   title: {
-    fr: "Evolution des subventions demandées et obtenues (M€)",
+    fr: "Evolution des financements demandés et obtenus (M€)",
     en: "Financing applied for and obtained (€m)",
   },
   description: {
@@ -32,7 +32,7 @@ const configChart1 = {
 const configChart2 = {
   id: "EvolutionFundingLinesSuccessRate",
   title: {
-    fr: "Evolution du taux de succès des subventions demandées et obtenues",
+    fr: "Evolution du taux de succès des financements demandés et obtenus",
     en: "Trend in the success rate of financing applications and grants",
   },
   description: {
@@ -45,7 +45,7 @@ const configChart2 = {
 const configChart3 = {
   id: "EvolutionFundingLinesRates",
   title: {
-    fr: "Part des subventions du pays demandées et obtenues par rapport au total des participants",
+    fr: "Part des subventions du pays demandées et obtenus par rapport au total des participants",
     en: "Percentage of country funding applied for and obtained as a proportion of total participants",
   },
   description: {

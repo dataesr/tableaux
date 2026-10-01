@@ -158,14 +158,14 @@
   {
     "id": "typeOfFinancingSubsidiesRequestedByProjects",
     "title": "",
-    "subtitle": "Subventions demandées et obtenues (M€)",
+    "subtitle": "Financements demandés et obtenus (M€)",
     "description": null,
     "integrationURL": "/european-projects/components/pages/analysis/overview/charts/projects-types-1"
   },
   {
     "id": "typeOfFinancingSubsidiesRequestedByProjectsRates",
     "title": "",
-    "subtitle": "Part des subventions demandées et obtenues sur HE",
+    "subtitle": "Part des financements demandées et obtenus sur HE",
     "description": null,
     "integrationURL": "/european-projects/components/pages/analysis/overview/charts/projects-types-1"
   },
@@ -193,7 +193,7 @@
   {
     "id": "pillarsSubsidiesRequestedByProjects",
     "title": "",
-    "subtitle": "Subventions demandées et obtenues (M€)",
+    "subtitle": "Financements demandés et obtenus (M€)",
     "description": null,
     "integrationURL": "/european-projects/components/pages/analysis/overview/charts/projects-types-1"
   },
@@ -208,49 +208,49 @@
   {
     "id": "projectsTypesPiliers2",
     "title": "",
-    "subtitle": "Subventions demandées et obtenues (M€)",
+    "subtitle": "Financements demandés et obtenus (M€)",
     "description": null,
     "integrationURL": "/european-projects/components/pages/analysis/overview/charts/projects-types-1"
   },
   {
     "id": "projectsTypesPiliers2Rates",
     "title": "",
-    "subtitle": "Part des subventions demandées et obtenues sur HE",
+    "subtitle": "Part des financements demandées et obtenus sur HE",
     "description": null,
     "integrationURL": "/european-projects/components/pages/analysis/overview/charts/projects-types-1"
   },
   {
     "id": "projectsTypesPillarsSubsidiesRequested",
     "title": "",
-    "subtitle": "Subventions demandées et obtenues (M€)",
+    "subtitle": "Financements demandés et obtenus (M€)",
     "description": null,
     "integrationURL": "/european-projects/components/pages/analysis/overview/charts/projects-types-1"
   },
   {
     "id": "projectsTypesPillarsSubsidiesRequestedRates",
     "title": "",
-    "subtitle": "Part des subventions demandées et obtenues sur HE",
+    "subtitle": "Part des financements demandées et obtenus sur HE",
     "description": null,
     "integrationURL": "/european-projects/components/pages/analysis/overview/charts/projects-types-1"
   },
   {
     "id": "typeOfFinancingSubsidiesRequested",
     "title": "",
-    "subtitle": "Subventions demandées et obtenues (M€)",
+    "subtitle": "Financements demandés et obtenus (M€)",
     "description": null,
     "integrationURL": "/european-projects/components/pages/analysis/overview/charts/projects-types-1"
   },
   {
     "id": "typeOfFinancingSubsidiesRequestedRates",
     "title": "",
-    "subtitle": "Part des subventions demandées et obtenues sur HE",
+    "subtitle": "Part des financements demandées et obtenus sur HE",
     "description": null,
     "integrationURL": "/european-projects/components/pages/analysis/overview/charts/projects-types-1"
   },
   {
     "id": "pillarsSubsidiesRequestedByProjectsRates",
     "title": "",
-    "subtitle": "Part des subventions demandées et obtenues sur HE",
+    "subtitle": "Part des financements demandées et obtenus sur HE",
     "description": null,
     "integrationURL": "/european-projects/components/pages/analysis/overview/charts/projects-types-1"
   },
@@ -264,7 +264,7 @@
   {
     "id": "mainBeneficiaries",
     "title": "",
-    "subtitle": "Principaux bénéficiaires qui concentrent 50 % des subventions allouées aux équipes",
+    "subtitle": "Principaux bénéficiaires qui concentrent 50 % des financements allouées aux équipes",
     "description": "Ad duis occaecat voluptate deserunt tempor enim nulla officia.",
     "integrationURL": "/european-projects/components/pages/analysis/overview/charts/main-beneficiaries"
   },
@@ -285,7 +285,7 @@
   {
     "id": "fundingRankingSub",
     "title": "",
-    "subtitle": "Subventions demandées et obtenues (M€) par pays",
+    "subtitle": "Financements demandés et obtenus (M€) par pays",
     "description": null,
     "integrationURL": "/european-projects/components/pages/analysis/positioning/charts/top-10-participating-organizations"
   },

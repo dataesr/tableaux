@@ -16,14 +16,14 @@ import i18n from "../../../../i18n-global.json";
 const configChart1 = {
   id: "typeOfFinancingSubsidiesRequested",
   title: "",
-  subtitle: "Subventions demandées et obtenues (M€)<br />&nbsp;",
+  subtitle: "Financements demandés et obtenus (M€)<br />&nbsp;",
   description: null,
   integrationURL: "/european-projects/components/pages/analysis/overview/charts/projects-types-1",
 };
 const configChart2 = {
   id: "typeOfFinancingSubsidiesRequestedRates",
   title: "",
-  subtitle: "Part des subventions demandées et obtenues sur HE",
+  subtitle: "Part des financements demandés et obtenus sur HE",
   description: null,
   integrationURL: "/european-projects/components/pages/analysis/overview/charts/projects-types-1",
 };
