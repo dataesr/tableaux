@@ -391,8 +391,6 @@ export default function ChartWrapper({
   const [isOpenIntegration, setIsOpenIntegration] = useState(false);
   const [displayType, setDisplayType] = useState("chart"); // ["chart", "data"]
   const modalId = useId();
-  const [searchParams] = useSearchParams();
-  const currentLang = searchParams.get("language") || "fr";
 
   const chart = useRef<HighchartsReact.RefObject>(null);
 
@@ -459,11 +457,10 @@ export default function ChartWrapper({
 
   if (chart && chart.current && chart.current.chart && !renderData) {
     const currentChart = chart.current.chart as CurrentChart;
-    const caption = typeof config.title === "string" ? config.title : config.title?.[currentLang] ?? config.title?.fr;
     currentChart.update({
       exporting: {
         showTable: displayType === 'data',
-        tableCaption: typeof caption === "string" ? caption : getI18nLabel(i18n, "data"),
+        tableCaption: getI18nLabel(i18n, "data"),
       }
     });
   };
