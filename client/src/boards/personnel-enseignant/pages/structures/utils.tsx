@@ -25,3 +25,6 @@ export function getParamKey(viewType: ViewType): string {
             return "id";
     }
 }
+export function compareCnuCodes(a: string | number, b: string | number): number {
+    return parseInt(String(a)) - parseInt(String(b)) || String(a).localeCompare(String(b));
+}

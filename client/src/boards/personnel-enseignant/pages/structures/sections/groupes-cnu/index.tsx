@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { Col, Row, Title, Text } from "@dataesr/dsfr-plus";
 import { ViewType, useFacultyResearchTeachers } from "../../api";
+import { compareCnuCodes } from "../../utils";
 import { getCssColor } from "../../../../../../utils/colors";
 import MetricCard from "../../components/metric-card";
 import TreemapSectionsChart from "./charts/treemap-sections";
@@ -77,7 +78,7 @@ export default function GroupesCnuSection({ viewType, selectedId, selectedYear }
             };
         })
         .filter((g: any) => g.totalCount > 0)
-        .sort((a: any, b: any) => b.totalCount - a.totalCount);
+        .sort((a: any, b: any) => compareCnuCodes(a.cnuGroupId, b.cnuGroupId));
     if (!groups.length) return null;
     const totalGroups = groups.reduce((s: number, g: any) => s + (g.totalCount || 0), 0);
     const sections = (currentData.cnuGroups || [])

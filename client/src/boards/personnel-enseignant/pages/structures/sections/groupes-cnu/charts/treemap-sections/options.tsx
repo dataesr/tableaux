@@ -8,6 +8,7 @@ export function createTreemapSectionsOptions(
         value?: number;
         parent?: string;
         color?: string;
+        sortIndex?: number;
     }>
 ): Highcharts.Options {
     return createChartOptions("treemap", {

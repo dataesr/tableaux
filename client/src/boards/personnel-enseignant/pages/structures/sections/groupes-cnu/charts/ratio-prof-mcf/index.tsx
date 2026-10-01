@@ -11,6 +11,7 @@ export default function RatioProfMcfChart({ cnuGroups, selectedYear }: Props) {
     const { options, readingKey } = useMemo(() => {
         const points = (cnuGroups || [])
             .flatMap((g: any) => g.cnuSections || [])
+            .sort((a: any, b: any) => a.cnuSectionId - b.cnuSectionId)
             .map((s: any) => ({
                 name: `${s.cnuSectionId} - ${s.cnuSectionLabel}`,
                 x: s.categories?.find((c: any) => /conf[eé]rences/i.test(c.categoryName))?.count || 0,

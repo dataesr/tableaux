@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import ChartWrapper from "../../../../../../../../components/chart-wrapper";
 import { getCssColor } from "../../../../../../../../utils/colors";
 import { createTreemapSectionsOptions } from "./options";
+import { compareCnuCodes } from "../../../../utils";
 
 const GROUP_COLORS = [
     "scale-1",
@@ -29,9 +30,9 @@ export default function TreemapSectionsChart({ cnuGroups, selectedYear }: Props)
     const { options, readingKey } = useMemo(() => {
         if (!cnuGroups?.length) return { options: null, readingKey: null };
 
-        const sorted = [...cnuGroups].sort((a, b) => (b.totalCount || 0) - (a.totalCount || 0));
+        const sorted = [...cnuGroups].sort((a, b) => compareCnuCodes(a.cnuGroupId, b.cnuGroupId));
         const totalSections = sorted.reduce((acc, g) => acc + (g.cnuSections?.length || 0), 0);
-        const largestGroup = sorted[0];
+        const largestGroup = sorted.reduce((max, g) => ((g.totalCount || 0) > (max.totalCount || 0) ? g : max));
 
         const treemapData: Array<{
             id?: string;
@@ -39,6 +40,7 @@ export default function TreemapSectionsChart({ cnuGroups, selectedYear }: Props)
             value?: number;
             parent?: string;
             color?: string;
+            sortIndex?: number;
         }> = [];
 
         sorted.forEach((g, i) => {
@@ -47,6 +49,7 @@ export default function TreemapSectionsChart({ cnuGroups, selectedYear }: Props)
                 id: groupId,
                 name: `Grp ${g.cnuGroupId} - ${g.cnuGroupLabel}`,
                 color: getCssColor(GROUP_COLORS[i % GROUP_COLORS.length]),
+                sortIndex: i,
             });
 
             (g.cnuSections || []).forEach((s: any) => {
@@ -55,6 +58,7 @@ export default function TreemapSectionsChart({ cnuGroups, selectedYear }: Props)
                         name: `${s.cnuSectionId} - ${s.cnuSectionLabel}`,
                         value: s.totalCount,
                         parent: groupId,
+                        sortIndex: s.cnuSectionId,
                     });
                 }
             });

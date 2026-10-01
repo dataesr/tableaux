@@ -6,6 +6,10 @@ const COLLECTION = "faculty-members";
 
 const VALID_VIEWS = ["structure", "discipline", "region", "academie"];
 
+function compareCnuCodes(a, b) {
+  return parseInt(a) - parseInt(b) || String(a).localeCompare(String(b));
+}
+
 function buildMatchStage(view, id, year, scope) {
   const match = {};
   if (year) match.annee_universitaire = year;
@@ -185,122 +189,117 @@ router.get("/faculty-members/dashboard", async (req, res) => {
     const collection = db.collection(COLLECTION);
     const match = buildMatchStage(view, id, year, scope);
 
-    const [
-      genderAgg,
-      statusAgg,
-      ageAgg,
-      rankedItems,
-      contextInfo,
-    ] = await Promise.all([
-      collection
-        .aggregate([
-          { $match: match },
-          { $group: { _id: "$sexe", count: { $sum: "$effectif" } } },
-        ])
-        .toArray(),
-
-      collection
-        .aggregate([
-          { $match: match },
-          {
-            $group: {
-              _id: {
-                status: {
-                  $switch: {
-                    branches: [
-                      {
-                        case: { $eq: ["$is_enseignant_chercheur", true] },
-                        then: "enseignant_chercheur",
-                      },
-                      {
-                        case: {
-                          $and: [
-                            { $eq: ["$is_titulaire", true] },
-                            { $eq: ["$is_enseignant_chercheur", false] },
-                          ],
-                        },
-                        then: "titulaire_non_chercheur",
-                      },
-                    ],
-                    default: "non_titulaire",
-                  },
-                },
-                gender: "$sexe",
-              },
-              count: { $sum: "$effectif" },
-            },
-          },
-          {
-            $group: {
-              _id: "$_id.status",
-              count: { $sum: "$count" },
-              gender_breakdown: {
-                $push: { gender: "$_id.gender", count: "$count" },
-              },
-            },
-          },
-        ])
-        .toArray(),
-
-      collection
-        .aggregate([
-          { $match: match },
-          {
-            $group: {
-              _id: { age_class: "$classe_age3", gender: "$sexe" },
-              count: { $sum: "$effectif" },
-            },
-          },
-          {
-            $group: {
-              _id: "$_id.age_class",
-              total: { $sum: "$count" },
-              gender_breakdown: {
-                $push: { gender: "$_id.gender", count: "$count" },
-              },
-            },
-          },
-          { $sort: { _id: 1 } },
-        ])
-        .toArray(),
-
-      (() => {
-        const topGroupConfig = {
-          structure: {
-            id: "$etablissement_id_paysage",
-            label: "$etablissement_lib",
-          },
-          discipline: {
-            id: "$code_grande_discipline",
-            label: "$grande_discipline",
-          },
-          region: {
-            id: "$etablissement_code_region",
-            label: "$etablissement_region",
-          },
-          academie: {
-            id: "$etablissement_code_academie",
-            label: "$etablissement_academie",
-          },
-        };
-        const topGroup = topGroupConfig[view];
-        const yearMatch = year ? { annee_universitaire: year } : {};
-        return collection
+    const [genderAgg, statusAgg, ageAgg, rankedItems, contextInfo] =
+      await Promise.all([
+        collection
           .aggregate([
-            { $match: yearMatch },
+            { $match: match },
+            { $group: { _id: "$sexe", count: { $sum: "$effectif" } } },
+          ])
+          .toArray(),
+
+        collection
+          .aggregate([
+            { $match: match },
             {
               $group: {
-                _id: { id: topGroup.id, label: topGroup.label },
-                total: { $sum: "$effectif" },
+                _id: {
+                  status: {
+                    $switch: {
+                      branches: [
+                        {
+                          case: { $eq: ["$is_enseignant_chercheur", true] },
+                          then: "enseignant_chercheur",
+                        },
+                        {
+                          case: {
+                            $and: [
+                              { $eq: ["$is_titulaire", true] },
+                              { $eq: ["$is_enseignant_chercheur", false] },
+                            ],
+                          },
+                          then: "titulaire_non_chercheur",
+                        },
+                      ],
+                      default: "non_titulaire",
+                    },
+                  },
+                  gender: "$sexe",
+                },
+                count: { $sum: "$effectif" },
               },
             },
-            { $sort: { total: -1 } },
+            {
+              $group: {
+                _id: "$_id.status",
+                count: { $sum: "$count" },
+                gender_breakdown: {
+                  $push: { gender: "$_id.gender", count: "$count" },
+                },
+              },
+            },
           ])
-          .toArray();
-      })(),
+          .toArray(),
 
-      getContextInfo(collection, view, id),
-    ]);
+        collection
+          .aggregate([
+            { $match: match },
+            {
+              $group: {
+                _id: { age_class: "$classe_age3", gender: "$sexe" },
+                count: { $sum: "$effectif" },
+              },
+            },
+            {
+              $group: {
+                _id: "$_id.age_class",
+                total: { $sum: "$count" },
+                gender_breakdown: {
+                  $push: { gender: "$_id.gender", count: "$count" },
+                },
+              },
+            },
+            { $sort: { _id: 1 } },
+          ])
+          .toArray(),
+
+        (() => {
+          const topGroupConfig = {
+            structure: {
+              id: "$etablissement_id_paysage",
+              label: "$etablissement_lib",
+            },
+            discipline: {
+              id: "$code_grande_discipline",
+              label: "$grande_discipline",
+            },
+            region: {
+              id: "$etablissement_code_region",
+              label: "$etablissement_region",
+            },
+            academie: {
+              id: "$etablissement_code_academie",
+              label: "$etablissement_academie",
+            },
+          };
+          const topGroup = topGroupConfig[view];
+          const yearMatch = year ? { annee_universitaire: year } : {};
+          return collection
+            .aggregate([
+              { $match: yearMatch },
+              {
+                $group: {
+                  _id: { id: topGroup.id, label: topGroup.label },
+                  total: { $sum: "$effectif" },
+                },
+              },
+              { $sort: { total: -1 } },
+            ])
+            .toArray();
+        })(),
+
+        getContextInfo(collection, view, id),
+      ]);
 
     const total_count = genderAgg.reduce((s, g) => s + g.count, 0);
 
@@ -354,10 +353,7 @@ router.get("/faculty-members/evolution", async (req, res) => {
     const collection = db.collection(COLLECTION);
     const match = buildMatchStage(view, id);
 
-    const [
-      globalEvolution,
-      contextInfo,
-    ] = await Promise.all([
+    const [globalEvolution, contextInfo] = await Promise.all([
       collection
         .aggregate([
           { $match: match },
@@ -1023,20 +1019,22 @@ router.get("/faculty-members/research-teachers", async (req, res) => {
         totalCount: group.groupTotal,
         ageDistribution: group.ageDistribution,
         categories: group.categories,
-        cnuSections: group.sections.map((section) => ({
-          cnuSectionId: section.sectionCode,
-          cnuSectionLabel: section.sectionName,
-          maleCount: section.maleCount,
-          femaleCount: section.femaleCount,
-          totalCount: section.totalCount,
-          ageDistribution: ageClasses.map((ageClass) => ({
-            ageClass,
-            count:
-              section.ageDistribution.find((a) => a.ageClass === ageClass)
-                ?.count || 0,
+        cnuSections: [...group.sections]
+          .sort((a, b) => a.sectionCode - b.sectionCode)
+          .map((section) => ({
+            cnuSectionId: section.sectionCode,
+            cnuSectionLabel: section.sectionName,
+            maleCount: section.maleCount,
+            femaleCount: section.femaleCount,
+            totalCount: section.totalCount,
+            ageDistribution: ageClasses.map((ageClass) => ({
+              ageClass,
+              count:
+                section.ageDistribution.find((a) => a.ageClass === ageClass)
+                  ?.count || 0,
+            })),
+            categories: section.categories,
           })),
-          categories: section.categories,
-        })),
       })),
       categoryDistribution: categoryDistribution.map((cat) => ({
         categoryCode: cat._id.category_code,
@@ -1696,20 +1694,22 @@ router.get("/faculty-members/2nd-degree-teachers", async (req, res) => {
         totalCount: group.groupTotal,
         ageDistribution: group.ageDistribution,
         categories: group.categories,
-        cnuSections: group.sections.map((section) => ({
-          cnuSectionId: section.sectionCode,
-          cnuSectionLabel: section.sectionName,
-          maleCount: section.maleCount,
-          femaleCount: section.femaleCount,
-          totalCount: section.totalCount,
-          ageDistribution: ageClasses.map((ageClass) => ({
-            ageClass,
-            count:
-              section.ageDistribution.find((a) => a.ageClass === ageClass)
-                ?.count || 0,
+        cnuSections: [...group.sections]
+          .sort((a, b) => a.sectionCode - b.sectionCode)
+          .map((section) => ({
+            cnuSectionId: section.sectionCode,
+            cnuSectionLabel: section.sectionName,
+            maleCount: section.maleCount,
+            femaleCount: section.femaleCount,
+            totalCount: section.totalCount,
+            ageDistribution: ageClasses.map((ageClass) => ({
+              ageClass,
+              count:
+                section.ageDistribution.find((a) => a.ageClass === ageClass)
+                  ?.count || 0,
+            })),
+            categories: section.categories,
           })),
-          categories: section.categories,
-        })),
       })),
       categoryDistribution: categoryDistribution.map((cat) => ({
         categoryCode: cat._id.category_code,
@@ -2597,7 +2597,6 @@ router.get("/faculty-members/cnu-list", async (req, res) => {
           {
             $group: { _id: { code: "$code_groupe_cnu", label: "$groupe_cnu" } },
           },
-          { $sort: { "_id.code": 1 } },
           { $project: { _id: 0, code: "$_id.code", label: "$_id.label" } },
         ])
         .toArray(),
@@ -2626,6 +2625,7 @@ router.get("/faculty-members/cnu-list", async (req, res) => {
         .toArray(),
     ]);
 
+    groupes.sort((a, b) => compareCnuCodes(a.code, b.code));
     res.json({ groupes, sections });
   } catch (error) {
     console.error("Error fetching CNU list:", error);
@@ -2689,7 +2689,7 @@ router.get("/faculty-members/analyses", async (req, res) => {
       discYearAgg,
       discGenderAgg,
       cnuGroupYearAgg,
-      cnuSectionTopAgg,
+      cnuSectionAgg,
       gradeGenderAgg,
       ageGenderAgg,
     ] = await Promise.all([
@@ -2876,7 +2876,7 @@ router.get("/faculty-members/analyses", async (req, res) => {
               yearly: { $push: { year: "$_id.year", g: "$_id.g", c: "$c" } },
             },
           },
-          { $sort: { total: -1 } },
+          { $sort: { "_id.code": 1 } },
         ])
         .toArray(),
 
@@ -2988,18 +2988,9 @@ router.get("/faculty-members/analyses", async (req, res) => {
       })
     );
 
-    const cnuGroupTotals = new Map();
-    cnuGroupYearAgg.forEach((e) =>
-      e.groups.forEach((g) => {
-        const k = String(g.code);
-        cnuGroupTotals.set(k, (cnuGroupTotals.get(k) || 0) + g.c);
-      })
-    );
-    const cnuGroupCodes = [...cnuGroupCodesMap.keys()].sort(
-      (a, b) => (cnuGroupTotals.get(b) || 0) - (cnuGroupTotals.get(a) || 0)
-    );
+    const cnuGroupCodes = [...cnuGroupCodesMap.keys()].sort(compareCnuCodes);
 
-    const cnuSections = cnuSectionTopAgg.map((s) => ({
+    const cnuSections = cnuSectionAgg.map((s) => ({
       code: String(s._id.code),
       name: s._id.name,
       total: s.total,
