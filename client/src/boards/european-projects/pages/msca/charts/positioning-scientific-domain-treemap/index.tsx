@@ -54,10 +54,7 @@ function PositioningScientificDomainTreemapInner({ currentLang: propLang }: Posi
     );
   }
 
-  const options = Options({
-    data,
-    currentLang,
-  });
+  const options = Options({ data });
 
   const title = getI18nLabel(i18n, "chart-title", currentLang);
   config.title.fr = title;

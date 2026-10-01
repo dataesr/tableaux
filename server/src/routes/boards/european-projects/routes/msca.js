@@ -33,7 +33,7 @@ router.route("/european-projects/msca/synthesis").get(async (req, res) => {
     {
       $group: {
         _id: "$country_code",
-        total_funding_project: { $sum: "$fund_eur" },
+        total_funding_project: { $sum: "$calculated_fund" },
         total_involved: { $sum: "$number_involved" },
         total_pi: {
           $sum: { $cond: [{ $eq: ["$role_participant", "Coordinator"] }, "$number_involved", 0] },
@@ -132,7 +132,7 @@ router.route("/european-projects/msca/synthesis-by-destination").get(async (req,
             country_name_en: "$country_name_en",
             stage: "$stage",
           },
-          total_funding_project: { $sum: "$fund_eur" },
+          total_funding_project: { $sum: "$calculated_fund" },
           total_involved: { $sum: "$number_involved" },
           total_pi: {
             $sum: { $cond: [{ $eq: ["$role_participant", "Coordinator"] }, "$number_involved", 0] },
@@ -223,7 +223,7 @@ router.route("/european-projects/msca/synthesis-by-panel").get(async (req, res) 
   const data = await db
     .collection(COLLECTION_NAME)
     .aggregate([
-      { $match: { ...filters, panel_id: { $ne: null, $exists: true } } },
+      { $match: { ...filters, panel_code: { $ne: null, $exists: true } } },
       {
         $group: {
           _id: {
@@ -234,7 +234,7 @@ router.route("/european-projects/msca/synthesis-by-panel").get(async (req, res) 
             country_name_en: "$country_name_en",
             stage: "$stage",
           },
-          total_funding_project: { $sum: "$fund_eur" },
+          total_funding_project: { $sum: "$calculated_fund" },
           total_involved: { $sum: "$number_involved" },
           total_pi: {
             $sum: { $cond: [{ $eq: ["$role_participant", "Coordinator"] }, "$number_involved", 0] },
@@ -381,7 +381,7 @@ router.route("/european-projects/msca/evolution").get(async (req, res) => {
           destination_code: "$destination_code",
           destination_name_en: "$destination_name_en",
         },
-        total_funding_project: { $sum: "$fund_eur" },
+        total_funding_project: { $sum: "$calculated_fund" },
         total_involved: { $sum: "$number_involved" },
       },
     },
@@ -464,7 +464,7 @@ router.route("/european-projects/msca/evolution-by-panel").get(async (req, res) 
           panel_id: "$panel_code",
           panel_name: "$panel_name",
         },
-        total_funding: { $sum: "$fund_eur" },
+        total_funding: { $sum: "$calculated_fund" },
         total_involved: { $sum: "$number_involved" },
       },
     },
