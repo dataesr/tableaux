@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import ChartWrapper from "../../../../../../../../components/chart-wrapper";
 import { FM_METRICS_CONFIG, type FmMetricKey } from "../../config";
+import type { ViewType } from "../../../../api";
 import { createFmComparisonBarOptions } from "./options";
 import { formatNumber, formatToPercent } from "../../../../../../../../utils/format";
 
@@ -8,22 +9,29 @@ interface Props {
     data: any[];
     currentId?: string;
     currentName?: string;
+    viewType: ViewType;
     selectedMetric: string;
     selectedYear: string;
     labelOverride?: string;
 }
 
-function getRank(data: any[], currentId: string | undefined, dataKey: FmMetricKey): string {
-    if (!currentId) return "";
+const VIEW_PLURAL: Record<ViewType, string> = {
+    structure: "établissements",
+    region: "régions",
+    academie: "académies",
+    discipline: "disciplines",
+};
+
+function getRank(data: any[], currentId: string | undefined, dataKey: FmMetricKey) {
+    if (!currentId) return null;
     const sorted = [...data]
         .filter((item) => item[dataKey] != null)
         .sort((a, b) => (b[dataKey] as number) - (a[dataKey] as number));
     const rank = sorted.findIndex((item) => item.etablissement_id_paysage_actuel === currentId) + 1;
-    if (!rank) return "";
-    return `${rank}e / ${sorted.length}`;
+    return rank ? { rank, total: sorted.length } : null;
 }
 
-export default function ComparisonBarChart({ data, currentId, currentName, selectedMetric, selectedYear, labelOverride }: Props) {
+export default function ComparisonBarChart({ data, currentId, currentName, viewType, selectedMetric, selectedYear, labelOverride }: Props) {
     const isDynamic = selectedMetric.startsWith("groupe_cnu:") || selectedMetric.startsWith("section_cnu:") || selectedMetric.startsWith("assimil:");
     const dataKey = (isDynamic ? "total_effectif" : selectedMetric) as FmMetricKey;
     const config = FM_METRICS_CONFIG[dataKey] ?? FM_METRICS_CONFIG["total_effectif"];
@@ -48,7 +56,15 @@ export default function ComparisonBarChart({ data, currentId, currentName, selec
         : null;
 
     const readingKey = currentName && formattedValue && rank
-        ? { fr: (<><strong>{currentName}</strong> : {formattedValue} — rang <strong>{rank}</strong></>) }
+        ? {
+            fr: (
+                <>
+                    <strong>{currentName}</strong> se classe au{" "}
+                    <strong>{rank.rank === 1 ? "1er" : `${rank.rank}e`} rang</strong> sur {rank.total}{" "}
+                    {VIEW_PLURAL[viewType]} ({formattedValue}).
+                </>
+            ),
+        }
         : null;
 
     return (

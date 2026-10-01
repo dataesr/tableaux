@@ -86,8 +86,9 @@ export default function ComparaisonSection({ viewType, selectedId, selectedYear 
                     ) : (
                         <ComparisonBarChart
                             data={filteredItems}
-                            currentId={selectedId}
+                            currentId={currentItem?.etablissement_id_paysage_actuel}
                             currentName={entityName}
+                            viewType={viewType}
                             selectedMetric={selectedMetric}
                             selectedYear={selectedYear}
                             labelOverride={selectedMetricLabel || undefined}

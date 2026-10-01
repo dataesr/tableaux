@@ -122,9 +122,9 @@ export function createFmComparisonBarOptions(
               marker: {
                 radius: 9,
                 symbol: "diamond",
-                fillColor: getCssColor("blue-france-main-525"),
+                fillColor: getCssColor("red-marianne-main-472"),
                 lineWidth: 2,
-                lineColor: getCssColor("blue-france-sun-113"),
+                lineColor: getCssColor("background-default-grey"),
               },
               dataLabels: {
                 enabled: true,
@@ -136,7 +136,7 @@ export function createFmComparisonBarOptions(
                 style: {
                   fontSize: "12px",
                   fontWeight: "600",
-                  color: getCssColor("blue-france-main-525"),
+                  color: getCssColor("text-default-grey"),
                 },
               },
             } as any,

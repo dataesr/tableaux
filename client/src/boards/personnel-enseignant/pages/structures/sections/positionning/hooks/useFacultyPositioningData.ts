@@ -53,7 +53,7 @@ export function useFacultyPositioningData(
     // Un filtre n'est appliqué que s'il est proposé (donc visible) pour l'entité courante.
     const available = getAvailablePositioningFilters(viewType, currentItem);
     return allItems.filter((item) => {
-      if (item.etablissement_id_paysage_actuel === selectedId) return true;
+      if (item === currentItem) return true;
 
       if (available.type && filters.type === "same-type") {
         if (item.etablissement_type !== currentItem.etablissement_type)
