@@ -11,6 +11,7 @@ export default function AgeDistributionChart({
     ageDistribution,
     selectedYear,
 }: AgeDistributionChartProps) {
+    const title = `Répartition par tranche d'âge et par genre (${selectedYear})`;
     const { options, readingKey } = useMemo(() => {
         if (!ageDistribution?.length) return { options: null, readingKey: null };
 
@@ -19,7 +20,7 @@ export default function AgeDistributionChart({
         const largestPct = total > 0 ? ((largest.total / total) * 100).toFixed(1) : "0";
 
         return {
-            options: createAgeDistributionOptions(ageDistribution),
+            options: createAgeDistributionOptions(ageDistribution, title),
             readingKey: {
                 fr: (
                     <>
@@ -32,7 +33,7 @@ export default function AgeDistributionChart({
                 ),
             },
         };
-    }, [ageDistribution, selectedYear]);
+    }, [ageDistribution, selectedYear, title]);
 
     if (!options) return null;
 
@@ -41,7 +42,7 @@ export default function AgeDistributionChart({
             config={{
                 id: "ec-age-distribution",
                 title: {
-                    fr: `Répartition par tranche d'âge et par genre (${selectedYear})`,
+                    fr: title,
                     size: "h2" as const,
                     look: "h6" as const,
                 },

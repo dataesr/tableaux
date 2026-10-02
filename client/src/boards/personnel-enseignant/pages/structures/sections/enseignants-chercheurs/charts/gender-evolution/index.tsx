@@ -6,6 +6,8 @@ interface GenderEvolutionChartProps {
     genderEvolution: any[];
 }
 
+const TITLE = "Évolution de la parité femmes-hommes";
+
 export default function GenderEvolutionChart({
     genderEvolution,
 }: GenderEvolutionChartProps) {
@@ -25,7 +27,7 @@ export default function GenderEvolutionChart({
         const diff = lastShare - firstShare;
 
         return {
-            options: createGenderEvolutionOptions(genderEvolution),
+            options: createGenderEvolutionOptions(genderEvolution, TITLE),
             readingKey: {
                 fr: (
                     <>
@@ -47,7 +49,7 @@ export default function GenderEvolutionChart({
             config={{
                 id: "ec-gender-evolution",
                 title: {
-                    fr: "Évolution de la parité femmes-hommes",
+                    fr: TITLE,
                     size: "h2" as const,
                     look: "h6" as const,
                 },

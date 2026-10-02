@@ -11,9 +11,10 @@ export default function AgeCategoryHeatmapChart({
     categoryDistribution,
     selectedYear,
 }: AgeCategoryHeatmapChartProps) {
+    const title = `Tranche d'âge par catégorie (${selectedYear})`;
     const options = useMemo(
-        () => createAgeCategoryHeatmapOptions(categoryDistribution || []),
-        [categoryDistribution]
+        () => createAgeCategoryHeatmapOptions(categoryDistribution || [], title),
+        [categoryDistribution, title]
     );
 
     if (!options) return null;
@@ -23,7 +24,7 @@ export default function AgeCategoryHeatmapChart({
             config={{
                 id: "ec-age-category-heatmap",
                 title: {
-                    fr: `Tranche d'âge par catégorie (${selectedYear})`,
+                    fr: title,
                     size: "h2" as const,
                     look: "h6" as const,
                 },

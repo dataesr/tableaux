@@ -4,7 +4,8 @@ import { getCssColor } from "../../../../../../../../utils/colors";
 import { AGE_CLASSES } from "../../../../../../config/age-classes";
 
 export function createAgeCategoryHeatmapOptions(
-    categoryDistribution: any[]
+    categoryDistribution: any[],
+    title: string
 ): Highcharts.Options | null {
     if (!categoryDistribution?.length) return null;
 
@@ -24,6 +25,11 @@ export function createAgeCategoryHeatmapOptions(
 
     return createChartOptions("bar", {
         chart: { height: Math.max(240, 70 + categories.length * 42) },
+        title: { text: title, style: { display: "none" } },
+        accessibility: {
+            description:
+                "Barres empilées à 100 % : pour chaque catégorie d'enseignants-chercheurs, répartition des effectifs par tranche d'âge.",
+        },
         xAxis: { categories, title: { text: null } },
         yAxis: {
             min: 0,

@@ -3,7 +3,8 @@ import { createChartOptions } from "../../../../../../../../components/chart-wra
 import { getCssColor } from "../../../../../../../../utils/colors";
 
 export function createGenderEvolutionOptions(
-    genderEvolution: any[]
+    genderEvolution: any[],
+    title: string
 ): Highcharts.Options {
     const categories = genderEvolution.map((e: any) => e._id);
 
@@ -19,6 +20,11 @@ export function createGenderEvolutionOptions(
 
     return createChartOptions("area", {
         chart: { height: 350 },
+        title: { text: title, style: { display: "none" } },
+        accessibility: {
+            description:
+                "Aires empilées à 100 % : évolution de la part des femmes et des hommes parmi les enseignants-chercheurs, par année universitaire.",
+        },
         xAxis: {
             categories,
             title: { text: null },
