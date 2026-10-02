@@ -13,6 +13,12 @@ interface MetricCardProps {
     isExpanded?: boolean;
 }
 
+function formatValue(value: number, unit: string) {
+    if (unit === "%") return value.toFixed(1) + " %";
+    const formatted = value.toLocaleString("fr-FR", { maximumFractionDigits: 0 });
+    return unit ? `${formatted} ${unit}` : formatted;
+}
+
 export default function MetricCard({
     title,
     value,
@@ -90,16 +96,8 @@ export default function MetricCard({
                 borderColor: "var(--border-default-grey)",
                 style: { color: "var(--text-default-grey)", zIndex: 9999 },
                 formatter: function () {
-                    const val = this.y as number;
                     const year = years[(this as any).point?.index ?? this.x];
-                    let formatted: string;
-                    if (unit === "%") {
-                        formatted = val.toFixed(1) + " %";
-                    } else {
-                        formatted = val.toLocaleString("fr-FR", { maximumFractionDigits: 0 });
-                        if (unit) formatted += ` ${unit}`;
-                    }
-                    return `<b>${year}</b><br/>${formatted}`;
+                    return `<b>${year}</b><br/>${formatValue(this.y as number, unit)}`;
                 },
             },
             series: [{ type: "areaspline", name: title, data: values }],
@@ -145,6 +143,13 @@ export default function MetricCard({
                             {detail}
                         </p>
                     )}
+                    {hasChart && (
+                        <p className="fr-sr-only">
+                            Évolution de {evolutionData[0].year} à {evolutionData[evolutionData.length - 1].year} : de{" "}
+                            {formatValue(evolutionData[0].value, unit)} à{" "}
+                            {formatValue(evolutionData[evolutionData.length - 1].value, unit)}.
+                        </p>
+                    )}
                 </div>
             </div>
             {onToggle && (
@@ -158,8 +163,8 @@ export default function MetricCard({
                 />
             )}
             {hasChart && (
-                <div style={{ position: "relative", flex: "0 0 auto", order: 2 }}>
-                    <div ref={chartRef} aria-hidden="true" style={{ width: "100%" }} />
+                <div aria-hidden="true" style={{ position: "relative", flex: "0 0 auto", order: 2 }}>
+                    <div ref={chartRef} style={{ width: "100%" }} />
                     {evolutionData && evolutionData.length >= 2 && (
                         <div
                             style={{

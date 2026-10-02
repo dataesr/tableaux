@@ -13,6 +13,7 @@ interface MapOptionsParams {
         female_percent: number;
     }>;
     maxValue: number;
+    title: string;
     clickable?: boolean;
 }
 
@@ -30,6 +31,7 @@ const fmt = (n?: number) => (n ?? 0).toLocaleString("fr-FR");
 export function createFranceMapOptions({
     chartData,
     maxValue,
+    title,
     clickable = false,
 }: MapOptionsParams): Highcharts.Options {
     const femmesColor = getCssColor("fm-femmes");
@@ -71,7 +73,7 @@ export function createFranceMapOptions({
             spacing: [8, 0, 8, 0],
             style: { fontFamily: "Marianne, sans-serif" },
         },
-        title: { text: "" },
+        title: { text: title, style: { display: "none" } },
         exporting: { enabled: false },
         credits: { enabled: false },
         accessibility: {

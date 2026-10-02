@@ -23,6 +23,7 @@ export default function FranceMap({
     asideList = false,
 }: FranceMapProps) {
     const { data: mapData, isLoading } = useFacultyMapData(year, level);
+    const chartTitle = title || `Répartition par région du siège de l'établissement (${year})`;
 
     const regionMapping = useMemo(() => {
         const mapping: Record<string, string> = {};
@@ -60,6 +61,7 @@ export default function FranceMap({
             options: createFranceMapOptions({
                 chartData,
                 maxValue,
+                title: chartTitle,
                 clickable: !!onRegionClick,
             }),
             readingKey: {
@@ -77,7 +79,7 @@ export default function FranceMap({
                 ),
             },
         };
-    }, [mapData, regionMapping, onRegionClick]);
+    }, [mapData, regionMapping, onRegionClick, chartTitle]);
 
     const regionList = useMemo(() => {
         if (!mapData?.regions?.length) return [];
@@ -126,7 +128,7 @@ export default function FranceMap({
             config={{
                 id: `faculty-map-france-${level}`,
                 title: {
-                    fr: title || `Répartition par région du siège de l'établissement (${year})`,
+                    fr: chartTitle,
                     look: "h5" as const,
                 },
                 readingKey,
