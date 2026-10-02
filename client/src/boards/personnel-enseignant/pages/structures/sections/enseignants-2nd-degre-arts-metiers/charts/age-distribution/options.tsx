@@ -4,7 +4,8 @@ import { getCssColor } from "../../../../../../../../utils/colors";
 import { AGE_CLASSES } from "../../../../../../config/age-classes";
 
 export function createAgeDistributionOptions(
-    ageDistribution: any[]
+    ageDistribution: any[],
+    title: string
 ): Highcharts.Options {
     const sorted = AGE_CLASSES.map((a) => a.key)
         .map((age) => ageDistribution.find((a: any) => a._id === age))
@@ -29,6 +30,11 @@ export function createAgeDistributionOptions(
 
     return createChartOptions("bar", {
         chart: { height: 280 },
+        title: { text: title, style: { display: "none" } },
+        accessibility: {
+            description:
+                "Pyramide des âges : effectifs de femmes et d'hommes enseignants du 2nd degré et Arts et Métiers par tranche d'âge.",
+        },
         xAxis: {
             categories,
             title: { text: null },
@@ -67,6 +73,9 @@ export function createAgeDistributionOptions(
                 name: "Hommes",
                 data: maleData,
                 color: getCssColor("fm-hommes"),
+                accessibility: {
+                    point: { valueDescriptionFormat: "{xDescription}, {subtract 0 point.y}." },
+                },
             },
             {
                 type: "bar",
