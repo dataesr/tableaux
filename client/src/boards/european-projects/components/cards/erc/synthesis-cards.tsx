@@ -66,7 +66,7 @@ export default function ErcSynthesisCards({
 
   return (
     <Row className="erc-synthesis-cards" gutters>
-      <Col md={4}>
+      <Col xs={12} md={4}>
         {/* Part du budget capté */}
         <ErcCard
           label={`Part du budget capté par les équipes ${adjFemPlural}`}
@@ -79,7 +79,7 @@ export default function ErcSynthesisCards({
           tooltipText={`Budget total lauréat: ${formatCurrency(totalBudgetSuccessful)}`}
         />
       </Col>
-      <Col md={4}>
+      <Col xs={12} md={4}>
         {/* Part des projets lauréats */}
         <ErcCard
           label={`Part des projets lauréats avec participation ${countryAdj.f}`}
@@ -92,7 +92,7 @@ export default function ErcSynthesisCards({
           tooltipText={`Total projets lauréats: ${formatNumber(totalProjectsSuccessful)}`}
         />
       </Col>
-      <Col md={4}>
+      <Col xs={12} md={4}>
         {/* Part des porteurs (PI) */}
         <ErcCard
           label={`Part des porteurs ${adjMascPlural} (PI) dans les projets lauréats`}
@@ -105,7 +105,7 @@ export default function ErcSynthesisCards({
           tooltipText={`Total porteurs: ${formatNumber(totalPiSuccessful)}`}
         />
       </Col>
-      <Col md={4}>
+      <Col xs={12} md={4}>
         {/* Taux de succès sur les financements */}
         <ErcCard
           label="Taux de succès global sur les financements"
@@ -116,7 +116,7 @@ export default function ErcSynthesisCards({
           tooltipText="Ratio entre financements lauréats et financements demandés"
         />
       </Col>
-      <Col md={4}>
+      <Col xs={12} md={4}>
         {/* Taux de succès sur le nombre de projets */}
         <ErcCard
           label="Taux de succès global sur le nombre de projets"
@@ -127,7 +127,7 @@ export default function ErcSynthesisCards({
           tooltipText="Ratio entre projets lauréats et projets évalués"
         />
       </Col>
-      <Col md={4}>
+      <Col xs={12} md={4}>
         {/* Taux de succès individuel des porteurs */}
         <ErcCard
           label={`Taux de succès des porteurs ${adjMascPlural} (PI)`}

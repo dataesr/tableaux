@@ -30,7 +30,7 @@ export default function Home() {
       <section className="ep-home__hero">
         <Container>
           <Row gutters>
-            <Col md={8}>
+            <Col xs={12} md={8}>
               <p className="ep-home__hero-badge">TABLEAU DE BORD</p>
               <Title as="h1" look="h2" className="ep-home__hero-title">
                 {getI18nLabel("title1")}
@@ -76,7 +76,7 @@ export default function Home() {
           <Row gutters>
             {dataPillars &&
               dataPillars.map((pillar) => (
-                <Col md={6} key={pillar.id}>
+                <Col xs={12} md={4} key={pillar.id}>
                   <PillarCard description={getI18nLabel(`${pillar.id}-description`)} title={pillar[`label_${currentLang}`]} subtitle={pillar.id} to={`/european-projects/horizon-europe?section=synthesis&pillarId=${pillar.id}`} titleAs="h3" />
                 </Col>
               ))}
@@ -90,7 +90,7 @@ export default function Home() {
             Focus
           </Title>
           <Row gutters>
-            <Col md={6}>
+            <Col xs={12} md={4}>
               <MscaCard
                 title="MSCA"
                 subtitle="Actions Marie Sklodowska-Curie"
@@ -99,7 +99,7 @@ export default function Home() {
                 titleAs="h3"
               />
             </Col>
-            <Col md={6}>
+            <Col xs={12} md={4}>
               <ErcCard
                 title="ERC"
                 subtitle="Le Conseil Européen de la Recherche"
@@ -115,10 +115,10 @@ export default function Home() {
       <section className="ep-home__section">
         <Container>
           <Row gutters>
-            <Col md={12}>
+            <Col xs={12} md={4}>
               <Timeline />
             </Col>
-            <Col md={12} className="text-center">
+            <Col xs={12} md={4} className="text-center">
               <Link href="/european-projects/evolution-pcri" className="fr-link fr-link--icon-right">
                 Visualisez et analysez l'évolution des programmes européens de recherche
                 <span className="fr-fi-arrow-right-line fr-link__icon fr-link__icon--right" />

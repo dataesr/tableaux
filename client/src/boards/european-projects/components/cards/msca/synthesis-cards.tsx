@@ -52,7 +52,7 @@ export default function MscaSynthesisCards({
 
   return (
     <Row className="msca-synthesis-cards" gutters>
-      <Col md={4}>
+      <Col xs={12} md={4}>
         <MscaCard
           label={`Part du budget MSCA capté par les équipes ${adjFemPlural}`}
           value={formatToRates(fundingShare)}
@@ -64,7 +64,7 @@ export default function MscaSynthesisCards({
           tooltipText={`Budget total des projets lauréats : ${formatCurrency(totalFundingSuccessful)}`}
         />
       </Col>
-      <Col md={4}>
+      <Col xs={12} md={4}>
         <MscaCard
           label={`Part des projets lauréats avec participation ${countryAdj.f}`}
           value={formatToRates(projectsShare)}
@@ -76,7 +76,7 @@ export default function MscaSynthesisCards({
           tooltipText={`Total projets lauréats : ${formatNumber(totalProjectsSuccessful)}`}
         />
       </Col>
-      <Col md={4}>
+      <Col xs={12} md={4}>
         <MscaCard
           label={`Coordinateurs ${adjMascPlural} dans les projets lauréats`}
           value={formatNumber(countryCoordinations)}
@@ -86,7 +86,7 @@ export default function MscaSynthesisCards({
           tooltipText="Nombre de participations en tant que coordinateur dans des projets lauréats"
         />
       </Col>
-      <Col md={4}>
+      <Col xs={12} md={4}>
         <MscaCard
           label="Taux de succès global sur le nombre de projets"
           value={formatToRates(successRateProjects)}
@@ -96,7 +96,7 @@ export default function MscaSynthesisCards({
           tooltipText="Ratio entre projets lauréats et projets évalués (tous pays)"
         />
       </Col>
-      <Col md={4}>
+      <Col xs={12} md={4}>
         <MscaCard
           label={`Taux de succès des équipes ${adjFemPlural}`}
           value={formatToRates(countrySuccessRate)}

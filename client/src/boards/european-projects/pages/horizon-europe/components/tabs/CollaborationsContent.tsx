@@ -7,7 +7,7 @@ import Callout from "../../../../../../components/callout";
 import CountriesCollaborationsBubble from "../../../collaborations/charts/countries-collaborations-bubble";
 import CountriesCollaborationsTable from "../../../collaborations/charts/countries-collaborations-table";
 import CountryNeighbourgs from "../../../collaborations/charts/country-neighbourgs";
-import CountryLanguages from "../../../collaborations/charts/countries-languages";
+// import CountryLanguages from "../../../collaborations/charts/countries-languages";
 import EntityVariablePie from "../../../collaborations/charts/entity-variable-pie";
 import MapOfEuropeCollaborationsFlow from "../../../collaborations/charts/map-of-europe-collaborations-flow";
 
@@ -69,10 +69,10 @@ export default function CollaborationsContent() {
         </Col>
       </Row>
       <Row>
-        <Col md={6}>
+        <Col xs={12} md={6}>
           <MapOfEuropeCollaborationsFlow nbToShow={nbToShow} />
         </Col>
-        <Col md={6}>
+        <Col xs={12} md={6}>
           <CountriesCollaborationsBubble nbToShow={nbToShow} />
         </Col>
       </Row>
@@ -90,22 +90,22 @@ export default function CollaborationsContent() {
             {getI18nLabel(i18n, "focus-on-europe-title", currentLang)}
           </Title>
           <Row gutters>
-            <Col md={7}>
+            <Col xs={12} md={7}>
               <EuropeanCards />
             </Col>
-            <Col>
+            <Col xs={12}>
               <EuropeanMap />
             </Col>
           </Row>
         </>
       )}
       <Row gutters>
-        <Col>
+        <Col xs={12}>
           <CountryNeighbourgs />
         </Col>
-        <Col>
+        {/* <Col>
           <CountryLanguages />
-        </Col>
+        </Col> */}
       </Row>
       <Row className="fr-mt-5w">
         <Col>

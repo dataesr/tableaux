@@ -109,7 +109,7 @@ export default function FundingRankingCoordination() {
         </Col>
       </Row>
       <Row className="chart-container chart-container--default">
-        <Col md={6}>
+        <Col xs={12} md={6}>
           <Title as="h3" look="h5" style={{ minHeight: "4.5rem", lineHeight: "1.5rem" }} className="fr-mb-0">
             {getI18nLabel("configChart2a-title")}
           </Title>
@@ -119,7 +119,7 @@ export default function FundingRankingCoordination() {
             renderData={() => renderDataTableCoordination(prepareData(data, "total_coordination_number_successful"), currentLang, searchParams.get("country_code") ?? null)}
           />
         </Col>
-        <Col md={6}>
+        <Col xs={12} md={6}>
           <Title as="h3" look="h5" style={{ minHeight: "4.5rem", lineHeight: "1.5rem" }} className="fr-mb-0">
             {getI18nLabel("configChart2b-title")}
           </Title>
@@ -129,7 +129,7 @@ export default function FundingRankingCoordination() {
             renderData={() => renderDataTableCoordinationSuccessRate(prepareData(data, "total_coordination_number_successful"), currentLang, searchParams.get("country_code") ?? null)}
           />
         </Col>
-        <Col md={12} className="chart-footer">
+        <Col xs={12} md={12} className="chart-footer">
           <ChartFooter
             comment={{
               fr: (

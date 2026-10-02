@@ -9,10 +9,10 @@ export default function PillarsFunding() {
   return (
     <Container fluid>
       <Row className="chart-container chart-container--default">
-        <Col md={8}>
+        <Col xs={12} md={8}>
           <FundingValues />
         </Col>
-        <Col md={4}>
+        <Col xs={12} md={4}>
           <FundingSuccessRates />
         </Col>
         <Col md={12} className="chart-footer">

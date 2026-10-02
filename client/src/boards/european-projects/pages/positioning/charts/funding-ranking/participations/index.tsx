@@ -110,7 +110,7 @@ export default function FundingRankingParticipations() {
         </Col>
       </Row>
       <Row className="chart-container chart-container--default">
-        <Col>
+        <Col xs={12}>
           <Title as="h3" look="h5" style={{ minHeight: "4.5rem", lineHeight: "1.5rem" }} className="fr-mb-0">
             {getI18nLabel("configChart3a-title")}
           </Title>
@@ -120,7 +120,7 @@ export default function FundingRankingParticipations() {
             renderData={() => renderDataTableParticipations(prepareData(data, "total_number_involved_successful"), currentLang, searchParams.get("country_code") ?? null)}
           />
         </Col>
-        <Col>
+        <Col xs={12}>
           <Title as="h3" look="h5" style={{ minHeight: "4.5rem", lineHeight: "1.5rem" }} className="fr-mb-0">
             {getI18nLabel("configChart3b-title")}
           </Title>
@@ -130,7 +130,7 @@ export default function FundingRankingParticipations() {
             renderData={() => renderDataTableParticipationsSuccessRate(prepareData(data, "total_number_involved_successful"), currentLang, searchParams.get("country_code") ?? null)}
           />
         </Col>
-        <Col md={12} className="chart-footer">
+        <Col xs={12} md={12} className="chart-footer">
           <ChartFooter
             comment={{
               fr: (

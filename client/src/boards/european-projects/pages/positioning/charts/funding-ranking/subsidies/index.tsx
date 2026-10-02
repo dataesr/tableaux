@@ -109,7 +109,7 @@ export default function FundingRankingSubsidies() {
         </Col>
       </Row>
       <Row className="chart-container chart-container--default">
-        <Col>
+        <Col xs={12}>
           <Title as="h3" look="h5" style={{ minHeight: "4.5rem", lineHeight: "1.5rem" }} className="fr-mb-0">
             {getI18nLabel("configChart1a-title")}
           </Title>
@@ -119,7 +119,7 @@ export default function FundingRankingSubsidies() {
             renderData={() => renderDataTableSubsidies(prepareData(data, "total_successful"), currentLang, searchParams.get("country_code") ?? null)}
           />
         </Col>
-        <Col>
+        <Col xs={12}>
           <Title as="h3" look="h5" style={{ minHeight: "4.5rem", lineHeight: "1.5rem" }} className="fr-mb-0">
             {getI18nLabel("configChart1b-title")}
           </Title>
@@ -129,7 +129,7 @@ export default function FundingRankingSubsidies() {
             renderData={() => renderDataTableSuccessRate(prepareData(data, "total_successful"), currentLang, searchParams.get("country_code") ?? null)}
           />
         </Col>
-        <Col md={12} className="chart-footer">
+        <Col xs={12} md={12} className="chart-footer">
           <ChartFooter
             comment={{
               fr: (

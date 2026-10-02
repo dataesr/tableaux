@@ -1,17 +1,17 @@
 import { useState, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { getFilters, getPrograms, getThematics, getDestinations } from "../../api";
-
 import { Container, Row, Col, Checkbox } from "@dataesr/dsfr-plus";
 
-import i18nLocal from "./i18n.json";
+import { getFilters, getPrograms, getThematics, getDestinations } from "../../api";
+import { getI18nLabel } from "../../../../utils";
 import i18nGlobal from "../../i18n-global.json";
-const i18n = { ...i18nGlobal, ...i18nLocal };
+import i18nLocal from "./i18n.json";
+import RangeOfYears from "../../../../components/range-of-years";
 
 import styles from "./styles.module.scss";
-import RangeOfYears from "../../../../components/range-of-years";
-import { getI18nLabel } from "../../../../utils";
+
+const i18n = { ...i18nGlobal, ...i18nLocal };
 
 const i18nFilters = {
   "more-filters": { fr: "Plus de filtres", en: "More filters" },
@@ -175,7 +175,7 @@ export default function EpNavigator() {
       <Container>
         <Row gutters>
           {/* Piliers */}
-          <Col lg={3} sm={12}>
+          <Col lg={3} xs={12}>
             <label className="fr-label" htmlFor="select-pillar-label">
               {getI18nLabel(i18n, "pillar_selection_button_title", currentLang)}
             </label>
@@ -211,7 +211,7 @@ export default function EpNavigator() {
             </select>
           </Col>
           {/* Programmes dépendants du pilier sélectionné */}
-          <Col lg={3} sm={12}>
+          <Col lg={3} xs={12}>
             <label className="fr-label" htmlFor="select-program-label">
               {getI18nLabel(i18n, "program_selection_button_title", currentLang)}
             </label>
@@ -247,7 +247,7 @@ export default function EpNavigator() {
             </select>
           </Col>
           {/* Thématiques dépendantes du programme sélectionné */}
-          <Col lg={3} sm={12}>
+          <Col lg={3} xs={12}>
             <div className={styles.dropdownContainer} ref={thematicsDropdownRef}>
               <label className="fr-label" htmlFor="select-thematics-label">
                 {getI18nLabel(i18n, "thematic_selection_title", currentLang)}
@@ -285,7 +285,7 @@ export default function EpNavigator() {
               )}
             </div>
           </Col>
-          <Col lg={3} sm={12}>
+          <Col lg={3} xs={12}>
             <div className={styles.dropdownContainer} ref={destinationsDropdownRef}>
               <label className="fr-label" htmlFor="select-destinations-label">
                 {getI18nLabel(i18n, "destination_selection_title", currentLang)}
