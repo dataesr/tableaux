@@ -6,7 +6,7 @@ import "./styles.scss";
 const i18n = {
   "range-of-years-label": { fr: "Années", en: "Years" },
   "select-all": { fr: "Tout sélectionner", en: "Select all" },
-  "deselect-all": { fr: "Tout désélectionner", en: "Deselect all" },
+  "deselect-all": { fr: "Tout désélectionner", en: "Unselect all" },
 };
 
 interface RangeOfYearsProps {
