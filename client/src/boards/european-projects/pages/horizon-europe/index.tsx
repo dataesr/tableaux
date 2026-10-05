@@ -29,7 +29,10 @@ function FloatingFilters() {
     thematicIds: { fr: "Thématiques", en: "Thematics" },
     destinationIds: { fr: "Destinations", en: "Destinations" },
     structureid: { fr: "Identifiant Paysage de la structure", en: "Paysage ID" },
-    isEjo: { fr: "Organismes externes associés", en: "External joint organisations" },
+    isEjo: {
+      fr: "Exclure les organisations internationales, organisations intergouvernementales, agences européennes liées à la CE, structures communes comme le CERN, l'ESA, réseaux EIT, GEANT ou COST",
+      en: "Exclure les organisations internationales, organisations intergouvernementales, agences européennes liées à la CE, structures communes comme le CERN, l'ESA, réseaux EIT, GEANT ou COST",
+    },
   };
 
   function showParam(param) {

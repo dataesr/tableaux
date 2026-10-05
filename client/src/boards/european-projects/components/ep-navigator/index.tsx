@@ -16,7 +16,10 @@ const i18n = { ...i18nGlobal, ...i18nLocal };
 const i18nFilters = {
   "more-filters": { fr: "Plus de filtres", en: "More filters" },
   "less-filters": { fr: "Afficher moins", en: "Show less" },
-  isEjo: { fr: "Organismes externes associés", en: "External joint organisations" },
+  isEjo: {
+    fr: "Exclure les organisations internationales, organisations intergouvernementales, agences européennes liées à la CE, structures communes comme le CERN, l'ESA, réseaux EIT, GEANT ou COST",
+    en: "Exclure les organisations internationales, organisations intergouvernementales, agences européennes liées à la CE, structures communes comme le CERN, l'ESA, réseaux EIT, GEANT ou COST",
+  },
 };
 
 interface FilterItem {
