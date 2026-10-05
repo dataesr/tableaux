@@ -11,7 +11,8 @@ export interface CategoryData {
 }
 
 export function createCategoryDistributionOptions(
-    categoryData: CategoryData[]
+    categoryData: CategoryData[],
+    title: string
 ): Highcharts.Options | null {
     if (!categoryData || categoryData.length === 0) return null;
 
@@ -33,6 +34,11 @@ export function createCategoryDistributionOptions(
     return createChartOptions("bar", {
         chart: {
             height: Math.max(250, 80 + categories.length * 40),
+        },
+        title: { text: title, style: { display: "none" } },
+        accessibility: {
+            description:
+                "Pyramide : effectifs de femmes et d'hommes enseignants non permanents par catégorie.",
         },
         xAxis: {
             categories,
@@ -71,6 +77,9 @@ export function createCategoryDistributionOptions(
                 data: menData,
                 type: "bar",
                 color: getCssColor("fm-hommes"),
+                accessibility: {
+                    point: { valueDescriptionFormat: "{xDescription}, {subtract 0 point.y}." },
+                },
             },
             {
                 name: "Femmes",

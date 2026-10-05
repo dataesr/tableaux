@@ -6,6 +6,8 @@ interface CategoryEvolutionChartProps {
   categoryEvolution: any[];
 }
 
+const TITLE = "Évolution par catégorie";
+
 export default function CategoryEvolutionChart({
   categoryEvolution,
 }: CategoryEvolutionChartProps) {
@@ -19,11 +21,11 @@ export default function CategoryEvolutionChart({
     const diff = lastTotal - firstTotal;
     const pct = firstTotal > 0 ? ((diff / firstTotal) * 100).toFixed(1) : "0";
     return {
-      options: createCategoryEvolutionOptions(categories, categoryEvolution),
+      options: createCategoryEvolutionOptions(categories, categoryEvolution, TITLE),
       readingKey: firstTotal > 0 ? {
         fr: (<>
           Entre <strong>{first._id}</strong> et <strong>{last._id}</strong>,
-          l'effectif des enseignants non permaments est passé de{" "}
+          l'effectif des enseignants non permanents est passé de{" "}
           <strong>{firstTotal.toLocaleString("fr-FR")}</strong> à{" "}
           <strong>{lastTotal.toLocaleString("fr-FR")}</strong> ({diff >= 0 ? "+" : ""}{pct}%).
         </>),
@@ -38,8 +40,8 @@ export default function CategoryEvolutionChart({
       config={{
         id: "faculty-category-evolution",
         title: {
-          fr: "Évolution par catégorie",
-          size: "h2" as const,
+          fr: TITLE,
+          size: "h3" as const,
           look: "h6" as const,
         },
         readingKey: readingKey || undefined,

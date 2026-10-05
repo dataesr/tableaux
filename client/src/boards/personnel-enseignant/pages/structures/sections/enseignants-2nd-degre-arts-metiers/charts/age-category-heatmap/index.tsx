@@ -25,7 +25,7 @@ export default function AgeCategoryHeatmapChart({
                 id: "sd-age-category-heatmap",
                 title: {
                     fr: title,
-                    size: "h2" as const,
+                    size: "h3" as const,
                     look: "h6" as const,
                 },
                 comment: {

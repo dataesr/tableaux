@@ -11,6 +11,7 @@ export default function CategoryDistributionChart({
     categoryDistribution,
     selectedYear,
 }: CategoryDistributionChartProps) {
+    const title = `Répartition par catégorie et par genre (${selectedYear})`;
     const categoryData = useMemo(() => {
         if (!categoryDistribution?.length) return null;
         return [...categoryDistribution].sort((a, b) => b.totalCount - a.totalCount);
@@ -18,8 +19,8 @@ export default function CategoryDistributionChart({
 
     const options = useMemo(() => {
         if (!categoryData) return null;
-        return createCategoryDistributionOptions(categoryData);
-    }, [categoryData]);
+        return createCategoryDistributionOptions(categoryData, title);
+    }, [categoryData, title]);
 
     const readingKey = useMemo(() => {
         if (!categoryData?.length) return null;
@@ -43,8 +44,8 @@ export default function CategoryDistributionChart({
             config={{
                 id: "category-distribution",
                 title: {
-                    fr: `Répartition par catégorie et par genre (${selectedYear})`,
-                    size: "h2" as const,
+                    fr: title,
+                    size: "h3" as const,
                     look: "h6" as const,
                 },
                 readingKey: readingKey ? { fr: readingKey } : undefined,

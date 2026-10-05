@@ -50,7 +50,7 @@ export default function GenderEvolutionChart({
                 id: "ec-gender-evolution",
                 title: {
                     fr: TITLE,
-                    size: "h2" as const,
+                    size: "h3" as const,
                     look: "h6" as const,
                 },
                 readingKey: readingKey || undefined,

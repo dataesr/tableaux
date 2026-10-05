@@ -6,7 +6,8 @@ const SCALE_COLORS = Array.from({ length: 14 }, (_, i) => `scale-${i + 1}`);
 
 export function createCategoryEvolutionOptions(
   categories: string[],
-  categoryEvolution: any[]
+  categoryEvolution: any[],
+  title: string
 ): Highcharts.Options {
   const allCategories = new Set<string>();
   categoryEvolution.forEach((e: any) =>
@@ -29,6 +30,11 @@ export function createCategoryEvolutionOptions(
 
   return createChartOptions("area", {
     chart: { height: 350 },
+    title: { text: title, style: { display: "none" } },
+    accessibility: {
+      description:
+        "Aires empilées : évolution de l'effectif des enseignants non permanents par catégorie et par année universitaire.",
+    },
     xAxis: {
       categories,
       title: { text: null },

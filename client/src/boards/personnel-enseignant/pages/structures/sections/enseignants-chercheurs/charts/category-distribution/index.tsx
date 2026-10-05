@@ -45,7 +45,7 @@ export default function CategoryDistributionChart({
                 id: "category-distribution",
                 title: {
                     fr: title,
-                    size: "h2" as const,
+                    size: "h3" as const,
                     look: "h6" as const,
                 },
                 readingKey: readingKey ? { fr: readingKey } : undefined,

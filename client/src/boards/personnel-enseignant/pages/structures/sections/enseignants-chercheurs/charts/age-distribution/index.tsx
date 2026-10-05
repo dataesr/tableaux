@@ -43,7 +43,7 @@ export default function AgeDistributionChart({
                 id: "ec-age-distribution",
                 title: {
                     fr: title,
-                    size: "h2" as const,
+                    size: "h3" as const,
                     look: "h6" as const,
                 },
                 readingKey: readingKey || undefined,

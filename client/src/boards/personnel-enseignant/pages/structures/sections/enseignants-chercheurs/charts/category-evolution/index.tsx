@@ -41,7 +41,7 @@ export default function CategoryEvolutionChart({
         id: "faculty-category-evolution",
         title: {
           fr: TITLE,
-          size: "h2" as const,
+          size: "h3" as const,
           look: "h6" as const,
         },
         readingKey: readingKey || undefined,
