@@ -1,5 +1,4 @@
 import { useFinanceDefinitions } from "../../api";
-import "./styles.scss";
 
 interface StatusIndicatorProps {
   status: "alerte" | "vigilance" | "normal";
@@ -9,15 +8,15 @@ interface StatusIndicatorProps {
 
 const STATUS_CONFIG = {
   alerte: {
-    color: "var(--text-default-error)",
+    badge: "fr-badge--error",
     label: "Alerte",
   },
   vigilance: {
-    color: "var(--text-default-warning)",
+    badge: "fr-badge--warning",
     label: "Vigilance",
   },
   normal: {
-    color: "var(--text-default-success)",
+    badge: "fr-badge--success",
     label: "Normal",
   },
 };
@@ -54,31 +53,30 @@ export default function StatusIndicator({
     }
   }
 
-  const displayText = interpretation
-    ? `${config.label} : ${truncateText(interpretation, MAX_CHARS)}`
-    : config.label;
-
   return (
     <>
-      <button
-        type="button"
-        className={`fr-btn--tooltip fr-btn status-indicator ${className}`}
-        aria-describedby={tooltipId}
-      >
-        <span
-          className="status-indicator__dot"
-          style={{ backgroundColor: config.color }}
-          aria-hidden="true"
-        />
-      </button>
-      <span
-        className="fr-tooltip fr-placement"
-        id={tooltipId}
-        role="tooltip"
-        aria-hidden="true"
-      >
-        {displayText}
+      <span className={`fr-badge fr-badge--sm ${config.badge} fr-ml-1w ${className}`}>
+        {config.label}
       </span>
+      {interpretation && (
+        <>
+          <button
+            type="button"
+            className="fr-btn--tooltip fr-btn"
+            aria-describedby={tooltipId}
+          >
+            Interprétation de l'indicateur
+          </button>
+          <span
+            className="fr-tooltip fr-placement"
+            id={tooltipId}
+            role="tooltip"
+            aria-hidden="true"
+          >
+            {truncateText(interpretation, MAX_CHARS)}
+          </span>
+        </>
+      )}
     </>
   );
 }
