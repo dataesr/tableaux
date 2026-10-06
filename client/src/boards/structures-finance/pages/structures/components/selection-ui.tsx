@@ -185,6 +185,9 @@ export default function SelectionUI({
           <div className="fr-select-group">
             <label className="fr-label" htmlFor="structure-select">
               Accéder à une structure
+              <span className="fr-hint-text">
+                La sélection ouvre directement la page de la structure
+              </span>
             </label>
             <select
               className="fr-select"

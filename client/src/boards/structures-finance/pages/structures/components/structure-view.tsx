@@ -8,7 +8,7 @@ import {
   useCheckStructureExists,
 } from "../api";
 import PageHeader from "./page-header";
-import SectionNavigation from "./section-navigation";
+import SectionNavigation, { SECTION_LABELS } from "./section-navigation";
 import {
   FinancementsSection,
   SanteFinancierSection,
@@ -27,6 +27,9 @@ import { SectionYearProvider } from "../../../../../components/section-year-sele
 import navigationConfig from "../../../components/layouts/navigation-config.json";
 import { DEFAULT_REFERENCE_YEAR } from "../../../config/constants";
 import Breadcrumb from "../../../../../components/breadcrumb";
+import { useTitle } from "../../../../../hooks/usePageTitle";
+import { getI18nLabel } from "../../../../../utils";
+import titles from "../../../title-i18n.json";
 
 export default function StructureView() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -84,6 +87,17 @@ export default function StructureView() {
     !!(selectedYear || years[0]) &&
     !showMultipleSelector &&
     !showNotExistsAlert);
+
+  const structureName =
+    detailData?.etablissement_lib ||
+    detailData?.etablissement_actuel_lib ||
+    existsData?.etablissement_lib_historique;
+  const routeTitle = getI18nLabel(titles, "etablissements");
+  useTitle(
+    structureName
+      ? [structureName, SECTION_LABELS[section], routeTitle].filter(Boolean).join(" - ")
+      : routeTitle
+  );
 
   const handleClearSelection = () => {
     const params = Object.fromEntries(searchParams);

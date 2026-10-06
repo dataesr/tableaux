@@ -9,9 +9,13 @@ import CardSimple from "../../../../../components/card-simple";
 import DefaultSkeleton from "../../../../../components/charts-skeletons/default";
 import navigationConfig from "../../../components/layouts/navigation-config.json";
 import Breadcrumb from "../../../../../components/breadcrumb";
+import { useTitle } from "../../../../../hooks/usePageTitle";
+import { getI18nLabel } from "../../../../../utils";
+import titles from "../../../title-i18n.json";
 
 export default function StructureSelection() {
   const [, setSearchParams] = useSearchParams();
+  useTitle(getI18nLabel(titles, "selection"));
 
   const { data: yearsData, isLoading: isLoadingYears } = useFinanceYears();
   const latestYear = (() => {

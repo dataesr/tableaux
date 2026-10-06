@@ -106,6 +106,9 @@ function QuickAccessSection() {
                 <div className="fr-select-group">
                   <label className="fr-label" htmlFor="accueil-etablissement">
                     Accéder à un établissement
+                    <span className="fr-hint-text">
+                      La sélection ouvre directement la page de l'établissement
+                    </span>
                   </label>
                   <select
                     className="fr-select"

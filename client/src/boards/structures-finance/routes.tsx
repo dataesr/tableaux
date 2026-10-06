@@ -12,9 +12,11 @@ const StructuresView = lazy(() => import("./pages/structures/index.tsx"));
 
 import "./styles.scss";
 import { useTitle } from "../../hooks/usePageTitle.tsx";
+import { getI18nLabel } from "../../utils";
+import i18n from "./title-i18n.json";
 
 const RouteWithTitle = ({ titleKey, element }) => {
-  useTitle(titleKey);
+  useTitle(getI18nLabel(i18n, titleKey));
   return element;
 };
 
@@ -27,7 +29,7 @@ export default function StructuresFinanceRoutes() {
           path="accueil"
           element={
             <RouteWithTitle
-              titleKey="Accueil - Financement des établissements d'enseignement supérieur français"
+              titleKey="accueil"
               element={<Suspense><AccueilView /></Suspense>}
             />
           }
@@ -36,7 +38,7 @@ export default function StructuresFinanceRoutes() {
           path="definitions"
           element={
             <RouteWithTitle
-              titleKey="Definitions - Financement des établissements d'enseignement supérieur français"
+              titleKey="definitions"
               element={<Suspense><DefinitionsView /></Suspense>}
             />
           }
@@ -45,8 +47,7 @@ export default function StructuresFinanceRoutes() {
           path="etablissements"
           element={
             <RouteWithTitle
-              titleKey="Vue par établissement - Financement des établissements d'enseignement supérieur français
-"
+              titleKey="etablissements"
               element={<Suspense><StructuresView /></Suspense>}
             />
           }
@@ -55,7 +56,7 @@ export default function StructuresFinanceRoutes() {
           path="faq"
           element={
             <RouteWithTitle
-              titleKey="FAQ - Financement des établissements d'enseignement supérieur français"
+              titleKey="faq"
               element={<Suspense><FAQView /></Suspense>}
             />
           }
@@ -64,7 +65,7 @@ export default function StructuresFinanceRoutes() {
           path="national"
           element={
             <RouteWithTitle
-              titleKey="Vue nationale - Financement des établissements d'enseignement supérieur français"
+              titleKey="national"
               element={<Suspense><NationalView /></Suspense>}
             />
           }
