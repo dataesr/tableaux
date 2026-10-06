@@ -1,22 +1,22 @@
 import { useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-
 import { Col, Container, Row, Title, Link } from "@dataesr/dsfr-plus";
-import PillarCard from "../../components/cards/pillars";
+
+import { getFiltersValues } from "../../api";
+import DefaultSkeleton from "../../../../components/charts-skeletons/default";
 import ErcCard from "../../components/cards/erc";
 import MscaCard from "../../components/cards/msca";
+import PillarCard from "../../components/cards/pillars";
 import Timeline from "./components/Timeline";
-import { getFiltersValues } from "../../api";
 
 import i18n from "./i18n.json";
-
 import "./styles.scss";
 
 export default function Home() {
   const [searchParams] = useSearchParams();
   const currentLang = searchParams.get("language") || "fr";
 
-  const { data: dataPillars } = useQuery({
+  const { data: dataPillars, isLoading: isLoadinPillars } = useQuery({
     queryKey: ["ep/get-filters-values", "pillars"],
     queryFn: () => getFiltersValues("pillars"),
   });
@@ -74,9 +74,19 @@ export default function Home() {
             Les 4 piliers d'Horizon Europe
           </Title>
           <Row gutters>
+            {isLoadinPillars && (
+              <>
+                <Col md={12}>
+                  <DefaultSkeleton col={2} />
+                </Col>
+                <Col md={12}>
+                  <DefaultSkeleton col={2} />
+                </Col>
+              </>
+            )}
             {dataPillars &&
               dataPillars.map((pillar) => (
-                <Col xs={12} md={4} key={pillar.id}>
+                <Col xs={12} md={6} key={pillar.id}>
                   <PillarCard description={getI18nLabel(`${pillar.id}-description`)} title={pillar[`label_${currentLang}`]} subtitle={pillar.id} to={`/european-projects/horizon-europe?section=synthesis&pillarId=${pillar.id}`} titleAs="h3" />
                 </Col>
               ))}
@@ -90,7 +100,7 @@ export default function Home() {
             Focus
           </Title>
           <Row gutters>
-            <Col xs={12} md={4}>
+            <Col xs={12} md={6}>
               <MscaCard
                 title="MSCA"
                 subtitle="Actions Marie Sklodowska-Curie"
@@ -99,7 +109,7 @@ export default function Home() {
                 titleAs="h3"
               />
             </Col>
-            <Col xs={12} md={4}>
+            <Col xs={12} md={6}>
               <ErcCard
                 title="ERC"
                 subtitle="Le Conseil Européen de la Recherche"
@@ -115,10 +125,10 @@ export default function Home() {
       <section className="ep-home__section">
         <Container>
           <Row gutters>
-            <Col xs={12} md={4}>
+            <Col xs={12}>
               <Timeline />
             </Col>
-            <Col xs={12} md={4} className="text-center">
+            <Col xs={12} className="text-center">
               <Link href="/european-projects/evolution-pcri" className="fr-link fr-link--icon-right">
                 Visualisez et analysez l'évolution des programmes européens de recherche
                 <span className="fr-fi-arrow-right-line fr-link__icon fr-link__icon--right" />

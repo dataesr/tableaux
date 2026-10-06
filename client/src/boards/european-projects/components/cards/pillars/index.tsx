@@ -1,6 +1,8 @@
 import { Badge } from "@dataesr/dsfr-plus";
 import { Link } from "react-router-dom";
 
+import "./styles.scss";
+
 function matchPiliarId(idFromDb) {
   switch (idFromDb) {
     case "HORIZON.1":
@@ -16,9 +18,24 @@ function matchPiliarId(idFromDb) {
   }
 }
 
+function matchPiliarIdCollors(idFromDb) {
+  switch (idFromDb) {
+    case "HORIZON.1":
+      return "pillar-p1-color";
+    case "HORIZON.2":
+      return "pillar-p2-color";
+    case "HORIZON.3":
+      return "pillar-p3-color";
+    case "HORIZON.4":
+      return "pillar-p4-color";
+    default:
+      return idFromDb;
+  }
+}
+
 export default function PillarCard({ title, subtitle, description, to, titleAs: Heading = "h3" }: { title: string; subtitle?: string; description?: string; to: string; titleAs?: "h2" | "h3" | "h4" | "h5" }) {
   return (
-    <div className="fr-card fr-enlarge-link" style={{ borderBottom: "4px solid #a00351ff" }}>
+    <div className={`fr-card fr-enlarge-link ${matchPiliarIdCollors(subtitle)}`}>
       <div className="fr-card__body">
         <div className="fr-card__content">
           <Heading className="fr-card__title">
