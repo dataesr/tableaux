@@ -10,7 +10,8 @@ import { getI18nLabel } from "../../../../utils.tsx"
 import ChartWrapperFundings from "../../components/chart-wrapper-fundings/index.tsx"
 import SegmentedControl from "../../components/segmented-control/index.tsx"
 import i18n from "../../i18n.json"
-import { formatCompactNumber, getCssColor, getEsQuery, pattern, years } from "../../utils.ts"
+import { formatCompactNumber, getEsQuery, pattern, years } from "../../utils.ts"
+import { getCssColor } from "../../../../utils/colors.ts"
 
 const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env
 
@@ -134,9 +135,9 @@ export default function InstrumentsOverTimeForAnr({ name, participantSuperOrgani
   const seriesBudgetRegion: any = []
   const seriesFundingRegion: any = []
   const seriesProjectRegion: any = [];
-  (data?.aggregations?.by_instrument?.buckets ?? []).forEach((instrument) => {
+  (data?.aggregations?.by_instrument?.buckets ?? []).forEach((instrument, index) => {
     seriesBudget.push({
-      color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: instrument.key, prefix: "instrument" }) } },
+      color: { pattern: { ...pattern, backgroundColor: getCssColor(`scale-${index + 1}-color`) } },
       data: years.map((year) => instrument?.by_project_year?.buckets
         ?.find((bucket) => bucket.key === year)?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 1)?.should_ignore_budget?.buckets
@@ -145,7 +146,7 @@ export default function InstrumentsOverTimeForAnr({ name, participantSuperOrgani
       name: [instrument.key, getI18nLabel(i18n, 'coordinator')].join(' - '),
     })
     seriesBudget.push({
-      color: getCssColor({ name: instrument.key, prefix: "instrument" }),
+      color: getCssColor(`scale-${index + 1}-color`),
       data: years.map((year) => instrument?.by_project_year?.buckets
         ?.find((bucket) => bucket.key === year)?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 0)?.should_ignore_budget?.buckets
@@ -154,7 +155,7 @@ export default function InstrumentsOverTimeForAnr({ name, participantSuperOrgani
       name: [instrument.key, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
     })
     seriesBudgetRegion.push({
-      color: getCssColor({ name: instrument.key, prefix: "instrument" }),
+      color: getCssColor(`scale-${index + 1}-color`),
       data: years.map((year) => instrument
         ?.by_project_year?.buckets?.find((bucket) => bucket.key === year)
         ?.should_ignore_budget?.buckets?.find((bucket) => bucket.key.toString() === '0')?.sum_budget?.value ?? 0),
@@ -162,7 +163,7 @@ export default function InstrumentsOverTimeForAnr({ name, participantSuperOrgani
       name: instrument.key,
     })
     seriesFunding.push({
-      color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: instrument.key, prefix: "instrument" }) } },
+      color: { pattern: { ...pattern, backgroundColor: getCssColor(`scale-${index + 1}-color`) } },
       data: years.map((year) => instrument?.by_project_year?.buckets
         ?.find((bucket) => bucket.key === year)?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 1)?.should_ignore_funding?.buckets
@@ -171,7 +172,7 @@ export default function InstrumentsOverTimeForAnr({ name, participantSuperOrgani
       name: [instrument.key, getI18nLabel(i18n, 'coordinator')].join(' - '),
     })
     seriesFunding.push({
-      color: getCssColor({ name: instrument.key, prefix: "instrument" }),
+      color: getCssColor(`scale-${index + 1}-color`),
       data: years.map((year) => instrument?.by_project_year?.buckets
         ?.find((bucket) => bucket.key === year)?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 0)?.should_ignore_funding?.buckets
@@ -180,7 +181,7 @@ export default function InstrumentsOverTimeForAnr({ name, participantSuperOrgani
       name: [instrument.key, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
     })
     seriesFundingRegion.push({
-      color: getCssColor({ name: instrument.key, prefix: "instrument" }),
+      color: getCssColor(`scale-${index + 1}-color`),
       data: years.map((year) => instrument
         ?.by_project_year?.buckets?.find((bucket) => bucket.key === year)
         ?.should_ignore_funding?.buckets?.find((bucket) => bucket.key.toString() === '0')?.sum_funding?.value ?? 0),
@@ -188,7 +189,7 @@ export default function InstrumentsOverTimeForAnr({ name, participantSuperOrgani
       name: instrument.key,
     })
     seriesProject.push({
-      color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: instrument.key, prefix: "instrument" }) } },
+      color: { pattern: { ...pattern, backgroundColor: getCssColor(`scale-${index + 1}-color`) } },
       data: years.map((year) => instrument?.by_project_year?.buckets
         ?.find((bucket) => bucket.key === year)?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 1)?.by_unique_project?.value ?? 0),
@@ -196,7 +197,7 @@ export default function InstrumentsOverTimeForAnr({ name, participantSuperOrgani
       name: [instrument.key, getI18nLabel(i18n, 'coordinator')].join(' - '),
     })
     seriesProject.push({
-      color: getCssColor({ name: instrument.key, prefix: "instrument" }),
+      color: getCssColor(`scale-${index + 1}-color`),
       data: years.map((year) => instrument?.by_project_year?.buckets
         ?.find((bucket) => bucket.key === year)?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 0)?.by_unique_project?.value ?? 0),
@@ -204,7 +205,7 @@ export default function InstrumentsOverTimeForAnr({ name, participantSuperOrgani
       name: [instrument.key, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
     })
     seriesProjectRegion.push({
-      color: getCssColor({ name: instrument.key, prefix: "instrument" }),
+      color: getCssColor(`scale-${index + 1}-color`),
       data: years.map((year) => instrument
         ?.by_project_year?.buckets?.find((bucket) => bucket.key === year)
         ?.by_unique_project?.value ?? 0),

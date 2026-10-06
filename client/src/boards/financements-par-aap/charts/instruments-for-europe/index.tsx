@@ -10,7 +10,8 @@ import { getI18nLabel } from "../../../../utils.tsx"
 import ChartWrapperFundings from "../../components/chart-wrapper-fundings/index.tsx"
 import SegmentedControl from "../../components/segmented-control/index.tsx"
 import i18n from "../../i18n.json"
-import { formatCompactNumber, getCssColor, getEsQuery, getYearRangeLabel, pattern } from "../../utils.ts"
+import { formatCompactNumber, getEsQuery, getYearRangeLabel, pattern } from "../../utils.ts"
+import { getCssColor } from "../../../../utils/colors.ts"
 
 const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env
 
@@ -171,63 +172,63 @@ export default function InstrumentsForEurope({ name, participantSuperOrganizatio
   const instrumentsBudget = data?.aggregations?.by_instrument_budget?.buckets ?? []
   const instrumentsFunding = data?.aggregations?.by_instrument_funding?.buckets ?? []
   const instrumentsProject = data?.aggregations?.by_instrument_project?.buckets ?? []
-  instrumentsBudget.forEach((instrument) => {
+  instrumentsBudget.forEach((instrument, index) => {
     seriesBudget.push({
-      color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: instrument.key, prefix: "instrument" }) } },
+      color: { pattern: { ...pattern, backgroundColor: getCssColor(`scale-${index + 1}-color`) } },
       name: [instrument.key, getI18nLabel(i18n, 'coordinator')].join(' - '),
       value: instrument?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 1)?.should_ignore_budget?.buckets
         ?.find((bucket) => bucket.key.toString() === '0')?.sum_budget?.value ?? 0,
     })
     seriesBudget.push({
-      color: getCssColor({ name: instrument.key, prefix: "instrument" }),
+      color: getCssColor(`scale-${index + 1}-color`),
       name: [instrument.key, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
       value: instrument?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 0)?.should_ignore_budget?.buckets
         ?.find((bucket) => bucket.key.toString() === '0')?.sum_budget?.value ?? 0,
     })
     seriesBudgetRegion.push({
-      color: getCssColor({ name: instrument.key, prefix: "instrument" }),
+      color: getCssColor(`scale-${index + 1}-color`),
       name: instrument.key,
       value: instrument?.should_ignore_budget?.buckets?.find((bucket) => bucket.key.toString() === '0')?.sum_budget?.value ?? 0,
     })
   })
-  instrumentsFunding.forEach((instrument) => {
+  instrumentsFunding.forEach((instrument, index) => {
     seriesFunding.push({
-      color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: instrument.key, prefix: "instrument" }) } },
+      color: { pattern: { ...pattern, backgroundColor: getCssColor(`scale-${index + 1}-color`) } },
       name: [instrument.key, getI18nLabel(i18n, 'coordinator')].join(' - '),
       value: instrument?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 1)?.should_ignore_funding?.buckets
         ?.find((bucket) => bucket.key.toString() === '0')?.sum_funding?.value ?? 0,
     })
     seriesFunding.push({
-      color: getCssColor({ name: instrument.key, prefix: "instrument" }),
+      color: getCssColor(`scale-${index + 1}-color`),
       name: [instrument.key, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
       value: instrument?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 0)?.should_ignore_funding?.buckets
         ?.find((bucket) => bucket.key.toString() === '0')?.sum_funding?.value ?? 0,
     })
     seriesFundingRegion.push({
-      color: getCssColor({ name: instrument.key, prefix: "instrument" }),
+      color: getCssColor(`scale-${index + 1}-color`),
       name: instrument.key,
       value: instrument?.should_ignore_funding?.buckets?.find((bucket) => bucket.key.toString() === '0')?.sum_funding?.value ?? 0,
     })
   })
-  instrumentsProject.forEach((instrument) => {
+  instrumentsProject.forEach((instrument, index) => {
     seriesProject.push({
-      color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: instrument.key, prefix: "instrument" }) } },
+      color: { pattern: { ...pattern, backgroundColor: getCssColor(`scale-${index + 1}-color`) } },
       name: [instrument.key, getI18nLabel(i18n, 'coordinator')].join(' - '),
       value: instrument?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 1)?.by_unique_project?.value ?? 0,
     })
     seriesProject.push({
-      color: getCssColor({ name: instrument.key, prefix: "instrument" }),
+      color: getCssColor(`scale-${index + 1}-color`),
       name: [instrument.key, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
       value: instrument?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 0)?.by_unique_project?.value ?? 0,
     })
     seriesProjectRegion.push({
-      color: getCssColor({ name: instrument.key, prefix: "instrument" }),
+      color: getCssColor(`scale-${index + 1}-color`),
       name: instrument.key,
       value: instrument?.by_unique_project?.value ?? 0,
     })

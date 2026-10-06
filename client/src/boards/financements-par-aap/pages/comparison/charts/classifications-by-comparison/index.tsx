@@ -10,7 +10,8 @@ import { getI18nLabel } from "../../../../../../utils"
 import ChartWrapperFundings from "../../../../components/chart-wrapper-fundings"
 import SegmentedControl from "../../../../components/segmented-control"
 import i18n from "../../../../i18n.json"
-import { formatCompactNumber, getCssColor, getEsQuery, getYearRangeLabel, pattern } from "../../../../utils.ts"
+import { formatCompactNumber, getEsQuery, getYearRangeLabel, pattern } from "../../../../utils.ts"
+import { getCssColor } from "../../../../../../utils/colors.ts"
 
 const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env
 
@@ -144,38 +145,38 @@ export default function ClassificationsByComparison() {
   const structuresBudget = data?.aggregations?.by_structure_budget?.buckets ?? []
   const structuresParticipation = data?.aggregations?.by_structure_funding?.buckets ?? []
   const structuresProject = data?.aggregations?.by_structure_project?.buckets ?? [];
-  (structuresBudget?.[0]?.by_classifications?.buckets ?? []).forEach((bucket) => {
+  (structuresBudget?.[0]?.by_classifications?.buckets ?? []).forEach((bucket, index) => {
     seriesBudget.push({
-      color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: bucket.key, prefix: "classification" }) } },
+      color: { pattern: { ...pattern, backgroundColor: getCssColor(`scale-${index + 1}-color`) } },
       data: structuresBudget.map((sss) => sss.by_classifications.buckets.find((classification) => classification.key === bucket.key)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.sum_budget?.value ?? 0),
       name: [bucket.key, getI18nLabel(i18n, 'coordinator')].join(' - '),
     })
     seriesBudget.push({
-      color: getCssColor({ name: bucket.key, prefix: "classification" }),
+      color: getCssColor(`scale-${index + 1}-color`),
       data: structuresBudget.map((sss) => sss.by_classifications.buckets.find((classification) => classification.key === bucket.key)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.sum_budget?.value ?? 0),
       name: [bucket.key, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
     })
   })
-  (structuresParticipation?.[0]?.by_classifications?.buckets ?? []).forEach((bucket) => {
+  (structuresParticipation?.[0]?.by_classifications?.buckets ?? []).forEach((bucket, index) => {
     seriesParticipation.push({
-      color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: bucket.key, prefix: "classification" }) } },
+      color: { pattern: { ...pattern, backgroundColor: getCssColor(`scale-${index + 1}-color`) } },
       data: structuresParticipation.map((sss) => sss.by_classifications.buckets.find((classification) => classification.key === bucket.key)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.sum_funding?.value ?? 0),
       name: [bucket.key, getI18nLabel(i18n, 'coordinator')].join(' - '),
     })
     seriesParticipation.push({
-      color: getCssColor({ name: bucket.key, prefix: "classification" }),
+      color: getCssColor(`scale-${index + 1}-color`),
       data: structuresParticipation.map((sss) => sss.by_classifications.buckets.find((classification) => classification.key === bucket.key)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.sum_funding?.value ?? 0),
       name: [bucket.key, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
     })
   });
-  (structuresProject?.[0]?.by_classifications?.buckets ?? []).forEach((bucket) => {
+  (structuresProject?.[0]?.by_classifications?.buckets ?? []).forEach((bucket, index) => {
     seriesProject.push({
-      color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: bucket.key, prefix: "classification" }) } },
+      color: { pattern: { ...pattern, backgroundColor: getCssColor(`scale-${index + 1}-color`) } },
       data: structuresProject.map((sss) => sss.by_classifications.buckets.find((classification) => classification.key === bucket.key)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.by_unique_project?.value ?? 0),
       name: [bucket.key, getI18nLabel(i18n, 'coordinator')].join(' - '),
     })
     seriesProject.push({
-      color: getCssColor({ name: bucket.key, prefix: "classification" }),
+      color: getCssColor(`scale-${index + 1}-color`),
       data: structuresProject.map((sss) => sss.by_classifications.buckets.find((classification) => classification.key === bucket.key)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.by_unique_project?.value ?? 0),
       name: [bucket.key, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
     })
