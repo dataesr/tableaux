@@ -3,11 +3,7 @@
 }
 
 .accueil-hero {
-  background: linear-gradient(
-    135deg,
-    var(--background-default-grey) 0%,
-    var(--background-flat-grey) 100%
-  );
+  background: var(--background-alt-blue-france);
   padding: 4rem 0;
   color: var(--text-default-grey);
 
@@ -61,8 +57,7 @@
     font-size: 1.125rem;
     line-height: 1.6;
     margin-bottom: 2rem;
-    color: var(--text-inverted-grey);
-    opacity: 0.95;
+    color: var(--text-default-grey);
 
     @media (max-width: 768px) {
       font-size: 1rem;
@@ -93,8 +88,6 @@
       width: 100%;
       max-width: 400px;
       height: auto;
-      filter: brightness(0) invert(1);
-      opacity: 0.9;
     }
   }
 }

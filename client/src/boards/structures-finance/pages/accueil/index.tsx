@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Row, Col, Container, Title } from "@dataesr/dsfr-plus";
 import { useMemo } from "react";
 import { useFinanceYears } from "../../api";
@@ -10,8 +10,6 @@ import mediaStructuresFinance from "../../../../assets/boards/structures-finance
 
 
 function HeroSection() {
-  const navigate = useNavigate();
-
   return (
     <section className="accueil-hero">
       <Container>
@@ -28,18 +26,18 @@ function HeroSection() {
                 tendances nationales et les indicateurs clés.
               </p>
               <div className="accueil-hero__cta">
-                <button
+                <Link
                   className="fr-btn fr-btn--icon-right fr-icon-arrow-right-line"
-                  onClick={() => navigate("/structures-finance/etablissements")}
+                  to="/structures-finance/etablissements"
                 >
                   Explorer un établissement
-                </button>
-                <button
+                </Link>
+                <Link
                   className="fr-btn fr-btn--icon-right fr-icon-arrow-right-line"
-                  onClick={() => navigate("/structures-finance/national")}
+                  to="/structures-finance/national"
                 >
                   Explorer la vue nationale
-                </button>
+                </Link>
               </div>
             </div>
           </Col>
