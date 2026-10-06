@@ -59,7 +59,8 @@ export default function DualEvolutionChart({
         <Row gutters className="fr-mb-2w">
           <Col xs="12" md="6">
             <SegmentedControl
-              className="fr-segmented--sm"
+              className="fr-segmented--sm fr-segmented--no-legend"
+              label="Type de prix"
               name="evolution-ipc-mode"
             >
               <SegmentedElement

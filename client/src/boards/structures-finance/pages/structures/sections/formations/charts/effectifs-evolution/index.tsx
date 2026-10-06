@@ -229,7 +229,8 @@ export default function EffectifsEvolutionChart({
     <div>
       <div className="fr-mb-2w">
         <SegmentedControl
-          className="fr-segmented--sm"
+          className="fr-segmented--sm fr-segmented--no-legend"
+          label="Répartition affichée"
           name="effectifs-evolution-view"
         >
           {availableViews.map((viewKey) => (

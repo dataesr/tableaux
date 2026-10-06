@@ -113,7 +113,8 @@ export default function RessourcesPropresEvolutionChart({
     <div>
       <div className="fr-mb-2w">
         <SegmentedControl
-          className="fr-segmented--sm"
+          className="fr-segmented--sm fr-segmented--no-legend"
+          label="Affichage"
           name="ressources-propres-evolution-view"
         >
           <SegmentedElement

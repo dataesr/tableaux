@@ -96,7 +96,8 @@ export default function SingleEvolutionChart({
           {hasIPCMetrics && (
             <Col xs="12" md="6">
               <SegmentedControl
-                className="fr-segmented--sm"
+                className="fr-segmented--sm fr-segmented--no-legend"
+                label="Type de prix"
                 name="evolution-ipc-mode"
               >
                 <SegmentedElement
@@ -117,7 +118,8 @@ export default function SingleEvolutionChart({
           {partMetricKey && (
             <Col xs="12" md="6">
               <SegmentedControl
-                className="fr-segmented--sm"
+                className="fr-segmented--sm fr-segmented--no-legend"
+                label="Affichage"
                 name="evolution-part-mode"
               >
                 <SegmentedElement

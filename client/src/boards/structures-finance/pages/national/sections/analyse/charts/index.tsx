@@ -1,7 +1,6 @@
 import { useMemo, useState } from "react";
 import type Highcharts from "highcharts/es-modules/masters/highcharts.src.js";
 import {
-  Text,
   Row,
   Col,
   SegmentedControl,
@@ -165,10 +164,11 @@ export default function NationalChart({
     <div>
       <Row gutters className="fr-mb-3w">
         <Col xs="12">
-          <Text className="fr-text--sm fr-text--bold fr-mb-1w">
-            Mode de représentation
-          </Text>
-          <SegmentedControl className="fr-segmented--sm" name="view-mode">
+          <SegmentedControl
+            className="fr-segmented--sm"
+            label="Mode de représentation"
+            name="view-mode"
+          >
             <SegmentedElement
               checked={viewMode === "bar"}
               label="Classement"
@@ -217,11 +217,9 @@ export default function NationalChart({
               {hasPartVersion && (
                 <Row gutters className="fr-mt-2w">
                   <Col xs="12" md="6">
-                    <Text className="fr-text--sm fr-text--bold fr-mb-1w">
-                      Affichage
-                    </Text>
                     <SegmentedControl
                       className="fr-segmented--sm"
+                      label="Affichage"
                       name="national-part-mode"
                     >
                       <SegmentedElement

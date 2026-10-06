@@ -106,7 +106,8 @@ export default function PositioningCharts({
 
   const comparisonSegmentedControl = onChartChange ? (
     <SegmentedControl
-      className="fr-segmented--sm fr-mb-3w"
+      className="fr-segmented--sm fr-segmented--no-legend fr-mb-3w"
+      label="Type de comparaison"
       name="positioning-view-mode"
     >
       <SegmentedElement

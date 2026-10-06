@@ -2,7 +2,6 @@ import { useMemo, useState } from "react";
 import {
   Row,
   Col,
-  Text,
   SegmentedControl,
   SegmentedElement,
 } from "@dataesr/dsfr-plus";
@@ -140,11 +139,9 @@ export default function ComparisonBarChart({
       {currentStructureHasData && hasPartVersion && (
         <Row gutters className="fr-mb-3w">
           <Col xs="12" md="6">
-            <Text className="fr-text--sm fr-text--bold fr-mb-1w">
-              Affichage
-            </Text>
             <SegmentedControl
               className="fr-segmented--sm"
+              label="Affichage"
               name="positioning-part-mode"
             >
               <SegmentedElement

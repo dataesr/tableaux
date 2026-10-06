@@ -214,7 +214,8 @@ export default function EvolutionChart({
     return (
       <>
         <SegmentedControl
-          className="fr-segmented--sm fr-mb-3w"
+          className="fr-segmented--sm fr-segmented--no-legend fr-mb-3w"
+          label="Type d'analyse"
           name="analysis-view-mode"
         >
           <SegmentedElement
