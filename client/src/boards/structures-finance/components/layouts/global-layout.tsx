@@ -22,6 +22,18 @@ export default function GlobalLayout() {
 
   return (
     <>
+      <div className="fr-skiplinks">
+        <nav className="fr-container" role="navigation" aria-label="Accès rapide">
+          <ul className="fr-skiplinks__list">
+            <li>
+              <a className="fr-link" href="#main-content">Contenu principal</a>
+            </li>
+            <li>
+              <a className="fr-link" href="#footer">Pied de page</a>
+            </li>
+          </ul>
+        </nav>
+      </div>
       <header role="banner" className="fr-header">
         <div className="fr-header__body">
           <div className="fr-container">
@@ -144,7 +156,9 @@ export default function GlobalLayout() {
         </div>
       </header>
 
-      <Outlet />
+      <main id="main-content" tabIndex={-1}>
+        <Outlet />
+      </main>
       <Footer
         href="/structures-finance/accueil"
         title="#dataESR tableaux de bord"

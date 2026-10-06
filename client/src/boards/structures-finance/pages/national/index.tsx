@@ -4,9 +4,9 @@ import "./styles.scss";
 
 export default function NationalView() {
   return (
-    <main>
+    <>
       <NationalSelector />
       <NationalContent />
-    </main>
+    </>
   );
 }

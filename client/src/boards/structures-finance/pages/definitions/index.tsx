@@ -40,7 +40,7 @@ export default function DefinitionsView() {
   }
 
   return (
-    <main role="main">
+    <>
       <Container fluid className="etablissement-selector__wrapper">
         <Container as="section">
           <Row>
@@ -66,6 +66,6 @@ export default function DefinitionsView() {
           </Col>
         </Row>
       </Container>
-    </main>
+    </>
   );
 }

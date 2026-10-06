@@ -42,7 +42,7 @@ export default function FAQView() {
   }
 
   return (
-    <main role="main">
+    <>
       <Container fluid className="etablissement-selector__wrapper">
         <Container as="section">
           <Row>
@@ -68,6 +68,6 @@ export default function FAQView() {
           </Col>
         </Row>
       </Container>
-    </main>
+    </>
   );
 }

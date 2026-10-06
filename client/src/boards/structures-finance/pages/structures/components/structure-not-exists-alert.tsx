@@ -29,7 +29,7 @@ export default function StructureNotExistsAlert({
   };
 
   return (
-    <main>
+    <>
       <Container fluid className="etablissement-selector__wrapper">
         <Container as="section">
           <Row>
@@ -65,6 +65,6 @@ export default function StructureNotExistsAlert({
           </Row>
         </Container>
       </Container>
-    </main>
+    </>
   );
 }

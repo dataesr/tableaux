@@ -18,7 +18,7 @@ export default function NoDataForYearAlert({
     onClearSelection,
 }: NoDataForYearAlertProps) {
     return (
-        <main>
+        <>
             <Container fluid className="etablissement-selector__wrapper">
                 <Container as="section">
                     <Row>
@@ -76,6 +76,6 @@ export default function NoDataForYearAlert({
                     </Row>
                 </Container>
             </Container>
-        </main>
+        </>
     );
 }

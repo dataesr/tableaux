@@ -53,7 +53,7 @@ export default function StructureSelection() {
   };
 
   return (
-    <main>
+    <>
       <Container fluid className="etablissement-selector__wrapper">
         <Container as="section">
           <Row>
@@ -125,6 +125,6 @@ export default function StructureSelection() {
           </Row>
         </Container>
       )}
-    </main>
+    </>
   );
 }

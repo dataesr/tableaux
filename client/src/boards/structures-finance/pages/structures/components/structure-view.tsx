@@ -157,20 +157,20 @@ export default function StructureView() {
 
   if (isLoading || isCheckingMultiples || isCheckingExists || isLoadingYears) {
     return (
-      <main>
+      <>
         <Container fluid className="etablissement-selector__wrapper">
           <Container className="fr-py-4w">
             <DefaultSkeleton />
           </Container>
         </Container>
-      </main>
+      </>
     );
   }
 
   if (showNotExistsAlert && existsData?.etablissementActuel) {
 
     return (
-      <main>
+      <>
         <StructureNotExistsAlert
           etablissementLibHistorique={
             existsData.etablissement_lib_historique || selectedStructure
@@ -178,7 +178,7 @@ export default function StructureView() {
           etablissementActuel={existsData.etablissementActuel}
           selectedYear={selectedYear}
         />
-      </main>
+      </>
     );
   }
 
@@ -199,7 +199,7 @@ export default function StructureView() {
 
   if (showMultipleSelector && multiplesData) {
     return (
-      <main>
+      <>
         <Container fluid className="etablissement-selector__wrapper">
           <Container as="section">
             <Row>
@@ -224,7 +224,7 @@ export default function StructureView() {
             multiplesData.etablissements[0]?.etablissement_actuel_lib || ""
           }
         />
-      </main>
+      </>
     );
   }
 
@@ -233,7 +233,7 @@ export default function StructureView() {
   }
 
   return (
-    <main>
+    <>
       <Container fluid className="etablissement-selector__wrapper">
         <Container>
           <Row>
@@ -275,6 +275,6 @@ export default function StructureView() {
           {renderSectionContent()}
         </SectionYearProvider>
       </Container>
-    </main>
+    </>
   );
 }
