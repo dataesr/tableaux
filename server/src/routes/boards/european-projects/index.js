@@ -10,6 +10,7 @@ import typeBeneficiariesRoutes from "./routes/type-beneficiaries.js";
 import evolutionPcriRoutes from "./routes/evolution-pcri.js";
 import ercRoutes from "./routes/erc.js";
 import mscaRoutes from "./routes/msca.js";
+import callsRoutes from "./routes/calls.js";
 import paysageRoutes from "./routes/paysage.js";
 
 const router = new express.Router();
@@ -24,6 +25,7 @@ router.use(typeBeneficiariesRoutes);
 router.use(evolutionPcriRoutes);
 router.use(ercRoutes);
 router.use(mscaRoutes);
+router.use(callsRoutes);
 router.use(paysageRoutes);
 
 export default router;

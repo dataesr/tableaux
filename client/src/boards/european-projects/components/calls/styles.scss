@@ -1,0 +1,61 @@
+.ep-calls {
+  li {
+    list-style: none;
+  }
+
+  .year {
+    li {
+      display: inline-block;
+    }
+  }
+
+  .item {
+    display: block;
+    height: 12px;
+    width: 12px;
+    margin: 2px;
+    padding: 0;
+    border: none;
+    cursor: help;
+  }
+
+  .legend {
+    li,
+    div {
+      display: inline-block;
+    }
+    li {
+      margin-right: 4vw;
+    }
+  }
+
+  .complete {
+    background-color: var(--green-bourgeon-main-640);
+  }
+
+  // jauge : remplie de bas en haut selon --ratio
+  .incomplete {
+    background: linear-gradient(to top, var(--orange-terre-battue-main-645) var(--ratio, 0%), #e8e8e8 var(--ratio, 0%));
+    outline: 1px solid var(--orange-terre-battue-main-645);
+    outline-offset: -1px;
+  }
+
+  .unavailable {
+    background-color: var(--beige-gris-galet-850);
+  }
+
+  .year-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    .fr-accordion__title {
+      flex: 1;
+      margin: 0;
+    }
+
+    .fr-btn {
+      flex-shrink: 0;
+    }
+  }
+}

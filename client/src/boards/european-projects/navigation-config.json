@@ -34,6 +34,10 @@
     "entities": {
       "label": { "fr": "Entités du pays", "en": "Country entities" },
       "link": "/european-projects/horizon-europe?section=entities"
+    },
+    "calls": {
+      "label": { "fr": "Appels à projets", "en": "Calls" },
+      "link": "/european-projects/horizon-europe?section=calls"
     }
   },
   "msca": {
@@ -53,6 +57,10 @@
     "evolution": {
       "label": { "fr": "Evolution", "en": "Evolution" },
       "link": "/european-projects/msca?section=evolution"
+    },
+    "calls": {
+      "label": { "fr": "Appels à projets", "en": "Calls" },
+      "link": "/european-projects/msca?section=calls"
     }
   },
   "erc": {
@@ -77,6 +85,10 @@
     "evolution": {
       "label": { "fr": "Evolution", "en": "Evolution" },
       "link": "/european-projects/erc?section=evolution"
+    },
+    "calls": {
+      "label": { "fr": "Appels à projets", "en": "Calls" },
+      "link": "/european-projects/erc?section=calls"
     }
   },
   "evolution-pcri": {
