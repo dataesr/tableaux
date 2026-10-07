@@ -1,4 +1,4 @@
-import { Alert, Button, Col, Container, Row, Text, Title } from "@dataesr/dsfr-plus"
+import { Alert, Button, Col, Container, Row, Title } from "@dataesr/dsfr-plus"
 import { useState } from "react"
 import { useNavigate, useSearchParams } from "react-router-dom"
 
