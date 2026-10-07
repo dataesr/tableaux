@@ -9,8 +9,9 @@ import { useChartColor } from "../../../../../../hooks/useChartColor.tsx"
 import { getI18nLabel } from "../../../../../../utils"
 import ChartWrapperFundings from "../../../../components/chart-wrapper-fundings"
 import SegmentedControl from "../../../../components/segmented-control"
-import { formatCompactNumber, funders, getCssColor, getEsQuery, getYearRangeLabel, pattern } from "../../../../utils.ts"
+import { formatCompactNumber, funders, getEsQuery, getYearRangeLabel, pattern } from "../../../../utils.ts"
 import i18n from "../../../../i18n.json"
+import { getCssColor } from "../../../../../../utils/colors.ts"
 
 const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env
 
@@ -142,42 +143,42 @@ export default function ProjectsByComparison() {
   const structuresProject = data?.aggregations?.by_structure_project?.buckets ?? []
   funders.forEach((funder) => {
     seriesBudget.push({
-      color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } },
+      color: { pattern: { ...pattern, backgroundColor: getCssColor(`funder-${funder}`) } },
       data: structuresBudget.map((bucket) => bucket?.by_project_type?.buckets
         ?.find((item) => item.key === funder)?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 1)?.sum_budget?.value ?? 0),
       name: [funder, getI18nLabel(i18n, 'coordinator')].join(' - '),
     })
     seriesBudget.push({
-      color: getCssColor({ name: funder, prefix: "funder" }),
+      color: getCssColor(`funder-${funder}`),
       data: structuresBudget.map((bucket) => bucket?.by_project_type?.buckets
         ?.find((item) => item.key === funder)?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 0)?.sum_budget?.value ?? 0),
       name: [funder, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
     })
     seriesParticipation.push({
-      color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } },
+      color: { pattern: { ...pattern, backgroundColor: getCssColor(`funder-${funder}`) } },
       data: structuresParticipation.map((bucket) => bucket?.by_project_type?.buckets
         ?.find((item) => item.key === funder)?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 1)?.sum_funding?.value ?? 0),
       name: [funder, getI18nLabel(i18n, 'coordinator')].join(' - '),
     })
     seriesParticipation.push({
-      color: getCssColor({ name: funder, prefix: "funder" }),
+      color: getCssColor(`funder-${funder}`),
       data: structuresParticipation.map((bucket) => bucket?.by_project_type?.buckets
         ?.find((item) => item.key === funder)?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 0)?.sum_funding?.value ?? 0),
       name: [funder, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
     })
     seriesProject.push({
-      color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } },
+      color: { pattern: { ...pattern, backgroundColor: getCssColor(`funder-${funder}`) } },
       data: structuresProject.map((bucket) => bucket?.by_project_type?.buckets
         ?.find((item) => item.key === funder)?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 1)?.by_unique_project?.value ?? 0),
       name: [funder, getI18nLabel(i18n, 'coordinator')].join(' - '),
     })
     seriesProject.push({
-      color: getCssColor({ name: funder, prefix: "funder" }),
+      color: getCssColor(`funder-${funder}`),
       data: structuresProject.map((bucket) => bucket?.by_project_type?.buckets
         ?.find((item) => item.key === funder)?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 0)?.by_unique_project?.value ?? 0),

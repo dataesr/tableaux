@@ -6,7 +6,8 @@ import { useChartColor } from "../../../../hooks/useChartColor.tsx"
 import { getI18nLabel } from "../../../../utils.tsx"
 import ChartWrapperFundings from "../../components/chart-wrapper-fundings/index.tsx"
 import i18n from "../../i18n.json"
-import { formatCompactNumber, funders, getCssColor, getEsQuery, getYearRangeLabel, pattern } from "../../utils.ts"
+import { formatCompactNumber, funders, getEsQuery, getYearRangeLabel, pattern } from "../../utils.ts"
+import { getCssColor } from "../../../../utils/colors.ts"
 
 const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
@@ -103,8 +104,8 @@ export default function Overview({ name, participantSuperOrganizationChildrenIds
       [bucket.key, bucket?.should_ignore_funding?.buckets?.find((bucket) => bucket.key.toString() === '0')?.sum_funding?.value ?? 0, bucket?.by_unique_project?.value ?? 0],
     ])
     .flat();
-  const colorsWithCoordinators = funders.map((funder) => [{ pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } }, getCssColor({ name: funder, prefix: "funder" })]).flat();
-  const colorsWithoutCoordinators = funders.map((funder) => [getCssColor({ name: funder, prefix: "funder" })]).flat();
+  const colorsWithCoordinators = funders.map((funder) => [{ pattern: { ...pattern, backgroundColor: getCssColor(`funder-${funder}`) } }, getCssColor(`funder-${funder}`)]).flat();
+  const colorsWithoutCoordinators = funders.map((funder) => [getCssColor(`funder-${funder}`)]).flat();
 
   const config = {
     comment: {

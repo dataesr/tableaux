@@ -10,7 +10,8 @@ import { getI18nLabel } from "../../../../utils"
 import ChartWrapperFundings from "../../components/chart-wrapper-fundings"
 import SegmentedControl from "../../components/segmented-control"
 import i18n from "../../i18n.json"
-import { formatCompactNumber, funders, getCssColor, getEsQuery, pattern, years } from "../../utils.ts"
+import { formatCompactNumber, funders, getEsQuery, pattern, years } from "../../utils.ts"
+import { getCssColor } from "../../../../utils/colors.ts"
 
 const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env
 
@@ -144,7 +145,7 @@ export default function ProjectsOverTime({ name, participantSuperOrganizationChi
   const seriesProjectRegion: any = []
   funders.map((funder) => {
     seriesBudget.push({
-      color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } },
+      color: { pattern: { ...pattern, backgroundColor: getCssColor(`funder-${funder}`) } },
       data: years.map((year) => (data?.aggregations?.by_project_type?.buckets ?? [])
         ?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 1)?.by_project_year?.buckets
@@ -154,7 +155,7 @@ export default function ProjectsOverTime({ name, participantSuperOrganizationChi
       name: [funder, getI18nLabel(i18n, 'coordinator')].join(' - '),
     })
     seriesBudget.push({
-      color: getCssColor({ name: funder, prefix: "funder" }),
+      color: getCssColor(`funder-${funder}`),
       data: years.map((year) => (data?.aggregations?.by_project_type?.buckets ?? [])
         ?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 0)?.by_project_year?.buckets
@@ -164,7 +165,7 @@ export default function ProjectsOverTime({ name, participantSuperOrganizationChi
       name: [funder, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
     })
     seriesBudgetRegion.push({
-      color: getCssColor({ name: funder, prefix: "funder" }),
+      color: getCssColor(`funder-${funder}`),
       data: years.map((year) => (data?.aggregations?.by_project_type?.buckets ?? [])
         ?.find((bucket) => bucket.key === funder)?.by_project_year?.buckets
         ?.find((bucket) => bucket.key === year)?.should_ignore_budget?.buckets
@@ -173,7 +174,7 @@ export default function ProjectsOverTime({ name, participantSuperOrganizationChi
       name: funder,
     })
     seriesFunding.push({
-      color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } },
+      color: { pattern: { ...pattern, backgroundColor: getCssColor(`funder-${funder}`) } },
       data: years.map((year) => (data?.aggregations?.by_project_type?.buckets ?? [])
         ?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 1)?.by_project_year?.buckets
@@ -183,7 +184,7 @@ export default function ProjectsOverTime({ name, participantSuperOrganizationChi
       name: [funder, getI18nLabel(i18n, 'coordinator')].join(' - '),
     })
     seriesFunding.push({
-      color: getCssColor({ name: funder, prefix: "funder" }),
+      color: getCssColor(`funder-${funder}`),
       data: years.map((year) => (data?.aggregations?.by_project_type?.buckets ?? [])
         ?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 0)?.by_project_year?.buckets
@@ -193,7 +194,7 @@ export default function ProjectsOverTime({ name, participantSuperOrganizationChi
       name: [funder, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
     })
     seriesFundingRegion.push({
-      color: getCssColor({ name: funder, prefix: "funder" }),
+      color: getCssColor(`funder-${funder}`),
       data: years.map((year) => (data?.aggregations?.by_project_type?.buckets ?? [])
         ?.find((bucket) => bucket.key === funder)?.by_project_year?.buckets
         ?.find((bucket) => bucket.key === year)?.should_ignore_funding?.buckets
@@ -202,7 +203,7 @@ export default function ProjectsOverTime({ name, participantSuperOrganizationChi
       name: funder,
     })
     seriesProject.push({
-      color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } },
+      color: { pattern: { ...pattern, backgroundColor: getCssColor(`funder-${funder}`) } },
       data: years.map((year) => (data?.aggregations?.by_project_type?.buckets ?? [])
         ?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 1)?.by_project_year?.buckets
@@ -211,7 +212,7 @@ export default function ProjectsOverTime({ name, participantSuperOrganizationChi
       name: [funder, getI18nLabel(i18n, 'coordinator')].join(' - '),
     })
     seriesProject.push({
-      color: getCssColor({ name: funder, prefix: "funder" }),
+      color: getCssColor(`funder-${funder}`),
       data: years.map((year) => (data?.aggregations?.by_project_type?.buckets ?? [])
         ?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 0)?.by_project_year?.buckets
@@ -220,7 +221,7 @@ export default function ProjectsOverTime({ name, participantSuperOrganizationChi
       name: [funder, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
     })
     seriesProjectRegion.push({
-      color: getCssColor({ name: funder, prefix: "funder" }),
+      color: getCssColor(`funder-${funder}`),
       data: years.map((year) => (data?.aggregations?.by_project_type?.buckets ?? [])
         ?.find((bucket) => bucket.key === funder)?.by_project_year?.buckets
         ?.find((bucket) => bucket.key === year)?.by_unique_project?.value ?? 0),

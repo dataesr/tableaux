@@ -3,7 +3,8 @@ import { useQuery } from "@tanstack/react-query"
 import { useSearchParams } from "react-router-dom"
 
 import DefaultSkeleton from "../../../../components/charts-skeletons/default.tsx"
-import { formatCompactNumber, funders, getCssColor, getEsQuery, getYearRangeLabel, years } from "../../utils.ts"
+import { formatCompactNumber, funders, getEsQuery, getYearRangeLabel, years } from "../../utils.ts"
+import { getCssColor } from "../../../../utils/colors.ts"
 import ChartCard from "../chart-card"
 
 const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env
@@ -128,7 +129,7 @@ export default function Cards({ participantSuperOrganizationChildrenIds = [] }: 
               bold
               className="fr-mb-0"
               style={{
-                color: getCssColor({ name: funder, prefix: "funder" }),
+                color: getCssColor(`funder-${funder}`),
                 textAlign: "center",
                 textTransform: "uppercase",
               }}
@@ -152,7 +153,7 @@ export default function Cards({ participantSuperOrganizationChildrenIds = [] }: 
           <Col xs="12" md="2" key={`card-projects-${funder}`}>
             {isLoading ? <DefaultSkeleton height="250px" /> :
               <ChartCard
-                color={getCssColor({ name: funder, prefix: "funder" })}
+                color={getCssColor(`funder-${funder}`)}
                 data={dataFunders[funder].projects}
                 detail={getYearRangeLabel({ yearMax, yearMin })}
                 title={`Projets ${funder}`}
@@ -180,7 +181,7 @@ export default function Cards({ participantSuperOrganizationChildrenIds = [] }: 
           <Col xs="12" md="2" key={`card-budget-${funder}`}>
             {isLoading ? <DefaultSkeleton height="250px" /> :
               <ChartCard
-                color={getCssColor({ name: funder, prefix: "funder" })}
+                color={getCssColor(`funder-${funder}`)}
                 data={dataFunders[funder].budget}
                 detail={getYearRangeLabel({ yearMax, yearMin })}
                 title={`Financement global des projets ${funder}`}
@@ -206,7 +207,7 @@ export default function Cards({ participantSuperOrganizationChildrenIds = [] }: 
           <Col xs="12" md="2" key={`card-funding-${funder}`}>
             {isLoading ? <DefaultSkeleton height="250px" /> :
               <ChartCard
-                color={getCssColor({ name: funder, prefix: "funder" })}
+                color={getCssColor(`funder-${funder}`)}
                 data={dataFunders[funder].funding}
                 detail={getYearRangeLabel({ yearMax, yearMin })}
                 title={`Financements perçus des projets ${funder}`}

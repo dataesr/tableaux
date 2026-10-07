@@ -1,5 +1,3 @@
-import { getCssColor as getCssColorGlobal } from "../../utils/colors"
-
 const funders = ["ANR", "PIA ANR", "PIA hors ANR", "Horizon 2020", "Horizon Europe"]
 
 const pattern = { height: 4, path: "M 2 2 l 2 2", width: 4 }
@@ -20,18 +18,6 @@ const formatPercent = (number: number, decimals: number = 0): string => {
     style: "percent",
   })
   return formatter.format(number)
-}
-
-const getCssColor = ({ name, prefix = "" }: { name: string, prefix?: string }): string => {
-  let variableName: string = ""
-  if (prefix?.length > 0) variableName += `${prefix}-`
-  variableName += name.toLowerCase().replace(/[^0-9a-z ]/g, "").replace(/  +/g, " ").replaceAll(" ", "-")
-  let color = getCssColorGlobal(variableName)
-  if (color === '') {
-    console.error(`No CSS color for ${variableName}`)
-    color = "#c3c3c3"
-  }
-  return color
 }
 
 const getEsQuery = ({ regions, structures, yearMax = years[years.length - 1], yearMin = years[0] }:
@@ -87,7 +73,6 @@ export {
   formatCompactNumber,
   formatPercent,
   funders,
-  getCssColor,
   getEsQuery,
   getYearRangeLabel,
   pattern,

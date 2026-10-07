@@ -10,7 +10,8 @@ import { getI18nLabel } from "../../../../utils.tsx"
 import ChartWrapperFundings from "../../components/chart-wrapper-fundings"
 import SegmentedControl from "../../components/segmented-control/index.tsx"
 import i18n from "../../i18n.json"
-import { formatCompactNumber, formatPercent, funders, getCssColor, getEsQuery, getYearRangeLabel, pattern } from "../../utils.ts"
+import { formatCompactNumber, formatPercent, funders, getEsQuery, getYearRangeLabel, pattern } from "../../utils.ts"
+import { getCssColor } from "../../../../utils/colors.ts"
 
 const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env
 
@@ -137,52 +138,52 @@ export default function ProjectsByFunder({ name, participantSuperOrganizationChi
     const isCoordBudget = isCoord?.should_ignore_budget?.buckets?.find((bucket) => bucket.key.toString() === '0')?.sum_budget?.value ?? 0
     const isNotCoordBudget = isNotCoord?.should_ignore_budget?.buckets?.find((bucket) => bucket.key.toString() === '0')?.sum_budget?.value ?? 0
     seriesBudget.push({
-      color: getCssColor({ name: funder, prefix: "funder" }),
-      data: [{ name: funder, x: index, y: isNotCoordBudget, y_perc: isNotCoordBudget === 0 ? 0 : isNotCoordBudget / (isCoordBudget + isNotCoordBudget), total: isCoordBudget + isNotCoordBudget, color: getCssColor({ name: funder, prefix: "funder" }) }],
+      color: getCssColor(`funder-${funder}`),
+      data: [{ name: funder, x: index, y: isNotCoordBudget, y_perc: isNotCoordBudget === 0 ? 0 : isNotCoordBudget / (isCoordBudget + isNotCoordBudget), total: isCoordBudget + isNotCoordBudget, color: getCssColor(`funder-${funder}`) }],
       name: [funder, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
     })
     seriesBudget.push({
-      color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } },
-      data: [{ name: funder, x: index, y: isCoordBudget, y_perc: isCoordBudget === 0 ? 0 : isCoordBudget / (isCoordBudget + isNotCoordBudget), total: isCoordBudget + isNotCoordBudget, color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } } }],
+      color: { pattern: { ...pattern, backgroundColor: getCssColor(`funder-${funder}`) } },
+      data: [{ name: funder, x: index, y: isCoordBudget, y_perc: isCoordBudget === 0 ? 0 : isCoordBudget / (isCoordBudget + isNotCoordBudget), total: isCoordBudget + isNotCoordBudget, color: { pattern: { ...pattern, backgroundColor: getCssColor(`funder-${funder}`) } } }],
       name: [funder, getI18nLabel(i18n, 'coordinator')].join(' - '),
     })
     seriesBudgetRegion.push({
-      color: getCssColor({ name: funder, prefix: "funder" }),
-      data: [{ name: funder, x: index, y: funderData?.should_ignore_budget?.buckets?.find((bucket) => bucket.key.toString() === '0')?.sum_budget?.value ?? 0, y_perc: 0, total: 0, color: getCssColor({ name: funder, prefix: "funder" }) }],
+      color: getCssColor(`funder-${funder}`),
+      data: [{ name: funder, x: index, y: funderData?.should_ignore_budget?.buckets?.find((bucket) => bucket.key.toString() === '0')?.sum_budget?.value ?? 0, y_perc: 0, total: 0, color: getCssColor(`funder-${funder}`) }],
       name: funder,
     })
     const isCoordFunding = isCoord?.should_ignore_funding?.buckets?.find((bucket) => bucket.key.toString() === '0')?.sum_funding?.value ?? 0
     const isNotCoordFunding = isNotCoord?.should_ignore_funding?.buckets?.find((bucket) => bucket.key.toString() === '0')?.sum_funding?.value ?? 0
     seriesFunding.push({
-      color: getCssColor({ name: funder, prefix: "funder" }),
-      data: [{ name: funder, x: index, y: isNotCoordFunding, y_perc: isNotCoordFunding === 0 ? 0 : isNotCoordFunding / (isCoordFunding + isNotCoordFunding), total: isCoordFunding + isNotCoordFunding, color: getCssColor({ name: funder, prefix: "funder" }) }],
+      color: getCssColor(`funder-${funder}`),
+      data: [{ name: funder, x: index, y: isNotCoordFunding, y_perc: isNotCoordFunding === 0 ? 0 : isNotCoordFunding / (isCoordFunding + isNotCoordFunding), total: isCoordFunding + isNotCoordFunding, color: getCssColor(`funder-${funder}`) }],
       name: [funder, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
     })
     seriesFunding.push({
-      color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } },
-      data: [{ name: funder, x: index, y: isCoordFunding, y_perc: isCoordFunding === 0 ? 0 : isCoordFunding / (isCoordFunding + isNotCoordFunding), total: isCoordFunding + isNotCoordFunding, color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } } }],
+      color: { pattern: { ...pattern, backgroundColor: getCssColor(`funder-${funder}`) } },
+      data: [{ name: funder, x: index, y: isCoordFunding, y_perc: isCoordFunding === 0 ? 0 : isCoordFunding / (isCoordFunding + isNotCoordFunding), total: isCoordFunding + isNotCoordFunding, color: { pattern: { ...pattern, backgroundColor: getCssColor(`funder-${funder}`) } } }],
       name: [funder, getI18nLabel(i18n, 'coordinator')].join(' - '),
     })
     seriesFundingRegion.push({
-      color: getCssColor({ name: funder, prefix: "funder" }),
-      data: [{ name: funder, x: index, y: funderData?.should_ignore_funding?.buckets?.find((bucket) => bucket.key.toString() === '0')?.sum_funding?.value ?? 0, y_perc: 0, total: 0, color: getCssColor({ name: funder, prefix: "funder" }) }],
+      color: getCssColor(`funder-${funder}`),
+      data: [{ name: funder, x: index, y: funderData?.should_ignore_funding?.buckets?.find((bucket) => bucket.key.toString() === '0')?.sum_funding?.value ?? 0, y_perc: 0, total: 0, color: getCssColor(`funder-${funder}`) }],
       name: funder,
     })
     const isCoordProject = isCoord?.by_unique_project?.value ?? 0
     const isNotCoordProject = isNotCoord?.by_unique_project?.value ?? 0
     seriesProject.push({
-      color: getCssColor({ name: funder, prefix: "funder" }),
-      data: [{ name: funder, x: index, y: isNotCoordProject, y_perc: isNotCoordProject === 0 ? 0 : isNotCoordProject / (isCoordProject + isNotCoordProject), total: isCoordProject + isNotCoordProject, color: getCssColor({ name: funder, prefix: "funder" }) }],
+      color: getCssColor(`funder-${funder}`),
+      data: [{ name: funder, x: index, y: isNotCoordProject, y_perc: isNotCoordProject === 0 ? 0 : isNotCoordProject / (isCoordProject + isNotCoordProject), total: isCoordProject + isNotCoordProject, color: getCssColor(`funder-${funder}`) }],
       name: [funder, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
     })
     seriesProject.push({
-      color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } },
-      data: [{ name: funder, x: index, y: isCoordProject, y_perc: isCoordProject === 0 ? 0 : isCoordProject / (isCoordProject + isNotCoordProject), total: isCoordProject + isNotCoordProject, color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } } }],
+      color: { pattern: { ...pattern, backgroundColor: getCssColor(`funder-${funder}`) } },
+      data: [{ name: funder, x: index, y: isCoordProject, y_perc: isCoordProject === 0 ? 0 : isCoordProject / (isCoordProject + isNotCoordProject), total: isCoordProject + isNotCoordProject, color: { pattern: { ...pattern, backgroundColor: getCssColor(`funder-${funder}`) } } }],
       name: [funder, getI18nLabel(i18n, 'coordinator')].join(' - '),
     })
     seriesProjectRegion.push({
-      color: getCssColor({ name: funder, prefix: "funder" }),
-      data: [{ name: funder, x: index, y: funderData?.by_unique_project?.value ?? 0, y_perc: 0, total: 0, color: getCssColor({ name: funder, prefix: "funder" }) }],
+      color: getCssColor(`funder-${funder}`),
+      data: [{ name: funder, x: index, y: funderData?.by_unique_project?.value ?? 0, y_perc: 0, total: 0, color: getCssColor(`funder-${funder}`) }],
       name: funder,
     })
     categories.push(funder)
