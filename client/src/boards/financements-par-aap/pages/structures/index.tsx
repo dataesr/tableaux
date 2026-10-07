@@ -25,11 +25,6 @@ export default function Structures() {
     setSearchParams(searchParams)
   }, [searchParams, setSearchParams])
 
-  const handleStructure = (structure) => {
-    searchParams.set("structureId", structure)
-    setSearchParams(searchParams)
-  };
-
   return (
     structure ? (
       <DisplayStructure />
@@ -72,10 +67,10 @@ export default function Structures() {
               <Col key={structure.id} xs="12" md="6" lg="4">
                 <CardSimple
                   description={structure.region}
-                  onClick={() => handleStructure(structure.id)}
                   subtitle={structure.typologie_1}
                   title={structure.label}
-                  year={structure.label}
+                  type="structureId"
+                  value={structure.id}
                 />
               </Col>
             ))}

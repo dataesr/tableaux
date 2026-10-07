@@ -1,66 +1,37 @@
-import { Text, Title } from "@dataesr/dsfr-plus";
+import { Link, Text, Title } from "@dataesr/dsfr-plus";
 
 import "./styles.scss";
 
 interface StructureCardProps {
-  as?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
-  bottomText?: string;
-  className?: string;
   description?: string;
-  onClick?: () => void;
-  stat?: number;
   subtitle?: string;
   title: string;
-  year?: string | number;
+  type: string;
+  value: any;
 }
 
+
 export default function CardSimple({
-  as = "h2",
-  bottomText,
-  className = "",
   description,
-  onClick,
-  stat,
   subtitle,
   title,
-  year,
+  type,
+  value,
 }: StructureCardProps) {
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if ((e.key === "Enter" || e.key === " ") && onClick) {
-      e.preventDefault();
-      onClick();
-    }
-  };
-
   return (
     <div
-      className={`structure-card ${className}`}
-      onClick={onClick}
-      onKeyDown={handleKeyDown}
-      role={onClick ? "button" : undefined}
-      tabIndex={onClick ? 0 : undefined}
+      className="structure-card fr-card fr-enlarge-link fr-p-3w"
+      role="button"
+      tabIndex={0}
     >
-      <Title as={as} className="structure-card__title">
-        {title}
+      <Title as="h2" className="structure-card__title fr-card_title" look="h5">
+        <Link href={`?${type}=${value}`}>
+          {title}
+        </Link>
       </Title>
-
       {subtitle && <Text className="structure-card__meta">{subtitle}</Text>}
-
       {description && (
         <Text className="structure-card__meta">{description}</Text>
-      )}
-
-      {stat && (
-        <Text className="structure-card__stat">
-          {stat.toLocaleString("fr-FR")} étudiant{stat > 1 ? "s" : ""} inscrit
-          {stat > 1 ? "s" : ""} en {year}
-        </Text>
-      )}
-
-      {bottomText && (
-        <Text className="structure-card__bottom fr-text--sm fr-mt-1w">
-          {bottomText}
-        </Text>
       )}
     </div>
   );

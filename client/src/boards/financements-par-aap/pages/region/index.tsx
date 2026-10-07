@@ -28,11 +28,6 @@ export default function regions() {
     setSearchParams(searchParams)
   }, [searchParams, setSearchParams])
 
-  const handleRegion = (region) => {
-    searchParams.set("region", region)
-    setSearchParams(searchParams)
-  };
-
   const body: any = {
     ...getEsQuery({}),
     aggregations: {
@@ -110,8 +105,9 @@ export default function regions() {
               <Col key={region.key} xs="12" md="6" lg="4">
                 <CardSimple
                   description={`${region.doc_count} participations`}
-                  onClick={() => handleRegion(region.key)}
                   title={region.key}
+                  type="region"
+                  value={region.key}
                 />
               </Col>
             ))}
