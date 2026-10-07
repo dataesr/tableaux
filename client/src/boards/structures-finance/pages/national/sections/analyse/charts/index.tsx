@@ -198,7 +198,7 @@ export default function NationalChart({
             <Col xs="12" md="4">
               <div className="fr-select-group fr-mb-0">
                 <label className="fr-label" htmlFor="national-year">
-                  Année
+                  Année du graphique
                 </label>
                 <select
                   className="fr-select"

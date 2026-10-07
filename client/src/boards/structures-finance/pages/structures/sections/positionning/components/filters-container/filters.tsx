@@ -36,12 +36,19 @@ export default function PositioningFilters({
     <div className="positioning-filters fr-mb-3w">
       <Row gutters>
         <Col xs="12" md="12">
-          <div className="positioning-filters__card">
+          <div
+            className="positioning-filters__card"
+            role="group"
+            aria-labelledby="positioning-filters-title"
+          >
             <div className="positioning-filters__card-header">
               <div className="positioning-filters__icon-wrapper positioning-filters__icon-wrapper--blue">
                 <span className="fr-icon-filter-line" aria-hidden="true" />
               </div>
-              <Text className="fr-text--sm fr-text--bold text-mention-grey">
+              <Text
+                className="fr-text--sm fr-text--bold text-mention-grey"
+                id="positioning-filters-title"
+              >
                 Filtrer la comparaison
               </Text>
             </div>
@@ -150,7 +157,7 @@ export default function PositioningFilters({
                   {filters.type && (
                     <DismissibleTag
                       color="blue-cumulus"
-                      aria-label={`Retirer filtre type`}
+                      aria-label={`Même type (${structureType}) - retirer le filtre`}
                       onClick={() => handleFilterChange("type", "")}
                     >
                       Même type ({structureType})
@@ -159,7 +166,7 @@ export default function PositioningFilters({
                   {filters.typologie && (
                     <DismissibleTag
                       color="blue-cumulus"
-                      aria-label={`Retirer filtre typologie`}
+                      aria-label={`Même typologie (${structureTypologie}) - retirer le filtre`}
                       onClick={() => handleFilterChange("typologie", "")}
                     >
                       Même typologie ({structureTypologie})
@@ -168,7 +175,7 @@ export default function PositioningFilters({
                   {filters.region && (
                     <DismissibleTag
                       color="blue-cumulus"
-                      aria-label={`Retirer filtre région`}
+                      aria-label={`Même région (${structureRegion}) - retirer le filtre`}
                       onClick={() => handleFilterChange("region", "")}
                     >
                       Même région ({structureRegion})
@@ -177,7 +184,7 @@ export default function PositioningFilters({
                   {filters.rce && (
                     <DismissibleTag
                       color="blue-cumulus"
-                      aria-label={`Retirer filtre RCE`}
+                      aria-label={`${structureIsRce ? "RCE uniquement" : "Non RCE uniquement"} - retirer le filtre`}
                       onClick={() => handleFilterChange("rce", "")}
                     >
                       {structureIsRce ? "RCE uniquement" : "Non RCE uniquement"}
@@ -186,7 +193,7 @@ export default function PositioningFilters({
                   {filters.devimmo && (
                     <DismissibleTag
                       color="blue-cumulus"
-                      aria-label={`Retirer filtre dévolution`}
+                      aria-label={`${structureIsDevimmo ? "Avec dévolution immobilière" : "Sans dévolution immobilière"} - retirer le filtre`}
                       onClick={() => handleFilterChange("devimmo", "")}
                     >
                       {structureIsDevimmo
