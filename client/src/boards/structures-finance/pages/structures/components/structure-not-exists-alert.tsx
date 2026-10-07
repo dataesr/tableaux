@@ -44,7 +44,7 @@ export default function StructureNotExistsAlert({
         <Container className="fr-py-6w">
           <Row>
             <Col>
-              <div className="fr-alert fr-alert--warning">
+              <div className="fr-alert fr-alert--warning" role="alert">
                 <p>
                   L'établissement <strong>{etablissementLibHistorique}</strong>{" "}
                   n'existe pas pour l'année <strong>{selectedYear}</strong>.

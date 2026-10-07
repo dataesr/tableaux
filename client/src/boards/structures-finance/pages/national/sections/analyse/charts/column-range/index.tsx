@@ -258,7 +258,7 @@ export default function ColumnRangeChart({
       {isLoading ? (
         <DefaultSkeleton />
       ) : noData ? (
-        <div className="fr-alert fr-alert--warning">
+        <div className="fr-alert fr-alert--warning" role="alert">
           <p className="fr-alert__title">Aucune donnée disponible</p>
           <p>
             Aucun établissement ne dispose de données pour les deux années

@@ -229,7 +229,7 @@ export default function NationalSelector() {
                 </div>
               </Col>
             </Row>
-            <Text size="sm" className="fr-mb-0 fr-text--bold">
+            <Text size="sm" className="fr-mb-0 fr-text--bold" role="status">
               {etablissementCount} établissement
               {etablissementCount > 1 ? "s" : ""}
             </Text>

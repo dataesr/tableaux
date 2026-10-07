@@ -47,7 +47,7 @@ export function PositionnementSection({
   if (allItems.length === 0) {
     return (
       <PositionningSectionWrapper structureName={structureName}>
-        <div className="fr-alert fr-alert--warning">
+        <div className="fr-alert fr-alert--warning" role="alert">
           <Text>
             Les données de comparaison ne sont pas disponibles pour l'année
             sélectionnée.
@@ -72,13 +72,13 @@ export function PositionnementSection({
       />
 
       {filteredItems.length === 0 ? (
-        <div className="fr-alert fr-alert--warning">
+        <div className="fr-alert fr-alert--warning" role="alert">
           <Text>
             Aucun établissement ne correspond aux filtres sélectionnés.
           </Text>
         </div>
       ) : filteredItems.length === 1 ? (
-        <div className="fr-alert fr-alert--warning">
+        <div className="fr-alert fr-alert--warning" role="alert">
           <Text>
             Le graphique ne peut pas être affiché lorsqu'il n'y a qu'un seul
             point.

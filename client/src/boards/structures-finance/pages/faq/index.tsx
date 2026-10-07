@@ -27,7 +27,7 @@ export default function FAQView() {
       <Container className="fr-my-6w">
         <Row>
           <Col>
-            <div className="fr-alert fr-alert--error">
+            <div className="fr-alert fr-alert--error" role="alert">
               <p className="fr-alert__title">Erreur</p>
               <p>
                 {error instanceof Error

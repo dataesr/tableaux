@@ -25,7 +25,7 @@ export default function DefinitionsView() {
       <Container className="fr-my-6w">
         <Row>
           <Col>
-            <div className="fr-alert fr-alert--error">
+            <div className="fr-alert fr-alert--error" role="alert">
               <p className="fr-alert__title">Erreur</p>
               <p>
                 {error instanceof Error

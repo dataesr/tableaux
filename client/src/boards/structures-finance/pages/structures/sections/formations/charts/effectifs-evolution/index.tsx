@@ -219,7 +219,7 @@ export default function EffectifsEvolutionChart({
 
   if (!data || data.length === 0 || availableViews.length === 0) {
     return (
-      <div className="fr-alert fr-alert--info fr-mt-2w">
+      <div className="fr-alert fr-alert--info fr-mt-2w" role="status">
         <p>Aucune donnée d'évolution des effectifs disponible.</p>
       </div>
     );

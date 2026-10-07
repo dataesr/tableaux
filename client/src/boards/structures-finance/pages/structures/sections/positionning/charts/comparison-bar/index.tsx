@@ -162,7 +162,7 @@ export default function ComparisonBarChart({
       )}
 
       {!chartOptions || !filteredData?.length || !currentStructureHasData ? (
-        <div className="fr-alert fr-alert--warning">
+        <div className="fr-alert fr-alert--warning" role="alert">
           <p className="fr-alert__title">Aucune donnée disponible</p>
           <p>
             Aucune donnée disponible pour{" "}

@@ -32,7 +32,7 @@ export default function FAQ({ data, className = "" }: FAQProps) {
 
   if (!data || data.length === 0) {
     return (
-      <div className="fr-alert fr-alert--info">
+      <div className="fr-alert fr-alert--info" role="status">
         <p>Aucune question fréquente disponible pour le moment.</p>
       </div>
     );

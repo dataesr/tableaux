@@ -74,7 +74,7 @@ export function AnalysesSection({
   if (analysesWithData.size === 0) {
     return (
       <AnalysesSectionWrapper>
-        <div className="fr-alert fr-alert--info">
+        <div className="fr-alert fr-alert--info" role="status">
           <p>Aucune donnée d'évolution disponible pour cet établissement</p>
         </div>
       </AnalysesSectionWrapper>

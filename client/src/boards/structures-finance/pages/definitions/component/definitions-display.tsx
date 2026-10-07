@@ -38,7 +38,7 @@ export default function Definitions({
 }: DefinitionsProps) {
   if (!data || data.length === 0) {
     return (
-      <div className="fr-alert fr-alert--info">
+      <div className="fr-alert fr-alert--info" role="status">
         <p>Aucune définition disponible pour le moment.</p>
       </div>
     );

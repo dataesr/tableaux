@@ -249,7 +249,7 @@ export default function StructureColumnRangeChart({
           )}
         />
       ) : (
-        <div className="fr-alert fr-alert--warning">
+        <div className="fr-alert fr-alert--warning" role="alert">
           <p>Aucune donnée disponible pour la période sélectionnée.</p>
         </div>
       )}

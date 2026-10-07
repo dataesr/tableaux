@@ -33,7 +33,7 @@ export default function NoDataForYearAlert({
                 <Container className="fr-py-4w">
                     <Row gutters className="fr-grid-row--middle fr-mb-3w">
                         <Col xs="12" md="8">
-                            <div className="fr-alert fr-alert--info">
+                            <div className="fr-alert fr-alert--info" role="status">
                                 <p>
                                     Aucune donnée disponible pour <strong>{etablissementLib}</strong> en <strong>{selectedYear}</strong>.
                                 </p>

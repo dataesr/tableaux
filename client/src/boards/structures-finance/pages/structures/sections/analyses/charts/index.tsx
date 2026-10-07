@@ -174,7 +174,7 @@ export default function EvolutionChart({
 
   if (institutionSeries.length === 0) {
     return (
-      <div className="fr-alert fr-alert--info">
+      <div className="fr-alert fr-alert--info" role="status">
         <p>Aucune donnée disponible</p>
       </div>
     );
