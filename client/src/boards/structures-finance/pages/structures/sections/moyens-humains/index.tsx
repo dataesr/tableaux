@@ -97,6 +97,7 @@ export function MoyensHumainsSection({ data }: MoyensHumainsSectionProps) {
           <Col xs="12" sm="6" md="4">
             <MetricChartCard
               title="Charges de personnel"
+              titleAs="h3"
               value={
                 data.charges_de_personnel != null
                   ? `${Number(data.charges_de_personnel).toLocaleString(
@@ -117,6 +118,7 @@ export function MoyensHumainsSection({ data }: MoyensHumainsSectionProps) {
           <Col xs="12" sm="6" md="4">
             <MetricChartCard
               title="Poids sur produits"
+              titleAs="h3"
               value={
                 data.charges_de_personnel_produits_encaissables != null
                   ? `${data.charges_de_personnel_produits_encaissables.toLocaleString(
@@ -141,6 +143,7 @@ export function MoyensHumainsSection({ data }: MoyensHumainsSectionProps) {
             <Col xs="12" md="4">
               <MetricChartCard
                 title="Rémunération permanents"
+                titleAs="h3"
                 value={
                   data.taux_de_remuneration_des_permanents != null
                     ? `${data.taux_de_remuneration_des_permanents.toLocaleString(

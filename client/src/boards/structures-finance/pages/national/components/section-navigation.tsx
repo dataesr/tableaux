@@ -48,7 +48,7 @@ export default function SectionNavigation() {
           <li key={item.id} className="fr-nav__item">
             <a
               className="fr-nav__link"
-              href={`#${item.id}`}
+              href={`#section-${item.id}`}
               aria-current={activeSection === item.id ? "page" : undefined}
               onClick={(e) => {
                 e.preventDefault();

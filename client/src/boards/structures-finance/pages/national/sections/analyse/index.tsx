@@ -82,7 +82,7 @@ export function AnalyseSection({
   return (
     <section
       id="section-comparison"
-      role="region"
+      aria-labelledby="section-comparison-title"
       className="fr-mb-3w section-container"
     >
       <div className="section-header fr-mb-4w">

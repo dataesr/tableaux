@@ -236,10 +236,10 @@ export default function PageHeader({ data, onClose }: PageHeaderProps) {
             <div className="page-header__formations-column">
               {hasCursus && (
                 <div className="page-header__formations-group fr-mb-3w">
-                  <Text bold className="fr-text-mention--grey fr-mb-1v">
+                  <Text bold className="fr-text-mention--grey fr-mb-1v" id="page-header-cursus">
                     Cursus
                   </Text>
-                  <ul className="page-header__tag-list">
+                  <ul className="page-header__tag-list" aria-labelledby="page-header-cursus">
                     {data.has_effectif_l && (
                       <li>
                         <Tag size="sm">Licence</Tag>
@@ -260,10 +260,10 @@ export default function PageHeader({ data, onClose }: PageHeaderProps) {
               )}
               {hasFilieres && (
                 <div className="page-header__formations-group fr-mb-3w">
-                  <Text bold className="fr-text-mention--grey fr-mb-1v">
+                  <Text bold className="fr-text-mention--grey fr-mb-1v" id="page-header-filieres">
                     Filières spécifiques
                   </Text>
-                  <ul className="page-header__tag-list">
+                  <ul className="page-header__tag-list" aria-labelledby="page-header-filieres">
                     {data.has_effectif_iut && (
                       <li>
                         <Tag size="sm">IUT</Tag>
@@ -284,10 +284,10 @@ export default function PageHeader({ data, onClose }: PageHeaderProps) {
               )}
               {hasDisciplines && (
                 <div className="page-header__formations-group">
-                  <Text bold className="fr-text-mention--grey fr-mb-1v">
+                  <Text bold className="fr-text-mention--grey fr-mb-1v" id="page-header-disciplines">
                     Disciplines
                   </Text>
-                  <ul className="page-header__tag-list">
+                  <ul className="page-header__tag-list" aria-labelledby="page-header-disciplines">
                     {data.has_effectif_dsa && (
                       <li>
                         <Tag size="sm">Droit Éco</Tag>

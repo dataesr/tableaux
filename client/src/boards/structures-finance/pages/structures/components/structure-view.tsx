@@ -279,7 +279,7 @@ export default function StructureView() {
         />
       </Container>
 
-      <Container as="section" className="fr-mt-4w" aria-label={section}>
+      <Container className="fr-mt-4w">
         <SectionYearProvider
           label="Année"
           years={years.map(String)}
