@@ -102,29 +102,32 @@ export default function MetricDefinitionsTable({
 
   return (
     <div className="metric-definitions-table fr-mt-4w">
-      <button
-        className="definitions-toggle"
-        onClick={() => setIsOpen(!isOpen)}
-        aria-expanded={isOpen}
-      >
-        <div className="definitions-toggle-content">
+      <Title as="h2" look="h6" className="fr-mb-0">
+        <button
+          type="button"
+          className="definitions-toggle"
+          onClick={() => setIsOpen(!isOpen)}
+          aria-expanded={isOpen}
+        >
+          <span className="definitions-toggle-content">
+            <span
+              className="fr-icon-information-line fr-icon--lg"
+              aria-hidden="true"
+            />
+            <span className="definitions-toggle-label">
+              À propos des indicateurs
+            </span>
+            <span className="definitions-count">
+              {relevantDefinitions.length} indicateur
+              {relevantDefinitions.length > 1 ? "s" : ""}
+            </span>
+          </span>
           <span
-            className="fr-icon-information-line fr-icon--lg"
+            className={`fr-icon-arrow-down-s-line toggle-icon ${isOpen ? "open" : ""}`}
             aria-hidden="true"
           />
-          <Title as="h2" look="h6" className="fr-mb-0">
-            À propos des indicateurs
-          </Title>
-          <span className="definitions-count">
-            {relevantDefinitions.length} indicateur
-            {relevantDefinitions.length > 1 ? "s" : ""}
-          </span>
-        </div>
-        <span
-          className={`fr-icon-arrow-down-s-line toggle-icon ${isOpen ? "open" : ""}`}
-          aria-hidden="true"
-        />
-      </button>
+        </button>
+      </Title>
 
       {isOpen && (
         <div className="definitions-grid">
