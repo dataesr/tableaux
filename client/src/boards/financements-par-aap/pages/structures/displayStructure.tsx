@@ -1,4 +1,4 @@
-import { Alert, Button, Col, Container, Link, Row, Text, Title } from "@dataesr/dsfr-plus"
+import { Alert, Button, Col, Container, Link, Row, Text, Title, Toggle } from "@dataesr/dsfr-plus"
 import { useQuery } from "@tanstack/react-query"
 import { useState } from "react"
 import { useNavigate, useSearchParams } from "react-router-dom"
@@ -210,10 +210,11 @@ export default function DisplayStructure() {
               </div>
               {!!participantIsSuperOrganization && (
                 <div style={{ alignItems: "center", display: "flex", gap: "0.5rem" }}>
-                  <div className="fr-toggle">
-                    <input checked={withComponents} className="fr-toggle__input" onChange={handleDisplayComponentsChange} type="checkbox" />
-                    <label className="fr-toggle__label">Vision consolidée avec ses établissements composantes</label>
-                  </div>
+                  <Toggle
+                    checked={withComponents}
+                    label="Vision consolidée avec ses établissements composantes"
+                    onChange={handleDisplayComponentsChange}
+                  />
                 </div>
               )}
             </Col>
