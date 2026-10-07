@@ -1,4 +1,4 @@
-import { Badge, Col, DismissibleTag, Row, TagGroup } from "@dataesr/dsfr-plus"
+import { Col, DismissibleTag, Row, TagGroup } from "@dataesr/dsfr-plus"
 import { useQuery } from "@tanstack/react-query"
 import { useState } from "react"
 import { useSearchParams } from "react-router-dom"
@@ -171,29 +171,29 @@ export default function StructuresSelector() {
 
   return (
     <>
-      <Row gutters className="fr-grid-row--middle">
+      <Row gutters className="fr-grid-row--middle" role="group" aria-label="Filtrer les établissements">
         <Col xs="12" sm="3">
           {isLoadingRegions ? <DefaultSkeleton height="40px" /> : (
             <Select
-              label={region === "*" ? <>Région <Badge className="fr-ml-1v" size="sm" >{regions.length}</Badge></> : region}
-              icon="map-pin-2-line"
-              size="sm"
+              aria-label="Rechercher une région par nom..."
               fullWidth
-              aria-label="Filtrer par région"
+              icon="map-pin-2-line"
+              label={region === "*" ? <>Région <span className="fr-badge fr-badge--sm fr-ml-1v">{regions.length}</span></> : region}
+              size="sm"
             >
               <Select.Option
-                value="*"
-                selected={region === "*"}
                 onClick={() => setRegion("*")}
+                selected={region === "*"}
+                value="*"
               >
                 Toutes les régions
               </Select.Option>
               {regions.map((c: string) => (
                 <Select.Option
                   key={c}
-                  value={c}
-                  selected={region === c}
                   onClick={() => setRegion(c)}
+                  selected={region === c}
+                  value={c}
                 >
                   {c}
                 </Select.Option>
@@ -204,25 +204,25 @@ export default function StructuresSelector() {
         <Col xs="12" sm="3">
           {isLoadingTypologies ? <DefaultSkeleton height="40px" /> : (
             <Select
-              label={typology === "*" ? <>Typologie <Badge className="fr-ml-1v" size="sm">{typologies.length}</Badge></> : typology}
-              icon="layout-grid-line"
-              size="sm"
+              aria-label="Rechercher une typologie par nom..."
               fullWidth
-              aria-label="Filtrer par typologie"
+              icon="layout-grid-line"
+              label={typology === "*" ? <>Typologie <span className="fr-badge fr-badge--sm fr-ml-1v">{typologies.length}</span></> : typology}
+              size="sm"
             >
               <Select.Option
-                value="*"
-                selected={typology === "*"}
                 onClick={() => setTypology("*")}
+                selected={typology === "*"}
+                value="*"
               >
                 Toutes les typologies
               </Select.Option>
               {typologies.map((t: string) => (
                 <Select.Option
                   key={t}
-                  value={t}
-                  selected={typology === t}
                   onClick={() => setTypology(t)}
+                  selected={typology === t}
+                  value={t}
                 >
                   {t}
                 </Select.Option>
@@ -233,17 +233,17 @@ export default function StructuresSelector() {
         <Col xs="12" sm="6">
           {(isLoadingStructures || isLoadingStructuresAll) ? <DefaultSkeleton height="40px" /> : (
             <Select
-              label={<>Établissement <Badge className="fr-ml-1v" size="sm">{structures.length}</Badge></>}
-              icon="search-line"
-              size="sm"
+              aria-label="Rechercher un établissement par nom..."
               fullWidth
+              icon="search-line"
+              label={<>Établissement <span className="fr-badge fr-badge--sm fr-ml-1v">{structures.length}</span></>}
               multiple
-              aria-label="Rechercher et ajouter un établissement"
+              size="sm"
             >
               <Select.Search
+                onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Rechercher par nom..."
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
               />
               <Select.Content maxHeight="300px">
                 {structures.filter((s) =>
@@ -287,9 +287,9 @@ export default function StructuresSelector() {
                   )
                   .map((s) => (
                     <Select.Checkbox
+                      checked={selectedStructures.includes(s.id)}
                       key={s.id}
                       value={s.id}
-                      checked={selectedStructures.includes(s.id)}
                       onChange={(checked) => {
                         if (checked) {
                           handleStructureChange(s.id)

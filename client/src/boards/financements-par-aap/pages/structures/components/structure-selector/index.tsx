@@ -1,4 +1,4 @@
-import { Badge, Col, Row } from "@dataesr/dsfr-plus"
+import { Col, Row } from "@dataesr/dsfr-plus"
 import { useQuery } from "@tanstack/react-query"
 import { useSearchParams } from "react-router-dom"
 
@@ -11,10 +11,10 @@ const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.en
 
 
 export default function StructureSelector({ setStructures }) {
-  const [region, setRegion] = useState("*")
+  const [selectedRegion, setSelectedRegion] = useState("*")
   const [searchParams, setSearchParams] = useSearchParams({})
   const [searchQuery, setSearchQuery] = useState("")
-  const [typology, setTypology] = useState("*")
+  const [selectedTypology, setSelectedTypology] = useState("*")
 
   const bodyRegions: any = {
     ...getEsQuery({}),
@@ -28,14 +28,13 @@ export default function StructureSelector({ setStructures }) {
       },
     },
   }
-  // bodyRegions.query.bool.filter.push({ term: { participant_is_main_parent: 1 } })
   bodyRegions.query.bool.filter.push({ term: { participant_type: "institution" } })
   bodyRegions.query.bool.filter.push({ terms: { "participant_typologie_1.keyword": ["Ecoles, instituts et assimilés", "Organismes de recherche", "Universités et assimilés"] } })
-  if (typology) {
-    bodyRegions.query.bool.filter.push({ wildcard: { "participant_typologie_1.keyword": typology } })
+  if (selectedTypology) {
+    bodyRegions.query.bool.filter.push({ wildcard: { "participant_typologie_1.keyword": selectedTypology } })
   }
   const { data: dataRegions, isLoading: isLoadingRegions } = useQuery({
-    queryKey: ["fundings-regions", typology],
+    queryKey: ["fundings-regions", selectedTypology],
     queryFn: () =>
       fetch(
         `${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_ES_INDEX_PARTICIPATIONS}`,
@@ -64,14 +63,13 @@ export default function StructureSelector({ setStructures }) {
       },
     },
   }
-  // bodyTypologies.query.bool.filter.push({ term: { participant_is_main_parent: 1 } })
   bodyTypologies.query.bool.filter.push({ term: { participant_type: "institution" } })
   bodyTypologies.query.bool.filter.push({ terms: { "participant_typologie_1.keyword": ["Ecoles, instituts et assimilés", "Organismes de recherche", "Universités et assimilés"] } })
-  if (region) {
-    bodyTypologies.query.bool.filter.push({ wildcard: { "address.region.keyword": region } })
+  if (selectedRegion) {
+    bodyTypologies.query.bool.filter.push({ wildcard: { "address.region.keyword": selectedRegion } })
   }
   const { data: dataTypologies, isLoading: isLoadingTypologies } = useQuery({
-    queryKey: ["fundings-typologies", region],
+    queryKey: ["fundings-typologies", selectedRegion],
     queryFn: () =>
       fetch(
         `${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_ES_INDEX_PARTICIPATIONS}`,
@@ -98,17 +96,16 @@ export default function StructureSelector({ setStructures }) {
       },
     },
   }
-  // bodyStructures.query.bool.filter.push({ term: { participant_is_main_parent: 1 } })
   bodyStructures.query.bool.filter.push({ term: { participant_type: "institution" } })
   bodyStructures.query.bool.filter.push({ terms: { "participant_typologie_1.keyword": ["Ecoles, instituts et assimilés", "Organismes de recherche", "Universités et assimilés"] } })
-  if (region) {
-    bodyStructures.query.bool.filter.push({ wildcard: { "address.region.keyword": region } })
+  if (selectedRegion) {
+    bodyStructures.query.bool.filter.push({ wildcard: { "address.region.keyword": selectedRegion } })
   }
-  if (typology) {
-    bodyStructures.query.bool.filter.push({ wildcard: { "participant_typologie_1.keyword": typology } })
+  if (selectedTypology) {
+    bodyStructures.query.bool.filter.push({ wildcard: { "participant_typologie_1.keyword": selectedTypology } })
   }
   const { data: dataStructures, isLoading: isLoadingStructures } = useQuery({
-    queryKey: ["fundings-structures", region, typology],
+    queryKey: ["fundings-structures", selectedRegion, selectedTypology],
     queryFn: () =>
       fetch(
         `${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_ES_INDEX_PARTICIPATIONS}`,
@@ -150,29 +147,29 @@ export default function StructureSelector({ setStructures }) {
   }, [dataStructures])
 
   return (
-    <Row gutters className="fr-grid-row--middle">
+    <Row gutters className="fr-grid-row--middle" role="group" aria-label="Filtrer les établissements">
       <Col xs="12" sm="3">
         {isLoadingRegions ? <DefaultSkeleton /> : (
           <Select
-            label={region === "*" ? <>Région <Badge className="fr-ml-1v" size="sm">{regions.length}</Badge></> : region}
-            icon="map-pin-2-line"
-            size="sm"
+            aria-label="Rechercher une région par nom..."
             fullWidth
-            aria-label="Filtrer par région"
+            icon="map-pin-2-line"
+            label={selectedRegion === "*" ? <>Région <span className="fr-badge fr-badge--sm fr-ml-1v">{regions.length}</span></> : selectedRegion}
+            size="sm"
           >
             <Select.Option
+              onClick={() => setSelectedRegion("*")}
+              selected={selectedRegion === "*"}
               value="*"
-              selected={region === "*"}
-              onClick={() => setRegion("*")}
             >
               Toutes les régions
             </Select.Option>
             {regions.map((region: string) => (
               <Select.Option
                 key={region}
+                onClick={() => setSelectedRegion(region)}
+                selected={selectedRegion === region}
                 value={region}
-                selected={region === region}
-                onClick={() => setRegion(region)}
               >
                 {region}
               </Select.Option>
@@ -184,25 +181,25 @@ export default function StructureSelector({ setStructures }) {
       <Col xs="12" sm="3">
         {isLoadingTypologies ? <DefaultSkeleton height="40px" /> : (
           <Select
-            label={typology === "*" ? <>Typologie <Badge className="fr-ml-1v" size="sm">{typologies.length}</Badge></> : typology}
-            icon="layout-grid-line"
-            size="sm"
+            aria-label="Rechercher une typologie par nom..."
             fullWidth
-            aria-label="Filtrer par typologie"
+            icon="layout-grid-line"
+            label={selectedTypology === "*" ? <>Typologie <span className="fr-badge fr-badge--sm fr-ml-1v">{typologies.length}</span></> : selectedTypology}
+            size="sm"
           >
             <Select.Option
+              onClick={() => setSelectedTypology("*")}
+              selected={selectedTypology === "*"}
               value="*"
-              selected={typology === "*"}
-              onClick={() => setTypology("*")}
             >
               Toutes les typologies
             </Select.Option>
             {typologies.map((typology: string) => (
               <Select.Option
                 key={typology}
+                onClick={() => setSelectedTypology(typology)}
+                selected={selectedTypology === typology}
                 value={typology}
-                selected={typology === typology}
-                onClick={() => setTypology(typology)}
               >
                 {typology}
               </Select.Option>
@@ -214,16 +211,16 @@ export default function StructureSelector({ setStructures }) {
       <Col xs="12" sm="6">
         {isLoadingStructures ? <DefaultSkeleton height="40px" /> : (
           <Select
-            label={<>Établissement <Badge className="fr-ml-1v" size="sm">{structures.length}</Badge></>}
-            icon="search-line"
-            size="sm"
+            aria-label="Rechercher un établissement par nom..."
             fullWidth
-            aria-label="Rechercher un établissement"
+            icon="search-line"
+            label={<>Établissement <span className="fr-badge fr-badge--sm fr-ml-1v">{structures.length}</span></>}
+            size="sm"
           >
             <Select.Search
-              placeholder="Rechercher par nom..."
-              value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Rechercher un établissement par nom..."
+              value={searchQuery}
             />
             <Select.Content maxHeight="300px">
               {structures

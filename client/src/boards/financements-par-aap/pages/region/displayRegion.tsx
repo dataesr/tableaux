@@ -88,41 +88,55 @@ export default function DisplayRegion() {
                 Changer de région
               </Button>
               <div style={{ alignItems: "center", display: "flex", gap: "0.5rem" }}>
-                <div className="fr-select-group fr-mb-0">
-                  <label className="fr-label" htmlFor="select-year-min">Année de début</label>
-                  <select className="fr-select" aria-describedby="select-year-min-messages" id="select-year-min" name="select-year-min">
-                    {[...years].sort((a, b) => b - a).map((year) => (
-                      <option
-                        key={year}
-                        onClick={() => handleYearMinChange(String(year))}
-                        selected={yearMin === String(year)}
-                        value={String(year)}
+                <fieldset className="fr-fieldset" aria-label="Années">
+                  <legend className="fr-fieldset__legend--regular fr-fieldset__legend">Années</legend>
+                  <div className="fr-fieldset__element" style={{ maxWidth: "48%" }}>
+                    <div className="fr-select-group fr-mb-0">
+                      <label className="fr-label" htmlFor="select-year-min">Début</label>
+                      <select
+                        aria-label={`Année de début: ${yearMin}`}
+                        className="fr-select"
+                        id="select-year-min"
+                        name="select-year-min"
+                        title="Année de début"
                       >
-                        {year}
-                      </option>
-                    ))}
-                  </select>
-                  <div className="fr-messages-group" id="select-year-min-messages" aria-live="polite">
+                        {[...years].sort((a, b) => b - a).map((year) => (
+                          <option
+                            key={year}
+                            onClick={() => handleYearMinChange(String(year))}
+                            selected={yearMin === String(year)}
+                            value={String(year)}
+                          >
+                            {year}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
                   </div>
-                </div>
-                <Text className="fr-mb-0">à</Text>
-                <div className="fr-select-group">
-                  <label className="fr-label" htmlFor="select-year-max">Année de fin</label>
-                  <select className="fr-select fr-icon-calendar-line" aria-describedby="select-year-max-messages" id="select-year-max" name="select-year-max">
-                    {[...years].sort((a, b) => b - a).map((year) => (
-                      <option
-                        key={year}
-                        onClick={() => handleYearMaxChange(String(year))}
-                        selected={yearMax === String(year)}
-                        value={String(year)}
+                  <div className="fr-fieldset__element" style={{ maxWidth: "48%" }}>
+                    <div className="fr-select-group">
+                      <label className="fr-label" htmlFor="select-year-max">Fin</label>
+                      <select
+                        aria-label={`Année de fin: ${yearMax}`}
+                        className="fr-select"
+                        id="select-year-max"
+                        name="select-year-max"
+                        title="Année de fin"
                       >
-                        {year}
-                      </option>
-                    ))}
-                  </select>
-                  <div className="fr-messages-group" id="select-year-max-messages" aria-live="polite">
+                        {[...years].sort((a, b) => b - a).map((year) => (
+                          <option
+                            key={year}
+                            onClick={() => handleYearMaxChange(String(year))}
+                            selected={yearMax === String(year)}
+                            value={String(year)}
+                          >
+                            {year}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
                   </div>
-                </div>
+                </fieldset>
               </div>
             </Col>
           </Row>
