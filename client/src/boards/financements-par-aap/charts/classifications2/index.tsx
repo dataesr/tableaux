@@ -197,7 +197,7 @@ export default function Classifications2({ name, participantSuperOrganizationChi
   const classificationsProject = data?.aggregations?.by_classifications_project?.buckets ?? []
   classificationsBudget.forEach((classification, index) => {
     seriesBudget.push({
-      color: { pattern: { ...pattern, backgroundColor: getCssColor(`scale-${index + 1}-color`) } },
+      color: { pattern: { ...pattern, backgroundColor: getCssColor(`scale-${index}-color`) } },
       data: funders.map((funder) => classification?.by_project_type?.buckets
         ?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 1)?.should_ignore_budget?.buckets
@@ -205,7 +205,7 @@ export default function Classifications2({ name, participantSuperOrganizationChi
       name: [classification.key, getI18nLabel(i18n, 'coordinator')].join(' - '),
     })
     seriesBudget.push({
-      color: getCssColor(`scale-${index + 1}-color`),
+      color: getCssColor(`scale-${index}-color`),
       data: funders.map((funder) => classification?.by_project_type?.buckets
         ?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 0)?.should_ignore_budget?.buckets
@@ -213,7 +213,7 @@ export default function Classifications2({ name, participantSuperOrganizationChi
       name: [classification.key, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
     })
     seriesBudgetRegion.push({
-      color: getCssColor(`scale-${index + 1}-color`),
+      color: getCssColor(`scale-${index}-color`),
       data: funders.map((funder) => classification?.by_project_type?.buckets
         ?.find((project) => project.key === funder)?.should_ignore_budget?.buckets
         ?.find((bucket) => bucket.key.toString() === '0')?.sum_budget?.value ?? 0),
@@ -222,7 +222,7 @@ export default function Classifications2({ name, participantSuperOrganizationChi
   })
   classificationsFunding.forEach((classification, index) => {
     seriesFunding.push({
-      color: { pattern: { ...pattern, backgroundColor: getCssColor(`scale-${index + 1}-color`) } },
+      color: { pattern: { ...pattern, backgroundColor: getCssColor(`scale-${index}-color`) } },
       data: funders.map((funder) => classification?.by_project_type?.buckets
         ?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 1)?.should_ignore_funding?.buckets
@@ -230,7 +230,7 @@ export default function Classifications2({ name, participantSuperOrganizationChi
       name: [classification.key, getI18nLabel(i18n, 'coordinator')].join(' - '),
     })
     seriesFunding.push({
-      color: getCssColor(`scale-${index + 1}-color`),
+      color: getCssColor(`scale-${index}-color`),
       data: funders.map((funder) => classification?.by_project_type?.buckets
         ?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 0)?.should_ignore_funding?.buckets
@@ -238,7 +238,7 @@ export default function Classifications2({ name, participantSuperOrganizationChi
       name: [classification.key, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
     })
     seriesFundingRegion.push({
-      color: getCssColor(`scale-${index + 1}-color`),
+      color: getCssColor(`scale-${index}-color`),
       data: funders.map((funder) => classification?.by_project_type?.buckets
         ?.find((project) => project.key === funder)?.should_ignore_funding?.buckets
         ?.find((bucket) => bucket.key.toString() === '0')?.sum_funding?.value ?? 0),
@@ -247,21 +247,21 @@ export default function Classifications2({ name, participantSuperOrganizationChi
   })
   classificationsProject.forEach((classification, index) => {
     seriesProject.push({
-      color: { pattern: { ...pattern, backgroundColor: getCssColor(`scale-${index + 1}-color`) } },
+      color: { pattern: { ...pattern, backgroundColor: getCssColor(`scale-${index}-color`) } },
       data: funders.map((funder) => classification?.by_project_type?.buckets
         ?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 1)?.by_unique_project?.value ?? 0),
       name: [classification.key, getI18nLabel(i18n, 'coordinator')].join(' - '),
     })
     seriesProject.push({
-      color: getCssColor(`scale-${index + 1}-color`),
+      color: getCssColor(`scale-${index}-color`),
       data: funders.map((funder) => classification?.by_project_type?.buckets
         ?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 0)?.by_unique_project?.value ?? 0),
       name: [classification.key, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
     })
     seriesProjectRegion.push({
-      color: getCssColor(`scale-${index + 1}-color`),
+      color: getCssColor(`scale-${index}-color`),
       data: funders.map((funder) => classification?.by_project_type?.buckets
         ?.find((project) => project.key === funder)?.by_unique_project?.value ?? 0),
       name: classification.key,

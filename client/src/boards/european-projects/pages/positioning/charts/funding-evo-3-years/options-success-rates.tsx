@@ -87,7 +87,7 @@ export default function Options(data, currentLang): HighchartsOptions {
         const totalSuccessful = data.successful.find((c) => c.id === country.id).data.find((y) => y.year === year.year)?.total_fund_eur || 0;
         return (totalSuccessful / year.total_fund_eur) * 100;
       }),
-      color: rootStyles.getPropertyValue(`--scale-${index + 1}-color`),
+      color: rootStyles.getPropertyValue(`--scale-${index}-color`),
     })),
   };
 

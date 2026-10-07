@@ -91,14 +91,14 @@ export default function Options(data, currentLang): HighchartsOptions {
       .map((country, index) => ({
         name: country[`name_${currentLang}`],
         data: country.data.map((year) => year.total_fund_eur),
-        color: rootStyles.getPropertyValue(`--scale-${index + 1}-color`),
+        color: rootStyles.getPropertyValue(`--scale-${index}-color`),
       }))
       .concat(
         data.successful.map((country, index) => ({
           xAxis: 1,
           name: country[`name_${currentLang}`],
           data: country.data.map((year) => year.total_fund_eur),
-          color: rootStyles.getPropertyValue(`--scale-${index + 1}-color`),
+          color: rootStyles.getPropertyValue(`--scale-${index}-color`),
         })),
       ),
   };

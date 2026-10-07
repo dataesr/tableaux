@@ -101,7 +101,7 @@ export default function FundingEvo3Years() {
             <li key={country.id}>
               <div
                 style={{
-                  background: rootStyles.getPropertyValue(`--scale-${index + 1}-color`),
+                  background: rootStyles.getPropertyValue(`--scale-${index}-color`),
                 }}
               />
               <span>{country[`name_${currentLang}`]}</span>

@@ -7,7 +7,7 @@ import i18n from "./i18n.json";
 const getDSFRColors = () => {
   const rootStyles = getComputedStyle(document.documentElement);
   const colors: string[] = [];
-  for (let i = 1; i <= 20; i++) {
+  for (let i = 0; i <= 20; i++) {
     const color = rootStyles.getPropertyValue(`--scale-${i}-color`).trim();
     if (color) {
       colors.push(color);

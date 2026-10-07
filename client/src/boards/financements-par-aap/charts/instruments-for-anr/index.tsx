@@ -174,61 +174,61 @@ export default function InstrumentsForAnr({ name, participantSuperOrganizationCh
   const instrumentsProject = data?.aggregations?.by_instrument_project?.buckets ?? []
   instrumentsBudget.forEach((instrument, index) => {
     seriesBudget.push({
-      color: { pattern: { ...pattern, backgroundColor: getCssColor(`scale-${index + 1}-color`) } },
+      color: { pattern: { ...pattern, backgroundColor: getCssColor(`scale-${index}-color`) } },
       name: [instrument.key, getI18nLabel(i18n, 'coordinator')].join(' - '),
       value: instrument?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 1)?.should_ignore_budget?.buckets
         ?.find((bucket) => bucket.key.toString() === '0')?.sum_budget?.value ?? 0,
     })
     seriesBudget.push({
-      color: getCssColor(`scale-${index + 1}-color`),
+      color: getCssColor(`scale-${index}-color`),
       name: [instrument.key, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
       value: instrument?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 0)?.should_ignore_budget?.buckets
         ?.find((bucket) => bucket.key.toString() === '0')?.sum_budget?.value ?? 0,
     })
     seriesBudgetRegion.push({
-      color: getCssColor(`scale-${index + 1}-color`),
+      color: getCssColor(`scale-${index}-color`),
       name: instrument.key,
       value: instrument?.should_ignore_budget?.buckets?.find((bucket) => bucket.key.toString() === '0')?.sum_budget?.value ?? 0,
     })
   })
   instrumentsFunding.forEach((instrument, index) => {
     seriesFunding.push({
-      color: { pattern: { ...pattern, backgroundColor: getCssColor(`scale-${index + 1}-color`) } },
+      color: { pattern: { ...pattern, backgroundColor: getCssColor(`scale-${index}-color`) } },
       name: [instrument.key, getI18nLabel(i18n, 'coordinator')].join(' - '),
       value: instrument?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 1)?.should_ignore_funding?.buckets
         ?.find((bucket) => bucket.key.toString() === '0')?.sum_funding?.value ?? 0,
     })
     seriesFunding.push({
-      color: getCssColor(`scale-${index + 1}-color`),
+      color: getCssColor(`scale-${index}-color`),
       name: [instrument.key, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
       value: instrument?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 0)?.should_ignore_funding?.buckets
         ?.find((bucket) => bucket.key.toString() === '0')?.sum_funding?.value ?? 0,
     })
     seriesFundingRegion.push({
-      color: getCssColor(`scale-${index + 1}-color`),
+      color: getCssColor(`scale-${index}-color`),
       name: instrument.key,
       value: instrument?.should_ignore_funding?.buckets?.find((bucket) => bucket.key.toString() === '0')?.sum_funding?.value ?? 0,
     })
   })
   instrumentsProject.forEach((instrument, index) => {
     seriesProject.push({
-      color: { pattern: { ...pattern, backgroundColor: getCssColor(`scale-${index + 1}-color`) } },
+      color: { pattern: { ...pattern, backgroundColor: getCssColor(`scale-${index}-color`) } },
       name: [instrument.key, getI18nLabel(i18n, 'coordinator')].join(' - '),
       value: instrument?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 1)?.by_unique_project?.value ?? 0,
     })
     seriesProject.push({
-      color: getCssColor(`scale-${index + 1}-color`),
+      color: getCssColor(`scale-${index}-color`),
       name: [instrument.key, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
       value: instrument?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 0)?.by_unique_project?.value ?? 0,
     })
     seriesProjectRegion.push({
-      color: getCssColor(`scale-${index + 1}-color`),
+      color: getCssColor(`scale-${index}-color`),
       name: instrument.key,
       value: instrument?.by_unique_project?.value ?? 0,
     })

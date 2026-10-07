@@ -97,7 +97,7 @@ export default function Options(data, currentLang): HighchartsOptions {
         data: country.data.map((year) => {
           return (year.total_fund_eur / data.total_evaluated.find((y) => y.year === year.year).total_fund_eur) * 100;
         }),
-        color: rootStyles.getPropertyValue(`--scale-${index + 1}-color`),
+        color: rootStyles.getPropertyValue(`--scale-${index}-color`),
       }))
       .concat(
         data.successful.map((country, index) => ({
@@ -106,7 +106,7 @@ export default function Options(data, currentLang): HighchartsOptions {
           data: country.data.map((year) => {
             return (year.total_fund_eur / data.total_successful.find((y) => y.year === year.year).total_fund_eur) * 100;
           }),
-          color: rootStyles.getPropertyValue(`--scale-${index + 1}-color`),
+          color: rootStyles.getPropertyValue(`--scale-${index}-color`),
         })),
       ),
   };
