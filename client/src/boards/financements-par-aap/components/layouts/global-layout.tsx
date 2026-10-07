@@ -38,6 +38,21 @@ export default function GlobalLayout() {
 
   return (
     <>
+      <div className="fr-skiplinks">
+        <nav className="fr-container" role="navigation" aria-label="Accès rapide">
+          <ul className="fr-skiplinks__list">
+            <li>
+              <a className="fr-link" title="Contenu principal" href="#main-content">Contenu principal</a>
+            </li>
+            <li>
+              <a className="fr-link" title="Menu principal" href="#main-menu">Menu principal</a>
+            </li>
+            <li>
+              <a className="fr-link" title="Pied de page" href="#footer">Pied de page</a>
+            </li>
+          </ul>
+        </nav>
+      </div>
       <header role="banner" className="fr-header">
         <div className="fr-header__body">
           <div className="fr-container">
@@ -69,11 +84,11 @@ export default function GlobalLayout() {
         </div>
         <div className="fr-header__menu fr-modal" id="modal-header" aria-labelledby="button-header">
           <div className="fr-container">
-            <button aria-controls="modal-header" title="Fermer" type="button" id="button-2168" className="fr-btn--close fr-btn">
+            <button aria-controls="modal-header" title="Fermer" type="button" className="fr-btn--close fr-btn">
               {getI18nLabel(i18n, "close")}
             </button>
             <div className="fr-header__menu-links"></div>
-            <nav className="fr-nav" role="navigation" aria-label="Menu principal">
+            <nav aria-label="Menu principal" className="fr-nav" id="main-menu" role="navigation">
               <ul className="fr-nav__list">
                 <li className="fr-nav__item">
                   <Link
@@ -123,7 +138,9 @@ export default function GlobalLayout() {
           </div>
         </div>
       </header>
-      <Outlet />
+      <main id="main-content" tabIndex={-1}>
+        <Outlet />
+      </main>
       <Footer
         href="/financements-par-aap/accueil"
         title="Financements par appels à projets - Tableaux"
