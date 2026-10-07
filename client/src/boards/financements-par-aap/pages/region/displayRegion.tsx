@@ -1,63 +1,62 @@
-import { Alert, Button, Col, Container, Row, Text, Title } from "@dataesr/dsfr-plus";
-import { useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { Alert, Button, Col, Container, Row, Text, Title } from "@dataesr/dsfr-plus"
+import { useState } from "react"
+import { useNavigate, useSearchParams } from "react-router-dom"
 
-import Select from "../../../../components/select";
-import Classifications from "../../charts/classifications";
-import Classifications2 from "../../charts/classifications2";
-import FrenchPartners from "../../charts/french-partners";
-import Institutions from "../../charts/institutions";
-import InstrumentsForAnr from "../../charts/instruments-for-anr";
-import InstrumentsForEurope from "../../charts/instruments-for-europe";
-import InstrumentsOverTimeForAnr from "../../charts/instruments-over-time-for-anr";
-import InstrumentsOverTimeForEurope from "../../charts/instruments-over-time-for-europe";
-import InternationalPartners from "../../charts/international-partners";
-import Laboratories from "../../charts/laboratories";
-import Overview from "../../charts/overview";
-import ProjectsByFunder from "../../charts/projects-by-funder";
-import ProjectsOverTime from "../../charts/projects-over-time";
-import Breadcrumb from "../../components/breadcrumb";
-import Cards from "../../components/cards";
-import { years } from "../../utils";
-import ProjectsData from "./components/projects-data";
+import Classifications from "../../charts/classifications"
+import Classifications2 from "../../charts/classifications2"
+import FrenchPartners from "../../charts/french-partners"
+import Institutions from "../../charts/institutions"
+import InstrumentsForAnr from "../../charts/instruments-for-anr"
+import InstrumentsForEurope from "../../charts/instruments-for-europe"
+import InstrumentsOverTimeForAnr from "../../charts/instruments-over-time-for-anr"
+import InstrumentsOverTimeForEurope from "../../charts/instruments-over-time-for-europe"
+import InternationalPartners from "../../charts/international-partners"
+import Laboratories from "../../charts/laboratories"
+import Overview from "../../charts/overview"
+import ProjectsByFunder from "../../charts/projects-by-funder"
+import ProjectsOverTime from "../../charts/projects-over-time"
+import Breadcrumb from "../../components/breadcrumb"
+import Cards from "../../components/cards"
+import { years } from "../../utils"
+import ProjectsData from "./components/projects-data"
 
-import "./styles.scss";
+import "./styles.scss"
+
 
 export default function DisplayRegion() {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const navigate = useNavigate();
-  const section = searchParams.get("section");
-  const region = searchParams.get("region") ?? '';
-  const yearMax = searchParams.get("yearMax") ?? String(years[years.length - 2]);
-  const yearMin = searchParams.get("yearMin") ?? String(years[years.length - 2]);
-  const [isOpen, setIsOpen] = useState(false);
+  const [searchParams, setSearchParams] = useSearchParams()
+  const navigate = useNavigate()
+  const section = searchParams.get("section")
+  const region = searchParams.get("region") ?? ''
+  const yearMax = searchParams.get("yearMax") ?? String(years[years.length - 2])
+  const yearMin = searchParams.get("yearMin") ?? String(years[years.length - 2])
+  const [isOpen, setIsOpen] = useState(false)
   const sections = [
     { id: "apercu", label: "Aperçu" },
     { id: "financements", label: "Volume et répartition des financements" },
     { id: "evolution", label: "Evolution temporelle" },
-    // { id: "partenaires", label: "Institutions partenaires" },
     { id: "institutions", label: "Institutions" },
     { id: "laboratoires", label: "Laboratoires" },
     { id: "disciplines", label: "Disciplines" },
     { id: "instruments", label: "Instruments" },
     { id: "donnees", label: "Données" },
-  ];
+  ]
 
   const handleNavClick = (section: string) => {
-    searchParams.set("section", section);
-    setSearchParams(searchParams);
-    setIsOpen(false);
-  };
+    searchParams.set("section", section)
+    setSearchParams(searchParams)
+    setIsOpen(false)
+  }
 
   const handleYearMaxChange = (year: string) => {
-    searchParams.set("yearMax", year);
-    setSearchParams(searchParams);
-  };
+    searchParams.set("yearMax", year)
+    setSearchParams(searchParams)
+  }
 
   const handleYearMinChange = (year: string) => {
-    searchParams.set("yearMin", year);
-    setSearchParams(searchParams);
-  };
+    searchParams.set("yearMin", year)
+    setSearchParams(searchParams)
+  }
 
   return (
     <main>
@@ -89,43 +88,41 @@ export default function DisplayRegion() {
                 Changer de région
               </Button>
               <div style={{ alignItems: "center", display: "flex", gap: "0.5rem" }}>
-                <Select
-                  aria-label="Année de début"
-                  icon="calendar-line"
-                  label={yearMin}
-                  outline={false}
-                  size="sm"
-                >
-                  {[...years].sort((a, b) => b - a).map((year) => (
-                    <Select.Option
-                      key={year}
-                      onClick={() => handleYearMinChange(String(year))}
-                      selected={yearMin === String(year)}
-                      value={String(year)}
-                    >
-                      {year}
-                    </Select.Option>
-                  ))}
-                </Select>
+                <div className="fr-select-group fr-mb-0">
+                  <label className="fr-label" htmlFor="select-year-min">Année de début</label>
+                  <select className="fr-select" aria-describedby="select-year-min-messages" id="select-year-min" name="select-year-min">
+                    {[...years].sort((a, b) => b - a).map((year) => (
+                      <option
+                        key={year}
+                        onClick={() => handleYearMinChange(String(year))}
+                        selected={yearMin === String(year)}
+                        value={String(year)}
+                      >
+                        {year}
+                      </option>
+                    ))}
+                  </select>
+                  <div className="fr-messages-group" id="select-year-min-messages" aria-live="polite">
+                  </div>
+                </div>
                 <Text className="fr-mb-0">à</Text>
-                <Select
-                  aria-label="Année de fin"
-                  icon="calendar-line"
-                  label={yearMax}
-                  outline={false}
-                  size="sm"
-                >
-                  {[...years].sort((a, b) => b - a).map((year) => (
-                    <Select.Option
-                      key={year}
-                      onClick={() => handleYearMaxChange(String(year))}
-                      selected={yearMax === String(year)}
-                      value={String(year)}
-                    >
-                      {year}
-                    </Select.Option>
-                  ))}
-                </Select>
+                <div className="fr-select-group">
+                  <label className="fr-label" htmlFor="select-year-max">Année de fin</label>
+                  <select className="fr-select fr-icon-calendar-line" aria-describedby="select-year-max-messages" id="select-year-max" name="select-year-max">
+                    {[...years].sort((a, b) => b - a).map((year) => (
+                      <option
+                        key={year}
+                        onClick={() => handleYearMaxChange(String(year))}
+                        selected={yearMax === String(year)}
+                        value={String(year)}
+                      >
+                        {year}
+                      </option>
+                    ))}
+                  </select>
+                  <div className="fr-messages-group" id="select-year-max-messages" aria-live="polite">
+                  </div>
+                </div>
               </div>
             </Col>
           </Row>
@@ -272,5 +269,5 @@ export default function DisplayRegion() {
           )}
       </Container>
     </main>
-  );
+  )
 }

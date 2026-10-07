@@ -15,7 +15,7 @@ export default function StructuresSelector() {
   const [typology, setTypology] = useState("*")
   const [searchQuery, setSearchQuery] = useState("")
   const [searchParams, setSearchParams] = useSearchParams({})
-  const selectedStructures: string[] = searchParams.getAll("structure")
+  const selectedStructures: string[] = searchParams.getAll("structureId")
 
   const bodyRegions: any = {
     ...getEsQuery({}),
@@ -29,7 +29,6 @@ export default function StructuresSelector() {
       },
     },
   }
-  // bodyRegions.query.bool.filter.push({ term: { participant_is_main_parent: 1 } })
   bodyRegions.query.bool.filter.push({ term: { participant_type: "institution" } })
   bodyRegions.query.bool.filter.push({ terms: { "participant_typologie_1.keyword": ["Ecoles, instituts et assimilés", "Organismes de recherche", "Universités et assimilés"] } })
   if (typology && typology !== '*') {
@@ -63,7 +62,6 @@ export default function StructuresSelector() {
       },
     },
   }
-  // bodyTypologies.query.bool.filter.push({ term: { participant_is_main_parent: 1 } })
   bodyTypologies.query.bool.filter.push({ term: { participant_type: "institution" } })
   bodyTypologies.query.bool.filter.push({ terms: { "participant_typologie_1.keyword": ["Ecoles, instituts et assimilés", "Organismes de recherche", "Universités et assimilés"] } })
   if (region && region !== '*') {
@@ -97,7 +95,6 @@ export default function StructuresSelector() {
       },
     },
   }
-  // bodyStructures.query.bool.filter.push({ term: { participant_is_main_parent: 1 } })
   bodyStructures.query.bool.filter.push({ term: { participant_type: "institution" } })
   bodyStructures.query.bool.filter.push({ terms: { "participant_typologie_1.keyword": ["Ecoles, instituts et assimilés", "Organismes de recherche", "Universités et assimilés"] } })
   // Deep copy
@@ -158,17 +155,17 @@ export default function StructuresSelector() {
     let structureIdsToAdd = selectedStructure ? [selectedStructure] : structures.map((str) => str.id)
     // Do not add duplicates as selected structures
     structureIdsToAdd = structureIdsToAdd.filter((str: string) => !selectedStructures.includes(str))
-    structureIdsToAdd.forEach((str: string) => searchParams.append("structure", str))
+    structureIdsToAdd.forEach((str: string) => searchParams.append("structureId", str))
     setSearchParams(searchParams)
   }
 
   const handleTagClick = (selectedStructure: string) => {
-    searchParams.delete("structure", selectedStructure)
+    searchParams.delete("structureId", selectedStructure)
     setSearchParams(searchParams)
   }
 
   const handleDeleteAll = () => {
-    searchParams.delete("structure")
+    searchParams.delete("structureId")
     setSearchParams(searchParams)
   }
 
@@ -272,9 +269,9 @@ export default function StructuresSelector() {
                         )
                         if (checked) {
                           const idsToAdd = filtered.map((s) => s.id).filter((id) => !selectedStructures.includes(id))
-                          idsToAdd.forEach((id) => searchParams.append("structure", id))
+                          idsToAdd.forEach((id) => searchParams.append("structureId", id))
                         } else {
-                          filtered.forEach((s) => searchParams.delete("structure", s.id))
+                          filtered.forEach((s) => searchParams.delete("structureId", s.id))
                         }
                         setSearchParams(searchParams)
                       }}

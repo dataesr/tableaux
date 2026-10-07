@@ -18,7 +18,7 @@ const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.en
 export default function ClassificationsByComparison() {
   const [selectedControl, setSelectedControl] = useState("projects")
   const [searchParams] = useSearchParams()
-  const structures = searchParams.getAll("structure")
+  const structures = searchParams.getAll("structureId")
   const yearMax = searchParams.get("yearMax")
   const yearMin = searchParams.get("yearMin")
   const color = useChartColor()

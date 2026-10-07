@@ -3,7 +3,6 @@ import { useEffect, useState } from "react"
 import { useSearchParams } from "react-router-dom"
 
 import Breadcrumb from "../../components/breadcrumb"
-import Select from "../../../../components/select"
 import { years } from "../../utils"
 import ClassificationsByComparison from "./charts/classifications-by-comparison"
 import DispersionByComparison from "./charts/dispersion-by-comparison"
@@ -16,7 +15,7 @@ import "./styles.scss"
 export default function Comparison() {
   const [searchParams, setSearchParams] = useSearchParams({})
   const section = searchParams.get("section")
-  const structures = searchParams.getAll("structure")
+  const structures = searchParams.getAll("structureId")
   const yearMax = searchParams.get("yearMax") ?? String(years[years.length - 2])
   const yearMin = searchParams.get("yearMin") ?? String(years[years.length - 2])
   const [isOpen, setIsOpen] = useState(false)
@@ -72,43 +71,43 @@ export default function Comparison() {
               </Text>
             </Col>
             <Col md="3" style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", gap: "0.5rem" }}>
-              <Select
-                label={yearMin}
-                icon="calendar-line"
-                outline={false}
-                size="sm"
-                aria-label="Année de début"
-              >
-                {[...years].sort((a, b) => b - a).map((year) => (
-                  <Select.Option
-                    key={year}
-                    value={String(year)}
-                    selected={yearMin === String(year)}
-                    onClick={() => handleYearMinChange(String(year))}
-                  >
-                    {year}
-                  </Select.Option>
-                ))}
-              </Select>
-              <Text className="fr-mb-0">à</Text>
-              <Select
-                label={yearMax}
-                icon="calendar-line"
-                outline={false}
-                size="sm"
-                aria-label="Année de fin"
-              >
-                {[...years].sort((a, b) => b - a).map((year) => (
-                  <Select.Option
-                    key={year}
-                    value={String(year)}
-                    selected={yearMax === String(year)}
-                    onClick={() => handleYearMaxChange(String(year))}
-                  >
-                    {year}
-                  </Select.Option>
-                ))}
-              </Select>
+              <div style={{ alignItems: "center", display: "flex", gap: "0.5rem" }}>
+                <div className="fr-select-group fr-mb-0">
+                  <label className="fr-label" htmlFor="select-year-min">Année de début</label>
+                  <select className="fr-select" aria-describedby="select-year-min-messages" id="select-year-min" name="select-year-min">
+                    {[...years].sort((a, b) => b - a).map((year) => (
+                      <option
+                        key={year}
+                        onClick={() => handleYearMinChange(String(year))}
+                        selected={yearMin === String(year)}
+                        value={String(year)}
+                      >
+                        {year}
+                      </option>
+                    ))}
+                  </select>
+                  <div className="fr-messages-group" id="select-year-min-messages" aria-live="polite">
+                  </div>
+                </div>
+                <Text className="fr-mb-0">à</Text>
+                <div className="fr-select-group">
+                  <label className="fr-label" htmlFor="select-year-max">Année de fin</label>
+                  <select className="fr-select fr-icon-calendar-line" aria-describedby="select-year-max-messages" id="select-year-max" name="select-year-max">
+                    {[...years].sort((a, b) => b - a).map((year) => (
+                      <option
+                        key={year}
+                        onClick={() => handleYearMaxChange(String(year))}
+                        selected={yearMax === String(year)}
+                        value={String(year)}
+                      >
+                        {year}
+                      </option>
+                    ))}
+                  </select>
+                  <div className="fr-messages-group" id="select-year-max-messages" aria-live="polite">
+                  </div>
+                </div>
+              </div>
             </Col>
           </Row>
           <Row gutters className="fr-mt-2w fr-mb-2w">

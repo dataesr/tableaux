@@ -3,7 +3,6 @@ import { useQuery } from "@tanstack/react-query"
 import { useState } from "react"
 import { useNavigate, useSearchParams } from "react-router-dom"
 
-import Select from "../../../../components/select"
 import Classifications from "../../charts/classifications"
 import Classifications2 from "../../charts/classifications2"
 import FrenchPartners from "../../charts/french-partners"
@@ -25,6 +24,7 @@ import ProjectsData from "./components/projects-data"
 import "./styles.scss"
 
 const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env
+
 
 export default function DisplayStructure() {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -158,45 +158,43 @@ export default function DisplayStructure() {
                 Changer d'établissement
               </Button>
               <div style={{ alignItems: "center", display: "flex", gap: "0.5rem" }}>
-                <Select
-                  aria-label="Année de début"
-                  icon="calendar-line"
-                  label={yearMin}
-                  outline={false}
-                  size="sm"
-                >
-                  {[...years].sort((a, b) => b - a).map((year) => (
-                    <Select.Option
-                      key={year}
-                      onClick={() => handleYearMinChange(String(year))}
-                      selected={yearMin === String(year)}
-                      value={String(year)}
-                    >
-                      {year}
-                    </Select.Option>
-                  ))}
-                </Select>
+                <div className="fr-select-group fr-mb-0">
+                  <label className="fr-label" htmlFor="select-year-min">Année de début</label>
+                  <select className="fr-select" aria-describedby="select-year-min-messages" id="select-year-min" name="select-year-min">
+                    {[...years].sort((a, b) => b - a).map((year) => (
+                      <option
+                        key={year}
+                        onClick={() => handleYearMinChange(String(year))}
+                        selected={yearMin === String(year)}
+                        value={String(year)}
+                      >
+                        {year}
+                      </option>
+                    ))}
+                  </select>
+                  <div className="fr-messages-group" id="select-year-min-messages" aria-live="polite">
+                  </div>
+                </div>
                 <Text className="fr-mb-0">à</Text>
-                <Select
-                  aria-label="Année de fin"
-                  icon="calendar-line"
-                  label={yearMax}
-                  outline={false}
-                  size="sm"
-                >
-                  {[...years].sort((a, b) => b - a).map((year) => (
-                    <Select.Option
-                      key={year}
-                      onClick={() => handleYearMaxChange(String(year))}
-                      selected={yearMax === String(year)}
-                      value={String(year)}
-                    >
-                      {year}
-                    </Select.Option>
-                  ))}
-                </Select>
+                <div className="fr-select-group">
+                  <label className="fr-label" htmlFor="select-year-max">Année de fin</label>
+                  <select className="fr-select fr-icon-calendar-line" aria-describedby="select-year-max-messages" id="select-year-max" name="select-year-max">
+                    {[...years].sort((a, b) => b - a).map((year) => (
+                      <option
+                        key={year}
+                        onClick={() => handleYearMaxChange(String(year))}
+                        selected={yearMax === String(year)}
+                        value={String(year)}
+                      >
+                        {year}
+                      </option>
+                    ))}
+                  </select>
+                  <div className="fr-messages-group" id="select-year-max-messages" aria-live="polite">
+                  </div>
+                </div>
               </div>
-              {participantIsSuperOrganization && (
+              {!!participantIsSuperOrganization && (
                 <div style={{ alignItems: "center", display: "flex", gap: "0.5rem" }}>
                   <div className="fr-toggle">
                     <input checked={withComponents} className="fr-toggle__input" onChange={handleDisplayComponentsChange} type="checkbox" />
