@@ -3,7 +3,6 @@ import { useSearchParams } from "react-router-dom";
 import type Highcharts from "highcharts/es-modules/masters/highcharts.src.js";
 import { useFinanceEtablissementEvolution } from "../../../../../../api";
 import { createEffectifsDisciplinesChartOptions } from "./options";
-import { RenderDataDisciplines } from "./render-data";
 import ChartWrapper from "../../../../../../../../components/chart-wrapper";
 
 interface EffectifsDisciplinesChartProps {
@@ -53,7 +52,6 @@ export default function EffectifsDisciplinesChart({
     <ChartWrapper
       config={config}
       options={options}
-      renderData={() => <RenderDataDisciplines data={data} />}
     />
   );
 }

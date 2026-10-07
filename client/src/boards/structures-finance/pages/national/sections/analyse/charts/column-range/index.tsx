@@ -11,7 +11,6 @@ import {
   type MetricKey,
 } from "../../../../../../config/metrics-config.ts";
 import { createColumnRangeOptions, type ColumnRangePoint } from "./options.tsx";
-import { RenderDataVariation } from "./render-data.tsx";
 
 
 interface ColumnRangeChartProps {
@@ -270,15 +269,6 @@ export default function ColumnRangeChart({
           <ChartWrapper
             config={config}
             options={chartOptions!}
-            renderData={() => (
-              <RenderDataVariation
-                points={points}
-                metricLabel={metricLabel}
-                metricConfig={metricConfig!}
-                yearFrom={yearFrom}
-                yearTo={yearTo}
-              />
-            )}
           />
           <MetricDefinitionsTable metricKeys={[metricKey]} />
         </>

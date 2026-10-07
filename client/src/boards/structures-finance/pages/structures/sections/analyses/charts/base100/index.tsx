@@ -2,7 +2,6 @@ import { Row, Col } from "@dataesr/dsfr-plus";
 import ChartWrapper from "../../../../../../../../components/chart-wrapper";
 import MetricDefinitionsTable from "../../../../../../components/metric-definitions/metric-definitions-table";
 import { BudgetWarning } from "../../../../../../components/budget-warning";
-import { RenderDataBase100, RenderDataSingle } from "../render-data";
 import { createBase100ChartOptions } from "./options";
 import { METRICS_CONFIG } from "../../../../../../config/metrics-config";
 import type { MetricKey } from "../../../../../../config/metrics-config";
@@ -51,15 +50,6 @@ export default function Base100EvolutionChart({
         <ChartWrapper
           config={comparisonConfig}
           options={chartOptionsBase100}
-          renderData={() => (
-            <RenderDataBase100
-              data={data}
-              metric1Key={selectedMetrics[0]}
-              metric1Config={METRICS_CONFIG[selectedMetrics[0]]}
-              metric2Key={selectedMetrics[1]}
-              metric2Config={METRICS_CONFIG[selectedMetrics[1]]}
-            />
-          )}
         />
       )}
 
@@ -80,13 +70,6 @@ export default function Base100EvolutionChart({
                       METRICS_CONFIG,
                       xAxisField
                     )}
-                    renderData={() => (
-                      <RenderDataSingle
-                        data={data}
-                        metricKey={metricKey}
-                        metricConfig={METRICS_CONFIG[metricKey]}
-                      />
-                    )}
                   />
                 </Col>
               ))}
@@ -103,13 +86,6 @@ export default function Base100EvolutionChart({
                     [selectedMetrics[2]],
                     METRICS_CONFIG,
                     xAxisField
-                  )}
-                  renderData={() => (
-                    <RenderDataSingle
-                      data={data}
-                      metricKey={selectedMetrics[2]}
-                      metricConfig={METRICS_CONFIG[selectedMetrics[2]]}
-                    />
                   )}
                 />
               </Col>
@@ -129,13 +105,6 @@ export default function Base100EvolutionChart({
                     [metricKey],
                     METRICS_CONFIG,
                     xAxisField
-                  )}
-                  renderData={() => (
-                    <RenderDataSingle
-                      data={data}
-                      metricKey={metricKey}
-                      metricConfig={METRICS_CONFIG[metricKey]}
-                    />
                   )}
                 />
               </Col>

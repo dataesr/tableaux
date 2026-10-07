@@ -3,7 +3,6 @@ import { useSearchParams } from "react-router-dom";
 import { SegmentedControl, SegmentedElement } from "@dataesr/dsfr-plus";
 import { useFinanceEtablissementEvolution } from "../../../../../../api";
 import { createStackedEvolutionChartOptions } from "./options";
-import { RenderDataStacked } from "./render-data";
 import { getCssColor } from "../../../../../../../../utils/colors";
 import ChartWrapper from "../../../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../../../components/charts-skeletons/default";
@@ -249,13 +248,6 @@ export default function EffectifsEvolutionChart({
         <ChartWrapper
           config={config}
           options={chartOptions}
-          renderData={() => (
-            <RenderDataStacked
-              data={data}
-              metrics={viewConfig.metrics}
-              categories={viewConfig.categories}
-            />
-          )}
         />
       )}
     </div>

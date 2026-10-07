@@ -3,7 +3,6 @@ import { useSearchParams } from "react-router-dom";
 import type Highcharts from "highcharts/es-modules/masters/highcharts.src.js";
 import { useFinanceEtablissementEvolution } from "../../../../../../api";
 import { createEffectifsDegreesChartOptions } from "./options";
-import { RenderDataDegrees } from "./render-data";
 import ChartWrapper from "../../../../../../../../components/chart-wrapper";
 
 interface EffectifsDegreesChartProps {
@@ -53,7 +52,6 @@ export default function EffectifsDegreesChart({
     <ChartWrapper
       config={config}
       options={options}
-      renderData={() => <RenderDataDegrees data={data} />}
     />
   );
 }

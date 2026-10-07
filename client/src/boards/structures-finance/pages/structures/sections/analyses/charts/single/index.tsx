@@ -16,7 +16,6 @@ import {
   ThresholdLegend,
   type ThresholdConfig,
 } from "../../../../../../components/threshold/threshold-legend";
-import { RenderDataSingle } from "../render-data";
 import { createSingleChartOptions } from "./options";
 import {
   METRICS_CONFIG,
@@ -143,13 +142,6 @@ export default function SingleEvolutionChart({
         config={chartConfig}
         options={chartOptions}
         legend={<ThresholdLegend threshold={metricThreshold} />}
-        renderData={() => (
-          <RenderDataSingle
-            data={data}
-            metricKey={selectedMetric}
-            metricConfig={METRICS_CONFIG[selectedMetric]}
-          />
-        )}
       />
 
       {selectedAnalysis === "ressources-propres" && (

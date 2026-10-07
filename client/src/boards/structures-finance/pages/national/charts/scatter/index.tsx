@@ -1,7 +1,6 @@
 import { useMemo } from "react";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import { createScatterOptions, ScatterConfig } from "./options";
-import { RenderData } from "./render-data";
 
 interface ScatterChartProps {
   config: ScatterConfig;
@@ -27,7 +26,6 @@ export default function ScatterChart({ config, data }: ScatterChartProps) {
     <ChartWrapper
       config={chartConfig}
       options={chartOptions}
-      renderData={() => <RenderData config={config} data={data} />}
     />
   );
 }

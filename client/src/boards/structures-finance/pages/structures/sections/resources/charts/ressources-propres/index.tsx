@@ -3,7 +3,6 @@ import { useSearchParams } from "react-router-dom";
 import type Highcharts from "highcharts/es-modules/masters/highcharts.src.js";
 import { useFinanceEtablissementEvolution } from "../../../../../../api";
 import { createRessourcesPropresChartOptions } from "./options";
-import { RenderData } from "./render-data";
 import ChartWrapper from "../../../../../../../../components/chart-wrapper";
 
 const euro = (n?: number) =>
@@ -150,7 +149,6 @@ export default function RessourcesPropresChart({
       <ChartWrapper
         config={config}
         options={options}
-        renderData={() => <RenderData data={data} />}
       />
     </div>
   );

@@ -3,7 +3,6 @@ import { useSearchParams } from "react-router-dom";
 import { SegmentedControl, SegmentedElement } from "@dataesr/dsfr-plus";
 import { useFinanceEtablissementEvolution } from "../../../../../../api";
 import { createRessourcesAutresDecompositionChartOptions } from "./options";
-import { RenderData } from "./render-data";
 import ChartWrapper from "../../../../../../../../components/chart-wrapper";
 
 interface RessourcesAutresDecompositionChartProps {
@@ -130,7 +129,6 @@ export default function RessourcesAutresDecompositionChart({
       <ChartWrapper
         config={config}
         options={options}
-        renderData={() => <RenderData data={evolutionData} />}
       />
     </div>
   );

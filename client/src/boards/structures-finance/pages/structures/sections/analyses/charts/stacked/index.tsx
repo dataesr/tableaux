@@ -2,7 +2,6 @@ import { SegmentedControl, SegmentedElement } from "@dataesr/dsfr-plus";
 import ChartWrapper from "../../../../../../../../components/chart-wrapper";
 import MetricDefinitionsTable from "../../../../../../components/metric-definitions/metric-definitions-table";
 import { BudgetWarning } from "../../../../../../components/budget-warning";
-import { RenderDataStacked } from "../render-data";
 import { createStackedChartOptions } from "./options";
 import { METRICS_CONFIG } from "../../../../../../config/metrics-config";
 import type { MetricKey } from "../../../../../../config/metrics-config";
@@ -71,13 +70,6 @@ export default function StackedEvolutionChart({
       <ChartWrapper
         config={chartConfig}
         options={chartOptions}
-        renderData={() => (
-          <RenderDataStacked
-            data={data}
-            metrics={selectedMetrics}
-            metricsConfig={METRICS_CONFIG}
-          />
-        )}
       />
       <BudgetWarning data={data} metrics={baseMetrics} />
       <MetricDefinitionsTable metricKeys={selectedMetrics} />

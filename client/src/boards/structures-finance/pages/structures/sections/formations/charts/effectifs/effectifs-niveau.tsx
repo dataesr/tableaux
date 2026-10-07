@@ -3,7 +3,6 @@ import { useSearchParams } from "react-router-dom";
 import type Highcharts from "highcharts/es-modules/masters/highcharts.src.js";
 import { useFinanceEtablissementEvolution } from "../../../../../../api";
 import { createEffectifsNiveauChartOptions } from "./options";
-import { RenderDataNiveau } from "./render-data";
 import ChartWrapper from "../../../../../../../../components/chart-wrapper";
 
 interface EffectifsNiveauChartProps {
@@ -53,7 +52,6 @@ export default function EffectifsNiveauChart({
     <ChartWrapper
       config={config}
       options={options}
-      renderData={() => <RenderDataNiveau data={data} />}
     />
   );
 }

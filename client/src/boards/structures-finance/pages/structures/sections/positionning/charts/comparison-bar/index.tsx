@@ -6,7 +6,6 @@ import {
   SegmentedElement,
 } from "@dataesr/dsfr-plus";
 import { createPositioningComparisonBarOptions } from "./options";
-import { RenderData } from "./render-data";
 import ChartWrapper from "../../../../../../../../components/chart-wrapper";
 import { useMetricThreshold, useMetricSens, useMetricLabel } from "../../../../../../utils/metrics";
 import {
@@ -177,17 +176,6 @@ export default function ComparisonBarChart({
             config={chartConfig}
             options={chartOptions}
             legend={<ThresholdLegend threshold={metricThreshold} />}
-            renderData={() => (
-              <RenderData
-                data={filteredData}
-                metric={selectedMetric}
-                metricLabel={metricLabel}
-                metricConfig={selectedMetricConfig}
-                metricSens={metricSens}
-                currentStructureId={currentStructureId}
-                currentStructureName={currentStructureName}
-              />
-            )}
           />
         </>
       )}

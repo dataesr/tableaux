@@ -7,7 +7,6 @@ import {
 import ChartWrapper from "../../../../../../../../components/chart-wrapper";
 import MetricDefinitionsTable from "../../../../../../components/metric-definitions/metric-definitions-table";
 import { BudgetWarning } from "../../../../../../components/budget-warning";
-import { RenderDataComparison } from "../render-data";
 import { createDualChartOptions } from "./options";
 import { METRICS_CONFIG } from "../../../../../../config/metrics-config";
 import type { MetricKey } from "../../../../../../config/metrics-config";
@@ -82,15 +81,6 @@ export default function DualEvolutionChart({
       <ChartWrapper
         config={chartConfig}
         options={chartOptions}
-        renderData={() => (
-          <RenderDataComparison
-            data={data}
-            metric1Key={metric1}
-            metric1Config={METRICS_CONFIG[metric1]}
-            metric2Key={metric2}
-            metric2Config={METRICS_CONFIG[metric2]}
-          />
-        )}
       />
       <BudgetWarning data={data} metrics={baseMetrics} />
       <MetricDefinitionsTable metricKeys={[metric1, metric2]} />

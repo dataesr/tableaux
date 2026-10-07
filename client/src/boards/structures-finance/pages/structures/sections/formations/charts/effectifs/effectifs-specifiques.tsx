@@ -3,7 +3,6 @@ import { useSearchParams } from "react-router-dom";
 import type Highcharts from "highcharts/es-modules/masters/highcharts.src.js";
 import { useFinanceEtablissementEvolution } from "../../../../../../api";
 import { createEffectifsSpecifiquesChartOptions } from "./options";
-import { RenderDataSpecifiques } from "./render-data";
 import ChartWrapper from "../../../../../../../../components/chart-wrapper";
 
 interface EffectifsSpecifiquesChartProps {
@@ -53,7 +52,6 @@ export default function EffectifsSpecifiquesChart({
     <ChartWrapper
       config={config}
       options={options}
-      renderData={() => <RenderDataSpecifiques data={data} />}
     />
   );
 }

@@ -19,7 +19,6 @@ import {
   type AnalysisKey,
   type MetricKey,
 } from "../../../../../config/metrics-config.ts";
-import { RenderData } from "./render-data.tsx";
 import { ThresholdLegend } from "../../../../../components/threshold/threshold-legend.tsx";
 import { BudgetWarning } from "../../../../../components/budget-warning";
 import { SanteFinanciereTable } from "./national-synthese-sante-financiere";
@@ -313,17 +312,6 @@ export default function NationalChart({
                 config={config}
                 options={chartOptions}
                 legend={<ThresholdLegend threshold={metricThreshold} />}
-                renderData={() => (
-                  <RenderData
-                    data={data}
-                    metric={activeMetricKey!}
-                    metricLabel={
-                      activeMetricKey ? getMetricLabel(activeMetricKey) : ""
-                    }
-                    metricConfig={metricConfig!}
-                    topN={topN ?? data.length}
-                  />
-                )}
               />
 
               {isSanteFinanciere && activeMetricKey && (

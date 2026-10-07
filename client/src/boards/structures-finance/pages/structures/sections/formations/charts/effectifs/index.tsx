@@ -9,12 +9,6 @@ import {
   createEffectifsDisciplinesChartOptions,
   createEffectifsDegreesChartOptions,
 } from "./options";
-import {
-  RenderDataNiveau,
-  RenderDataSpecifiques,
-  RenderDataDisciplines,
-  RenderDataDegrees,
-} from "./render-data";
 import ChartWrapper from "../../../../../../../../components/chart-wrapper";
 
 interface EffectifsChartProps {
@@ -121,7 +115,6 @@ export default function EffectifsChart({
     <ChartWrapper
       config={niveauConfig}
       options={cursusOptions}
-      renderData={() => <RenderDataNiveau data={data} />}
     />
   );
 
@@ -129,7 +122,6 @@ export default function EffectifsChart({
     <ChartWrapper
       config={specifiquesConfig}
       options={specifiquesOptions}
-      renderData={() => <RenderDataSpecifiques data={data} />}
     />
   );
 
@@ -137,7 +129,6 @@ export default function EffectifsChart({
     <ChartWrapper
       config={disciplinesConfig}
       options={disciplinesOptions}
-      renderData={() => <RenderDataDisciplines data={data} />}
     />
   );
 
@@ -145,7 +136,6 @@ export default function EffectifsChart({
     <ChartWrapper
       config={degreesConfig}
       options={degreesOptions}
-      renderData={() => <RenderDataDegrees data={data} />}
     />
   );
 

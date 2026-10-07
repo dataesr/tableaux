@@ -5,7 +5,6 @@ import {
   createColumnRangeOptions,
   type ColumnRangePoint,
 } from "../../../../../pages/national/sections/analyse/charts/column-range/options";
-import { RenderDataVariation } from "../../../../../pages/national/sections/analyse/charts/column-range/render-data";
 import {
   METRICS_CONFIG,
   type MetricKey,
@@ -238,15 +237,6 @@ export default function StructureColumnRangeChart({
         <ChartWrapper
           config={config}
           options={chartOptions}
-          renderData={() => (
-            <RenderDataVariation
-              points={points}
-              metricLabel={metricLabel}
-              metricConfig={metricConfig!}
-              yearFrom={yearFrom}
-              yearTo={yearTo}
-            />
-          )}
         />
       ) : (
         <div className="fr-alert fr-alert--warning" role="alert">

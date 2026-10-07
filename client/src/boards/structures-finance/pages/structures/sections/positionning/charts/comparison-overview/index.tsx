@@ -17,7 +17,6 @@ import {
   type ComparisonOverviewConfig,
   type OverviewDataset,
 } from "./options";
-import { RenderData } from "./render-data";
 import { ThresholdLegend } from "../../../../../../components/threshold/threshold-legend";
 import { sortByMetricSens } from "../../../../../../components/metric-sort";
 
@@ -289,13 +288,6 @@ export default function ComparisonOverviewChart({
         }}
         legend={<ThresholdLegend threshold={metricThreshold} />}
         options={chartOptions}
-        renderData={() => (
-          <RenderData
-            config={activeConfig}
-            datasets={datasets}
-            currentStructureId={currentStructureId}
-          />
-        )}
       />
     </div>
   );

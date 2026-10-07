@@ -1,7 +1,6 @@
 import { useMemo } from "react";
 import ChartWrapper from "../../../../../../../../components/chart-wrapper";
 import { createPositioningScatterOptions, type ScatterConfig } from "./options";
-import { RenderData } from "./render-data";
 import MetricDefinitionsTable from "../../../../../../components/metric-definitions/metric-definitions-table";
 
 const SCATTER_CONFIGS: Record<string, ScatterConfig> = {
@@ -108,14 +107,6 @@ export default function ScatterChart({
         key={chartKey}
         config={chartConfig}
         options={chartOptions}
-        renderData={() => (
-          <RenderData
-            config={config}
-            data={data}
-            currentStructureId={currentStructureId}
-            currentStructureName={currentStructureName}
-          />
-        )}
       />
       <MetricDefinitionsTable metricKeys={metricKeys} />
     </>
