@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import "./metric-definitions-table.scss";
-import { Title, Link } from "@dataesr/dsfr-plus";
+import { Title } from "@dataesr/dsfr-plus";
 import { useFinanceDefinitions } from "../../api";
 import DefaultSkeleton from "../../../../components/charts-skeletons/default";
 import { parseMarkdown } from "../../../../utils/format";
@@ -82,15 +82,15 @@ export default function MetricDefinitionsTable({
               {source.link && (
                 <>
                   {" "}
-                  <Link
+                  <a
                     href={source.link}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="fr-link--sm"
-                    title="Accéder aux données ouvertes"
+                    title={`(données ouvertes) : ${source.label} - nouvelle fenêtre`}
                   >
                     (données ouvertes)
-                  </Link>
+                  </a>
                 </>
               )}
             </div>

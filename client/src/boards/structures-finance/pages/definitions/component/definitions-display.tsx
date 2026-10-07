@@ -1,4 +1,3 @@
-import { Link } from "@dataesr/dsfr-plus";
 import { parseMarkdown } from "../../../../../utils/format";
 
 interface Definition {
@@ -62,16 +61,15 @@ export default function Definitions({
             {source.link && (
               <>
                 <br />
-                <Link
+                <a
                   href={source.link}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="fr-link fr-link--sm"
-                  title="Accéder aux données ouvertes"
+                  title={`Données ouvertes : ${source.label} - nouvelle fenêtre`}
                 >
-                  <span aria-hidden="true" />
                   Données ouvertes
-                </Link>
+                </a>
               </>
             )}
           </div>
