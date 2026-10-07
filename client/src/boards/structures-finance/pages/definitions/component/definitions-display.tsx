@@ -104,8 +104,9 @@ export default function Definitions({
                 className="fr-mb-6w"
               >
                 <h3 className="fr-h4 fr-mb-2w">{sousRubrique.nom}</h3>
-                <div className="fr-table fr-table--bordered">
+                <div className="fr-table fr-table--bordered fr-table--no-caption">
                   <table>
+                    <caption>{sousRubrique.nom}</caption>
                     <thead>
                       <tr>
                         <th scope="col">Indicateur</th>
@@ -128,10 +129,7 @@ export default function Definitions({
                           <tr
                             key={`def-${categoryIndex}-${sousIndex}-${defIndex}`}
                           >
-                            <td>
-                              <strong>{def.libelle}</strong>
-                              <br />
-                            </td>
+                            <th scope="row">{def.libelle}</th>
                             <td>
                               <span
                                 dangerouslySetInnerHTML={{
