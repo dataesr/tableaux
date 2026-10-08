@@ -8,14 +8,14 @@ export default function Breadcrumb({ items }) {
   return (
     <nav className="fr-breadcrumb" role="navigation">
       <button
-        aria-controls={`breadcrumb-${id}`}
+        aria-controls={`fundings-breadcrumb-${id}`}
         aria-expanded="false"
         className="fr-breadcrumb__button"
         type="button"
       >
         Voir le fil d’Ariane
       </button>
-      <div className="fr-collapse" id={`breadcrumb-${id}`}>
+      <div className="fr-collapse" id={`fundings-breadcrumb-${id}`}>
         <ol className="fr-breadcrumb__list">
           {items.map((item: any, index: number) =>
             <li key={index}>
