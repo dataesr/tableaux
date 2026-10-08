@@ -1,30 +1,31 @@
 import { Link } from "@dataesr/dsfr-plus"
+import { useId } from "react"
 
 
 export default function Breadcrumb({ items }) {
+  const id = useId()
+
   return (
-    <nav role="navigation" className="fr-breadcrumb" aria-label="vous êtes ici :">
-      <button className="fr-breadcrumb__button" aria-expanded="false" aria-controls="breadcrumb-1">
+    <nav className="fr-breadcrumb" role="navigation">
+      <button
+        aria-controls={`breadcrumb-${id}`}
+        aria-expanded="false"
+        className="fr-breadcrumb__button"
+        type="button"
+      >
         Voir le fil d’Ariane
       </button>
-      <div className="fr-collapse" id="breadcrumb-1">
+      <div className="fr-collapse" id={`breadcrumb-${id}`}>
         <ol className="fr-breadcrumb__list">
           {items.map((item: any, index: number) =>
-            (index == items.length - 1) ? (
-              <li key={index}>
-                <Link>
-                  <strong>
-                    {item.label}
-                  </strong>
-                </Link>
-              </li>
-            ) : (
-              <li key={index}>
-                <Link href={item.href}>
-                  {item.label}
-                </Link>
-              </li>
-            )
+            <li key={index}>
+              <Link
+                aria-current={index == items.length - 1 ? "page" : undefined}
+                aria-label="Vous êtes ici :"
+              >
+                {item.label}
+              </Link>
+            </li>
           )}
         </ol>
       </div>
