@@ -293,8 +293,8 @@ export default function InstrumentsForAnr({ name, participantSuperOrganizationCh
   }
 
   return (
-    <div className={`chart-container chart-container--${color}`} id="instruments-for-anr">
-      <Title as="h2" look="h6">
+    <div aria-labelledby="fundings-instruments-for-anr-title" className={`chart-container chart-container--${color}`} id="fundings-instruments-for-anr" role="figure">
+      <Title as="h2" id="fundings-instruments-for-anr-title" look="h6">
         {title}
       </Title>
       <SegmentedControl selectedControl={selectedControl} setSelectedControl={setSelectedControl} />

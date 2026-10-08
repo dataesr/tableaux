@@ -274,8 +274,8 @@ Le type de participation est distingué, en pointillé quand l'établissement es
   }
 
   return (
-    <div className={`chart-container chart-container--${color}`} id="projects-by-comparison">
-      <Title as="h2" look="h6">
+    <div aria-labelledby="fundings-projects-by-comparison-title" className={`chart-container chart-container--${color}`} id="fundings-projects-by-comparison" role="figure">
+      <Title as="h2" id="fundings-projects-by-comparison-title" look="h6">
         {title}
       </Title>
       <SegmentedControl selectedControl={selectedControl} setSelectedControl={setSelectedControl} />

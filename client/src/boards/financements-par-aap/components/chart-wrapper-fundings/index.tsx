@@ -1,13 +1,13 @@
-import { useQuery } from "@tanstack/react-query";
-import React from "react";
-import Highcharts from "highcharts/es-modules/masters/highcharts.src.js";
+import { useQuery } from "@tanstack/react-query"
+import Highcharts from "highcharts/es-modules/masters/highcharts.src.js"
+import React from "react"
 
-import { createChartOptions } from "../../../../components/chart-wrapper/default-options";
-import ChartWrapper, { ChartConfig, HighchartsOptions } from "../../../../components/chart-wrapper/index.js";
-import DefaultSkeleton from "../../../../components/charts-skeletons/default.js";
-import { deepMerge } from "../../../../utils";
+import { createChartOptions } from "../../../../components/chart-wrapper/default-options"
+import ChartWrapper, { ChartConfig, HighchartsOptions } from "../../../../components/chart-wrapper/index.js"
+import DefaultSkeleton from "../../../../components/charts-skeletons/default.js"
+import { deepMerge } from "../../../../utils"
 
-const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
+const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env
 
 const fundingsSources = [
   {
@@ -50,7 +50,7 @@ const fundingsSources = [
       fr: "https://data.enseignementsup-recherche.gouv.fr/explore/dataset/fr-esr-horizon-projects-entities/information/?disjunctive.paysage_category&disjunctive.region_1_name&disjunctive.regional_unit_name&disjunctive.free_keywords",
     },
   },
-];
+]
 
 
 export default function ChartWrapperFundings({
@@ -68,7 +68,6 @@ export default function ChartWrapperFundings({
   options: HighchartsOptions;
   renderData?: (options: Highcharts.Options) => React.ReactNode;
 }) {
-
   const { data: dataAlias, isLoading: isLoadingAlias } = useQuery({
     queryKey: ["fundings-alias"],
     queryFn: () =>
@@ -81,21 +80,21 @@ export default function ChartWrapperFundings({
           method: "GET",
         },
       ).then((response) => response.json()),
-  });
+  })
 
   let update: any = "";
   if (dataAlias) {
-    update = dataAlias?.index?.replace("\n", "")?.split("-")?.[2];
-    update = `${update.substring(0, 4)}-${update.substring(4, 6)}-${update.substring(6, 8)}`;
-    update = new Date(update);
+    update = dataAlias?.index?.replace("\n", "")?.split("-")?.[2]
+    update = `${update.substring(0, 4)}-${update.substring(4, 6)}-${update.substring(6, 8)}`
+    update = new Date(update)
   }
 
   const configLocal = {
     ...config,
     sources: fundingsSources.map((source) => ({ ...source, update })),
-  };
+  }
 
-  const optionsLocal: HighchartsOptions = deepMerge(createChartOptions("bar", { chart: { height: "600px" } }), options);
+  const optionsLocal: HighchartsOptions = deepMerge(createChartOptions("bar", { chart: { height: "600px" } }), options)
 
   return isLoadingAlias ? <DefaultSkeleton height={String(options?.chart?.height)} /> : <ChartWrapper
     config={configLocal}

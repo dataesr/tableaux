@@ -181,7 +181,7 @@ export default function Overview({ name, participantSuperOrganizationChildrenIds
   };
 
   return (
-    <div className={`chart-container chart-container--${color}`} id="overview">
+    <div className={`chart-container chart-container--${color}`} id="fundings-overview" role="figure">
       {isLoading ? <DefaultSkeleton height="600px" /> : <ChartWrapperFundings config={config} options={options} />}
     </div>
   );

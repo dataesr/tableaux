@@ -273,8 +273,8 @@ export default function ClassificationsByComparison() {
   }
 
   return (
-    <div className={`chart-container chart-container--${color}`} id="classifications-by-comparison">
-      <Title as="h2" look="h6">
+    <div aria-labelledby="fundings-classifications-by-comparison-title" className={`chart-container chart-container--${color}`} id="fundings-classifications-by-comparison" role="figure">
+      <Title as="h2" id="fundings-classifications-by-comparison-title" look="h6">
         {title}
       </Title>
       <SegmentedControl selectedControl={selectedControl} setSelectedControl={setSelectedControl} />

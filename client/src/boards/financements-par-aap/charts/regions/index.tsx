@@ -337,8 +337,8 @@ export default function Regions({ name, participantSuperOrganizationChildrenIds 
   }
 
   return (
-    <div className={`chart-container chart-container--${color}`} id="regions">
-      <Title as="h2" look="h6">
+    <div aria-labelledby="fundings-regions-title" className={`chart-container chart-container--${color}`} id="fundings-regions" role="figure">
+      <Title as="h2" id="fundings-regions-title" look="h6">
         {title}
       </Title>
       <SegmentedControl selectedControl={selectedControl} setSelectedControl={setSelectedControl} />

@@ -293,8 +293,8 @@ export default function InstrumentsForEurope({ name, participantSuperOrganizatio
   }
 
   return (
-    <div className={`chart-container chart-container--${color}`} id="instruments-for-europe">
-      <Title as="h2" look="h6">
+    <div aria-labelledby="fundings-instruments-for-europe-title" className={`chart-container chart-container--${color}`} id="fundings-instruments-for-europe" role="figure">
+      <Title as="h2" id="fundings-instruments-for-europe-title" look="h6">
         {title}
       </Title>
       <SegmentedControl selectedControl={selectedControl} setSelectedControl={setSelectedControl} />

@@ -428,8 +428,8 @@ export default function FrenchPartners({ name, participantSuperOrganizationChild
   }
 
   return (
-    <div className={`chart-container chart-container--${color}`} id="french-partners">
-      <Title as="h2" look="h6">
+    <div aria-labelledby="fundings-french-partners-title" className={`chart-container chart-container--${color}`} id="fundings-french-partners" role="figure">
+      <Title as="h2" id="fundings-french-partners-title" look="h6">
         {title}
       </Title>
       <SegmentedControl selectedControl={selectedControl} setSelectedControl={setSelectedControl} />

@@ -135,7 +135,7 @@ Le financement perçu approxime la part réelle allouée à chaque établissemen
   }
 
   return (
-    <div className={`chart-container chart-container--${color}`} id="dispersion-by-comparison">
+    <div aria-labelledby="fundings-classifications-title" className={`chart-container chart-container--${color}`} id="fundings-dispersion-by-comparison" role="figure">
       {isLoading ? <DefaultSkeleton height="600px" /> : <ChartWrapperFundings config={config} options={options} />}
     </div>
   )

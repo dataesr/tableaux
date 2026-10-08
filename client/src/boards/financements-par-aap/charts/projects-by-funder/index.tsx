@@ -282,8 +282,8 @@ export default function ProjectsByFunder({ name, participantSuperOrganizationChi
   }
 
   return (
-    <div className={`chart-container chart-container--${color}`} id="projects-by-funder">
-      <Title as="h2" look="h6">
+    <div aria-labelledby="fundings-projects-by-funder-title" className={`chart-container chart-container--${color}`} id="fundings-projects-by-funder" role="figure">
+      <Title as="h2" id="fundings-projects-by-funder-title" look="h6">
         {title}
       </Title>
       <SegmentedControl selectedControl={selectedControl} setSelectedControl={setSelectedControl} />

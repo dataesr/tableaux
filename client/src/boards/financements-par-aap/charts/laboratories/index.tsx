@@ -414,8 +414,8 @@ export default function Laboratories({ name, participantSuperOrganizationChildre
   }
 
   return (
-    <div className={`chart-container chart-container--${color}`} id="laboratories">
-      <Title as="h2" look="h6">
+    <div aria-labelledby="fundings-laboratories-title" className={`chart-container chart-container--${color}`} id="fundings-laboratories" role="figure">
+      <Title as="h2" id="fundings-laboratories-title" look="h6">
         {title}
       </Title>
       <SegmentedControl selectedControl={selectedControl} setSelectedControl={setSelectedControl} />

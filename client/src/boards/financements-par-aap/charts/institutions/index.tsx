@@ -410,8 +410,8 @@ export default function Institutions({ name }: { name: string | undefined }) {
   }
 
   return (
-    <div className={`chart-container chart-container--${color}`} id="institutions">
-      <Title as="h2" look="h6">
+    <div aria-labelledby="fundings-institutions-title" className={`chart-container chart-container--${color}`} id="fundings-institutions" role="figure">
+      <Title as="h2" id="fundings-institutions-title" look="h6">
         {title}
       </Title>
       <SegmentedControl selectedControl={selectedControl} setSelectedControl={setSelectedControl} />

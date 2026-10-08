@@ -281,8 +281,8 @@ export default function InstrumentsOverTimeForAnr({ name, participantSuperOrgani
   }
 
   return (
-    <div className={`chart-container chart-container--${color}`} id="instruments-over-time-for-anr">
-      <Title as="h2" look="h6">
+    <div aria-labelledby="fundings-instruments-over-time-for-anr-title" className={`chart-container chart-container--${color}`} id="fundings-instruments-over-time-for-anr" role="figure">
+      <Title as="h2" id="fundings-instruments-over-time-for-anr-title" look="h6">
         {title}
       </Title>
       <SegmentedControl selectedControl={selectedControl} setSelectedControl={setSelectedControl} />

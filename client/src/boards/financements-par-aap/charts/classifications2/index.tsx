@@ -356,8 +356,8 @@ export default function Classifications2({ name, participantSuperOrganizationChi
   }
 
   return (
-    <div className={`chart-container chart-container--${color}`} id="classifications2">
-      <Title as="h2" look="h6">
+    <div aria-labelledby="fundings-classifications2-title" className={`chart-container chart-container--${color}`} id="fundings-classifications2" role="figure">
+      <Title as="h2" id="fundings-classifications2-title" look="h6">
         {title}
       </Title>
       <SegmentedControl selectedControl={selectedControl} setSelectedControl={setSelectedControl} />
