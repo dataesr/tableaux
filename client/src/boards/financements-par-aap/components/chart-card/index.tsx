@@ -44,9 +44,7 @@ export default function ChartCard({
 
     chartInstance.current = Highcharts.chart({
       accessibility: {
-        screenReaderSection: {
-          beforeChartFormat: '',
-        }
+        enabled: false,
       },
       chart: {
         backgroundColor: 'transparent',
