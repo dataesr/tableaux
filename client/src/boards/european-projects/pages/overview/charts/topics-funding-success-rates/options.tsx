@@ -46,7 +46,7 @@ export default function Options(data) {
       {
         type: "bar",
         name: getI18nLabel(i18n, "successRate"),
-        color: getCssColor("successRate"),
+        color: getCssColor("success-rate"),
         groupPadding: 0,
         data: data.successRateByTopic.map((item) => ({
           name: item.topic,

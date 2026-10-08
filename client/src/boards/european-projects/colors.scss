@@ -3,13 +3,13 @@
 :root {
   --evaluated-project: #009099; // projets évalués
   --successful-project: #233e41; // projets lauréats
-  --successRate: #1f8d49; // taux de succès
+  --success-rate: #1f8d49; // taux de succès
 
   --label-color: var(--text-action-high-grey);
   --evaluated-project-color: #009099; // projets évalués
   --successful-project-color: #233e41; // projets lauréats
-  --averageSuccessRate-color: #d75521; // taux de succès moyen
-  --cumulativeSuccessRate-color: #d75521; // taux de succès moyen
+  --average-success-rate-color: #d75521; // taux de succès moyen
+  --cumulative-success-rate-color: #d75521; // taux de succès moyen
   --selected-country-color: #6dd897; // pays sélectionné
   --associated-countries-color: #09622a; // pays associés
   --collaboration-color: #7C3AED; // collaboration

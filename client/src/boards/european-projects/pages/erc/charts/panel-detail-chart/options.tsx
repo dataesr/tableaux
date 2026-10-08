@@ -58,17 +58,14 @@ export default function OptionsProjects({ data, domain, currentLang }: OptionsPr
   // Couleurs depuis les variables CSS
   const rootStyles = getComputedStyle(document.documentElement);
   const domainColor = rootStyles.getPropertyValue(DOMAIN_CSS_VARS[domain] || "--erc-domain-ls-color").trim() || "#6b7280";
-  const successRateColor = rootStyles.getPropertyValue("--averageSuccessRate-color").trim() || "#d75521";
+  const successRateColor = rootStyles.getPropertyValue("--average-success-rate-color").trim() || "#d75521";
 
   const newOptions: HighchartsInstance.Options = {
     chart: {
       height: 400,
     },
     title: {
-      text:
-        currentLang === "fr"
-          ? `Projets par panel - ${DOMAIN_LABELS[domain]?.fr || domain}`
-          : `Projects by panel - ${DOMAIN_LABELS[domain]?.en || domain}`,
+      text: currentLang === "fr" ? `Projets par panel - ${DOMAIN_LABELS[domain]?.fr || domain}` : `Projects by panel - ${DOMAIN_LABELS[domain]?.en || domain}`,
     },
     xAxis: {
       categories,
@@ -125,7 +122,7 @@ export default function OptionsProjects({ data, domain, currentLang }: OptionsPr
             <span style="color: #666; font-size: 11px;">${panelData.panel_name}</span><br/><br/>
             <span style="color: var(--evaluated-project-color);">●</span> ${currentLang === "fr" ? "Projets évalués" : "Evaluated"}: <strong>${evaluated.toLocaleString()}</strong><br/>
             <span style="color: ${domainColor};">●</span> ${currentLang === "fr" ? "Projets lauréats" : "Successful"}: <strong>${successful.toLocaleString()}</strong><br/>
-            <span style="color: var(--averageSuccessRate-color);">●</span> ${currentLang === "fr" ? "Taux de succès" : "Success rate"}: <strong>${rate}%</strong>
+            <span style="color: var(--average-success-rate-color);">●</span> ${currentLang === "fr" ? "Taux de succès" : "Success rate"}: <strong>${rate}%</strong>
           </div>
         `;
       },
@@ -167,7 +164,7 @@ export default function OptionsProjects({ data, domain, currentLang }: OptionsPr
         name: currentLang === "fr" ? "Taux de succès" : "Success rate",
         type: "spline",
         data: successRates,
-        color: "var(--averageSuccessRate-color)",
+        color: "var(--average-success-rate-color)",
         yAxis: 1,
         tooltip: {
           valueSuffix: " %",

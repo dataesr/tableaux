@@ -112,7 +112,7 @@ export default function Options(data, displayType, currentLang): HighchartsOptio
       {
         type: "line",
         name: `${getI18nLabel(i18n, "successRate", currentLang)} (%)`,
-        color: getCssColor("successRate"),
+        color: getCssColor("success-rate"),
         yAxis: 1,
         data: (() => {
           const data: number[] = [];

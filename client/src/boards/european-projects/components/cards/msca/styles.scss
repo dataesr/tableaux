@@ -105,7 +105,7 @@
     --card-primary-color: #8b5cf6;
   }
   &.rate-card {
-    --card-primary-color: var(--successRate-color);
+    --card-primary-color: var(--success-rate-color);
     background-color: var(--background-default-grey);
   }
 
@@ -278,7 +278,7 @@
     .rate-value {
       font-size: 1rem;
       font-weight: 700;
-      color: var(--successRate, #1f8d49);
+      color: var(--success-rate, #1f8d49);
     }
   }
 }

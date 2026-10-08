@@ -48,7 +48,7 @@ export default function Options({ data, currentLang = "fr" }: OptionsParams) {
   const rootStyles = getComputedStyle(document.documentElement);
   const evaluatedColor = rootStyles.getPropertyValue("--evaluated-project-color").trim() || "#009099";
   const successfulColor = rootStyles.getPropertyValue("--successful-project-color").trim() || "#233e41";
-  const successRateColor = rootStyles.getPropertyValue("--averageSuccessRate-color").trim() || "#d75521";
+  const successRateColor = rootStyles.getPropertyValue("--average-success-rate-color").trim() || "#d75521";
 
   const titleText = currentLang === "fr" ? "Projets par type de financement ERC" : "Projects by ERC funding type";
 

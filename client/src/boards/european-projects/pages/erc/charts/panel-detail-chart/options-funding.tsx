@@ -58,17 +58,14 @@ export default function OptionsFunding({ data, domain, currentLang }: OptionsFun
   // Couleurs depuis les variables CSS
   const rootStyles = getComputedStyle(document.documentElement);
   const domainColor = rootStyles.getPropertyValue(DOMAIN_CSS_VARS[domain] || "--erc-domain-ls-color").trim() || "#6b7280";
-  const successRateColor = rootStyles.getPropertyValue("--averageSuccessRate-color").trim() || "#d75521";
+  const successRateColor = rootStyles.getPropertyValue("--average-success-rate-color").trim() || "#d75521";
 
   const newOptions: HighchartsInstance.Options = {
     chart: {
       height: 400,
     },
     title: {
-      text:
-        currentLang === "fr"
-          ? `Financements par panel - ${DOMAIN_LABELS[domain]?.fr || domain}`
-          : `Funding by panel - ${DOMAIN_LABELS[domain]?.en || domain}`,
+      text: currentLang === "fr" ? `Financements par panel - ${DOMAIN_LABELS[domain]?.fr || domain}` : `Funding by panel - ${DOMAIN_LABELS[domain]?.en || domain}`,
     },
     xAxis: {
       categories,
@@ -134,7 +131,7 @@ export default function OptionsFunding({ data, domain, currentLang }: OptionsFun
             <span style="color: #666; font-size: 11px;">${panelData.panel_name}</span><br/><br/>
             <span style="color: var(--evaluated-project-color);">●</span> ${currentLang === "fr" ? "Demandés" : "Requested"}: <strong>${formatEuros(requested)}</strong><br/>
             <span style="color: ${domainColor};">●</span> ${currentLang === "fr" ? "Obtenus" : "Obtained"}: <strong>${formatEuros(obtained)}</strong><br/>
-            <span style="color: var(--averageSuccessRate-color);">●</span> ${currentLang === "fr" ? "Taux de succès" : "Success rate"}: <strong>${rate}%</strong>
+            <span style="color: var(--average-success-rate-color);">●</span> ${currentLang === "fr" ? "Taux de succès" : "Success rate"}: <strong>${rate}%</strong>
           </div>
         `;
       },
@@ -176,7 +173,7 @@ export default function OptionsFunding({ data, domain, currentLang }: OptionsFun
         name: currentLang === "fr" ? "Taux de succès" : "Success rate",
         type: "spline",
         data: successRates,
-        color: "var(--averageSuccessRate-color)",
+        color: "var(--average-success-rate-color)",
         yAxis: 1,
         tooltip: {
           valueSuffix: " %",

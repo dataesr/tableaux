@@ -35,7 +35,7 @@ export default function OptionsFunding({ data, currentLang = "fr" }: OptionsPara
   const rootStyles = getComputedStyle(document.documentElement);
   const evaluatedColor = rootStyles.getPropertyValue("--evaluated-project-color").trim() || "#009099";
   const successfulColor = rootStyles.getPropertyValue("--successful-project-color").trim() || "#233e41";
-  const successRateColor = rootStyles.getPropertyValue("--averageSuccessRate-color").trim() || "#d75521";
+  const successRateColor = rootStyles.getPropertyValue("--average-success-rate-color").trim() || "#d75521";
 
   const titleText = currentLang === "fr" ? "Financements par type de financement MSCA" : "Funding by MSCA funding type";
 

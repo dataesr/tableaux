@@ -29,7 +29,7 @@ export default function optionCoordinationNumberSuccessRate(data: DataItem[], cu
     yAxis: {
       plotLines: [
         {
-          color: rootStyles.getPropertyValue("--averageSuccessRate-color"),
+          color: rootStyles.getPropertyValue("--average-success-rate-color"),
           width: 4,
           value: average,
           zIndex: 4,
@@ -53,7 +53,7 @@ export default function optionCoordinationNumberSuccessRate(data: DataItem[], cu
       {
         type: "bar",
         name: t.successRateLabel,
-        color: rootStyles.getPropertyValue("--successRate-color"),
+        color: rootStyles.getPropertyValue("--success-rate-color"),
         groupPadding: 0,
         data: data.map((item) => ({
           name: item.name,

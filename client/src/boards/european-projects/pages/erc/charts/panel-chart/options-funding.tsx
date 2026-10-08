@@ -89,7 +89,7 @@ export default function OptionsFunding({ data, currentLang = "fr" }: OptionsPara
 
   // Récupérer les autres couleurs CSS
   const evaluatedColor = rootStyles.getPropertyValue("--evaluated-project-color").trim() || "#009099";
-  const successRateColor = rootStyles.getPropertyValue("--averageSuccessRate-color").trim() || "#d75521";
+  const successRateColor = rootStyles.getPropertyValue("--average-success-rate-color").trim() || "#d75521";
 
   const titleText = currentLang === "fr" ? "Financements par domaine scientifique ERC" : "Funding by ERC scientific domain";
 

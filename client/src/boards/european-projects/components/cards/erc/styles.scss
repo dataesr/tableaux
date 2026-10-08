@@ -109,7 +109,7 @@
   }
 
   &.rate-card {
-    --card-primary-color: var(--successRate-color);
+    --card-primary-color: var(--success-rate-color);
     background-color: var(--background-default-grey);
   }
 
@@ -293,7 +293,7 @@
     .rate-value {
       font-size: 1.125rem;
       font-weight: 700;
-      color: var(--successRate-color);
+      color: var(--success-rate-color);
     }
   }
 
@@ -402,7 +402,7 @@
     .rate-value {
       font-size: 1.25rem;
       font-weight: 700;
-      color: var(--successRate-color);
+      color: var(--success-rate-color);
     }
   }
 }
@@ -503,7 +503,7 @@
         }
 
         &.success-rate {
-          color: var(--successRate-color);
+          color: var(--success-rate-color);
         }
       }
 
@@ -663,7 +663,7 @@
     .rate-value {
       font-size: 1.125rem;
       font-weight: 700;
-      color: var(--successRate-color);
+      color: var(--success-rate-color);
     }
   }
 
