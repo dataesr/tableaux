@@ -78,7 +78,7 @@ export default function LegalNoticePage() {
               </Title>
               <Text>
                 {t("contactBody")}
-                <Link href="/contact">{t("contactLink")}</Link>
+                <Link href="/contact?from=general">{t("contactLink")}</Link>
                 {t("contactBodyAfter")}
               </Text>
             </section>
