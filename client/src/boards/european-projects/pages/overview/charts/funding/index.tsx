@@ -14,7 +14,7 @@ const config = {
   integrationURL: "/european-projects/components/pages/analysis/overview/charts/destination-funding",
 };
 
-export default function FundingValues() {
+export default function FundingValues({ displayType = "total-fund-eur_DEFAULT" }: { displayType: string }) {
   const params = useGetParams();
   const [searchParams] = useSearchParams();
   const currentLang = searchParams.get("language") || "fr";
@@ -26,5 +26,5 @@ export default function FundingValues() {
 
   if (isLoading || !data) return <DefaultSkeleton />;
 
-  return <ChartWrapper config={config} options={options(data, currentLang === "fr" ? "Financements (M€)" : "Funding (M€)")} renderData={() => renderDataTable(data, "fr")} />;
+  return <ChartWrapper config={config} options={options(data, displayType, currentLang === "fr" ? "Financements (M€)" : "Funding (M€)")} renderData={() => renderDataTable(data, "fr")} />;
 }

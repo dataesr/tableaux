@@ -20,7 +20,7 @@ export default function ProgramsFunding() {
     <>
       <Row className="chart-container chart-container--default">
         <Col md={6}>
-          <FundingValues />
+          <FundingValues displayType="" />
         </Col>
         <Col md={6}>
           <FundingSuccessRates />

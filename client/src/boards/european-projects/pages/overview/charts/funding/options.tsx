@@ -6,8 +6,10 @@ import { getCssColor } from "../../../../../../utils/colors";
 import { getI18nLabel, getResponsiveChartHeight } from "../../../../../../utils";
 import i18n from "../../i18n-charts.json";
 
-export default function Options(data, title) {
+export default function Options(data, displayType, title) {
   if (!data) return null;
+
+  console.log(displayType);
 
   const newOptions: HighchartsInstance.Options = {
     chart: { height: getResponsiveChartHeight(data.data.length) },

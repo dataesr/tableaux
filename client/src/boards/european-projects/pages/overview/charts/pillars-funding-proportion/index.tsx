@@ -3,14 +3,24 @@ import { useSearchParams } from "react-router-dom";
 
 import { getData } from "./query";
 import options from "./options";
-import { useGetParams, renderDataTable } from "./utils";
+import { useGetParams } from "./utils";
 import { EPChartsSources } from "../../../../config";
 
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
-const title = {
-  fr: "Part des financement demandés et obtenus par le pays sur l'ensemble des pays",
-  en: "Funding requested and obtained by the country on all countries",
+const titles: Record<string, { fr: string; en: string }> = {
+  total_fund_eur: {
+    fr: "Part des financements demandés et obtenus par le pays sur l'ensemble des pays",
+    en: "Funding requested and obtained by the country on all countries",
+  },
+  total_coordination_number: {
+    fr: "Part des coordinations demandées et obtenues par le pays sur l'ensemble des pays",
+    en: "Coordinations requested and obtained by the country on all countries",
+  },
+  total_number_involved: {
+    fr: "Part des participations demandées et obtenues par le pays sur l'ensemble des pays",
+    en: "Participations requested and obtained by the country on all countries",
+  },
 };
 const config = {
   id: "pillarsFundingProportion",
@@ -26,11 +36,11 @@ const config = {
   integrationURL: "/european-projects/components/pages/analysis/overview/charts/destination-funding-proportion",
 };
 
-export default function PillarsFundingProportion() {
+export default function PillarsFundingProportion({ displayType = "total_fund_eur" }: { displayType: string }) {
   const params = useGetParams();
-    const [searchParams] = useSearchParams();
-    const currentLang = searchParams.get("language") || "fr";
-  
+  const [searchParams] = useSearchParams();
+  const currentLang = searchParams.get("language") || "fr";
+
   const { data, isLoading } = useQuery({
     queryKey: [config.id, params],
     queryFn: () => getData(params),
@@ -38,11 +48,5 @@ export default function PillarsFundingProportion() {
 
   if (isLoading || !data) return <DefaultSkeleton />;
 
-  return (
-    <ChartWrapper
-      config={config}
-      options={options(data, currentLang === "fr" ? title.fr : title.en)}
-      renderData={() => renderDataTable(data, "fr")}
-    />
-  );
+  return <ChartWrapper config={config} options={options(data, displayType, (titles[displayType] ?? titles.total_fund_eur)[currentLang === "fr" ? "fr" : "en"])} />;
 }

@@ -251,6 +251,8 @@ router.route("/european-projects/overview/pillars-funding-proportion").get(async
             pilier_name_en: "$pilier_name_en",
           },
           total_fund_eur: { $sum: "$calculated_fund" },
+          total_coordination_number: { $sum: "$coordination_number" },
+          total_number_involved: { $sum: "$number_involved" },
         },
       },
       {
@@ -259,6 +261,8 @@ router.route("/european-projects/overview/pillars-funding-proportion").get(async
           pillar: "$_id.pillar",
           stage: "$_id.stage",
           total_fund_eur: 1,
+          total_coordination_number: 1,
+          total_number_involved: 1,
           pilier_name_fr: "$_id.pilier_name_fr",
           pilier_name_en: "$_id.pilier_name_en",
         },
@@ -284,6 +288,8 @@ router.route("/european-projects/overview/pillars-funding-proportion").get(async
             pilier_name_en: "$pilier_name_en",
           },
           total_fund_eur: { $sum: "$calculated_fund" },
+          total_coordination_number: { $sum: "$coordination_number" },
+          total_number_involved: { $sum: "$number_involved" },
         },
       },
       {
@@ -292,6 +298,8 @@ router.route("/european-projects/overview/pillars-funding-proportion").get(async
           pillar: "$_id.pillar",
           stage: "$_id.stage",
           total_fund_eur: 1,
+          total_coordination_number: 1,
+          total_number_involved: 1,
           pilier_name_fr: "$_id.pilier_name_fr",
           pilier_name_en: "$_id.pilier_name_en",
         },
@@ -302,15 +310,17 @@ router.route("/european-projects/overview/pillars-funding-proportion").get(async
 
   // calculate the proportion of each destination in the country data compared to the all data
   const data = data_country.map((item) => {
-    const total_fund_eur_country = item.total_fund_eur;
-    const total_fund_eur_all = data_all.find((el) => el.pillar === item.pillar && el.stage === item.stage)?.total_fund_eur;
+    const all = data_all.find((el) => el.pillar === item.pillar && el.stage === item.stage);
+    const ratio = (country, total) => (total ? (country / total) * 100 : 0);
 
     return {
       pillar: item.pillar,
       pilier_name_fr: item.pilier_name_fr,
       pilier_name_en: item.pilier_name_en,
       stage: item.stage,
-      proportion: total_fund_eur_all ? (total_fund_eur_country / total_fund_eur_all) * 100 : 0,
+      proportion: ratio(item.total_fund_eur, all?.total_fund_eur),
+      proportion_coordination_number: ratio(item.total_coordination_number, all?.total_coordination_number),
+      proportion_number_involved: ratio(item.total_number_involved, all?.total_number_involved),
     };
   });
   // sort by proportion
@@ -929,6 +939,8 @@ router.route("/european-projects/overview/funding").get(async (req, res) => {
             name_en: groupBy.name_en,
           },
           total_fund_eur: { $sum: "$calculated_fund" },
+          total_coordination_number: { $sum: "$coordination_number" },
+          total_number_involved: { $sum: "$number_involved" },
           count: { $sum: 1 },
         },
       },
@@ -940,6 +952,8 @@ router.route("/european-projects/overview/funding").get(async (req, res) => {
           name_en: "$_id.name_en",
           stage: "$_id.stage",
           total_fund_eur: 1,
+          total_coordination_number: 1,
+          total_number_involved: 1,
           count: 1,
         },
       },
