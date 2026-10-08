@@ -135,40 +135,44 @@ export default function Comparison() {
         {(structures && structures.length >= 2) ? (
           <>
             <Row gutters>
-              <Col>
-                <nav
-                  aria-label="Navigation secondaire"
-                  className="fr-nav fr-mb-1w"
-                  role="navigation"
+              <Col xs={12}>
+                <button
+                  aria-controls="section-nav-list"
+                  aria-expanded={isOpen}
+                  aria-label="Onglets"
+                  className="fr-btn fr-btn--secondary fr-btn--sm fr-icon-menu-fill data-mobile-burger"
+                  onClick={() => setIsOpen(!isOpen)}
                 >
-                  <button
-                    aria-controls="section-nav-list"
-                    aria-expanded={isOpen}
-                    className="fr-btn fr-btn--secondary fr-btn--sm fr-icon-menu-fill data-mobile-burger"
-                    onClick={() => setIsOpen(!isOpen)}
-                  >
-                    Menu
-                  </button>
-                  <ul className={`fr-nav__list ${isOpen ? 'fr-nav__list-open' : ''}`}>
+                  Menu
+                </button>
+                <div className="fr-tabs">
+                  <ul className="fr-tabs__list" id="section-nav-list" role="tablist" aria-label="Menu secondaire">
                     {sections.map((item) => (
-                      <li key={item.id} className="fr-nav__item">
+                      <li key={item.id} role="presentation">
                         <button
-                          aria-current={section === item.id ? "page" : undefined}
-                          className="fr-nav__link"
+                          aria-label={item.label}
+                          aria-selected={section === item.id}
+                          className="fr-tabs__tab"
                           onClick={() => handleNavClick(item.id)}
+                          role="tab"
+                          tabIndex={section === item.id ? 0 : -1}
+                          type="button"
                         >
                           {item.label}
                         </button>
                       </li>
                     ))}
                   </ul>
-                </nav>
+                </div>
               </Col>
             </Row>
             {(yearMax < yearMin) ?
               (<Alert description="Merci de choisir une année de fin supérieure ou égale à l'année de début" title="Erreur dans le choix des années" variant="error" />) :
               (
                 <>
+                  <Title as="h2" className="fr-sr-only">
+                    {sections.find((item) => section === item.id)?.label}
+                  </Title>
                   {(section === "financements") && (
                     <>
                       <Row gutters>
