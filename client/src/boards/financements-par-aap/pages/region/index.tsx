@@ -94,7 +94,7 @@ export default function regions() {
         </Container>
         <Container className="fr-mb-3w">
           <Row gutters>
-            <Text className="fr-text--sm fr-mb-2w fr-pl-2w">
+            <Text className="fr-text--sm fr-mb-2w fr-pl-2w" role="status">
               {regions.length} région
               {regions.length > 1 ? "s" : ""} trouvée
               {regions.length > 1 ? "s" : ""}

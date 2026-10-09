@@ -180,6 +180,7 @@ export default function DisplayRegion() {
           <Alert
             className="fr-mb-4w fr-mt-4w"
             description="Les sources disponibles ne fournissent que des données provisoires pour 2024 et 2025."
+            role="status"
             size="sm"
             variant="warning"
           />

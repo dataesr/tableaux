@@ -237,7 +237,7 @@ export default function DataTable({ aggregations, caption, columns, dataTable, f
           </nav>
         </Col>
         <Col xs="12" style={{ textAlign: 'right' }}>
-          <Text className="fr-text--sm fr-mb-0">
+          <Text className="fr-text--sm fr-mb-0" role="status">
             Résultats {pagination.from + 1} - {Math.min(pagination.from + pagination.size, numberOfResults)} / {numberOfResults}
           </Text>
         </Col>

@@ -56,7 +56,7 @@ export default function Structures() {
         </Container>
         <Container className="fr-mb-3w">
           <Row gutters>
-            <Text className="fr-text--sm fr-mb-2w fr-pl-2w">
+            <Text className="fr-text--sm fr-mb-2w fr-pl-2w" role="status">
               {structures.length} établissement
               {structures.length > 1 ? "s" : ""} trouvé
               {structures.length > 1 ? "s" : ""}

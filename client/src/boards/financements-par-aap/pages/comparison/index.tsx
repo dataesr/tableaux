@@ -203,6 +203,7 @@ export default function Comparison() {
             description="Sélectionner plusieurs établissements dans la liste déroulante pour visualiser
               leurs financements via les appels à projets. Vous pouvez filtrer par région et par typologie."
             className="fr-mt-3w fr-mb-3w"
+            role="status"
             title="Sélectionner plusieurs établissements"
             variant="info"
           />

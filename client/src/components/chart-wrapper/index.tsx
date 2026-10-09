@@ -1,33 +1,31 @@
 import { Button, Col, Container, Modal, ModalContent, ModalTitle, Radio, Row, Title } from "@dataesr/dsfr-plus"
-import Highcharts from "highcharts/es-modules/masters/highcharts.src.js"
 import HighchartsReact from "highcharts-react-official"
-import "highcharts/es-modules/masters/highcharts-more.src.js"
-import "highcharts/es-modules/masters/modules/heatmap.src.js";
-import "highcharts/es-modules/masters/modules/exporting.src.js"
-import "highcharts/es-modules/masters/modules/export-data.src.js"
-import "highcharts/es-modules/masters/modules/map.src.js"
-import "highcharts/es-modules/masters/modules/flowmap.src.js"
-import "highcharts/es-modules/masters/modules/offline-exporting.src.js"
-import "highcharts/es-modules/masters/modules/variable-pie.src.js"
-import "highcharts/es-modules/masters/modules/sankey.src.js"
-import "highcharts/es-modules/masters/modules/treemap.src.js"
-import "highcharts/es-modules/masters/modules/pattern-fill.src.js"
-import "highcharts/es-modules/masters/modules/variwide.src.js"
-
-import "highcharts/es-modules/masters/modules/accessibility.src.js"
-
+import Highcharts from "highcharts/es-modules/masters/highcharts.src.js"
 import React, { useId, useRef, useState } from "react"
+import { useSearchParams } from "react-router-dom"
 import SyntaxHighlighter from "react-syntax-highlighter"
 import { a11yDark } from "react-syntax-highlighter/dist/esm/styles/hljs"
 
-import { useSearchParams } from "react-router-dom"
 import { deepMerge, getI18nLabel } from "../../utils"
 import ChartFooter from "../chart-footer"
 import CopyButton from "../copy-button"
 import i18n from "./i18n.json"
 
-import "./styles.scss";
+import "highcharts/es-modules/masters/highcharts-more.src.js"
+import "highcharts/es-modules/masters/modules/accessibility.src.js"
+import "highcharts/es-modules/masters/modules/export-data.src.js"
+import "highcharts/es-modules/masters/modules/exporting.src.js"
+import "highcharts/es-modules/masters/modules/flowmap.src.js"
+import "highcharts/es-modules/masters/modules/heatmap.src.js"
+import "highcharts/es-modules/masters/modules/map.src.js"
+import "highcharts/es-modules/masters/modules/offline-exporting.src.js"
+import "highcharts/es-modules/masters/modules/pattern-fill.src.js"
+import "highcharts/es-modules/masters/modules/sankey.src.js"
+import "highcharts/es-modules/masters/modules/treemap.src.js"
+import "highcharts/es-modules/masters/modules/variable-pie.src.js"
+import "highcharts/es-modules/masters/modules/variwide.src.js"
 
+import "./styles.scss"
 
 // Configuration globale pour l'export offline
 Highcharts.setOptions({
@@ -81,22 +79,8 @@ export type HighchartsOptions = Highcharts.Options | any | null;
 
 const { VITE_APP_URL } = import.meta.env;
 
-function useEscapeKey(isOpen: boolean, onClose: () => void) {
-  React.useEffect(() => {
-    if (!isOpen) return;
-
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        onClose();
-      }
-    };
-    document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [isOpen, onClose]);
-}
 
 function IntegrationModal({ graphConfig, isOpen, modalId, setIsOpen }) {
-  useEscapeKey(isOpen, () => setIsOpen(false));
   const integrationCode = `<iframe \ntitle="${graphConfig.title}" \nwidth="800" \nheight="600" \nsrc="${VITE_APP_URL}${graphConfig.integrationURL}"></iframe>`;
   return (
     <Modal
@@ -141,7 +125,6 @@ function MenuModal({
   setIsOpen,
   setIsOpenIntegration,
 }) {
-  useEscapeKey(isOpen, () => setIsOpen(false));
   const shareUrl = typeof window !== "undefined"
     ? new URL(window.location.pathname + window.location.search, VITE_APP_URL || window.location.origin).toString()
     : "";
