@@ -8,7 +8,7 @@
   "synthesis": {
     "sectionTitle": {
       "fr": "Synthèse",
-      "en": "Synthesis"
+      "en": "Overview"
     }
   },
   "panelFunding": {
@@ -20,7 +20,7 @@
   "positioning": {
     "sectionTitle": {
       "fr": "Positionnement",
-      "en": "Positioning"
+      "en": "Position"
     }
   },
   "entities": {
@@ -32,15 +32,15 @@
   "evolution": {
     "sectionTitle": {
       "fr": "Évolution de la participation",
-      "en": "Evolution of participation"
+      "en": "Trends in participation"
     },
     "byFundingType": {
       "fr": "par type de financement",
-      "en": "by funding type"
+      "en": "by action type"
     },
     "noDataAvailable": {
       "fr": "Aucune donnée d'évolution disponible.",
-      "en": "No evolution data available."
+      "en": "No trend data available."
     }
   }
 }

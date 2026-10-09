@@ -22,14 +22,14 @@ const configProjects = {
   comment: {
     fr: (
       <>
-        Ce graphique présente le nombre de projets évalués et lauréats par panel scientifique MSCA. La ligne orange représente le taux de succès pour
-        chaque panel.
+        Ce graphique présente le nombre de projets évalués et lauréats pour chaque panel scientifique MSCA. 
+        La ligne orange indique le taux de succès de chaque panel, soit le rapport entre les projets lauréats et les projets évalués.
       </>
     ),
     en: (
       <>
-        This chart shows the number of evaluated and successful projects by MSCA scientific panel. The orange line represents the success rate for
-        each panel.
+        This chart shows the number of projects evaluated and successful projects for each MSCA scientific panel. 
+        The orange line shows the success rate for each panel, i.e. the ratio of successful projects to projects evaluated.
       </>
     ),
   },
@@ -56,13 +56,14 @@ const configFunding = {
   comment: {
     fr: (
       <>
-        Ce graphique présente les financements demandés et obtenus par panel scientifique MSCA. La ligne orange représente le taux de succès en termes
-        de financement.
+        Ce graphique présente les financements demandés et obtenus pour chaque panel scientifique MSCA. 
+        La ligne orange indique le taux de succès de chaque panel, soit le rapport entre les financements obtenus et les financements demandés.
       </>
     ),
     en: (
       <>
-        This chart shows the requested and obtained funding by MSCA scientific panel. The orange line represents the success rate in terms of funding.
+        This chart shows the funding requested and secured for each MSCA scientific panel.
+        The orange line shows the funding success rate for each panel, i.e. the ratio of funding secured to funding requested.
       </>
     ),
   },
@@ -133,7 +134,7 @@ function renderDataTableFunding(data: MscaPanelChartItem[], currentLang: string)
         <tr>
           <th>{currentLang === "fr" ? "Panel scientifique" : "Scientific panel"}</th>
           <th>{currentLang === "fr" ? "Financements demandés" : "Requested"}</th>
-          <th>{currentLang === "fr" ? "Financements obtenus" : "Obtained"}</th>
+          <th>{currentLang === "fr" ? "Financements obtenus" : "Secured"}</th>
           <th>{currentLang === "fr" ? "Taux de succès" : "Success rate"}</th>
         </tr>
       </thead>

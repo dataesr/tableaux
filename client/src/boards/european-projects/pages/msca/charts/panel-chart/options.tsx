@@ -27,7 +27,7 @@ export default function Options({ data, currentLang = "fr" }: OptionsParams) {
   const successfulColor = rootStyles.getPropertyValue("--successful-project-color").trim() || "#233e41";
   const successRateColor = rootStyles.getPropertyValue("--average-success-rate-color").trim() || "#d75521";
 
-  const titleText = currentLang === "fr" ? "Graphique des projets par panel scientifique MSCA" : "Chart of projects by MSCA scientific panel";
+  const titleText = currentLang === "fr" ? "Nombre de projets par panel scientifique MSCA" : "Number of projects by MSCA scientific panel";
 
   const newOptions: HighchartsInstance.Options = {
     chart: {

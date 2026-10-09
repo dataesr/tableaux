@@ -33,14 +33,14 @@ const configProjects = {
   comment: {
     fr: (
       <>
-        Ce graphique présente le nombre de projets évalués et lauréats par type de financement MSCA (Postdoctoral Fellowships, Doctoral Networks,
-        Staff Exchanges…). La ligne orange représente le taux de succès pour chaque type.
+        Ce graphique présente le nombre de projets évalués et lauréats pour chaque type de financement MSCA (Postdoctoral Fellowships, Doctoral Networks, Staff Exchanges, etc.). 
+        La ligne orange indique le taux de succès de chaque type, soit le rapport entre les projets lauréats et les projets évalués.
       </>
     ),
     en: (
       <>
-        This chart shows the number of evaluated and successful projects by MSCA funding type (Postdoctoral Fellowships, Doctoral Networks, Staff
-        Exchanges…). The orange line represents the success rate for each type.
+        This chart shows the number of projects evaluated and successful projects for each MSCA action type (Postdoctoral Fellowships, Doctoral Networks, Staff Exchanges, etc.). 
+        The orange line shows the success rate for each type, i.e. the ratio of successful projects to projects evaluated.
       </>
     ),
   },
@@ -67,12 +67,15 @@ const configFunding = {
   comment: {
     fr: (
       <>
-        Ce graphique présente les financements demandés et obtenus par type de financement MSCA. La ligne orange représente le taux de succès en
-        termes de financement.
+        Ce graphique présente les financements demandés et obtenus pour chaque type de financement MSCA. 
+        La ligne orange indique le taux de succès des financements, soit le rapport entre les financements obtenus et les financements demandés.
       </>
     ),
     en: (
-      <>This chart shows the requested and obtained funding by MSCA funding type. The orange line represents the success rate in terms of funding.</>
+      <>
+        This chart shows the funding requested and secured for each MSCA action type. 
+        The orange line shows the funding success rate, i.e. the ratio of funding secured to funding requested.
+      </>
     ),
   },
   readingKey: {
@@ -103,10 +106,10 @@ function renderDataTableProjects(data: MscaDestinationChartItem[], currentLang: 
   const sortedData = [...data].sort((a, b) => a.destination_code.localeCompare(b.destination_code));
   return (
     <table className="fr-table">
-      <caption>{currentLang === "fr" ? "Projets par type de financement MSCA" : "Projects by MSCA funding type"}</caption>
+      <caption>{currentLang === "fr" ? "Projets par type de financement MSCA" : "Projects by MSCA action type"}</caption>
       <thead>
         <tr>
-          <th>{currentLang === "fr" ? "Type de financement" : "Funding type"}</th>
+          <th>{currentLang === "fr" ? "Type de financement" : "Action type"}</th>
           <th>{currentLang === "fr" ? "Projets évalués" : "Evaluated"}</th>
           <th>{currentLang === "fr" ? "Projets lauréats" : "Successful"}</th>
           <th>{currentLang === "fr" ? "Taux de succès" : "Success rate"}</th>
@@ -136,12 +139,12 @@ function renderDataTableFunding(data: MscaDestinationChartItem[], currentLang: s
   const sortedData = [...data].sort((a, b) => a.destination_code.localeCompare(b.destination_code));
   return (
     <table className="fr-table">
-      <caption>{currentLang === "fr" ? "Financements par type de financement MSCA" : "Funding by MSCA funding type"}</caption>
+      <caption>{currentLang === "fr" ? "Financements par type de financement MSCA" : "Funding by action type"}</caption>
       <thead>
         <tr>
-          <th>{currentLang === "fr" ? "Type de financement" : "Funding type"}</th>
+          <th>{currentLang === "fr" ? "Type de financement" : "Action type"}</th>
           <th>{currentLang === "fr" ? "Financements demandés" : "Requested"}</th>
-          <th>{currentLang === "fr" ? "Financements obtenus" : "Obtained"}</th>
+          <th>{currentLang === "fr" ? "Financements obtenus" : "Secured"}</th>
           <th>{currentLang === "fr" ? "Taux de succès" : "Success rate"}</th>
         </tr>
       </thead>
