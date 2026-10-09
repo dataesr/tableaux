@@ -1,10 +1,22 @@
 {
-  "total-of-subsidies":{
-    "fr": "Total des subventions",
-    "en": "Total of subsidies"
+  "total-funding-eur-axis": {
+    "fr": "Total financements en euros €",
+    "en": "Total funding in euros €"
   },
-  "weight-of-subsidies": {
-    "fr": "Poids du cumul des subventions",
-    "en": "Weight of the cumulative subsidies"    
+  "cumulative-weight-axis": {
+    "fr": "Poids du cumul des financements (%)",
+    "en": "Weight of cumulative funding (%)"
+  },
+  "total-funding-eur": {
+    "fr": "Total financements en euros",
+    "en": "Total funding in euros"
+  },
+  "total-funding": {
+    "fr": "Total des financements",
+    "en": "Total funding"
+  },
+  "weight-of-funding": {
+    "fr": "Poids du cumul des financements",
+    "en": "Weight of cumulative funding"
   }
 }
