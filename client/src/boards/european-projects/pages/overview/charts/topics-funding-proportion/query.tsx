@@ -6,6 +6,6 @@ export async function getData(params: string) {
   }
 
   return fetch(
-    `${VITE_APP_SERVER_URL}/european-projects/overview/topics-funding-proportion?${params}`
+    `${VITE_APP_SERVER_URL}/european-projects/overview/funding-proportion?${params}&groupBy=topic`
   ).then((response) => response.json());
 }

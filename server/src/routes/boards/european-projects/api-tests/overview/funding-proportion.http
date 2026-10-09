@@ -1,0 +1,11 @@
+### Funding proportion by pillar
+GET http://localhost:3000/api/european-projects/overview/funding-proportion?country_code=FRA&groupBy=pillar
+
+### Funding proportion by program
+GET http://localhost:3000/api/european-projects/overview/funding-proportion?country_code=FRA&groupBy=program
+
+### Funding proportion by topic
+GET http://localhost:3000/api/european-projects/overview/funding-proportion?country_code=FRA&groupBy=topic
+
+### Funding proportion by destination
+GET http://localhost:3000/api/european-projects/overview/funding-proportion?country_code=FRA&groupBy=destination

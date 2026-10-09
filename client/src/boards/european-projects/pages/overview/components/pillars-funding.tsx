@@ -23,7 +23,7 @@ export default function PillarsFunding() {
       </Row>
       <Row>
         <Col xs={12} md={12}>
-          <FundingCombined displayType={displayType} />
+          <FundingCombined displayType={displayType} groupBy="pillar" />
         </Col>
       </Row>
 

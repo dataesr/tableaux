@@ -1,39 +1,37 @@
-import { Col, Row } from "@dataesr/dsfr-plus";
-import DestinationFundingValues from "../charts/destination-funding";
-import DestinationFundingSuccessRates from "../charts/destination-funding-success-rates";
+import { useState } from "react";
+import { Col, Container, Row } from "@dataesr/dsfr-plus";
+
+import FundingCombined from "../charts/fundings-combined";
 import DestinationFundingProportion from "../charts/destination-funding-proportion";
-import ChartFooter from "../../../../../components/chart-footer";
-import { EPChartsSources } from "../../../config";
+import { getI18nLabel } from "../../../../../utils";
+
+import i18nGlobal from "../../../i18n-global.json";
 
 export default function DestinationsFunding() {
+  const [displayType, setDisplayType] = useState("total_fund_eur");
+
   return (
-    <>
-      <Row className="chart-container chart-container--default">
-        <Col md={6}>
-          <DestinationFundingValues />
-        </Col>
-        <Col md={6}>
-          <DestinationFundingSuccessRates />
-        </Col>
-        <Col md={12} className="chart-footer">
-          <ChartFooter
-            comment={{
-              fr: <>Ce graphique affiche la répartition des financements demandés et obtenus (en M€) par destination, ainsi que le taux de succès associé (montants obtenus / montants demandés).</>,
-              en: <>This chart displays the distribution of requested and obtained funding (in M€) by destination, as well as the associated success rate (amounts obtained / amounts requested).</>,
-            }}
-            readingKey={{
-              fr: <>Pour la thématique "Excellence Scientifique", les projets ont demandé X M€ de subventions, et en ont obtenu Y M€, soit un taux de succès de Z %.</>,
-              en: <>For the "Scientific Excellence" topic, projects requested X M€ in funding and obtained Y M€, representing a success rate of Z%.</>,
-            }}
-            sources={EPChartsSources}
-          />
+    <Container fluid className="chart-container chart-container--default">
+      <Row className="fr-my-1w">
+        <Col className="fr-px-1w">
+          <select className="fr-select" onChange={(e) => setDisplayType(e.target.value)}>
+            <option value="total_fund_eur">{getI18nLabel(i18nGlobal, "total-fund-eur")}</option>
+            <option value="total_coordination_number">{getI18nLabel(i18nGlobal, "total-coordination-number")}</option>
+            <option value="total_number_involved">{getI18nLabel(i18nGlobal, "total-number-involved")}</option>
+          </select>
         </Col>
       </Row>
-      <Row className="fr-mt-1w chart-container chart-container--default">
+      <Row>
+        <Col xs={12} md={12}>
+          <FundingCombined displayType={displayType} groupBy="destination" />
+        </Col>
+      </Row>
+
+      <Row className="fr-mt-1w">
         <Col>
-          <DestinationFundingProportion />
+          <DestinationFundingProportion displayType={displayType} />
         </Col>
       </Row>
-    </>
+    </Container>
   );
 }

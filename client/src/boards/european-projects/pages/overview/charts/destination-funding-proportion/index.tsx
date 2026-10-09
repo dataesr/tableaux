@@ -16,7 +16,7 @@ const config = {
   integrationURL: "/european-projects/components/pages/analysis/overview/charts/destination-funding-proportion",
 };
 
-export default function DestinationFundingProportion() {
+export default function DestinationFundingProportion({ displayType = "total_fund_eur" }: { displayType?: string }) {
   const { params } = useGetParams();
   const { data, isLoading } = useQuery({
     queryKey: [config.id, params],
@@ -25,5 +25,5 @@ export default function DestinationFundingProportion() {
 
   if (isLoading || !data) return <DefaultSkeleton />;
 
-  return <ChartWrapper config={config} options={options(data)} renderData={() => renderDataTable(data)} />;
+  return <ChartWrapper config={config} options={options(data, displayType)} renderData={() => renderDataTable(data)} />;
 }

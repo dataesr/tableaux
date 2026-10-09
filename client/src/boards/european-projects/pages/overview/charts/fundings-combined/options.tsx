@@ -6,7 +6,7 @@ import { getCssColor } from "../../../../../../utils/colors";
 import { getI18nLabel } from "../../../../../../utils";
 import i18n from "../../i18n-charts.json";
 
-type FundingItem = { name_fr?: string; pilier_name_fr?: string; stage: string; total_fund_eur: number; total_coordination_number?: number; total_number_involved?: number };
+type FundingItem = { code?: string; name_fr?: string; pilier_name_fr?: string; stage: string; total_fund_eur: number; total_coordination_number?: number; total_number_involved?: number };
 
 export default function Options(data: { data?: FundingItem[] } | null, displayType: string = "total_fund_eur", title?: string) {
   const items = data?.data;
@@ -16,7 +16,7 @@ export default function Options(data: { data?: FundingItem[] } | null, displayTy
   const isFunding = valueKey === "total_fund_eur";
   const divider = isFunding ? 1000000 : 1;
 
-  const getName = (item: FundingItem) => item.name_fr ?? item.pilier_name_fr ?? "";
+  const getName = (item: FundingItem) => item.name_fr ?? item.pilier_name_fr ?? item.code ?? "";
   const categories = Array.from(new Set(items.map(getName)));
 
   const getValue = (name: string, stage: string) =>
