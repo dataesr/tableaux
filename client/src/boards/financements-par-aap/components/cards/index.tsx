@@ -135,7 +135,7 @@ export default function Cards({ participantSuperOrganizationChildrenIds = [] }: 
               }}
             >
               {funder}
-              <span aria-hidden="true" style={{ display: "block", fontSize: "0.75rem", opacity: 0.5 }}>▼</span>
+              <span aria-hidden="true" style={{ display: "block", fontSize: "0.75rem" }}>▼</span>
             </Text>
           </Col>
         ))}

@@ -278,12 +278,14 @@ export default function InstrumentsForEurope({ name, participantSuperOrganizatio
     plotOptions: {
       treemap: {
         dataLabels: {
+          backgroundColor: "contrast",
+          color: "white",
+          enabled: true,
+          inside: true,
           style: {
-            color: "black",
-            fontWeight: "bold",
-            fontSize: "14px",
-            textOutline: "1px contrast",
-          },
+            fontWeight: "normal",
+            fontSize: "12px",
+          }
         },
       },
     },

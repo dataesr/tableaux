@@ -77,8 +77,8 @@ ul {
   position: relative; // Pour permettre le positionnement absolu du badge
 
   .chart-footer {
+    color: var(--text-mention-grey);
     font-size: 0.8rem;
-    color: #6a6a6a;
   }
 
   .legend {
