@@ -63,7 +63,7 @@ export default function DisplayRegion() {
       <Container fluid className="funding-gradient fr-mb-3w">
         <Container as="section">
           <Row gutters>
-            <Col>
+            <Col xs="12">
               <Breadcrumb items={[
                 { href: "/financements-par-aap/accueil", label: "Financements par AAP" },
                 { href: "/financements-par-aap/region", label: "Vue par région" },
@@ -144,13 +144,14 @@ export default function DisplayRegion() {
       </Container>
       <Container className="fr-mb-3w">
         <Row gutters>
-          <Col xs={12}>
+          <Col xs="12">
             <button
               aria-controls="section-nav-list"
               aria-expanded={isOpen}
               aria-label="Onglets"
               className="fr-btn fr-btn--secondary fr-btn--sm fr-icon-menu-fill data-mobile-burger"
               onClick={() => setIsOpen(!isOpen)}
+                type="button"
             >
               Menu
             </button>
@@ -196,12 +197,12 @@ export default function DisplayRegion() {
               {(section === "financements") && (
                 <>
                   <Row gutters style={{ clear: "both" }}>
-                    <Col>
+                    <Col xs="12">
                       <ProjectsByFunder name={region} />
                     </Col>
                   </Row>
                   <Row gutters>
-                    <Col>
+                    <Col xs="12">
                       <Overview name={region} />
                     </Col>
                   </Row>
@@ -209,7 +210,7 @@ export default function DisplayRegion() {
               )}
               {(section === "evolution") && (
                 <Row gutters style={{ clear: "both" }}>
-                  <Col>
+                  <Col xs="12">
                     <ProjectsOverTime name={region} />
                   </Col>
                 </Row>
@@ -217,12 +218,12 @@ export default function DisplayRegion() {
               {(section === "partenaires") && (
                 <>
                   <Row gutters style={{ clear: "both" }}>
-                    <Col>
+                    <Col xs="12">
                       <FrenchPartners name={region} />
                     </Col>
                   </Row>
                   <Row gutters>
-                    <Col>
+                    <Col xs="12">
                       <InternationalPartners name={region} />
                     </Col>
                   </Row>
@@ -230,14 +231,14 @@ export default function DisplayRegion() {
               )}
               {(section === "institutions") && (
                 <Row gutters style={{ clear: "both" }}>
-                  <Col>
+                  <Col xs="12">
                     <Institutions name={region} />
                   </Col>
                 </Row>
               )}
               {(section === "laboratoires") && (
                 <Row gutters style={{ clear: "both" }}>
-                  <Col>
+                  <Col xs="12">
                     <Laboratories name={region} />
                   </Col>
                 </Row>
@@ -245,12 +246,12 @@ export default function DisplayRegion() {
               {(section === "disciplines") && (
                 <>
                   <Row gutters style={{ clear: "both" }}>
-                    <Col>
+                    <Col xs="12">
                       <Classifications name={region} />
                     </Col>
                   </Row>
                   <Row gutters>
-                    <Col>
+                    <Col xs="12">
                       <Classifications2 name={region} />
                     </Col>
                   </Row>
@@ -259,22 +260,22 @@ export default function DisplayRegion() {
               {(section === "instruments") && (
                 <>
                   <Row gutters style={{ clear: "both" }}>
-                    <Col>
+                    <Col xs="12">
                       <InstrumentsForAnr name={region} />
                     </Col>
                   </Row>
                   <Row gutters>
-                    <Col>
+                    <Col xs="12">
                       <InstrumentsForEurope name={region} />
                     </Col>
                   </Row>
                   <Row gutters>
-                    <Col>
+                    <Col xs="12">
                       <InstrumentsOverTimeForAnr name={region} />
                     </Col>
                   </Row>
                   <Row gutters>
-                    <Col>
+                    <Col xs="12">
                       <InstrumentsOverTimeForEurope name={region} />
                     </Col>
                   </Row>

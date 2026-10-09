@@ -4,8 +4,8 @@ import { useMemo, useState } from "react"
 import { useSearchParams } from "react-router-dom"
 
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx"
-import { getEsQuery } from "../../../../utils.ts"
-import DataTable from "./datatable.tsx"
+import { getEsQuery, getYearRangeLabel } from "../../../../utils.ts"
+import DataTable from "../../../../components/projects-data"
 
 const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env
 
@@ -40,6 +40,7 @@ type Sort = {
   id: string
   order: 'asc' | 'desc'
 }
+
 
 export default function ProjectsData({ participantSuperOrganizationChildrenIds = [] }: { participantSuperOrganizationChildrenIds: any[] }) {
   const [searchParams] = useSearchParams()
@@ -264,16 +265,18 @@ export default function ProjectsData({ participantSuperOrganizationChildrenIds =
 
   if (isLoading) return <DefaultSkeleton height="600px" />
 
+  const caption = `Liste des participations aux projets financés ${getYearRangeLabel({ yearMax, yearMin })}`
+
   return (
     <>
       <Row className="fr-grid-row--middle fr-mb-3w">
-        <Col>
+        <Col xs="12">
           <Title as="h2" look="h4">Données détaillées</Title>
           <Text className="fr-text--sm fr-mb-0" style={{ color: "var(--text-mention-grey)" }}>
-            Liste des participations aux projets financés pour la période sélectionnée
+            {caption}
           </Text>
         </Col>
-        <Col style={{ display: "flex", justifyContent: "flex-end" }}>
+        <Col style={{ display: "flex", justifyContent: "flex-end" }} xs="12">
           {isLoadingAll ? "Chargement..." : (
             <Button
               icon="download-line"
@@ -288,9 +291,10 @@ export default function ProjectsData({ participantSuperOrganizationChildrenIds =
         </Col>
       </Row>
       <Row>
-        <Col>
+        <Col aria-label="Données détaillées" role="structure" style={{ overflowX: "auto" }} tabIndex={0} xs="12">
           <DataTable
             aggregations={dataAll?.aggregations ?? {}}
+            caption={caption}
             columns={columns}
             dataTable={dataTable}
             filters={filters}

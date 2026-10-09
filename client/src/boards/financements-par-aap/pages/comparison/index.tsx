@@ -52,7 +52,7 @@ export default function Comparison() {
       <Container fluid className="funding-gradient">
         <Container as="section">
           <Row gutters>
-            <Col>
+            <Col xs="12">
               <Breadcrumb items={[
                 { href: "/financements-par-aap/accueil", label: "Financements par AAP" },
                 { label: "Comparaison entre établissements" },
@@ -60,7 +60,7 @@ export default function Comparison() {
             </Col>
           </Row>
           <Row gutters className="fr-grid-row--middle">
-            <Col md="9">
+            <Col xs="12" md="9">
               <Title as="h1" look="h4" className="fr-mb-1v">
                 Comparaison entre établissements
               </Title>
@@ -70,7 +70,7 @@ export default function Comparison() {
                   : `${structures.length} établissements sélectionnés`}
               </Text>
             </Col>
-            <Col md="3" style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", gap: "0.5rem" }}>
+            <Col xs="12" md="3" style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", gap: "0.5rem" }}>
               <div style={{ alignItems: "center", display: "flex", gap: "0.5rem" }}>
                 <fieldset className="fr-fieldset" aria-label="Années">
                   <legend className="fr-fieldset__legend--regular fr-fieldset__legend">Années</legend>
@@ -125,7 +125,7 @@ export default function Comparison() {
             </Col>
           </Row>
           <Row gutters className="fr-mt-2w fr-mb-2w">
-            <Col>
+            <Col xs="12">
               <StructuresSelector />
             </Col>
           </Row>
@@ -135,13 +135,14 @@ export default function Comparison() {
         {(structures && structures.length >= 2) ? (
           <>
             <Row gutters>
-              <Col xs={12}>
+              <Col xs="12">
                 <button
                   aria-controls="section-nav-list"
                   aria-expanded={isOpen}
                   aria-label="Onglets"
                   className="fr-btn fr-btn--secondary fr-btn--sm fr-icon-menu-fill data-mobile-burger"
                   onClick={() => setIsOpen(!isOpen)}
+                  type="button"
                 >
                   Menu
                 </button>
@@ -176,12 +177,12 @@ export default function Comparison() {
                   {(section === "financements") && (
                     <>
                       <Row gutters>
-                        <Col>
+                        <Col xs="12">
                           <ProjectsByComparison />
                         </Col>
                       </Row>
                       <Row gutters>
-                        <Col>
+                        <Col xs="12">
                           <DispersionByComparison />
                         </Col>
                       </Row>
@@ -189,7 +190,7 @@ export default function Comparison() {
                   )}
                   {(section === "disciplines") && (
                     <Row gutters>
-                      <Col>
+                      <Col xs="12">
                         <ClassificationsByComparison />
                       </Col>
                     </Row>

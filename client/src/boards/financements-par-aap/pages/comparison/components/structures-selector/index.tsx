@@ -317,7 +317,7 @@ export default function StructuresSelector() {
       </Row>
       {selectedStructures.length > 0 && (
         <Row className="fr-mt-3w">
-          <Col >
+          <Col xs="12">
             <TagGroup >
               {selectedStructures.map((selectedStructure) => (
                 <DismissibleTag key={selectedStructure} onClick={() => handleTagClick(selectedStructure)}>

@@ -1,4 +1,4 @@
-.fr-table.fr-table--sm {
+.fundings-datatable.fr-table.fr-table--sm {
   font-size: 0.75rem;
 
   th {
@@ -14,10 +14,7 @@
 
   td {
     font-size: 0.75rem;
-    white-space: nowrap;
     overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 0;
   }
 }
 
@@ -55,8 +52,4 @@
   .fr-select {
     width: auto;
   }
-}
-
-.fr-pagination__list {
-  flex-wrap: nowrap;
 }

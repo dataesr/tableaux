@@ -109,7 +109,7 @@ export default function DisplayStructure() {
       <Container fluid className="funding-gradient fr-mb-3w">
         <Container as="section">
           <Row gutters>
-            <Col>
+            <Col xs="12">
               <Breadcrumb items={[
                 { href: "/financements-par-aap/accueil", label: "Financements par AAP" },
                 { href: "/financements-par-aap/etablissement", label: "Vue par établissement" },
@@ -223,13 +223,14 @@ export default function DisplayStructure() {
       </Container>
       <Container className="fr-mb-3w">
         <Row gutters>
-          <Col xs={12}>
+          <Col xs="12">
             <button
               aria-controls="section-nav-list"
               aria-expanded={isOpen}
               aria-label="Onglets"
               className="fr-btn fr-btn--secondary fr-btn--sm fr-icon-menu-fill data-mobile-burger"
               onClick={() => setIsOpen(!isOpen)}
+              type="button"
             >
               Menu
             </button>
@@ -275,12 +276,12 @@ export default function DisplayStructure() {
               {(section === "financements") && (
                 <>
                   <Row gutters style={{ clear: "both" }}>
-                    <Col>
+                    <Col xs="12">
                       <ProjectsByFunder name={name} participantSuperOrganizationChildrenIds={withComponents ? participantSuperOrganizationChildrenIds : []} />
                     </Col>
                   </Row>
                   <Row gutters>
-                    <Col>
+                    <Col xs="12">
                       <Overview name={name} participantSuperOrganizationChildrenIds={withComponents ? participantSuperOrganizationChildrenIds : []} />
                     </Col>
                   </Row>
@@ -288,7 +289,7 @@ export default function DisplayStructure() {
               )}
               {(section === "evolution") && (
                 <Row gutters style={{ clear: "both" }}>
-                  <Col>
+                  <Col xs="12">
                     <ProjectsOverTimeByStructure name={name} participantSuperOrganizationChildrenIds={withComponents ? participantSuperOrganizationChildrenIds : []} />
                   </Col>
                 </Row>
@@ -296,12 +297,12 @@ export default function DisplayStructure() {
               {(section === "partenaires") && (
                 <>
                   <Row gutters style={{ clear: "both" }}>
-                    <Col>
+                    <Col xs="12">
                       <FrenchPartners name={name} participantSuperOrganizationChildrenIds={withComponents ? participantSuperOrganizationChildrenIds : []} />
                     </Col>
                   </Row>
                   <Row gutters>
-                    <Col>
+                    <Col xs="12">
                       <InternationalPartners name={name} participantSuperOrganizationChildrenIds={withComponents ? participantSuperOrganizationChildrenIds : []} />
                     </Col>
                   </Row>
@@ -309,7 +310,7 @@ export default function DisplayStructure() {
               )}
               {(section === "laboratoires") && (
                 <Row gutters style={{ clear: "both" }}>
-                  <Col>
+                  <Col xs="12">
                     <Laboratories name={name} participantSuperOrganizationChildrenIds={withComponents ? participantSuperOrganizationChildrenIds : []} />
                   </Col>
                 </Row>
@@ -317,12 +318,12 @@ export default function DisplayStructure() {
               {(section === "disciplines") && (
                 <>
                   <Row gutters style={{ clear: "both" }}>
-                    <Col>
+                    <Col xs="12">
                       <Classifications name={name} participantSuperOrganizationChildrenIds={withComponents ? participantSuperOrganizationChildrenIds : []} />
                     </Col>
                   </Row>
                   <Row gutters>
-                    <Col>
+                    <Col xs="12">
                       <Classifications2 name={name} participantSuperOrganizationChildrenIds={withComponents ? participantSuperOrganizationChildrenIds : []} />
                     </Col>
                   </Row>
@@ -331,22 +332,22 @@ export default function DisplayStructure() {
               {(section === "instruments") && (
                 <>
                   <Row gutters style={{ clear: "both" }}>
-                    <Col>
+                    <Col xs="12">
                       <InstrumentsForAnr name={name} participantSuperOrganizationChildrenIds={withComponents ? participantSuperOrganizationChildrenIds : []} />
                     </Col>
                   </Row>
                   <Row gutters>
-                    <Col>
+                    <Col xs="12">
                       <InstrumentsForEurope name={name} participantSuperOrganizationChildrenIds={withComponents ? participantSuperOrganizationChildrenIds : []} />
                     </Col>
                   </Row>
                   <Row gutters>
-                    <Col>
+                    <Col xs="12">
                       <InstrumentsOverTimeForAnr name={name} participantSuperOrganizationChildrenIds={withComponents ? participantSuperOrganizationChildrenIds : []} />
                     </Col>
                   </Row>
                   <Row gutters>
-                    <Col>
+                    <Col xs="12">
                       <InstrumentsOverTimeForEurope name={name} participantSuperOrganizationChildrenIds={withComponents ? participantSuperOrganizationChildrenIds : []} />
                     </Col>
                   </Row>
@@ -355,7 +356,7 @@ export default function DisplayStructure() {
               {(section === "regions") && (
                 <>
                   <Row gutters style={{ clear: "both" }}>
-                    <Col>
+                    <Col xs="12">
                       <Regions name={name} participantSuperOrganizationChildrenIds={withComponents ? participantSuperOrganizationChildrenIds : []} />
                     </Col>
                   </Row>

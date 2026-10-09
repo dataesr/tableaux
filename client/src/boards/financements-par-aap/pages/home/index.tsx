@@ -23,7 +23,7 @@ export default function Home() {
       <section className="home-aap__hero">
         <Container>
           <Row>
-            <Col>
+            <Col xs="12">
               <Breadcrumb items={[
                 { href: "/financements-par-aap/accueil", label: "Financements par AAP" },
                 { label: "Accueil" },

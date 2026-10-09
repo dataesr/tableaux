@@ -3,7 +3,8 @@ import { useEffect, useState } from "react";
 
 import "./style.scss";
 
-export default function DataTable({ aggregations, columns, dataTable, filters, numberOfResults, pagination, setFilters, setPagination, setSorting, sorting }) {
+
+export default function DataTable({ aggregations, caption, columns, dataTable, filters, numberOfResults, pagination, setFilters, setPagination, setSorting, sorting }) {
   const inputsTmp = {}
   filters.forEach((filter) => {
     inputsTmp[filter.id] = filter.value
@@ -21,7 +22,7 @@ export default function DataTable({ aggregations, columns, dataTable, filters, n
     }
   }
 
-  const getSortableIcon = (column) => {
+  const getSortableButton = (column) => {
     if (column.isSortable) {
       const id = column?.sortableField ?? column.id
       let icon = <i className="ri-arrow-up-down-fill" />
@@ -29,14 +30,27 @@ export default function DataTable({ aggregations, columns, dataTable, filters, n
       if ((id === sorting?.id) && (sorting?.order === 'desc')) icon = <i className="ri-sort-desc" />
       return (
         <button
+          aria-label={`Trier par ${(column?.label ?? column?.id).toLowerCase()}`}
           className="fr-btn fundings-datatable_filter"
           onClick={() => handleSort(column)}
+          type="button"
         >
-          {icon}
+          <span aria-hidden>
+            {icon}
+          </span>
         </button>
       )
     }
     return ''
+  }
+
+  const getSortableAriaSort = (column) => {
+    if (column.isSortable) {
+      const id = column?.sortableField ?? column.id
+      if ((id === sorting?.id) && (sorting?.order === 'asc')) return "ascending"
+      if ((id === sorting?.id) && (sorting?.order === 'desc')) return "descending"
+      return "none"
+    }
   }
 
   const handleSort = (column) => {
@@ -77,11 +91,12 @@ export default function DataTable({ aggregations, columns, dataTable, filters, n
           <div className="fr-table__container">
             <div className="fr-table__content">
               <table>
+                <caption className="fr-sr-only">{caption}</caption>
                 <thead>
                   <tr>
                     {columns.map((column) => {
                       return (
-                        <th key={column.id} scope="col">
+                        <th key={column.id} scope="col" aria-sort={getSortableAriaSort(column)}>
                           {column.isPlaceholder ? null : (
                             <>
                               <div className="fundings-datatable__header">
@@ -89,19 +104,20 @@ export default function DataTable({ aggregations, columns, dataTable, filters, n
                                 {' '}
                                 {column?.isFilterable}
                                 {' '}
-                                {getSortableIcon(column)}
+                                {getSortableButton(column)}
                               </div>
                               <div>
                                 {column?.isFilterable && (
                                   column?.isFilterableBySelect && aggregations?.[column.id] ? (
                                     <select
+                                      aria-label={`Filtrer par ${(column?.label ?? column?.id).toLowerCase()}`}
                                       className="fr-select fundings-datatable__select"
                                       id={`fundings-structure-data-${column.id}`}
                                       name={`fundings-structure-data-${column.id}`}
                                       onChange={(event) => handleFilter(column, event)}
                                       value={inputs[column.id]}
                                     >
-                                      <option key='all' value=''>
+                                      <option key="all" value="">
                                         Tout
                                       </option>
                                       {(aggregations?.[column.id]?.buckets ?? []).map((bucket) => (
@@ -112,7 +128,9 @@ export default function DataTable({ aggregations, columns, dataTable, filters, n
                                     </select>
                                   ) : (
                                     <input
+                                      aria-label={`Filtrer par ${(column?.label ?? column?.id).toLowerCase()}`}
                                       className="fr-input fundings-datatable__input"
+                                      id={`fundings-structure-data-${column.id}`}
                                       onChange={(event) => handleFilter(column, event)}
                                       type="text"
                                       value={inputs[column.id]}
@@ -132,7 +150,7 @@ export default function DataTable({ aggregations, columns, dataTable, filters, n
                     <tr key={row.uniqId}>
                       {columns.map((column) => (
                         <td key={`${column.id}-${row.id}`}>
-                          {column.getCellValue ? column.getCellValue(row) : <span title={row?.[column?.id]}>{row?.[column?.id]}</span>}
+                          {column.getCellValue ? column.getCellValue(row) : row?.[column?.id]}
                         </td>
                       ))}
                     </tr>
@@ -144,10 +162,11 @@ export default function DataTable({ aggregations, columns, dataTable, filters, n
         </div>
       </div>
       <Row className="fr-mt-1w">
-        <Col>
+        <Col xs="12">
           <div className="fundings-datatable__page-size">
             <select
               className="fr-select"
+              aria-label="Nombre de résultats par page"
               onChange={(e) => setPagination({ from: 0, size: Number(e.target.value) })}
               value={pagination.size}
             >
@@ -160,7 +179,7 @@ export default function DataTable({ aggregations, columns, dataTable, filters, n
             résultats par page
           </div>
         </Col>
-        <Col>
+        <Col xs="12">
           <nav role="navigation" className="fr-pagination" aria-label="Pagination">
             <ul className="fr-pagination__list">
               <li>
@@ -169,6 +188,7 @@ export default function DataTable({ aggregations, columns, dataTable, filters, n
                   disabled={pagination.from === 0}
                   onClick={() => setPagination({ ...pagination, from: 0 })}
                   title="Première page"
+                  type="button"
                 >
                   Première page
                 </button>
@@ -179,14 +199,17 @@ export default function DataTable({ aggregations, columns, dataTable, filters, n
                   disabled={pagination.from === 0}
                   onClick={() => setPagination({ ...pagination, from: pagination.from - pagination.size })}
                   title="Page précédente"
+                  type="button"
                 >
                   Page précédente
                 </button>
               </li>
               <li>
-                <a className="fr-pagination__link" aria-current="page">
-                  {(pagination.from / pagination.size) + 1}
-                </a>
+                <span className="fr-pagination__link" aria-current="page">
+                  <button type="button">
+                    {(pagination.from / pagination.size) + 1}
+                  </button>
+                </span>
               </li>
               <li>
                 <button
@@ -194,6 +217,7 @@ export default function DataTable({ aggregations, columns, dataTable, filters, n
                   disabled={(pagination.from / pagination.size) + 1 === Math.ceil(numberOfResults / pagination.size)}
                   onClick={() => setPagination({ ...pagination, from: pagination.from + pagination.size })}
                   title="Page suivante"
+                  type="button"
                 >
                   Page suivante
                 </button>
@@ -204,6 +228,7 @@ export default function DataTable({ aggregations, columns, dataTable, filters, n
                   disabled={(pagination.from / pagination.size) + 1 === Math.ceil(numberOfResults / pagination.size)}
                   onClick={() => setPagination({ ...pagination, from: Math.floor(numberOfResults / pagination.size) * pagination.size })}
                   title="Dernière page"
+                  type="button"
                 >
                   Dernière page
                 </button>
@@ -211,7 +236,7 @@ export default function DataTable({ aggregations, columns, dataTable, filters, n
             </ul>
           </nav>
         </Col>
-        <Col style={{ textAlign: 'right' }}>
+        <Col xs="12" style={{ textAlign: 'right' }}>
           <Text className="fr-text--sm fr-mb-0">
             Résultats {pagination.from + 1} - {Math.min(pagination.from + pagination.size, numberOfResults)} / {numberOfResults}
           </Text>

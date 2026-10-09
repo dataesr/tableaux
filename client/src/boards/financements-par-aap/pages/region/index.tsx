@@ -76,7 +76,7 @@ export default function regions() {
         <Container fluid className="funding-gradient fr-mb-3w">
           <Container as="section">
             <Row gutters>
-              <Col>
+              <Col xs="12">
                 <Breadcrumb items={[
                   { href: "/financements-par-aap/accueil", label: "Financements par AAP" },
                   { label: "Vue par région" },
@@ -84,7 +84,7 @@ export default function regions() {
               </Col>
             </Row>
             <Row gutters>
-              <Col>
+              <Col xs="12">
                 <Title as="h1" look="h4">
                   Rechercher une région
                 </Title>
