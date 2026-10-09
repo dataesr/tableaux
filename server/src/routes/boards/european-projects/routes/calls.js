@@ -34,6 +34,8 @@ router.route("/european-projects/calls").get(async (req, res) => {
             call_year: 1,
             expectedGrants: 1,
             nb_proj_successful: 1,
+            nb_open_topics: 1,
+            nb_topics_included: 1,
             status: 1,
           },
         },

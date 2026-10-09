@@ -17,27 +17,25 @@ type Call = {
   call_id: string;
   call_year: number | string;
   status: string;
-  expectedGrants: number;
-  nb_proj_successful: number;
+  nb_topics_included: number;
+  nb_open_topics: number;
 };
 
 function getRatio(call: Call): number {
-  if (!call.expectedGrants || call.expectedGrants <= 0) return 0;
-  return Math.min(1, Math.max(0, call.nb_proj_successful / call.expectedGrants));
+  if (!call.nb_open_topics || call.nb_open_topics <= 0) return 0;
+  return Math.min(1, Math.max(0, call.nb_topics_included / call.nb_open_topics));
 }
 
 // --- Export CSV ---
-
 const CSV_COLUMNS: { key: keyof Call; label: string }[] = [
   { key: "call_id", label: "call_id" },
   { key: "call_year", label: "call_year" },
   { key: "action_code", label: "action_code" },
   { key: "status", label: "status" },
-  { key: "expectedGrants", label: "expectedGrants" },
-  { key: "nb_proj_successful", label: "nb_proj_successful" },
+  { key: "nb_open_topics", label: "nb_open_topics" },
+  { key: "nb_topics_included", label: "nb_topics_included" },
 ];
-
-const CSV_SEPARATOR = ";"; // point-virgule : s'ouvre correctement dans Excel FR
+const CSV_SEPARATOR = ";";
 
 function escapeCsvValue(value: unknown): string {
   const str = value === null || value === undefined ? "" : String(value);
@@ -86,8 +84,8 @@ function CallItem({ call }: { call: Call }) {
         <br />
         Statut : {call.status}
         <br />
-        Projets : {call.nb_proj_successful} / {call.expectedGrants}
-        {call.expectedGrants > 0 && ` (${percent} %)`}
+        Topics : {call.nb_topics_included} / {call.nb_open_topics}
+        {call.nb_open_topics > 0 && ` (${percent} %)`}
       </span>
     </li>
   );
