@@ -195,6 +195,7 @@ router.route("/european-projects/positioning/top-10-beneficiaries").get(async (r
   if (req.query.isEjo) {
     filters["is_ejo"] = { $eq: req.query.isEjo === "true" ? true : false };
   }
+  filters.stage = "successful";
 
   const data = await db
     .collection(collection_projects_entities)
@@ -268,6 +269,7 @@ router.route("/european-projects/positionning/funding-evo-3-years").get(async (r
   if (req.query.isEjo) {
     filters["is_ejo"] = { $eq: req.query.isEjo === "true" ? true : false };
   }
+  filters.stage = "successful";
 
   const query = () => {
     return db
