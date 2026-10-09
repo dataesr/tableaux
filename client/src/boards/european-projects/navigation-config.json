@@ -23,6 +23,10 @@
       "label": { "fr": "Synthèse", "en": "Synthesis" },
       "link": "/european-projects/horizon-europe?section=synthesis"
     },
+    "axes": {
+      "label": { "fr": "Axes & dispositifs", "en": "Axes & dispositifs" },
+      "link": "/european-projects/horizon-europe?section=axes"
+    },
     "positioning": {
       "label": { "fr": "Positionnement", "en": "Positioning" },
       "link": "/european-projects/horizon-europe?section=positioning"

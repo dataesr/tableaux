@@ -1,6 +1,7 @@
 import { useSearchParams } from "react-router-dom";
 
 import i18n from "../../../i18n-global.json";
+import AxesContent from "./tabs/AxesContent";
 import CallsContent from "./tabs/CallsContent";
 import CheckEICAccelerator from "../../../components/check-eic-accelerator";
 import CollaborationsContent from "./tabs/CollaborationsContent";
@@ -20,7 +21,7 @@ export default function TabsContent() {
   }
 
   // Fonction pour changer d'onglet
-  const handleTabChange = (newTab: "synthesis" | "positioning" | "collaborations" | "entities" | "calls") => {
+  const handleTabChange = (newTab: "synthesis" | "axes" | "positioning" | "collaborations" | "entities" | "calls") => {
     const newParams = new URLSearchParams(searchParams);
     newParams.set("section", newTab);
     setSearchParams(newParams);
@@ -42,6 +43,18 @@ export default function TabsContent() {
               aria-current={activeTab === "synthesis" ? "page" : undefined}
             >
               {getIntlLabel("synthesis")}
+            </button>
+          </li>
+          <li className="fr-nav__item">
+            <button
+              className="fr-nav__link"
+              onClick={(e) => {
+                e.preventDefault();
+                handleTabChange("axes");
+              }}
+              aria-current={activeTab === "axes" ? "page" : undefined}
+            >
+              {getIntlLabel("axes")}
             </button>
           </li>
           <li className="fr-nav__item">
@@ -96,6 +109,7 @@ export default function TabsContent() {
       </nav>
       <div className="fr-mt-3w">
         {activeTab === "synthesis" && <SyntheseContent />}
+        {activeTab === "axes" && <AxesContent />}
         {activeTab === "positioning" && <PositionnementContent />}
         {activeTab === "collaborations" && <CollaborationsContent />}
         {activeTab === "entities" && <EntitiesContent />}

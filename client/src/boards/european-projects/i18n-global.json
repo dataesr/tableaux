@@ -59,6 +59,10 @@
     "fr": "Synthèse",
     "en": "Synthesis"
   },
+  "axes": {
+    "fr": "Axes & dispositifs",
+    "en": "Axes & dispositifs"
+  },
   "positioning": {
     "fr": "Positionnement",
     "en": "Positioning"
