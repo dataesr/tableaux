@@ -57,7 +57,7 @@
   },
   "synthesis": {
     "fr": "Synthèse",
-    "en": "Synthesis"
+    "en": "Summary"
   },
   "axes": {
     "fr": "Axes & dispositifs",
@@ -65,11 +65,11 @@
   },
   "positioning": {
     "fr": "Positionnement",
-    "en": "Positioning"
+    "en": "Position"
   },
   "collaborations": {
     "fr": "Collaborations",
-    "en": "Collaborations"
+    "en": "Cooperation"
   },
   "evolution": {
     "fr": "Évolution",
@@ -397,7 +397,7 @@
   },
   "country-entities": {
     "fr": "Entités du pays",
-    "en": "Country entities"
+    "en": "Entities"
   },
   "pi": {
     "fr": "Porteurs de projets",
@@ -405,7 +405,7 @@
   },
   "calls": {
     "fr": "Appels à projets",
-    "en": "Calls"
+    "en": "Call"
   },
   "total-number-involved": {
     "fr": "Nombre total de participants",
