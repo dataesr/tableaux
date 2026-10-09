@@ -54,26 +54,26 @@ export default function MscaSynthesisCards({
     <Row className="msca-synthesis-cards" gutters>
       <Col xs={12} md={4}>
         <MscaCard
-          label={`Part du budget MSCA capté par les équipes ${adjFemPlural}`}
+          label={`part des financements obtenus par les participants ${adjMascPlural}`}
           value={formatToRates(fundingShare)}
           secondaryValue={formatCurrency(countryFunding)}
           secondaryLabel="obtenus"
           progressValue={fundingShare}
           loading={isLoading}
           variant="funding-card"
-          tooltipText={`Budget total des projets lauréats : ${formatCurrency(totalFundingSuccessful)}`}
+          tooltipText={`Montant des financements obtenus par les participants du pays sur le montant des financements obtenus par l'ensemble des participants`}
         />
       </Col>
       <Col xs={12} md={4}>
         <MscaCard
-          label={`Part des projets lauréats avec participation ${countryAdj.f}`}
+          label={`Part des projets lauréats `}
           value={formatToRates(projectsShare)}
           secondaryValue={formatNumber(countryProjects)}
           secondaryLabel="projets"
           progressValue={projectsShare}
           loading={isLoading}
           variant="projects-card"
-          tooltipText={`Total projets lauréats : ${formatNumber(totalProjectsSuccessful)}`}
+          tooltipText={`Nombre de projets lauréats impliquant au moins un participant ${countryAdj.m} sur le total des projets lauréats}`}
         />
       </Col>
       <Col xs={12} md={4}>
@@ -88,12 +88,12 @@ export default function MscaSynthesisCards({
       </Col>
       <Col xs={12} md={4}>
         <MscaCard
-          label="Taux de succès global sur le nombre de projets"
+          label="Taux de succès des projets"
           value={formatToRates(successRateProjects)}
           progressValue={successRateProjects}
           loading={isLoading}
           variant="rate-card"
-          tooltipText="Ratio entre projets lauréats et projets évalués (tous pays)"
+          tooltipText="nombre de projets lauréats sur le nombre de projets évalués du pays sélectionné"
         />
       </Col>
       <Col xs={12} md={4}>
