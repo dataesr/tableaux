@@ -38,7 +38,7 @@ export default function Options({ data, currentLang = "fr" }: OptionsParams) {
   const successfulColor = rootStyles.getPropertyValue("--successful-project-color").trim() || "#233e41";
   const successRateColor = rootStyles.getPropertyValue("--averageSuccessRate-color").trim() || "#d75521";
 
-  const titleText = currentLang === "fr" ? "Projets par type de financement MSCA" : "Projects by MSCA funding type";
+  const titleText = currentLang === "fr" ? "Projets par type de financement MSCA" : "Projects by MSCA action type";
 
   const newOptions: HighchartsInstance.Options = {
     chart: {

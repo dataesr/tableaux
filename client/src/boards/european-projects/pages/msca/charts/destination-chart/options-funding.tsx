@@ -132,7 +132,7 @@ export default function OptionsFunding({ data, currentLang = "fr" }: OptionsPara
       },
       {
         type: "column",
-        name: currentLang === "fr" ? "Financements obtenus" : "Obtained funding",
+        name: currentLang === "fr" ? "Financements obtenus" : "Secured funding",
         color: successfulColor,
         data: successfulData,
         yAxis: 0,
