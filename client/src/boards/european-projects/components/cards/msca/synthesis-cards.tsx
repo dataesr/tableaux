@@ -54,26 +54,26 @@ export default function MscaSynthesisCards({
     <Row className="msca-synthesis-cards" gutters>
       <Col xs={12} md={4}>
         <MscaCard
-          label={`part des financements obtenus par les participants ${adjMascPlural}`}
+          label={`Part des financements obtenus par les participants ${adjMascPlural}`}
           value={formatToRates(fundingShare)}
           secondaryValue={formatCurrency(countryFunding)}
           secondaryLabel="obtenus"
           progressValue={fundingShare}
           loading={isLoading}
           variant="funding-card"
-          tooltipText={`Montant des financements obtenus par les participants du pays sur le montant des financements obtenus par l'ensemble des participants`}
+          tooltipText="Montant des financements obtenus par les participants du pays sur le montant des financements obtenus par l'ensemble des participants"
         />
       </Col>
       <Col xs={12} md={4}>
         <MscaCard
-          label={`Part des projets lauréats `}
+          label="Part des projets lauréats"
           value={formatToRates(projectsShare)}
           secondaryValue={formatNumber(countryProjects)}
           secondaryLabel="projets"
           progressValue={projectsShare}
           loading={isLoading}
           variant="projects-card"
-          tooltipText={`Nombre de projets lauréats impliquant au moins un participant ${countryAdj.m} sur le total des projets lauréats}`}
+          tooltipText={`Nombre de projets lauréats impliquant au moins un participant ${countryAdj.m} sur le total des projets lauréats`}
         />
       </Col>
       <Col xs={12} md={4}>
