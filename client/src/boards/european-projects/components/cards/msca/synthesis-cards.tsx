@@ -93,7 +93,7 @@ export default function MscaSynthesisCards({
           progressValue={successRateProjects}
           loading={isLoading}
           variant="rate-card"
-          tooltipText="nombre de projets lauréats sur le nombre de projets évalués du pays sélectionné"
+          tooltipText="Nombre de projets lauréats sur le nombre de projets évalués du pays sélectionné"
         />
       </Col>
       <Col xs={12} md={4}>
