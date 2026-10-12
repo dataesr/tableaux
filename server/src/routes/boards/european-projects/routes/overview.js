@@ -980,7 +980,7 @@ router.route("/european-projects/overview/funding").get(async (req, res) => {
           count: 1,
         },
       },
-      { $sort: { total_fund_eur: -1 } },
+      { $sort: { code: 1 } },
     ])
     .toArray();
 
