@@ -24,7 +24,7 @@ const config = {
   integrationURL: "/european-projects/components/pages/analysis/overview/charts/destination-funding",
 };
 
-export default function FundingCombined({ displayType = "total_fund_eur", groupBy }: { displayType: string; groupBy: "pillar" | "program" | "theme" | "destination" }) {
+export default function FundingCombined({ displayType = "total_fund_eur", groupBy }: { displayType: string; groupBy: "pillar" | "program" | "topic" | "destination" }) {
   const params = useGetParams();
   const [searchParams] = useSearchParams();
   const currentLang = searchParams.get("language") || "fr";
