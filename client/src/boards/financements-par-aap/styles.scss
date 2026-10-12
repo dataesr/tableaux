@@ -1,15 +1,21 @@
 @use "../styles.scss";
 @use "./colors.scss";
 
-.funding-gradient {
-  background: linear-gradient(
-    135deg,
-    var(--background-contrast-blue-france) 0%,
-    var(--background-default-grey) 100%
-  );
-  padding-bottom: 1rem;
-}
+.fundings {
+  .fundings-gradient {
+    background: linear-gradient(
+      135deg,
+      var(--background-contrast-blue-france) 0%,
+      var(--background-default-grey) 100%
+    );
+    padding-bottom: 1rem;
+  }
 
-.fundings-ml-auto {
-  margin-left: auto !important;
+  .fundings-ml-auto {
+    margin-left: auto !important;
+  }
+
+  .chart-container h2 {
+    overflow-wrap: normal;
+  }
 }

@@ -21,11 +21,6 @@ export default function GlobalLayout() {
               <div className="fr-header__brand fr-enlarge-link">
                 <div className="fr-header__brand-top">
                   <Logo text={import.meta.env.VITE_MINISTER_NAME} />
-                  <Service
-                    href="/"
-                    name="#dataESR tableaux de bord"
-                    tagline="Contact"
-                  />
                   <div className="fr-header__navbar">
                     <button
                       data-fr-opened="false"
@@ -39,6 +34,11 @@ export default function GlobalLayout() {
                     </button>
                   </div>
                 </div>
+                <Service
+                  href="/"
+                  name="#dataESR tableaux de bord"
+                  tagline="Contact"
+                />
               </div>
               <TranslateButton />
             </div>

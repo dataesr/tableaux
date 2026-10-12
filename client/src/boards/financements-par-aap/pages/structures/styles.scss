@@ -1,35 +1,37 @@
-.data-mobile-burger {
-  display: none;
-}
-
-.fr-nav {
-  border-bottom: 1px solid var(--border-default-grey);
-
-  .fr-nav__list {
-    align-items: center;
-  }
-}
-
-@media (max-width: 575px) {
+.fundings {
   .data-mobile-burger {
-    display: flex;
-    margin: 0.5rem 1rem;
+    display: none;
   }
 
-  .fr-nav__list {
-    background: var(--background-default-grey);
-    display: none !important;
-    flex-direction: column;
+  .fr-nav {
+    border-bottom: 1px solid var(--border-default-grey);
 
-    &.fr-nav__list-open {
-      display: flex !important;
+    .fr-nav__list {
+      align-items: center;
+    }
+  }
+
+  @media (max-width: 575px) {
+    .data-mobile-burger {
+      display: flex;
+      margin: 0.5rem 1rem;
     }
 
-    .fr-nav__item {
-      width: 100%;
+    .fr-nav__list {
+      background: var(--background-default-grey);
+      display: none !important;
+      flex-direction: column;
 
-      .fr-nav__link {
+      &.fr-nav__list-open {
+        display: flex !important;
+      }
+
+      .fr-nav__item {
         width: 100%;
+
+        .fr-nav__link {
+          width: 100%;
+        }
       }
     }
   }

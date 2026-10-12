@@ -5,12 +5,9 @@ import Footer from "../../../../components/footer";
 import { getI18nLabel } from "../../../../utils";
 import i18n from "./i18n.json";
 
-import "./styles.scss"
-
 
 export default function GlobalLayout() {
   const { pathname } = useLocation();
-
 
   if (!pathname) return null;
 
@@ -23,11 +20,6 @@ export default function GlobalLayout() {
               <div className="fr-header__brand fr-enlarge-link">
                 <div className="fr-header__brand-top">
                   <Logo text={import.meta.env.VITE_MINISTER_NAME} />
-                  <Service
-                    href="/"
-                    name="#dataESR tableaux de bord"
-                    tagline="Tableau de bord du personnel enseignant des établissements d'enseignement supérieur français"
-                  />
                   <div className="fr-header__navbar">
                     <button
                       data-fr-opened="false"
@@ -41,6 +33,11 @@ export default function GlobalLayout() {
                     </button>
                   </div>
                 </div>
+                <Service
+                  href="/"
+                  name="#dataESR tableaux de bord"
+                  tagline="Tableau de bord du personnel enseignant des établissements d'enseignement supérieur français"
+                />
               </div>
             </div>
           </div>

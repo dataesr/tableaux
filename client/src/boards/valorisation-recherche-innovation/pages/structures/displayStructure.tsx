@@ -67,7 +67,7 @@ export default function DisplayStructure() {
 
   return (
     <>
-      <Container fluid className="funding-gradient fr-mb-3w">
+      <Container fluid className="fundings fundings-gradient fr-mb-3w">
         <Container as="section">
           <Row gutters>
             <Col>

@@ -48,8 +48,8 @@ export default function Comparison() {
   }, [searchParams, setSearchParams])
 
   return (
-    <>
-      <Container fluid className="funding-gradient">
+    <div className="fundings">
+      <Container fluid className="fundings-gradient">
         <Container as="section">
           <Row gutters>
             <Col xs="12">
@@ -209,6 +209,6 @@ export default function Comparison() {
           />
         )}
       </Container>
-    </>
+    </div>
   )
 }

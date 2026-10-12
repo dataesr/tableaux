@@ -7,7 +7,6 @@ import { getI18nLabel } from "../../../../utils";
 import { years } from "../../utils";
 import i18n from "./i18n.json";
 
-import "./styles.scss";
 
 export default function GlobalLayout() {
   const { pathname } = useLocation();
@@ -37,11 +36,6 @@ export default function GlobalLayout() {
               <div className="fr-header__brand fr-enlarge-link">
                 <div className="fr-header__brand-top">
                   <Logo text={import.meta.env.VITE_MINISTER_NAME} />
-                  <Service
-                    href="/valorisation-recherche-innovation/accueil"
-                    name="Valorisation de la recherche - innovation"
-                    tagline=""
-                  />
                   <div className="fr-header__navbar">
                     <button
                       data-fr-opened="false"
@@ -55,6 +49,11 @@ export default function GlobalLayout() {
                     </button>
                   </div>
                 </div>
+                <Service
+                  href="/valorisation-recherche-innovation/accueil"
+                  name="Valorisation de la recherche - innovation"
+                  tagline=""
+                />
               </div>
             </div>
           </div>

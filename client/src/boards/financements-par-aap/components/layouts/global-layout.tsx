@@ -7,7 +7,6 @@ import { getI18nLabel } from "../../../../utils";
 import { years } from "../../utils";
 import i18n from "./i18n.json";
 
-import "./styles.scss";
 
 export default function GlobalLayout() {
   const { pathname } = useLocation();
@@ -60,11 +59,6 @@ export default function GlobalLayout() {
               <div className="fr-header__brand fr-enlarge-link">
                 <div className="fr-header__brand-top">
                   <Logo text={import.meta.env.VITE_MINISTER_NAME} />
-                  <Service
-                    href="/financements-par-aap/accueil"
-                    name="Financements par appels à projets"
-                    tagline="Suivi des financements par appels à projets dans les institutions françaises"
-                  />
                   <div className="fr-header__navbar">
                     <button
                       data-fr-opened="false"
@@ -78,11 +72,16 @@ export default function GlobalLayout() {
                     </button>
                   </div>
                 </div>
+                <Service
+                  href="/financements-par-aap/accueil"
+                  name="Financements par appels à projets"
+                  tagline="Suivi des financements par appels à projets dans les institutions françaises"
+                />
               </div>
             </div>
           </div>
         </div>
-        <div className="fr-header__menu fr-modal" id="modal-header" aria-labelledby="button-header">
+        <div className="fr-header__menu fr-modal fundings-menu" id="modal-header" aria-labelledby="button-header">
           <div className="fr-container">
             <button aria-controls="modal-header" title="Fermer" type="button" className="fr-btn--close fr-btn">
               {getI18nLabel(i18n, "close")}

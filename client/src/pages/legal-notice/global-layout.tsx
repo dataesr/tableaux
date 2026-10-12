@@ -33,12 +33,12 @@ export default function GlobalLayout() {
               <div className="fr-header__brand fr-enlarge-link">
                 <div className="fr-header__brand-top">
                   <Logo text={import.meta.env.VITE_MINISTER_NAME} />
-                  <Service
-                    href="/"
-                    name="#dataESR tableaux de bord"
-                    tagline={getI18nLabel(i18n, "pageTitle", currentLang)}
-                  />
                 </div>
+                <Service
+                  href="/"
+                  name="#dataESR tableaux de bord"
+                  tagline={getI18nLabel(i18n, "pageTitle", currentLang)}
+                />
               </div>
               <TranslateButton />
             </div>

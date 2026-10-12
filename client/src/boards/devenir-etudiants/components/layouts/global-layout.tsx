@@ -6,8 +6,6 @@ import { useDashboardVisibility } from "../../../../hooks/useDashboardVisibility
 import { getI18nLabel } from "../../../../utils";
 import i18n from "./i18n.json";
 
-import "./styles.scss"
-
 import "../../colors.scss";
 
 
@@ -52,11 +50,6 @@ export default function GlobalLayout() {
               <div className="fr-header__brand fr-enlarge-link">
                 <div className="fr-header__brand-top">
                   <Logo text={import.meta.env.VITE_MINISTER_NAME} />
-                  <Service
-                    href="/"
-                    name="#dataESR tableaux de bord"
-                    tagline={getI18nLabel(i18n, "tagline")}
-                  />
                   <div className="fr-header__navbar">
                     <button
                       data-fr-opened="false"
@@ -70,6 +63,11 @@ export default function GlobalLayout() {
                     </button>
                   </div>
                 </div>
+                <Service
+                  href="/"
+                  name="#dataESR tableaux de bord"
+                  tagline={getI18nLabel(i18n, "tagline")}
+                />
               </div>
             </div>
           </div>

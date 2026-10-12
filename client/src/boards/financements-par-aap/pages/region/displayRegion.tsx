@@ -59,8 +59,8 @@ export default function DisplayRegion() {
   }
 
   return (
-    <main>
-      <Container fluid className="funding-gradient fr-mb-3w">
+    <main className="fundings">
+      <Container fluid className="fundings-gradient fr-mb-3w">
         <Container as="section">
           <Row gutters>
             <Col xs="12">
