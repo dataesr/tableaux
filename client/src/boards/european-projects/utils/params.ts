@@ -6,7 +6,7 @@ import { useSearchParams } from "react-router-dom";
 // et bien passer false pour retirer les extra_joint_organisation pour afficher les resultats sans
 export function isEjoParam() {
   const [searchParams] = useSearchParams();
-  const isEjo = searchParams.get("isEjo") || "true";
+  const isEjo = searchParams.get("isEjo") || "false";
   if (isEjo === "false") {
     return "";
   }
