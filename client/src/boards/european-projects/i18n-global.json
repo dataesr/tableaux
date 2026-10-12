@@ -60,8 +60,8 @@
     "en": "Summary"
   },
   "axes": {
-    "fr": "Axes & dispositifs",
-    "en": "Axes & dispositifs"
+    "fr": "Domaines & actions",
+    "en": "Areas & actions"
   },
   "positioning": {
     "fr": "Positionnement",
@@ -133,11 +133,11 @@
   },
   "topic": {
     "fr": "Thématique",
-    "en": "Topic"
+    "en": "Themes"
   },
   "funding-by-topic": {
     "fr": "Financements par thématique",
-    "en": "Funding by topic"
+    "en": "Funding by themes"
   },
   "destination": {
     "fr": "Destination",
@@ -157,7 +157,7 @@
   },
   "funding-proportion-by-country": {
     "fr": "Part des financements demandés et obtenus par le pays",
-    "en": "Percentage of funding requested and obtained by the country"
+    "en": "Share of funding requested and secured by the country"
   },
   "no-data-table": {
     "fr": "Aucune donnée disponible pour le tableau.",
@@ -189,7 +189,7 @@
   },
   "caption-topic-success-rate": {
     "fr": "Taux de succès par thématique",
-    "en": "Success rate by topic"
+    "en": "Success rate by themes"
   },
   "caption-destination-success-rate": {
     "fr": "Taux de succès par destination",
@@ -208,11 +208,11 @@
     "en": "Total funding"
   },
   "caption-pillar-evolution": {
-    "fr": "Évolution des subventions par pilier sur les 3 dernières années",
+    "fr": "Évolution des financements par pilier sur les 3 dernières années",
     "en": "Funding evolution by pillar over the last 3 years"
   },
   "caption-pillar-proportion-participants": {
-    "fr": "Part des subventions du pays par rapport au total des participants",
+    "fr": "Part des financements du pays par rapport au total des participants",
     "en": "Percentage of country funding as a proportion of total participants"
   },
   "caption-pillar-funding": {
@@ -237,11 +237,11 @@
   },
   "share-obtained-percent": {
     "fr": "Part obtenue (%)",
-    "en": "Share obtained (%)"
+    "en": "Share secured (%)"
   },
   "rank-obtained": {
     "fr": "Rang (obtenus)",
-    "en": "Rank (obtained)"
+    "en": "Rank (secured)"
   },
   "caption-top-10-beneficiaries": {
     "fr": "Classement des 10 premiers bénéficiaires",
@@ -265,7 +265,7 @@
   },
   "obtained-amount-millions": {
     "fr": "Montant obtenu (M€)",
-    "en": "Obtained amount (M€)"
+    "en": "Secured amount (M€)"
   },
   "total": {
     "fr": "Total (M€)",
@@ -341,7 +341,7 @@
   },
   "caption-funding-ranking-subsidies": {
     "fr": "Classement des pays selon les montants demandés et obtenus",
-    "en": "Ranking of countries by requested and obtained amounts"
+    "en": "Ranking of countries by requested and secured amounts"
   },
   "caption-success-rate-by-country": {
     "fr": "Taux de succès des pays",
@@ -373,7 +373,7 @@
   },
   "candidates": {
     "fr": "Candidats",
-    "en": "Candidates"
+    "en": "Applicants"
   },
   "participants": {
     "fr": "Participants",
@@ -408,15 +408,15 @@
     "en": "Call"
   },
   "total-number-involved": {
-    "fr": "Nombre total de participants",
-    "en": "Total number of participants"
+    "fr": "Participants",
+    "en": "Participants"
   },
   "total-coordination-number": {
-    "fr": "Nombre de coordinations",
-    "en": "Total number of coordination"
+    "fr": "Coordinations de projets",
+    "en": "Project coordinations"
   },
   "total-fund-eur": {
-    "fr": "Total des subventions (EUR)",
-    "en": "Total grants (EUR)"
+    "fr": "Financements",
+    "en": "Funding"
   }
 }
