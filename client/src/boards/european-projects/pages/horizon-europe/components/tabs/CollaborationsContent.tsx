@@ -38,6 +38,14 @@ const i18n = {
     fr: "Focus sur les pays européens",
     en: "Focus on European countries",
   },
+  "more-5": {
+    fr: "Afficher plus de pays",
+    en: "Show more countries",
+  },
+  "less-5": {
+    fr: "Afficher moins de pays",
+    en: "Show fewer countries",
+  },
 };
 
 export default function CollaborationsContent() {
@@ -55,10 +63,10 @@ export default function CollaborationsContent() {
           </Title>
         </Col>
         <Col md={6} className="text-right">
-          <Button disabled={nbToShow <= 10} onClick={() => setNbToShow((prev) => prev - 5)} size="sm" variant="secondary">
+          <Button disabled={nbToShow <= 10} onClick={() => setNbToShow((prev) => prev - 5)} size="sm" variant="secondary" title={getI18nLabel(i18n, "less-5", currentLang)}>
             - 5
           </Button>
-          <Button onClick={() => setNbToShow((prev) => prev + 5)} size="sm" variant="secondary">
+          <Button onClick={() => setNbToShow((prev) => prev + 5)} size="sm" variant="secondary" title={getI18nLabel(i18n, "more-5", currentLang)}>
             + 5
           </Button>
         </Col>
