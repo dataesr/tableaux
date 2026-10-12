@@ -24,7 +24,7 @@
       "link": "/european-projects/horizon-europe?section=synthesis"
     },
     "axes": {
-      "label": { "fr": "Axes & dispositifs", "en": "Axes & dispositifs" },
+      "label": { "fr": "Domaines & actions", "en": "Areas & actions" },
       "link": "/european-projects/horizon-europe?section=axes"
     },
     "positioning": {
@@ -55,7 +55,7 @@
       "link": "/european-projects/msca?section=synthesis"
     },
     "positioning": {
-      "label": { "fr": "Positionnement", "en": "Positioning" },
+      "label": { "fr": "Positionnement", "en": "Position" },
       "link": "/european-projects/msca?section=positioning"
     },
     "evolution": {
@@ -75,7 +75,7 @@
       "link": "/european-projects/erc?section=synthesis"
     },
     "positioning": {
-      "label": { "fr": "Positionnement", "en": "Positioning" },
+      "label": { "fr": "Positionnement", "en": "Position" },
       "link": "/european-projects/erc?section=positioning"
     },
     "entities": {
