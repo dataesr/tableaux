@@ -81,7 +81,7 @@ export default function ChartFooter({
             <b>{getI18nLabel(i18n, "sources")} </b>
             {sources.map((source, index) => (
               <span key={`graph-footer-source-${index}`}>
-                <Link href={source.url[currentLang] || source.url.fr} target="_blank" rel="noopener noreferrer">
+                <Link href={source.url[currentLang] || source.url.fr} target="_blank" title={`${source.label[currentLang] || source.label.fr} - Nouvelle fenêtre`} rel="noopener noreferrer">
                   {source.label[currentLang] || source.label.fr}
                 </Link>
                 {(source?.update) && (

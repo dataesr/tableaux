@@ -141,8 +141,7 @@ export default function DisplayStructure() {
                 </Text>
               )}
               <Text size="sm" className="fr-mb-0 fr-text-mention--grey">
-                <Link href={scanrUrl} target="_blank" size="sm" className="fr-mt-1w fr-text-mention--grey">
-                  <span aria-hidden="true" />
+                <Link className="fr-mt-1w fr-text-mention--grey" href={scanrUrl} rel="noopener noreferrer" size="sm" target="_blank" title="scanR - Nouvelle fenêtre">
                   Voir sur scanR
                 </Link>
               </Text>

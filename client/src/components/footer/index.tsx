@@ -41,27 +41,27 @@ export default function Footer({ href = "/", sitemapHref, title = "Accueil - Tab
           <div className="fr-footer__content">
             <ul className="fr-footer__content-list">
               <li className="fr-footer__content-item">
-                <a className="fr-footer__content-link" target="_blank" rel="noopener external" title="Legifrance - nouvelle fenêtre" href="https://legifrance.gouv.fr">
+                <a className="fr-footer__content-link" target="_blank" rel="noopener external" title="Legifrance - Nouvelle fenêtre" href="https://legifrance.gouv.fr">
                   legifrance.gouv.fr
                 </a>
               </li>
               <li className="fr-footer__content-item">
-                <a className="fr-footer__content-link" target="_blank" rel="noopener external" title="Gouvernement français - nouvelle fenêtre" href="https://gouvernement.fr">
+                <a className="fr-footer__content-link" target="_blank" rel="noopener external" title="Gouvernement français - Nouvelle fenêtre" href="https://gouvernement.fr">
                   gouvernement.fr
                 </a>
               </li>
               <li className="fr-footer__content-item">
-                <a className="fr-footer__content-link" target="_blank" rel="noopener external" title="Service public - nouvelle fenêtre" href="https://service-public.fr">
+                <a className="fr-footer__content-link" target="_blank" rel="noopener external" title="Service public - Nouvelle fenêtre" href="https://service-public.fr">
                   service-public.fr
                 </a>
               </li>
               <li className="fr-footer__content-item">
-                <a className="fr-footer__content-link" target="_blank" rel="noopener external" title="DataGouv - nouvelle fenêtre" href="https://data.gouv.fr">
+                <a className="fr-footer__content-link" target="_blank" rel="noopener external" title="DataGouv - Nouvelle fenêtre" href="https://data.gouv.fr">
                   data.gouv.fr
                 </a>
               </li>
               <li className="fr-footer__content-item">
-                <a className="fr-footer__content-link fr-icon-github-fill fr-link--icon-left" target="_blank" rel="noopener external" title="Github dataESR - nouvelle fenêtre" href="https://github.com/dataesr/tableaux">
+                <a className="fr-footer__content-link fr-icon-github-fill fr-link--icon-left" target="_blank" rel="noopener external" title="Github dataESR - Nouvelle fenêtre" href="https://github.com/dataesr/tableaux">
                   Github
                 </a>
               </li>
@@ -106,7 +106,7 @@ export default function Footer({ href = "/", sitemapHref, title = "Accueil - Tab
               </a>
             </li>
             <li className="fr-footer__bottom-item">
-              <a className="fr-footer__bottom-link" href={`https://github.com/dataesr/tableaux/releases/tag/v${VITE_VERSION}`} title={`v${VITE_VERSION} - nouvelle fenêtre`} rel="noreferrer noopener external" target="_blank">
+              <a className="fr-footer__bottom-link" href={`https://github.com/dataesr/tableaux/releases/tag/v${VITE_VERSION}`} title={`v${VITE_VERSION} - Nouvelle fenêtre`} rel="noreferrer noopener external" target="_blank">
                 {`v${VITE_VERSION}`}
               </a>
             </li>

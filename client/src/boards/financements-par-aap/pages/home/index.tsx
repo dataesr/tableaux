@@ -69,7 +69,12 @@ export default function Home() {
             <Col xs="12">
               <Callout colorFamily="blue-ecume" title="Financements ANR">
                 L'Agence Nationale de la Recherche (ANR) expose en open data{' '}
-                <a target="_blank" rel="noopener noreferrer" href="https://www.data.gouv.fr/organizations/agence-nationale-de-la-recherche/datasets">deux jeux de données</a>{' '}
+                <a
+                  href="https://www.data.gouv.fr/organizations/agence-nationale-de-la-recherche/datasets"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                  title="Jeux de données ANR - Nouvelle fenêtre"
+                >deux jeux de données</a>{' '}
                 : DGDS pour les projets ANR et DGPIE pour les projets du Programme
                 d'investissements d'avenir gérés par l'ANR. Ces sources fournissent
                 des informations détaillées sur les projets financés par l'ANR, avec une description des
@@ -88,7 +93,12 @@ export default function Home() {
               <Callout colorFamily="blue-ecume" title="Financements européens">
                 Les données relatives aux programmes <strong>Horizon Europe</strong> 2021-2027 et{' '}
                 <strong>Horizon 2020</strong> 2014-2020 sont issues des{' '}
-                <a target="_blank" rel="noopener noreferrer" href="https://data.enseignementsup-recherche.gouv.fr/explore/dataset/fr-esr-horizon-projects-entities/information/?disjunctive.paysage_category&disjunctive.free_keywords">jeux de données open data</a>{' '}
+                <a
+                  href="https://data.enseignementsup-recherche.gouv.fr/explore/dataset/fr-esr-horizon-projects-entities/information/?disjunctive.paysage_category&disjunctive.free_keywords"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                  title="Jeux de données Horizon Europe - Nouvelle fenêtre"
+                >jeux de données open data</a>{' '}
                 produits par le MESRE sur les projets financés et les partenaires, à partir de la
                 base eCorda sur les programmes cadres de recherche et d'innovation de l'Union
                 européenne. Ces jeux de données permettent d'identifier les participants au niveau
@@ -159,8 +169,8 @@ export default function Home() {
             <Col xs="12" >
               <Title as="h2" look="h5">Identification des établissements partenaires</Title>
               <Text>
-                Les <strong>référentiels de structures</strong> (<a target="_blank" rel="noopener noreferrer" href="https://rnsr.adc.education.fr/">Répertoire national des structures de recherche - RNSR</a>)
-                et d'<strong>établissements</strong> (l'application en accès restreint <a target="_blank" rel="noopener noreferrer" href="https://paysage.esr.gouv.fr/">Paysage</a>)
+                Les <strong>référentiels de structures</strong> (<a href="https://rnsr.adc.education.fr/" rel="noopener noreferrer" target="_blank" title="RNSR - Nouvelle fenêtre">Répertoire national des structures de recherche - RNSR</a>)
+                et d'<strong>établissements</strong> (l'application en accès restreint <a href="https://paysage.esr.gouv.fr/" rel="noopener noreferrer" target="_blank" title="Paysage - Nouvelle fenêtre">Paysage</a>)
                 permettent de rattacher chaque participation observée aux structures parentes (tutelles).
               </Text>
               <dl className="home-aap__methodology">
