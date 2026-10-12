@@ -17,7 +17,7 @@ import FundingValuesPrograms from "../../../overview/charts/funding-programs";
 
 const i18n = {
   "synthesis-title": { fr: "Synthèse", en: "Synthesis" },
-  "pillar-comparison-title": { fr: "Comparaison de la répartition des subventions par pilier", en: "Comparison of grant distribution by pillar" },
+  "pillar-comparison-title": { fr: "Focus par pilier", en: "Focus by pillar" },
   "pillar-detail-title": { fr: "Détails du pilier sur les 3 dernières années", en: "Pillar details over the last 3 years" },
   "pillar-detail-callout": {
     fr: "Visualisez l'évolution des financements demandés et obtenus pour le pilier sélectionné sur les trois dernières années du programme Horizon Europe. Cela vous permet d'analyser les tendances de financement et d'évaluer la performance du pilier au fil du temps. Vous pouvez également ajuster l'affichage pour visualister le total des subventions, le nombre total de coordinations ou le nombre total de participations.",
