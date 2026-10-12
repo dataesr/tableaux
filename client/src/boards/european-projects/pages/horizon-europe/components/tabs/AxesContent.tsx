@@ -29,8 +29,8 @@ const i18n = {
     en: "Visualize the grant distribution of the selected pillar by program. This allows you to identify the most funded programs and understand their contribution within the pillar.",
   },
   "pillar-programs-title": {
-    fr: "Cumul des financements obtenus de chaque programme par pilier",
-    en: "Total of successful funding for each program by pillar",
+    fr: "Composition des piliers",
+    en: "Pillar breakdown",
   },
   "main-partner-title": { fr: "Qui sont les bénéficiaires ?", en: "Who are the beneficiaries?" },
 
