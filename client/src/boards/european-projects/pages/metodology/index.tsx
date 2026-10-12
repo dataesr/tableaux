@@ -53,9 +53,10 @@ export default function Methodology() {
             (trois institutions françaises dans un même projet = un seul projet pour la France).
           </li>
           <li>
-            <strong>Nombre de participants (ou candidats)</strong>
+            <strong>Nombre de participants ou candidats</strong>
             <br />
-            Une participation est enregistrée pour chaque candidature formelle d'une organisation disposant de la personnalité juridique.
+              Un candidat est une organisation disposant de la personnalité juridique qui fait partie d’un consortium déposant un
+              projet auprès de la Commission européenne. Elle devient participant lorsque le projet est lauréat.
             <br />
             Pour un pays, on compte le nombre d’entités indépendantes qui participent à un projet donné 
             (trois institutions françaises dans un même projet = trois participations pour la France).
@@ -96,7 +97,7 @@ export default function Methodology() {
             pour chacun des quatre indicateurs, au stade évalué comme au stade lauréat.
             <br />
             <em>
-              Part des financements obtenus par la France = financements obtenus par la France ÷ ensemble des
+              Part des financements obtenus par la France = financements obtenus par la France / ensemble des
               financements obtenus tous pays confondus
             </em>
           </li>
@@ -105,14 +106,14 @@ export default function Methodology() {
             <br />
             Un taux de succès compare ce qui a été obtenu à ce qui a été évalué, pour chacun des quatre indicateurs.
             <br />
-            <em>Taux de succès en projets = projets lauréats ÷ projets évalués</em>
+            <em>Taux de succès des projets = projets lauréats / projets évalués</em>
             <br />
-            <em>Taux de succès en financements = financements obtenus ÷ financements demandés</em>
+            <em>Taux de succès des financements = financements obtenus / financements demandés</em>
           </li>
           <li>
             <strong>Collaborations</strong>
             <br />
-            Les collaborations se déduisent des projets et des participations : deux pays collaborent lorsqu’ils figurent dans
+            Les collaborations se déduisent des projets et des participations : deux pays collaborent lorsqu'au moins un participant de chaque pays figurent dans
             un même projet. Le nombre de projets en commun mesure l’intensité de la collaboration, et la répartition des 
             coordinations au sein des consortiums en précise la nature.
           </li>
