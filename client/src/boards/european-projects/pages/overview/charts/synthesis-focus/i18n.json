@@ -1,62 +1,62 @@
 {
   "fundsShare": {
     "label": {
-      "fr": "part captée par les participants du pays",
-      "en": "share captured by participants from the country"
+      "fr": "part des financements obtenus par les participants du pays",
+      "en": "Share of funding secured by participants from the country"
     },
     "tooltip": {
-      "fr": "Part des financements obtenus par les participants du pays par rapport au total des financements obtenus par tous les participants (toutes nationalités confondues).",
-      "en": "Share of funding obtained by participants from the country compared to the total funding obtained by all participants (all nationalities combined)."
+      "fr": "Montant des financements obtenus par les participants du pays sur le montant des financements obtenus par l'ensemble des participants",
+      "en": "Amount of funding secured by participants from the country as a proportion of the total funding secured by all participants"
     }
   },
   "participantsShare": {
     "label": {
       "fr": "part des participants lauréats du pays",
-      "en": "share of winning participants from the country"
+      "en": "share of the country's participants in successful projects"
     },
     "tooltip": {
-      "fr": "Part du nombre de participants du pays parmi l'ensemble des participants (toutes nationalités confondues) ayant obtenu un financement.",
-      "en": "Share of the number of participants from the country among all participants (all nationalities combined) who have obtained funding."
+      "fr": "Nombre de participants du pays dans les projets lauréats sur le nombre total de participants dans les projest lauréats",
+      "en": "Number of participants from the country in successful projects as a proportion of the total number of participants in successful projects"
     }
   },
   "coordinationsShare": {
     "label": {
       "fr": "part des coordinations de projets du pays",
-      "en": "share of project coordinations from the country"
+      "en": "share of projects coordinated by the country's participants"
     },
     "tooltip": {
-      "fr": "Part du nombre des projets coordonnés par un participant du pays parmi l'ensemble des projets financés (toutes nationalités confondues).",
-      "en": "Share of the number of projects coordinated by a participant from the country among all funded projects (all nationalities combined)."
+      "fr": "Nombre de projets lauréats coordonnés par un participant du pays sur le nombre total de coordinations de projets lauréats",
+      "en": "Number of successful projects coordinated by a participant from the country as a proportion of the total number of successful projects coordinated"
     }
   },
   "fundsSuccessRate": {
     "label": {
       "fr": "taux de succès sur les financements",
-      "en": "success rate on amounts"
+      "en": "funding success rate"
     },
     "tooltip": {
-      "fr": "Financements obtenus / financements demandés par les équipes du pays sélectionné.",
-      "en": "funding obtained / funding requested by teams from the selected country."
+      "fr": "Montant des financements obtenus sur le montant des financements demandés par les participants du pays",
+      "en": "Amount of funding secured as a proportion of the amount of funding requested by participants from the country"
     }
   },
   "participantsSuccessRate": {
     "label": {
       "fr": "taux de succès individuel des participants du pays",
-      "en": "individual success rate of participants from the country"
+      "en": "participant-level success rate for the country"
     },
     "tooltip": {
-      "fr": "Nombre de participants du pays dans les projets lauréats / le nombre de participants du pays dans les projets évalués",
-      "en": "number of country participants in winning projects / number of country participants in evaluated projects"
+      "fr": "Nombre de participants du pays dans les projets lauréats sur le nombre de participants du pays dans les projets évalués",
+      "en": "Number of participants from the country in successful projects as a proportion of the number of participants from the country in evaluated projects"
     }
   },
   "projectsSuccessRate": {
     "label": {
-      "fr": "taux de succès sur le nombre de projets coordonnés",
-      "en": "success rate on the number of coordinated projects"
+      "fr": "taux de succès des coordinations de projets",
+      "en": "coordination success rate"
     },
     "tooltip": {
-      "fr": "Nombre de projets du pays dans les projets lauréats / le nombre de projets du pays dans les projets évalués",
-      "en": "number of country projects in winning projects / number of country projects in evaluated projects"
+      "fr": "Nombre de projets coordonnés par le pays dans les projets lauréats sur le nombre de projets coordonnés par le pays dans les projets évalués",
+      "en": "Number of successful projects coordinated by participants from the country as a proportion of the number of evaluated projects coordinated by participants from the country"
     }
   },
   "labels": {
@@ -93,7 +93,7 @@
     "fundsSuccessRate": {
       "numerator": {
         "fr": "Financements obtenus",
-        "en": "Funding obtained"
+        "en": "Funding secured"
       },
       "denominator": {
         "fr": "Financements demandés",
@@ -103,7 +103,7 @@
     "participantsSuccessRate": {
       "numerator": {
         "fr": "Participants lauréats",
-        "en": "Winning participants"
+        "en": "Successful participants"
       },
       "denominator": {
         "fr": "Participants évalués",
@@ -113,7 +113,7 @@
     "projectsSuccessRate": {
       "numerator": {
         "fr": "Projets lauréats",
-        "en": "Winning projects"
+        "en": "Successful projects"
       },
       "denominator": {
         "fr": "Projets évalués",
@@ -129,7 +129,7 @@
     "entityParticipantsShare": {
       "numerator": {
         "fr": "Participants lauréats de la structure",
-        "en": "Winning participants from the entity"
+        "en": "Successful participants from the entity"
       }
     },
     "entityCoordinationsShare": {
