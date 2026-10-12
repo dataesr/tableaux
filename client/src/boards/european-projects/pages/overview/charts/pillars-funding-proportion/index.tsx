@@ -10,27 +10,27 @@ import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 const titles: Record<string, { fr: string; en: string }> = {
   total_fund_eur: {
-    fr: "Part des financements demandés et obtenus par le pays sur l'ensemble des pays",
-    en: "Funding requested and obtained by the country on all countries",
+    fr: "Part des financements demandés et obtenus par le pays",
+    en: "Share of total funding requested and secured by the country's participants",
   },
   total_coordination_number: {
-    fr: "Part des coordinations demandées et obtenues par le pays sur l'ensemble des pays",
-    en: "Coordinations requested and obtained by the country on all countries",
+    fr: "Part des coordinations de projets évalués et lauréats par le pays",
+    en: "Share of evaluated and successful project coordinations by the country",
   },
   total_number_involved: {
-    fr: "Part des participations demandées et obtenues par le pays sur l'ensemble des pays",
-    en: "Participations requested and obtained by the country on all countries",
+    fr: "Part des candidats et des participants du pays",
+    en: "Share of applicants and participants from the country",
   },
 };
 const config = {
   id: "pillarsFundingProportion",
   comment: {
-    fr: <>Ce graphique affiche la part des financements demandés et obtenus (en M€) par le pays sélectionné sur l'ensemble des pays, pour chaque pilier.</>,
-    en: <>This chart displays the share of funding requested and obtained (in M€) by the selected country across all countries, for each pillar.</>,
+    fr: <>Ce graphique présente, pour chaque pilier, la part du pays sélectionné dans l’ensemble des financements demandés et obtenus par les participants de tous les pays.</>,
+    en: <>This chart shows, for each pillar, the selected country’s share of all funding requested and secured by participants from all countries.</>,
   },
   readingKey: {
-    fr: <>Pour le pilier "Excellence Scientifique", les projets du pays sélectionné ont demandé 583.5 M€ de financements, et en ont obtenu 115.4 M€, soit respectivement 10% et 10% des montants demandés et obtenus par l'ensemble des pays.</>,
-    en: <>For the "Scientific Excellence" pillar, projects from the selected country requested 583.5 M€ in funding and obtained 115.4 M€, representing 10% and 10% of the amounts requested and obtained by all countries, respectively.</>,
+    fr: <>Dans le cadre des appels à projets du pilier 2, le montant des financements demandés par les participants du pays sélectionné représentent 9,2% de l'ensemble des financements demandés et le montant des financements obtenus par les participants du pays sélectionné représentent 10,7% de l'ensemble des financements obtenus.</>,
+    en: <>Under Pillar II calls for proposals, the funding requested by participants from the selected country represents 9.2% of all funding requested, and the funding secured by participants from the selected country represents 10.7% of all funding secured.</>,
   },
   sources: EPChartsSources,
   integrationURL: "/european-projects/components/pages/analysis/overview/charts/destination-funding-proportion",
