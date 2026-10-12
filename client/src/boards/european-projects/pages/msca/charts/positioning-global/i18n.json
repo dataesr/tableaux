@@ -40,7 +40,7 @@
     "en": "Country global positioning"
   },
   "main-title-with-country": {
-    "fr": "Positionnement global de {country} sur les {metric} MSCA",
+    "fr": "Positionnement {country} sur les {metric} MSCA",
     "en": "{country}'s global positioning on MSCA {metric}"
   },
   "projects": {
