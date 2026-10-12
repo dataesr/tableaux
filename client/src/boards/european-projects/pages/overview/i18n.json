@@ -9,7 +9,7 @@
   },
   "topics": {
     "fr": "Thématiques",
-    "en": "Topics"
+    "en": "Themes"
   },
   "destinations": {
     "fr": "Destinations",
@@ -21,50 +21,50 @@
   },
   "callout-overview": {
     "fr": "Cette vue d'ensemble présente les données sur les subventions européennes demandées et obtenus par les projets. Explorez les différentes dimensions (piliers, programmes, thématiques, destinations) pour analyser les tendances de financement.",
-    "en": "This overview presents data on European funding requested and obtained by projects. Explore the different dimensions (pillars, programs, topics, destinations) to analyze funding trends."
+    "en": "This overview presents data on European funding requested and secured by projects. Explore the different dimensions (pillars, programs, topics, destinations) to analyze funding trends."
   },
   "title1-pillars": {
     "fr": "Financements demandés et obtenus par pilier",
-    "en": "Funding requested and obtained by pillar"
+    "en": "Funding requested and secured by pillar"
   },
   "title2-pillars": {
-    "fr": "Evolution des demandes de financements demandés et obtenuse par pilier",
-    "en": "Evolution of funding requests and obtained by pillar"
+    "fr": "Evolution des financements demandés et obtenus par pilier",
+    "en": "Funding requested and secured by pillar, by year of call"
   },
   "title1-programs": {
     "fr": "Financements demandés et obtenus par programme",
-    "en": "Funding requested and obtained by program"
+    "en": "Funding requested and secured by program"
   },
   "title2-programs": {
-    "fr": "Evolution des demandes de financements demandés et obtenus par programme",
-    "en": "Evolution of funding requests and obtained by program"
+    "fr": "Evolution des financements demandés et obtenus par programme",
+    "en": "Funding requested and secured by program, by year of call"
   },
   "title1-topics": {
     "fr": "Financements demandés et obtenus par thématique",
-    "en": "Funding requested and obtained by topic"
+    "en": "Funding requested and secured by theme"
   },
   "title2-topics": {
-    "fr": "Evolution des demandes de financements demandés et obtenus par thématique",
-    "en": "Evolution of funding requests and obtained by topic"
+    "fr": "Evolution des financements demandés et obtenus par thématique",
+    "en": "Funding requested and secured by theme, by year of call"
   },
   "title1-destinations": {
     "fr": "Financements demandés et obtenus par destination",
-    "en": "Funding requested and obtained by destination"
+    "en": "Funding requested and secured by destination"
   },
   "title2-destinations": {
-    "fr": "Evolution des demandes de financements demandés et obtenus par destination",
-    "en": "Evolution of funding requests and obtained by destination"
+    "fr": "Evolution des financements demandés et obtenus par destination",
+    "en": "Funding requested and secured by destination, by year of call"
   },
   "title1-financing": {
     "fr": "Financements demandés et obtenus par type de projet",
-    "en": "Funding requested and obtained by project type"
+    "en": "Funding requested and secured by action type"
   },
   "title2-financing": {
-    "fr": "Evolution des demandes de financements demandés et obtenus par type de projet",
-    "en": "Evolution of funding requests and obtained by project type"
+    "fr": "Evolution des financements demandés et obtenus par type de projet",
+    "en": "Funding requested and secured by action type, by year of call"
   },
   "title3-financing": {
-    "fr": "Taux de succès sur le montants par type de financement",
-    "en": "Success rate on amounts by type of funding"
+    "fr": "Taux de succès sur les financements par type de projet",
+    "en": "Funding success rate by action type"
   }
 }
