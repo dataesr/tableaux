@@ -9,17 +9,16 @@ import { EPChartsSources } from "../../../../config";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 
-const config = {
+const config: {
+  id: string;
+  idQuery: string;
+  sources: typeof EPChartsSources;
+  integrationURL: string;
+  comment?: { fr: JSX.Element; en: JSX.Element };
+  readingKey?: { fr: JSX.Element; en: JSX.Element };
+} = {
   id: "FundingCombined",
   idQuery: "FundingCombined",
-  comment: {
-    fr: <>Ce graphique présente la répartition, par pilier, des financements demandés et obtenus par l'ensemble des participants du pays sélectionné et les taux de succès associé (montants obtenus / montants demandés).</>,
-    en: <>This chart shows the breakdown, by pillar, of the funding requested and secured by all participants from the selected country, together with the associated success rates (funding secured ÷ funding requested).</>,
-  },
-  readingKey: {
-    fr: <>Dans le cadre des appels à projets du pilier 2, les participants du pays sélectionné ont demandé 12 845M€ et obtenu 3 921M€ soit un taux de succès de 30,5%</>,
-    en: <>Under Pillar II calls for proposals, participants from the selected country requested €12,845 million and secured €3,921 million, a success rate of 30.5%.</>,
-  },
   sources: EPChartsSources,
   integrationURL: "/european-projects/components/pages/analysis/overview/charts/destination-funding",
 };
@@ -35,6 +34,39 @@ export default function FundingCombined({ displayType = "total_fund_eur", groupB
   });
 
   if (isLoading || !data) return <DefaultSkeleton />;
+
+  switch (displayType) {
+    case "total_coordination_number":
+      config.comment = {
+        fr: <>total_coordination_number</>,
+        en: <>total_coordination_number EN</>,
+      };
+      config.readingKey = {
+        fr: <>{data.data[0][displayType]}</>,
+        en: <>Under Pillar II calls for proposals, participants from the selected country requested €12,845 million and secured €3,921 million, a success rate of 30.5%.</>,
+      };
+      break;
+    case "total_number_involved":
+      config.comment = {
+        fr: <>total_number_involved</>,
+        en: <>total_number_involved EN</>,
+      };
+      config.readingKey = {
+        fr: <>{data.data[0][displayType]}</>,
+        en: <>Under Pillar II calls for proposals, participants from the selected country requested €12,845 million and secured €3,921 million, a success rate of 30.5%.</>,
+      };
+      break;
+    default: //"total_fund_eur"
+      config.comment = {
+        fr: <>Ce graphique présente la répartition, par pilier, des financements demandés et obtenus par l'ensemble des participants du pays sélectionné et les taux de succès associé (montants obtenus / montants demandés).</>,
+        en: <>This chart shows the breakdown, by pillar, of the funding requested and secured by all participants from the selected country, together with the associated success rates (funding secured ÷ funding requested).</>,
+      };
+      config.readingKey = {
+        fr: <>{data.data[0][displayType]}</>,
+        en: <>Under Pillar II calls for proposals, participants from the selected country requested €12,845 million and secured €3,921 million, a success rate of 30.5%.</>,
+      };
+      break;
+  }
 
   const titles: Record<string, { fr: string; en: string }> = {
     total_fund_eur: { fr: "Répartition des financements et des taux de succès par pilier", en: "Breakdown of funding and success rates by pillar" },
