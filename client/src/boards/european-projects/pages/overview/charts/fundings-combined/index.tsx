@@ -9,6 +9,7 @@ import { EPChartsSources } from "../../../../config";
 
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
+import { formatToRates } from "../../../../../../utils/format";
 
 const config: {
   id: string;
@@ -35,15 +36,32 @@ export default function FundingCombined({ displayType = "total_fund_eur", groupB
   });
 
   if (isLoading || !data) return <DefaultSkeleton />;
+  const readingDataEvaluated = data.data.filter((d) => d.stage === "evaluated")[0];
+  const readingDataSuccessful = data.data.find((d) => d.stage === "successful" && d.code === readingDataEvaluated.code);
 
   switch (displayType) {
     case "total_coordination_number":
       config.comment = {
-        fr: <>Ce graphique présente la répartition, par pilier, des coordinations de projets évalués et lauréats par l'ensemble des participants du pays sélectionné et les taux de succès associé (coordinations projets lauréats / coordinations projets évalués).</>,
-        en: <>This chart shows the breakdown, by pillar, of evaluated and successful project coordinations by all participants from the selected country, together with the associated success rates (successful project coordinations / evaluated project coordinations).</>,
+        fr: (
+          <>
+            Ce graphique présente la répartition, par pilier, des coordinations de projets évalués et lauréats par l'ensemble des participants du pays sélectionné et les taux de succès associé (coordinations projets lauréats / coordinations projets
+            évalués).
+          </>
+        ),
+        en: (
+          <>
+            This chart shows the breakdown, by pillar, of evaluated and successful project coordinations by all participants from the selected country, together with the associated success rates (successful project coordinations / evaluated project
+            coordinations).
+          </>
+        ),
       };
       config.readingKey = {
-        fr: <>Dans le cadre des appels à projets du pilier 2, 3 600 propositions ont été déposées avec un participant du pays sélectionné comme coordinateur et 740 d'entre elles ont été retenues, soit un taux de succès de 20,6 %.</>,
+        fr: (
+          <>
+            Dans le cadre des appels à projets concernant "{readingDataEvaluated.name_fr}", {readingDataEvaluated.total_coordination_number} propositions ont été déposées avec un participant du pays sélectionné comme coordinateur et{" "}
+            {readingDataSuccessful.total_coordination_number} d'entre elles ont été retenues, soit un taux de succès de {formatToRates(readingDataSuccessful.total_coordination_number / readingDataEvaluated.total_coordination_number)}.
+          </>
+        ),
         en: <>Under Pillar II calls for proposals, 3,600 proposals were submitted with a participant from the selected country as coordinator, and 740 of them were successful, a success rate of 20.6%.</>,
       };
       break;
