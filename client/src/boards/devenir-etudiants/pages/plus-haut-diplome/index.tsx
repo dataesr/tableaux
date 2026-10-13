@@ -185,8 +185,11 @@ export default function PlusHautDiplomePage() {
                 <Col lg={8}>
                     <div className="outcomes-flux-page__content">
                         {activeFiltersElement}
-                        {isLoading && <DefaultSkeleton height="400px" />}
                         <div role="status">
+                            {isLoading && <DefaultSkeleton height="400px" />}
+                            {hasData && (
+                                <p className="fr-sr-only">Tableau et graphique mis à jour pour {formatNumber(data.totalStudents)} étudiants</p>
+                            )}
                             {!isLoading && error && (
                                 <Callout colorFamily="pink-macaron" icon="fr-icon-error-warning-line" title="Erreur de chargement">
                                     Impossible de récupérer les données pour cette cohorte.

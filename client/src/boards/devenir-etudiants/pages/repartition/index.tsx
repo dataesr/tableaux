@@ -186,8 +186,11 @@ export default function RepartitionPage() {
                 <Col lg={8}>
                     <div className="outcomes-flux-page__content">
                         <ChartWrapper.Title config={{ id: "outcomes-repartition", title: { fr: "Répartition des néo-bacheliers inscrits en L1 en 2019 selon les inscriptions par année (en %)", look: "h4" as const } }} />
-                        {isLoading && <DefaultSkeleton height="540px" />}
                         <div role="status">
+                            {isLoading && <DefaultSkeleton height="540px" />}
+                            {!isLoading && !error && (data?.distribution?.length ?? 0) > 0 && (
+                                <p className="fr-sr-only">Graphique mis à jour pour {data!.totalStudents.toLocaleString("fr-FR")} étudiants</p>
+                            )}
                             {!isLoading && error && (
                                 <Callout colorFamily="pink-macaron" icon="fr-icon-error-warning-line" title="Erreur de chargement">
                                     Impossible de récupérer les données de répartition pour cette cohorte.

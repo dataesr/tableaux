@@ -251,7 +251,6 @@ export default function FluxPage() {
                     <div className="outcomes-flux-page__content">
                         <ChartWrapper.Title config={{ id: "outcomes-flux-sankey", title: `Parcours des néo-bacheliers inscrits en L1 en 2019 (seuil : ${minValue} étudiant${minValue > 1 ? "s" : ""})` }} />
                         {activeFiltersElement}
-                        {(isLoading || (isFetching && !data)) && <DefaultSkeleton height="540px" />}
                         {!isLoading && isFetching && data && (
                             <div style={{ opacity: 0.5, transition: "opacity 0.2s" }}>
                                 <SankeyChart
@@ -266,6 +265,11 @@ export default function FluxPage() {
                             </div>
                         )}
                         <div role="status">
+                            {(isLoading || (isFetching && !data)) && <DefaultSkeleton height="540px" />}
+                            {!isLoading && isFetching && data && <p className="fr-sr-only">Chargement en cours</p>}
+                            {!isLoading && !isFetching && (data?.links?.length ?? 0) > 0 && (
+                                <p className="fr-sr-only">Graphique mis à jour : {data!.links.length} flux affichés</p>
+                            )}
                             {!isLoading && !isFetching && error && (
                                 <Callout colorFamily="pink-macaron" icon="fr-icon-error-warning-line" title="Erreur de chargement">
                                     Impossible de récupérer les flux pour cette cohorte.

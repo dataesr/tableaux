@@ -143,11 +143,18 @@ function ProfileCard({ badge, profile, axisOptions, canRemove, tauxDipl, total, 
                 ))}
             </div>
             <Row gutters className="fr-mt-2w" >
-                <Col xs={6}>
-                    <Text size="sm" className="fr-mb-0">Taux de diplômés du supérieur</Text>
-                    <p className={`fr-h3 fr-mb-0 outcomes-croisements__value--${badge}`}>
-                        {isLoading ? "…" : tauxDipl !== undefined ? `${tauxDipl.toFixed(0)}%` : "n/a"}
-                    </p>
+                <Col xs={6} role="status">
+                    <Text size="sm" className="fr-mb-0">
+                        <span className="fr-sr-only">Profil {badge} : </span>
+                        Taux de diplômés du supérieur
+                    </Text>
+                    {isLoading ? (
+                        <DefaultSkeleton height="1.625rem" />
+                    ) : (
+                        <p className={`fr-h3 fr-mb-0 outcomes-croisements__value--${badge}`}>
+                            {tauxDipl !== undefined ? `${tauxDipl.toFixed(0)}%` : "Non disponible"}
+                        </p>
+                    )}
                 </Col>
                 {!isLoading && total !== undefined && (
                     <Col xs={6}>
