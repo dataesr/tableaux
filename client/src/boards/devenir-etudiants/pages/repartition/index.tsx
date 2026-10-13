@@ -1,4 +1,4 @@
-import { Button, Col, Container, DismissibleTag, Row, TagGroup, Title } from "@dataesr/dsfr-plus";
+import { Button, Col, Container, Row, Title } from "@dataesr/dsfr-plus";
 import { useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 
@@ -7,6 +7,7 @@ import ChartWrapper from "../../../../components/chart-wrapper";
 import Callout from "../../../../components/callout.tsx";
 import { type OutcomesFilterField, useOutcomesRepartition } from "../../api";
 import ItemFilter from "../../../../components/item-filter";
+import ActiveFilters, { getFilterId } from "../../components/active-filters/index.tsx";
 import OutcomesDefinitionsTable from "../../components/definitions-table/index.tsx";
 import { OUTCOMES_DEFINITIONS } from "../../components/definitions-table/data.tsx";
 import RepartitionChart from "./charts/repartition-column";
@@ -113,17 +114,10 @@ export default function RepartitionPage() {
             s.fields.filter(f => filters[f.field]).map(f => {
                 const value = filters[f.field]!;
                 const option = data?.filterOptions?.[f.field]?.find((o) => o.key === value);
-                return { field: f.field, label: f.label, valueLabel: option?.label ?? value };
+                return { field: f.field, label: f.label, value: option?.label ?? value };
             })
         );
-        if (!tags.length) return null;
-        return (
-            <TagGroup className="fr-mt-1w fr-mb-1w">
-                {tags.map(({ field, label, valueLabel }) => (
-                    <DismissibleTag key={field} size="sm" onClick={() => updateFilter(field, null)}>{label} : {valueLabel}</DismissibleTag>
-                ))}
-            </TagGroup>
-        );
+        return <ActiveFilters filters={tags} onRemove={(field) => updateFilter(field, null)} />;
     })();
 
     const updateFilter = (field: OutcomesFilterField, value: string | null) => {
@@ -176,6 +170,7 @@ export default function RepartitionPage() {
                                 {section.fields.map(({ field, label }) => (
                                     <ItemFilter
                                         key={field}
+                                        id={getFilterId(field)}
                                         label={label}
                                         items={data?.filterOptions?.[field] || []}
                                         selectedKey={filters[field]}

@@ -1,4 +1,4 @@
-import { Button, Col, Container, DismissibleTag, Row, TagGroup, Title } from "@dataesr/dsfr-plus";
+import { Button, Col, Container, Row, Title } from "@dataesr/dsfr-plus";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
@@ -7,6 +7,7 @@ import ChartWrapper from "../../../../components/chart-wrapper";
 import Callout from "../../../../components/callout.tsx";
 import { type OutcomesFilterField, useOutcomesFlux } from "../../api";
 import ItemFilter from "../../../../components/item-filter";
+import ActiveFilters, { getFilterId } from "../../components/active-filters/index.tsx";
 import OutcomesDefinitionsTable from "../../components/definitions-table/index.tsx";
 import { OUTCOMES_DEFINITIONS } from "../../components/definitions-table/data.tsx";
 import SankeyChart from "./charts/sankey";
@@ -138,14 +139,7 @@ export default function FluxPage() {
                 return { field: f.field, label: f.label, value: option?.label || code };
             })
         );
-        if (!tags.length) return null;
-        return (
-            <TagGroup className="fr-mt-1w fr-mb-1w">
-                {tags.map(({ field, label, value }) => (
-                    <DismissibleTag key={field} size="sm" onClick={() => updateFilter(field, null)}>{label} : {value}</DismissibleTag>
-                ))}
-            </TagGroup>
-        );
+        return <ActiveFilters filters={tags} onRemove={(field) => updateFilter(field, null)} />;
     })();
 
     const exportFiltersText = useMemo(() => {
@@ -240,6 +234,7 @@ export default function FluxPage() {
                                 {section.fields.map(({ field, label }) => (
                                     <ItemFilter
                                         key={field}
+                                        id={getFilterId(field)}
                                         label={label}
                                         items={data?.filterOptions?.[field] || []}
                                         selectedKey={filters[field]}
