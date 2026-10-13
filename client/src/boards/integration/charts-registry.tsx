@@ -167,15 +167,6 @@ export const chartsRegistry = {
   projectsOverTime: lazy(
     () => import("../financements-par-aap/charts/projects-over-time")
   ),
-  classificationsByComparison: lazy(
-    () => import("../financements-par-aap/pages/comparison/charts/classifications-by-comparison")
-  ),
-  dispersionByComparison: lazy(
-    () => import("../financements-par-aap/pages/comparison/charts/dispersion-by-comparison")
-  ),
-  projectsByComparison: lazy(
-    () => import("../financements-par-aap/pages/comparison/charts/projects-by-comparison")
-  ),
 
   // Outcomes
   outcomesFluxSankey: lazy(
