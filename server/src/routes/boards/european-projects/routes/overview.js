@@ -1120,16 +1120,13 @@ router.route("/european-projects/overview/funding-proportion").get(async (req, r
 router.route("/european-projects/overview/pillars-funding-evo-3-years").get(async (req, res) => {
   const filters = checkQuery(req.query, ["country_code"], res);
 
-  // cas de plusieurs piliers passés en paramètre
-  if (req.query.pilier_code?.split("|").length > 1) {
-    filters.pilier_code = { $in: req.query.pilier_code.split("|") };
-  } else if (req.query.pilier_code?.split("|").length === 1) {
-    filters.pilier_code = req.query.pilier_code;
-  } else {
-    filters.pilier_code = { $in: ["p1", "p2", "p3", "p4"] };
+  if (req.query.pillars) {
+    filters.pilier_code = { $in: req.query.pillars.split("|") };
   }
 
-  filters.call_year = { $in: rangeOfYears };
+  if (req.query.range_of_years) {
+    filters.call_year = { $in: req.query.range_of_years.split(/[|,]/) };
+  }
 
   delete filters.thema_code;
   delete filters.programme_code;
@@ -1137,7 +1134,7 @@ router.route("/european-projects/overview/pillars-funding-evo-3-years").get(asyn
 
   if (req.query.isEjo) {
     filters["is_ejo"] = { $eq: req.query.isEjo === "true" ? true : false };
-  }  
+  }
 
   const query = () => {
     return db

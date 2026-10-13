@@ -15,32 +15,22 @@ export default function Options(data, displayType, currentLang): HighchartsOptio
 
   filteredData.find((item) => item.stage === "evaluated").pillars[0].years.forEach((year) => years.add(year.year));
 
+  const commonXAxis = {
+    type: "category" as const,
+    categories: Array.from(years).map(String),
+    width: "48%",
+    offset: 0,
+    gridLineWidth: 0,
+  };
+
   const newOptions: HighchartsInstance.Options = {
-    title: { text: "" },
-    legend: {
-      enabled: true,
-      align: "center",
-      verticalAlign: "bottom",
-      layout: "horizontal",
-    },
     yAxis: {
       gridLineColor: "var(--background-default-grey-hover)",
       gridLineWidth: 0.5,
     },
     xAxis: [
-      {
-        type: "category" as const,
-        categories: Array.from(years).map(String),
-        width: "48%",
-        gridLineWidth: 0,
-      },
-      {
-        type: "category" as const,
-        categories: Array.from(years).map(String),
-        offset: 0,
-        left: "50%",
-        width: "48%",
-      },
+      { ...commonXAxis, left: "0%" },
+      { ...commonXAxis, left: "50%" },
     ],
     plotOptions: {
       line: {
