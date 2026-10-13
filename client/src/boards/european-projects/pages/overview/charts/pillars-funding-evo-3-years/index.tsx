@@ -4,29 +4,28 @@ import { useSearchParams } from "react-router-dom";
 import { GetData } from "./query";
 import optionsValues from "./options-values";
 import optionsSuccessRates from "./options-success-rates";
-
 import ChartWrapper from "../../../../../../components/chart-wrapper";
-import { getDefaultParams, successRatesReadingKey, valuesSuccessReadingKey, renderDataTable, renderDataTableRates } from "./utils";
+import { successRatesReadingKey, valuesSuccessReadingKey, renderDataTable, renderDataTableRates } from "./utils";
 import { Container, Row, Col } from "@dataesr/dsfr-plus";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 import { useState } from "react";
 import { getI18nLabel } from "../../../../../../utils";
+import { EPChartsSources } from "../../../../config.js";
 
 import i18nLocal from "./i18n.json";
 import i18nGlobal from "../../../../i18n-global.json";
-import { EPChartsSources } from "../../../../config.js";
-// TODO: adapter les commentaires en fonction du selecteur
-// TODO: fix renderDataTable()
 
 export default function PillarsFundingEvo3Years() {
   const [searchParams] = useSearchParams();
   const currentLang = searchParams.get("language") || "fr";
-  const params = getDefaultParams(searchParams);
+  const pillarId = searchParams.get("pillarId");
+  const countryCode = searchParams.get("country_code");
+  const rangeOfYears = searchParams.get("range_of_years");
   const [displayType, setDisplayType] = useState("total_fund_eur");
 
   const { data, isLoading } = useQuery({
-    queryKey: ["PillarsFundingEvo3Years", params],
-    queryFn: () => GetData(params),
+    queryKey: ["PillarsFundingEvo3Years", pillarId, rangeOfYears, countryCode],
+    queryFn: () => GetData(pillarId, rangeOfYears, countryCode),
   });
 
   if (isLoading || !data)
@@ -40,8 +39,8 @@ export default function PillarsFundingEvo3Years() {
   const configChart1 = {
     id: "pillarsEvolutionFundingLines",
     title: {
-      fr: "Evolution des financements demandés et obtenus (M€) sur Horizon Europe - 3 dernières années",
-      en: "Financing applied for and obtained (€m) evolution on Horizon Europe - last 3 years",
+      fr: "Evolution des financements demandés et obtenus (M€) sur Horizon Europe",
+      en: "Financing applied for and obtained (€m) evolution on Horizon Europe",
     },
     comment: {
       fr: (

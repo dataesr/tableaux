@@ -1,18 +1,14 @@
 const { VITE_APP_SERVER_URL } = import.meta.env;
 
-export async function GetData(params: string) {
+export async function GetData(pillarId: string | null, rangeOfYears: string | null, countryCode: string | null) {
+  const params: string[] = [];
+
+  if (pillarId) params.push(`pillars=${pillarId}`);
+  if (countryCode) params.push(`country_code=${countryCode}`);
+  if (rangeOfYears) params.push(`range_of_years=${rangeOfYears}`);
+
   const baseUrl = `${VITE_APP_SERVER_URL}/european-projects/overview/pillars-funding-evo-3-years`;
-  const searchParams = new URLSearchParams(params);
-
-  // Récupérer le paramètre pillarId depuis l'URL et le convertir en pilier_code
-  const pillarId = searchParams.get("pillarId");
-  if (pillarId) {
-    searchParams.delete("pillarId"); // Supprimer l'ancien paramètre
-    searchParams.append("pilier_code", pillarId);
-  }
-
-  const queryString = searchParams.toString();
-  const finalUrl = queryString ? `${baseUrl}?${queryString}` : baseUrl;
+  const finalUrl = params.length ? `${baseUrl}?${params.join("&")}` : baseUrl;
 
   return fetch(finalUrl).then((response) => response.json());
 }
