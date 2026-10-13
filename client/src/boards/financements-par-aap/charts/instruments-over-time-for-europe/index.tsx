@@ -217,7 +217,7 @@ export default function InstrumentsOverTimeForEurope({ name, participantSuperOrg
   // If view by number of projects, view by default
   let axis = getI18nLabel(i18n, 'number_of_projects_funded')
   let series = (structure && !withComponents) ? seriesProject.reverse() : seriesProjectRegion.reverse()
-  let title = `Evolution temporelle des instruments européens (actions) dont a bénéficié ${structure ? "l'établissement" : "la région"} ${name}`
+  let title = `Évolution temporelle des instruments européens (actions) dont a bénéficié ${structure ? "l'établissement" : "la région"} ${name}`
   let tooltip = function (this: any) {
     return `<b>${this.y}</b> projets <b>${this.series.name}</b> en <b>${this.x}</b> dont a bénéficié ${structure ? "l'établissement" : "la région"} <b>${name}</b>`
   }
@@ -226,7 +226,7 @@ export default function InstrumentsOverTimeForEurope({ name, participantSuperOrg
     case 'amount_global':
       axis = getI18nLabel(i18n, 'funding_total')
       series = (structure && !withComponents) ? seriesBudget.reverse() : seriesBudgetRegion.reverse()
-      title = `Evolution temporelle du financement global par instrument européen dont a bénéficié ${structure ? "l'établissement" : "la région"} ${name}`
+      title = `Évolution temporelle du financement global par instrument européen dont a bénéficié ${structure ? "l'établissement" : "la région"} ${name}`
       tooltip = function (this: any) {
         return `<b>${formatCompactNumber(this.y)} €</b> ont été financés en <b>${this.x}</b> par l'instrument <b>${this.series.name}</b> dont a bénéficié ${structure ? "l'établissement" : "la région"} <b>${name}</b>`
       }
@@ -235,7 +235,7 @@ export default function InstrumentsOverTimeForEurope({ name, participantSuperOrg
     case 'amount_by_structure':
       axis = getI18nLabel(i18n, structure ? 'funding_by_structure' : 'funding_by_region')
       series = (structure && !withComponents) ? seriesFunding.reverse() : seriesFundingRegion.reverse()
-      title = `Evolution temporelle du financement perçu par instrument européen dont a bénéficié ${structure ? "l'établissement" : "la région"} ${name}`
+      title = `Évolution temporelle du financement perçu par instrument européen dont a bénéficié ${structure ? "l'établissement" : "la région"} ${name}`
       tooltip = function (this: any) {
         return `<b>${formatCompactNumber(this.y)} €</b> ont été perçus en <b>${this.x}</b> par l'instrument <b>${this.series.name}</b> dont a bénéficié ${structure ? "l'établissement" : "la région"} <b>${name}</b>`
       }

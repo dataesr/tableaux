@@ -233,7 +233,7 @@ export default function ProjectsOverTime({ name, participantSuperOrganizationChi
   // If view by number of projects, view by default
   let axis = getI18nLabel(i18n, 'number_of_projects_funded')
   let series = (structure && !withComponents) ? seriesProject.reverse() : seriesProjectRegion.reverse()
-  let title = `Evolution temporelle du nombre de projets auxquels participe ${structure ? "l'établissement" : "la région"} ${name}`
+  let title = `Évolution temporelle du nombre de projets auxquels participe ${structure ? "l'établissement" : "la région"} ${name}`
   let tooltip = function (this: any) {
     return `<b>${this.y}</b> projets <b>${this.series.name}</b> en <b>${this.x}</b> auxquels prend part ${structure ? "l'établissement" : "la région"} <b>${name}</b>`
   }
@@ -242,7 +242,7 @@ export default function ProjectsOverTime({ name, participantSuperOrganizationChi
     case 'amount_global':
       axis = getI18nLabel(i18n, 'funding_total')
       series = (structure && !withComponents) ? seriesBudget.reverse() : seriesBudgetRegion.reverse()
-      title = `Evolution temporelle des financements globaux pour les projets auxquels participe ${structure ? "l'établissement" : "la région"} ${name}`
+      title = `Évolution temporelle des financements globaux pour les projets auxquels participe ${structure ? "l'établissement" : "la région"} ${name}`
       tooltip = function (this: any) {
         return `<b>${formatCompactNumber(this.y)} €</b> ont été financés en <b>${this.x}</b> pour les projets <b>${this.series.name}</b> auxquels participe ${structure ? "l'établissement" : "la région"} <b>${name}</b>`
       }
@@ -251,7 +251,7 @@ export default function ProjectsOverTime({ name, participantSuperOrganizationChi
     case 'amount_by_structure':
       axis = getI18nLabel(i18n, structure ? 'funding_by_structure' : 'funding_by_region')
       series = (structure && !withComponents) ? seriesFunding.reverse() : seriesFundingRegion.reverse()
-      title = `Evolution temporelle des financements perçus pour les projets auxquels participe ${structure ? "l'établissement" : "la région"} ${name}`
+      title = `Évolution temporelle des financements perçus pour les projets auxquels participe ${structure ? "l'établissement" : "la région"} ${name}`
       tooltip = function (this: any) {
         return `<b>${formatCompactNumber(this.y)} €</b> ont été perçus en <b>${this.x}</b> pour les projets <b>${this.series.name}</b> auxquels participe ${structure ? "l'établissement" : "la région"} <b>${name}</b>`
       }

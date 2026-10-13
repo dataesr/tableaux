@@ -38,7 +38,7 @@ export default function DisplayStructure() {
   const sections = [
     { id: "apercu", label: "Aperçu" },
     { id: "financements", label: "Volume et répartition des financements" },
-    { id: "evolution", label: "Evolution temporelle" },
+    { id: "evolution", label: "Évolution temporelle" },
     { id: "partenaires", label: "Institutions partenaires" },
     { id: "laboratoires", label: "Laboratoires" },
     { id: "disciplines", label: "Disciplines" },
@@ -129,7 +129,7 @@ export default function DisplayStructure() {
               )}
               {!!participantIsSuperOrganization && withComponents && (
                 <Text size="xs" className="fr-mb-0 fr-text-mention--grey">
-                  Composantes:
+                  Composantes :
                   {' '}
                   {participantSuperOrganizationChildren.map((child) => child.displayName).join(' - ')}
                 </Text>

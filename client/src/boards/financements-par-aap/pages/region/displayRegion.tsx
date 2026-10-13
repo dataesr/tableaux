@@ -34,7 +34,7 @@ export default function DisplayRegion() {
   const sections = [
     { id: "apercu", label: "Aperçu" },
     { id: "financements", label: "Volume et répartition des financements" },
-    { id: "evolution", label: "Evolution temporelle" },
+    { id: "evolution", label: "Évolution temporelle" },
     { id: "institutions", label: "Institutions" },
     { id: "laboratoires", label: "Laboratoires" },
     { id: "disciplines", label: "Disciplines" },
