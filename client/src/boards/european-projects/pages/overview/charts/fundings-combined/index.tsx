@@ -62,7 +62,12 @@ export default function FundingCombined({ displayType = "total_fund_eur", groupB
             {readingDataSuccessful.total_coordination_number} d'entre elles ont été retenues, soit un taux de succès de {formatToRates(readingDataSuccessful.total_coordination_number / readingDataEvaluated.total_coordination_number)}.
           </>
         ),
-        en: <>Under Pillar II calls for proposals, 3,600 proposals were submitted with a participant from the selected country as coordinator, and 740 of them were successful, a success rate of 20.6%.</>,
+        en: (
+          <>
+            Under "{readingDataEvaluated.name_en}" calls for proposals, {readingDataEvaluated.total_coordination_number} proposals were submitted with a participant from the selected country as coordinator, and{" "}
+            {readingDataSuccessful.total_coordination_number}  of them were successful, a success rate of {formatToRates(readingDataSuccessful.total_coordination_number / readingDataEvaluated.total_coordination_number)}.
+          </>
+        ),
       };
       break;
     case "total_number_involved":
@@ -71,8 +76,10 @@ export default function FundingCombined({ displayType = "total_fund_eur", groupB
         en: <>This chart shows the breakdown, by pillar, of the number of applicants and participants from the selected country, together with the associated success rates (number of participants / number of applicants).</>,
       };
       config.readingKey = {
-        fr: <>Dans le cadre des appels à projets du pilier 2, 28 500 candidats figuraient dans les propositions déposées et 7 000 sont devenus participants à un projet lauréat, soit un taux de succès de 24,8 %.</>,
-        en: <>Under Pillar II calls for proposals, 28,500 applicants were named in submitted proposals and 7,000 of them became participants in successful projects, a success rate of 24.8%.</>,
+        fr: <>Dans le cadre des appels à projets concernant "{readingDataEvaluated.name_fr}", {readingDataEvaluated.total_number_involved} candidats figuraient dans les propositions déposées et{" "}
+        {readingDataSuccessful.total_number_involved} sont devenus participants à un projet lauréat, soit un taux de succès de {formatToRates(readingDataSuccessful.total_number_involved / readingDataEvaluated.total_number_involved)}.</>,
+        en: <>Under "{readingDataEvaluated.name_en}" calls for proposals, {readingDataEvaluated.total_number_involved} applicants were named in submitted proposals and{" "}
+        {readingDataSuccessful.total_number_involved} of them became participants in successful projects, a success rate of {formatToRates(readingDataSuccessful.total_number_involved / readingDataEvaluated.total_number_involved)}.</>,
       };
       break;
     default: //"total_fund_eur"
@@ -81,8 +88,10 @@ export default function FundingCombined({ displayType = "total_fund_eur", groupB
         en: <>This chart shows the breakdown, by pillar, of the funding requested and secured by all participants from the selected country, together with the associated success rates (funding secured / funding requested).</>,
       };
       config.readingKey = {
-        fr: <>Dans le cadre des appels à projets du pilier 2, les participants du pays sélectionné ont demandé 12 845M€ et obtenu 3 921M€ soit un taux de succès de 30,5%</>,
-        en: <>Under Pillar II calls for proposals, participants from the selected country requested €12,845 million and secured €3,921 million, a success rate of 30.5%.</>,
+        fr: <>Dans le cadre des appels à projets concernant "{readingDataEvaluated.name_fr}", les participants du pays sélectionné ont demandé {readingDataEvaluated.total_fund_eur} et{" "}
+        obtenu {readingDataSuccessful.total_fund_eur} soit un taux de succès de {formatToRates(readingDataSuccessful.total_fund_eur / readingDataEvaluated.total_fund_eur)}.</>,
+        en: <>Under "{readingDataEvaluated.name_en}" calls for proposals, participants from the selected country requested {readingDataEvaluated.total_fund_eur} and{" "}
+       secured {readingDataSuccessful.total_fund_eur}, a success rate of {formatToRates(readingDataSuccessful.total_fund_eur / readingDataEvaluated.total_fund_eur)}.</>,
       };
       break;
   }
