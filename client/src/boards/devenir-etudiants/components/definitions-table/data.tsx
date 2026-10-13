@@ -12,7 +12,7 @@ const SOURCE_NODE = (
 export const OUTCOMES_DEFINITIONS: OutcomesDefinition[] = [
     {
         key: "champ",
-        libelle: "Champ et population observée",
+        title: "Champ et population observée",
         definition: (
             <>
                 Les néo-bacheliers inscrits en L1 en 2019 en France. L'observation s'étend sur 5 ans
@@ -24,7 +24,7 @@ export const OUTCOMES_DEFINITIONS: OutcomesDefinition[] = [
     },
     {
         key: "doubles_inscriptions",
-        libelle: "Gestion des doubles inscriptions",
+        title: "Gestion des doubles inscriptions",
         definition: (
             <>
                 Les étudiants peuvent s'inscrire dans plusieurs formations ou dans une même formation
@@ -37,7 +37,7 @@ export const OUTCOMES_DEFINITIONS: OutcomesDefinition[] = [
     },
     {
         key: "origine_sociale",
-        libelle: "Origine sociale",
+        title: "Origine sociale",
         definition: (
             <>
                 L'origine sociale correspond à la PCS du responsable légal. Elle peut être :
@@ -53,7 +53,7 @@ export const OUTCOMES_DEFINITIONS: OutcomesDefinition[] = [
     },
     {
         key: "devenir_en_un_an",
-        libelle: "Devenir en un an",
+        title: "Devenir en un an",
         definition: (
             <>
                 Situation des étudiants un an après leur première inscription en 2019 :
@@ -69,7 +69,7 @@ export const OUTCOMES_DEFINITIONS: OutcomesDefinition[] = [
     },
     {
         key: "sortants",
-        libelle: "Sortants de l'enseignement supérieur",
+        title: "Sortants de l'enseignement supérieur",
         definition: (
             <>
                 Les sortants de l'enseignement supérieur peuvent soit renoncer à faire des études ou
@@ -82,7 +82,7 @@ export const OUTCOMES_DEFINITIONS: OutcomesDefinition[] = [
     },
     {
         key: "parcours_types",
-        libelle: "Parcours types",
+        title: "Parcours types",
         definition: (
             <>
                 Construits selon les trajectoires les plus fréquentes :
