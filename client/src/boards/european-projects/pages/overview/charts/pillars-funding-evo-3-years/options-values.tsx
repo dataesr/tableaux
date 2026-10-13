@@ -27,37 +27,57 @@ export default function Options(data, displayType, currentLang): HighchartsOptio
     });
   });
 
+    const evaluatedColor = getCssColor("evaluated-project");
+    const successfulColor = getCssColor("successful-project");
+    const successRateColor = getCssColor("average-success-rate") || "#d75521";
+
   const newOptions: HighchartsInstance.Options = {
-    xAxis: {
-      // categories: categories,
-      categories: sortedYears.map(String),
-      labels: {
-        rotation: -45,
-        style: {
-          fontSize: "10px",
+    chart: {
+      height: 400,
+      events: {
+        render(this: any) {
+          (this._stems || []).forEach((el: any) => el.destroy());
+          this._stems = [];
+          const scatter = this.series.find((s: any) => s.type === "scatter");
+          if (!scatter) return;
+          const y0 = (this.yAxis[1] as any).toPixels(0);
+          scatter.points.forEach((pt: any) => {
+            if (pt.plotX == null || pt.plotY == null) return;
+            this._stems.push(
+              this.renderer
+                .path(["M", this.plotLeft + pt.plotX, y0, "L", this.plotLeft + pt.plotX, this.plotTop + pt.plotY])
+                .attr({ stroke: successRateColor, "stroke-width": 1.5, dashstyle: "Dot", zIndex: 3 })
+                .add(),
+            );
+          });
         },
       },
     },
+    xAxis: {
+      categories: sortedYears.map(String),
+      crosshair: true,
+    },
     yAxis: [
       {
-        min: 0,
         title: {
           text: displayType === "total_fund_eur" ? "M€" : "Nombre",
         },
+        min: 0,
         gridLineColor: "var(--background-default-grey-hover)",
         gridLineWidth: 0.5,
       },
       {
-        min: 0,
-        max: 100,
         title: {
           text: `${getI18nLabel(i18n, "successRate", currentLang)} (%)`,
         },
         opposite: true,
+        min: 0,
+        max: 100,
         labels: {
           formatter: function (this: Highcharts.AxisLabelsFormatterContextObject) {
             return `${this.value}%`;
           },
+          style: { color: successRateColor },
         },
         gridLineColor: "var(--background-default-grey-hover)",
         gridLineWidth: 0.5,
@@ -88,7 +108,7 @@ export default function Options(data, displayType, currentLang): HighchartsOptio
       {
         type: "column",
         name: getI18nLabel(i18n, "evaluatedProjects", currentLang),
-        color: getCssColor("evaluated-project"),
+        color: evaluatedColor,
         data: (() => {
           const data: number[] = [];
           sortedYears.forEach((year) => {
@@ -106,7 +126,7 @@ export default function Options(data, displayType, currentLang): HighchartsOptio
       {
         type: "column",
         name: getI18nLabel(i18n, "successfulProjects", currentLang),
-        color: getCssColor("successful-project"),
+        color: successfulColor,
         data: (() => {
           const data: number[] = [];
           sortedYears.forEach((year) => {
@@ -122,9 +142,9 @@ export default function Options(data, displayType, currentLang): HighchartsOptio
       },
       // Série pour les taux de succès
       {
-        type: "line",
+        type: "scatter",
         name: `${getI18nLabel(i18n, "successRate", currentLang)} (%)`,
-        color: getCssColor("success-rate"),
+        color: successRateColor,
         yAxis: 1,
         data: (() => {
           const data: number[] = [];
@@ -141,15 +161,14 @@ export default function Options(data, displayType, currentLang): HighchartsOptio
           });
           return data;
         })(),
-        marker: {
-          enabled: true,
-          radius: 4,
-        },
+        marker: { symbol: "circle", radius: 6 },
         dataLabels: {
           enabled: true,
           formatter: function () {
             return `${Number(this.y).toFixed(1)}%`;
           },
+          y: -10,
+          style: { fontSize: "11px", fontWeight: "600", textOutline: "none" },
         },
       },
     ],
