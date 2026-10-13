@@ -10,6 +10,7 @@ interface YearRangeSliderProps {
     min: number;
     onChange: (start: number, end: number) => void;
     start: number;
+    valuePrefix?: string;
     yearLabels?: Record<number, string>;
 }
 
@@ -23,10 +24,10 @@ export default function YearRangeSlider({
     min,
     onChange,
     start,
+    valuePrefix = "",
     yearLabels,
 }: YearRangeSliderProps) {
     const rangeRef = useRef<HTMLDivElement>(null);
-    const outputRef = useRef<HTMLSpanElement>(null);
 
     const labelId = `${id}-label`;
     const messagesId = `${id}-messages`;
@@ -48,10 +49,7 @@ export default function YearRangeSlider({
         const right = ((end - min) / range) * usable + thumb / 2;
         node.style.setProperty("--progress-left", `${(left / width) * 100}%`);
         node.style.setProperty("--progress-right", `${(right / width) * 100}%`);
-        if (outputRef.current) {
-            outputRef.current.textContent = `${startLabel} - ${endLabel}`;
-        }
-    }, [start, end, min, max, startLabel, endLabel]);
+    }, [start, end, min, max]);
 
     const message = useMemo(() => {
         if (messageBuilder) return messageBuilder(start, end);
@@ -68,15 +66,17 @@ export default function YearRangeSlider({
             </label>
             <div
                 ref={rangeRef}
+                aria-labelledby={labelId}
                 className="fr-range fr-range--double fr-range--sm"
-                data-fr-js-range="true"
+                data-fr-prefix={valuePrefix}
+                role="group"
             >
-                <span className="fr-range__output" ref={outputRef}>
-                    {`${startLabel} - ${endLabel}`}
+                <span className="fr-range__output" aria-hidden="true">
+                    {`${valuePrefix}${start} - ${valuePrefix}${end}`}
                 </span>
                 <input
-                    aria-labelledby={labelId}
-                    data-fr-js-range-input="true"
+                    aria-label={`${label} : début`}
+                    aria-valuetext={startLabel}
                     id={startId}
                     max={max}
                     min={min}
@@ -90,8 +90,8 @@ export default function YearRangeSlider({
                     value={start}
                 />
                 <input
-                    aria-labelledby={labelId}
-                    data-fr-js-range-input-2="true"
+                    aria-label={`${label} : fin`}
+                    aria-valuetext={endLabel}
                     id={endId}
                     max={max}
                     min={min}
@@ -105,10 +105,10 @@ export default function YearRangeSlider({
                     value={end}
                 />
                 <span className="fr-range__min" aria-hidden="true">
-                    {yearLabels?.[min] ?? min}
+                    {`${valuePrefix}${min}`}
                 </span>
                 <span className="fr-range__max" aria-hidden="true">
-                    {yearLabels?.[max] ?? max}
+                    {`${valuePrefix}${max}`}
                 </span>
             </div>
             <div className="fr-messages-group" id={messagesId} aria-live="polite">

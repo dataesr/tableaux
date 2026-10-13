@@ -307,6 +307,7 @@ export default function FluxPage() {
                                         start={yearStart}
                                         end={yearEnd}
                                         onChange={updateYearRange}
+                                        valuePrefix="N+"
                                         yearLabels={YEAR_LABELS}
                                     />
                                 </Col>

@@ -222,6 +222,7 @@ export default function RepartitionPage() {
                                         start={yearStart}
                                         end={yearEnd}
                                         onChange={updateYearRange}
+                                        valuePrefix="N+"
                                         yearLabels={YEAR_LABELS}
                                     />
                                 </Col>
