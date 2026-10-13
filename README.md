@@ -30,7 +30,8 @@ The version number follows [semver](https://semver.org/).
 
 To deploy in production, simply run this command from your staging branch :
 
-`npm run deploy:[patch|minor|major]`
+`npm run deploy -- [patch|minor|major]`
+
 ⚠️ Obviously, only members of the [dataesr organization](https://github.com/dataesr/) have rights to push on the repo.
 
 ## How to push a new boards in prod
