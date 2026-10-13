@@ -108,11 +108,12 @@ interface ProfileCardProps {
 
 function ProfileCard({ badge, profile, axisOptions, canRemove, tauxDipl, total, cohortTotal, isLoading, onChange, onRemove }: ProfileCardProps) {
     const sharePct = total !== undefined && cohortTotal ? (total / cohortTotal) * 100 : null;
+    const titleId = `profil-${badge}-title`;
     return (
         <div className={`outcomes-croisements__card outcomes-croisements__card--${badge} fr-p-2w`}>
             <Row verticalAlign="middle">
                 <Col>
-                    <Title as="h2" look="h6" className="fr-mb-0">Profil {badge}</Title>
+                    <Title as="h2" look="h6" className="fr-mb-0" id={titleId}>Profil {badge}</Title>
                 </Col>
                 {canRemove && (
                     <Col className="text-right">
@@ -128,10 +129,11 @@ function ProfileCard({ badge, profile, axisOptions, canRemove, tauxDipl, total, 
                     </Col>
                 )}
             </Row>
-            <div className="outcomes-croisements__fields">
+            <div className="outcomes-croisements__fields" role="group" aria-labelledby={titleId}>
                 {PROFILE_FIELDS.map(({ field, label }) => (
                     <ItemFilter
                         key={field}
+                        id={`profil-${badge}-${field}`}
                         label={label}
                         items={axisOptions[field] || []}
                         selectedKey={profile[field] ?? null}
