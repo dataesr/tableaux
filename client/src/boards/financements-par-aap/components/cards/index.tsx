@@ -124,19 +124,22 @@ export default function Cards({ participantSuperOrganizationChildrenIds = [] }: 
         <Col xs="12" md="2" />
         {Object.keys(dataFunders).map((funder) => (
           <Col xs="12" md="2" key={`header-${funder}`}>
-            <Text
-              size="sm"
-              bold
+            <Title
+              as="h2"
               className="fr-mb-0"
               style={{
                 color: getCssColor(`funder-${funder}`),
+                fontSize: "0.8rem",
+                fontWeight: "bold",
+                letterSpacing: "0.3px",
+                lineHeight: 1.3,
                 textAlign: "center",
                 textTransform: "uppercase",
               }}
             >
               {funder}
               <span aria-hidden="true" style={{ display: "block", fontSize: "0.75rem" }}>▼</span>
-            </Text>
+            </Title>
           </Col>
         ))}
       </Row>

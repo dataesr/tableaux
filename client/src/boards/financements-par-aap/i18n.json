@@ -28,5 +28,47 @@
   },
   "region": {
     "fr": "Vue par région - Financements par appels à projets - Tableaux"
+  },
+  "Agricultural, Food and Veterinary Sciences": {
+    "fr": "Sciences agricoles, alimentaires et vétérinaires"
+  },
+  "Biological Sciences (Fundamental)": {
+    "fr": "Sciences biologiques (fondamentales)"
+  },
+  "Chemistry": {
+    "fr": "Chimie"
+  },
+  "Computer Science and Information Science": {
+    "fr": "Informatique et sciences de l'information"
+  },
+  "Earth, Environmental and Climate Sciences": {
+    "fr": "Sciences de la Terre, de l'environnement et du climat"
+  },
+  "Economics and Business": {
+    "fr": "Économie et commerce"
+  },
+  "Engineering and Technology": {
+    "fr": "Ingénierie et technologie"
+  },
+  "Humanities": {
+    "fr": "Sciences humaines"
+  },
+  "Interdisciplinary / Cross-cutting Research": {
+    "fr": "Recherche interdisciplinaire / transversale"
+  },
+  "Mathematics and Statistics": {
+    "fr": "Mathématiques et statistiques"
+  },
+  "Medical and Health Sciences": {
+    "fr": "Sciences médicales et de la santé"
+  },
+  "Physics and Astronomy": {
+    "fr": "Physique et astronomie"
+  },
+  "Psychology and Cognitive Sciences": {
+    "fr": "Psychologie et sciences cognitives"
+  },
+  "Social Sciences": {
+    "fr": "Sciences sociales"
   }
 }

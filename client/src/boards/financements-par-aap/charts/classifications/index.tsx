@@ -307,12 +307,11 @@ export default function Classifications({ name, participantSuperOrganizationChil
       name: funder,
     })
   })
-  const categoriesProject = classificationsProject.map((classification) => classification.key)
 
   const title = `Financements par discipline de ${structure ? "l'établissement" : "la région"} ${name} ${getYearRangeLabel({ yearMax, yearMin })}`
   // If view by number of projects, view by default
   let axis = getI18nLabel(i18n, 'number_of_projects_funded')
-  let categories = categoriesProject
+  let categories = classificationsProject.map((classification) => getI18nLabel(i18n, classification.key))
   let dataLabel = function (this: any) {
     return `${this.y} projet${this.y > 1 ? 's' : ''}`
   }
@@ -327,7 +326,7 @@ export default function Classifications({ name, participantSuperOrganizationChil
     // If view by global amount
     case 'amount_global':
       axis = getI18nLabel(i18n, 'funding_total')
-      categories = categoriesBudget
+      categories = categoriesBudget.map((classification) => getI18nLabel(i18n, classification))
       dataLabel = function (this: any) {
         return `${formatCompactNumber(this.y)} €`
       }
@@ -342,7 +341,7 @@ export default function Classifications({ name, participantSuperOrganizationChil
     // If view by amount by structure
     case 'amount_by_structure':
       axis = getI18nLabel(i18n, structure ? 'funding_by_structure' : 'funding_by_region')
-      categories = categoriesFunding
+      categories = categoriesFunding.map((classification) => getI18nLabel(i18n, classification))
       dataLabel = function (this: any) {
         return `${formatCompactNumber(this.y)} €`
       }

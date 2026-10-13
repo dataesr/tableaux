@@ -470,7 +470,7 @@ export default function ChartWrapper({
       {displayType === "data" && renderData && options && <>{renderData(options)}</>}
       {((displayType === "chart" && renderData) || (!renderData)) && optionsTmp && (
         <figure className="chart">
-          <figcaption>{`Graphique: ${config?.title?.[currentLang]}`}</figcaption>
+          <figcaption className="fr-sr-only">{`Graphique: ${config?.title?.[currentLang]}`}</figcaption>
           <HighchartsReact constructorType={constructorType} highcharts={Highcharts} options={optionsTmp} ref={chart} />
         </figure>
       )}
