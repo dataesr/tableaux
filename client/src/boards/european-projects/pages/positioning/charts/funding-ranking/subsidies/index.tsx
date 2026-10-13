@@ -110,7 +110,7 @@ export default function FundingRankingSubsidies() {
       </Row>
       <Row className="chart-container chart-container--default">
         <Col xs={12}>
-          <Title as="h3" look="h5" style={{ minHeight: "4.5rem", lineHeight: "1.5rem" }} className="fr-mb-0">
+          <Title as="h3" look="h5" className="fr-mb-0">
             {getI18nLabel("configChart1a-title")}
           </Title>
           <ChartWrapper
@@ -120,7 +120,7 @@ export default function FundingRankingSubsidies() {
           />
         </Col>
         <Col xs={12}>
-          <Title as="h3" look="h5" style={{ minHeight: "4.5rem", lineHeight: "1.5rem" }} className="fr-mb-0">
+          <Title as="h3" look="h5" className="fr-mb-0">
             {getI18nLabel("configChart1b-title")}
           </Title>
           <ChartWrapper

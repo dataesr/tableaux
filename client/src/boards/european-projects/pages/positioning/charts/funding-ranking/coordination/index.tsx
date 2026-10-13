@@ -109,8 +109,8 @@ export default function FundingRankingCoordination() {
         </Col>
       </Row>
       <Row className="chart-container chart-container--default">
-        <Col xs={12} md={6}>
-          <Title as="h3" look="h5" style={{ minHeight: "4.5rem", lineHeight: "1.5rem" }} className="fr-mb-0">
+        <Col xs={12}>
+          <Title as="h3" look="h5" className="fr-mb-0">
             {getI18nLabel("configChart2a-title")}
           </Title>
           <ChartWrapper
@@ -119,8 +119,8 @@ export default function FundingRankingCoordination() {
             renderData={() => renderDataTableCoordination(prepareData(data, "total_coordination_number_successful"), currentLang, searchParams.get("country_code") ?? null)}
           />
         </Col>
-        <Col xs={12} md={6}>
-          <Title as="h3" look="h5" style={{ minHeight: "4.5rem", lineHeight: "1.5rem" }} className="fr-mb-0">
+        <Col xs={12}>
+          <Title as="h3" look="h5" className="fr-mb-0">
             {getI18nLabel("configChart2b-title")}
           </Title>
           <ChartWrapper

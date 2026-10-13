@@ -1,5 +1,7 @@
 import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js";
 import { CreateChartOptions } from "../../../../../components/chart-ep";
+import { getCssColor } from "../../../../../../../utils/colors";
+import { getResponsiveChartHeight } from "../../../../../../../utils";
 
 interface DataItem {
   name_fr: string;
@@ -13,15 +15,11 @@ interface DataItem {
 export default function OptionsNumberInvolved(data: DataItem[], currentLang: string): Highcharts.Options | null {
   if (!data) return null;
 
-  const rootStyles = getComputedStyle(document.documentElement);
-
   const newOptions: HighchartsInstance.Options = {
     chart: {
       type: "bar",
-      height: 400,
+      height: getResponsiveChartHeight(data.length),
     },
-    title: { text: "" },
-    legend: { enabled: true, layout: "horizontal" },
     credits: { enabled: false },
     xAxis: {
       type: "category",
@@ -37,13 +35,19 @@ export default function OptionsNumberInvolved(data: DataItem[], currentLang: str
     },
     plotOptions: {
       series: { dataLabels: { enabled: true } },
+      bar: {
+        groupPadding: 0.2,
+        pointPadding: 0.1,
+        borderWidth: 0,
+        shadow: false,
+        borderRadius: 0,
+      },
     },
     series: [
       {
         type: "bar",
         name: "Candidats",
-        color: rootStyles.getPropertyValue("--candidats-color"),
-        groupPadding: 0,
+        color: getCssColor("candidats-color"),
         data: data.map((item) => ({
           name: item[`name_${currentLang}` as keyof DataItem],
           y: item.total_number_involved_evaluated,
@@ -59,8 +63,7 @@ export default function OptionsNumberInvolved(data: DataItem[], currentLang: str
       {
         type: "bar",
         name: "Participants",
-        color: rootStyles.getPropertyValue("--participants-color"),
-        groupPadding: 0,
+        color: getCssColor("participants-color"),
         data: data.map((item) => ({
           name: item[`name_${currentLang}` as keyof DataItem],
           y: item.total_number_involved_successful,
