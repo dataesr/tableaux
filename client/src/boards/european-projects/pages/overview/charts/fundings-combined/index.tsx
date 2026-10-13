@@ -1,3 +1,4 @@
+import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 
@@ -14,8 +15,8 @@ const config: {
   idQuery: string;
   sources: typeof EPChartsSources;
   integrationURL: string;
-  comment?: { fr: JSX.Element; en: JSX.Element };
-  readingKey?: { fr: JSX.Element; en: JSX.Element };
+  comment?: { fr: React.JSX.Element; en: React.JSX.Element };
+  readingKey?: { fr: React.JSX.Element; en: React.JSX.Element };
 } = {
   id: "FundingCombined",
   idQuery: "FundingCombined",
