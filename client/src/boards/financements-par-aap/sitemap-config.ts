@@ -10,8 +10,7 @@ export const SITEMAP: BoardSitemapConfig = {
     "Retrouvez l'ensemble des pages du tableau de bord des financements par appels à projets.",
   links: [
     { label: "Accueil", href: `${BASE}/accueil` },
-    { label: "Comparaison", href: `${BASE}/comparaison` },
-    { label: "Par région", href: `${BASE}/region` },
     { label: "Par établissement", href: `${BASE}/etablissement` },
+    { label: "Par région", href: `${BASE}/region` },
   ],
 }
