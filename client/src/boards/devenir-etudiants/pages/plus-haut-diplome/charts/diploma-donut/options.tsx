@@ -73,7 +73,14 @@ export function createDiplomaDonutOptions(
                 innerSize: "60%",
                 borderColor: "var(--background-default-grey)",
                 borderWidth: 2,
-                dataLabels: { enabled: false },
+                dataLabels: {
+                    enabled: true,
+                    formatter() {
+                        const p = this as unknown as { name: string; percentage: number };
+                        return `${p.name}<br/>${formatPercent(p.percentage)}`;
+                    },
+                    style: { color: "var(--text-default-grey)", fontSize: "11px", fontWeight: "500", textOutline: "none" },
+                },
                 showInLegend: true,
             },
         },
