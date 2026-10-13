@@ -15,9 +15,6 @@ export default function Options(data, country_code, currentLang) {
     xAxis: {
       type: "category",
     },
-    legend: {
-      enabled: true,
-    },
     yAxis: [
       {
         title: {
@@ -31,6 +28,15 @@ export default function Options(data, country_code, currentLang) {
         opposite: true,
       },
     ],
+    plotOptions: {
+      column: {
+        groupPadding: 0.2,
+        pointPadding: 0.1,
+        borderWidth: 0,
+        shadow: false,
+        borderRadius: 0,
+      },
+    },
     series: [
       {
         name: label("total-funding-eur"),

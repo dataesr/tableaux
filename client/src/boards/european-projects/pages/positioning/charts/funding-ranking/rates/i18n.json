@@ -3,6 +3,10 @@
     "fr": "Focus sur les parts des subventions",
     "en": "Focus on funding shares"
   },
+  "callout": {
+    "fr": "La part des montants demandés et obtenus est calculée en divisant le montant total obtenu par le montant total demandé pour chaque pays. Cet indicateur permet de mesurer l'efficacité des pays dans l'obtention de subventions par rapport à leurs demandes. Plus la part est élevée, meilleure est la performance du pays en matière de financement.",
+    "en": "EN"
+  },
   "sort-by": {
     "fr": "Trier par",
     "en": "Sort by"

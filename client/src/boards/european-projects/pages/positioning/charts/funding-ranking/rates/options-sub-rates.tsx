@@ -1,11 +1,11 @@
 import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js";
 
 import { CreateChartOptions } from "../../../../../components/chart-ep";
+import { getCssColor } from "../../../../../../../utils/colors";
 
 export default function Options(data, currentLang) {
   if (!data) return null;
 
-  const rootStyles = getComputedStyle(document.documentElement);
   const newOptions: HighchartsInstance.Options = {
     legend: {
       enabled: true,
@@ -27,13 +27,19 @@ export default function Options(data, currentLang) {
     },
     plotOptions: {
       series: { dataLabels: { enabled: true } },
+      column: {
+        groupPadding: 0.2,
+        pointPadding: 0.1,
+        borderWidth: 0,
+        shadow: false,
+        borderRadius: 0,
+      },
     },
     series: [
       {
         name: "Projets évalués",
         type: "column",
-        color: rootStyles.getPropertyValue("--evaluated-project-color"),
-        groupPadding: 0,
+        color: getCssColor("evaluated-project"),
         data: data.map((item) => ({
           name: item[`name_${currentLang}`],
           y: parseFloat(item.total_evaluated_ratio),
@@ -49,8 +55,7 @@ export default function Options(data, currentLang) {
       {
         name: "Projets lauréats",
         type: "column",
-        color: rootStyles.getPropertyValue("--successful-project-color"),
-        groupPadding: 0,
+        color: getCssColor("successful-project"),
         data: data.map((item) => ({
           name: item[`name_${currentLang}`],
           y: parseFloat(item.total_successful_ratio),
