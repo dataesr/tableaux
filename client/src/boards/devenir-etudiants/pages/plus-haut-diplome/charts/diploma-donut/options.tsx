@@ -71,6 +71,7 @@ export function createDiplomaDonutOptions(
         plotOptions: {
             pie: {
                 innerSize: "60%",
+                borderColor: "var(--background-default-grey)",
                 borderWidth: 2,
                 dataLabels: { enabled: false },
                 showInLegend: true,

@@ -9,7 +9,7 @@ export type ProfileBadge = typeof PROFILE_BADGES[number];
 
 export const PROFILE_COLOR_TOKENS: Record<ProfileBadge, string> = {
     A: "blue-france-main-525",
-    B: "orange-terre-battue-main-645",
+    B: "orange-terre-battue-sun-370-moon-672",
     C: "green-emeraude-main-632",
 };
 
@@ -120,7 +120,8 @@ export function createProfilesDiplomaStackOptions(profiles: ProfileStackInput[])
         plotOptions: {
             column: {
                 stacking: "percent",
-                borderWidth: 0,
+                borderColor: "var(--background-default-grey)",
+                borderWidth: 2,
                 dataLabels: {
                     enabled: true,
                     format: "{point.y:.0f}%",
