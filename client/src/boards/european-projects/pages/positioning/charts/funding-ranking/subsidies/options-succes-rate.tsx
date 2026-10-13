@@ -1,5 +1,7 @@
 import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js";
 import { CreateChartOptions } from "../../../../../components/chart-ep";
+import { getCssColor } from "../../../../../../../utils/colors";
+import { getResponsiveChartHeight } from "../../../../../../../utils";
 
 interface DataItem {
   name: string;
@@ -8,8 +10,6 @@ interface DataItem {
 
 export default function optionSuccessRate(data: DataItem[], currentLang: string): Highcharts.Options | null {
   if (!data) return null;
-
-  const rootStyles = getComputedStyle(document.documentElement);
 
   // average ratio
   const total = data.reduce((acc, el) => acc + el.ratio, 0);
@@ -22,14 +22,16 @@ export default function optionSuccessRate(data: DataItem[], currentLang: string)
   const t = translations[currentLang as keyof typeof translations] || translations.en;
 
   const newOptions: HighchartsInstance.Options = {
-    legend: { enabled: true, layout: "horizontal" },
+    chart: {
+      height: getResponsiveChartHeight(data.length),
+    },
     xAxis: {
       visible: false,
     },
     yAxis: {
       plotLines: [
         {
-          color: rootStyles.getPropertyValue("--average-success-rate-color"),
+          color: getCssColor("success-rate-color"),
           width: 4,
           value: average,
           zIndex: 4,
@@ -48,13 +50,19 @@ export default function optionSuccessRate(data: DataItem[], currentLang: string)
     },
     plotOptions: {
       series: { dataLabels: { enabled: true } },
+      bar: {
+        groupPadding: 0.2,
+        pointPadding: 0.1,
+        borderWidth: 0,
+        shadow: false,
+        borderRadius: 0,
+      },
     },
     series: [
       {
         type: "bar",
         name: t.successRateLabel,
-        color: rootStyles.getPropertyValue("--success-rate-color"),
-        groupPadding: 0,
+        color: getCssColor("success-rate"),
         data: data.map((item) => ({
           name: item[`name_${currentLang}`],
           y: item.ratio,

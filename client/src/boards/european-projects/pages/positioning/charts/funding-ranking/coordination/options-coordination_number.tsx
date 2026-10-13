@@ -1,5 +1,7 @@
 import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js";
 import { CreateChartOptions } from "../../../../../components/chart-ep";
+import { getCssColor } from "../../../../../../../utils/colors";
+import { getResponsiveChartHeight } from "../../../../../../../utils";
 
 interface DataItem {
   name_fr: string;
@@ -13,16 +15,10 @@ interface DataItem {
 export default function OptionsCoordinationNumber(data: DataItem[], currentLang: string): Highcharts.Options | null {
   if (!data) return null;
 
-  const rootStyles = getComputedStyle(document.documentElement);
-
   const newOptions: HighchartsInstance.Options = {
     chart: {
-      type: "bar",
-      height: 400,
+      height: getResponsiveChartHeight(data.length),
     },
-    title: { text: "" },
-    legend: { enabled: true, layout: "horizontal" },
-    credits: { enabled: false },
     xAxis: {
       type: "category",
     },
@@ -37,13 +33,19 @@ export default function OptionsCoordinationNumber(data: DataItem[], currentLang:
     },
     plotOptions: {
       series: { dataLabels: { enabled: true } },
+      bar: {
+        groupPadding: 0.2,
+        pointPadding: 0.1,
+        borderWidth: 0,
+        shadow: false,
+        borderRadius: 0,
+      },
     },
     series: [
       {
         type: "bar",
         name: "Coordination de projets déposés",
-        color: rootStyles.getPropertyValue("--evaluated-project-color"),
-        groupPadding: 0,
+        color: getCssColor("evaluated-project"),
         data: data.map((item) => ({
           name: item[`name_${currentLang}` as keyof DataItem],
           y: item.total_coordination_number_evaluated,
@@ -59,8 +61,7 @@ export default function OptionsCoordinationNumber(data: DataItem[], currentLang:
       {
         type: "bar",
         name: "Coordination de projets lauréats",
-        color: rootStyles.getPropertyValue("--successful-project-color"),
-        groupPadding: 0,
+        color: getCssColor("successful-project"),
         data: data.map((item) => ({
           name: item[`name_${currentLang}` as keyof DataItem],
           y: item.total_coordination_number_successful,

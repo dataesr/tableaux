@@ -10,7 +10,8 @@ import Top10Beneficiaries from "../../../positioning/charts/top-10-beneficiaries
 export default function PositionnementContent() {
   return (
     <div className="fr-pb-3w">
-      <Intro /> {/** TODO: Permettre l'intégration comme pour le chartWrapper */}
+      {/** TODO: Permettre l'intégration comme pour le chartWrapper */}
+      <Intro />
       <Top10Beneficiaries />
       <FundingRankingRates />
       <FundingRankingSubsidies />
