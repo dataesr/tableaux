@@ -204,14 +204,14 @@ function SankeyChartView({
     if (!options) return null;
 
     const legend = (
-        <div className="outcomes-flux-sankey__legend">
+        <ul className="fr-raw-list outcomes-flux-sankey__legend">
             {presentSituations.map((sit) => (
-                <span key={sit} className="outcomes-flux-sankey__legend-item">
-                    <span className={`outcomes-flux-sankey__legend-color outcomes-flux-sankey__legend-color--${sit}`} />
+                <li key={sit} className="outcomes-flux-sankey__legend-item">
+                    <span aria-hidden="true" className={`outcomes-flux-sankey__legend-color outcomes-flux-sankey__legend-color--${sit}`} />
                     {SITUATION_LABELS[sit] || sit}
-                </span>
+                </li>
             ))}
-        </div>
+        </ul>
     );
 
     return (
