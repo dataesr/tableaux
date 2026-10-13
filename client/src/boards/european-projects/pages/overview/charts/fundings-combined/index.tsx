@@ -38,8 +38,8 @@ export default function FundingCombined({ displayType = "total_fund_eur", groupB
 
   const titles: Record<string, { fr: string; en: string }> = {
     total_fund_eur: { fr: "Répartition des financements et des taux de succès par pilier", en: "Breakdown of funding and success rates by pillar" },
-    total_coordination_number: { fr: "Répartition des coordinations de projets évalués & lauréats par pilier", en: "Breakdown of evaluated & successful project coordinations by pilla" },
-    total_number_involved: { fr: "Répartition du nombre de candidats & participants par pilier", en: "Breakdown of the number of candidates & participants by pillar" },
+    total_coordination_number: { fr: "Répartition des coordinations de projets évalués et lauréats par pilier", en: "Breakdown of evaluated and successful project coordinations by pilla" },
+    total_number_involved: { fr: "Répartition du nombre de candidats et participants par pilier", en: "Breakdown of the number of candidates and participants by pillar" },
   };
   const title = (titles[displayType] ?? titles.total_fund_eur)[currentLang === "fr" ? "fr" : "en"];
 
