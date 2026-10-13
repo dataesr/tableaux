@@ -1,5 +1,5 @@
 import { Button, Col, Container, DismissibleTag, Row, TagGroup, Title } from "@dataesr/dsfr-plus";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
 import DefaultSkeleton from "../../../../components/charts-skeletons/default";
@@ -100,6 +100,7 @@ export default function FluxPage() {
         ? Math.max(MIN_MIN_VALUE, parsedMinValue)
         : suggestedThreshold;
     const [sliderValue, setSliderValue] = useState(minValue);
+    const minValueTimer = useRef<number | undefined>(undefined);
 
     useEffect(() => {
         if (!isManualOverride) {
@@ -192,6 +193,12 @@ export default function FluxPage() {
         const nextParams = new URLSearchParams(searchParams);
         nextParams.set("min_value", String(value));
         setSearchParams(nextParams);
+    };
+
+    const changeSliderValue = (value: number) => {
+        setSliderValue(value);
+        window.clearTimeout(minValueTimer.current);
+        minValueTimer.current = window.setTimeout(() => updateMinValue(value), 300);
     };
 
     const resetMinValue = () => {
@@ -305,7 +312,7 @@ export default function FluxPage() {
                                 </Col>
                                 <Col md={6}>
                                     <div className="fr-range-group">
-                                        <label className="fr-label" id="flux-min-value-range-label">
+                                        <label className="fr-label" htmlFor="flux-min-value-range">
                                             Affichage des flux
                                             <span className="fr-hint-text">
                                                 {!isManualOverride && activeFilterCount > 0
@@ -318,14 +325,13 @@ export default function FluxPage() {
                                             <span className="fr-range__output">{sliderValue}</span>
                                             <input
                                                 aria-describedby="flux-min-value-range-messages"
-                                                aria-labelledby="flux-min-value-range-label"
+                                                aria-valuetext={`${sliderValue} étudiant${sliderValue > 1 ? "s" : ""}`}
                                                 className="fr-range__input"
+                                                id="flux-min-value-range"
                                                 max={1000}
                                                 min={MIN_MIN_VALUE}
                                                 name="flux-min-value-range"
-                                                onChange={(e) => setSliderValue(Number(e.target.value))}
-                                                onMouseUp={() => updateMinValue(sliderValue)}
-                                                onTouchEnd={() => updateMinValue(sliderValue)}
+                                                onChange={(e) => changeSliderValue(Number(e.target.value))}
                                                 step={1}
                                                 type="range"
                                                 value={sliderValue}
