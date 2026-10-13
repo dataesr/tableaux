@@ -314,11 +314,11 @@ function MenuModal({
 // Composant Title exportable séparément
 function ChartTitle({
   config,
-  currentLang,
+  currentLang = "fr",
   children = null,
 }: {
   config: ChartConfig;
-  currentLang: string;
+  currentLang?: string;
   children?: React.ReactNode;
 }) {
   if (!config.title) return <>{children}</>;
@@ -369,7 +369,7 @@ export default function ChartWrapper({
   renderData?: (options: Highcharts.Options) => React.ReactNode;
 }) {
   const [searchParams] = useSearchParams();
-  const currentLang = searchParams.get("language") || "fr";
+  const currentLang: string = searchParams.get("language") || "fr";
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenIntegration, setIsOpenIntegration] = useState(false);
   const [displayType, setDisplayType] = useState("chart"); // ["chart", "data"]
