@@ -53,13 +53,13 @@ export default function Methodology() {
             (trois institutions françaises dans un même projet = un seul projet pour la France).
           </li>
           <li>
-            <strong>Nombre de participants ou candidats</strong>
+            <strong>Nombre de participants et de candidats</strong>
             <br />
               Un candidat est une organisation disposant de la personnalité juridique qui fait partie d’un consortium déposant un
               projet auprès de la Commission européenne. Elle devient participant lorsque le projet est lauréat.
             <br />
             Pour un pays, on compte le nombre d’entités indépendantes qui participent à un projet donné 
-            (trois institutions françaises dans un même projet = trois participations pour la France).
+            (trois institutions françaises dans un même projet = trois participants pour la France).
           </li>
           <li>
             <strong>Nombre de projets coordonnés (ou coordinations)</strong>
