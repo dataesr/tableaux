@@ -17,7 +17,7 @@ import FundingValuesPrograms from "../../../overview/charts/funding-programs";
 
 const i18n = {
   "synthesis-title": { fr: "Synthèse", en: "Synthesis" },
-  "pillar-comparison-title": { fr: "Focus par pilier", en: "Focus by pillar" },
+  "pillar-comparison-title": { fr: "Vue par pilier", en: "Pillar overview" },
   "pillar-detail-title": { fr: "Détails du pilier sur les 3 dernières années", en: "Pillar details over the last 3 years" },
   "pillar-detail-callout": {
     fr: "Visualisez l'évolution des financements demandés et obtenus pour le pilier sélectionné sur les trois dernières années du programme Horizon Europe. Cela vous permet d'analyser les tendances de financement et d'évaluer la performance du pilier au fil du temps. Vous pouvez également ajuster l'affichage pour visualister le total des subventions, le nombre total de coordinations ou le nombre total de participations.",
@@ -34,26 +34,28 @@ const i18n = {
   },
   "main-partner-title": { fr: "Qui sont les bénéficiaires ?", en: "Who are the beneficiaries?" },
 
+  "program-composition": { fr: "Composition du programme", en: "Program composition" },
+  "program-composition-callout": {
+    fr: "Visualisez la répartition des subventions du programme sélectionné par thématique. Cela vous permet d'identifier les thématiques les plus financées et de comprendre leur contribution au sein du programme.",
+    en: "Visualize the grant distribution of the selected program by topic. This allows you to identify the most funded topics and understand their contribution within the program.",
+  },
   "program-detail-title": { fr: "Détails du programme sur les 3 dernières années", en: "Program details over the last 3 years" },
   "program-detail-callout": {
     fr: "Visualisez l'évolution des financements demandés et obtenus pour le programme sélectionné sur les trois dernières années du programme Horizon Europe. Cela vous permet d'analyser les tendances de financement et d'évaluer la performance du programme au fil du temps. Vous pouvez également ajuster l'affichage pour visualister le total des subventions, le nombre total de coordinations ou le nombre total de participations.",
     en: "Visualize the evolution of requested and obtained grants for the selected program over the last three years of the Horizon Europe program. This allows you to analyze funding trends and evaluate the program's performance over time. You can also adjust the display to view total grants, total coordinations, or total participations.",
   },
-  "program-composition": { fr: "Composition du programme", en: "Program composition" },
-  "program-composition-callout": {
-    fr: "Visualisez la répartition des subventions du programme sélectionné par thématique. Cela vous permet d'identifier les thématiques les plus financées et de comprendre leur contribution au sein du programme.",
-    en: "Visualize the grant distribution of the selected program by topic. This allows you to identify the most funded topics and understand their contribution within the program.",
+
+  "thematic-composition": { fr: "Composition du ou des thématiques", en: "Thematic composition" },
+  "thematic-composition-callout": {
+    fr: "Visualisez la répartition des subventions de la ou des thématiques sélectionnée(s) par destination. Cela vous permet d'identifier les destinations les plus financées et de comprendre leur contribution au sein de la ou des thématiques.",
+    en: "Visualize the grant distribution of the selected topic(s) by destination. This allows you to identify the most funded destinations and understand their contribution within the topic(s).",
   },
   "thematic-detail-title": { fr: "Détails de ou des thématique(s) sur les 3 dernières années", en: "Thematic details over the last 3 years" },
   "thematic-detail-callout": {
     fr: "Visualisez l'évolution des financements demandés et obtenus pour la ou les thématique(s) sélectionnée(s) sur les trois dernières années du programme Horizon Europe. Cela vous permet d'analyser les tendances de financement et d'évaluer la performance de la thématique au fil du temps. Vous pouvez également ajuster l'affichage pour visualister le total des subventions, le nombre total de coordinations ou le nombre total de participations.",
     en: "Visualize the evolution of requested and obtained grants for the selected topic over the last three years of the Horizon Europe program. This allows you to analyze funding trends and evaluate the topic's performance over time. You can also adjust the display to view total grants, total coordinations, or total participations.",
   },
-  "thematic-composition": { fr: "Composition du ou des thématiques", en: "Thematic composition" },
-  "thematic-composition-callout": {
-    fr: "Visualisez la répartition des subventions de la ou des thématiques sélectionnée(s) par destination. Cela vous permet d'identifier les destinations les plus financées et de comprendre leur contribution au sein de la ou des thématiques.",
-    en: "Visualize the grant distribution of the selected topic(s) by destination. This allows you to identify the most funded destinations and understand their contribution within the topic(s).",
-  },
+
   "no-content": { fr: "Aucun contenu disponible", en: "No content available" },
 };
 
