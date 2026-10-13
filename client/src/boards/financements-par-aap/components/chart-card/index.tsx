@@ -126,7 +126,8 @@ export default function ChartCard({
         borderColor: "var(--border-default-grey)",
         formatter: tooltipFormatter,
         shared: true,
-        style: { color: "var(--text-default-grey)" },
+        stickOnContact: true,
+        style: { color: "var(--text-default-grey)", pointerEvents: "auto" },
       },
       series: [
         {

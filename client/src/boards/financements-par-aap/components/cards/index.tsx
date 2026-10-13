@@ -145,7 +145,7 @@ export default function Cards({ participantSuperOrganizationChildrenIds = [] }: 
           <div style={{ height: "100%", display: "flex", alignItems: "center" }}>
             <Title as="h2" className="fr-mb-0" style={{ fontSize: "0.8rem", letterSpacing: "0.3px", lineHeight: 1.3, textTransform: "uppercase" }}>
               Nombre de projets financés auxquels {structure ? "l'établissement" : "la région"} participe
-              <span aria-hidden="true" style={{ display: "inline-block", marginLeft: "0.5rem", opacity: 0.4 }}>→</span>
+              <span aria-hidden="true" style={{ display: "inline-block", marginLeft: "0.5rem" }}>→</span>
             </Title>
           </div>
         </Col>

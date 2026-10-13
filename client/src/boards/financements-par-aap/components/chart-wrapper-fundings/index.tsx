@@ -94,7 +94,7 @@ export default function ChartWrapperFundings({
     sources: fundingsSources.map((source) => ({ ...source, update })),
   }
 
-  const optionsLocal: HighchartsOptions = deepMerge(createChartOptions("bar", { chart: { height: "600px" } }), options)
+  const optionsLocal: HighchartsOptions = deepMerge(createChartOptions("bar", { chart: { height: "600px" }, tooltip: { stickOnContact: true, style: { pointerEvents: "auto" } } }), options)
 
   return isLoadingAlias ? <DefaultSkeleton height={String(options?.chart?.height)} /> : <ChartWrapper
     config={configLocal}
