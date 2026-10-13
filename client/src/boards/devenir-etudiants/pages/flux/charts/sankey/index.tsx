@@ -125,14 +125,14 @@ function SankeyRenderData({ links, totalStudents = 0 }: { links: OutcomesFluxLin
                             <caption>Parcours des néo-bacheliers inscrits en L1 en 2019</caption>
                             <thead>
                                 <tr>
-                                    <th>Année source</th>
-                                    <th>Situation source</th>
-                                    <th>Année cible</th>
-                                    <th>Situation cible</th>
-                                    <th>Effectif du flux</th>
-                                    <th>Part des flux sortants source</th>
-                                    <th>Part des flux entrants cible</th>
-                                    <th>Part du total cohorte</th>
+                                    <th scope="col">Année source</th>
+                                    <th scope="col">Situation source</th>
+                                    <th scope="col">Année cible</th>
+                                    <th scope="col">Situation cible</th>
+                                    <th scope="col">Effectif du flux</th>
+                                    <th scope="col">Part des flux sortants source</th>
+                                    <th scope="col">Part des flux entrants cible</th>
+                                    <th scope="col">Part du total cohorte</th>
                                 </tr>
                             </thead>
                             <tbody>
