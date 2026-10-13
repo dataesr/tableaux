@@ -43,7 +43,7 @@ const getConfig = (metric: MetricType) => {
 };
 
 function PositioningFundingTypeChartInner({ countryCode: propCountryCode, currentLang: propLang }: PositioningFundingTypeChartProps) {
-  const [metric, setMetric] = useState<MetricType>("projects");
+  const [metric, setMetric] = useState<MetricType>("funding");
   const [fundingType, setFundingType] = useState<FundingTypeCode>(FUNDING_TYPES[0].code);
 
   const { params, currentLang: urlLang, countryCode: urlCountryCode } = useGetParams();

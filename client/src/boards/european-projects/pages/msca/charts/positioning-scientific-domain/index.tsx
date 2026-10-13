@@ -43,7 +43,7 @@ const getConfig = (metric: MetricType) => {
 };
 
 function PositioningScientificDomainChartInner({ countryCode: propCountryCode, currentLang: propLang }: PositioningScientificDomainChartProps) {
-  const [metric, setMetric] = useState<MetricType>("projects");
+  const [metric, setMetric] = useState<MetricType>("funding");
   const [domain, setDomain] = useState<ScientificDomainCode>(SCIENTIFIC_DOMAINS[0].code);
 
   const { params, currentLang: urlLang, countryCode: urlCountryCode } = useGetParams();

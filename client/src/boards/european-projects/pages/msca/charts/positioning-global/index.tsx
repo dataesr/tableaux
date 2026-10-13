@@ -43,7 +43,7 @@ const getConfig = (metric: MetricType) => {
 };
 
 function PositioningGlobalChartInner({ countryCode: propCountryCode, currentLang: propLang }: PositioningGlobalChartProps) {
-  const [metric, setMetric] = useState<MetricType>("projects");
+  const [metric, setMetric] = useState<MetricType>("funding");
   const { params, currentLang: urlLang, countryCode: urlCountryCode } = useGetParams();
   const currentLang = propLang || urlLang;
   const countryCode = propCountryCode || urlCountryCode;
