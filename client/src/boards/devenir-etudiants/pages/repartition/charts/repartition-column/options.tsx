@@ -115,9 +115,10 @@ export function createRepartitionOptions(
                 borderColor: "var(--background-default-grey)",
                 dataLabels: {
                     enabled: true,
+                    filter: { property: "percentage", operator: ">=", value: 4 },
                     format: "{point.percentage:.0f} %",
                     style: {
-                        color: "var(--text-title-grey)",
+                        color: "contrast",
                         fontSize: "11px",
                         textOutline: "none",
                     },

@@ -124,7 +124,7 @@ export function createProfilesDiplomaStackOptions(profiles: ProfileStackInput[])
                 dataLabels: {
                     enabled: true,
                     format: "{point.y:.0f}%",
-                    style: { color: "white", textOutline: "none", fontWeight: "600" },
+                    style: { color: "contrast", textOutline: "none", fontWeight: "600" },
                 },
             },
         },

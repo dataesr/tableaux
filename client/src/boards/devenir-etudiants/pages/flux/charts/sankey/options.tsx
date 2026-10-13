@@ -341,6 +341,7 @@ export function createSankeyOptions(links: OutcomesFluxLink[], totalStudents = 0
                 borderColor: resolveTokenColor("border-default-grey"),
                 borderWidth: 1,
                 dataLabels: {
+                    backgroundColor: resolveTokenColor("background-default-grey"),
                     enabled: true,
                     nodeFormatter() {
                         return (this as any).point.name;
