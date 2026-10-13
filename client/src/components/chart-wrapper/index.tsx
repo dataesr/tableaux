@@ -147,11 +147,12 @@ function MenuModal({
 
   return (
     <Modal
+      canClose
       hide={() => setIsOpen(false)}
       isOpen={isOpen}
       key={modalId}
       size="sm"
-      canClose
+      tabIndex={isOpen ? 0 : -1}
     >
       <ModalContent className="modal-actions">
         <Title as="h1" look="h6">
@@ -162,13 +163,10 @@ function MenuModal({
           {getI18nLabel(i18n, "modalTitle")}
         </Title>
 
-        <fieldset
-          aria-labelledby="sélection du type d'affichage"
-          className="fr-fieldset"
-        >
+        <fieldset className="fr-fieldset">
           <legend
             className="fr-fieldset__legend--regular fr-fieldset__legend"
-            id="radio-hint-legend"
+            id="modal-fieldset-legend"
           >
             {getI18nLabel(i18n, "displayType")}
           </legend>
@@ -316,14 +314,13 @@ function MenuModal({
 // Composant Title exportable séparément
 function ChartTitle({
   config,
+  currentLang,
   children = null,
 }: {
   config: ChartConfig;
+  currentLang: string;
   children?: React.ReactNode;
 }) {
-  const [searchParams] = useSearchParams();
-  const currentLang = searchParams.get("language") || "fr";
-
   if (!config.title) return <>{children}</>;
 
   // Si title est un string simple
@@ -371,6 +368,8 @@ export default function ChartWrapper({
   options: HighchartsOptions;
   renderData?: (options: Highcharts.Options) => React.ReactNode;
 }) {
+  const [searchParams] = useSearchParams();
+  const currentLang = searchParams.get("language") || "fr";
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenIntegration, setIsOpenIntegration] = useState(false);
   const [displayType, setDisplayType] = useState("chart"); // ["chart", "data"]
@@ -379,9 +378,7 @@ export default function ChartWrapper({
   const chart = useRef<HighchartsReact.RefObject>(null);
 
   // Si les options sont null, ne pas afficher le graphique
-  if (!options) {
-    return null;
-  };
+  if (!options) return null;
 
   const downloadCSV = () => {
     if (chart && chart.current && chart.current.chart) {
@@ -457,20 +454,23 @@ export default function ChartWrapper({
 
   return (
     <section className="chart-container">
-      {!hideTitle && <ChartTitle config={config} />}
+      {!hideTitle && <ChartTitle config={config} currentLang={currentLang} />}
       <div className="actions">
         <Button
+          aria-label={`Options et données du graphique${config?.title?.[currentLang] ? ": " + config.title[currentLang] : ""}`}
           color="beige-gris-galet"
           icon="settings-5-line"
           onClick={() => setIsOpen(true)}
           size="sm"
           style={{ minHeight: "1rem", padding: "0 0.5rem" }}
+          title="Options et données du graphique"
           variant="text"
         />
       </div>
       {displayType === "data" && renderData && options && <>{renderData(options)}</>}
       {((displayType === "chart" && renderData) || (!renderData)) && optionsTmp && (
         <figure className="chart">
+          <figcaption>{`Graphique: ${config?.title?.[currentLang]}`}</figcaption>
           <HighchartsReact constructorType={constructorType} highcharts={Highcharts} options={optionsTmp} ref={chart} />
         </figure>
       )}

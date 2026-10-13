@@ -39,7 +39,7 @@ function MenuModal({ displayType, isOpen, setDisplayType, setIsOpen, setIsOpenIn
           Options du graphique
         </Title>
 
-        <fieldset className="fr-fieldset" id="radio-hint" aria-labelledby="radio-hint-legend radio-hint-messages">
+        <fieldset className="fr-fieldset" id="radio-hint">
           <legend className="fr-fieldset__legend--regular fr-fieldset__legend" id="radio-hint-legend">
             Type d'affichage
           </legend>
