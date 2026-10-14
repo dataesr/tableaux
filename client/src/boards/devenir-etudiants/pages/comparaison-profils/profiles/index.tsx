@@ -1,6 +1,6 @@
 import { Button, Col, Row, Text, Title } from "@dataesr/dsfr-plus";
 import { useQueries } from "@tanstack/react-query";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
 import ChartWrapper from "../../../../../components/chart-wrapper";
@@ -111,24 +111,16 @@ function ProfileCard({ badge, profile, axisOptions, canRemove, tauxDipl, total, 
     const titleId = `profil-${badge}-title`;
     return (
         <div className={`outcomes-croisements__card outcomes-croisements__card--${badge} fr-p-2w`}>
-            <Row verticalAlign="middle">
-                <Col>
-                    <Title as="h2" look="h6" className="fr-mb-0" id={titleId}>Profil {badge}</Title>
-                </Col>
+            <div className="outcomes-croisements__header fr-grid-row fr-grid-row--middle">
+                <div className="fr-col">
+                    <Title as="h2" look="h6" className="fr-mb-0" id={titleId} tabIndex={-1}>Profil {badge}</Title>
+                </div>
                 {canRemove && (
-                    <Col className="text-right">
-                        <Button
-                            icon="close-line"
-                            variant="text"
-                            size="sm"
-                            onClick={onRemove}
-                            title={`Retirer le profil ${badge}`}
-                        >
-                            Retirer
-                        </Button>
-                    </Col>
+                    <Button icon="close-line" variant="text" size="sm" onClick={onRemove}>
+                        Retirer<span className="fr-sr-only"> le profil {badge}</span>
+                    </Button>
                 )}
-            </Row>
+            </div>
             <div className="outcomes-croisements__fields" role="group" aria-labelledby={titleId}>
                 {PROFILE_FIELDS.map(({ field, label }) => (
                     <ItemFilter
@@ -180,6 +172,13 @@ interface ProfilesTabProps {
 export default function ProfilesTab({ axisOptions, isLoadingOptions, cohortTotal }: ProfilesTabProps) {
     const [searchParams] = useSearchParams();
     const [profiles, setProfiles] = useState<Profile[]>(() => parseProfilesFromURL(searchParams));
+    const [badgeToFocus, setBadgeToFocus] = useState<string | null>(null);
+
+    useEffect(() => {
+        if (!badgeToFocus) return;
+        document.getElementById(`profil-${badgeToFocus}-title`)?.focus();
+        setBadgeToFocus(null);
+    }, [badgeToFocus]);
 
     const queries = useQueries({
         queries: profiles.map((p, i) => ({
@@ -192,10 +191,12 @@ export default function ProfilesTab({ axisOptions, isLoadingOptions, cohortTotal
     };
     const removeProfile = (i: number) => {
         setProfiles((arr) => arr.filter((_, idx) => idx !== i));
+        setBadgeToFocus(PROFILE_BADGES[Math.min(i, profiles.length - 2)]);
     };
     const addProfile = () => {
         if (profiles.length >= 3) return;
         setProfiles((arr) => [...arr, {}]);
+        setBadgeToFocus(PROFILE_BADGES[profiles.length]);
     };
 
     const lineOptions = useMemo(
@@ -257,7 +258,7 @@ export default function ProfilesTab({ axisOptions, isLoadingOptions, cohortTotal
             {profiles.length < 3 && (
                 <Row className="fr-mt-2w">
                     <Col>
-                        <Button title="Ajouter un troisième profil" icon="account-circle-fill" variant="secondary" size="sm" onClick={addProfile}>
+                        <Button icon="account-circle-fill" variant="secondary" size="sm" onClick={addProfile}>
                             Ajouter un troisième profil
                         </Button>
                     </Col>
