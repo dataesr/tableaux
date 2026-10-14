@@ -1,11 +1,11 @@
 import { useSearchParams } from "react-router-dom";
 
-import ChartWrapper from "../../chart-wrapper";
 import { useQueryResponse } from "../hooks";
 import { getLabel } from "../utils";
 import useQuery from "./query";
 import Template from "./template";
 import { getOptions } from "./utils";
+import ChartWrapper from "../../../../components/chart-wrapper";
 
 export default function Ipcc5countries() {
   const [searchParams] = useSearchParams();
@@ -95,13 +95,18 @@ export default function Ipcc5countries() {
     getLabel("ipcc_five_countries", "title_x_axis", currentLang),
     getLabel("ipcc_five_countries", "title_y_axis", currentLang)
   );
+  const chartConfig = {
+    id: "ipcc_five_countries",
+    title: {
+      fr: title,
+      en: title,
+    },
+  };
 
   return (
     <ChartWrapper
-      id="ipcc_five_countries"
+      config={chartConfig}
       options={options}
-      legend={<ul className="legend"></ul>}
-      display_title={true}
     />
   );
 }

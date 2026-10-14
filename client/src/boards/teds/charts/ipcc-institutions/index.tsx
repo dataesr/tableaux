@@ -1,7 +1,6 @@
 import { useSearchParams } from "react-router-dom";
 import { useState } from "react";
 
-import ChartWrapper from "../../chart-wrapper";
 import bool from "./query";
 import Template from "./template";
 import {
@@ -9,8 +8,8 @@ import {
   getOptions,
   getSeries,
   getLabel,
-  renderRegionLegend,
 } from "./utils.tsx";
+import ChartWrapper from "../../../../components/chart-wrapper/index.tsx";
 
 export default function IpccInstitutions() {
   const [searchParams] = useSearchParams();
@@ -33,6 +32,13 @@ export default function IpccInstitutions() {
     getLabel("ipcc_institutions", "title_x_axis", currentLang),
     getLabel("ipcc_institutions", "title_y_axis", currentLang)
   );
+  const chartConfig = {
+    id: "ipcc_institutions",
+    title: {
+      fr: title,
+      en: title,
+    },
+  };
 
   return (
     <>
@@ -49,10 +55,8 @@ export default function IpccInstitutions() {
       </button>
 
       <ChartWrapper
-        id="ipcc_institutions"
+        config={chartConfig}
         options={options}
-        legend={renderRegionLegend()}
-        display_title={true}
       />
     </>
   );

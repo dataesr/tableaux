@@ -1,11 +1,11 @@
 import { useSearchParams } from "react-router-dom";
 
-import ChartWrapper from "../../chart-wrapper";
 import { useQueryResponse } from "../hooks";
 import { getLabel } from "../utils";
 import bool from "./query";
 import Template from "./template";
 import { getOptions, getSeries } from "./utils";
+import ChartWrapper from "../../../../components/chart-wrapper";
 
 export default function IpbesAll() {
   const [searchParams] = useSearchParams();
@@ -27,12 +27,12 @@ export default function IpbesAll() {
     getLabel("ipbes_all", "title_y_axis", currentLang)
   );
 
-  return (
-    <ChartWrapper
-      id="ipbes_all"
-      options={options}
-      legend={<ul className="legend"></ul>}
-      display_title={true}
-    />
-  );
+  const chartConfig = {
+    id: "ipbes_all",
+    title: {
+      fr: title,
+      en: title,
+    },
+  };
+  return <ChartWrapper config={chartConfig} options={options} />;
 }
