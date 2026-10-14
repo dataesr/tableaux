@@ -1,13 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
-import Cookies from "js-cookie";
 
 import { GetData } from "./query";
 import optionsValues from "./options-values";
 import optionsSuccessRates from "./options-success-rates";
 
 import ChartWrapper from "../../../../../../components/chart-wrapper";
-import { getDefaultParams, successRatesReadingKey, valuesSuccessReadingKey, renderDataTable, renderDataTableRates } from "./utils";
+import { successRatesReadingKey, valuesSuccessReadingKey, renderDataTable, renderDataTableRates } from "./utils";
 import { Container, Row, Col } from "@dataesr/dsfr-plus";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 import { useState } from "react";
@@ -20,16 +19,14 @@ import { EPChartsSources } from "../../../../config.js";
 export default function ProgramsFundingEvo3Years() {
   const [searchParams] = useSearchParams();
   const currentLang = searchParams.get("language") || "fr";
-  const params = getDefaultParams(searchParams);
+  const programId = searchParams.get("programId");
+  const countryCode = searchParams.get("country_code");
+  const rangeOfYears = searchParams.get("range_of_years");
   const [displayType, setDisplayType] = useState("total_fund_eur");
 
   const { data, isLoading } = useQuery({
-    queryKey: [
-      "ProgramsFundingEvo3Years",
-      params,
-      Cookies.get("selectedPrograms"),
-    ],
-    queryFn: () => GetData(params),
+    queryKey: ["ProgramsFundingEvo3Years", programId, rangeOfYears, countryCode],
+    queryFn: () => GetData(programId, rangeOfYears, countryCode),
   });
 
   if (isLoading || !data)
@@ -43,20 +40,20 @@ export default function ProgramsFundingEvo3Years() {
   const configChart1 = {
     id: "programsEvolutionFundingLines",
     title: {
-      fr: "Evolution des financements demandés et obtenus (M€) par programme - 3 dernières années",
-      en: "Financing applied for and obtained (€m) evolution by program - last 3 years",
+      fr: "Evolution des financements demandés et obtenus (M€) par programme",
+      en: "Financing applied for and obtained (€m) evolution by program",
     },
     comment: {
       fr: (
         <>
-          Ce graphique montre l'évolution des financements demandés et obtenus pour les programmes du programme Horizon Europe sur les trois dernières
-          années. Les barres représentent les montants demandés et obtenus. La ligne verte indique le taux de succès correspondant.
+          Ce graphique montre l'évolution des financements demandés et obtenus pour les programmes du programme Horizon Europe sur les trois dernières années. Les barres représentent les montants demandés et obtenus. La ligne verte indique le taux de
+          succès correspondant.
         </>
       ),
       en: (
         <>
-          This chart shows the evolution of funding applied for and obtained for the programs of the Horizon Europe programme over the last three
-          years. The bars represent the amounts applied for and obtained. The line indicates the corresponding success rate.
+          This chart shows the evolution of funding applied for and obtained for the programs of the Horizon Europe programme over the last three years. The bars represent the amounts applied for and obtained. The line indicates the corresponding
+          success rate.
         </>
       ),
     },

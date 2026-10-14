@@ -15,32 +15,22 @@ export default function Options(data, displayType, currentLang): HighchartsOptio
 
   filteredData.find((item) => item.stage === "evaluated").programs[0].years.forEach((year) => years.add(year.year));
 
+  const commonXAxis = {
+    type: "category" as const,
+    categories: Array.from(years).map(String),
+    width: "48%",
+    offset: 0,
+    gridLineWidth: 0,
+  };
+
   const newOptions: HighchartsInstance.Options = {
-    title: { text: "" },
-    legend: {
-      enabled: true,
-      align: "center",
-      verticalAlign: "bottom",
-      layout: "horizontal",
-    },
     yAxis: {
       gridLineColor: "var(--background-default-grey-hover)",
       gridLineWidth: 0.5,
     },
     xAxis: [
-      {
-        type: "category" as const,
-        categories: Array.from(years).map(String),
-        width: "48%",
-        gridLineWidth: 0,
-      },
-      {
-        type: "category" as const,
-        categories: Array.from(years).map(String),
-        offset: 0,
-        left: "50%",
-        width: "48%",
-      },
+      { ...commonXAxis, left: "0%" },
+      { ...commonXAxis, left: "50%" },
     ],
     plotOptions: {
       line: {
@@ -51,7 +41,6 @@ export default function Options(data, displayType, currentLang): HighchartsOptio
           lineWidth: 2,
           lineColor: undefined,
         },
-
         dataLabels: {
           enabled: true,
           formatter: function () {
@@ -64,11 +53,9 @@ export default function Options(data, displayType, currentLang): HighchartsOptio
       shared: true,
       formatter: function () {
         let s = `<b>${this.x}</b>`; // annee
-
         this.points?.forEach((point) => {
           s += `<br/><span style="color:${point.color}">\u25CF</span> ${point.series.name}: <b>${Number(point.y).toFixed(1)}%</b>`;
         });
-
         return s;
       },
     },
@@ -76,7 +63,6 @@ export default function Options(data, displayType, currentLang): HighchartsOptio
       .find((item) => item.stage === "evaluated")
       .programs.map((program) => {
         const allProgramData = allData.find((item) => item.stage === "evaluated").programs.find((p) => p.programme_code === program.programme_code);
-
         return {
           color: getCssColor("evaluated-project"),
           name: getI18nLabel(i18n, "evaluatedProjects", currentLang),
@@ -90,9 +76,7 @@ export default function Options(data, displayType, currentLang): HighchartsOptio
         filteredData
           .find((item) => item.stage === "successful")
           .programs.map((program) => {
-            const allProgramData = allData
-              .find((item) => item.stage === "successful")
-              .programs.find((p) => p.programme_code === program.programme_code);
+            const allProgramData = allData.find((item) => item.stage === "successful").programs.find((p) => p.programme_code === program.programme_code);
             return {
               xAxis: 1,
               name: getI18nLabel(i18n, "successfulProjects", currentLang),
