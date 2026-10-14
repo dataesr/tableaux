@@ -235,6 +235,7 @@ function MenuModal({
                       href={`https://www.facebook.com/sharer/sharer.php?u=${pageUrl}${chartTitle ? `&quote=${chartTitle}` : ""}`}
                       rel="noopener external"
                       target="_blank"
+                      title="Partager sur Facebook - nouvelle fenêtre"
                       onClick={(e) => { e.preventDefault(); openSharePopup(`https://www.facebook.com/sharer/sharer.php?u=${pageUrl}${chartTitle ? `&quote=${chartTitle}` : ""}`); }}
                     >
                       Partager sur Facebook
@@ -246,9 +247,10 @@ function MenuModal({
                       href={`https://twitter.com/intent/tweet?url=${pageUrl}${chartTitle ? `&text=${chartTitle}` : ""}`}
                       rel="noopener external"
                       target="_blank"
+                      title="Partager sur X - nouvelle fenêtre"
                       onClick={(e) => { e.preventDefault(); openSharePopup(`https://twitter.com/intent/tweet?url=${pageUrl}${chartTitle ? `&text=${chartTitle}` : ""}`); }}
                     >
-                      Partager sur X (anciennement Twitter)
+                      Partager sur X
                     </a>
                   </li>
                   <li>
@@ -257,6 +259,7 @@ function MenuModal({
                       href={`https://www.linkedin.com/sharing/share-offsite/?url=${pageUrl}`}
                       rel="noopener external"
                       target="_blank"
+                      title="Partager sur LinkedIn - nouvelle fenêtre"
                       onClick={(e) => { e.preventDefault(); openSharePopup(`https://www.linkedin.com/sharing/share-offsite/?url=${pageUrl}`); }}
                     >
                       Partager sur LinkedIn
@@ -267,7 +270,6 @@ function MenuModal({
                       className="fr-btn--mail fr-btn"
                       href={`mailto:?subject=${chartTitle ? `${chartTitle} - ` : ""}Découvrez ce graphique&body=${shareText ? `${shareText} - ` : ""}${shareUrl}`}
                       rel="noopener external"
-                      target="_blank"
                     >
                       Partager par email
                     </a>
