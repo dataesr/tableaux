@@ -8,7 +8,6 @@ import { EPChartsSources } from "../../../../config";
 
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
-import { formatToRates } from "../../../../../../utils/format";
 
 const titles: Record<string, { fr: string; en: string }> = {
   total_fund_eur: {
