@@ -55,7 +55,7 @@ const FILTER_SECTIONS: Array<{
         {
             title: "Informations sur le baccalauréat",
             fields: [
-                { field: "bac_type", label: "Type" },
+                { field: "bac_type", label: "Type de baccalauréat" },
                 { field: "bac_mention", label: "Mention obtenue" },
                 { field: "retard_scolaire", label: "Retard scolaire" },
             ],
