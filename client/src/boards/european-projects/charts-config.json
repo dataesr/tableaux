@@ -31,7 +31,7 @@
     },
     "description": {
       "fr": "Part des financements demandés et obtenus par le pays sur l'ensemble des pays",
-      "en": "Funding requested and obtained by the country on all countries"
+      "en": "Funding requested and secured by the country on all countries"
     },
     "integrationURL": "/european-projects/components/pages/analysis/overview/charts/destination-funding-proportion"
   },
@@ -54,8 +54,8 @@
       "en": "Success rate"
     },
     "description": {
-      "en": "Success rate on the amounts requested and obtained",
-      "fr": "Taux de succès sur les montants demandés et obtenus"
+      "fr": "Taux de succès sur les montants demandés et obtenus",
+      "en": "Success rate on the amounts requested and secured"
     },
     "integrationURL": "/european-projects/components/pages/analysis/overview/charts/destination-funding-success-rates"
   },
@@ -63,11 +63,11 @@
     "id": "programsFundingProportion",
     "title": {
       "fr": "Part des financement demandés et obtenus par le pays sur l'ensemble des pays",
-      "en": "Funding requested and obtained by the country on all countries"
+      "en": "Funding requested and secured by the country on all countries"
     },
     "description": {
       "fr": "Part des financements demandés et obtenus par le pays sur l'ensemble des pays",
-      "en": "Funding requested and obtained by the country on all countries"
+      "en": "Funding requested and secured by the country on all countries"
     },
     "integrationURL": "/european-projects/components/pages/analysis/overview/charts/destination-funding-proportion"
   },
@@ -79,7 +79,7 @@
     },
     "description": {
       "fr": "Financements demandés et obtenus (M€)",
-      "en": "Funding requested and obtained (M€)"
+      "en": "Funding requested and secured (M€)"
     },
     "integrationURL": "/european-projects/components/pages/analysis/overview/charts/destination-funding"
   },
@@ -90,8 +90,8 @@
       "en": "Success rate"
     },
     "description": {
-      "en": "Success rate on the amounts requested and obtained",
-      "fr": "Taux de succès sur les montants demandés et obtenus"
+      "fr": "Taux de succès sur les montants demandés et obtenus",
+      "en": "Success rate on the amounts requested and secured"
     },
     "integrationURL": "/european-projects/components/pages/analysis/overview/charts/destination-funding-success-rates"
   },
@@ -99,11 +99,11 @@
     "id": "topicsFundingProportion",
     "title": {
       "fr": "Part des financement demandés et obtenus par le pays sur l'ensemble des pays",
-      "en": "Funding requested and obtained by the country on all countries"
+      "en": "Funding requested and secured by the country on all countries"
     },
     "description": {
       "fr": "Part des financements demandés et obtenus par le pays sur l'ensemble des pays",
-      "en": "Funding requested and obtained by the country on all countries"
+      "en": "Funding requested and secured by the country on all countries"
     },
     "integrationURL": "/european-projects/components/pages/analysis/overview/charts/destination-funding-proportion"
   },
@@ -115,7 +115,7 @@
     },
     "description": {
       "fr": "Financements demandés et obtenus (M€)",
-      "en": "Funding requested and obtained (M€)"
+      "en": "Funding requested and secured (M€)"
     },
     "integrationURL": "/european-projects/components/pages/analysis/overview/charts/destination-funding"
   },
@@ -126,7 +126,7 @@
       "en": "Success rate"
     },
     "description": {
-      "en": "Success rate on the amounts requested and obtained",
+      "en": "Success rate on the amounts requested and secured",
       "fr": "Taux de succès sur les montants demandés et obtenus"
     },
     "integrationURL": "/european-projects/components/pages/analysis/overview/charts/destination-funding-success-rates"
@@ -135,11 +135,11 @@
     "id": "destinationFundingProportion",
     "title": {
       "fr": "Part des financement demandés et obtenus par le pays sur l'ensemble des pays",
-      "en": "Funding requested and obtained by the country on all countries"
+      "en": "Funding requested and secured by the country on all countries"
     },
     "description": {
       "fr": "Part des financements demandés et obtenus par le pays sur l'ensemble des pays",
-      "en": "Funding requested and obtained by the country on all countries"
+      "en": "Funding requested and secured by the country on all countries"
     },
     "integrationURL": "/european-projects/components/pages/analysis/overview/charts/destination-funding-proportion"
   },
@@ -299,7 +299,7 @@
   {
     "id": "fundingRankingCoordination",
     "title": "",
-    "subtitle": "Nombre de coordinations de projets déposés et lauréats",
+    "subtitle": "Nombre de coordinations de projets évalués et lauréats",
     "description": null,
     "integrationURL": "/european-projects/components/pages/analysis/positioning/charts/top-10-participating-organizations"
   },
@@ -328,7 +328,7 @@
     "id": "pillarsEvolutionFundingLines",
     "title": {
       "fr": "Pilliers - Evolution des financements demandés et obtenus (M€)",
-      "en": "Pilars - Financing applied for and obtained (€m)"
+      "en": "Pilars - Trends in funding requested and secured (€M)"
     },
     "description": {
       "fr": "",
@@ -340,8 +340,8 @@
   {
     "id": "pillarsEvolutionFundingLinesRates",
     "title": {
-      "fr": "Pilliers - Evolution du taux de succès des financements demandés et obtenus",
-      "en": "Pilars - Trend in the success rate of financing applications and grants"
+      "fr": "Pilliers - Evolution du taux de succès des financements",
+      "en": "Pilars - Trends in funding success rate"
     },
     "description": {
       "fr": "",
@@ -353,8 +353,8 @@
     {
     "id": "pillarsEvolutionFundingLinesSuccessRate",
     "title": {
-      "fr": "Pilliers - Part des financements du pays demandés et obtenus par rapport au total des participants",
-      "en": "Pilars - Percentage of country funding applied for and obtained as a proportion of total participants"
+      "fr": "Pilliers - Part des financements demandés et obtenus par le pays sélectionné",
+      "en": "Pilars - Share of funding requested and secured by the selected country"
     },
     "description": {
       "fr": "",
@@ -367,7 +367,7 @@
     "id": "programsEvolutionFundingLines",
     "title": {
       "fr": "Programmes - Evolution des financements demandés et obtenus (M€)",
-      "en": "Programs - Financing applied for and obtained (€m)"
+      "en": "Programs - Trends in funding requested and secured (€M)"
     },
     "description": {
       "fr": "",
@@ -379,8 +379,8 @@
   {
     "id": "programsEvolutionFundingLinesRates",
     "title": {
-      "fr": "Programmes - Evolution du taux de succès des financements demandés et obtenus",
-      "en": "Programs - Trend in the success rate of financing applications and grants"
+      "fr": "Programmes - Evolution du taux de succès des financements",
+      "en": "Programs - Trends in funding success rate"
     },
     "description": {
       "fr": "",
@@ -392,8 +392,8 @@
     {
     "id": "programsEvolutionFundingLinesSuccessRate",
     "title": {
-      "fr": "Programmes - Part des financements du pays demandés et obtenus par rapport au total des participants",
-      "en": "Programs - Percentage of country funding applied for and obtained as a proportion of total participants"
+      "fr": "Programmes - Part des financements demandés et obtenus du pays sélectionné",
+      "en": "Programs - Share of funding requested and secured by the selected country"
     },
     "description": {
       "fr": "",
@@ -406,7 +406,7 @@
     "id": "topicsEvolutionFundingLines",
     "title": {
       "fr": "Thématiques - Evolution des financements demandés et obtenus (M€)",
-      "en": "Topics - Financing applied for and obtained (€m)"
+      "en": "Themes - Trends in funding requested and secured (€M)"
     },
     "description": {
       "fr": "",
@@ -418,8 +418,8 @@
   {
     "id": "topicsEvolutionFundingLinesRates",
     "title": {
-      "fr": "Thématiques - Evolution du taux de succès des financements demandés et obtenus",
-      "en": "Topics - Trend in the success rate of financing applications and grants"
+      "fr": "Thématiques - Evolution du taux de succès des financements",
+      "en": "Themes - Trends in funding success rate"
     },
     "description": {
       "fr": "",
@@ -431,8 +431,8 @@
     {
     "id": "topicsEvolutionFundingLinesSuccessRate",
     "title": {
-      "fr": "Thématiques - Part des financements du pays demandés et obtenus par rapport au total des participants",
-      "en": "Topics - Percentage of country funding applied for and obtained as a proportion of total participants"
+      "fr": "Thématiques - Part des financements demandés et obtenus par le pays sélectionné",
+      "en": "Themes - Share of funding requested and secured by the selected country"
     },
     "description": {
       "fr": "",
@@ -445,7 +445,7 @@
     "id": "destinationsEvolutionFundingLines",
     "title": {
       "fr": "Destinations - Evolution des financements demandés et obtenus (M€)",
-      "en": "Destinations - Financing applied for and obtained (€m)"
+      "en": "Destinations - Trends in funding requested and secured (€M)"
     },
     "description": {
       "fr": "",
@@ -457,8 +457,8 @@
   {
     "id": "destinationsEvolutionFundingLinesRates",
     "title": {
-      "fr": "Destinations - Evolution du taux de succès des financements demandés et obtenus",
-      "en": "Destinations - Trend in the success rate of financing applications and grants"
+      "fr": "Destinations - Evolution du taux de succès des financements",
+      "en": "Destinations - Trends in funding success rate"
     },
     "description": {
       "fr": "",
@@ -470,8 +470,8 @@
     {
     "id": "destinationsEvolutionFundingLinesSuccessRate",
     "title": {
-      "fr": "Destinations - Part des financements du pays demandés et obtenus par rapport au total des participants",
-      "en": "Destinations - Percentage of country funding applied for and obtained as a proportion of total participants"
+      "fr": "Destinations - Part des financements demandés et obtenus par la pays sélectionné",
+      "en": "Destinations - Share of funding requested and secured by the selected country"
     },
     "description": {
       "fr": "",
