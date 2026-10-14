@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from "react";
+import { useId, useState, type ReactNode } from "react";
 import "./styles.scss";
 
 export interface FilterItem {
@@ -33,7 +33,8 @@ export default function ItemFilter({
     const availableItems = availableKeys
         ? items.filter((item) => availableKeys.has(item.key))
         : items;
-    const groupId = id ?? `item-filter-${label.replace(/\s+/g, "-").toLowerCase()}`;
+    const autoId = useId();
+    const groupId = id ?? autoId;
     const resolvedHint =
         hint ??
         (availableKeys
@@ -99,7 +100,7 @@ export function ItemFilterPanel({
         ),
     ];
     const selectedItem = availableItems.find((item) => item.key === selectedKey);
-    const groupId = `item-filter-${title.replace(/\s+/g, "-").toLowerCase()}`;
+    const groupId = useId();
 
     const [browsedCategory, setBrowsedCategory] = useState(
         selectedItem?.category ?? categories[0] ?? ""
