@@ -1,6 +1,6 @@
 import { Link, useLocation, useSearchParams } from "react-router-dom";
 
-export default function Breadcrumb({ config }) {
+export default function Breadcrumb({ config, homeHref }: { config; homeHref?: string }) {
   const [searchParams] = useSearchParams();
   const location = useLocation();
   const shared: boolean = searchParams.has("shared");
@@ -18,6 +18,13 @@ export default function Breadcrumb({ config }) {
       </button>
       <div className="fr-collapse" id="breadcrumb-1">
         <ol className="fr-breadcrumb__list">
+          {homeHref && (
+            <li>
+              <Link className="fr-breadcrumb__link" to={homeHref}>
+                {currentLang === "fr" ? "Accueil" : "Home"}
+              </Link>
+            </li>
+          )}
           {shared && (
             <li>
               <Link className="fr-breadcrumb__link" to={`${config[parent].link}?${searchParams.toString()}`}>

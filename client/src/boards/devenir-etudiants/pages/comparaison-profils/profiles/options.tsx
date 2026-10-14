@@ -58,7 +58,8 @@ export function createProfilesLineOptions(profiles: ProfileSeriesInput[]) {
             shape: "square",
             backgroundColor: getCssColor("background-overlap-grey"),
             borderColor: getCssColor("border-default-grey"),
-            style: { color: getCssColor("text-title-grey") },
+            stickOnContact: true,
+            style: { color: getCssColor("text-title-grey"), pointerEvents: "auto" },
             formatter() {
                 const ctx = this as any;
                 const rows = (ctx.points || [])
@@ -138,6 +139,8 @@ export function createProfilesDiplomaStackOptions(profiles: ProfileStackInput[])
         tooltip: {
             shared: true,
             useHTML: true,
+            stickOnContact: true,
+            style: { pointerEvents: "auto" },
             formatter() {
                 const ctx = this as any;
                 const rows = (ctx.points || [])

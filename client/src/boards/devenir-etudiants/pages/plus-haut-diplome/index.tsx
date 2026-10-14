@@ -158,7 +158,7 @@ export default function PlusHautDiplomePage() {
                 </Title>
             </Row>
             <Row gutters>
-                <Col lg={4}>
+                <Col xs={12} lg={4}>
                     <section className="outcomes-flux-page__filters" aria-label="Filtres du tableau plus haut diplôme">
                         <Title as="h2" look="h6" className="outcomes-flux-page__filters-title fr-mb-2w">
                             Filtres à sélectionner
@@ -182,7 +182,7 @@ export default function PlusHautDiplomePage() {
                         <Button title="Réinitialiser les filtres" className="fr-mt-3w" onClick={resetFilters}>Réinitialiser les filtres</Button>
                     </section>
                 </Col>
-                <Col lg={8}>
+                <Col xs={12} lg={8}>
                     <div className="outcomes-flux-page__content">
                         {activeFiltersElement}
                         <div role="status">
