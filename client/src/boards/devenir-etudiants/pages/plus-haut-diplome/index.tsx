@@ -112,8 +112,8 @@ export default function PlusHautDiplomePage() {
         return <ActiveFilters filters={tags} onRemove={(field) => updateFilter(field, null)} />;
     })();
 
-    const exportCsv = () => {
-        if (!data?.rows?.length) return;
+    const getCsvBlob = () => {
+        if (!data?.rows?.length) return null;
         const header = [
             `Plus haut diplôme obtenu en ${lastYearLabel} dont :`,
             "Effectif",
@@ -139,8 +139,15 @@ export default function PlusHautDiplomePage() {
             data.totals.nonDiplomes.dontSortants,
         ]);
         const csv = [header, ...rows].map((line) => line.map(formatCsvCell).join(";")).join("\n");
-        const blob = new Blob([`\uFEFF${csv}`], { type: "text/csv;charset=utf-8;" });
-        const url = URL.createObjectURL(blob);
+        return new Blob([`\uFEFF${csv}`], { type: "text/csv;charset=utf-8;" });
+    };
+
+    const csvBlob = getCsvBlob();
+    const csvSize = csvBlob ? `${(csvBlob.size / 1024).toLocaleString("fr-FR", { maximumFractionDigits: 1 })} ko` : "";
+
+    const exportCsv = () => {
+        if (!csvBlob) return;
+        const url = URL.createObjectURL(csvBlob);
         const link = document.createElement("a");
         link.href = url;
         link.download = "plus-haut-diplome.csv";
@@ -206,8 +213,8 @@ export default function PlusHautDiplomePage() {
                             <>
                                 <Title as="h2" look="h5" className="fr-mb-2w">Tableau détaillé</Title>
                                 <div className="outcomes-phd__table-actions fr-mb-1w">
-                                    <Button icon="file-download-line" onClick={exportCsv} title="Télécharger les données du tableau au format CSV" size="sm">
-                                        Télécharger les données (CSV)
+                                    <Button icon="file-download-line" onClick={exportCsv} size="sm">
+                                        Télécharger les données (CSV, {csvSize})
                                     </Button>
                                 </div>
 
