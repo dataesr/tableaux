@@ -3,6 +3,8 @@ import { formatToMillions } from "../../../../../../utils/format";
 import { getI18nLabel } from "../../../../../../utils";
 import { isEjoParam } from "../../../../utils/params";
 import i18n from "../../../../i18n-global.json";
+import { COUNTRY_MAPPING } from "../../../../utils/country-mapping";
+
 
 export function useGetParams() {
   const [searchParams] = useSearchParams();
@@ -57,31 +59,32 @@ export function readingKey(data) {
     };
   }
 
-  const topCountry = data.top10[0];
+  const topCountry = data.top10[0]
+  const countryGenre = <COUNTRY_MAPPING className="key"></COUNTRY_MAPPING>
   const secondCountry = data.top10.length > 1 ? data.top10[1] : null;
   const tenthCountry = data.top10.length >= 10 ? data.top10[9] : data.top10[data.top10.length - 1];
 
   return {
     fr: (
       <>
-        Le pays "{topCountry.name_fr}" se place en 1ère position du classement avec <strong>{formatToMillions(topCountry.total_fund_eur)}</strong> de subventions reçues
+        Le pays "{topCountry.name_fr}" se place en 1ère position du classement avec {formatToMillions(topCountry.total_fund_eur)} de financements obtenus
         {secondCountry && (
           <>
-            , suivi par "{secondCountry.name_fr}" avec <strong>{formatToMillions(secondCountry.total_fund_eur)}</strong>
+            , suivi par "{secondCountry.name_fr}" avec {formatToMillions(secondCountry.total_fund_eur)}
           </>
         )}
-        . {data.top10.length >= 10 ? "Les 10 premiers" : `Les ${data.top10.length}`} bénéficiaires représentent <strong>{tenthCountry.influence?.toFixed(1)}%</strong> du cumul total des subventions allouées.
+        . {data.top10.length >= 10 ? "Les 10 premiers" : `Les ${data.top10.length}`} pays bénéficiaires représentent {tenthCountry.influence?.toFixed(1)}% du cumul total des financements alloués.
       </>
     ),
     en: (
       <>
-        The country "{topCountry.name_en}" ranks 1st with <strong>{formatToMillions(topCountry.total_fund_eur)}</strong> in subsidies received
+        The country "{topCountry.name_en}" ranks 1st with {formatToMillions(topCountry.total_fund_eur)} in secured funding
         {secondCountry && (
           <>
-            , followed by "{secondCountry.name_en}" with <strong>{formatToMillions(secondCountry.total_fund_eur)}</strong>
+            , followed by "{secondCountry.name_en}" with {formatToMillions(secondCountry.total_fund_eur)}
           </>
         )}
-        . The top {data.top10.length >= 10 ? "10" : data.top10.length} beneficiaries represent <strong>{tenthCountry.influence?.toFixed(1)}%</strong> of the cumulative total subsidies allocated.
+        . The top {data.top10.length >= 10 ? "10" : data.top10.length} beneficiaries countries represent {tenthCountry.influence?.toFixed(1)}% of the cumulative total allocated funding.
       </>
     ),
   };
