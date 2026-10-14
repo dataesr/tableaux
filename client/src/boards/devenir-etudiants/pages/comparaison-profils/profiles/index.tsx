@@ -264,15 +264,23 @@ export default function ProfilesTab({ axisOptions, isLoadingOptions, cohortTotal
                 </Row>
             )}
 
-            <Text size="sm" className="fr-mt-3w">Part de chaque profil encore inscrite en formation supérieure</Text>
+            <div className="fr-mt-3w">
+                <ChartWrapper.Title config={{ id: "outcomes-profiles-line", title: "Position au fil des années" }} />
+            </div>
+            <Text size="sm">Part de chaque profil encore inscrite en formation supérieure</Text>
             <ChartWrapper
+                hideTitle
                 config={{ id: "outcomes-profiles-line", title: "Position au fil des années", integrationURL }}
                 options={lineOptions}
             />
 
-            <Text size="sm" className="fr-mt-3w">Répartition à 4 ans par profil</Text>
+            <div className="fr-mt-3w">
+                <ChartWrapper.Title config={{ id: "outcomes-profiles-stack", title: "Diplômés du supérieur et sortants sans diplôme" }} />
+            </div>
+            <Text size="sm">Répartition à 4 ans par profil</Text>
             <ChartWrapper
-                config={{ id: "outcomes-profiles-stack", title: "Diplômés du supérieur vs sortants sans diplôme", integrationURL }}
+                hideTitle
+                config={{ id: "outcomes-profiles-stack", title: "Diplômés du supérieur et sortants sans diplôme", integrationURL }}
                 options={stackOptions}
             />
 

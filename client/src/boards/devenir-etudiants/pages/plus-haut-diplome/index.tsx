@@ -204,6 +204,7 @@ export default function PlusHautDiplomePage() {
 
                         {hasData && (
                             <>
+                                <Title as="h2" look="h5" className="fr-mb-2w">Tableau détaillé</Title>
                                 <div className="outcomes-phd__table-actions fr-mb-1w">
                                     <Button icon="file-download-line" onClick={exportCsv} title="Télécharger les données du tableau au format CSV" size="sm">
                                         Télécharger les données (CSV)
@@ -255,7 +256,8 @@ export default function PlusHautDiplomePage() {
                                         Les deux premières colonnes permettent de savoir s'ils sont ou non diplômés de l'enseignement supérieur, et si c'est le cas, connaître le plus haut diplôme obtenu à la rentrée 2023. Les deux dernières colonnes permettent de distinguer les personnes encore étudiants à la rentrée 2023 de ceux sorti du système de l'enseignement supérieur français.                                    </p>
                                 </div>
 
-                                <Row gutters className="fr-mb-2w fr-mt-3w">
+                                <Title as="h2" look="h5" className="fr-mt-3w fr-mb-2w">Chiffres clés</Title>
+                                <Row gutters className="fr-mb-2w">
                                     <Col xs={12} md={4}>
                                         <div className="fr-tile fr-tile--sm fr-tile--no-icon">
                                             <div className="fr-tile__body">

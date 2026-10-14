@@ -219,7 +219,7 @@ export default function FluxPage() {
         <Container className="outcomes-section-page outcomes-flux-page">
             <Row>
                 <Title as="h1" look="h4" className="fr-mb-3w">
-                    Parcours des néo-bacheliers inscrits en L1 en 2019
+                    Flux – Parcours des néo-bacheliers inscrits en L1 en 2019
                 </Title>
             </Row>
             <Row gutters>
