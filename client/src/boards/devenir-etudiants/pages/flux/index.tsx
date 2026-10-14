@@ -244,7 +244,7 @@ export default function FluxPage() {
                                 ))}
                             </section>
                         ))}
-                        <Button title="Réinitialiser les filtres" className="fr-mt-3w" onClick={resetFilters}>Réinitialiser les filtres</Button>
+                        <Button className="fr-mt-3w" onClick={resetFilters}>Réinitialiser les filtres</Button>
                     </section>
                 </Col>
                 <Col xs={12} lg={8}>
@@ -342,7 +342,7 @@ export default function FluxPage() {
                                         <div className="fr-messages-group" id="flux-min-value-range-messages" aria-live="polite" />
                                         {isManualOverride && (
                                             <div className="fr-mt-1w">
-                                                <button title="Réinitialiser le seuil automatique" className="fr-btn fr-btn--sm fr-btn--tertiary" onClick={resetMinValue} type="button">
+                                                <button className="fr-btn fr-btn--sm fr-btn--tertiary" onClick={resetMinValue} type="button">
                                                     Réinitialiser le seuil automatique ({suggestedThreshold})
                                                 </button>
                                             </div>
