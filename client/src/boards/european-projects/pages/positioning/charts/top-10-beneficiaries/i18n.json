@@ -1,22 +1,22 @@
 {
   "total-funding-eur-axis": {
-    "fr": "Total financements en euros €",
-    "en": "Total funding in euros €"
+    "fr": "Financements en euros €",
+    "en": "Funding in euros €"
   },
   "cumulative-weight-axis": {
     "fr": "Poids du cumul des financements (%)",
     "en": "Weight of cumulative funding (%)"
   },
   "total-funding-eur": {
-    "fr": "Total financements en euros",
-    "en": "Total funding in euros"
+    "fr": "Financements obtenus",
+    "en": "Secured funding"
   },
   "total-funding": {
     "fr": "Total des financements",
     "en": "Total funding"
   },
   "weight-of-funding": {
-    "fr": "Poids du cumul des financements",
-    "en": "Weight of cumulative funding"
+    "fr": "Poids du cumul des financements obtenus",
+    "en": "Weight of cumulative funding secured"
   }
 }
