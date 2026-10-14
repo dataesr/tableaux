@@ -8,6 +8,7 @@ import { EPChartsSources } from "../../../../config";
 
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
+import { formatToPercent } from "../../../../../../utils/format";
 
 const titles: Record<string, { fr: string; en: string }> = {
   total_fund_eur: {
@@ -61,11 +62,11 @@ export default function PillarsFundingProportion({ displayType = "total_fund_eur
         },
         config.readingKey = {
           fr: <>Dans le cadre des appels à projets concernant « {readingDataEvaluated.name_fr} », les entités du pays sélectionné coordonnent{" "}
-                {readingDataEvaluated.proportion_coordination_number} de l'ensemble des projets évalués et{" "}
-                {readingDataSuccessful.proportion_coordination_number} de l'ensemble des projets lauréats.</>,
+                {formatToPercent(readingDataEvaluated.proportion_coordination_number)} de l'ensemble des projets évalués et{" "}
+                {formatToPercent(readingDataSuccessful.proportion_coordination_number)} de l'ensemble des projets lauréats.</>,
           en: <>Under calls for proposals concerning "{readingDataEvaluated.name_en}", entities from the selected country coordinate{" "}
-                {readingDataEvaluated.proportion_coordination_number} of all evaluated projects and{" "}
-                {readingDataSuccessful.proportion_coordination_number} of all successful projects.</>,
+                {formatToPercent(readingDataEvaluated.proportion_coordination_number)} of all evaluated projects and{" "}
+                {formatToPercent(readingDataSuccessful.proportion_coordination_number)} of all successful projects.</>,
         }
       break;
     
@@ -75,10 +76,10 @@ export default function PillarsFundingProportion({ displayType = "total_fund_eur
         en: <>This chart shows, for each pillar, the selected country's share of all applicants (entities named in evaluated proposals) and of all participants (entities named in successful projects), across all countries.</>,
         },
         config.readingKey = {
-          fr: <>Dans le cadre des appels à projets concernant « {readingDataEvaluated.name_fr} », les entités du pays sélectionné représentent {readingDataEvaluated.proportion_number_involved} de l'ensemble des candidats et{" "}
-          {readingDataSuccessful.proportion_number_involved} de l'ensemble des participants.</>,
-          en: <>Under calls for proposals concerning "{readingDataEvaluated.name_en}", entities from the selected country account for {readingDataEvaluated.proportion_number_involved} of all applicants and{" "}
-          {readingDataSuccessful.proportion_number_involved} of all participants.</>,
+          fr: <>Dans le cadre des appels à projets concernant « {readingDataEvaluated.name_fr} », les entités du pays sélectionné représentent {formatToPercent(readingDataEvaluated.proportion_number_involved)} de l'ensemble des candidats et{" "}
+          {formatToPercent(readingDataSuccessful.proportion_number_involved)} de l'ensemble des participants.</>,
+          en: <>Under calls for proposals concerning "{readingDataEvaluated.name_en}", entities from the selected country account for {formatToPercent(readingDataEvaluated.proportion_number_involved)} of all applicants and{" "}
+          {formatToPercent(readingDataSuccessful.proportion_number_involved)} of all participants.</>,
         }
       break;
 
@@ -88,10 +89,10 @@ export default function PillarsFundingProportion({ displayType = "total_fund_eur
         en: <>This chart shows, for each pillar, the selected country’s share of all funding requested and secured by participants from all countries.</>,
         },
         config.readingKey = {
-          fr: <>Dans le cadre des appels à projets concernant "{readingDataEvaluated.name_fr}", le montant des financements demandés par les participants du pays sélectionné représentent {readingDataEvaluated.proportion} de l'ensemble des financements demandés et{" "}
-          le montant des financements obtenus par les participants du pays sélectionné représentent {readingDataSuccessful.proportion} de l'ensemble des financements obtenus.</>,
-          en: <>Under "{readingDataEvaluated.name_en}" calls for proposals, the funding requested by participants from the selected country represents {readingDataEvaluated.proportion} of all funding requested and{" "}
-          the funding secured by participants from the selected country represents {readingDataSuccessful.proportion} of all funding secured.</>,
+          fr: <>Dans le cadre des appels à projets concernant "{readingDataEvaluated.name_fr}", le montant des financements demandés par les participants du pays sélectionné représentent {formatToPercent(readingDataEvaluated.proportion)} de l'ensemble des financements demandés et{" "}
+          le montant des financements obtenus par les participants du pays sélectionné représentent {formatToPercent(readingDataSuccessful.proportion)} de l'ensemble des financements obtenus.</>,
+          en: <>Under "{readingDataEvaluated.name_en}" calls for proposals, the funding requested by participants from the selected country represents {formatToPercent(readingDataEvaluated.proportion)} of all funding requested and{" "}
+          the funding secured by participants from the selected country represents {formatToPercent(readingDataSuccessful.proportion)} of all funding secured.</>,
         }
       break;
   }
