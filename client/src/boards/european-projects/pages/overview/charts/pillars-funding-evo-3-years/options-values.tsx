@@ -27,13 +27,12 @@ export default function Options(data, displayType, currentLang): HighchartsOptio
     });
   });
 
-    const evaluatedColor = getCssColor("evaluated-project");
-    const successfulColor = getCssColor("successful-project");
-    const successRateColor = getCssColor("average-success-rate") || "#d75521";
+  const evaluatedColor = getCssColor("evaluated-project");
+  const successfulColor = getCssColor("successful-project");
+  const successRateColor = getCssColor("average-success-rate") || "#d75521";
 
   const newOptions: HighchartsInstance.Options = {
     chart: {
-      height: 400,
       events: {
         render(this: any) {
           (this._stems || []).forEach((el: any) => el.destroy());
@@ -83,9 +82,6 @@ export default function Options(data, displayType, currentLang): HighchartsOptio
         gridLineWidth: 0.5,
       },
     ],
-    legend: {
-      enabled: true,
-    },
     tooltip: {
       shared: true,
     },

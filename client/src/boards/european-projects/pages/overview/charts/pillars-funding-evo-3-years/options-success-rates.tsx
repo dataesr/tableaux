@@ -41,7 +41,6 @@ export default function Options(data, displayType, currentLang): HighchartsOptio
           lineWidth: 2,
           lineColor: undefined,
         },
-
         dataLabels: {
           enabled: true,
           formatter: function () {
@@ -54,11 +53,9 @@ export default function Options(data, displayType, currentLang): HighchartsOptio
       shared: true,
       formatter: function () {
         let s = `<b>${this.x}</b>`; // annee
-
         this.points?.forEach((point) => {
           s += `<br/><span style="color:${point.color}">\u25CF</span> ${point.series.name}: <b>${Number(point.y).toFixed(1)}%</b>`;
         });
-
         return s;
       },
     },
@@ -66,7 +63,6 @@ export default function Options(data, displayType, currentLang): HighchartsOptio
       .find((item) => item.stage === "evaluated")
       .pillars.map((pillar) => {
         const allPillarData = allData.find((item) => item.stage === "evaluated").pillars.find((p) => p.pilier_code === pillar.pilier_code);
-
         return {
           color: getCssColor("evaluated-project"),
           name: getI18nLabel(i18n, "evaluatedProjects", currentLang),
