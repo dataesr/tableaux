@@ -9,7 +9,7 @@ import { EPChartsSources } from "../../../../config";
 
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
-import { formatToRates } from "../../../../../../utils/format";
+import { formatNumber, formatToRates, formatCurrency, formatCurrency_en } from "../../../../../../utils/format";
 
 const config: {
   id: string;
@@ -58,14 +58,14 @@ export default function FundingCombined({ displayType = "total_fund_eur", groupB
       config.readingKey = {
         fr: (
           <>
-            Dans le cadre des appels à projets concernant "{readingDataEvaluated.name_fr}", {readingDataEvaluated.total_coordination_number} propositions ont été déposées avec un participant du pays sélectionné comme coordinateur et{" "}
-            {readingDataSuccessful.total_coordination_number} d'entre elles ont été retenues, soit un taux de succès de {formatToRates(readingDataSuccessful.total_coordination_number / readingDataEvaluated.total_coordination_number)}.
+            Dans le cadre des appels à projets concernant "{readingDataEvaluated.name_fr}", {formatNumber(readingDataEvaluated.total_coordination_number)} propositions ont été évaluées avec un participant du pays sélectionné comme coordinateur et{" "}
+            {formatNumber(readingDataSuccessful.total_coordination_number)} d'entre elles sont lauréates, soit un taux de succès de {formatToRates(readingDataSuccessful.total_coordination_number / readingDataEvaluated.total_coordination_number)}.
           </>
         ),
         en: (
           <>
-            Under "{readingDataEvaluated.name_en}" calls for proposals, {readingDataEvaluated.total_coordination_number} proposals were submitted with a participant from the selected country as coordinator, and{" "}
-            {readingDataSuccessful.total_coordination_number}  of them were successful, a success rate of {formatToRates(readingDataSuccessful.total_coordination_number / readingDataEvaluated.total_coordination_number)}.
+            Under "{readingDataEvaluated.name_en}" calls for proposals, {formatNumber(readingDataEvaluated.total_coordination_number)} proposals were evaluated with a participant from the selected country as coordinator, and{" "}
+            {formatNumber(readingDataSuccessful.total_coordination_number)} of them were successful, a success rate of {formatToRates(readingDataSuccessful.total_coordination_number / readingDataEvaluated.total_coordination_number)}.
           </>
         ),
       };
@@ -76,10 +76,10 @@ export default function FundingCombined({ displayType = "total_fund_eur", groupB
         en: <>This chart shows the breakdown, by pillar, of the number of applicants and participants from the selected country, together with the associated success rates (number of participants / number of applicants).</>,
       };
       config.readingKey = {
-        fr: <>Dans le cadre des appels à projets concernant "{readingDataEvaluated.name_fr}", {readingDataEvaluated.total_number_involved} candidats figuraient dans les propositions déposées et{" "}
-        {readingDataSuccessful.total_number_involved} sont devenus participants à un projet lauréat, soit un taux de succès de {formatToRates(readingDataSuccessful.total_number_involved / readingDataEvaluated.total_number_involved)}.</>,
-        en: <>Under "{readingDataEvaluated.name_en}" calls for proposals, {readingDataEvaluated.total_number_involved} applicants were named in submitted proposals and{" "}
-        {readingDataSuccessful.total_number_involved} of them became participants in successful projects, a success rate of {formatToRates(readingDataSuccessful.total_number_involved / readingDataEvaluated.total_number_involved)}.</>,
+        fr: <>Dans le cadre des appels à projets concernant "{readingDataEvaluated.name_fr}", {formatNumber(readingDataEvaluated.total_number_involved)} candidats du pays sélectionné figuraient dans les propositions évaluées et{" "}
+        {formatNumber(readingDataSuccessful.total_number_involved)} sont devenus participants d'un projet lauréat, soit un taux de succès de {formatToRates(readingDataSuccessful.total_number_involved / readingDataEvaluated.total_number_involved)}.</>,
+        en: <>Under "{readingDataEvaluated.name_en}" calls for proposals, {formatNumber(readingDataEvaluated.total_number_involved)} applicants were named in evaluated proposals and{" "}
+        {formatNumber(readingDataSuccessful.total_number_involved)} of them became participants in successful projects, a success rate of {formatToRates(readingDataSuccessful.total_number_involved / readingDataEvaluated.total_number_involved)}.</>,
       };
       break;
     default: //"total_fund_eur"
@@ -88,10 +88,10 @@ export default function FundingCombined({ displayType = "total_fund_eur", groupB
         en: <>This chart shows the breakdown, by pillar, of the funding requested and secured by all participants from the selected country, together with the associated success rates (funding secured / funding requested).</>,
       };
       config.readingKey = {
-        fr: <>Dans le cadre des appels à projets concernant "{readingDataEvaluated.name_fr}", les participants du pays sélectionné ont demandé {readingDataEvaluated.total_fund_eur} et{" "}
-        obtenu {readingDataSuccessful.total_fund_eur} soit un taux de succès de {formatToRates(readingDataSuccessful.total_fund_eur / readingDataEvaluated.total_fund_eur)}.</>,
-        en: <>Under "{readingDataEvaluated.name_en}" calls for proposals, participants from the selected country requested {readingDataEvaluated.total_fund_eur} and{" "}
-       secured {readingDataSuccessful.total_fund_eur}, a success rate of {formatToRates(readingDataSuccessful.total_fund_eur / readingDataEvaluated.total_fund_eur)}.</>,
+        fr: <>Dans le cadre des appels à projets concernant "{readingDataEvaluated.name_fr}", les participants du pays sélectionné ont demandé {formatCurrency(readingDataEvaluated.total_fund_eur)} et{" "}
+        obtenu {formatCurrency(readingDataSuccessful.total_fund_eur)} soit un taux de succès de {formatToRates(readingDataSuccessful.total_fund_eur / readingDataEvaluated.total_fund_eur)}.</>,
+        en: <>Under "{readingDataEvaluated.name_en}" calls for proposals, participants from the selected country requested {formatCurrency_en(readingDataEvaluated.total_fund_eur)} and{" "}
+       secured {formatCurrency_en(readingDataSuccessful.total_fund_eur)}, a success rate of {formatToRates(readingDataSuccessful.total_fund_eur / readingDataEvaluated.total_fund_eur)}.</>,
       };
       break;
   }
