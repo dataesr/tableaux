@@ -23,6 +23,17 @@ function formatPercent(value: number) {
     }).format(value)}%`;
 }
 
+const LABEL_CHARACTER_WIDTH = 6;
+const LABEL_LINE_HEIGHT = 17;
+
+function formatSegmentLabel(point: { percentage: number; series: { name: string }; shapeArgs?: { height: number; width: number } }) {
+    const { height = 0, width = 0 } = point.shapeArgs ?? {};
+    if (height < LABEL_LINE_HEIGHT) return "";
+    const value = `${Math.round(point.percentage)} %`;
+    const nameFits = height >= 2 * LABEL_LINE_HEIGHT && point.series.name.length * LABEL_CHARACTER_WIDTH <= width;
+    return nameFits ? `${point.series.name}<br/>${value}` : value;
+}
+
 const SITUATION_LABELS: Record<string, string> = {
     SIT01: "L1",
     SIT02: "L2",
@@ -94,7 +105,7 @@ export function createRepartitionOptions(
         accessibility: {
             description: "Colonnes empilées présentant, pour chaque année de 2019 à 2024, la répartition en pourcentage des néo-bacheliers inscrits en L1 en 2019 selon leur situation.",
             point: {
-                valueDescriptionFormat: "{series.name}: {point.percentage:.1f}%",
+                valueDescriptionFormat: "{xDescription}{separator}{point.percentage:.1f} %.",
             },
         },
         caption: {
@@ -115,8 +126,9 @@ export function createRepartitionOptions(
                 borderColor: "var(--background-default-grey)",
                 dataLabels: {
                     enabled: true,
-                    filter: { property: "percentage", operator: ">=", value: 4 },
-                    format: "{point.percentage:.0f} %",
+                    formatter() {
+                        return formatSegmentLabel(this as any);
+                    },
                     style: {
                         color: "contrast",
                         fontSize: "11px",

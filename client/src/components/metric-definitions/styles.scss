@@ -1,0 +1,42 @@
+.metric-definitions {
+  &__toggle,
+  &__card {
+    border: 1px solid var(--border-default-grey);
+  }
+
+  &__toggle {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+    text-align: left;
+  }
+
+  &__grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(min(400px, 100%), 1fr));
+  }
+
+  &__card-header {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    border-bottom: 1px solid var(--border-default-grey);
+  }
+
+  &__section,
+  &__source {
+    display: flex;
+    gap: 0.75rem;
+  }
+
+  &__source {
+    border-top: 1px solid var(--border-default-grey);
+  }
+
+  &__label {
+    display: block;
+    text-transform: uppercase;
+  }
+}

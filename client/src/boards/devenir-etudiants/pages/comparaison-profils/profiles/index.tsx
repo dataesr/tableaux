@@ -143,11 +143,18 @@ function ProfileCard({ badge, profile, axisOptions, canRemove, tauxDipl, total, 
                 ))}
             </div>
             <Row gutters className="fr-mt-2w" >
-                <Col xs={6}>
-                    <Text size="sm" className="fr-mb-0">Taux de diplômés du supérieur</Text>
-                    <p className={`fr-h3 fr-mb-0 outcomes-croisements__value--${badge}`}>
-                        {isLoading ? "…" : tauxDipl !== undefined ? `${tauxDipl.toFixed(0)}%` : "n/a"}
-                    </p>
+                <Col xs={6} role="status">
+                    <Text size="sm" className="fr-mb-0">
+                        <span className="fr-sr-only">Profil {badge} : </span>
+                        Taux de diplômés du supérieur
+                    </Text>
+                    {isLoading ? (
+                        <DefaultSkeleton height="1.625rem" />
+                    ) : (
+                        <p className={`fr-h3 fr-mb-0 outcomes-croisements__value--${badge}`}>
+                            {tauxDipl !== undefined ? `${tauxDipl.toFixed(0)}%` : "Non disponible"}
+                        </p>
+                    )}
                 </Col>
                 {!isLoading && total !== undefined && (
                     <Col xs={6}>
@@ -257,15 +264,23 @@ export default function ProfilesTab({ axisOptions, isLoadingOptions, cohortTotal
                 </Row>
             )}
 
-            <Text size="sm" className="fr-mt-3w">Part de chaque profil encore inscrite en formation supérieure</Text>
+            <div className="fr-mt-3w">
+                <ChartWrapper.Title config={{ id: "outcomes-profiles-line", title: "Position au fil des années" }} />
+            </div>
+            <Text size="sm">Part de chaque profil encore inscrite en formation supérieure</Text>
             <ChartWrapper
+                hideTitle
                 config={{ id: "outcomes-profiles-line", title: "Position au fil des années", integrationURL }}
                 options={lineOptions}
             />
 
-            <Text size="sm" className="fr-mt-3w">Répartition à 4 ans par profil</Text>
+            <div className="fr-mt-3w">
+                <ChartWrapper.Title config={{ id: "outcomes-profiles-stack", title: "Diplômés du supérieur et sortants sans diplôme" }} />
+            </div>
+            <Text size="sm">Répartition à 4 ans par profil</Text>
             <ChartWrapper
-                config={{ id: "outcomes-profiles-stack", title: "Diplômés du supérieur vs sortants sans diplôme", integrationURL }}
+                hideTitle
+                config={{ id: "outcomes-profiles-stack", title: "Diplômés du supérieur et sortants sans diplôme", integrationURL }}
                 options={stackOptions}
             />
 

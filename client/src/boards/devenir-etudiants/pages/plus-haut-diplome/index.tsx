@@ -1,4 +1,4 @@
-import { Button, Col, Container, DismissibleTag, Row, TagGroup, Title } from "@dataesr/dsfr-plus";
+import { Button, Col, Container, Row, Title } from "@dataesr/dsfr-plus";
 import { useSearchParams } from "react-router-dom";
 
 import DefaultSkeleton from "../../../../components/charts-skeletons/default";
@@ -8,6 +8,7 @@ import {
     useOutcomesPlusHautDiplome,
 } from "../../api";
 import ItemFilter from "../../../../components/item-filter";
+import ActiveFilters, { getFilterId } from "../../components/active-filters/index.tsx";
 import OutcomesDefinitionsTable from "../../components/definitions-table/index.tsx";
 import { OUTCOMES_DEFINITIONS } from "../../components/definitions-table/data.tsx";
 import DiplomaDonut from "./charts/diploma-donut";
@@ -108,16 +109,7 @@ export default function PlusHautDiplomePage() {
                     return { field: f.field, label: f.label, value: label };
                 })
         );
-        if (!tags.length) return null;
-        return (
-            <TagGroup className="fr-mt-1w fr-mb-1w">
-                {tags.map(({ field, label, value }) => (
-                    <DismissibleTag key={field} size="sm" onClick={() => updateFilter(field, null)}>
-                        {label} : {value}
-                    </DismissibleTag>
-                ))}
-            </TagGroup>
-        );
+        return <ActiveFilters filters={tags} onRemove={(field) => updateFilter(field, null)} />;
     })();
 
     const exportCsv = () => {
@@ -177,6 +169,7 @@ export default function PlusHautDiplomePage() {
                                 {section.fields.map(({ field, label }) => (
                                     <ItemFilter
                                         key={field}
+                                        id={getFilterId(field)}
                                         label={label}
                                         items={data?.filterOptions?.[field] || []}
                                         selectedKey={filters[field] ?? null}
@@ -192,8 +185,11 @@ export default function PlusHautDiplomePage() {
                 <Col lg={8}>
                     <div className="outcomes-flux-page__content">
                         {activeFiltersElement}
-                        {isLoading && <DefaultSkeleton height="400px" />}
                         <div role="status">
+                            {isLoading && <DefaultSkeleton height="400px" />}
+                            {hasData && (
+                                <p className="fr-sr-only">Tableau et graphique mis à jour pour {formatNumber(data.totalStudents)} étudiants</p>
+                            )}
                             {!isLoading && error && (
                                 <Callout colorFamily="pink-macaron" icon="fr-icon-error-warning-line" title="Erreur de chargement">
                                     Impossible de récupérer les données pour cette cohorte.
@@ -208,6 +204,7 @@ export default function PlusHautDiplomePage() {
 
                         {hasData && (
                             <>
+                                <Title as="h2" look="h5" className="fr-mb-2w">Tableau détaillé</Title>
                                 <div className="outcomes-phd__table-actions fr-mb-1w">
                                     <Button icon="file-download-line" onClick={exportCsv} title="Télécharger les données du tableau au format CSV" size="sm">
                                         Télécharger les données (CSV)
@@ -259,7 +256,8 @@ export default function PlusHautDiplomePage() {
                                         Les deux premières colonnes permettent de savoir s'ils sont ou non diplômés de l'enseignement supérieur, et si c'est le cas, connaître le plus haut diplôme obtenu à la rentrée 2023. Les deux dernières colonnes permettent de distinguer les personnes encore étudiants à la rentrée 2023 de ceux sorti du système de l'enseignement supérieur français.                                    </p>
                                 </div>
 
-                                <Row gutters className="fr-mb-2w fr-mt-3w">
+                                <Title as="h2" look="h5" className="fr-mt-3w fr-mb-2w">Chiffres clés</Title>
+                                <Row gutters className="fr-mb-2w">
                                     <Col xs={12} md={4}>
                                         <div className="fr-tile fr-tile--sm fr-tile--no-icon">
                                             <div className="fr-tile__body">

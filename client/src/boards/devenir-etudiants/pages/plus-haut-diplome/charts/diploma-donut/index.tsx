@@ -23,7 +23,7 @@ export default function DiplomaDonut() {
         filters,
     });
 
-    const title = `Plus haut diplôme obtenu lors de la session 2023 par les néo-bacheliers inscrits en L1 en 2019`;
+    const title = "Répartition selon le plus haut diplôme obtenu";
 
     const options = useMemo(() => {
         if (!data?.rows.length) return null;

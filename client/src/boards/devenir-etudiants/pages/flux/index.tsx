@@ -1,4 +1,4 @@
-import { Button, Col, Container, DismissibleTag, Row, TagGroup, Title } from "@dataesr/dsfr-plus";
+import { Button, Col, Container, Row, Title } from "@dataesr/dsfr-plus";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
@@ -7,6 +7,7 @@ import ChartWrapper from "../../../../components/chart-wrapper";
 import Callout from "../../../../components/callout.tsx";
 import { type OutcomesFilterField, useOutcomesFlux } from "../../api";
 import ItemFilter from "../../../../components/item-filter";
+import ActiveFilters, { getFilterId } from "../../components/active-filters/index.tsx";
 import OutcomesDefinitionsTable from "../../components/definitions-table/index.tsx";
 import { OUTCOMES_DEFINITIONS } from "../../components/definitions-table/data.tsx";
 import SankeyChart from "./charts/sankey";
@@ -138,14 +139,7 @@ export default function FluxPage() {
                 return { field: f.field, label: f.label, value: option?.label || code };
             })
         );
-        if (!tags.length) return null;
-        return (
-            <TagGroup className="fr-mt-1w fr-mb-1w">
-                {tags.map(({ field, label, value }) => (
-                    <DismissibleTag key={field} size="sm" onClick={() => updateFilter(field, null)}>{label} : {value}</DismissibleTag>
-                ))}
-            </TagGroup>
-        );
+        return <ActiveFilters filters={tags} onRemove={(field) => updateFilter(field, null)} />;
     })();
 
     const exportFiltersText = useMemo(() => {
@@ -225,7 +219,7 @@ export default function FluxPage() {
         <Container className="outcomes-section-page outcomes-flux-page">
             <Row>
                 <Title as="h1" look="h4" className="fr-mb-3w">
-                    Parcours des néo-bacheliers inscrits en L1 en 2019
+                    Flux – Parcours des néo-bacheliers inscrits en L1 en 2019
                 </Title>
             </Row>
             <Row gutters>
@@ -240,6 +234,7 @@ export default function FluxPage() {
                                 {section.fields.map(({ field, label }) => (
                                     <ItemFilter
                                         key={field}
+                                        id={getFilterId(field)}
                                         label={label}
                                         items={data?.filterOptions?.[field] || []}
                                         selectedKey={filters[field]}
@@ -256,7 +251,6 @@ export default function FluxPage() {
                     <div className="outcomes-flux-page__content">
                         <ChartWrapper.Title config={{ id: "outcomes-flux-sankey", title: `Parcours des néo-bacheliers inscrits en L1 en 2019 (seuil : ${minValue} étudiant${minValue > 1 ? "s" : ""})` }} />
                         {activeFiltersElement}
-                        {(isLoading || (isFetching && !data)) && <DefaultSkeleton height="540px" />}
                         {!isLoading && isFetching && data && (
                             <div style={{ opacity: 0.5, transition: "opacity 0.2s" }}>
                                 <SankeyChart
@@ -271,6 +265,11 @@ export default function FluxPage() {
                             </div>
                         )}
                         <div role="status">
+                            {(isLoading || (isFetching && !data)) && <DefaultSkeleton height="540px" />}
+                            {!isLoading && isFetching && data && <p className="fr-sr-only">Chargement en cours</p>}
+                            {!isLoading && !isFetching && (data?.links?.length ?? 0) > 0 && (
+                                <p className="fr-sr-only">Graphique mis à jour : {data!.links.length} flux affichés</p>
+                            )}
                             {!isLoading && !isFetching && error && (
                                 <Callout colorFamily="pink-macaron" icon="fr-icon-error-warning-line" title="Erreur de chargement">
                                     Impossible de récupérer les flux pour cette cohorte.

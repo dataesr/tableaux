@@ -21,7 +21,10 @@ interface ProfileSeriesInput {
 export function createProfilesLineOptions(profiles: ProfileSeriesInput[]) {
     return createChartOptions("line", ({
         accessibility: {
-            description: "Courbes comparant, de 2019 à 2024, le taux de diplomation des profils sélectionnés.",
+            description: "Courbes comparant, de 2019 à 2024, la part de chaque profil encore inscrite en formation supérieure.",
+            point: {
+                valueDescriptionFormat: "{xDescription}{separator}{point.y:.1f} %.",
+            },
         },
         caption: {
             align: "left",
@@ -30,7 +33,7 @@ export function createProfilesLineOptions(profiles: ProfileSeriesInput[]) {
             verticalAlign: "bottom",
         },
         chart: { type: "line", backgroundColor: "transparent", height: 380 },
-        title: { text: "Taux de diplomation par profil", style: { display: "none" } },
+        title: { text: "Part de chaque profil encore inscrite en formation supérieure", style: { display: "none" } },
         legend: { enabled: true, itemStyle: { color: getCssColor("text-default-grey") } },
         xAxis: {
             categories: YEAR_LABELS,
@@ -96,6 +99,9 @@ export function createProfilesDiplomaStackOptions(profiles: ProfileStackInput[])
     return createChartOptions("column", ({
         accessibility: {
             description: "Colonnes empilées comparant, par profil, la part de diplômés du supérieur et de sortants sans diplôme.",
+            point: {
+                valueDescriptionFormat: "{xDescription}{separator}{point.y:.1f} %.",
+            },
         },
         caption: {
             align: "left",

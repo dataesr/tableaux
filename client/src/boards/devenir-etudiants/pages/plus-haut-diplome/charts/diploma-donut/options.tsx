@@ -40,6 +40,9 @@ export function createDiplomaDonutOptions(
     return createChartOptions("pie", {
         accessibility: {
             description: "Anneau présentant la répartition des néo-bacheliers inscrits en L1 en 2019 selon le plus haut diplôme obtenu.",
+            point: {
+                valueDescriptionFormat: "{xDescription}{separator}{point.percentage:.1f} %.",
+            },
         },
         caption: {
             align: "left",
@@ -73,7 +76,14 @@ export function createDiplomaDonutOptions(
                 innerSize: "60%",
                 borderColor: "var(--background-default-grey)",
                 borderWidth: 2,
-                dataLabels: { enabled: false },
+                dataLabels: {
+                    enabled: true,
+                    formatter() {
+                        const p = this as unknown as { name: string; percentage: number };
+                        return `${p.name}<br/>${formatPercent(p.percentage)}`;
+                    },
+                    style: { color: "var(--text-default-grey)", fontSize: "11px", fontWeight: "500", textOutline: "none" },
+                },
                 showInLegend: true,
             },
         },
