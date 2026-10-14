@@ -1,0 +1,44 @@
+{
+  "entrants-en-L1-2019": {
+    "label": {
+      "fr": "Parcours des néo-bacheliers inscrits en L1 en 2019",
+      "en": "Outcomes dashboard"
+    },
+    "link": "/devenir-etudiants/entrants-en-L1-2019/flux"
+  },
+  "flux": {
+    "label": {
+      "fr": "Flux",
+      "en": "Flow"
+    },
+    "link": "/devenir-etudiants/entrants-en-L1-2019/flux"
+  },
+  "repartition": {
+    "label": {
+      "fr": "Répartition",
+      "en": "Distribution"
+    },
+    "link": "/devenir-etudiants/entrants-en-L1-2019/repartition"
+  },
+  "plus-haut-diplome": {
+    "label": {
+      "fr": "Plus haut diplôme",
+      "en": "Highest degree"
+    },
+    "link": "/devenir-etudiants/entrants-en-L1-2019/plus-haut-diplome"
+  },
+  "comparaison-profils": {
+    "label": {
+      "fr": "Comparaison de profils",
+      "en": "Profiles comparison"
+    },
+    "link": "/devenir-etudiants/entrants-en-L1-2019/comparaison-profils"
+  },
+  "methodologie": {
+    "label": {
+      "fr": "Méthodologie",
+      "en": "Methodology"
+    },
+    "link": "/devenir-etudiants/entrants-en-L1-2019/methodologie"
+  }
+}

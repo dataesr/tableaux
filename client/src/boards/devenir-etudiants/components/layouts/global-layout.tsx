@@ -1,10 +1,12 @@
 import { Logo, Service } from "@dataesr/dsfr-plus";
 import { Link, Outlet, useLocation } from "react-router-dom";
 
+import Breadcrumb from "../../../../components/breadcrumb";
 import Footer from "../../../../components/footer";
 import { useDashboardVisibility } from "../../../../hooks/useDashboardVisibility";
 import { getI18nLabel } from "../../../../utils";
 import i18n from "./i18n.json";
+import navigationConfig from "./navigation-config.json";
 
 import "../../colors.scss";
 
@@ -19,15 +21,11 @@ const NAV_ITEMS = [
   { key: "methodologie", labelKey: "methodologie", to: `${BASE}/methodologie` },
 ] as const;
 
-const ALL_BREADCRUMB_PAGES = NAV_ITEMS;
-
 export default function GlobalLayout() {
   const { pathname, search } = useLocation();
   const isHomePageVisible = useDashboardVisibility("devenir-etudiants");
 
   if (!pathname) return null;
-
-  const currentPage = ALL_BREADCRUMB_PAGES.find(({ to }) => pathname === to || pathname.startsWith(to + "/"));
 
   return (
     <>
@@ -35,10 +33,13 @@ export default function GlobalLayout() {
         <nav className="fr-container" role="navigation" aria-label="Accès rapide">
           <ul className="fr-skiplinks__list">
             <li>
-              <a className="fr-link" title="Contenu principal" href="#main-content">Contenu principal</a>
+              <a className="fr-link" href="#main-content">Contenu principal</a>
             </li>
             <li>
-              <a className="fr-link" title="Pied de page" href="#footer">Pied de page</a>
+              <a className="fr-link" href="#header-navigation">Menu</a>
+            </li>
+            <li>
+              <a className="fr-link" href="#footer">Pied de page</a>
             </li>
           </ul>
         </nav>
@@ -84,16 +85,14 @@ export default function GlobalLayout() {
               {getI18nLabel(i18n, "close")}
             </button>
             <div className="fr-header__menu-links"></div>
-            <nav className="fr-nav" aria-label="Menu principal">
+            <nav className="fr-nav" id="header-navigation" aria-label="Menu principal">
               <ul className="fr-nav__list">
                 {NAV_ITEMS.map(({ key, labelKey, to }) => (
                   <li key={key} className="fr-nav__item">
                     <Link
                       to={`${to}${search}`}
-                      target="_self"
                       {...(pathname === to && { "aria-current": "page" })}
                       className="fr-nav__link"
-                      title={getI18nLabel(i18n, labelKey)}
                     >
                       {getI18nLabel(i18n, labelKey)}
                     </Link>
@@ -106,36 +105,13 @@ export default function GlobalLayout() {
       </header>
       <main id="main-content" tabIndex={-1}>
         <div className="fr-container fr-pt-2w fr-pb-0">
-          <nav role="navigation" className="fr-breadcrumb" aria-label="vous êtes ici :">
-            <button title="Voir le fil d'Ariane" className="fr-breadcrumb__button" aria-expanded="false" aria-controls="breadcrumb-outcomes">
-              Voir le fil d'Ariane
-            </button>
-            <div className="fr-collapse" id="breadcrumb-outcomes">
-              <ol className="fr-breadcrumb__list">
-                {isHomePageVisible && (
-                  <li>
-                    <a title="Accueil" className="fr-breadcrumb__link" href="/">Accueil</a>
-                  </li>
-                )}
-                <li>
-                  <a title="Parcours des néo-bacheliers inscrits en L1 en 2019" className="fr-breadcrumb__link" href={`${BASE}/flux`}>
-                    Parcours des néo-bacheliers inscrits en L1 en 2019
-                  </a>
-                </li>
-                {currentPage && (
-                  <li>
-                    <a title={getI18nLabel(i18n, currentPage.labelKey)} className="fr-breadcrumb__link" aria-current="page">
-                      {getI18nLabel(i18n, currentPage.labelKey)}
-                    </a>
-                  </li>
-                )}
-              </ol>
-            </div>
-          </nav>
+          {NAV_ITEMS.some(({ to }) => pathname === to) && (
+            <Breadcrumb config={navigationConfig} homeHref={isHomePageVisible ? "/" : undefined} />
+          )}
         </div>
         <Outlet />
       </main>
-      <Footer href={`${BASE}/flux`} title="#dataESR tableaux de bord" />
+      <Footer href={`${BASE}/flux`} title="Accueil - Parcours des néo-bacheliers inscrits en L1 en 2019 - Ministère de l'enseignement supérieur, de la recherche et de l'espace" />
     </>
   );
 }
