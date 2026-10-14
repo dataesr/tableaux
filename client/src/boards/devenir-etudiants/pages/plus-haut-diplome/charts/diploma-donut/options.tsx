@@ -66,6 +66,8 @@ export function createDiplomaDonutOptions(
             style: { display: "none" },
         },
         tooltip: {
+            stickOnContact: true,
+            style: { pointerEvents: "auto" },
             pointFormatter() {
                 const p = this as unknown as { y: number; percentage: number };
                 return `<b>${formatNumber(p.y)}</b> étudiants (${formatPercent(p.percentage)})`;

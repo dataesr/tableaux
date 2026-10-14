@@ -155,9 +155,11 @@ export function createRepartitionOptions(
             padding: 0,
             shape: "square",
             outside: true,
+            stickOnContact: true,
             style: {
                 color: resolveTokenColor("text-title-grey"),
                 fontSize: "13px",
+                pointerEvents: "auto",
                 zIndex: 9999,
             },
             formatter() {
