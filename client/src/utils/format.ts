@@ -39,13 +39,13 @@ export const formatCurrency = (amount: number): string => {
 
 export const formatCurrency_en = (amount: number): string => {
   if (amount >= 1_000_000_000) {
-    return `€${(amount / 1_000_000_000).toFixed(2)}bn`;
+    return `€${(amount / 1_000_000_000).toFixed(2)} billion`;
   }
   if (amount >= 1_000_000) {
-    return `€${(amount / 1_000_000).toFixed(1)}m`;
+    return `€${(amount / 1_000_000).toFixed(1)} million`;
   }
   if (amount >= 1_000) {
-    return `€${(amount / 1_000).toFixed(1)}k`;
+    return `€${(amount / 1_000).toFixed(1)} thousand`;
   }
   return `€${amount.toFixed(0)}`;
 }
