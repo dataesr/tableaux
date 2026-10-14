@@ -13,7 +13,7 @@ export default function SegmentedControl({ selectedControl, setSelectedControl }
   const id = useId();
 
   return (
-    <SegmentedControlDSFR className="fr-segmented--sm" label={`Indicateur affiché: ${selectedControl}`} name={`fundings-segmented-${id}`}>
+    <SegmentedControlDSFR className="fr-segmented--sm" isLegendHidden={true} label={`Indicateur affiché: ${selectedControl}`} name={`fundings-segmented-${id}`}>
       {controls.map((control) => (
         <SegmentedElement
           checked={selectedControl === control.field}
