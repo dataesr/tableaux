@@ -37,6 +37,19 @@ export const formatCurrency = (amount: number): string => {
   return `${amount.toFixed(0)} €`;
 };
 
+export const formatCurrency_en = (amount: number): string => {
+  if (amount >= 1_000_000_000) {
+    return `€${(amount / 1_000_000_000).toFixed(2)}bn`;
+  }
+  if (amount >= 1_000_000) {
+    return `€${(amount / 1_000_000).toFixed(1)}m`;
+  }
+  if (amount >= 1_000) {
+    return `€${(amount / 1_000).toFixed(1)}k`;
+  }
+  return `€${amount.toFixed(0)}`;
+}
+
 export function capitalize(word: string) {
   return String(word).charAt(0).toUpperCase() + String(word).slice(1);
 }
