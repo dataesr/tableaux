@@ -1,9 +1,9 @@
 import { useSearchParams } from "react-router-dom";
-import { formatToMillions } from "../../../../../../utils/format";
+import { formatToMillions, formatCurrency, formatCurrencyEn } from "../../../../../../utils/format";
 import { getI18nLabel } from "../../../../../../utils";
 import { isEjoParam } from "../../../../utils/params";
 import i18n from "../../../../i18n-global.json";
-import { COUNTRY_MAPPING } from "../../../../utils/country-mapping";
+import { getCountryNameWithArticle } from "../../../../utils/country-mapping";
 
 
 export function useGetParams() {
@@ -60,17 +60,26 @@ export function readingKey(data) {
   }
 
   const topCountry = data.top10[0]
-  const countryGenre = <COUNTRY_MAPPING className="key"></COUNTRY_MAPPING>
+  const genderedCountryFr = getCountryNameWithArticle(topCountry.id, 'fr')
+  const genderedCountryEn = getCountryNameWithArticle(topCountry.id, 'en')
+
   const secondCountry = data.top10.length > 1 ? data.top10[1] : null;
+  const genderedSecondCountryFr = secondCountry
+  ? getCountryNameWithArticle(secondCountry.id, 'fr')
+  : null;
+    const genderedSecondCountryEn = secondCountry
+  ? getCountryNameWithArticle(secondCountry.id, 'en')
+  : null;
+
   const tenthCountry = data.top10.length >= 10 ? data.top10[9] : data.top10[data.top10.length - 1];
 
   return {
     fr: (
       <>
-        Le pays "{topCountry.name_fr}" se place en 1ère position du classement avec {formatToMillions(topCountry.total_fund_eur)} de financements obtenus
+        {genderedCountryFr} se place en 1ère position du classement avec {formatCurrency(topCountry.total_fund_eur)} de financements obtenus
         {secondCountry && (
           <>
-            , suivi par "{secondCountry.name_fr}" avec {formatToMillions(secondCountry.total_fund_eur)}
+            , suivi par {genderedSecondCountryFr} avec {formatCurrency(secondCountry.total_fund_eur)}
           </>
         )}
         . {data.top10.length >= 10 ? "Les 10 premiers" : `Les ${data.top10.length}`} pays bénéficiaires représentent {tenthCountry.influence?.toFixed(1)}% du cumul total des financements alloués.
@@ -78,10 +87,10 @@ export function readingKey(data) {
     ),
     en: (
       <>
-        The country "{topCountry.name_en}" ranks 1st with {formatToMillions(topCountry.total_fund_eur)} in secured funding
+        {genderedCountryEn} ranks 1st with {formatCurrencyEn(topCountry.total_fund_eur)} in secured funding
         {secondCountry && (
           <>
-            , followed by "{secondCountry.name_en}" with {formatToMillions(secondCountry.total_fund_eur)}
+            , followed by {genderedSecondCountryEn} with {formatCurrencyEn(secondCountry.total_fund_eur)}
           </>
         )}
         . The top {data.top10.length >= 10 ? "10" : data.top10.length} beneficiaries countries represent {tenthCountry.influence?.toFixed(1)}% of the cumulative total allocated funding.
