@@ -1,7 +1,7 @@
 import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js";
 
 import { CreateChartOptions } from "../../../../components/chart-ep";
-import { formatCurrency, formatNumber, formatToRates } from "../../../../../../utils/format";
+import { formatNumber, formatToRates, formatToMillions } from "../../../../../../utils/format";
 import { getCssColor } from "../../../../../../utils/colors";
 import { getI18nLabel } from "../../../../../../utils";
 import i18n from "../../i18n-charts.json";
@@ -77,7 +77,7 @@ export default function Options(data: { data?: FundingItem[] } | null, displayTy
         let html = `<strong>${this.x}</strong><br/>`;
         (this.points || []).forEach((point) => {
           const value = point.y || 0;
-          const formatted = point.series.type === "scatter" ? formatToRates(value / 100) : (isFunding ? formatCurrency(value * 1000000) : formatNumber(value));
+          const formatted = point.series.type === "scatter" ? formatToRates(value / 100) : (isFunding ? formatToMillions(value * 1000000) : formatNumber(value));
           html += `<span style="color:${point.color}">●</span> ${point.series.name}: <strong>${formatted}</strong><br/>`;
         });
         return html;
