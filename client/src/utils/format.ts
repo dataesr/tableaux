@@ -3,6 +3,20 @@ export const formatToMillions = (amount: number, precision = 1): string => {
   return `${millions.toFixed(precision)} M€`;
 };
 
+export const formatToMillionsLang = (
+  amount: number,
+  precision = 1,
+  lang: "fr" | "en" = "fr",
+): string => {
+  const millions = amount / 1_000_000;
+  const formatted = millions.toLocaleString(lang === "fr" ? "fr-FR" : "en-US", {
+    minimumFractionDigits: precision,
+    maximumFractionDigits: precision,
+  });
+
+  return lang === "fr" ? `${formatted}\u00A0M€` : `€${formatted}M`;
+};
+
 export const formatToThousands = (amount: number): string => {
   const thousands = amount / 1_000;
   return `${thousands.toFixed(1)} K€`;
@@ -10,6 +24,18 @@ export const formatToThousands = (amount: number): string => {
 
 export const formatToPercent = (amount: number): string => {
   return `${amount.toFixed(1)} %`;
+};
+
+export const formatToPercentLang = (
+  amount: number,
+  lang: "fr" | "en" = "fr",
+): string => {
+  const formatted = amount.toLocaleString(lang === "fr" ? "fr-FR" : "en-US", {
+    minimumFractionDigits: 1,
+    maximumFractionDigits: 1,
+  });
+
+  return lang === "fr" ? `${formatted}\u00A0%` : `${formatted}%`;
 };
 
 export const formatToEuro = (amount: number): string => {
@@ -37,7 +63,7 @@ export const formatCurrency = (amount: number): string => {
   return `${amount.toFixed(0)} €`;
 };
 
-export const formatCurrency_en = (amount: number): string => {
+export const formatCurrencyEn = (amount: number): string => {
   if (amount >= 1_000_000_000) {
     return `€${(amount / 1_000_000_000).toFixed(2)} billion`;
   }
@@ -48,7 +74,7 @@ export const formatCurrency_en = (amount: number): string => {
     return `€${(amount / 1_000).toFixed(1)} thousand`;
   }
   return `€${amount.toFixed(0)}`;
-}
+};
 
 export function capitalize(word: string) {
   return String(word).charAt(0).toUpperCase() + String(word).slice(1);
