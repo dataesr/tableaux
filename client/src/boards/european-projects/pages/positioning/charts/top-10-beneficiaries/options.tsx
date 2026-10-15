@@ -1,7 +1,7 @@
 import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js";
 
 import { CreateChartOptions } from "../../../../components/chart-ep";
-import { formatToMillions } from "../../../../../../utils/format";
+import { formatToMillionsLang } from "../../../../../../utils/format";
 import { getCssColor } from "../../../../../../utils/colors";
 import { getI18nLabel } from "../../../../../../utils";
 import i18n from "./i18n.json";
@@ -49,7 +49,7 @@ export default function Options(data, country_code, currentLang) {
         })),
         tooltip: {
           pointFormatter: function (this: HighchartsInstance.Point) {
-            return `${label("total-funding")} : <b>${formatToMillions(this.y ?? 0)}</b>`;
+            return `${label("total-funding")} : <b>${formatToMillionsLang(this.y ?? 0, 1, currentLang)}</b>`;
           },
         },
       },
