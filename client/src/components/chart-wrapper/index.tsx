@@ -192,7 +192,6 @@ function MenuModal({
             <Button
               icon="file-download-line"
               onClick={downloadCSV}
-              title="Télécharger les données du graphique au format CSV"
               variant="text"
             >
               {getI18nLabel(i18n, "downloadCSV")}
@@ -202,7 +201,6 @@ function MenuModal({
             <Button
               icon="image-line"
               onClick={downloadPNG}
-              title="Télécharger l'image du graphique au format PNG"
               variant="text"
             >
               {getI18nLabel(i18n, "downloadPNG")}
@@ -212,7 +210,6 @@ function MenuModal({
             <Button
               icon="printer-line"
               onClick={printChart}
-              title="Lancement de l'impression"
               variant="text"
             >
               {getI18nLabel(i18n, "print")}
@@ -292,7 +289,6 @@ function MenuModal({
                       setIsOpen(false);
                     }
                   }}
-                  title={getI18nLabel(i18n, "integration")}
                   variant="secondary"
                 >
                   {getI18nLabel(i18n, "integration")}
