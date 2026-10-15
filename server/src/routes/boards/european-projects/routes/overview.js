@@ -1330,15 +1330,13 @@ router.route("/european-projects/overview/programs-funding-evo-3-years").get(asy
 router.route("/european-projects/overview/topics-funding-evo-3-years").get(async (req, res) => {
   const filters = checkQuery(req.query, ["country_code"], res);
 
-  // cas de plusieurs thématiques passées en paramètre
-  if (req.query.thema_code?.split("|").length > 1) {
-    filters.thema_code = { $in: req.query.thema_code.split("|") };
-  } else if (req.query.thema_code?.split("|").length === 1) {
-    filters.thema_code = req.query.thema_code;
+  if (req.query.thematicIds) {
+    filters.thema_code = { $in: req.query.thematicIds.split(/[|,]/) };
   }
 
-  // TODO: implémenter le filtre rangeOfYears côté client
-  // filters.call_year = { $in: rangeOfYears };
+  if (req.query.range_of_years) {
+    filters.call_year = { $in: req.query.range_of_years.split(/[|,]/) };
+  }
 
   delete filters.pilier_code;
   delete filters.programme_code;
@@ -1347,6 +1345,7 @@ router.route("/european-projects/overview/topics-funding-evo-3-years").get(async
   if (req.query.isEjo) {
     filters["is_ejo"] = { $eq: req.query.isEjo === "true" ? true : false };
   }
+console.log(filters);
 
   const query = () => {
     return db

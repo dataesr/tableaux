@@ -4,27 +4,28 @@ import { useSearchParams } from "react-router-dom";
 import { GetData } from "./query";
 import optionsValues from "./options-values";
 import optionsSuccessRates from "./options-success-rates";
-
 import ChartWrapper from "../../../../../../components/chart-wrapper";
-import { getDefaultParams, successRatesReadingKey, valuesSuccessReadingKey, renderDataTable, renderDataTableRates } from "./utils";
+import { successRatesReadingKey, valuesSuccessReadingKey, renderDataTable, renderDataTableRates } from "./utils";
 import { Container, Row, Col } from "@dataesr/dsfr-plus";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 import { useState } from "react";
 import { getI18nLabel } from "../../../../../../utils";
+import { EPChartsSources } from "../../../../config.js";
 
 import i18nLocal from "./i18n.json";
 import i18nGlobal from "../../../../i18n-global.json";
-import { EPChartsSources } from "../../../../config.js";
 
 export default function TopicsFundingEvo3Years() {
   const [searchParams] = useSearchParams();
   const currentLang = searchParams.get("language") || "fr";
-  const params = getDefaultParams(searchParams);
+  const thematicIds = searchParams.get("thematicIds");
+  const countryCode = searchParams.get("country_code");
+  const rangeOfYears = searchParams.get("range_of_years");
   const [displayType, setDisplayType] = useState("total_fund_eur");
 
   const { data, isLoading } = useQuery({
-    queryKey: ["TopicsFundingEvo3Years", params, searchParams.get("thematicIds")],
-    queryFn: () => GetData(params),
+    queryKey: ["TopicsFundingEvo3Years", thematicIds, rangeOfYears, countryCode],
+    queryFn: () => GetData(thematicIds, rangeOfYears, countryCode),
   });
 
   if (isLoading || !data)
@@ -38,20 +39,20 @@ export default function TopicsFundingEvo3Years() {
   const configChart1 = {
     id: "topicsEvolutionFundingLines",
     title: {
-      fr: "Evolution des financements demandés et obtenus (M€) par thématique - 3 dernières années",
-      en: "Financing applied for and obtained (€m) evolution by topic - last 3 years",
+      fr: "Evolution des financements demandés et obtenus (M€) par thématique",
+      en: "Financing applied for and obtained (€m) evolution by topic",
     },
     comment: {
       fr: (
         <>
-          Ce graphique montre l'évolution des financements demandés et obtenus pour les thématiques du programme Horizon Europe sur les trois
-          dernières années. Les barres représentent les montants demandés et obtenus. La ligne verte indique le taux de succès correspondant.
+          Ce graphique montre l'évolution des financements demandés et obtenus pour les thématiques du programme Horizon Europe sur les trois dernières années. Les barres représentent les montants demandés et obtenus. La ligne verte indique le taux
+          de succès correspondant.
         </>
       ),
       en: (
         <>
-          This chart shows the evolution of funding applied for and obtained for the topics of the Horizon Europe programme over the last three years.
-          The bars represent the amounts applied for and obtained. The line indicates the corresponding success rate.
+          This chart shows the evolution of funding applied for and obtained for the topics of the Horizon Europe programme over the last three years. The bars represent the amounts applied for and obtained. The line indicates the corresponding
+          success rate.
         </>
       ),
     },

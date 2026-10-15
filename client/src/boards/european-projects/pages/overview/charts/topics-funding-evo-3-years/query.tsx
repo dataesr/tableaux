@@ -1,18 +1,14 @@
 const { VITE_APP_SERVER_URL } = import.meta.env;
 
-export async function GetData(params: string) {
+export async function GetData(thematicIds: string | null, rangeOfYears: string | null, countryCode: string | null) {
+  const params: string[] = [];
+
+  if (thematicIds) params.push(`thematicIds=${thematicIds}`);
+  if (countryCode) params.push(`country_code=${countryCode}`);
+  if (rangeOfYears) params.push(`range_of_years=${rangeOfYears}`);
+
   const baseUrl = `${VITE_APP_SERVER_URL}/european-projects/overview/topics-funding-evo-3-years`;
-  const searchParams = new URLSearchParams(params);
-
-  // Récupérer les thématiques sélectionnées depuis l'URL (séparées par ,) et les convertir en | pour l'API
-  const thematicIds = searchParams.get("thematicIds");
-  if (thematicIds) {
-    searchParams.delete("thematicIds");
-    searchParams.append("thema_code", thematicIds.split(",").join("|"));
-  }
-
-  const queryString = searchParams.toString();
-  const finalUrl = queryString ? `${baseUrl}?${queryString}` : baseUrl;
+  const finalUrl = params.length ? `${baseUrl}?${params.join("&")}` : baseUrl;
 
   return fetch(finalUrl).then((response) => response.json());
 }

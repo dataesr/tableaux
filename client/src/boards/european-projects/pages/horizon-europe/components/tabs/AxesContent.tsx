@@ -50,7 +50,7 @@ const i18n = {
     fr: "Visualisez la répartition des subventions de la ou des thématiques sélectionnée(s) par destination. Cela vous permet d'identifier les destinations les plus financées et de comprendre leur contribution au sein de la ou des thématiques.",
     en: "Visualize the grant distribution of the selected topic(s) by destination. This allows you to identify the most funded destinations and understand their contribution within the topic(s).",
   },
-  "thematic-detail-title": { fr: "Détails de ou des thématique(s) sur les 3 dernières années", en: "Thematic details over the last 3 years" },
+  "thematic-detail-title": { fr: "Evolution de ou des thématique(s)", en: "Thematic details over the last 3 years" },
   "thematic-detail-callout": {
     fr: "Visualisez l'évolution des financements demandés et obtenus pour la ou les thématique(s) sélectionnée(s) sur les trois dernières années du programme Horizon Europe. Cela vous permet d'analyser les tendances de financement et d'évaluer la performance de la thématique au fil du temps. Vous pouvez également ajuster l'affichage pour visualister le total des subventions, le nombre total de coordinations ou le nombre total de participations.",
     en: "Visualize the evolution of requested and obtained grants for the selected topic over the last three years of the Horizon Europe program. This allows you to analyze funding trends and evaluate the topic's performance over time. You can also adjust the display to view total grants, total coordinations, or total participations.",
