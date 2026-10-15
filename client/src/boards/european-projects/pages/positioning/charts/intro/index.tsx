@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 
@@ -5,6 +6,7 @@ import { getData } from "../top-10-beneficiaries/query";
 import Callout from "../../../../../../components/callout";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 import { getFlagEmoji } from "../../../../../../utils";
+import {formatToPercentLang} from "../../../../../../utils/format";
 
 import i18n from "./i18n.json";
 import { useGetParams } from "../top-10-beneficiaries/utils";
@@ -149,10 +151,12 @@ const COUNTRY_MAPPING = {
   },
 };
 
+type Lang = "fr" | "en";
+
 export default function Intro() {
   const [searchParams] = useSearchParams();
   const params = useGetParams();
-  const currentLang = searchParams.get("language") || "fr";
+  const currentLang: Lang = searchParams.get("language") === "en" ? "en" : "fr";
   const selectedCountryCode = searchParams.get("country_code") || "FRA";
 
   const { data, isLoading } = useQuery({
@@ -166,7 +170,7 @@ export default function Intro() {
 
   // Trouver la position du pays sélectionné dans le classement complet
   const allCountries = data.top10.sort((a, b) => b.total_fund_eur - a.total_fund_eur);
-
+  
   const selectedCountryIndex = allCountries.findIndex(
     (country) =>
       country.country_code === selectedCountryCode ||
@@ -181,7 +185,7 @@ export default function Intro() {
   function getI18nLabel(key) {
     return i18n[key][currentLang];
   }
-
+  
   function getPositionText(position) {
     const positionKey = position?.toString();
     const positions = i18n.ranking_position[currentLang];
@@ -238,12 +242,12 @@ export default function Intro() {
 
     const countryInfo = COUNTRY_MAPPING[selectedCountryCode];
     if (!countryInfo) return null;
-
+    
     const positionText = getPositionText(selectedCountryPosition);
     const countryName = countryInfo.name[currentLang] || countryInfo.name.fr;
     const iso2Code = getISO2FromISO3(selectedCountryCode);
     const flag = getFlagEmoji(iso2Code);
-
+    
     // En français, on utilise le genre pour la conjugaison
     if (currentLang === "fr") {
       const genderKey = countryInfo.gender === "feminine" ? "ranking_feminine" : "ranking_masculine";
@@ -264,17 +268,45 @@ export default function Intro() {
     }
   }
 
+  // Nom du pays pour la liste de l'intro (sans article en français)
+  function getListCountryName(item) {
+    if (currentLang === "fr") return item.name_fr;
+    return item.name_en ?? COUNTRY_MAPPING[item.id]?.name.en ?? item.name_fr;
+  }
+
+  // Intro : remplace {percent} et {countries} par du JSX (<strong> et <i>)
+  function renderIntro() {
+    const template = getI18nLabel("intro");
+
+    // "73,9 %" en fr, "73.9%" en en
+    const percent = formatToPercentLang(top10[top10.length - 1]?.influence ?? 0, currentLang);
+
+  const countriesListSort = top10
+    .map(getListCountryName)
+    .sort((a, b) => a.localeCompare(b, currentLang))
+    .join(", ");
+
+  console.log(countriesListSort)
+
+  return template.split(/(\{percent\}|\{countriesListSort\})/).map((part, i) => {
+      if (part === "{percent}") return <strong key={i}>{percent}</strong>;
+      if (part === "{countriesListSort}") return <i key={i}>{countriesListSort}</i>;
+      return <Fragment key={i}>{part}</Fragment>;
+    });
+  }
+
+  const notFoundText =
+    currentLang === "fr"
+      ? `Pays ${selectedCountryCode} non trouvé dans le classement`
+      : `Country ${selectedCountryCode} not found in the ranking`;
+  
   return (
     <>
       <Callout className="callout-style">
-        <strong>{`${top10[top10.length - 1]?.influence.toFixed(1)}`}</strong>
-        {getI18nLabel("intro")}
-        <i>{top10.map((item) => item.name_fr).join(", ")}</i>
-        <>
-          <br />
-          <br />
-          {selectedCountryPosition ? getCountryRankingText() : `Pays ${selectedCountryCode} non trouvé dans le classement`}
-        </>
+        {renderIntro()}
+        <br />
+        <br />
+        {selectedCountryPosition ? getCountryRankingText() : notFoundText}
       </Callout>
     </>
   );
