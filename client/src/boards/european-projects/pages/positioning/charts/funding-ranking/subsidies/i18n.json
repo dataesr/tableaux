@@ -1,7 +1,7 @@
 {
   "title": {
-    "fr": "Focus sur les subventions",
-    "en": "Focus on subsidies"
+    "fr": "Focus sur les Financements",
+    "en": "Focus on funding"
   },
   "sort-by": {
     "fr": "Trier par",
@@ -36,7 +36,7 @@
     "en": "Ranking of countries by share of amounts requested and obtained (M€)"
   },
   "configChart1b-title": {
-    "fr": "Taux de succès sur les montants par pays",
-    "en": "Success rate on amounts by country"
+    "fr": "Taux de succès des financements",
+    "en": "Success funding rates"
   }
 }
