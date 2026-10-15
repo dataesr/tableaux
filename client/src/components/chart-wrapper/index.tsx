@@ -166,7 +166,6 @@ function MenuModal({
         <fieldset className="fr-fieldset">
           <legend
             className="fr-fieldset__legend--regular fr-fieldset__legend"
-            id="modal-fieldset-legend"
           >
             {getI18nLabel(i18n, "displayType")}
           </legend>
