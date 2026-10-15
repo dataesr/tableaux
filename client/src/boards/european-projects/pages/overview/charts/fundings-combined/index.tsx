@@ -9,7 +9,7 @@ import { EPChartsSources } from "../../../../config";
 
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
-import { formatNumber, formatToRates, formatCurrency, formatCurrency_en } from "../../../../../../utils/format";
+import { formatNumber, formatToRates, formatCurrency, formatCurrencyEn} from "../../../../../../utils/format";
 
 const config: {
   id: string;
@@ -90,8 +90,8 @@ export default function FundingCombined({ displayType = "total_fund_eur", groupB
       config.readingKey = {
         fr: <>Dans le cadre des appels à projets concernant "{readingDataEvaluated.name_fr}", les participants du pays sélectionné ont demandé {formatCurrency(readingDataEvaluated.total_fund_eur)} et{" "}
         obtenu {formatCurrency(readingDataSuccessful.total_fund_eur)} soit un taux de succès de {formatToRates(readingDataSuccessful.total_fund_eur / readingDataEvaluated.total_fund_eur)}.</>,
-        en: <>Under "{readingDataEvaluated.name_en}" calls for proposals, participants from the selected country requested {formatCurrency_en(readingDataEvaluated.total_fund_eur)} and{" "}
-       secured {formatCurrency_en(readingDataSuccessful.total_fund_eur)}, a success rate of {formatToRates(readingDataSuccessful.total_fund_eur / readingDataEvaluated.total_fund_eur)}.</>,
+        en: <>Under "{readingDataEvaluated.name_en}" calls for proposals, participants from the selected country requested {formatCurrencyEn(readingDataEvaluated.total_fund_eur)} and{" "}
+       secured {formatCurrencyEn(readingDataSuccessful.total_fund_eur)}, a success rate of {formatToRates(readingDataSuccessful.total_fund_eur / readingDataEvaluated.total_fund_eur)}.</>,
       };
       break;
   }
