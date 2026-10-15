@@ -22,7 +22,7 @@ export default function Options(data, currentLang) {
       },
     ],
     tooltip: {
-      pointFormat: "Total des subventions : <b>{point.y:.1f} €</b>",
+      pointFormat: "Financements : <b>{point.y:.1f} €</b>",
     },
     plotOptions: {
       series: {
@@ -39,7 +39,7 @@ export default function Options(data, currentLang) {
     series: [
       {
         type: "bar",
-        name: "Projets évalués",
+        name: "Financements demandés",
         color: getCssColor("evaluated-project"),
         data: data.map((item) => ({
           name: item[`name_${currentLang}`],
@@ -55,7 +55,7 @@ export default function Options(data, currentLang) {
       },
       {
         type: "bar",
-        name: "Projets lauréats",
+        name: "Financements obtenus",
         color: getCssColor("successful-project"),
         data: data.map((item) => ({
           name: item[`name_${currentLang}`],
