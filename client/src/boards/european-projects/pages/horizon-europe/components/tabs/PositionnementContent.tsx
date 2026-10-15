@@ -13,8 +13,8 @@ export default function PositionnementContent() {
       {/** TODO: Permettre l'intégration comme pour le chartWrapper */}
       <Intro />
       <Top10Beneficiaries />
-      <FundingRankingRates />
       <FundingRankingSubsidies />
+      <FundingRankingRates />
       <FundingRankingParticipations />
       <FundingRankingCoordination />
       <BoardsSuggestComponent />
