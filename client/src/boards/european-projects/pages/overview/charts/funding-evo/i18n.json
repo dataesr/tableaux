@@ -1,0 +1,14 @@
+{
+  "total-number-involved":{
+    "fr": "Nombre total de participants",
+    "en": "Total number of participants"
+  },
+  "total-coordination-number":{
+    "fr": "Nombre de coordinations",
+    "en": "Total number of coordination"
+  },
+  "total-fund-eur":{
+    "fr": "Total des subventions (EUR)",
+    "en": "Total grants (EUR)"
+  }
+}

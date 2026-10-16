@@ -2,7 +2,6 @@ import { useSearchParams } from "react-router-dom";
 import { Container, Title } from "@dataesr/dsfr-plus";
 import Callout from "../../../../../../components/callout";
 
-import BoardsSuggestComponent from "../../../../../../components/boards-suggest-component";
 import DestinationsFunding from "../../../overview/components/destinations-funding";
 import DestinationsOverview from "../../../overview/components/destinations-overview";
 import PillarsFunding from "../../../overview/components/pillars-funding";
@@ -10,7 +9,7 @@ import PillarsFundingEvo3Years from "../../../overview/charts/pillars-funding-ev
 import ProgramsFunding from "../../../overview/components/programs-funding";
 import ProgramsFundingEvo3Years from "../../../overview/charts/programs-funding-evo-3-years";
 import TopicsFunding from "../../../overview/components/topics-funding";
-import TopicsFundingEvo3Years from "../../../overview/charts/topics-funding-evo-3-years";
+import FundingEvo from "../../../overview/charts/funding-evo";
 
 import { getI18nLabel } from "../../../../../../utils";
 import FundingValuesPrograms from "../../../overview/charts/funding-programs";
@@ -50,9 +49,15 @@ const i18n = {
     fr: "Visualisez la répartition des subventions de la ou des thématiques sélectionnée(s) par destination. Cela vous permet d'identifier les destinations les plus financées et de comprendre leur contribution au sein de la ou des thématiques.",
     en: "Visualize the grant distribution of the selected topic(s) by destination. This allows you to identify the most funded destinations and understand their contribution within the topic(s).",
   },
-  "thematic-detail-title": { fr: "Evolution de ou des thématique(s)", en: "Thematic details over the last 3 years" },
+  "thematic-detail-title": { fr: "Evolution de la thématique", en: "Thematic evolution" },
   "thematic-detail-callout": {
-    fr: "Visualisez l'évolution des financements demandés et obtenus pour la ou les thématique(s) sélectionnée(s) sur les trois dernières années du programme Horizon Europe. Cela vous permet d'analyser les tendances de financement et d'évaluer la performance de la thématique au fil du temps. Vous pouvez également ajuster l'affichage pour visualister le total des subventions, le nombre total de coordinations ou le nombre total de participations.",
+    fr: "Visualisez l'évolution des financements demandés et obtenus pour la ou les thématique(s) sélectionnée(s) sur les différentes années du programme Horizon Europe. Cela vous permet d'analyser les tendances de financement et d'évaluer la performance de la thématique au fil du temps. Vous pouvez également ajuster l'affichage pour visualister le total des subventions, le nombre total de coordinations ou le nombre total de participations.",
+    en: "Visualize the evolution of requested and obtained grants for the selected topic over the last three years of the Horizon Europe program. This allows you to analyze funding trends and evaluate the topic's performance over time. You can also adjust the display to view total grants, total coordinations, or total participations.",
+  },
+
+  "destination-detail-title": { fr: "Evolution de la destination", en: "Destination evolution" },
+  "destination-detail-callout": {
+    fr: "Visualisez l'évolution des financements demandés et obtenus pour la ou les destination(s) sélectionnée(s) sur les différentes années du programme Horizon Europe. Cela vous permet d'analyser les tendances de financement et d'évaluer la performance de la thématique au fil du temps. Vous pouvez également ajuster l'affichage pour visualister le total des subventions, le nombre total de coordinations ou le nombre total de participations.",
     en: "Visualize the evolution of requested and obtained grants for the selected topic over the last three years of the Horizon Europe program. This allows you to analyze funding trends and evaluate the topic's performance over time. You can also adjust the display to view total grants, total coordinations, or total participations.",
   },
 
@@ -67,6 +72,15 @@ export default function AxesContent() {
   const thematicIds = searchParams.get("thematicIds");
   const destinationIds = searchParams.get("destinationIds");
   const currentLang = searchParams.get("language") || "fr";
+
+  // Surcharge du titre si plusieurs thématiques
+  if ((thematicIds?.split(/[|,]/).length ?? 0) > 1) {
+    i18n["thematic-detail-title"] = { fr: "Evolution des thématiques", en: "Thematics evolution" };
+  }
+  // Surcharge du titre si plusieurs destinations
+  if ((destinationIds?.split(/[|,]/).length ?? 0) > 1) {
+    i18n["destination-detail-title"] = { fr: "Evolution des destinations", en: "Destinations evolution" };
+  }
 
   let contentType = "pillar-comparison";
   if (pillarId && programId && thematicIds && destinationIds) {
@@ -135,7 +149,7 @@ export default function AxesContent() {
             {getI18nLabel(i18n, "thematic-detail-title", currentLang)}
           </Title>
           <Callout className="callout-style">{getI18nLabel(i18n, "thematic-detail-callout", currentLang)}</Callout>
-          <TopicsFundingEvo3Years />
+          <FundingEvo />
 
           <Title as="h2" className="fr-mt-5w">
             {getI18nLabel(i18n, "thematic-composition", currentLang)}
@@ -149,8 +163,11 @@ export default function AxesContent() {
       return (
         <Container fluid className="fr-pb-3w" as="section">
           <DestinationsOverview />
-
-          <BoardsSuggestComponent />
+          <Title as="h2" className="fr-mt-5w">
+            {getI18nLabel(i18n, "destination-detail-title", currentLang)}
+          </Title>
+          <Callout className="callout-style">{getI18nLabel(i18n, "destination-detail-callout", currentLang)}</Callout>
+          <FundingEvo />
         </Container>
       );
 

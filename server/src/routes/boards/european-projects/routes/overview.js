@@ -1327,11 +1327,24 @@ router.route("/european-projects/overview/programs-funding-evo-3-years").get(asy
   ]);
 });
 
-router.route("/european-projects/overview/topics-funding-evo-3-years").get(async (req, res) => {
+router.route("/european-projects/overview/funding-evo").get(async (req, res) => {
+  // route utilisée pour les thématiques ET les destinations
   const filters = checkQuery(req.query, ["country_code"], res);
+
+  let field_code = "$thema_code";
+  let field_name_fr = "$thema_name_fr";
+  let field_name_en = "$thema_name_en";
 
   if (req.query.thematicIds) {
     filters.thema_code = { $in: req.query.thematicIds.split(/[|,]/) };
+  }
+
+  if (req.query.destinationIds) {
+    filters.destination_code = { $in: req.query.destinationIds.split(/[|,]/) };
+    field_code = "$destination_code";
+    field_name_fr = "$destination_name_fr";
+    field_name_en = "$destination_name_en";
+    delete filters.thema_code;
   }
 
   if (req.query.range_of_years) {
@@ -1340,12 +1353,10 @@ router.route("/european-projects/overview/topics-funding-evo-3-years").get(async
 
   delete filters.pilier_code;
   delete filters.programme_code;
-  delete filters.destination_code;
 
   if (req.query.isEjo) {
     filters["is_ejo"] = { $eq: req.query.isEjo === "true" ? true : false };
   }
-console.log(filters);
 
   const query = () => {
     return db
@@ -1358,9 +1369,9 @@ console.log(filters);
           $group: {
             _id: {
               stage: "$stage",
-              thema_code: "$thema_code",
-              thema_name_fr: "$thema_name_fr",
-              thema_name_en: "$thema_name_en",
+              code: field_code,
+              name_fr: field_name_fr,
+              name_en: field_name_en,
               call_year: "$call_year",
             },
             total_fund_eur: { $sum: "$calculated_fund" },
@@ -1372,9 +1383,9 @@ console.log(filters);
           $group: {
             _id: {
               stage: "$_id.stage",
-              thema_code: "$_id.thema_code",
-              thema_name_fr: "$_id.thema_name_fr",
-              thema_name_en: "$_id.thema_name_en",
+              code: "$_id.code",
+              name_fr: "$_id.name_fr",
+              name_en: "$_id.name_en",
             },
             years: {
               $push: {
@@ -1399,11 +1410,11 @@ console.log(filters);
         {
           $group: {
             _id: "$_id.stage",
-            topics: {
+            items: {
               $push: {
-                thema_code: "$_id.thema_code",
-                thema_name_fr: "$_id.thema_name_fr",
-                thema_name_en: "$_id.thema_name_en",
+                code: "$_id.code",
+                name_fr: "$_id.name_fr",
+                name_en: "$_id.name_en",
                 years: "$years",
               },
             },
@@ -1413,7 +1424,7 @@ console.log(filters);
           $project: {
             _id: 0,
             stage: "$_id",
-            topics: 1,
+            items: 1,
           },
         },
       ])
