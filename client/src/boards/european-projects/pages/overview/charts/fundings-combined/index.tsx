@@ -88,8 +88,11 @@ export default function FundingCombined({ displayType = "total_fund_eur", groupB
         en: <>This chart shows the breakdown, by pillar, of the funding requested and secured by all participants from the selected country, together with the associated success rates (funding secured / funding requested).</>,
       };
       config.readingKey = {
-        fr: <>Dans le cadre des appels à projets concernant "{readingDataEvaluated.name_fr}", les participants du pays sélectionné ont demandé {formatCurrency(readingDataEvaluated.total_fund_eur)} et{" "}
-        obtenu {formatCurrency(readingDataSuccessful.total_fund_eur)} soit un taux de succès de {formatToRates(readingDataSuccessful.total_fund_eur / readingDataEvaluated.total_fund_eur)}.</>,
+        fr: 
+        <>
+          Dans le cadre des appels à projets concernant "{readingDataEvaluated.name_fr}", les participants du pays sélectionné ont demandé {formatCurrency(readingDataEvaluated.total_fund_eur)} et{" "}
+          obtenu {formatCurrency(readingDataSuccessful.total_fund_eur)} soit un taux de succès de {formatToRates(readingDataSuccessful.total_fund_eur / readingDataEvaluated.total_fund_eur)}.
+        </>,
         en: <>Under "{readingDataEvaluated.name_en}" calls for proposals, participants from the selected country requested {formatCurrencyEn(readingDataEvaluated.total_fund_eur)} and{" "}
        secured {formatCurrencyEn(readingDataSuccessful.total_fund_eur)}, a success rate of {formatToRates(readingDataSuccessful.total_fund_eur / readingDataEvaluated.total_fund_eur)}.</>,
       };
