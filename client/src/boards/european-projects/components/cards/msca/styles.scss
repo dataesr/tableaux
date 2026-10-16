@@ -63,8 +63,8 @@
   }
 
   .secondary-value {
-    font-size: 1.25rem;
-    font-weight: 600;
+    font-size: 0.875rem;
+    font-weight: normal;
     color: var(--card-secondary-color, var(--text-mention-grey));
     margin: 0.5rem 0 0;
 
@@ -98,10 +98,14 @@
   &.funding-card {
     --card-primary-color: var(--successful-project-color);
   }
+  &.candidats-card {
+    --card-primary-color: var(--success-rate-color);
+    background-color: var(--background-default-grey);
+  }
   &.projects-card {
     --card-primary-color: var(--blue-france-main-525);
   }
-  &.coord-card {
+  &.fund-rate-cards {
     --card-primary-color: #8b5cf6;
   }
   &.rate-card {
