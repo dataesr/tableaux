@@ -12,6 +12,7 @@ const DESTINATION_LABELS: Record<string, string> = {
   DN: "Doctoral Networks",
   SE: "Staff Exchanges",
   COFUND: "COFUND",
+  CITIZENS: "CITIZENS",
   ITN: "Innovative Training Networks",
   RISE: "Research and Innovation Staff Exchange",
   IF: "Individual Fellowships",
@@ -47,6 +48,14 @@ export default function MscaDestinationCards({ countryCode, callYear }: MscaDest
 
   if (!data || data.length === 0) return null;
 
+  const ORDER = Object.keys(DESTINATION_LABELS);
+  const rank = (code: string) => {
+    const i = ORDER.indexOf(code);
+    return i === -1 ? ORDER.length : i;
+  };
+
+  const sortedData = [...data].sort((a, b) => rank(a.destination_code) - rank(b.destination_code));
+
   return (
     <div className="msca-destination-section">
       <div className="section-header">
@@ -59,7 +68,7 @@ export default function MscaDestinationCards({ countryCode, callYear }: MscaDest
         </SegmentedControl>
       </div>
       <div className="msca-stat-cards">
-        {data.map((dest) => (
+        {sortedData.map((dest) => (
           <MscaStatCard key={dest.destination_code} data={dest} viewMode={viewMode} />
         ))}
       </div>
