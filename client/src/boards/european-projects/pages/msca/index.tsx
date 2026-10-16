@@ -51,7 +51,7 @@ export default function MSCA() {
         <Container>
           <Breadcrumb config={navigationConfig} />
           <Title as="h1" look="h6">
-            MSCA Actions Marie Skłodowska-Curie
+            Marie Skłodowska-Curie actions
           </Title>
           {/* Filtre de sélection des années */}
           {showYearsFilter && !isLoadingFilters && availableYears.length > 0 && (
