@@ -59,8 +59,6 @@ export default function MscaSynthesisCards({
   const countrySuccessRate = countryCandidats > 0 ? countryParticipants / countryCandidats : 0;
   const successRateProjects = countryProjectsEvaluated > 0 ? countryProjects / countryProjectsEvaluated : 0;
   
-
-  console.log(countryCode)
   return (
     <Row className="msca-synthesis-cards" gutters>
       <Col xs={12} md={4}>
