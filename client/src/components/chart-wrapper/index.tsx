@@ -308,6 +308,12 @@ function MenuModal({
   );
 }
 
+function getTitleText(title: ChartConfig["title"], lang: string): string {
+  if (typeof title === "string") return title;
+  const localizedTitle = title?.[lang] ?? title?.fr;
+  return typeof localizedTitle === "string" ? localizedTitle : "";
+}
+
 // Composant Title exportable séparément
 function ChartTitle({
   config,
@@ -371,6 +377,8 @@ export default function ChartWrapper({
   const [isOpenIntegration, setIsOpenIntegration] = useState(false);
   const [displayType, setDisplayType] = useState("chart"); // ["chart", "data"]
   const modalId = useId();
+  const titleText = getTitleText(config.title, currentLang);
+  const optionsLabel = `Options et données du graphique${titleText ? ` : ${titleText}` : ""}`;
 
   const chart = useRef<HighchartsReact.RefObject>(null);
 
@@ -454,13 +462,13 @@ export default function ChartWrapper({
       {!hideTitle && <ChartTitle config={config} currentLang={currentLang} />}
       <div className="actions">
         <Button
-          aria-label={`Options et données du graphique${config?.title?.[currentLang] ? ": " + config.title[currentLang] : ""}`}
+          aria-label={optionsLabel}
           color="beige-gris-galet"
           icon="settings-5-line"
           onClick={() => setIsOpen(true)}
           size="sm"
           style={{ minHeight: "1rem", padding: "0 0.5rem" }}
-          title="Options et données du graphique"
+          title={optionsLabel}
           variant="text"
         />
       </div>
