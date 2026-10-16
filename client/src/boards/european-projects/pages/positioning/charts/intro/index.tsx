@@ -281,14 +281,14 @@ export default function Intro() {
     // "73,9 %" en fr, "73.9%" en en
     const percent = formatToPercentLang(top10[top10.length - 1]?.influence ?? 0, currentLang);
 
-  const countriesListSort = top10
-    .map(getListCountryName)
-    .sort((a, b) => a.localeCompare(b, currentLang))
-    .join(", ");
+    const countriesListSort = top10
+      .map(getListCountryName)
+      .sort((a, b) => a.localeCompare(b, currentLang))
+      .join(", ");
 
-  console.log(countriesListSort)
 
-  return template.split(/(\{percent\}|\{countriesListSort\})/).map((part, i) => {
+
+    return template.split(/(\{percent\}|\{countriesListSort\})/).map((part, i) => {
       if (part === "{percent}") return <strong key={i}>{percent}</strong>;
       if (part === "{countriesListSort}") return <i key={i}>{countriesListSort}</i>;
       return <Fragment key={i}>{part}</Fragment>;
