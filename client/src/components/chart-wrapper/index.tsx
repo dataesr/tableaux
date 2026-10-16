@@ -154,15 +154,14 @@ function MenuModal({
       size="sm"
       tabIndex={isOpen ? 0 : -1}
     >
+      <ModalTitle>
+        <span
+          aria-hidden="true"
+          className="fr-icon-bar-chart-box-line fr-mr-1w"
+        />
+        {getI18nLabel(i18n, "modalTitle")}
+      </ModalTitle>
       <ModalContent className="modal-actions">
-        <Title as="h1" look="h6">
-          <span
-            aria-hidden="true"
-            className="fr-icon-bar-chart-box-line fr-mr-1w"
-          />
-          {getI18nLabel(i18n, "modalTitle")}
-        </Title>
-
         <fieldset className="fr-fieldset">
           <legend
             className="fr-fieldset__legend--regular fr-fieldset__legend"
