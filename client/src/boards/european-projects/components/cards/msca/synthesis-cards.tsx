@@ -33,23 +33,34 @@ export default function MscaSynthesisCards({
   // Totaux globaux
   const totalFundingSuccessful = data?.successful?.total_funding_project || 0;
   const totalProjectsSuccessful = data?.successful?.total_projects || 0;
-  const totalProjectsEvaluated = data?.evaluated?.total_projects || 0;
+  // const totalFundingEvaluated = data?.evaluated?.total_funding_project || 0;
+  // const totalProjectsEvaluated = data?.evaluated?.total_projects || 0;
+  const totalCandidats = data?.evaluated?.total_involved || 0;
 
   // Données du pays
   const country = data?.successful?.countries?.[0];
   const countryEval = data?.evaluated?.countries?.[0];
 
   const countryFunding = country?.total_funding_project || 0;
+  const countryFundingEvaluated = countryEval?.total_funding_project || 0;
+
+  const countryParticipants = country?.total_involved || 0;
+  const countryCandidats = countryEval?.total_involved || 0;
+
   const countryProjects = country?.total_projects || 0;
-  const countryCoordinations = country?.total_pi || 0;
   const countryProjectsEvaluated = countryEval?.total_projects || 0;
 
   // Parts et taux
   const fundingShare = totalFundingSuccessful > 0 ? countryFunding / totalFundingSuccessful : 0;
+  const candidatShare = totalCandidats > 0 ? countryCandidats / totalCandidats : 0;
   const projectsShare = totalProjectsSuccessful > 0 ? countryProjects / totalProjectsSuccessful : 0;
-  const successRateProjects = totalProjectsEvaluated > 0 ? totalProjectsSuccessful / totalProjectsEvaluated : 0;
-  const countrySuccessRate = countryProjectsEvaluated > 0 ? countryProjects / countryProjectsEvaluated : 0;
 
+  const succesRateFunding = countryFundingEvaluated > 0 ? countryFunding / countryFundingEvaluated : 0;
+  const countrySuccessRate = countryCandidats > 0 ? countryParticipants / countryCandidats : 0;
+  const successRateProjects = countryProjectsEvaluated > 0 ? countryProjects / countryProjectsEvaluated : 0;
+  
+
+  console.log(countryCode)
   return (
     <Row className="msca-synthesis-cards" gutters>
       <Col xs={12} md={4}>
@@ -61,7 +72,19 @@ export default function MscaSynthesisCards({
           progressValue={fundingShare}
           loading={isLoading}
           variant="funding-card"
-          tooltipText="Montant des financements obtenus par les participants du pays sur le montant des financements obtenus par l'ensemble des participants"
+          tooltipText={`Montant des financements obtenus par {} sur le montant des financements obtenus par l'ensemble des participants`}
+        />
+      </Col>
+      <Col xs={12} md={4}>
+        <MscaCard
+          label={`Part des candidatures ${adjFemPlural}`}
+          value={formatToRates(candidatShare)}
+          secondaryValue={formatNumber(countryCandidats)}
+          secondaryLabel="candidats"
+          progressValue={candidatShare}
+          loading={isLoading}
+          variant="candidats-card"
+          tooltipText={`Nombre de candidats ${adjMascPlural} sur le nombre total des candidats`}
         />
       </Col>
       <Col xs={12} md={4}>
@@ -78,12 +101,23 @@ export default function MscaSynthesisCards({
       </Col>
       <Col xs={12} md={4}>
         <MscaCard
-          label={`Coordinateurs ${adjMascPlural} dans les projets lauréats`}
-          value={formatNumber(countryCoordinations)}
-          progressValue={projectsShare}
+          label={`Taux de succès des financements`}
+          value={formatToRates(succesRateFunding)}
+          progressValue={succesRateFunding}
           loading={isLoading}
-          variant="coord-card"
-          tooltipText="Nombre de participations en tant que coordinateur dans des projets lauréats"
+          variant="fund-rate-card"
+          tooltipText={`Montant des financements obtenus sur le montant des financements demandés par {}`}
+        />
+      </Col>
+      <Col xs={12} md={4}>
+        <MscaCard
+          label={`Taux de succès individuel des participants ${adjMascPlural}`}
+          value={formatToRates(countrySuccessRate)}
+          secondaryValue={`${formatNumber(countryParticipants)} participants / ${formatNumber(countryCandidats)} candidats`}
+          progressValue={countrySuccessRate}
+          loading={isLoading}
+          variant="rate-card"
+          tooltipText={`Nombre de participants ${adjMascPlural} sur le nombre de candidats ${adjMascPlural}`}
         />
       </Col>
       <Col xs={12} md={4}>
@@ -93,21 +127,10 @@ export default function MscaSynthesisCards({
           progressValue={successRateProjects}
           loading={isLoading}
           variant="rate-card"
-          tooltipText="Nombre de projets lauréats sur le nombre de projets évalués du pays sélectionné"
+          tooltipText={`Nombre de projets lauréats sur le nombre de projets évalués impliquant au moins une entité ${countryAdj.f}`}
         />
       </Col>
-      <Col xs={12} md={4}>
-        <MscaCard
-          label={`Taux de succès des équipes ${adjFemPlural}`}
-          value={formatToRates(countrySuccessRate)}
-          secondaryValue={`${formatNumber(countryProjects)} / ${formatNumber(countryProjectsEvaluated)}`}
-          secondaryLabel="lauréats / candidats"
-          progressValue={countrySuccessRate}
-          loading={isLoading}
-          variant="rate-card"
-          tooltipText="Ratio projets lauréats / évalués pour ce pays"
-        />
-      </Col>
+
     </Row>
   );
 }
