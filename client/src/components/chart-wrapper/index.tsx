@@ -379,6 +379,7 @@ export default function ChartWrapper({
   const modalId = useId();
   const titleText = getTitleText(config.title, currentLang);
   const optionsLabel = `Options et données du graphique${titleText ? ` : ${titleText}` : ""}`;
+  const figureLabel = titleText ? `Graphique : ${titleText}` : undefined;
 
   const chart = useRef<HighchartsReact.RefObject>(null);
 
@@ -474,8 +475,8 @@ export default function ChartWrapper({
       </div>
       {displayType === "data" && renderData && options && <>{renderData(options)}</>}
       {((displayType === "chart" && renderData) || (!renderData)) && optionsTmp && (
-        <figure className="chart">
-          <figcaption className="fr-sr-only">{`Graphique: ${config?.title?.[currentLang]}`}</figcaption>
+        <figure className="chart" role={figureLabel ? "figure" : undefined} aria-label={figureLabel}>
+          {figureLabel && <figcaption className="fr-sr-only">{figureLabel}</figcaption>}
           <HighchartsReact constructorType={constructorType} highcharts={Highcharts} options={optionsTmp} ref={chart} />
         </figure>
       )}
