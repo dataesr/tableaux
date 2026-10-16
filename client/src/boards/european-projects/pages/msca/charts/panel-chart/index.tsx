@@ -16,74 +16,6 @@ interface PanelChartProps {
   currentLang?: string;
 }
 
-const configProjects = {
-  id: "mscaPanelChartProjects",
-  idQuery: "mscaPanelChart",
-  comment: {
-    fr: (
-      <>
-        Ce graphique présente le nombre de projets évalués et lauréats pour chaque panel scientifique MSCA. 
-        La ligne orange indique le taux de succès de chaque panel, soit le rapport entre les projets lauréats et les projets évalués.
-      </>
-    ),
-    en: (
-      <>
-        This chart shows the number of projects evaluated and successful projects for each MSCA scientific panel. 
-        The orange line shows the success rate for each panel, i.e. the ratio of successful projects to projects evaluated.
-      </>
-    ),
-  },
-  readingKey: {
-    fr: (
-      <>
-        Les barres bleues représentent les projets évalués, les barres vertes les projets lauréats. Un taux de succès élevé indique une meilleure
-        performance pour ce panel scientifique.
-      </>
-    ),
-    en: (
-      <>
-        Blue bars represent evaluated projects, green bars represent successful projects. A high success rate indicates better performance for that
-        scientific panel.
-      </>
-    ),
-  },
-  integrationURL: "/european-projects/components/pages/msca/charts/panel-chart",
-};
-
-const configFunding = {
-  id: "mscaPanelChartFunding",
-  idQuery: "mscaPanelChart",
-  comment: {
-    fr: (
-      <>
-        Ce graphique présente les financements demandés et obtenus pour chaque panel scientifique MSCA. 
-        La ligne orange indique le taux de succès de chaque panel, soit le rapport entre les financements obtenus et les financements demandés.
-      </>
-    ),
-    en: (
-      <>
-        This chart shows the funding requested and secured for each MSCA scientific panel.
-        The orange line shows the funding success rate for each panel, i.e. the ratio of funding secured to funding requested.
-      </>
-    ),
-  },
-  readingKey: {
-    fr: (
-      <>
-        Les barres bleues représentent les financements demandés, les barres vertes les financements obtenus. Un taux de succès élevé indique une
-        meilleure performance pour ce panel scientifique.
-      </>
-    ),
-    en: (
-      <>
-        Blue bars represent requested funding, green bars represent obtained funding. A high success rate indicates better performance for that
-        scientific panel.
-      </>
-    ),
-  },
-  integrationURL: "/european-projects/components/pages/msca/charts/panel-chart-funding",
-};
-
 function buildParams(countryCode?: string, callYear?: string): string {
   const parts: string[] = [];
   if (countryCode) parts.push(`country_code=${countryCode}`);
@@ -96,7 +28,7 @@ function renderDataTableProjects(data: MscaPanelChartItem[], currentLang: string
   return (
     <table className="fr-table">
       <caption>
-        {currentLang === "fr" ? "Données du graphique des projets par panel scientifique MSCA" : "Data from the project graph by scientific panel"}
+        {currentLang === "fr" ? "Nombre de projets par panel scientifique" : "Number of projects by scientific panel"}
       </caption>
       <thead>
         <tr>
@@ -129,7 +61,7 @@ function renderDataTableFunding(data: MscaPanelChartItem[], currentLang: string)
   const sortedData = [...data].filter((d) => d.panel_id).sort((a, b) => a.panel_id.localeCompare(b.panel_id));
   return (
     <table className="fr-table">
-      <caption>{currentLang === "fr" ? "Financements par panel scientifique MSCA" : "Funding by MSCA scientific panel"}</caption>
+      <caption>{currentLang === "fr" ? "Financements par panel scientifique" : "Funding by scientific panel"}</caption>
       <thead>
         <tr>
           <th>{currentLang === "fr" ? "Panel scientifique" : "Scientific panel"}</th>
@@ -161,7 +93,7 @@ function PanelChartProjects({ countryCode, callYear, currentLang = "fr" }: Panel
   const params = buildParams(countryCode, callYear);
 
   const { data, isLoading } = useQuery({
-    queryKey: [configProjects.idQuery + "-projects", params],
+    queryKey: ["mscaPanelChart", params],
     queryFn: () => getData(params),
     enabled: params !== "",
   });
@@ -170,6 +102,45 @@ function PanelChartProjects({ countryCode, callYear, currentLang = "fr" }: Panel
 
   const options = OptionsProjects({ data, currentLang });
   if (!options) return null;
+
+  const readingChoice = data[0];
+  const countryEval = readingChoice?.evaluated?.total_projects ?? 0;
+  const countrySucc = readingChoice?.successful?.total_projects ?? 0;
+  const successRate = countryEval > 0 ? countrySucc / countryEval : 0;
+
+  const configProjects = {
+    id: "mscaPanelChartProjects",
+    // idQuery: "mscaPanelChart",
+    comment: {
+      fr: (
+        <>
+          Ce graphique présente le nombre de projets évalués et lauréats pour chaque panel scientifique. 
+          La ligne orange indique le taux de succès dans chaque panel, soit le nombre de projets lauréats sur le nombre projets évalués.
+        </>
+      ),
+      en: (
+        <>
+          This chart shows the number of evaluated and successful projects for each scientific panel.
+          The orange line shows the success rate in each panel, i.e. the ratio of successful projects to projects evaluated.
+        </>
+      ),
+    },
+    readingKey: {
+      fr: (
+        <>
+          En {readingChoice.panel_name}, sur {formatNumber(countryEval)} propositions évaluées {formatNumber(countrySucc)} sont lauréates, soit un taux de succès de {formatToRates(successRate)}.
+        </>
+      ),
+      en: (
+        <>
+          In {readingChoice.panel_name}, of the {formatNumber(countryEval)} proposals evaluated,{" "} {formatNumber(countrySucc)} were successful, a success rate of {formatToRates(successRate)}.
+        </>
+      ),
+    },
+    integrationURL: "/european-projects/components/pages/msca/charts/panel-chart",
+  };
+
+
 
   return (
     <div className="fr-my-3w chart-container chart-container--default">
@@ -182,7 +153,7 @@ function PanelChartFunding({ countryCode, callYear, currentLang = "fr" }: PanelC
   const params = buildParams(countryCode, callYear);
 
   const { data, isLoading } = useQuery({
-    queryKey: [configFunding.idQuery + "-funding", params],
+    queryKey: ["mscaPanelChart", params],
     queryFn: () => getData(params),
     enabled: params !== "",
   });
@@ -191,6 +162,46 @@ function PanelChartFunding({ countryCode, callYear, currentLang = "fr" }: PanelC
 
   const options = OptionsFunding({ data, currentLang });
   if (!options) return null;
+
+  const readingChoice = data[0];
+  const countryEval = readingChoice?.evaluated?.total_funding_project ?? 0;
+  const countrySucc = readingChoice?.successful?.total_funding_project ?? 0;
+  const successRate = countryEval > 0 ? countrySucc / countryEval : 0;
+   
+  const configFunding = {
+    id: "mscaPanelChartFunding",
+    // idQuery: "mscaPanelChart",
+    comment: {
+      fr: (
+        <>
+          Ce graphique présente les financements demandés et obtenus pour chaque panel scientifique. 
+          La ligne orange indique le taux de succès de chaque panel, soit le montant des financements obtenus sur le montant des financements demandés.
+        </>
+      ),
+      en: (
+        <>
+          This chart shows the funding requested and secured for each scientific panel.
+          The orange line shows the funding success rate for each panel, i.e. the ratio of funding secured to funding requested.
+        </>
+      ),
+    },
+    readingKey: {
+      fr: (
+        <>
+          En {readingChoice.panel_name}, les participants du pays sélectionné ont demandé {formatCurrency(countryEval)} et{" "}
+          obtenu {formatCurrency(countrySucc)} soit un taux de succès de {formatToRates(successRate)}.
+        </>
+      ),
+      en: (
+        <>
+          In {readingChoice.panel_name}, participants from the selected country requested {formatCurrency(countryEval)} and{" "}
+          secured {formatCurrency(countrySucc)}, a success rate of {formatToRates(successRate)}.
+        </>
+      ),
+    },
+    integrationURL: "/european-projects/components/pages/msca/charts/panel-chart-funding",
+  };
+
 
   return (
     <div className="fr-my-3w chart-container chart-container--default">
