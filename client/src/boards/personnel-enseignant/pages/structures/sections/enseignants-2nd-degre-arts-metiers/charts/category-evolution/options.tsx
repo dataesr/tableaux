@@ -2,7 +2,7 @@ import Highcharts from "highcharts/es-modules/masters/highcharts.src.js";
 import { createChartOptions } from "../../../../../../../../components/chart-wrapper/default-options";
 import { getCssColor } from "../../../../../../../../utils/colors";
 
-const SCALE_COLORS = Array.from({ length: 14 }, (_, i) => `scale-${i + 1}`);
+const SCALE_COLORS = Array.from({ length: 14 }, (_, i) => `scale-randomized-${i}-color`);
 
 export function createCategoryEvolutionOptions(
   categories: string[],

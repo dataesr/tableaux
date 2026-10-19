@@ -19,7 +19,7 @@ interface EnseignantsChercheursSectionProps {
     selectedYear: string;
 }
 
-const SCALE_COLORS = Array.from({ length: 14 }, (_, i) => `scale-${i + 1}`);
+const SCALE_COLORS = Array.from({ length: 14 }, (_, i) => `scale-randomized-${i}-color`);
 
 export default function EnseignantsChercheurSection({
     viewType,

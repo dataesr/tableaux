@@ -27,7 +27,7 @@ const VIEWS_CONFIG: Record<
     categories: {
       effectif_sans_cpge_l: {
         label: "Licence",
-        color: getCssColor("scale-1"),
+        color: getCssColor("scale-randomized-0-color"),
       },
       effectif_sans_cpge_m: { label: "Master", color: getCssColor("scale-2") },
       effectif_sans_cpge_d: {
@@ -51,7 +51,7 @@ const VIEWS_CONFIG: Record<
     categories: {
       effectif_sans_cpge_deg0: {
         label: "BAC ou inférieur",
-        color: getCssColor("scale-1"),
+        color: getCssColor("scale-randomized-0-color"),
       },
       effectif_sans_cpge_deg1: {
         label: "BAC + 1",
@@ -98,7 +98,7 @@ const VIEWS_CONFIG: Record<
     categories: {
       effectif_sans_cpge_dsa: {
         label: "Droit, Sc. éco., AES",
-        color: getCssColor("scale-1"),
+        color: getCssColor("scale-randomized-0-color"),
       },
       effectif_sans_cpge_llsh: {
         label: "Lettres, Langues, SHS",
@@ -136,7 +136,7 @@ const VIEWS_CONFIG: Record<
     categories: {
       effectif_sans_cpge_dn: {
         label: "Diplômes nationaux",
-        color: getCssColor("scale-1"),
+        color: getCssColor("scale-randomized-0-color"),
       },
       effectif_sans_cpge_du: {
         label: "Diplômes d'établissement",

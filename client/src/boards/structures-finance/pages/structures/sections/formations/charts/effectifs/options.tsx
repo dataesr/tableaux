@@ -63,7 +63,7 @@ export const createEffectifsNiveauChartOptions = (
     {
       name: "1er cycle (cursus L)",
       y: data.effectif_sans_cpge_l || 0,
-      color: getCssColor("scale-1"),
+      color: getCssColor("scale-randomized-0-color"),
       percentage: data.part_effectif_sans_cpge_l || 0,
       has: data.has_effectif_l,
     },
@@ -133,7 +133,7 @@ export const createEffectifsSpecifiquesChartOptions = (
       y: data.effectif_sans_cpge_iut || 0,
       percentage: data.part_effectif_sans_cpge_iut || 0,
       has: data.has_effectif_iut,
-      color: getCssColor("scale-1"),
+      color: getCssColor("scale-randomized-0-color"),
     },
     {
       name: "Formations d'ingénieurs",
@@ -222,7 +222,7 @@ export const createEffectifsDisciplinesChartOptions = (
       y: data.effectif_sans_cpge_dsa || 0,
       percentage: data.part_effectif_sans_cpge_dsa || 0,
       has: data.has_effectif_dsa,
-      color: getCssColor("scale-1"),
+      color: getCssColor("scale-randomized-0-color"),
     },
     {
       name: "Lettres, langues et sciences humaines",
@@ -323,7 +323,7 @@ export const createEffectifsDegreesChartOptions = (
     {
       name: "BAC ou inférieur",
       y: data.effectif_sans_cpge_deg0 || 0,
-      color: getCssColor("scale-1"),
+      color: getCssColor("scale-randomized-0-color"),
     },
     {
       name: "BAC + 1",

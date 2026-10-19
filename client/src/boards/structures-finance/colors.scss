@@ -1,3 +1,5 @@
+@use "../colors.scss";
+
 :root {
   --section-ressources: var(--blue-france-main-525);
   --section-sante-financiere: var(--green-emeraude-main-632);
@@ -44,7 +46,6 @@
   --threshold-alert-line: var(--border-plain-error);
   --threshold-vigilance-line: var(--border-plain-warning);
 
-  --scale-1: var(--green-tilleul-verveine-main-707);
   --scale-2: var(--green-bourgeon-main-640);
   --scale-3: var(--green-emeraude-main-632);
   --scale-4: var(--green-menthe-main-548);

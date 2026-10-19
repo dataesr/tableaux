@@ -1,3 +1,5 @@
+@use "../colors.scss";
+
 :root {
   // =========================================================================
   // COULEURS SÉMANTIQUES — Personnel Enseignant
@@ -25,19 +27,4 @@
 
   // --- Couleur background du tableau ---
   --fm-home: var(--green-archipel-975);
-
-  --scale-1: var(--blue-france-main-525);
-  --scale-2: var(--green-emeraude-main-632);
-  --scale-3: var(--yellow-tournesol-main-731);
-  --scale-4: var(--pink-tuile-main-556);
-  --scale-5: var(--purple-glycine-main-494);
-  --scale-6: var(--orange-terre-battue-main-645);
-  --scale-7: var(--green-bourgeon-main-640);
-  --scale-8: var(--blue-ecume-main-400);
-  --scale-9: var(--brown-cafe-creme-main-782);
-  --scale-10: var(--green-menthe-main-548);
-  --scale-11: var(--blue-cumulus-main-526);
-  --scale-12: var(--pink-macaron-main-689);
-  --scale-13: var(--yellow-moutarde-main-679);
-  --scale-14: var(--green-archipel-main-557);
 }

@@ -165,7 +165,7 @@ export const createPositioningComparisonBarOptions = (
         data: chartData.map((d) => ({
           y: d.value,
           color: d.isCurrentStructure
-            ? `${getCssColor("scale-1")}`
+            ? `${getCssColor("scale-randomized-0-color")}`
             : `${getCssColor("scale-8")}`,
         })),
       },

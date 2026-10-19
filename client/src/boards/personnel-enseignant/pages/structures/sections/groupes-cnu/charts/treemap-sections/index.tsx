@@ -4,22 +4,7 @@ import { getCssColor } from "../../../../../../../../utils/colors";
 import { createTreemapSectionsOptions } from "./options";
 import { compareCnuCodes } from "../../../../utils";
 
-const GROUP_COLORS = [
-    "scale-1",
-    "scale-2",
-    "scale-3",
-    "scale-4",
-    "scale-5",
-    "scale-6",
-    "scale-7",
-    "scale-8",
-    "scale-9",
-    "scale-10",
-    "scale-11",
-    "scale-12",
-    "scale-13",
-    "scale-14",
-];
+const GROUP_COLORS = Array.from({ length: 14 }, (_, i) => `scale-randomized-${i}-color`);
 
 interface Props {
     cnuGroups: any[];
