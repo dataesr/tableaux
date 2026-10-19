@@ -30,8 +30,8 @@ function FloatingFilters() {
     destinationIds: { fr: "Destinations", en: "Destinations" },
     structureid: { fr: "Identifiant Paysage de la structure", en: "Paysage ID" },
     isEjo: {
-      fr: "Exclure les organisations internationales, organisations intergouvernementales, agences européennes liées à la CE, structures communes comme le CERN, l'ESA, réseaux EIT, GEANT ou COST",
-      en: "Exclure les organisations internationales, organisations intergouvernementales, agences européennes liées à la CE, structures communes comme le CERN, l'ESA, réseaux EIT, GEANT ou COST",
+      fr: "Inclure les organisations internationales, organisations intergouvernementales, agences européennes liées à la CE, structures communes comme le CERN, l'ESA, réseaux EIT, GEANT ou COST",
+      en: "Include international organizations, intergovernmental organizations, European agencies affiliated with the European Commission, joint structures such as CERN and ESA, and networks such as EIT, GEANT, and COST",
     },
   };
 
@@ -66,7 +66,7 @@ function FloatingFilters() {
         ret = (
           <>
             <span>{i18n[param[0]][currentLang]}</span>
-            {param[1] === "true" ? (
+            {param[1] === "false" ? (
               <Badge color="success" className="fr-mx-1w">
                 {currentLang === "fr" ? "activé" : "enabled"}
               </Badge>

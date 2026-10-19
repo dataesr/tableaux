@@ -17,8 +17,8 @@ const i18nFilters = {
   "more-filters": { fr: "Plus de filtres", en: "More filters" },
   "less-filters": { fr: "Afficher moins", en: "Show less" },
   isEjo: {
-    fr: "Exclure les organisations internationales, organisations intergouvernementales, agences européennes liées à la CE, structures communes comme le CERN, l'ESA, réseaux EIT, GEANT ou COST",
-    en: "Exclure les organisations internationales, organisations intergouvernementales, agences européennes liées à la CE, structures communes comme le CERN, l'ESA, réseaux EIT, GEANT ou COST",
+    fr: "Inclure les organisations internationales, organisations intergouvernementales, agences européennes liées à la CE, structures communes comme le CERN, l'ESA, réseaux EIT, GEANT ou COST",
+    en: "Include international organizations, intergovernmental organizations, European agencies affiliated with the European Commission, joint structures such as CERN and ESA, and networks such as EIT, GEANT, and COST",
   },
 };
 
@@ -342,7 +342,7 @@ export default function EpNavigator() {
                   </Col>
                   <Col>
                     <div className="fr-checkbox-group fr-checkbox-group--sm">
-                      <input onChange={() => handleIsEjoToggle(isEjo === "true" ? false : true)} checked={isEjo === "true"} id="isEjo-checkbox" type="checkbox" aria-describedby="Prendre en compte tous les organismes ou non" />
+                      <input onChange={() => handleIsEjoToggle(isEjo === "true" ? false : true)} checked={isEjo === "false"} id="isEjo-checkbox" type="checkbox" aria-describedby="Prendre en compte tous les organismes ou non" />
                       <label className="fr-label" htmlFor="isEjo-checkbox">
                         {i18nFilters["isEjo"][currentLang]}
                       </label>
