@@ -135,9 +135,9 @@ export default function Methodology() {
         Les entités européennes et internationales comprennent :
         <ul style={{ listStyle: "inherit", paddingLeft: "1.2rem" }}>
           <li>les organisations internationales</li>
-          <li>les organisation intergouvernementales</li>
+          <li>les organisations intergouvernementales</li>
           <li>les agences liées à la CE</li>
-          <li>les structures communes comme le CERN, l'ESA</li>
+          <li>les structures communes comme le CERN&#44;, l'ESA</li>
           <li>les réseaux EIT, GEANT ou COST</li>
         </ul>
         La liste complète des entités identifiées est disponible ci-dessous
