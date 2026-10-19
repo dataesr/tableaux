@@ -1,7 +1,7 @@
 import Highcharts from "highcharts/es-modules/masters/highcharts.src.js";
 import { CreateChartOptions } from "../../../../components/chart-ep";
 import type { ProcessedPositioningByFundingTypeData } from "./utils";
-import { getChartColors } from "./utils";
+import { getChartColors, FUNDING_TYPES } from "./utils";
 import { getI18nLabel } from "../../../../../../utils";
 import i18n from "./i18n.json";
 
@@ -13,10 +13,12 @@ interface OptionsParams {
 export default function Options({ processedData, currentLang = "fr" }: OptionsParams): Highcharts.Options | null {
   if (!processedData || processedData.countries.length === 0) return null;
 
-  const titleText =
+    const fundingTypeLabel = FUNDING_TYPES.find((t) => t.code === processedData.fundingType)?.label[currentLang] ?? processedData.fundingType;
+
+    const titleText =
     processedData.metric === "projects"
-      ? getI18nLabel(i18n, "chart-title-projects", currentLang)
-      : getI18nLabel(i18n, "chart-title-funding", currentLang);
+      ? getI18nLabel(i18n, "chart-title-projects", currentLang).replace("{fundingType}", fundingTypeLabel)
+      : getI18nLabel(i18n, "chart-title-funding", currentLang).replace("{fundingType}", fundingTypeLabel);
 
   const yAxisLabel =
     processedData.metric === "projects" ? getI18nLabel(i18n, "y-axis-projects", currentLang) : getI18nLabel(i18n, "y-axis-funding", currentLang);
