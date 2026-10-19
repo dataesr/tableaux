@@ -58,7 +58,7 @@ export default function MscaSynthesisCards({
   const succesRateFunding = countryFundingEvaluated > 0 ? countryFunding / countryFundingEvaluated : 0;
   const countrySuccessRate = countryCandidats > 0 ? countryParticipants / countryCandidats : 0;
   const successRateProjects = countryProjectsEvaluated > 0 ? countryProjects / countryProjectsEvaluated : 0;
-  
+
   return (
     <Row className="msca-synthesis-cards" gutters>
       <Col xs={12} md={4}>

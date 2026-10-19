@@ -286,8 +286,6 @@ export default function Intro() {
       .sort((a, b) => a.localeCompare(b, currentLang))
       .join(", ");
 
-
-
     return template.split(/(\{percent\}|\{countriesListSort\})/).map((part, i) => {
       if (part === "{percent}") return <strong key={i}>{percent}</strong>;
       if (part === "{countriesListSort}") return <i key={i}>{countriesListSort}</i>;
