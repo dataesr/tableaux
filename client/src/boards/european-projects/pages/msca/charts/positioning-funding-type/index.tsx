@@ -8,6 +8,7 @@ import { useGetParams, processData, renderDataTable, FUNDING_TYPES, type Funding
 import i18n from "./i18n.json";
 import { getI18nLabel } from "../../../../../../utils";
 import { getCountryNameWithDe, getCountryNameWithArticle } from "../../../../utils/country-mapping";
+import { formatNumber, formatCurrency, formatCurrencyEn } from "../../../../../../utils/format";
 
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
@@ -20,24 +21,64 @@ interface PositioningFundingTypeChartProps {
   currentLang?: string;
 }
 
-const getConfig = (metric: MetricType) => {
+type RankedCountry = { code: string; name: string; value: number; isSelected: boolean };
+
+const withPlaceholders = (text: string, values: Record<string, string>) =>
+  text.replace(/\{(\w+)\}/g, (match, key) => values[key] ?? match);
+
+// Met l'article en minuscule en milieu de phrase (La France → la France),
+// sans toucher aux noms sans article (Madagascar,...)
+const lowerArticle = (s: string) => s.replace(/^(Le |La |Les |L')/, (m) => m.toLowerCase());
+
+const formatReadingValue = (value: number, metric: MetricType, lang: "fr" | "en") => {
+  if (metric === "funding") return lang === "fr" ? formatCurrency(value) : formatCurrencyEn(value);
+  return formatNumber(value);
+};
+
+// Tous les placeholders au même endroit
+const getPlaceholders = (
+  processedData: { countries: RankedCountry[]; selectedCountry?: { country_name_fr: string; country_name_en: string } | null; fundingType },
+  countryCode: string | undefined,
+  metric: MetricType,
+  lang: string,
+  fundingType: FundingTypeCode
+) => {
+  const l = lang as "fr" | "en";
+  const [first, second] = processedData.countries;
+  const selected = processedData.selectedCountry;
+  const selectedName = selected ? (l === "fr" ? selected.country_name_fr : selected.country_name_en) : "";
+  const code = countryCode ?? "";
+  const fundingTypeLabel = FUNDING_TYPES.find((t) => t.code === fundingType)?.label[l] ?? fundingType;
+
+
+  const withArticle = (c?: RankedCountry) =>
+    c ? lowerArticle(getCountryNameWithArticle(c.code, l, c.name)) : "";
+  const valueOf = (c?: RankedCountry) => (c ? formatReadingValue(c.value, metric, l) : "");
+
+  return {
+    country: l === "fr" ? getCountryNameWithDe(code, selectedName) : getCountryNameWithArticle(code, "en", selectedName),
+    metric: getI18nLabel(i18n, metric, l).toLowerCase(),
+    firstCountry: withArticle(first),
+    firstValue: valueOf(first),
+    secondCountry: withArticle(second),
+    secondValue: valueOf(second),
+    fundingType: fundingTypeLabel,
+  };
+};
+
+const getConfig = (metric: MetricType, values: Record<string, string>, lang: string) => {
   const isProjects = metric === "projects";
+  const commentKey = isProjects ? "comment-projects" : "comment-funding";
+  const readingKeyKey = isProjects ? "reading-key-projects" : "reading-key-funding";
+  const text = (key: string, l: string) => withPlaceholders(getI18nLabel(i18n, key, l), values);
+  const title = text("main-title-with-country", lang);
+
   return {
     id: isProjects ? "mscaPositioningFundingTypeProjects" : "mscaPositioningFundingTypeFunding",
     idQuery: "mscaPositioningFundingType",
-    title: {
-      en: getI18nLabel(i18n, isProjects ? "title-projects" : "title-funding", "en"),
-      fr: getI18nLabel(i18n, isProjects ? "title-projects" : "title-funding", "fr"),
-      className: "fr-mt-2w fr-ml-1w",
-    },
-    comment: {
-      fr: <>{getI18nLabel(i18n, isProjects ? "comment-projects" : "comment-funding", "fr")}</>,
-      en: <>{getI18nLabel(i18n, isProjects ? "comment-projects" : "comment-funding", "en")}</>,
-    },
-    readingKey: {
-      fr: <>{getI18nLabel(i18n, isProjects ? "reading-key-projects" : "reading-key-funding", "fr")}</>,
-      en: <>{getI18nLabel(i18n, isProjects ? "reading-key-projects" : "reading-key-funding", "en")}</>,
-    },
+    title: { fr: title, en: title, className: "fr-mt-2w fr-ml-1w"},
+    comment: { fr: <>{text(commentKey, "fr")}</>, en: <>{text(commentKey, "en")}</> },
+    readingKey: { fr: <>{text(readingKeyKey, "fr")}</>, en: <>{text(readingKeyKey, "en")}</> },
     integrationURL: isProjects ? "/european-projects/components/pages/msca/charts/positioning-funding-type" : "/european-projects/components/pages/msca/charts/positioning-funding-type-funding",
   };
 };
@@ -61,16 +102,16 @@ function PositioningFundingTypeChartInner({ countryCode: propCountryCode, curren
   const processedData = processData(data, countryCode, currentLang, metric, fundingType);
 
   // Récupérer le nom du pays avec préposition appropriée
-  const fallbackName = processedData.selectedCountry
-    ? currentLang === "fr"
-      ? processedData.selectedCountry.country_name_fr
-      : processedData.selectedCountry.country_name_en
-    : "";
+  // const fallbackName = processedData.selectedCountry
+  //   ? currentLang === "fr"
+  //     ? processedData.selectedCountry.country_name_fr
+  //     : processedData.selectedCountry.country_name_en
+  //   : "";
 
   // Pour le français, utiliser "de" + article (ex: "de la France", "de l'Allemagne")
   // Pour l'anglais, utiliser le nom simple (ex: "France", "Germany")
-  const countryName =
-    currentLang === "fr" ? getCountryNameWithDe(countryCode, fallbackName) : getCountryNameWithArticle(countryCode, "en", fallbackName);
+  // const countryName =
+  //   currentLang === "fr" ? getCountryNameWithDe(countryCode, fallbackName) : getCountryNameWithArticle(countryCode, "en", fallbackName);
 
   if (processedData.countries.length === 0) {
     return (
@@ -80,19 +121,19 @@ function PositioningFundingTypeChartInner({ countryCode: propCountryCode, curren
     );
   }
 
-  const options = Options({
-    processedData,
-    currentLang,
-  });
+  const options = Options({ processedData, currentLang });
+  const values = getPlaceholders(processedData, countryCode, metric, currentLang, fundingType);
+  const config = getConfig(metric, values, currentLang);
 
-  const config = getConfig(metric);
+  // const config = getConfig(metric);
 
   // Construire le titre dynamique avec le nom du pays
-  const metricLabel = getI18nLabel(i18n, metric === "projects" ? "projects" : "funding", currentLang).toLowerCase();
-  const title = getI18nLabel(i18n, "main-title-with-country", currentLang).replace("{country}", countryName).replace("{metric}", metricLabel);
+  // const metricLabel = getI18nLabel(i18n, metric === "projects" ? "projects" : "funding", currentLang).toLowerCase();
+  // const title = getI18nLabel(i18n, "main-title-with-country", currentLang).replace("{country}", countryName);
 
-  config.title.fr = title;
-  config.title.en = title;
+  // config.title.fr = title;
+  // config.title.en = title;
+  console.log(processedData)
   return (
     <div className="positioning-funding-type-chart">
       <div className="positioning-funding-type-chart__controls">
