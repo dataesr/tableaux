@@ -188,13 +188,13 @@ function PanelChartFunding({ countryCode, callYear, currentLang = "fr" }: PanelC
     readingKey: {
       fr: (
         <>
-          En {readingChoice.panel_name}, les participants du pays sélectionné ont demandé {formatCurrency(countryEval)} et{" "}
+          En "{readingChoice.panel_name}", les participants du pays sélectionné ont demandé {formatCurrency(countryEval)} et{" "}
           obtenu {formatCurrency(countrySucc)} soit un taux de succès de {formatToRates(successRate)}.
         </>
       ),
       en: (
         <>
-          In {readingChoice.panel_name}, participants from the selected country requested {formatCurrency(countryEval)} and{" "}
+          In "{readingChoice.panel_name}", participants from the selected country requested {formatCurrency(countryEval)} and{" "}
           secured {formatCurrency(countrySucc)}, a success rate of {formatToRates(successRate)}.
         </>
       ),
