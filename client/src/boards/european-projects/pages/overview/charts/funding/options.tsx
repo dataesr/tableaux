@@ -6,7 +6,7 @@ import { getCssColor } from "../../../../../../utils/colors";
 import { getI18nLabel, getResponsiveChartHeight } from "../../../../../../utils";
 import i18n from "../../i18n-charts.json";
 
-export default function Options(data, displayType, title) {
+export default function Options(data, title) {
   if (!data) return null;
 
   const newOptions: HighchartsInstance.Options = {
