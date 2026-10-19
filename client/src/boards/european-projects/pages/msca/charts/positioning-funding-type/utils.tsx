@@ -9,6 +9,7 @@ export const FUNDING_TYPES = [
   { code: "DN", label: { fr: "Doctoral Networks (DN)", en: "Doctoral Networks (DN)" } },
   { code: "SE", label: { fr: "Staff Exchanges (SE)", en: "Staff Exchanges (SE)" } },
   { code: "COFUND", label: { fr: "COFUND", en: "COFUND" } },
+  { code: "CITIZENS", label: {fr: "MSCA and Citizens", en: "MSCA and Citizens"} },
   { code: "ITN", label: { fr: "Innovative Training Networks (ITN)", en: "Innovative Training Networks (ITN)" } },
   { code: "RISE", label: { fr: "RISE", en: "RISE" } },
   { code: "IF", label: { fr: "Individual Fellowships (IF)", en: "Individual Fellowships (IF)" } },
