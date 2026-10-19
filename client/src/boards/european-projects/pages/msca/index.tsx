@@ -1,13 +1,14 @@
-import { useEffect, useState } from "react";
 import { Container, Title } from "@dataesr/dsfr-plus";
-import { useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
+
 import Breadcrumb from "../../../../components/breadcrumb";
 import RangeOfYears from "../../../../components/range-of-years";
 import { getMscaFilters } from "../../api/msca";
-import { cleanUrlParams, needsUrlCleaning } from "./url-utils";
-import TabsContent from "./components/TabsContent";
 import navigationConfig from "../../navigation-config.json";
+import TabsContent from "./components/TabsContent";
+import { cleanUrlParams, needsUrlCleaning } from "./url-utils";
 
 import "./styles.scss";
 

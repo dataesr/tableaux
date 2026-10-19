@@ -23,7 +23,9 @@ export default function EvolutionContent() {
       </div>
 
       {/* Graphiques d'évolution par domaine scientifique */}
-      <div className="fr-my-4w">{<EvolutionPanelsCharts countryAdjective={countryAdj.f} currentLang={currentLang} />}</div>
+      <div className="fr-my-4w">
+        <EvolutionPanelsCharts countryAdjective={countryAdj.f} currentLang={currentLang} />
+      </div>
     </div>
   );
 }

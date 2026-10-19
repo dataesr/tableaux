@@ -456,7 +456,7 @@ router.route("/european-projects/msca/evolution-by-panel").get(async (req, res) 
 
   // Agrégation par domaine scientifique
   const aggregationPipeline = (filters, stage) => [
-    { $match: { ...filters, stage, panel_id: { $ne: null } } },
+    { $match: { ...filters, stage, panel_code: { $ne: null } } },
     {
       $group: {
         _id: {
