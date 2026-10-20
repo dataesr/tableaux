@@ -13,8 +13,10 @@ interface OptionsParams {
 export default function Options({ processedData, currentLang = "fr" }: OptionsParams): Highcharts.Options | null {
   if (!processedData || processedData.countries.length === 0) return null;
 
+    /*retrieving the name of the funding type for title chart*/
     const fundingTypeLabel = FUNDING_TYPES.find((t) => t.code === processedData.fundingType)?.label[currentLang] ?? processedData.fundingType;
 
+    /*replacement of type code with type label*/
     const titleText =
     processedData.metric === "projects"
       ? getI18nLabel(i18n, "chart-title-projects", currentLang).replace("{fundingType}", fundingTypeLabel)
