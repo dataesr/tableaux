@@ -110,9 +110,9 @@ export function renderDataTable(processedData: ProcessedPositioningByScientificD
 
   return (
     <table className="fr-table">
-      <caption>
+      {/* <caption> => title in i18n.json
         {currentLang === "fr" ? "Classement des pays par nombre de participants MSCA" : "Country ranking by number of MSCA participants"}
-      </caption>
+      </caption> */}
       <thead>
         <tr>
           {headers.map((header, i) => (
