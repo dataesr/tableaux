@@ -21,21 +21,24 @@ interface PositioningGlobalChartProps {
   currentLang?: string;
 }
 
+// calculation of each country’s rank for inclusion in the readingkey
 type RankedCountry = { code: string; name: string; value: number; isSelected: boolean };
 
+// replacement each {item} with the corresponding value in the 'values' object
 const withPlaceholders = (text: string, values: Record<string, string>) =>
   text.replace(/\{(\w+)\}/g, (match, key) => values[key] ?? match);
 
-// Met l'article en minuscule en milieu de phrase (La France → la France),
-// sans toucher aux noms sans article (Madagascar,...)
+// Lowercases the article in mid-sentence (La France → la France),
+// without touching names that have no article (Madagascar, ...)
 const lowerArticle = (s: string) => s.replace(/^(Le |La |Les |L')/, (m) => m.toLowerCase());
 
+// formatting numerical values to display in readingkeys
 const formatReadingValue = (value: number, metric: MetricType, lang: "fr" | "en") => {
   if (metric === "funding") return lang === "fr" ? formatCurrency(value) : formatCurrencyEn(value);
   return formatNumber(value);
 };
 
-// Tous les placeholders au même endroit
+// Grouping all placeholders and collecting the measurements to be displayed
 const getPlaceholders = (
   processedData: { countries: RankedCountry[]; selectedCountry?: { country_name_fr: string; country_name_en: string } | null },
   countryCode: string | undefined,
@@ -62,6 +65,7 @@ const getPlaceholders = (
   };
 };
 
+// adding dictionary of placeholder names → replacement text { country: "de la France", firstValue: "€598.6 million" }
 const getConfig = (metric: MetricType, values: Record<string, string>, lang: string) => {
   const isProjects = metric === "projects";
   const commentKey = isProjects ? "comment-projects" : "comment-funding";
@@ -97,6 +101,17 @@ function PositioningGlobalChartInner({ countryCode: propCountryCode, currentLang
 
   const processedData = processPositioningData(data, countryCode, currentLang, metric);
 
+  // DEJA TRAITE DANS getPlaceholders
+  // // Récupérer le nom du pays avec préposition appropriée
+  // const fallbackName = processedData.selectedCountry
+  //   ? currentLang === "fr"
+  //     ? processedData.selectedCountry.country_name_fr
+  //     : processedData.selectedCountry.country_name_en
+  //   : "";
+
+  // const countryName =
+  //   currentLang === "fr" ? getCountryNameWithDe(countryCode, fallbackName) : getCountryNameWithArticle(countryCode, "en", fallbackName);
+
   if (processedData.countries.length === 0) {
     return (
       <div className="fr-alert fr-alert--info">
@@ -105,9 +120,18 @@ function PositioningGlobalChartInner({ countryCode: propCountryCode, currentLang
     );
   }
 
+// adding values with getPlaceholders values and calling getconfig with values
 const options = Options({ processedData, currentLang });
 const values = getPlaceholders(processedData, countryCode, metric, currentLang);
 const config = getConfig(metric, values, currentLang);
+
+// DEJA TRAITE DANS getPlaceholders
+// const metricLabel = getI18nLabel(i18n, metric === "projects" ? "projects" : "funding", currentLang).toLowerCase();
+// const title = getI18nLabel(i18n, "main-title-with-country", currentLang).replace("{country}", countryName).replace("{metric}", metricLabel);
+
+// config.title.fr = title;
+// config.title.en = title;
+
 
   return (
     <div className="positioning-global-chart">
