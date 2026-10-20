@@ -8,40 +8,40 @@
     "fr": "Positionnement par domaine scientifique - Financements"
   },
   "comment-projects": {
-    "fr": "Ce graphique présente le classement des pays par nombre de participants MSCA lauréats pour un domaine scientifique spécifique. Le pays sélectionné est mis en évidence en bleu foncé. Si le pays sélectionné n'est pas dans le top 10, il est affiché en dernière position pour comparaison.",
-    "en": "This chart shows the country ranking by number of successful MSCA participants for a specific scientific domain. The selected country is highlighted in dark blue. If the selected country is not in the top 10, it is displayed at the last position for comparison."
+    "fr": "Ce graphique présente le classement des pays par nombre de participants pour un domaine scientifique spécifique. Si le pays sélectionné n'est pas dans le top 10, il est affiché en dernière position pour comparaison.",
+    "en": "This chart shows the ranking of countries by number of participants for a specific scientific field. If the selected country is not in the top 10, it is displayed in last position for comparison."
   },
   "comment-funding": {
-    "fr": "Ce graphique présente le classement des pays par montant de financements MSCA obtenus pour un domaine scientifique spécifique. Le pays sélectionné est mis en évidence en bleu foncé. Si le pays sélectionné n'est pas dans le top 10, il est affiché en dernière position pour comparaison.",
-    "en": "This chart shows the country ranking by MSCA funding amount obtained for a specific scientific domain. The selected country is highlighted in dark blue. If the selected country is not in the top 10, it is displayed at the last position for comparison."
+    "fr": "Ce graphique présente le classement des pays par montant de financements obtenus pour un domaine scientifique spécifique. Si le pays sélectionné n'est pas dans le top 10, il est affiché en dernière position pour comparaison.",
+    "en": "This chart shows the ranking of countries by amount of funding secured for a specific scientific field. If the selected country is not in the top 10, it is displayed in last position for comparison."
   },
   "reading-key-projects": {
-    "fr": "Un pays bien positionné dans ce classement a un nombre élevé de participants MSCA lauréats dans ce domaine scientifique, ce qui reflète la capacité de recherche d'excellence du pays dans ce domaine.",
-    "en": "A well-positioned country in this ranking has a high number of successful MSCA participants in this scientific domain, which reflects the country's research excellence capacity in this area."
+    "fr": "Avec {firstValue} participants aux projets financés en {domain}, {firstCountry} se place en première position des pays du classement, suivi par {secondCountry} avec {secondValue} participants.",
+    "en": "With {firstValue} participants in projects funded in {domain}, {firstCountry} ranks first among the countries shown, followed by {secondCountry} with {secondValue} participants."
   },
   "reading-key-funding": {
-    "fr": "Un pays bien positionné dans ce classement a obtenu des montants élevés de financements MSCA dans ce domaine scientifique, ce qui reflète l'attractivité et la compétitivité de sa recherche dans ce domaine.",
-    "en": "A well-positioned country in this ranking has obtained high amounts of MSCA funding in this scientific domain, which reflects the attractiveness and competitiveness of its research in this area."
+    "fr": "Avec {firstValue} de financements obtenus, {firstCountry} se place en première position des pays financés en {domain}, suivi par {secondCountry} avec {secondValue}.",
+    "en": "With {firstValue} in funding secured, {firstCountry} ranks first among the funded countries in {domain}, followed by {secondCountry} with {secondValue}."
   },
   "no-data": {
     "fr": "Aucune donnée disponible.",
     "en": "No data available."
   },
   "chart-title-projects": {
-    "fr": "Graphique représentant le top 10 des pays par nombre de participants MSCA lauréats",
-    "en": "Country ranking by number of successful MSCA participants"
+    "fr": "Principaux pays participants aux projets financés en {domain}",
+    "en": "Top participating countries in funded {domain} projects"
   },
   "chart-title-funding": {
-    "fr": "Classement des pays par montant de financements MSCA obtenus",
-    "en": "Country ranking by MSCA funding amount obtained"
+    "fr": "Principaux pays bénéficiaires des financements en {domain}",
+    "en": "Top beneficiary countries for {domain} funding"
   },
   "main-title": {
     "fr": "Positionnement par domaine scientifique du pays",
     "en": "Country positioning by scientific domain"
   },
   "main-title-with-country": {
-    "fr": "Positionnement de {country} sur les {metric} MSCA par domaine scientifique",
-    "en": "{country}'s positioning on MSCA {metric} by scientific domain"
+    "fr": "Par domaine scientifique",
+    "en": "By scientific domain"
   },
   "projects": {
     "fr": "Participants",
