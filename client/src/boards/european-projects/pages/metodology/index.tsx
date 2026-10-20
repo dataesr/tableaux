@@ -13,7 +13,7 @@ export default function Methodology() {
       <Title as="h2" look="h4">
         Le périmètre des données retenues pour l'analyse
       </Title>
-      <Text>
+      <div>
         <ul>
           <li>
             <strong>Projets évalués</strong>
@@ -33,8 +33,8 @@ export default function Methodology() {
             Pour les évolutions, l'analyse couvre l'ensemble des PCRI depuis le FP6 (2002-2006). Pour le FP6 sont uniquement disponibles les projets lauréats.
           </li>
         </ul>
-      </Text>
-
+      </div>
+      <br />
       <Title as="h2" look="h4">
         Les 4 indicateurs de base
       </Title>
@@ -43,7 +43,7 @@ export default function Methodology() {
         <strong>projets évalués</strong> (ce qui a été demandé) et sur les{' '}
         <strong>projets lauréats</strong> (ce qui a été obtenu).
       </Text>
-      <Text>
+      <div>
         <ul>
           <li>
             <strong>Nombre de projets</strong>
@@ -80,15 +80,15 @@ export default function Methodology() {
             Il s'agit d'un engagement, et non de sommes effectivement versées.
           </li>
         </ul>
-      </Text>
-
+      </div>
+      <br />
       <Title as="h2" look="h4">
         Des indicateurs de base aux indicateurs dérivés
       </Title>
       <Text>
         Tous les autres indicateurs du site sont calculés à partir de ces quatre mesures.
       </Text>
-      <Text>
+      <div>
         <ul>
           <li>
             <strong>Parts</strong>
@@ -118,9 +118,8 @@ export default function Methodology() {
             coordinations au sein des consortiums en précise la nature.
           </li>
         </ul>
-      </Text>
-
-
+      </div>
+      <br />
       <Title as="h2" look="h4">
         Entités européennes et internationales
       </Title>
@@ -130,8 +129,9 @@ export default function Methodology() {
         indicateurs, ou une vision plus nationale, qui les exclut.
         <br />
           Ces entités sont repérées manuellement. La liste n’est pas exhaustive et peut évoluer en fonction des échanges entre les services.
-        <br />
-        <br />
+        </Text>
+
+      <div>
         Les entités européennes et internationales comprennent :
         <ul style={{ listStyle: "inherit", paddingLeft: "1.2rem" }}>
           <li>les organisations internationales</li>
@@ -144,7 +144,7 @@ export default function Methodology() {
         <br />
         ...
         {/* TODO: list of entities */}
-      </Text>
+      </div>
     </Container>
   );
 }
