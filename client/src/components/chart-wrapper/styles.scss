@@ -54,6 +54,9 @@ figure {
 }
 
 // highchart-data-table
+.highcharts-data-table {
+  overflow-x: auto;
+}
 .highcharts-data-table table {
   border-collapse: collapse;
   border-spacing: 0;
