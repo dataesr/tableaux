@@ -167,13 +167,13 @@ export default function DisplayStructure() {
                         className="fr-select"
                         id="select-year-min"
                         name="select-year-min"
+                        onChange={(e) => handleYearMinChange(e.target.value)}
                         title="Année de début"
+                        value={yearMin}
                       >
                         {[...years].sort((a, b) => b - a).map((year) => (
                           <option
                             key={year}
-                            onClick={() => handleYearMinChange(String(year))}
-                            selected={yearMin === String(year)}
                             value={String(year)}
                           >
                             {year}
@@ -190,13 +190,13 @@ export default function DisplayStructure() {
                         className="fr-select"
                         id="select-year-max"
                         name="select-year-max"
+                        onChange={(e) => handleYearMaxChange(e.target.value)}
                         title="Année de fin"
+                        value={yearMax}
                       >
                         {[...years].sort((a, b) => b - a).map((year) => (
                           <option
                             key={year}
-                            onClick={() => handleYearMaxChange(String(year))}
-                            selected={yearMax === String(year)}
                             value={String(year)}
                           >
                             {year}
