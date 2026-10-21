@@ -102,7 +102,6 @@ function IntegrationModal({ graphConfig, isOpen, modalId, setIsOpen }) {
         </SyntaxHighlighter>
         <div className="fr-mt-2w text-right">
           <Button
-            color="beige-gris-galet"
             onClick={() => setIsOpen(false)}
             variant="secondary"
           >
@@ -353,6 +352,8 @@ interface CurrentChart extends Highcharts.Chart {
   downloadCSV: () => string;
   exportChart: (exportingOptions: Highcharts.ExportingOptions, chartOptions: Highcharts.Options) => string;
   print: () => string;
+  viewData: () => void;
+  hideData: () => void;
 }
 
 export default function ChartWrapper({
@@ -437,24 +438,17 @@ export default function ChartWrapper({
       chartOptions: { title: { text: config?.title } },
       filename: config?.title ?? 'chart',
       showTable: displayType === 'data',
+      tableCaption: getI18nLabel(i18n, "data"),
     }
   };
   const optionsTmp: HighchartsOptions = deepMerge(options, exportingOptions);
 
-  if (chart && chart.current && chart.current.chart && !renderData) {
+  const changeDisplayType = (type: string) => {
+    setDisplayType(type);
+    if (renderData || !chart.current?.chart) return;
     const currentChart = chart.current.chart as CurrentChart;
-    currentChart.update({
-      exporting: {
-        showTable: displayType === 'data',
-        tableCaption: getI18nLabel(i18n, "data"),
-      }
-    });
-  };
-
-  // Force delete element DOM of data table of Highchart
-  if (displayType !== 'data') {
-    const elt: HTMLElement = document.getElementsByClassName("highcharts-data-table")?.[0] as HTMLElement;
-    elt?.style?.setProperty("display", "none");
+    if (type === "data") currentChart.viewData();
+    else currentChart.hideData();
   };
 
   return (
@@ -463,7 +457,6 @@ export default function ChartWrapper({
       <div className="actions">
         <Button
           aria-label={optionsLabel}
-          color="beige-gris-galet"
           icon="settings-5-line"
           onClick={() => setIsOpen(true)}
           size="sm"
@@ -493,7 +486,7 @@ export default function ChartWrapper({
         isOpen={isOpen}
         modalId={modalId}
         printChart={printChart}
-        setDisplayType={setDisplayType}
+        setDisplayType={changeDisplayType}
         setIsOpen={setIsOpen}
         setIsOpenIntegration={setIsOpenIntegration}
       />
