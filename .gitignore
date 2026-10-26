@@ -36,3 +36,6 @@ client/.env
 
 files/*
 todo.txt
+# Claude Code (fichiers personnels)
+.claude/settings.local.json
+CLAUDE.local.md

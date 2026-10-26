@@ -1,0 +1,21 @@
+GET http://localhost:3000/api/suivi-recherche/bibliometrie/meta
+
+###
+GET http://localhost:3000/api/suivi-recherche/bibliometrie/disciplines
+
+###
+GET http://localhost:3000/api/suivi-recherche/bibliometrie/entites
+
+###
+# Influence de la France, 2015–2022, toutes disciplines, périmètre SJR (exemple du contrat de données)
+GET http://localhost:3000/api/suivi-recherche/bibliometrie/indicateurs?entite_id=FR&perimetre=revues_sjr&annee_debut=2015&annee_fin=2022
+
+###
+GET http://localhost:3000/api/suivi-recherche/bibliometrie/indicateurs?entite_id=FR&perimetre=revues_sjr&annee_debut=2015&annee_fin=2022&domaine_code=LS&inclure_multidisciplinaires=true
+
+###
+GET http://localhost:3000/api/suivi-recherche/bibliometrie/evolution?entite_id=FR&perimetre=revues_sjr&annee_debut=2015&annee_fin=2022
+
+###
+# 400 attendu
+GET http://localhost:3000/api/suivi-recherche/bibliometrie/indicateurs?entite_id=FR&perimetre=inconnu&annee_debut=2015&annee_fin=2022

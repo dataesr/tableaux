@@ -1,0 +1,24 @@
+:root {
+  // Couleurs des indicateurs : tokens DSFR sun/moon, lus par getCssColor (thème sombre géré)
+  --sr-poids: var(--blue-france-main-525);
+  --sr-influence: var(--green-archipel-main-557);
+  --sr-prestige: var(--orange-terre-battue-main-645);
+
+  // Entité mise en avant dans les comparaisons
+  --sr-focus: var(--blue-france-sun-113-625);
+
+  // Continents (comparaison internationale)
+  --sr-continent-europe: var(--green-emeraude-main-632);
+  --sr-continent-asie: var(--purple-glycine-main-494);
+  --sr-continent-amerique-du-nord: var(--yellow-moutarde-main-679);
+  --sr-continent-amerique-du-sud: var(--orange-terre-battue-main-645);
+  --sr-continent-afrique: var(--brown-caramel-main-648);
+  --sr-continent-oceanie: var(--blue-ecume-main-400);
+  --sr-continent-autre: var(--grey-625-425);
+
+  // Domaines ERC (matrice de positionnement) : contraste ≥ 3:1 en clair et en sombre,
+  // et distincts en deutéranopie, protanopie et tritanopie (ΔE ≥ 31)
+  --sr-domaine-ls: var(--green-emeraude-sun-425-moon-753);
+  --sr-domaine-pe: var(--blue-france-sun-113-625);
+  --sr-domaine-sh: var(--purple-glycine-main-494);
+}

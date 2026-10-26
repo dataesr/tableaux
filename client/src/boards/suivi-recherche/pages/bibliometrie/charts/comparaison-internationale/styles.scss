@@ -1,0 +1,22 @@
+.sr-legende {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  li {
+    align-items: center;
+    display: flex;
+    gap: 0.5rem;
+    padding: 0;
+  }
+}
+
+.sr-legende__pastille {
+  border-radius: 2px;
+  display: inline-block;
+  height: 0.75rem;
+  width: 1.5rem;
+}

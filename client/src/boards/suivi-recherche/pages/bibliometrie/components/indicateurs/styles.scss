@@ -1,0 +1,34 @@
+.sr-indicateur {
+  border: 1px solid var(--border-default-grey);
+  border-block-start: 4px solid var(--sr-indicateur-color);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  height: 100%;
+  padding: 1.5rem;
+
+  &--poids {
+    --sr-indicateur-color: var(--sr-poids);
+  }
+
+  &--influence {
+    --sr-indicateur-color: var(--sr-influence);
+  }
+
+  &--prestige {
+    --sr-indicateur-color: var(--sr-prestige);
+  }
+
+  .sr-indicateur__header {
+    align-items: center;
+    display: flex;
+    gap: 0.5rem;
+    justify-content: space-between;
+  }
+}
+
+.sr-indicateurs__selection {
+  border-inline-start: 4px solid var(--border-active-blue-france);
+  margin-block-end: 1.5rem;
+  padding-inline-start: 1rem;
+}

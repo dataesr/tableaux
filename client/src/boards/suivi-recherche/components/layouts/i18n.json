@@ -1,0 +1,32 @@
+{
+  "accueil": {
+    "fr": "Accueil"
+  },
+  "bibliometrie": {
+    "fr": "Bibliométrie"
+  },
+  "explore": {
+    "fr": "Explorer d'autres tableaux de bord"
+  },
+  "mainNavigation": {
+    "fr": "Menu principal"
+  },
+  "menu": {
+    "fr": "Menu"
+  },
+  "skipContent": {
+    "fr": "Contenu principal"
+  },
+  "skipFooter": {
+    "fr": "Pied de page"
+  },
+  "skipLinks": {
+    "fr": "Accès rapide"
+  },
+  "skipMenu": {
+    "fr": "Menu"
+  },
+  "tagline": {
+    "fr": "Suivi de la recherche française"
+  }
+}
