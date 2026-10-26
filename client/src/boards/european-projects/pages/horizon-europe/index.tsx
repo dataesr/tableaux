@@ -94,7 +94,7 @@ function FloatingFilters() {
 
   return (
     <div>
-      <Button data-fr-opened="false" aria-controls="modal" icon="filter-fill" className="ep-filter-button" variant="secondary">
+      <Button data-fr-opened="false" aria-controls="modal" icon="filter-fill" className="ep-filter-button" size="sm" variant="primary">
         {getI18nLabel(i18nGlobal, "active-filters")}
         <Badge className="fr-ml-1w" size="sm">
           {filteredEntries.length}
