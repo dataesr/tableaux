@@ -150,7 +150,6 @@ export default function AxesContent() {
           </Title>
           <Callout className="callout-style">{getI18nLabel(i18n, "thematic-detail-callout", currentLang)}</Callout>
           <FundingEvo />
-
           <Title as="h2" className="fr-mt-5w">
             {getI18nLabel(i18n, "thematic-composition", currentLang)}
           </Title>

@@ -903,8 +903,8 @@ router.route("/european-projects/overview/funding").get(async (req, res) => {
 
   if (req.query.thematics) {
     const thematics = req.query.thematics.split(",");
-    const filteredThematics = thematics.filter((thematic) => !["ERC", "MSCA"].includes(thematic));
-    filters.thema_code = { $in: filteredThematics };
+    // const filteredThematics = thematics.filter((thematic) => !["ERC", "MSCA"].includes(thematic));
+    filters.thema_code = { $in: thematics };
     delete filters.pilier_code;
     delete filters.programme_code;
 
@@ -1045,7 +1045,7 @@ router.route("/european-projects/overview/funding-proportion").get(async (req, r
   }
   if (req.query.thematics) {
     const thematics = req.query.thematics.split(",");
-    filters.thema_code = { $in: thematics.filter((thematic) => !["ERC", "MSCA"].includes(thematic)) };
+    filters.thema_code = { $in: thematics };
   }
   if (req.query.destinations) {
     filters.destination_code = { $in: req.query.destinations.split(",") };

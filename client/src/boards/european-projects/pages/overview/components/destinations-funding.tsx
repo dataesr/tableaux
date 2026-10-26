@@ -26,7 +26,6 @@ export default function DestinationsFunding() {
           <FundingCombined displayType={displayType} groupBy="destination" />
         </Col>
       </Row>
-
       <Row className="fr-mt-1w">
         <Col>
           <DestinationFundingProportion displayType={displayType} />
