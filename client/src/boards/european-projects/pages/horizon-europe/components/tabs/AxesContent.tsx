@@ -19,8 +19,8 @@ const i18n = {
   "pillar-comparison-title": { fr: "Vue par pilier", en: "Pillar overview" },
   "pillar-detail-title": { fr: "Evolution du pilier", en: "Pillar details evolution" },
   "pillar-detail-callout": {
-    fr: "Visualisez l'évolution des financements demandés et obtenus pour le pilier sélectionné sur les trois dernières années du programme Horizon Europe. Cela vous permet d'analyser les tendances de financement et d'évaluer la performance du pilier au fil du temps. Vous pouvez également ajuster l'affichage pour visualister le total des subventions, le nombre total de coordinations ou le nombre total de participations.",
-    en: "Visualize the evolution of requested and obtained grants for the selected pillar over the last three years of the Horizon Europe program. This allows you to analyze funding trends and evaluate the pillar's performance over time. You can also adjust the display to view total grants, total coordinations, or total participations.",
+    fr: "Visualisez l'évolution des financements demandés et obtenus pour le pilier sélectionné sur les différentes années du programme Horizon Europe. Cela vous permet d'analyser les tendances de financement et d'évaluer la performance du pilier au fil du temps. Vous pouvez également ajuster l'affichage pour visualister le total des subventions, le nombre total de coordinations ou le nombre total de participations.",
+    en: "Visualize the evolution of requested and obtained grants for the selected pillar over the years of the Horizon Europe program. This allows you to analyze funding trends and evaluate the pillar's performance over time. You can also adjust the display to view total grants, total coordinations, or total participations.",
   },
   "pillar-composition": { fr: "Composition du pilier", en: "Pillar composition" },
   "pillar-composition-callout": {
@@ -40,8 +40,8 @@ const i18n = {
   },
   "program-detail-title": { fr: "Evolution du programme", en: "Program evolution" },
   "program-detail-callout": {
-    fr: "Visualisez l'évolution des financements demandés et obtenus pour le programme sélectionné sur les trois dernières années du programme Horizon Europe. Cela vous permet d'analyser les tendances de financement et d'évaluer la performance du programme au fil du temps. Vous pouvez également ajuster l'affichage pour visualister le total des subventions, le nombre total de coordinations ou le nombre total de participations.",
-    en: "Visualize the evolution of requested and obtained grants for the selected program over the last three years of the Horizon Europe program. This allows you to analyze funding trends and evaluate the program's performance over time. You can also adjust the display to view total grants, total coordinations, or total participations.",
+    fr: "Visualisez l'évolution des financements demandés et obtenus pour le programme sélectionné sur les différentes années du programme Horizon Europe. Cela vous permet d'analyser les tendances de financement et d'évaluer la performance du programme au fil du temps. Vous pouvez également ajuster l'affichage pour visualister le total des subventions, le nombre total de coordinations ou le nombre total de participations.",
+    en: "Visualize the evolution of requested and obtained grants for the selected program over the years of the Horizon Europe program. This allows you to analyze funding trends and evaluate the program's performance over time. You can also adjust the display to view total grants, total coordinations, or total participations.",
   },
 
   "thematic-composition": { fr: "Composition du ou des thématiques", en: "Thematic composition" },
@@ -52,13 +52,13 @@ const i18n = {
   "thematic-detail-title": { fr: "Evolution de la thématique", en: "Thematic evolution" },
   "thematic-detail-callout": {
     fr: "Visualisez l'évolution des financements demandés et obtenus pour la ou les thématique(s) sélectionnée(s) sur les différentes années du programme Horizon Europe. Cela vous permet d'analyser les tendances de financement et d'évaluer la performance de la thématique au fil du temps. Vous pouvez également ajuster l'affichage pour visualister le total des subventions, le nombre total de coordinations ou le nombre total de participations.",
-    en: "Visualize the evolution of requested and obtained grants for the selected topic over the last three years of the Horizon Europe program. This allows you to analyze funding trends and evaluate the topic's performance over time. You can also adjust the display to view total grants, total coordinations, or total participations.",
+    en: "Visualize the evolution of requested and obtained grants for the selected topic over the years of the Horizon Europe program. This allows you to analyze funding trends and evaluate the topic's performance over time. You can also adjust the display to view total grants, total coordinations, or total participations.",
   },
 
   "destination-detail-title": { fr: "Evolution de la destination", en: "Destination evolution" },
   "destination-detail-callout": {
     fr: "Visualisez l'évolution des financements demandés et obtenus pour la ou les destination(s) sélectionnée(s) sur les différentes années du programme Horizon Europe. Cela vous permet d'analyser les tendances de financement et d'évaluer la performance de la thématique au fil du temps. Vous pouvez également ajuster l'affichage pour visualister le total des subventions, le nombre total de coordinations ou le nombre total de participations.",
-    en: "Visualize the evolution of requested and obtained grants for the selected topic over the last three years of the Horizon Europe program. This allows you to analyze funding trends and evaluate the topic's performance over time. You can also adjust the display to view total grants, total coordinations, or total participations.",
+    en: "Visualize the evolution of requested and obtained grants for the selected topic over the years of the Horizon Europe program. This allows you to analyze funding trends and evaluate the topic's performance over time. You can also adjust the display to view total grants, total coordinations, or total participations.",
   },
 
   "no-content": { fr: "Aucun contenu disponible", en: "No content available" },
