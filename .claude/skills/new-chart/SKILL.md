@@ -11,12 +11,12 @@ Exemple de référence : `client/src/boards/template/pages/overview/charts/funde
 
 1. Créer `client/src/boards/<board>/pages/<page>/charts/<chart-name>/` (kebab-case).
 2. `utils.tsx` : fonctions pures sans React.
-   - `getSeries(data)` : transforme la réponse API/ES en `{ categories, series }`, en tolérant les données absentes (`?? []`).
+   - `getSeries(data)` : transforme la réponse API/ES en `{ categories, series }`. Traiter explicitement les données absentes ou vides ; ne pas masquer une réponse invalide comme un succès vide.
    - `getOptions(...)` : renvoie l'objet d'options Highcharts (`credits: { enabled: false }`, titres d'axes, etc.).
 3. `index.tsx` : composant par défaut.
    - `const { VITE_APP_SERVER_URL } = import.meta.env;`
    - Données : si le board a un dossier `api/`, y écrire le hook (`useQuery`) et l'importer ici ; sinon `useQuery` dans le composant, comme le reste du board. Tous les filtres vont dans la `queryKey` (`["<board>-<chart-name>", ...filtres]`).
-   - `if (isLoading || !data) return <DefaultSkeleton />;`. Prévoir aussi l'état vide (aucune donnée pour les filtres : message explicatif, pas un graphique vide) et l'erreur (`Alert` sur place, filtres conservés).
+   - Distinguer chargement, erreur et absence de résultat : `DefaultSkeleton` pendant le chargement, `Alert` sur place en cas d'erreur en conservant les filtres, et un message explicatif si la requête réussit sans données. Ne pas laisser l'erreur afficher un squelette indéfiniment.
    - Couleurs : `useChartColor`, `client/src/utils/colors.ts` ou le `colors.scss` du board. Jamais d'hex en dur dans un nouveau graphique (thème sombre).
    - `config = { id, title, integrationURL: "/integration?chart_id=<id>" }` (+ `comment`, `sources`, `description` si le board les utilise).
    - Rendu : `<ChartWrapper config={config} options={options} />` (ne jamais instancier `HighchartsReact` directement).
@@ -31,4 +31,4 @@ Filtres : préférer les composants dsfr-plus (`Select`, `SegmentedControl`…) 
 
 ## Vérification
 
-`cd client && npx tsc --noEmit`, puis si possible `npm start` et ouvrir la page pour vérifier le rendu.
+Lancer les vérifications indiquées dans le `AGENTS.md` racine et, si possible, ouvrir la page localement pour vérifier le rendu, les états et l'accessibilité clavier.

@@ -36,7 +36,7 @@ Il reste du balisage de ce type dans le code existant (sélecteurs de thème / l
 
 | Élément DSFR | Hypothèse tacite / ce qui casse | Dans tableaux |
 |---|---|---|
-| `fr-header` / `fr-nav` | Sur mobile, nav et outils passent dans une `fr-modal` pilotée par le JS DSFR ; les sous-menus de `fr-nav` ne sont câblés qu'à ≥ 62em. **Le `Header` de dsfr-plus rend lui aussi son burger avec `data-fr-opened`** : une `Nav` passée dans `Header` est inaccessible sur mobile. | `Header` pour le logo, le service et `FastAccess` seulement ; la navigation dans une barre à part, ouverte par un état React (`boards/suivi-recherche/components/layouts/global-layout.tsx`). Tester au tactile. |
+| `fr-header` / `fr-nav` | Sur mobile, nav et outils peuvent dépendre d'une `fr-modal` pilotée par le JS DSFR ; les sous-menus ont aussi des seuils responsive. Vérifier les comportements réels des composants dsfr-plus et du board avant de composer header et navigation. | Tester au tactile et au clavier ; ne pas supposer qu'un attribut DSFR déclenche un comportement React. |
 | `fr-container` | Plafonne et centre ; **deux conteneurs imbriqués doublent la gouttière**. | Un seul `Container` par niveau de page. |
 | `fr-container--fluid` (`Container fluid`) | Pose `overflow: hidden` : **tue `position: sticky`** en silence. | Ne pas l'utiliser autour d'un élément sticky (sidemenu, filtres collants). |
 | `fr-sidemenu` | Un sommaire secondaire en page, pas une nav principale. | `SideMenu` pour les sommaires des boards. |
@@ -76,7 +76,7 @@ Il reste du balisage de ce type dans le code existant (sélecteurs de thème / l
 7. **Case à cocher décalée** — le DSFR dessine la case en `label::before` à `left: -1.5rem`, relatif au `margin-left` du label. Ne compacter que les marges de bloc, jamais ce `margin-left`.
 8. **Les défauts navigateur sont remis à zéro** (listes, `<dialog>`, titres) : ajouter l'espacement par les utilitaires, ne pas supposer qu'il existe.
 9. **Un seul `::before`** — les icônes `fr-icon-*` dessinent dans `::before`, la surcouche de `fr-enlarge-link` aussi : un lien couvrant qui porte une icône perd sa surcouche (le clic ne marche que sur le texte). Mettre l'icône à droite (`::after`) ou dans un `<span>` séparé.
-10. **Focus dans un popup maison** — un anneau extérieur est rogné par les bords : le dessiner à l'intérieur (`outline: 2px solid #0a76f6; outline-offset: -2px`), sous la classe du popup pour gagner en spécificité (sinon match nul avec la règle DSFR, arbitré par l'ordre du bundle).
+10. **Focus dans un popup maison** — un anneau extérieur peut être rogné par les bords. Préserver l'indicateur de focus ; si un style spécifique est indispensable, utiliser un token DSFR vérifié et une règle localisée au popup plutôt qu'une couleur codée en dur.
 
 ## 4. Composants propres à un board
 
@@ -95,4 +95,4 @@ Il reste du balisage de ce type dans le code existant (sélecteurs de thème / l
   - Erreur attendue (filtre sans résultat, 4xx) : affichée sur place (`Alert`, `Notice`) sans démonter la page ni les filtres.
 - **États limites** : 0 élément, 1 élément, des centaines, des libellés très longs (noms d'établissements), années sans données.
 - **Accessibilité (RGAA)** : `id` uniques via `useId`, chaque champ a un `<label>`, ordre de titres cohérent (un seul `h1` par page), information jamais portée par la seule couleur, contrastes via les tokens.
-- **Validation humaine** : on ne voit pas le rendu. Avant de rendre la main : `cd client && npx tsc --noEmit`, relecture contre le §3, puis donner à l'utilisateur **la route à ouvrir** (`http://localhost:5173/<board>/<page>`) et une **liste de vérification** : thème clair/sombre, mobile, navigation clavier, états vides et limites à déclencher.
+- **Validation humaine** : on ne voit pas le rendu. Lancer les vérifications indiquées dans le `AGENTS.md` racine, relire contre le §3, puis donner à l'utilisateur **la route à ouvrir** (`http://localhost:5173/<board>/<page>`) et une **liste de vérification** : thème clair/sombre, mobile, navigation clavier, états vides et limites à déclencher.

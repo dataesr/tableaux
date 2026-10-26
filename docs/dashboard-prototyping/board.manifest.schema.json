@@ -1,0 +1,172 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Tableaux prototype board manifest",
+  "description": "Proposed metadata for a generated board; it does not register or authorize a dashboard.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "id",
+    "name",
+    "description",
+    "architecture_profile",
+    "data_mode",
+    "integrations",
+    "features"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "schema_version": {
+      "const": 1
+    },
+    "id": {
+      "type": "string",
+      "description": "Board folder name and, at promotion, matching MongoDB boards.id.",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+      "minLength": 2,
+      "maxLength": 50
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120
+    },
+    "description": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500
+    },
+    "architecture_profile": {
+      "enum": [
+        "tableaux-fixtures",
+        "tableaux-existing-api"
+      ]
+    },
+    "data_mode": {
+      "enum": [
+        "fixtures",
+        "approved-read-only-preview"
+      ]
+    },
+    "integrations": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "enum": [
+          "fixtures.local-json",
+          "tableaux.elasticsearch-proxy",
+          "tableaux.board-api"
+        ]
+      }
+    },
+    "features": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+        "maxLength": 64
+      }
+    },
+    "preview_approval": {
+      "description": "Required by review policy, not sufficient authorization, when data_mode is approved-read-only-preview.",
+      "anyOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "owner",
+            "source",
+            "datasets"
+          ],
+          "properties": {
+            "owner": {
+              "type": "string",
+              "minLength": 1
+            },
+            "source": {
+              "type": "string",
+              "minLength": 1
+            },
+            "datasets": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "data_mode": {
+            "const": "approved-read-only-preview"
+          }
+        },
+        "required": ["data_mode"]
+      },
+      "then": {
+        "required": ["preview_approval"],
+        "properties": {
+          "architecture_profile": {
+            "const": "tableaux-existing-api"
+          },
+          "preview_approval": {
+            "type": "object"
+          },
+          "integrations": {
+            "minItems": 1,
+            "items": {
+              "enum": [
+                "fixtures.local-json",
+                "tableaux.elasticsearch-proxy",
+                "tableaux.board-api"
+              ]
+            },
+            "contains": {
+              "enum": [
+                "tableaux.elasticsearch-proxy",
+                "tableaux.board-api"
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "data_mode": {
+            "const": "fixtures"
+          }
+        },
+        "required": ["data_mode"]
+      },
+      "then": {
+        "properties": {
+          "architecture_profile": {
+            "const": "tableaux-fixtures"
+          },
+          "integrations": {
+            "items": {
+              "const": "fixtures.local-json"
+            }
+          }
+        }
+      }
+    }
+  ]
+}
