@@ -65,11 +65,12 @@ Example:
 
 ## Checks and delivery
 
-The repository's current frontend checks are:
+Run the checks documented in the root `AGENTS.md` and report actual command outcomes.
+
+At the time of writing:
 
 ```powershell
-npm -w client run lint
 npm run build
 ```
 
-The build runs TypeScript compilation and Vite. The repository has no configured unit/browser/accessibility test runner, generic scaffold/import command, or pull-request validation workflow. An external archive therefore needs human import/review and these local checks; do not describe it as automatically validated or production-ready.
+`npm run build` runs TypeScript compilation and Vite. Client lint exists but currently depends on ESLint 9 flat-config migration. The repository has no configured unit/browser/accessibility test runner, generic scaffold/import command, or pull-request validation workflow. An external archive therefore needs human import/review and these local checks; do not describe it as automatically validated or production-ready.
