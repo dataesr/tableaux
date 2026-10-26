@@ -51,7 +51,7 @@ export default function EpNavigator() {
   const pillarId = searchParams.get("pillarId") || undefined;
   const programId = searchParams.get("programId") || undefined;
   const thematicIds = searchParams.get("thematicIds") || undefined;
-  const isEjo = searchParams.get("isEjo") || true;
+  const isEjo = searchParams.get("isEjo") || "false";
 
   // récupération de tous les piliers de la base de données
   const { data: pillarsData } = useQuery({
