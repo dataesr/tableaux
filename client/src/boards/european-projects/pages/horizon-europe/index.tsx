@@ -1,15 +1,16 @@
 import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Container, Button, Badge, Title } from "@dataesr/dsfr-plus";
+
+import { getCountryInfo } from "../../../../components/country-selector/utils";
+import { getFlagEmoji, getI18nLabel } from "../../../../utils";
+import Breadcrumb from "../../../../components/breadcrumb";
 import EpNavigator from "../../components/ep-navigator/index";
 import TabsContent from "./components/TabsContent";
-import { getCountryInfo } from "../../../../components/country-selector/utils";
 
 import navigationConfig from "../../navigation-config.json";
-
+import i18nGlobal from "../../i18n-global.json";
 import "./styles.scss";
-import Breadcrumb from "../../../../components/breadcrumb";
-import { getFlagEmoji } from "../../../../utils";
 
 function FloatingFilters() {
   const [searchParams] = useSearchParams();
@@ -94,7 +95,7 @@ function FloatingFilters() {
   return (
     <div>
       <Button data-fr-opened="false" aria-controls="modal" icon="filter-fill" className="ep-filter-button" variant="secondary">
-        Filtres actifs
+        {getI18nLabel(i18nGlobal, "active-filters")}
         <Badge className="fr-ml-1w" size="sm">
           {filteredEntries.length}
         </Badge>
@@ -106,14 +107,14 @@ function FloatingFilters() {
               <div className="fr-modal__body">
                 <div className="fr-modal__header">
                   <button aria-controls="modal" title="Fermer" type="button" className="fr-btn--close fr-btn">
-                    Fermer
+                    {getI18nLabel(i18nGlobal, "close")}
                     {allEntries}
                   </button>
                 </div>
                 <div className="fr-modal__content">
                   <Title as="h2" id="modal-title" className="fr-modal__title">
                     <span className="fr-icon-arrow-right-line fr-icon--lg" aria-hidden="true" />
-                    Filtres actifs
+                    {getI18nLabel(i18nGlobal, "active-filters")}
                   </Title>
                   <ul>{filteredEntries.map((param) => showParam(param))}</ul>
                 </div>
