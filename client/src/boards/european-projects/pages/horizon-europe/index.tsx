@@ -151,8 +151,9 @@ export default function HorizonEurope() {
     const handleScroll = () => {
       // On ignore le scroll tant que la modale est ouverte
       if (isModalOpenRef.current) return;
-      setCollapsed(window.scrollY > 100);
-    };;
+      const y = window.scrollY;
+      setCollapsed((prev) => (prev ? y > 20 : y > 150)); // évite la boucle replier/déplier #143
+    };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => {
