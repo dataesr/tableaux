@@ -12,7 +12,6 @@ import { formatNumberLang, formatCurrency, formatCurrencyEn } from "../../../../
 
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
-import "./styles.scss";
 
 type MetricType = "projects" | "funding";
 
