@@ -70,5 +70,9 @@
   "scientific-domain": {
     "fr": "Domaine scientifique",
     "en": "Scientific domain"
+  },
+  "display-type": {
+    "fr": "Type d'affichage",
+    "en": "Display type"
   }
 }

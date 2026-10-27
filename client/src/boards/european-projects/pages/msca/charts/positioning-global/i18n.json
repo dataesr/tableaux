@@ -66,5 +66,9 @@
   "avg-all": {
     "fr": "Moyenne tous pays",
     "en": "All countries average"
+  },
+  "display-type": {
+    "fr": "Type d'affichage",
+    "en": "Display type"
   }
 }

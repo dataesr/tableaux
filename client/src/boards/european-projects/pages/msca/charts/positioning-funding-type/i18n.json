@@ -1,39 +1,39 @@
 {
-  "title-projects": {
-    "en": "Positioning by funding type - Participants",
-    "fr": "Positionnement par type de financement - Participants"
+  "avg-all": {
+    "fr": "Moyenne tous pays",
+    "en": "All countries average"
   },
-  "title-funding": {
-    "en": "Positioning by funding type - Funding",
-    "fr": "Positionnement par type de financement - Financements"
+  "avg-top10": {
+    "fr": "Moyenne top 10",
+    "en": "Top 10 average"
   },
-  "comment-projects": {
-    "fr": "Ce graphique présente le classement des pays par nombre de participants pour un type de financement spécifique. Si le pays sélectionné n'est pas dans le top 10, il est affiché en dernière position pour comparaison.",
-    "en": "This chart shows the country ranking by number of participants for a specific funding type. If the selected country is not in the top 10, it is displayed at the last position for comparison."
-  },
-  "comment-funding": {
-    "fr": "Ce graphique présente le classement des pays par montant de financements obtenus pour un type de financement spécifique. Si le pays sélectionné n'est pas dans le top 10, il est affiché en dernière position pour comparaison.",
-    "en": "This chart shows the country ranking by MSCA funding amount obtained for a specific funding type. If the selected country is not in the top 10, it is displayed at the last position for comparison."
-  },
-  "reading-key-projects": {
-    "fr": "Avec {firstValue} participants aux projets financés par {fundingType}, {firstCountry} se place en première position des pays du classement, suivi par {secondCountry} avec {secondValue} participants.",
-    "en": "With {firstValue} participants in projects funded under {fundingType}, {firstCountry} ranks first among the countries shown, followed by {secondCountry} with {secondValue} participants."
-  },
-  "reading-key-funding": {
-    "fr": "Avec {firstValue} de financements obtenus, {firstCountry} se place en première position des pays financés par {fundingType}, suivi par {secondCountry} avec {secondValue}.",
-    "en": "With {firstValue} in funding secured, {firstCountry} ranks first among the funded countries under {fundingType}, followed by {secondCountry} with {secondValue}."
-  },
-  "no-data": {
-    "fr": "Aucune donnée disponible.",
-    "en": "No data available."
+  "chart-title-funding": {
+    "fr": "Principaux pays bénéficiaires des financements {fundingType}",
+    "en": "Top beneficiary countries for {fundingType} funding"
   },
   "chart-title-projects": {
     "fr": "Principaux pays participants aux projets financés par {fundingType}",
     "en": "Top participating countries in projects funded under {fundingType}"
   },
-  "chart-title-funding": {
-    "fr": "Principaux pays bénéficiaires des financements {fundingType}",
-    "en": "Top beneficiary countries for {fundingType} funding"
+  "comment-funding": {
+    "fr": "Ce graphique présente le classement des pays par montant de financements obtenus pour un type de financement spécifique. Si le pays sélectionné n'est pas dans le top 10, il est affiché en dernière position pour comparaison.",
+    "en": "This chart shows the country ranking by MSCA funding amount obtained for a specific funding type. If the selected country is not in the top 10, it is displayed at the last position for comparison."
+  },
+  "comment-projects": {
+    "fr": "Ce graphique présente le classement des pays par nombre de participants pour un type de financement spécifique. Si le pays sélectionné n'est pas dans le top 10, il est affiché en dernière position pour comparaison.",
+    "en": "This chart shows the country ranking by number of participants for a specific funding type. If the selected country is not in the top 10, it is displayed at the last position for comparison."
+  },
+  "display-type": {
+    "fr": "Type d'affichage",
+    "en": "Display type"
+  },
+  "funding": {
+    "fr": "Financements",
+    "en": "Funding"
+  },
+  "funding-type": {
+    "fr": "Type de financement",
+    "en": "Funding type"
   },
   "main-title": {
     "fr": "Positionnement par type de financement du pays",
@@ -43,32 +43,36 @@
     "fr": "Par type de financement",
     "en": "By type of action"
   },
+  "no-data": {
+    "fr": "Aucune donnée disponible.",
+    "en": "No data available."
+  },
   "projects": {
     "fr": "Participants",
     "en": "Participants"
   },
-  "funding": {
-    "fr": "Financements",
-    "en": "Funding"
+  "reading-key-funding": {
+    "fr": "Avec {firstValue} de financements obtenus, {firstCountry} se place en première position des pays financés par {fundingType}, suivi par {secondCountry} avec {secondValue}.",
+    "en": "With {firstValue} in funding secured, {firstCountry} ranks first among the funded countries under {fundingType}, followed by {secondCountry} with {secondValue}."
   },
-  "y-axis-projects": {
-    "fr": "Nombre de participants",
-    "en": "Number of participants"
+  "reading-key-projects": {
+    "fr": "Avec {firstValue} participants aux projets financés par {fundingType}, {firstCountry} se place en première position des pays du classement, suivi par {secondCountry} avec {secondValue} participants.",
+    "en": "With {firstValue} participants in projects funded under {fundingType}, {firstCountry} ranks first among the countries shown, followed by {secondCountry} with {secondValue} participants."
+  },
+  "title-funding": {
+    "en": "Positioning by funding type - Funding",
+    "fr": "Positionnement par type de financement - Financements"
+  },
+  "title-projects": {
+    "en": "Positioning by funding type - Participants",
+    "fr": "Positionnement par type de financement - Participants"
   },
   "y-axis-funding": {
     "fr": "Financements (M€)",
     "en": "Funding (M€)"
   },
-  "avg-top10": {
-    "fr": "Moyenne top 10",
-    "en": "Top 10 average"
-  },
-  "funding-type": {
-    "fr": "Type de financement",
-    "en": "Funding type"
-  },
-  "avg-all": {
-    "fr": "Moyenne tous pays",
-    "en": "All countries average"
+  "y-axis-projects": {
+    "fr": "Nombre de participants",
+    "en": "Number of participants"
   }
 }
