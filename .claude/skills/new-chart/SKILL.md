@@ -23,7 +23,7 @@ Exemple de référence : `client/src/boards/template/pages/overview/charts/funde
    - Textes : passer par le `i18n.json` du board et `getI18nLabel` si le board est multilingue.
 4. Importer le graphique dans `pages/<page>/index.tsx`.
 5. Si le graphique doit être intégrable en iframe : l'ajouter dans `client/src/boards/integration/charts-registry.tsx` avec le même `id`.
-6. Si une nouvelle route serveur est nécessaire : voir le skill `new-board` (partie serveur) et ajouter un fichier `.http` dans `api-tests/`.
+6. Si une nouvelle route serveur est nécessaire : voir le skill `new-board` (partie serveur) et ajouter un fichier `.http` dans `api-tests/`. Le graphique n'appelle que les routes de son board (`${VITE_APP_SERVER_URL}/<board-id>/...`), jamais `/elasticsearch` ni un autre service directement ;
 
 ## Accessibilité
 

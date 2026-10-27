@@ -20,7 +20,6 @@
 ## Safety and data
 
 - Use synthetic or public data in prompts and checked-in fixtures. Never include credentials, production records, or confidential data in prompts, fixtures, logs, or generated files.
-- Use fixtures by default. Do not call production data services or connect directly to MongoDB from prototype frontend code.
 - A read-only preview source may be used only after its owner, datasets, environment, and access controls have been explicitly approved.
 - Do not create or modify MongoDB dashboard records, deployment settings, secrets, or production routes as part of prototyping without an explicit human-approved task.
 - Never read or print `.env` files or expose credentials. Client-side `VITE_*` variables are included in the built bundle and must not contain secrets.
@@ -29,6 +28,8 @@
 
 - Use `ChartWrapper` for Highcharts, with `useQuery` keys containing all relevant filters. Handle loading, error, and empty states explicitly; keep expected data errors on the page so users can adjust filters.
 - Follow the nearest board's i18n pattern. Provide French text and English text when the board is multilingual.
+- Every board has its own server router under `server/src/routes/boards/<board-id>/`, even when it only serves synthetic or public fixtures, so that promotion replaces data access without changing the client contract.
+- Keep code dedicated to the board by default. Reuse existing `server/src/commons` and `server/src/services` code, and extract domain-neutral infrastructure into them only when a second board needs it; see `docs/dashboard-prototyping/README.md` ("Common or dedicated code").
 - Keep shared components shared only when a second board needs them. Boards must not import from one another except through `boards/integration/charts-registry.tsx`.
 - For new server routes, use the shared error classes and error middleware; use the repository logger instead of `console.log`.
 - Follow neighboring file conventions for imports, extensions, formatting, and language.

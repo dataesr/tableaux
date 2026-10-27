@@ -2,20 +2,23 @@
 
 This catalogue documents the current tableaux architecture for AI-assisted dashboard work. It is not an authorization to access every service present in the repository. Data owners must approve preview sources before use.
 
-## Supported profiles
+## Board model
 
-| Profile id | Frontend | Backend/data access | Intended use |
-| --- | --- | --- | --- |
-| `tableaux-fixtures` | React + TypeScript in the existing Vite client | Local synthetic or public JSON fixtures; no backend change | Default prototype profile |
-| `tableaux-existing-api` | React + TypeScript in the existing Vite client | Existing Node.js/Express endpoints | Only after the endpoint and dataset are approved for the prototype |
+There is one prototype profile: a **board** made of a client folder and its own server routes. The browser calls only the board's routes (`/<board-id>/...`); those routes read the data. Fixtures are a data source of the server routes, not a separate architecture, so promotion replaces the data access inside the route and leaves the URL, response shape, and client code unchanged.
+
+| Part | Location | Notes |
+| --- | --- | --- |
+| Client board | `client/src/boards/<board-id>/` | Follows `client/src/boards/template/` |
+| Server routes | `server/src/routes/boards/<board-id>/` | Mounted from `server/src/router.js`; follows `server/src/routes/boards/template/` |
+| Fixtures | `server/src/routes/boards/<board-id>/fixtures/*.json` | Synthetic or public only; read by the routes, never imported by the client |
 
 ## Repository-native layout and registration
 
-Work directly in `client/src/boards/<board-id>/` and follow `client/src/boards/template/`. A generated board should use the existing route/page/component conventions instead of adding a parallel `web/` application.
+Work directly in `client/src/boards/<board-id>/` and `server/src/routes/boards/<board-id>/`. A generated board should use the existing route/page/component conventions instead of adding a parallel `web/` application.
 
 The root router obtains board records from `/admin/list-dashboards` and dynamically imports `client/src/boards/<record.id>/routes.tsx`. A folder alone does not publish a dashboard. Production registration additionally requires a MongoDB `boards` record whose `id` matches the folder. Do not create or update production records during prototyping. Treat registration as a human-reviewed promotion step.
 
-The Express API is in `server/`. Board API modules are explicitly mounted in `server/src/router.js`. Backend work must be separately reviewed and must identify data ownership, input validation, route mounting, and deployment exposure.
+The Express API is in `server/`. Every board creates its router and mounts it in `server/src/router.js`, even when it only serves fixtures. The server connects to MongoDB at startup, so running any board locally requires the MongoDB that repository developers already have. Backend work is still reviewed by the data owner: identify data ownership, input validation, and deployment exposure.
 
 The chart iframe integration is a separate surface. When explicitly requested, follow `client/src/boards/integration/README.md` and register the chart in `client/src/boards/integration/charts-registry.tsx`.
 
@@ -25,27 +28,38 @@ The chart iframe integration is a separate surface. When explicitly requested, f
 - **Page composition:** `client/src/boards/template/pages/home/index.tsx` and `client/src/boards/template/pages/overview/index.tsx`.
 - **Chart wrapper:** `client/src/components/chart-wrapper/index.tsx`, `ChartWrapper({ config, options, constructorType?, hideTitle?, legend?, renderData? })`.
 - **Chart loading and colors:** `client/src/components/charts-skeletons/` and `client/src/hooks/useChartColor.tsx`.
-- **Example chart API/query pattern:** `client/src/boards/template/pages/overview/charts/funded-structures/index.tsx`. This chart queries the production Elasticsearch service through `/elasticsearch`; it is an architectural example only. Do not copy its live data access into a prototype without explicit approval.
+- **Reference chart and route:** `client/src/boards/template/pages/overview/charts/funding-by-year/` calls `GET /template/overview/funding-by-year`, served from a fixture by `server/src/routes/boards/template/routes/overview.js`. Copy this pattern.
+- **Legacy template charts:** the other charts under `client/src/boards/template/pages/overview/charts/` query the production Elasticsearch proxy (`/elasticsearch`) directly from the browser and are not rendered by the template. Do not copy that data access.
 - **Shared UI:** `client/src/components/` and `@dataesr/dsfr-plus`, already listed in `client/package.json`.
 
 The examples show patterns, not a universal component API. Inspect actual exports and nearby usage before generating code.
 
-## Integration inventory
+## Data sources
 
 | Catalogue id | Repository implementation | Prototype status | Required substitute / approval |
 | --- | --- | --- | --- |
-| `fixtures.local-json` | Fixture files owned by the prototype | Allowed default when synthetic/public and non-sensitive | Keep fixtures small, representative, and free of production records |
-| `tableaux.elasticsearch-proxy` | Express `/elasticsearch` proxy; frontend examples pass an index and Elasticsearch query | Not approved by this catalogue for prototype use | Use fixtures unless the Elasticsearch/data owner approves a specific preview index, read-only access, and data classification |
-| `tableaux.board-api` | Board-specific Express routes, e.g. `/faculty-members/*`, `/structures-finance/*`, `/outcomes/*` | Endpoint- and dataset-specific; no blanket approval | Use fixtures unless the endpoint owner approves the preview data and access controls |
-| `tableaux.mongodb` | Server-side MongoDB connections in `server/src/services/mongo.js` and related services | Not a frontend integration; no direct prototype access | Access only through an approved server endpoint; never expose MongoDB credentials or connect from browser code |
+| `board-fixtures` | JSON files in the board's server folder, read by its routes | Allowed default when synthetic/public and non-sensitive | Keep fixtures small, representative, and free of production records |
+| `mongodb` | `server/src/services/mongo.js` (and `mongo-accessibility.js`), read from board routes | Approval required | Use fixtures unless the data owner approves the exact collections and read-only access |
+| `elasticsearch` | Express `/elasticsearch` proxy (`ES_TOKEN_*`); several boards also call it from the browser | Approval required | Use fixtures unless the data owner approves a specific index, read-only access, and data classification; read it server-side from the board's routes, not from the browser |
+| `paysage` | `PAYSAGE_API_URL` / `PAYSAGE_API_KEY`, currently called separately from `atlas` and `european-projects` | Approval required | Use fixtures unless approved; reuse a shared client rather than a third copy |
+| `ods` | `ODS_API_URL` / `ODS_API_KEY`, used by `structures-finance` | Approval required | Use fixtures unless approved |
 
-The repository does not establish a separate preview database, approved dataset list, or service-owner approvals. Mark an integration approved only after recording its owner, environment, allowed datasets/indexes, authentication, sensitivity, and fixture source. No credentials or production connection strings belong in this catalogue.
+The repository does not establish a separate preview database, approved dataset list, or service-owner approvals. Mark a source approved only after recording its owner, environment, allowed datasets/indexes, authentication, sensitivity, and fixture source. No credentials or production connection strings belong in this catalogue.
+
+## Common or dedicated code
+
+The existing board servers share infrastructure but almost no data logic: one MongoDB connection and `boards` collection, `server/src/commons/errors` (used by few boards), `routes/utils.js`, and duplicated Paysage client code. No two boards read the same dataset. Before writing a helper for a new board:
+
+1. Search `server/src/commons`, `server/src/services`, `server/src/routes/utils.js`, and other boards' routers for an existing equivalent, and reuse it.
+2. Put code in the board when it depends on its dataset: aggregation pipelines, collection names, filter vocabularies, response shaping. This is the default.
+3. Extract to `commons`/`services` only domain-neutral infrastructure that a second board needs: error handling, query validation, caching, external-API clients (Paysage, ODS), database access. Extract after the second real use, not speculatively.
+4. Never edit shared code silently for one board. List proposed extractions in the manifest's `common_candidates` and in the pull request for reviewer decision.
 
 ## Bundle manifest
 
-`board.manifest.json` is proposed metadata kept at the board root when a generated bundle needs to travel separately. It does not replace dashboard metadata in MongoDB and is not consumed by the current runtime.
+`board.manifest.json` is proposed metadata kept at the board root when a generated bundle needs to travel separately. It does not replace dashboard metadata in MongoDB and is not consumed by the current runtime. Its useful part is the backend contract: `routes` lists the board's endpoints and `data_sources` what they read, so a data owner can review it before reading the code.
 
-The JSON Schema is [`board.manifest.schema.json`](./board.manifest.schema.json). `id` must match the intended `client/src/boards/<id>/` directory and, at promotion, the MongoDB `boards.id`. `integrations` entries reference the catalogue above. Set `data_mode` to `fixtures` unless the exact preview source was approved; the schema cannot grant access.
+The JSON Schema is [`board.manifest.schema.json`](./board.manifest.schema.json). `id` must match the intended client and server folder names and, at promotion, the MongoDB `boards.id`; every route path must start with `/<id>/` (the schema cannot check this, the MCP validator does). Set `data_mode` to `fixtures` unless the exact preview source was approved; the schema cannot grant access.
 
 Example:
 
@@ -56,9 +70,16 @@ Example:
   "id": "research-funding",
   "name": "Research funding",
   "description": "Synthetic prototype of funding trends",
-  "architecture_profile": "tableaux-fixtures",
   "data_mode": "fixtures",
-  "integrations": ["fixtures.local-json"],
+  "data_sources": ["board-fixtures"],
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/research-funding/overview/funding-by-year",
+      "description": "Projects funded per year"
+    }
+  ],
+  "common_candidates": [],
   "features": ["filters", "time-series-chart", "data-table"]
 }
 ```

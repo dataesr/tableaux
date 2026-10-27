@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "Tableaux prototype board manifest",
-  "description": "Proposed metadata for a generated board; it does not register or authorize a dashboard.",
+  "description": "Proposed metadata for a generated board (client folder and server routes); it does not register or authorize a dashboard.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -9,9 +9,9 @@
     "id",
     "name",
     "description",
-    "architecture_profile",
     "data_mode",
-    "integrations",
+    "data_sources",
+    "routes",
     "features"
   ],
   "properties": {
@@ -23,7 +23,7 @@
     },
     "id": {
       "type": "string",
-      "description": "Board folder name and, at promotion, matching MongoDB boards.id.",
+      "description": "Board folder name (client and server) and, at promotion, matching MongoDB boards.id.",
       "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
       "minLength": 2,
       "maxLength": 50
@@ -38,28 +38,70 @@
       "minLength": 1,
       "maxLength": 500
     },
-    "architecture_profile": {
-      "enum": [
-        "tableaux-fixtures",
-        "tableaux-existing-api"
-      ]
-    },
     "data_mode": {
+      "description": "fixtures: the board's routes read synthetic or public fixtures. approved-read-only-preview: routes read a source approved by its owner.",
       "enum": [
         "fixtures",
         "approved-read-only-preview"
       ]
     },
-    "integrations": {
+    "data_sources": {
+      "description": "Data sources read by the board's server routes. The browser never reads them directly.",
       "type": "array",
+      "minItems": 1,
       "uniqueItems": true,
       "items": {
-        "type": "string",
         "enum": [
-          "fixtures.local-json",
-          "tableaux.elasticsearch-proxy",
-          "tableaux.board-api"
+          "board-fixtures",
+          "mongodb",
+          "elasticsearch",
+          "paysage",
+          "ods"
         ]
+      }
+    },
+    "routes": {
+      "description": "Backend contract: the board's own server routes, mounted from server/src/router.js.",
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["method", "path", "description"],
+        "properties": {
+          "method": {
+            "enum": ["GET", "POST"]
+          },
+          "path": {
+            "type": "string",
+            "description": "Must start with /<id>/ where <id> is the board id.",
+            "pattern": "^/[a-z0-9]+(?:-[a-z0-9]+)*/[A-Za-z0-9_\\-/{}]+$"
+          },
+          "description": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 300
+          }
+        }
+      }
+    },
+    "common_candidates": {
+      "description": "Helpers that look reusable by other boards and may be proposed for extraction into server/src/commons or services after review. Dataset-specific logic stays in the board.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "reason"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
       }
     },
     "features": {
@@ -121,26 +163,12 @@
       "then": {
         "required": ["preview_approval"],
         "properties": {
-          "architecture_profile": {
-            "const": "tableaux-existing-api"
-          },
           "preview_approval": {
             "type": "object"
           },
-          "integrations": {
-            "minItems": 1,
-            "items": {
-              "enum": [
-                "fixtures.local-json",
-                "tableaux.elasticsearch-proxy",
-                "tableaux.board-api"
-              ]
-            },
+          "data_sources": {
             "contains": {
-              "enum": [
-                "tableaux.elasticsearch-proxy",
-                "tableaux.board-api"
-              ]
+              "enum": ["mongodb", "elasticsearch", "paysage", "ods"]
             }
           }
         }
@@ -157,12 +185,9 @@
       },
       "then": {
         "properties": {
-          "architecture_profile": {
-            "const": "tableaux-fixtures"
-          },
-          "integrations": {
+          "data_sources": {
             "items": {
-              "const": "fixtures.local-json"
+              "const": "board-fixtures"
             }
           }
         }

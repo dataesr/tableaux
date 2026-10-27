@@ -1,9 +1,10 @@
 # Board API development guidance
 
-- Board APIs are Node.js/Express routes under `server/src/routes/boards/<board-id>/`.
+- Board APIs are Node.js/Express routes under `server/src/routes/boards/<board-id>/`. Every board has one, including fixture-only prototypes; start from `server/src/routes/boards/template/`.
 - New route modules must be explicitly imported and mounted from `server/src/router.js`; adding a file alone does not activate a route.
-- Follow neighboring routes for input validation, response shapes, async error handling, and MongoDB access. Use the shared error middleware and existing helpers where appropriate.
+- Follow neighboring routes for input validation, response shapes, async error handling, and MongoDB access. Use the shared error middleware and existing helpers where appropriate. Throw `BadRequestError` and the other classes from `server/src/commons/errors` (async errors are forwarded by `express-async-errors`); prefer them over `checkQuery`, which sends a 400 but does not stop the handler.
 - Keep database credentials and service tokens on the server. Do not expose them to the frontend, fixtures, prompts, or logs.
-- Prototype work must use fixtures unless the data/service owner has approved a read-only preview source and its datasets and access controls. Never connect an AI-generated frontend directly to MongoDB.
+- Prototype routes read synthetic or public JSON from `fixtures/` in the board folder, unless the data/service owner has approved a read-only preview source and its datasets and access controls. Isolate data access in one place so promotion replaces it without changing the route path or response shape. Never connect an AI-generated frontend directly to MongoDB.
+- Before writing a helper, search `server/src/commons`, `server/src/services`, `server/src/routes/utils.js`, and other boards. Keep dataset-specific code (pipelines, collection names, filter vocabularies, response shaping) in the board. Extract domain-neutral infrastructure (errors, validation, caching, external-API clients such as Paysage or ODS) only when a second board needs it, and propose it in the pull request instead of editing shared code silently.
 - Do not add or expose a route solely on the assumption that a prototype route is private. Identify its access control, deployment exposure, and reviewer before implementation.
-- Backend changes require an explicit human review by the service/data owner. The repository currently has no package-script backend test suite or pull-request check workflow; do not claim those checks ran.
+- Backend changes require an explicit human review by the service/data owner. Provide an `api-tests/**/*.http` request file; the repository has no package-script backend test suite or pull-request check workflow, so do not claim those checks ran.
