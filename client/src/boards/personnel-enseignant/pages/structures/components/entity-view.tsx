@@ -129,18 +129,18 @@ export default function EntityView({ viewType }: Props) {
 
     if (isLoadingYears || (isLoadingDashboard && !dashboardData)) {
         return (
-            <main>
+            <div>
                 <Container fluid className="fm-etablissement-selector__wrapper">
                     <Container className="fr-py-4w">
                         <DefaultSkeleton />
                     </Container>
                 </Container>
-            </main>
+            </div>
         );
     }
 
     return (
-        <main>
+        <div>
             <Container fluid className="fm-etablissement-selector__wrapper">
                 <Container as="section">
                     <Row>
@@ -190,6 +190,6 @@ export default function EntityView({ viewType }: Props) {
                     {renderSectionContent()}
                 </SectionYearProvider>
             </Container>
-        </main>
+        </div>
     );
 }

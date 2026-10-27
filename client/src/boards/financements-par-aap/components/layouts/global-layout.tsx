@@ -1,12 +1,12 @@
-import { Logo, Service } from "@dataesr/dsfr-plus";
 import { useEffect } from "react";
-import { Link, Outlet, useLocation, useSearchParams } from "react-router-dom";
+import { useLocation, useSearchParams } from "react-router-dom";
 
-import Footer from "../../../../components/footer";
+import { Layout } from "../../../../layout/layout";
 import { getI18nLabel } from "../../../../utils";
 import { years } from "../../utils";
 import i18n from "./i18n.json";
 
+const BASE = "/financements-par-aap";
 
 export default function GlobalLayout() {
   const { pathname } = useLocation();
@@ -33,105 +33,24 @@ export default function GlobalLayout() {
   }
 
   if (!pathname) return null;
-  const is = (str: string): boolean => pathname?.startsWith(str);
+
+  const items = [
+    { key: "accueil", icon: "home-4-line", to: `${BASE}/accueil`, current: pathname === `${BASE}/accueil` },
+    {
+      key: "etablissement",
+      to: `${BASE}/etablissement?${searchParamsFiltered()}`,
+      current: pathname.startsWith(`${BASE}/etablissement`),
+    },
+    { key: "region", to: `${BASE}/region?${searchParamsFiltered()}`, current: pathname.startsWith(`${BASE}/region`) },
+  ].map((item) => ({ ...item, label: getI18nLabel(i18n, item.key) }));
 
   return (
-    <>
-      <div className="fr-skiplinks">
-        <nav className="fr-container" role="navigation" aria-label="Accès rapide">
-          <ul className="fr-skiplinks__list">
-            <li>
-              <a className="fr-link" title="Contenu principal" href="#main-content">Contenu principal</a>
-            </li>
-            <li>
-              <a className="fr-link" title="Menu principal" href="#main-menu">Menu principal</a>
-            </li>
-            <li>
-              <a className="fr-link" title="Pied de page" href="#footer">Pied de page</a>
-            </li>
-          </ul>
-        </nav>
-      </div>
-      <header role="banner" className="fr-header">
-        <div className="fr-header__body">
-          <div className="fr-container">
-            <div className="fr-header__body-row">
-              <div className="fr-header__brand fr-enlarge-link">
-                <div className="fr-header__brand-top">
-                  <Logo text={import.meta.env.VITE_MINISTER_NAME} />
-                  <div className="fr-header__navbar">
-                    <button
-                      data-fr-opened="false"
-                      aria-controls="modal-header"
-                      title="Menu"
-                      type="button"
-                      id="button-header"
-                      className="fr-btn--menu fr-btn"
-                    >
-                      Menu
-                    </button>
-                  </div>
-                </div>
-                <Service
-                  href="/financements-par-aap/accueil"
-                  name="Financements par appels à projets"
-                  tagline="Suivi des financements par appels à projets dans les institutions françaises"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="fr-header__menu fr-modal fundings-menu" id="modal-header" aria-labelledby="button-header">
-          <div className="fr-container">
-            <button aria-controls="modal-header" title="Fermer" type="button" className="fr-btn--close fr-btn">
-              {getI18nLabel(i18n, "close")}
-            </button>
-            <div className="fr-header__menu-links"></div>
-            <nav aria-label="Menu principal" className="fr-nav" id="main-menu" role="navigation">
-              <ul className="fr-nav__list">
-                <li className="fr-nav__item">
-                  <Link
-                    {...(pathname === "/financements-par-aap/accueil" && { "aria-current": "page" })}
-                    className="fr-nav__link"
-                    target="_self"
-                    to="/financements-par-aap/accueil"
-                  >
-                    <span className="fr-icon-home-4-line fr-mr-1w" aria-hidden="true" />
-                    {getI18nLabel(i18n, "accueil")}
-                  </Link>
-                </li>
-                <li className="fr-nav__item">
-                  <Link
-                    {...(is("/financements-par-aap/etablissement") && { "aria-current": "page" })}
-                    className="fr-nav__link"
-                    target="_self"
-                    to={`/financements-par-aap/etablissement?${searchParamsFiltered()}`}
-                  >
-                    {getI18nLabel(i18n, "etablissement")}
-                  </Link>
-                </li>
-                <li className="fr-nav__item">
-                  <Link
-                    {...(is("/financements-par-aap/region") && { "aria-current": "page" })}
-                    className="fr-nav__link"
-                    target="_self"
-                    to={`/financements-par-aap/region?${searchParamsFiltered()}`}
-                  >
-                    {getI18nLabel(i18n, "region")}
-                  </Link>
-                </li>
-              </ul>
-            </nav>
-          </div>
-        </div>
-      </header>
-      <main id="main-content" tabIndex={-1}>
-        <Outlet />
-      </main>
-      <Footer
-        href="/financements-par-aap/accueil"
-        title="Financements par appels à projets - Tableaux"
-      />
-    </>
+    <Layout
+      footer={{ href: `${BASE}/accueil`, title: "Financements par appels à projets - Tableaux" }}
+      items={items}
+      serviceHref={`${BASE}/accueil`}
+      serviceName="Financements par appels à projets"
+      serviceTag="Suivi des financements par appels à projets dans les institutions françaises"
+    />
   );
 }

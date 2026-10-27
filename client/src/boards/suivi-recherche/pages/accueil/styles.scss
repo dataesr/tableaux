@@ -1,0 +1,25 @@
+.sr-accueil__hero {
+  background: linear-gradient(
+    135deg,
+    var(--background-default-grey) 0%,
+    var(--background-contrast-blue-france) 100%
+  );
+  border-block-end: 1px solid var(--border-default-grey);
+  padding-block: 4rem;
+
+  @media (max-width: 48em) {
+    padding-block: 3rem;
+  }
+}
+
+.sr-accueil__eyebrow {
+  color: var(--text-active-blue-france);
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.sr-accueil__section {
+  padding-block: 3rem;
+}

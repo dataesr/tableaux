@@ -12,6 +12,7 @@ Référence : `client/src/boards/template/` et `server/src/routes/boards/templat
 1. Inspecter le template et un board existant similaire, puis créer uniquement les fichiers nécessaires dans `client/src/boards/<board-id>/`. Le template est une référence, pas un générateur à copier en bloc.
 2. Créer ou adapter `routes.tsx` et les pages ; renommer `TemplateRoutes` si le template sert de point de départ.
 3. Mettre à jour `title-i18n.json` (`fr` obligatoire, `en` si multilingue) et les `i18n.json` des layouts / sidemenu.
+   Le layout du board est un simple wrapper de `Layout` (`client/src/layout/layout.tsx`) : il fournit `items` (entrée « Accueil » avec `icon: "home-4-line"` en premier), `serviceTag` (slogan ; `serviceName` pour le titre), `footer`, éventuellement `exploreLink` / `languageSelector` (désactivés par défaut), `themeSwitch` (activé par défaut), `extra` (outils du header), `navExtra` (droite de la barre de menu) ou `before`. Header, liens d'évitement, `<main id="main-content">` et pied de page viennent de `Layout` : ne rien écrire de tout cela dans le board. Référence : `boards/template/components/layouts/global-layout.tsx`.
 4. Ajouter `sitemap-config.ts` exportant `SITEMAP: BoardSitemapConfig` (exemple : `client/src/boards/devenir-etudiants/sitemap-config.ts`) : il alimente le plan du site et le footer.
 5. **Ne pas** modifier `client/src/router.tsx` : les routes du board sont chargées dynamiquement depuis la liste MongoDB.
 

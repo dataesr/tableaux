@@ -1,0 +1,20 @@
+// Les éléments additionnels (sélecteur de pays, liens…) s'alignent sur les boutons DSFR du header
+.fr-header__tools-links .fr-btns-group {
+  align-items: center;
+
+  > li {
+    display: flex;
+    align-items: center;
+  }
+}
+
+.fr-nav__list .header-nav-extra {
+  display: flex;
+  align-items: center;
+}
+
+@media (min-width: 992px) {
+  .fr-nav__list .header-nav-extra {
+    margin-inline-start: auto;
+  }
+}

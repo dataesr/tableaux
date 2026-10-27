@@ -5,7 +5,7 @@ description: Écrire ou relire de l'interface DSFR dans tableaux avec @dataesr/d
 
 # Interface DSFR dans tableaux
 
-Le DSFR arrive par `@dataesr/dsfr-plus`, dont le JS importe `@gouvfr/dsfr/dist/dsfr.min.css` et `utility/utility.min.css` (`@gouvfr/dsfr` **1.11.0**, installé en peer) ; son propre `style.css` n'ajoute que des icônes. Pour vérifier qu'un token ou une classe existe : `grep` dans ces fichiers. Les comportements viennent de React. **Le JS du DSFR n'est jamais chargé** — et ne doit pas l'être.
+Le DSFR arrive par `@dataesr/dsfr-plus`, dont le JS importe `@gouvfr/dsfr/dist/dsfr.min.css` et `utility/utility.min.css` (`@gouvfr/dsfr` **1.11.0**, installé en peer) ; son propre `style.css` n'ajoute que des icônes. Pour vérifier qu'un token ou une classe existe : `grep` dans ces fichiers. Les comportements viennent de React, sauf les modales du header/footer partagés (§ JS DSFR).
 
 ## 0. Principes
 
@@ -16,9 +16,9 @@ Ne jamais écrire du balisage `fr-*` de mémoire : ce sera subtilement faux (cla
 1. **Les types de dsfr-plus** : `node_modules/@dataesr/dsfr-plus/dist/components/<Composant>/*.d.ts`. Si TS refuse une prop, elle n'existe pas — ne pas caster.
 2. **`node_modules/@gouvfr/dsfr/example/component/<nom>/index.html`** : le DOM et l'ARIA canoniques, à la version installée. À lire avant d'écrire à la main le moindre balisage `fr-*`.
 
-### Pas de JS DSFR
+### JS DSFR
 
-Tout ce qui dépend de `data-fr-opened`, `data-fr-js`, `.disclose()`, ou d'un `aria-controls` vers une `fr-modal` / `fr-collapse` sans état React **ne fait rien** ici. Ordre des comportements : composant dsfr-plus → élément natif (`<details>`, `<dialog>`, `<select>`) → état React (`useState` + `aria-expanded` + classe/rendu conditionnel). Un composant qui « aurait besoin du JS DSFR » est à réécrire.
+`DSFRConfig` (`main.tsx`) charge et démarre le JS du DSFR : les modales `fr-modal` pilotées par `data-fr-opened` / `aria-controls` fonctionnent pour le `Header` et le `Footer` partagés (menu mobile, thème, langue). Ailleurs, le JS DSFR agit sur des nœuds que React possède : ne pas compter dessus. Ordre des comportements : composant dsfr-plus → élément natif (`<details>`, `<dialog>`, `<select>`) → état React (`useState` + `aria-expanded` + classe/rendu conditionnel). Pour fermer une modale DSFR après une navigation, voir `concealModal` dans `layout/header`.
 
 Il reste du balisage de ce type dans le code existant (sélecteurs de thème / langue des `global-layout.tsx`, accordéons faits main) : ne pas le recopier dans du nouveau code.
 
@@ -37,6 +37,7 @@ Il reste du balisage de ce type dans le code existant (sélecteurs de thème / l
 | Élément DSFR | Hypothèse tacite / ce qui casse | Dans tableaux |
 |---|---|---|
 | `fr-header` / `fr-nav` | Sur mobile, nav et outils peuvent dépendre d'une `fr-modal` pilotée par le JS DSFR ; les sous-menus ont aussi des seuils responsive. Vérifier les comportements réels des composants dsfr-plus et du board avant de composer header et navigation. | Tester au tactile et au clavier ; ne pas supposer qu'un attribut DSFR déclenche un comportement React. |
+| En-tête, menu horizontal, liens d'évitement, `<main>` | Les copies à la main divergent (icône « Accueil » oubliée, barre de nav maison, skiplinks dupliqués, `id` de modale en double). | **`layout/layout.tsx` (`Layout`) + `layout/header`** : un seul header, une seule série de skiplinks, un seul `<main id="main-content">`. Le board passe `items` (Accueil en premier, `icon: "home-4-line"`), `serviceName` / `serviceTag`, `languageSelector` et `exploreLink` (désactivés par défaut), `themeSwitch`, `extra` (outils du header), `navExtra` (barre de menu). Ne jamais écrire de header, de nav, de `<main>` ni de `<SwitchTheme />` dans un board ou une page. |
 | `fr-container` | Plafonne et centre ; **deux conteneurs imbriqués doublent la gouttière**. | Un seul `Container` par niveau de page. |
 | `fr-container--fluid` (`Container fluid`) | Pose `overflow: hidden` : **tue `position: sticky`** en silence. | Ne pas l'utiliser autour d'un élément sticky (sidemenu, filtres collants). |
 | `fr-sidemenu` | Un sommaire secondaire en page, pas une nav principale. | `SideMenu` pour les sommaires des boards. |

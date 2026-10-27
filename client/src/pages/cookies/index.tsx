@@ -2,9 +2,8 @@ import { Button, ButtonGroup, Col, Container, Link, Modal, ModalContent, ModalTi
 import { useState } from "react";
 
 import { useCookieConsent } from "../../hooks/useCookieConsent";
-import HeaderTableaux from "../../layout/header";
+import { Layout } from "../../layout/layout";
 import { getI18nLabel } from "../../utils";
-import Footer from "../../components/footer";
 import i18n from "../../components/cookies/cookie-consent/i18n.json";
 import { CookieConsentModalContent } from "../../components/cookies/cookie-consent/index";
 
@@ -42,8 +41,7 @@ export default function CookiePolicyPage() {
   };
 
   return (
-    <>
-      <HeaderTableaux />
+    <Layout>
       <Container>
         <Row>
           <Col>
@@ -209,7 +207,6 @@ export default function CookiePolicyPage() {
           </ModalContent>
         </Modal>
       </Container>
-      <Footer />
-    </>
+    </Layout>
   );
 }
