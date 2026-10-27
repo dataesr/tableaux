@@ -1,14 +1,14 @@
 import { useSearchParams } from "react-router-dom";
 
 import i18n from "../../../i18n-global.json";
-import AxesContent from "./tabs/AxesContent";
-import CallsContent from "./tabs/CallsContent";
+import AxesContent from "./tabs/axes";
+import CallsContent from "./tabs/calls";
 import CheckEICAccelerator from "../../../components/check-eic-accelerator";
-import CollaborationsContent from "./tabs/CollaborationsContent";
-import EntitiesContent from "./tabs/EntitiesContent";
-import PositionnementContent from "./tabs/PositionnementContent";
+import CollaborationsContent from "./tabs/collaborations";
+import EntitiesContent from "./tabs/entities";
+import PositionnementContent from "./tabs/positioning";
 import StructureIdentity from "./structure-identity";
-import SyntheseContent from "./tabs/SyntheseContent";
+import SyntheseContent from "./tabs/synthesis";
 
 export default function TabsContent() {
   const [searchParams, setSearchParams] = useSearchParams();

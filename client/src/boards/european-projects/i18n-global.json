@@ -379,6 +379,22 @@
     "en": "Summary",
     "fr": "Synthèse"
   },
+  "tab1": {
+    "en": "methodology - tab1",
+    "fr": "methodologie - tab1"
+  },
+  "tab2": {
+    "en": "methodology - tab2",
+    "fr": "methodologie - tab2"
+  },
+  "tab3": {
+    "en": "methodology - tab3",
+    "fr": "methodologie - tab3"
+  },
+  "tab4": {
+    "en": "methodology - tab4",
+    "fr": "methodologie - tab4"
+  },
   "timeline-subtitle": {
     "en": "From 2002 to today: four generations of programmes",
     "fr": "De 2002 à aujourd'hui : quatre générations de programmes"

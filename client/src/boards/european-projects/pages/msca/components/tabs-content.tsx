@@ -2,10 +2,10 @@ import { useSearchParams } from "react-router-dom";
 
 import i18n from "../../../i18n-global.json";
 // import EntitiesContent from "./tabs/EntitiesContent";
-import CallsContent from "./tabs/CallsContent";
-import EvolutionContent from "./tabs/EvolutionContent";
-import PositionnementContent from "./tabs/PositionnementContent";
-import SyntheseContent from "./tabs/SyntheseContent";
+import CallsContent from "./tabs/calls";
+import EvolutionContent from "./tabs/evolution";
+import PositionnementContent from "./tabs/positioning";
+import SyntheseContent from "./tabs/synthesis";
 
 export default function TabsContent() {
   const [searchParams, setSearchParams] = useSearchParams();

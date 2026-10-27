@@ -7,7 +7,7 @@ import Breadcrumb from "../../../../components/breadcrumb";
 import RangeOfYears from "../../../../components/range-of-years";
 import { getMscaFilters } from "../../api/msca";
 import navigationConfig from "../../navigation-config.json";
-import TabsContent from "./components/TabsContent";
+import TabsContent from "./components/tabs-content";
 import { cleanUrlParams, needsUrlCleaning } from "./url-utils";
 
 import "./styles.scss";

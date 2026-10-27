@@ -6,7 +6,7 @@ import Breadcrumb from "../../../../components/breadcrumb";
 import RangeOfYears from "../../../../components/range-of-years";
 import { getErcFilters } from "../../api/erc";
 import { cleanUrlParams, needsUrlCleaning } from "./url-utils";
-import TabsContent from "./components/TabsContent";
+import TabsContent from "./components/tabs-content";
 import navigationConfig from "../../navigation-config.json";
 
 import "./styles.scss";

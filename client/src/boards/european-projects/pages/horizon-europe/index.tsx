@@ -6,7 +6,7 @@ import { getCountryInfo } from "../../../../components/country-selector/utils";
 import { getFlagEmoji, getI18nLabel } from "../../../../utils";
 import Breadcrumb from "../../../../components/breadcrumb";
 import EpNavigator from "../../components/ep-navigator/index";
-import TabsContent from "./components/TabsContent";
+import TabsContent from "./components/tabs-content";
 
 import navigationConfig from "../../navigation-config.json";
 import i18nGlobal from "../../i18n-global.json";
