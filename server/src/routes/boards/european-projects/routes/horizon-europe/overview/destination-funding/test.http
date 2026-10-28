@@ -1,0 +1,5 @@
+### Route
+GET http://localhost:3000/api/european-projects/overview/destination-funding?country_code=&destinations=&isEjo=&pillars=&programs=&thematics=
+
+### Création du covered index
+GET http://localhost:3000/api/european-projects/overview/destination-funding_indexes

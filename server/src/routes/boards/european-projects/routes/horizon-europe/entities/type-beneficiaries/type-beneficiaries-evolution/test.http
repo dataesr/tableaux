@@ -1,0 +1,5 @@
+### Route
+GET http://localhost:3000/api/european-projects/type-beneficiaries/type-beneficiaries-evolution?cordis_type_entity_code=&country_code=&destinations=&pillars=&programs=&thematics=&country_code=FRA
+
+### Création du covered index
+GET http://localhost:3000/api/european-projects/type-beneficiaries/type-beneficiaries-evolution_indexes

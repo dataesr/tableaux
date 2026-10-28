@@ -1,0 +1,5 @@
+### Route
+GET http://localhost:3000/api/european-projects/funded-objectives?country_code=&extra_joint_organization=&isEjo=&stage=
+
+### Création du covered index
+GET http://localhost:3000/api/european-projects/funded-objectives_indexes

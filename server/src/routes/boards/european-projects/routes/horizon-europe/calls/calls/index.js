@@ -1,5 +1,6 @@
 import express from "express";
-import { db } from "../../../../services/mongo.js";
+import { db } from "../../../../../../../services/mongo.js";
+import { recreateIndex } from "../../../../../../utils.js";
 
 const router = new express.Router();
 
@@ -51,6 +52,33 @@ router.route("/european-projects/calls").get(async (req, res) => {
     res.json(data);
   } catch (error) {
     res.status(500).json({ error: error.message });
+  }
+});
+
+// Route pour créer le covered index de calls
+router.route("/european-projects/calls_indexes").get(async (req, res) => {
+  try {
+    await recreateIndex(
+      db.collection(COLLECTION_NAME),
+      {
+        call_status: 1,
+        action_code: 1,
+        call_year: 1,
+        status: 1,
+        calltitle: 1,
+        call_id: 1,
+        expectedGrants: 1,
+        nb_proj_successful: 1,
+        nb_open_topics: 1,
+        nb_topics_included: 1,
+      },
+      "idx_calls_covered",
+    );
+
+    res.status(201).json({ message: "Index recréé avec succès" });
+  } catch (error) {
+    console.error("Erreur lors de la recréation de l'index:", error);
+    res.status(500).json({ error: "Erreur lors de la recréation de l'index" });
   }
 });
 
