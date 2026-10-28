@@ -162,11 +162,11 @@ export default function EpNavigator() {
   const thematicsLabel =
     selectedThematics.size > 0
       ? `${selectedThematics.size} ${getI18nLabel(i18n, "n_selected", currentLang)}`
-      : getI18nLabel(i18n, "no-selection", currentLang);
+      : getI18nLabel(i18n, "thema_no_selection", currentLang);
   const destinationsLabel =
     selectedDestinations.size > 0
       ? `${selectedDestinations.size} ${getI18nLabel(i18n, "n_selected", currentLang)}`
-      : getI18nLabel(i18n, "no-selection", currentLang);
+      : getI18nLabel(i18n, "destination_no_selection", currentLang);
 
     function handleIsEjoToggle(isEjoChk: boolean) {
       searchParams.set("isEjo", isEjoChk ? "true" : "false");
@@ -204,7 +204,7 @@ export default function EpNavigator() {
                 setSearchParams(newSearchParams);
               }}
             >
-              <option value="">{getI18nLabel(i18n, "no-selection", currentLang)}</option>
+              <option value="">{getI18nLabel(i18n, "pillar_no_selection", currentLang)}</option>
               {pillarsData &&
                 pillarsData.map((pillar: FilterItem) => (
                   <option key={pillar.id} value={pillar.id}>
@@ -240,7 +240,7 @@ export default function EpNavigator() {
                 setSearchParams(newSearchParams);
               }}
             >
-              <option value="">{getI18nLabel(i18n, "no-selection", currentLang)}</option>
+              <option value="">{getI18nLabel(i18n, "program_no_selection", currentLang)}</option>
               {programsData &&
                 programsData.map((program: FilterItem) => (
                   <option key={program.id} value={program.id}>
