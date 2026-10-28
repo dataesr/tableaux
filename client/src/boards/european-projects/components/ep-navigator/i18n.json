@@ -183,9 +183,21 @@
     "fr": "La navigation se fait de manière progressive : vous devez d'abord sélectionner un pilier avant de pouvoir accéder aux programmes, puis aux thématiques et enfin aux destinations.",
     "en": "Navigation is done progressively: you must first select a pillar before being able to access programs, then thematics and finally destinations."
   },
-  "no-selection": {
-    "fr": "Pas de sélection",
-    "en": "No selection"
+  "pillar_no_selection": {
+    "fr": "Tous les piliers",
+    "en": "All pillars"
+  },
+  "program_no_selection": {
+    "fr": "Tous les programmes",
+    "en": "All programs"
+  },
+  "thema_no_selection": {
+    "fr": "Toutes les thématiques",
+    "en": "All thematics"
+  },
+  "destination_no_selection": {
+    "fr": "Toutes les destinations",
+    "en": "All destinations"
   },
   "n_selected": {
     "fr": "sélectionnée(s)",
