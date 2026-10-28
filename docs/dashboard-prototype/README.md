@@ -1,6 +1,14 @@
 # Dashboard prototyping conventions
 
-This catalogue documents the current tableaux architecture for AI-assisted dashboard work. It is not an authorization to access every service present in the repository. Data owners must approve preview sources before use.
+This document describes the current tableaux architecture for AI-assisted dashboard work. It is not an authorization to access every service present in the repository. Data owners must approve preview sources before use.
+
+## Scope and status
+
+- The pilot targets Claude Code in an IDE with repository access. Browser-only and repository-less workflows are out of scope for now.
+- Prototype data is synthetic or public fixtures. Preview or production data requires explicit owner approval.
+- The backend is the existing Node.js/Express service; do not add a Python/FastAPI service.
+- Discovery and manifest-validation tools exist in the separate `dataesr-mcp` repository (`/tableaux` endpoint) but are not deployed. They read this repository from GitHub (branch `staging` by default), so `prototype.index.json` must be pushed before they work. They validate the manifest only, not generated code. No isolated sandbox exists for executing generated projects.
+- Open decisions: approved preview datasets and their owners, whether to add executable sandbox validation, and whether submission stays manual import/review or moves to a restricted bot branch/PR flow.
 
 ## Board model
 
@@ -28,15 +36,15 @@ The chart iframe integration is a separate surface. When explicitly requested, f
 - **Page composition:** `client/src/boards/template/pages/home/index.tsx` and `client/src/boards/template/pages/overview/index.tsx`.
 - **Chart wrapper:** `client/src/components/chart-wrapper/index.tsx`, `ChartWrapper({ config, options, constructorType?, hideTitle?, legend?, renderData? })`.
 - **Chart loading and colors:** `client/src/components/charts-skeletons/` and `client/src/hooks/useChartColor.tsx`.
-- **Reference chart and route:** `client/src/boards/template/pages/overview/charts/funding-by-year/` calls `GET /template/overview/funding-by-year`, served from a fixture by `server/src/routes/boards/template/routes/overview.js`. Copy this pattern.
-- **Legacy template charts:** the other charts under `client/src/boards/template/pages/overview/charts/` query the production Elasticsearch proxy (`/elasticsearch`) directly from the browser and are not rendered by the template. Do not copy that data access.
+- **Chart example (component usage only):** `client/src/boards/template/pages/overview/charts/funded-labs/index.tsx` shows `ChartWrapper`, `useQuery`, skeletons and `useChartColor`. Like the other charts in that folder, it queries the production Elasticsearch proxy (`/elasticsearch`) directly from the browser and the template page does not render it. Do not copy that data access: a prototype's charts call the board's own server routes, which serve fixtures.
+- **Server router:** `server/src/routes/boards/template/` is a minimal stub (`/template/overview/test`). Add fixture-backed routes and a `fixtures/` folder to a new board's router; see "Board model" above.
 - **Shared UI:** `client/src/components/` and `@dataesr/dsfr-plus`, already listed in `client/package.json`.
 
 The examples show patterns, not a universal component API. Inspect actual exports and nearby usage before generating code.
 
 ## Data sources
 
-| Catalogue id | Repository implementation | Prototype status | Required substitute / approval |
+| Source id | Repository implementation | Prototype status | Required substitute / approval |
 | --- | --- | --- | --- |
 | `board-fixtures` | JSON files in the board's server folder, read by its routes | Allowed default when synthetic/public and non-sensitive | Keep fixtures small, representative, and free of production records |
 | `mongodb` | `server/src/services/mongo.js` (and `mongo-accessibility.js`), read from board routes | Approval required | Use fixtures unless the data owner approves the exact collections and read-only access |
@@ -44,7 +52,9 @@ The examples show patterns, not a universal component API. Inspect actual export
 | `paysage` | `PAYSAGE_API_URL` / `PAYSAGE_API_KEY`, currently called separately from `atlas` and `european-projects` | Approval required | Use fixtures unless approved; reuse a shared client rather than a third copy |
 | `ods` | `ODS_API_URL` / `ODS_API_KEY`, used by `structures-finance` | Approval required | Use fixtures unless approved |
 
-The repository does not establish a separate preview database, approved dataset list, or service-owner approvals. Mark a source approved only after recording its owner, environment, allowed datasets/indexes, authentication, sensitivity, and fixture source. No credentials or production connection strings belong in this catalogue.
+The repository does not establish a separate preview database, approved dataset list, or service-owner approvals. Mark a source approved only after recording its owner, environment, allowed datasets/indexes, authentication, sensitivity, and fixture source. No credentials or production connection strings belong in this document.
+
+[`prototype.index.json`](./prototype.index.json) is the machine-readable form of this document: guidance files, template paths, components, and the data sources above with their status. The `dataesr-mcp` `/tableaux` server reads it, the `AGENTS.md` files, the skills, the template files, and the manifest schema from GitHub at request time and stores nothing itself. When you add or move a template, guidance file, component, or data source, update `prototype.index.json` in the same change.
 
 ## Common or dedicated code
 
@@ -65,7 +75,7 @@ Example:
 
 ```json
 {
-  "$schema": "../../../../docs/dashboard-prototyping/board.manifest.schema.json",
+  "$schema": "../../../../docs/dashboard-prototype/board.manifest.schema.json",
   "schema_version": 1,
   "id": "research-funding",
   "name": "Research funding",

@@ -1,0 +1,152 @@
+{
+  "schema_version": 1,
+  "description": "Machine-readable index of the dashboard prototyping resources. Read by the dataesr-mcp /tableaux server from GitHub; keep it in sync with README.md.",
+  "guidance": [
+    {
+      "id": "agents",
+      "title": "Repository guidance (start here)",
+      "path": "AGENTS.md"
+    },
+    {
+      "id": "prototyping",
+      "title": "Prototyping conventions, data sources, common vs dedicated code, manifest",
+      "path": "docs/dashboard-prototype/README.md"
+    },
+    {
+      "id": "agents-client",
+      "title": "Client board guidance",
+      "path": "client/src/boards/AGENTS.md"
+    },
+    {
+      "id": "agents-server",
+      "title": "Board API guidance",
+      "path": "server/src/routes/boards/AGENTS.md"
+    },
+    {
+      "id": "skill-dashboard-prototype",
+      "title": "Skill: end-to-end dashboard prototype",
+      "path": ".claude/skills/dashboard-prototype/SKILL.md"
+    },
+    {
+      "id": "skill-new-board",
+      "title": "Skill: scaffold a board",
+      "path": ".claude/skills/new-board/SKILL.md"
+    },
+    {
+      "id": "skill-new-chart",
+      "title": "Skill: add a chart",
+      "path": ".claude/skills/new-chart/SKILL.md"
+    },
+    {
+      "id": "skill-dsfr",
+      "title": "Skill: DSFR UI and styling",
+      "path": ".claude/skills/dsfr/SKILL.md"
+    }
+  ],
+  "templates": [
+    {
+      "id": "board-client",
+      "title": "Client board skeleton",
+      "description": "Routes, layouts and pages of a board. A reference to adapt, not a generator.",
+      "paths": [
+        "client/src/boards/template/routes.tsx",
+        "client/src/boards/template/title-i18n.json",
+        "client/src/boards/template/components/layouts/",
+        "client/src/boards/template/pages/home/",
+        "client/src/boards/template/pages/overview/index.tsx"
+      ]
+    },
+    {
+      "id": "board-server",
+      "title": "Server router stub",
+      "description": "Minimal board router, a route and an .http request file. Add routes serving fixtures from a fixtures/ folder in a new board.",
+      "paths": [
+        "server/src/routes/boards/template/"
+      ]
+    },
+    {
+      "id": "manifest-schema",
+      "title": "Board manifest JSON Schema",
+      "description": "Schema of board.manifest.json; the README documents the fields and an example.",
+      "paths": [
+        "docs/dashboard-prototype/board.manifest.schema.json"
+      ]
+    }
+  ],
+  "components": [
+    {
+      "id": "dsfr-layout",
+      "exports": [
+        "Container",
+        "Row",
+        "Col",
+        "Title"
+      ],
+      "package": "@dataesr/dsfr-plus",
+      "example": "client/src/boards/template/pages/overview/index.tsx"
+    },
+    {
+      "id": "chart-wrapper",
+      "exports": [
+        "ChartWrapper"
+      ],
+      "package": "client/src/components/chart-wrapper/index.tsx",
+      "example": "client/src/boards/template/pages/overview/charts/funded-labs/index.tsx"
+    },
+    {
+      "id": "chart-loading-skeletons",
+      "exports": [
+        "DefaultSkeleton",
+        "ListSkeleton",
+        "MapSkeleton"
+      ],
+      "package": "client/src/components/charts-skeletons/",
+      "example": "client/src/boards/template/pages/overview/charts/funded-labs/index.tsx"
+    },
+    {
+      "id": "chart-color-hook",
+      "exports": [
+        "useChartColor"
+      ],
+      "package": "client/src/hooks/useChartColor.tsx",
+      "example": "client/src/boards/template/pages/overview/charts/funded-labs/index.tsx"
+    }
+  ],
+  "data_sources": [
+    {
+      "id": "board-fixtures",
+      "name": "Board JSON fixtures",
+      "status": "allowed",
+      "purpose": "Synthetic or public sample data served by the board's routes.",
+      "guide": "Keep representative fixture JSON in server/src/routes/boards/<board-id>/fixtures/. No production records, credentials or confidential data. Isolate the read in one place so an approved data access can replace it without changing the route path or response shape."
+    },
+    {
+      "id": "mongodb",
+      "name": "Tableaux MongoDB",
+      "status": "approval-required",
+      "purpose": "Server-side connection in server/src/services/mongo.js (and mongo-accessibility.js).",
+      "guide": "Use fixtures unless the data owner approves the exact collections and read-only access. Read it from the board's server routes only, never from the browser."
+    },
+    {
+      "id": "elasticsearch",
+      "name": "Elasticsearch (via the /elasticsearch proxy)",
+      "status": "approval-required",
+      "purpose": "Configured Elasticsearch indexes behind ES_TOKEN_* credentials.",
+      "guide": "Use fixtures unless the data owner approves a specific index, read-only access and data classification. Several existing boards call the proxy from the browser; do not copy that pattern, read it from the board's server routes."
+    },
+    {
+      "id": "paysage",
+      "name": "Paysage API",
+      "status": "approval-required",
+      "purpose": "PAYSAGE_API_URL / PAYSAGE_API_KEY, used by the board.",
+      "guide": "Use fixtures unless approved. Keep calls in the board."
+    },
+    {
+      "id": "ods",
+      "name": "Opendatasoft API",
+      "status": "approval-required",
+      "purpose": "ODS_API_URL / ODS_API_KEY, used by structures-finance.",
+      "guide": "Use fixtures unless the data owner approves the dataset and access."
+    }
+  ]
+}

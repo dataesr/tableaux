@@ -7,7 +7,7 @@
 - Boards live in `client/src/boards/<board-id>/`. Read the board-specific guidance in `client/src/boards/AGENTS.md` before changing a board.
 - Board records are stored in MongoDB and returned by `/admin/list-dashboards`. The frontend dynamically imports a board's `routes.tsx` using its record id. Creating a folder alone does not publish a board.
 - Server route modules are explicitly mounted from `server/src/router.js`. Read `server/src/routes/boards/AGENTS.md` before changing board APIs.
-- See `docs/dashboard-prototyping/README.md` for the prototype architecture, component references, manifest and data-source constraints.
+- See `docs/dashboard-prototype/README.md` for the prototype architecture, component references, manifest and data-source constraints.
 - For DSFR UI and styling, consult `.claude/skills/dsfr/SKILL.md`; use the board and chart skills for those focused workflows.
 
 ## Runtime and commands
@@ -29,7 +29,7 @@
 - Use `ChartWrapper` for Highcharts, with `useQuery` keys containing all relevant filters. Handle loading, error, and empty states explicitly; keep expected data errors on the page so users can adjust filters.
 - Follow the nearest board's i18n pattern. Provide French text and English text when the board is multilingual.
 - Every board has its own server router under `server/src/routes/boards/<board-id>/`, even when it only serves synthetic or public fixtures, so that promotion replaces data access without changing the client contract.
-- Keep code dedicated to the board by default. Reuse existing `server/src/commons` and `server/src/services` code, and extract domain-neutral infrastructure into them only when a second board needs it; see `docs/dashboard-prototyping/README.md` ("Common or dedicated code").
+- Keep code dedicated to the board by default. Reuse existing `server/src/commons` and `server/src/services` code, and extract domain-neutral infrastructure into them only when a second board needs it; see `docs/dashboard-prototype/README.md` ("Common or dedicated code").
 - Keep shared components shared only when a second board needs them. Boards must not import from one another except through `boards/integration/charts-registry.tsx`.
 - For new server routes, use the shared error classes and error middleware; use the repository logger instead of `console.log`.
 - Follow neighboring file conventions for imports, extensions, formatting, and language.

@@ -1,6 +1,6 @@
 ---
 name: new-board
-description: Créer un nouveau tableau de bord (board) à partir du board template — dossier client, routes, i18n, sitemap, routes serveur et entrée MongoDB. À utiliser quand on demande de créer, initialiser ou scaffolder un nouveau tableau de bord.
+description: Créer un nouveau tableau de bord (board) à partir du board template — dossier client, routes, i18n, sitemap, router serveur avec fixtures et règles d'enregistrement MongoDB (sans écriture en base sans accord). À utiliser pour créer, initialiser ou scaffolder un board ; pour un prototype complet, voir dashboard-prototype.
 ---
 
 # Créer un nouveau board
