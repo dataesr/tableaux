@@ -35,7 +35,6 @@ export default function Options(data: { data?: FundingItem[] } | null, displayTy
 
   const newOptions: HighchartsInstance.Options = {
     chart: {
-      height: 400,
       events: {
         render(this: any) {
           (this._stems || []).forEach((el: any) => el.destroy());
@@ -77,7 +76,7 @@ export default function Options(data: { data?: FundingItem[] } | null, displayTy
       shared: true,
       useHTML: true,
       formatter: function () {
-        let html = `<strong>${this.x}</strong><br/>`;
+        let html = `<strong>${this.category}</strong><br/>`;
         (this.points || []).forEach((point) => {
           const value = point.y || 0;
           const formatted = point.series.type === "scatter" ? formatToRates(value / 100) : isFunding ? formatToMillions(value * 1000000) : formatNumber(value);
@@ -87,7 +86,7 @@ export default function Options(data: { data?: FundingItem[] } | null, displayTy
       },
     },
     plotOptions: {
-      column: { grouping: true, borderWidth: 0, borderRadius: 2 },
+      column: { borderRadius: 2, borderWidth: 0, grouping: true },
     },
     series: [
       {

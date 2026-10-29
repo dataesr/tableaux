@@ -15,6 +15,8 @@ export default function Options(data, displayType, currentLang): HighchartsOptio
 
   const filteredData = countryData.data;
 
+  const valueKey = (["total_fund_eur", "total_coordination_number", "total_number_involved", "count"].includes(displayType) ? displayType : "total_fund_eur") as "total_fund_eur" | "total_coordination_number" | "total_number_involved" | "count";
+  const isFunding = valueKey === "total_fund_eur";
   // liste de toutes les années/code disponibles en parcourant tous les items
   const years = new Set();
   const itemsLabels = new Set();
@@ -71,52 +73,37 @@ export default function Options(data, displayType, currentLang): HighchartsOptio
         },
       },
     },
-    xAxis: {
-      categories,
-      crosshair: true,
-    },
+    xAxis: { categories, crosshair: true },
     yAxis: [
       {
+        title: { text: displayType === "total_fund_eur" ? "Euros € (millions)" : displayType === "total_coordination_number" ? "Nombre de coordinations" : "Nombre de candidats et de participants" },
         min: 0,
-        title: {
-          text: displayType === "total_fund_eur" ? "Euros € (millions)" : displayType === "total_coordination_number" ? "Nombre de coordinations" : "Nombre de candidats et de participants",
-        },
         gridLineColor: "var(--background-default-grey-hover)",
         gridLineWidth: 0.5,
       },
       {
+        title: { text: `${getI18nLabel(i18n, "successRate", currentLang)} (%)` },
+        opposite: true,
         min: 0,
         max: 100,
-        title: {
-          text: `${getI18nLabel(i18n, "successRate", currentLang)} (%)`,
-        },
-        opposite: true,
-        labels: {
-          formatter: function (this: Highcharts.AxisLabelsFormatterContextObject) {
-            return `${this.value}%`;
-          },
-          style: { color: successRateColor },
-        },
-        gridLineColor: "var(--background-default-grey-hover)",
-        gridLineWidth: 0.5,
+        labels: { format: "{value}%", style: { color: successRateColor } },
       },
     ],
     tooltip: {
       shared: true,
+      useHTML: true,
+      formatter: function () {
+        let html = `<strong>${this.category}</strong><br/>`;
+        (this.points || []).forEach((point) => {
+          const value = point.y || 0;
+          const formatted = point.series.type === "scatter" ? formatToRates(value / 100) : isFunding ? formatToMillions(value * 1000000) : formatNumber(value);
+          html += `<span style="color:${point.color}">●</span> ${point.series.name}: <strong>${formatted}</strong><br/>`;
+        });
+        return html;
+      },
     },
     plotOptions: {
-      column: {
-        grouping: false,
-        shadow: false,
-        borderWidth: 0,
-        borderRadius: 0,
-        dataLabels: {
-          enabled: true,
-          formatter: function () {
-            return displayType === "total_fund_eur" ? formatToMillions(this.y as number) : (this.y as number);
-          },
-        },
-      },
+      column: { borderRadius: 2, borderWidth: 0, grouping: true },
     },
     series: [
       // Série pour les projets évalués
@@ -125,8 +112,7 @@ export default function Options(data, displayType, currentLang): HighchartsOptio
         name: getI18nLabel(i18n, "evaluatedProjects", currentLang),
         color: evaluatedColor,
         data: evaluated,
-        pointPadding: 0.3,
-        pointPlacement: -0.2,
+        yAxis: 0,
       },
       // Série pour les projets lauréats
       {
@@ -134,16 +120,15 @@ export default function Options(data, displayType, currentLang): HighchartsOptio
         name: getI18nLabel(i18n, "successfulProjects", currentLang),
         color: successfulColor,
         data: successful,
-        pointPadding: 0.3,
-        pointPlacement: 0.2,
+        yAxis: 0,
       },
       // Série pour les taux de succès
       {
         type: "scatter",
         name: `${getI18nLabel(i18n, "successRate", currentLang)} (%)`,
         color: successRateColor,
-        yAxis: 1,
         data: successRates,
+        yAxis: 1,
         marker: { symbol: "circle", radius: 6 },
         dataLabels: {
           enabled: true,
@@ -153,6 +138,7 @@ export default function Options(data, displayType, currentLang): HighchartsOptio
           y: -10,
           style: { fontSize: "11px", fontWeight: "600", textOutline: "none" },
         },
+        zIndex: 5,
       },
     ],
   };

@@ -1,15 +1,13 @@
-import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import { useSearchParams } from "react-router-dom";
-
-import { getData } from "./query";
-import options from "./options";
-import { useGetParams } from "./utils";
-import { EPChartsSources } from "../../../../config";
+import React from "react";
 
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
-import { formatNumber, formatToRates, formatCurrency, formatCurrencyEn} from "../../../../../../utils/format";
+import { formatCurrency, formatCurrencyEn, formatNumber, formatToRates } from "../../../../../../utils/format";
+import { EPChartsSources } from "../../../../config";
+import options from "./options";
+import { getData } from "./query";
+import { useGetParams } from "./utils";
 
 const config: {
   id: string;
@@ -18,6 +16,7 @@ const config: {
   integrationURL: string;
   comment?: { fr: React.JSX.Element; en: React.JSX.Element };
   readingKey?: { fr: React.JSX.Element; en: React.JSX.Element };
+  title?: { fr: string; en: string };
 } = {
   id: "FundingCombined",
   idQuery: "FundingCombined",
@@ -27,8 +26,6 @@ const config: {
 
 export default function FundingCombined({ displayType = "total_fund_eur", groupBy }: { displayType: string; groupBy: "pillar" | "program" | "topic" | "destination" }) {
   const params = useGetParams();
-  const [searchParams] = useSearchParams();
-  const currentLang = searchParams.get("language") || "fr";
 
   const { data, isLoading } = useQuery({
     queryKey: [config.idQuery, params, groupBy],
@@ -46,6 +43,7 @@ export default function FundingCombined({ displayType = "total_fund_eur", groupB
 
   switch (displayType) {
     case "total_coordination_number":
+      config.title = { fr: "Répartition des coordinations de projets évalués et lauréats par pilier", en: "Breakdown of evaluated and successful project coordinations by pilla" }
       config.comment = {
         fr: (
           <>
@@ -77,6 +75,7 @@ export default function FundingCombined({ displayType = "total_fund_eur", groupB
       break;
 
     case "total_number_involved":
+      config.title = { fr: "Répartition du nombre de candidats et participants par pilier", en: "Breakdown of the number of candidates and participants by pillar" }
       config.comment = {
         fr: <>Ce graphique présente la répartition, par pilier, du nombre de candidats et de participants du pays sélectionné et les taux de succès associé (nombre de participants / nombre de candidats).</>,
         en: <>This chart shows the breakdown, by pillar, of the number of applicants and participants from the selected country, together with the associated success rates (number of participants / number of applicants).</>,
@@ -98,6 +97,7 @@ export default function FundingCombined({ displayType = "total_fund_eur", groupB
       break;
 
     case "total_projects":
+      config.title = { fr: "Répartition des projets par pilier", en: "Breakdown of projects by pillar" }
       config.comment = {
         fr: <>Ce graphique présente la répartition, par pilier, du nombre de projets du pays sélectionné et les taux de succès associés (nombre de projets lauréats / nombre de projets évalués).</>,
         en: <>This chart shows the number of projects and success rates.</>,
@@ -119,6 +119,7 @@ export default function FundingCombined({ displayType = "total_fund_eur", groupB
       break;
 
     default: //"total_fund_eur"
+      config.title = { fr: "Répartition des financements et des taux de succès par pilier", en: "Breakdown of funding and success rates by pillar" }
       config.comment = {
         fr: <>Ce graphique présente la répartition, par pilier, des financements demandés et obtenus par l'ensemble des participants du pays sélectionné et les taux de succès associé (montants obtenus / montants demandés).</>,
         en: <>This chart shows the breakdown, by pillar, of the funding requested and secured by all participants from the selected country, together with the associated success rates (funding secured / funding requested).</>,
@@ -140,13 +141,5 @@ export default function FundingCombined({ displayType = "total_fund_eur", groupB
       break;
   }
 
-  const titles: Record<string, { fr: string; en: string }> = {
-    total_fund_eur: { fr: "Répartition des financements et des taux de succès par pilier", en: "Breakdown of funding and success rates by pillar" },
-    total_coordination_number: { fr: "Répartition des coordinations de projets évalués et lauréats par pilier", en: "Breakdown of evaluated and successful project coordinations by pilla" },
-    total_number_involved: { fr: "Répartition du nombre de candidats et participants par pilier", en: "Breakdown of the number of candidates and participants by pillar" },
-    count: { fr: "Répartition des projets par pilier", en: "Breakdown of projects by pillar" },
-  };
-  const title = (titles[displayType] ?? titles.total_fund_eur)[currentLang === "fr" ? "fr" : "en"];
-
-  return <ChartWrapper config={config} options={options(data, displayType, title)} />;
+  return <ChartWrapper config={config} options={options(data, displayType)} />;
 }
