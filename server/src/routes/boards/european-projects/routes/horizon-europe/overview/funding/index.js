@@ -20,7 +20,6 @@ router.route("/european-projects/overview/funding").get(async (req, res) => {
   }
   const hasExplicitGrouping = typeof requestedGrouping === "string";
   const groupBy = hasExplicitGrouping ? { ...groupings[requestedGrouping] } : { ...groupings.pillar };
-  console.log(req.query);
 
   // Depending on the filter selected, we want to group at the lowest level
   if (req.query.pillars) {

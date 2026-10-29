@@ -83,8 +83,8 @@ export default function EpNavigator() {
 
   // récupération des toutes les destinations des thématiques sélectionnées
   const { data: destinationsData, isLoading: isLoadingDestinations } = useQuery({
-    queryKey: ["ep/destinations", thematicIds],
-    queryFn: () => getDestinations(thematicIds!.split(",")),
+    queryKey: ["ep/destinations", programId, thematicIds],
+    queryFn: () => getDestinations({ programs: programId ? [programId] : [], thematics: thematicIds!.split(",") }),
     enabled: !!thematicIds,
     staleTime: 0, // Forcer la requête à être considérée comme périmée immédiatement
     gcTime: 0, // Ne pas mettre en cache
@@ -172,7 +172,7 @@ export default function EpNavigator() {
       searchParams.set("isEjo", isEjoChk ? "true" : "false");
       setSearchParams(searchParams);
     }
-  
+
   return (
     <>
       <Container>

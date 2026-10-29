@@ -426,6 +426,7 @@ router.route("/european-projects/thematics-from-programs").get(async (req, res) 
 });
 
 router.route("/european-projects/destinations-from-thematics").get(async (req, res) => {
+  const { programs, thematics } = req.query
   try {
     const data = await db
       .collection(collection_projects_entities)
@@ -433,7 +434,8 @@ router.route("/european-projects/destinations-from-thematics").get(async (req, r
         [
           {
             $match: {
-              thema_code: { $in: req.query.thematics.split(",") },
+              thema_code: { $in: thematics.split(",") },
+              programme_code: { $in: programs.split(",") },
               destination_code: { $ne: null },
               destination_name_en: { $ne: null },
             },
