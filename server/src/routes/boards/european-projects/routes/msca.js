@@ -301,22 +301,25 @@ router.route("/european-projects/msca/synthesis-by-panel").get(async (req, res) 
 
 /**
  * Route de filtres MSCA - retourne les années disponibles et leur répartition par framework
+ * Filtré uniquement sur le framework "Horizon Europe"
  */
 router.route("/european-projects/msca/filters").get(async (req, res) => {
   const [years, destinations, frameworks, yearsByFrameworkRaw] = await Promise.all([
-    db.collection(COLLECTION_NAME).distinct("call_year"),
+    db.collection(COLLECTION_NAME).distinct("call_year", { framework: "Horizon Europe" }),
     db
       .collection(COLLECTION_NAME)
       .aggregate([
+        { $match: { framework: "Horizon Europe" } },
         { $group: { _id: { code: "$destination_code", name: "$destination_name_en" } } },
         { $project: { _id: 0, code: "$_id.code", name: "$_id.name" } },
         { $sort: { code: 1 } },
       ])
       .toArray(),
-    db.collection(COLLECTION_NAME).distinct("framework"),
+    db.collection(COLLECTION_NAME).distinct("framework", { framework: "Horizon Europe" }),
     db
       .collection(COLLECTION_NAME)
       .aggregate([
+        { $match: { framework: "Horizon Europe" } },
         { $group: { _id: { framework: "$framework", call_year: "$call_year" } } },
         { $group: { _id: "$_id.framework", years: { $addToSet: "$_id.call_year" } } },
         { $project: { _id: 0, framework: "$_id", years: 1 } },
