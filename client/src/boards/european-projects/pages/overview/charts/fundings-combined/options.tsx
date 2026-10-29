@@ -56,7 +56,7 @@ export default function Options(data: { data?: FundingItem[] } | null, displayTy
     xAxis: { categories, crosshair: true },
     yAxis: [
       {
-        title: { text: isFunding ? "Euros € (millions)" : valueKey === "total_coordination_number" ? "Coordinations" : valueKey === "count" ? "Projets" : "Participations" },
+        title: { text: isFunding ? "Euros € (millions)" : valueKey === "total_coordination_number" ? "Nombre de coordinations" : valueKey === "count" ? "Nombre de projets" : "Nombre de cancicats et de participants" },
         min: 0,
         gridLineColor: "var(--background-default-grey-hover)",
         gridLineWidth: 0.5,

@@ -79,7 +79,7 @@ export default function Options(data, displayType, currentLang): HighchartsOptio
       {
         min: 0,
         title: {
-          text: displayType === "total_fund_eur" ? "M€" : "Nombre",
+          text: displayType === "total_fund_eur" ? "Euros € (millions)" : displayType === "total_coordination_number" ? "Nombre de coordinations" : "Nombre de candidats et de participants",
         },
         gridLineColor: "var(--background-default-grey-hover)",
         gridLineWidth: 0.5,

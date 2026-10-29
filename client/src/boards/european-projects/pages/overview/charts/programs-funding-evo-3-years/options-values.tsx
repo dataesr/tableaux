@@ -51,7 +51,7 @@ export default function Options(data, displayType, currentLang): HighchartsOptio
     yAxis: [
       {
         title: {
-          text: displayType === "total_fund_eur" ? "M€" : "Nombre",
+          text: displayType === "total_fund_eur" ? "Euros € (millions)" : displayType === "total_coordination_number" ? "Nombre de coordinations" : "Nombre de candidats et de participants",
         },
         min: 0,
         gridLineColor: "var(--background-default-grey-hover)",
