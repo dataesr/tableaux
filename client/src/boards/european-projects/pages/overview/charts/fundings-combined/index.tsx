@@ -42,7 +42,7 @@ export default function FundingCombined({ displayType = "total_fund_eur", groupB
   const total_coordination_number_rates = readingDataEvaluated?.total_coordination_number > 0 ? formatToRates(readingDataSuccessful.total_coordination_number / readingDataEvaluated.total_coordination_number) : 0;
   const total_number_involved_rates = readingDataEvaluated?.total_number_involved > 0 ? formatToRates(readingDataSuccessful.total_number_involved / readingDataEvaluated.total_number_involved) : 0;
   const total_fund_eur_rates = readingDataEvaluated?.total_fund_eur > 0 ? formatToRates(readingDataSuccessful.total_fund_eur / readingDataEvaluated.total_fund_eur) : 0;
-  const total_number_projects_rates = readingDataEvaluated?.count > 0 ? formatToRates(readingDataSuccessful.count / readingDataEvaluated.count) : 0;
+  const total_number_projects_rates = readingDataEvaluated?.total_projects > 0 ? formatToRates(readingDataSuccessful.total_projects / readingDataEvaluated.total_projects) : 0;
 
   switch (displayType) {
     case "total_coordination_number":
@@ -97,7 +97,7 @@ export default function FundingCombined({ displayType = "total_fund_eur", groupB
       };
       break;
 
-    case "count":
+    case "total_projects":
       config.comment = {
         fr: <>Ce graphique présente la répartition, par pilier, du nombre de projets du pays sélectionné et les taux de succès associés (nombre de projets lauréats / nombre de projets évalués).</>,
         en: <>This chart shows the number of projects and success rates.</>,
@@ -105,14 +105,14 @@ export default function FundingCombined({ displayType = "total_fund_eur", groupB
       config.readingKey = {
         fr: (
           <>
-            Dans le cadre des appels à projets concernant "{readingDataEvaluated?.name_fr || ""}", {formatNumber(readingDataEvaluated.count)} candidats du pays sélectionné figuraient dans les propositions évaluées et{" "}
-            {formatNumber(readingDataSuccessful.count)} sont devenus participants d'un projet lauréat, soit un taux de succès de {total_number_projects_rates}.
+            Dans le cadre des appels à projets concernant "{readingDataEvaluated?.name_fr || ""}", {formatNumber(readingDataEvaluated.total_projects)} candidats du pays sélectionné figuraient dans les propositions évaluées et{" "}
+            {formatNumber(readingDataSuccessful.total_projects)} sont devenus participants d'un projet lauréat, soit un taux de succès de {total_number_projects_rates}.
           </>
         ),
         en: (
           <>
-            Under "{readingDataEvaluated.name_en}" calls for proposals, {formatNumber(readingDataEvaluated.count)} applicants were named in evaluated proposals and {formatNumber(readingDataSuccessful.count)} of them became participants in successful
-            projects, a success rate of {total_number_projects_rates}.
+            Under "{readingDataEvaluated.name_en}" calls for proposals, {formatNumber(readingDataEvaluated.total_projects)} applicants were named in evaluated proposals and {formatNumber(readingDataSuccessful.total_projects)} of them became
+            participants in successful projects, a success rate of {total_number_projects_rates}.
           </>
         ),
       };

@@ -9,7 +9,7 @@ import i18n from "../../i18n-charts.json";
 export default function Options(data, displayType: string = "total_fund_eur", title?: string) {
   if (!data) return null;
 
-  const valueKey = displayType === "total_coordination_number" ? "proportion_coordination_number" : displayType === "total_number_involved" ? "proportion_number_involved" : displayType === "total_fund_eur" ? "proportion" : "proportion_count";
+  const valueKey = displayType === "total_coordination_number" ? "proportion_coordination_number" : displayType === "total_number_involved" ? "proportion_number_involved" : displayType === "total_fund_eur" ? "proportion" : "proportion_projects";
   
   const newOptions: HighchartsInstance.Options = {
     title: { text: title },

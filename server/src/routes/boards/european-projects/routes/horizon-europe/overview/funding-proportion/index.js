@@ -71,6 +71,7 @@ router.route("/european-projects/overview/funding-proportion").get(async (req, r
     total_coordination_number: 1,
     total_number_involved: 1,
     count: 1,
+    total_projects: { $size: "$projects" },
   };
   if (grouping.nameFr) project.name_fr = "$_id.name_fr";
   if (grouping.nameEn) project.name_en = "$_id.name_en";
@@ -84,6 +85,7 @@ router.route("/european-projects/overview/funding-proportion").get(async (req, r
         total_coordination_number: { $sum: "$coordination_number" },
         total_number_involved: { $sum: "$number_involved" },
         count: { $sum: 1 },
+        projects: { $addToSet: "$project_id" },
       },
     },
     { $project: project },
@@ -112,6 +114,7 @@ router.route("/european-projects/overview/funding-proportion").get(async (req, r
     result.proportion_coordination_number = ratio(item.total_coordination_number, all?.total_coordination_number);
     result.proportion_number_involved = ratio(item.total_number_involved, all?.total_number_involved);
     result.proportion_count = ratio(item.count, all?.count);
+    result.proportion_projects = ratio(item.total_projects, all?.total_projects);
 
     return result;
   });
@@ -136,6 +139,7 @@ router.route("/european-projects/overview/funding-proportion_indexes").get(async
         calculated_fund: 1,
         coordination_number: 1,
         number_involved: 1,
+        project_id: 1,
       },
       "idx_funding-proportion_covered",
     );

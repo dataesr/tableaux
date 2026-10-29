@@ -109,6 +109,7 @@ router.route("/european-projects/overview/funding").get(async (req, res) => {
           total_coordination_number: { $sum: "$coordination_number" },
           total_number_involved: { $sum: "$number_involved" },
           count: { $sum: 1 },
+          projects: { $addToSet: "$project_id" },
         },
       },
       {
@@ -122,6 +123,7 @@ router.route("/european-projects/overview/funding").get(async (req, res) => {
           total_coordination_number: 1,
           total_number_involved: 1,
           count: 1,
+          total_projects: { $size: "$projects" },
         },
       },
       { $sort: { code: 1 } },
@@ -174,6 +176,7 @@ router.route("/european-projects/overview/funding_indexes").get(async (req, res)
         calculated_fund: 1,
         coordination_number: 1,
         number_involved: 1,
+        project_id: 1,
       },
       "idx_funding_covered",
     );

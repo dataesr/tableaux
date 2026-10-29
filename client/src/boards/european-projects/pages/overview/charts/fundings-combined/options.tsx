@@ -6,21 +6,24 @@ import { getCssColor } from "../../../../../../utils/colors";
 import { getI18nLabel } from "../../../../../../utils";
 import i18n from "../../i18n-charts.json";
 
-type FundingItem = { code?: string; name_fr?: string; pilier_name_fr?: string; stage: string; total_fund_eur: number; total_coordination_number?: number; total_number_involved?: number; count?: number };
+type FundingItem = { code?: string; name_fr?: string; pilier_name_fr?: string; stage: string; total_fund_eur: number; total_coordination_number?: number; total_number_involved?: number; total_projects?: number };
 
 export default function Options(data: { data?: FundingItem[] } | null, displayType: string = "total_fund_eur", title?: string) {
   const items = data?.data;
   if (!items || items.length === 0) return null;
 
-  const valueKey = (["total_fund_eur", "total_coordination_number", "total_number_involved", "count"].includes(displayType) ? displayType : "total_fund_eur") as "total_fund_eur" | "total_coordination_number" | "total_number_involved" | "count";
+  const valueKey = (["total_fund_eur", "total_coordination_number", "total_number_involved", "total_projects"].includes(displayType) ? displayType : "total_fund_eur") as
+    | "total_fund_eur"
+    | "total_coordination_number"
+    | "total_number_involved"
+    | "total_projects";
   const isFunding = valueKey === "total_fund_eur";
   const divider = isFunding ? 1000000 : 1;
 
   const getName = (item: FundingItem) => item.name_fr ?? item.pilier_name_fr ?? item.code ?? "";
   const categories = Array.from(new Set(items.map(getName)));
 
-  const getValue = (name: string, stage: string) =>
-    items.filter((item) => getName(item) === name && item.stage === stage).reduce((sum, item) => sum + (item[valueKey] || 0), 0);
+  const getValue = (name: string, stage: string) => items.filter((item) => getName(item) === name && item.stage === stage).reduce((sum, item) => sum + (item[valueKey] || 0), 0);
 
   const evaluatedData = categories.map((name) => getValue(name, "evaluated") / divider);
   const successfulData = categories.map((name) => getValue(name, "successful") / divider);
@@ -56,7 +59,7 @@ export default function Options(data: { data?: FundingItem[] } | null, displayTy
     xAxis: { categories, crosshair: true },
     yAxis: [
       {
-        title: { text: isFunding ? "Euros € (millions)" : valueKey === "total_coordination_number" ? "Nombre de coordinations" : valueKey === "count" ? "Nombre de projets" : "Nombre de cancicats et de participants" },
+        title: { text: isFunding ? "Euros € (millions)" : valueKey === "total_coordination_number" ? "Coordinations" : valueKey === "total_projects" ? "Projets" : "Participations" },
         min: 0,
         gridLineColor: "var(--background-default-grey-hover)",
         gridLineWidth: 0.5,
