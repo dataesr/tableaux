@@ -8,7 +8,7 @@ import ChartWrapper from "../../../../../../components/chart-wrapper";
 import { successRatesReadingKey, valuesSuccessReadingKey, renderDataTable, renderDataTableRates } from "./utils";
 import { Container, Row, Col } from "@dataesr/dsfr-plus";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
-import { useState } from "react";
+import React, { useState } from "react";
 import { getI18nLabel } from "../../../../../../utils";
 import { EPChartsSources } from "../../../../config.js";
 
@@ -36,41 +36,29 @@ export default function PillarsFundingEvo3Years() {
       </>
     );
 
-  const configChart1 = {
+  const configChart1: {
+    id: string;
+    title?: { fr: string; en: string };
+    comment?: { fr: React.JSX.Element; en: React.JSX.Element };
+    readingKey: any;
+    sources: any;
+    integrationURL: string;
+  } = {
     id: "pillarsEvolutionFundingLines",
-    title: {
-      fr: "Evolution des financements demandés et obtenus (M€) sur Horizon Europe",
-      en: "Financing applied for and obtained (€m) evolution on Horizon Europe",
-    },
-    comment: {
-      fr: (
-        <>
-          Ce graphique montre l'évolution des financements demandés et obtenus pour les piliers du programme Horizon Europe sur les trois dernières années. Les barres représentent les montants demandés et obtenus. La ligne verte indique le taux de
-          succès correspondant.
-        </>
-      ),
-      en: (
-        <>
-          This chart shows the evolution of funding applied for and obtained for the pillars of the Horizon Europe programme over the last three years. The bars represent the amounts applied for and obtained. The line indicates the corresponding
-          success rate.
-        </>
-      ),
-    },
     readingKey: valuesSuccessReadingKey(data, displayType),
     sources: EPChartsSources,
     integrationURL: "/european-projects/components/pages/analysis/overview/charts/projects-types-3",
   };
 
-  const configChart3 = {
+  const configChart3: {
+    id: string;
+    title?: { fr: string; en: string };
+    comment?: { fr: React.JSX.Element; en: React.JSX.Element };
+    readingKey: any;
+    sources: any;
+    integrationURL: string;
+  } = {
     id: "pillarsEvolutionFundingLinesSuccessRate",
-    title: {
-      fr: "Part des financements du pays demandés et obtenus par rapport au total des participants",
-      en: "Percentage of country funding applied for and obtained as a proportion of total participants",
-    },
-    comment: {
-      fr: <>Ce graphique montre le pourcentage des financements demandés et obtenus par le pays sélectionné par rapport au total des participants.</>,
-      en: <>This chart shows the percentage of funding applied for and obtained by the selected country as a proportion of total participants.</>,
-    },
     readingKey: successRatesReadingKey(data, displayType),
     sources: EPChartsSources,
     integrationURL: "/european-projects/components/pages/analysis/overview/charts/projects-types-3",
@@ -81,6 +69,44 @@ export default function PillarsFundingEvo3Years() {
     ...i18nGlobal,
   };
 
+switch (displayType) {
+  case "total_coordination_number":
+    configChart1.title = { fr: "Evolution des coordinations", en: "Evolution of coordinations" };
+    configChart1.comment = { fr: <></>, en: <></> };
+    configChart3.title = { fr: "Evolution de la part des coordinations", en: "Evolution of percentage of country coordinations" };
+    configChart3.comment = { fr: <></>, en: <></> };
+    break;
+  case "total_number_involved":
+    configChart1.title = { fr: "Evolution des participants", en: "Evolution of participants" };
+    configChart1.comment = { fr: <></>, en: <></> };
+    configChart3.title = { fr: "Evolution de la part des participants", en: "Evolution of percentage of participants" };
+    configChart3.comment = { fr: <></>, en: <></> };
+    break;
+  case "total_projects":
+    configChart1.title = { fr: "Evolution des projets", en: "Evolution of projects" };
+    configChart1.comment = { fr: <></>, en: <></> };
+    configChart3.title = { fr: "Evolution de la part des projets", en: "Evolution of percentage of projects" };
+    configChart3.comment = { fr: <></>, en: <></> };
+    break;
+  default:
+    configChart1.title = {
+      fr: "Evolution des financements demandés et obtenus (M€) sur Horizon Europe",
+      en: "Financing applied for and obtained (€m) evolution on Horizon Europe",
+    };
+    configChart1.comment = {
+      fr: <>Ce graphique montre l'évolution des financements demandés et obtenus pour les piliers du programme Horizon Europe. Les barres représentent les montants demandés et obtenus. Le point orange indique le taux de succès correspondant.</>,
+      en: <>This chart shows funding applied for and obtained for Horizon Europe pillars. The bars show amounts, the orange point shows success rate.</>,
+    };
+    configChart3.title = {
+      fr: "Part des financements du pays demandés et obtenus par rapport au total des participants",
+      en: "Percentage of country funding applied for and obtained as a proportion of total participants",
+    };
+    configChart3.comment = {
+      fr: <>Ce graphique montre le pourcentage des financements demandés et obtenus par le pays sélectionné par rapport au total des participants.</>,
+      en: <>This chart shows the percentage of funding applied for and obtained by the selected country as a proportion of total participants.</>,
+    };
+}
+
   return (
     <Container fluid className="chart-container chart-container--default">
       <Row className="fr-my-1w">
@@ -89,6 +115,7 @@ export default function PillarsFundingEvo3Years() {
             <option value="total_fund_eur">{getI18nLabel(i18n, "total-fund-eur")}</option>
             <option value="total_coordination_number">{getI18nLabel(i18n, "total-coordination-number")}</option>
             <option value="total_number_involved">{getI18nLabel(i18n, "total-number-involved")}</option>
+            <option value="total_projects">{getI18nLabel(i18nGlobal, "total-projects")}</option>
           </select>
         </Col>
       </Row>

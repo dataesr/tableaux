@@ -44,6 +44,7 @@ router.route("/european-projects/overview/pillars-funding-evo-3-years").get(asyn
             total_fund_eur: { $sum: "$calculated_fund" },
             total_coordination_number: { $sum: "$coordination_number" },
             total_number_involved: { $sum: "$number_involved" },
+            projects: { $addToSet: "$project_id" },
           },
         },
         {
@@ -60,6 +61,7 @@ router.route("/european-projects/overview/pillars-funding-evo-3-years").get(asyn
                 total_fund_eur: "$total_fund_eur",
                 total_coordination_number: "$total_coordination_number",
                 total_number_involved: "$total_number_involved",
+                total_projects: { $size: "$projects" },
               },
             },
           },

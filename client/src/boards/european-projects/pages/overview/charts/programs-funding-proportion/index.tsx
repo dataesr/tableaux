@@ -1,12 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 
+import { EPChartsSources } from "../../../../config.js";
 import { getData } from "./query";
-import options from "./options";
 import { readingKey, useGetParams } from "./utils";
-
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
-import { EPChartsSources } from "../../../../config.js";
+import options from "./options";
 
 const titles: Record<string, { fr: string; en: string }> = {
   total_fund_eur: {
@@ -20,6 +19,10 @@ const titles: Record<string, { fr: string; en: string }> = {
   total_number_involved: {
     fr: "Part des participations demandées et obtenues par le pays sur l'ensemble des pays",
     en: "Participations requested and obtained by the country on all countries",
+  },
+  count: {
+    fr: "Part des projets du pays",
+    en: "Share of the country's projects",
   },
 };
 

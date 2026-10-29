@@ -1,14 +1,13 @@
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 
-import { getData } from "./query";
-import options from "./options";
-import { useGetParams } from "./utils";
 import { EPChartsSources } from "../../../../config";
-
+import { formatToPercent } from "../../../../../../utils/format";
+import { getData } from "./query";
+import { useGetParams } from "./utils";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
-import { formatToPercent } from "../../../../../../utils/format";
+import options from "./options";
 
 const titles: Record<string, { fr: string; en: string }> = {
   total_fund_eur: {
@@ -23,12 +22,12 @@ const titles: Record<string, { fr: string; en: string }> = {
     fr: "Part des candidats et des participants du pays",
     en: "Share of applicants and participants from the country",
   },
-  count: {
+  total_projects: {
     fr: "Part des projets du pays",
     en: "Share of the country's projects",
   },
 };
-const config : {
+const config: {
   id: string;
   idQuery: string;
   sources: typeof EPChartsSources;
@@ -40,7 +39,6 @@ const config : {
   idQuery: "pillarsFundingProportion",
   sources: EPChartsSources,
   integrationURL: "/european-projects/components/pages/analysis/overview/charts/destination-funding-proportion",
-
 };
 
 export default function PillarsFundingProportion({ displayType = "total_fund_eur" }: { displayType: string }) {
@@ -105,7 +103,7 @@ export default function PillarsFundingProportion({ displayType = "total_fund_eur
          }));
        break;
 
-     case "count":
+     case "total_projects":
        config.comment = {
          fr: <>Ce graphique présente, pour chaque pilier, la part du pays sélectionné dans l'ensemble des projets évalués et lauréats.</>,
          en: <>This chart shows, for each pillar, the selected country's share of all evaluated and successful projects.</>,
