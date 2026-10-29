@@ -61,8 +61,8 @@ export default function SynthesisFocus() {
               label={getI18nLabel("participantsShare.label")}
               loading={false}
               tooltipText={getI18nLabel("participantsShare.tooltip")}
-              numerator={dataCurrentCountry_successful.total_involved}
-              denominator={dataSuccessful.total_involved}
+              numerator={Math.trunc(dataCurrentCountry_successful.total_involved)}
+              denominator={Math.trunc(dataSuccessful.total_involved)}
               numeratorLabel={getI18nLabel("labels.participantsShare.numerator")}
               denominatorLabel={getI18nLabel("labels.participantsShare.denominator")}
             />
@@ -73,8 +73,8 @@ export default function SynthesisFocus() {
               label={getI18nLabel("coordinationsShare.label")}
               loading={false}
               tooltipText={getI18nLabel("coordinationsShare.tooltip")}
-              numerator={dataCurrentCountry_successful.total_coordination_number}
-              denominator={dataSuccessful.total_coordination_number}
+              numerator={Math.trunc(dataCurrentCountry_successful.total_coordination_number)}
+              denominator={Math.trunc(dataSuccessful.total_coordination_number)}
               numeratorLabel={getI18nLabel("labels.coordinationsShare.numerator")}
               denominatorLabel={getI18nLabel("labels.coordinationsShare.denominator")}
             />
@@ -97,8 +97,8 @@ export default function SynthesisFocus() {
               label={getI18nLabel("participantsSuccessRate.label")}
               loading={false}
               tooltipText={getI18nLabel("participantsSuccessRate.tooltip")}
-              numerator={dataCurrentCountry_successful.total_involved}
-              denominator={dataCurrentCountry_evaluated.total_involved}
+              numerator={Math.trunc(dataCurrentCountry_successful.total_involved)}
+              denominator={Math.trunc(dataCurrentCountry_evaluated.total_involved)}
               numeratorLabel={getI18nLabel("labels.participantsSuccessRate.numerator")}
               denominatorLabel={getI18nLabel("labels.participantsSuccessRate.denominator")}
             />
@@ -109,8 +109,8 @@ export default function SynthesisFocus() {
               label={getI18nLabel("projectsSuccessRate.label")}
               loading={false}
               tooltipText={getI18nLabel("projectsSuccessRate.tooltip")}
-              numerator={dataCurrentCountry_successful.total_coordination_number}
-              denominator={dataCurrentCountry_evaluated.total_coordination_number}
+              numerator={Math.trunc(dataCurrentCountry_successful.total_coordination_number)}
+              denominator={Math.trunc(dataCurrentCountry_evaluated.total_coordination_number)}
               numeratorLabel={getI18nLabel("labels.projectsSuccessRate.numerator")}
               denominatorLabel={getI18nLabel("labels.projectsSuccessRate.denominator")}
             />
