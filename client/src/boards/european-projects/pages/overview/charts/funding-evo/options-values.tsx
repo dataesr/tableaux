@@ -1,7 +1,7 @@
 import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js";
 
 import { CreateChartOptions } from "../../../../components/chart-ep";
-import { formatToMillions } from "../../../../../../utils/format";
+import { formatNumber, formatToRates, formatToMillions } from "../../../../../../utils/format";
 import type { HighchartsOptions } from "../../../../../../components/chart-wrapper";
 import { getCssColor } from "../../../../../../utils/colors";
 import { getI18nLabel } from "../../../../../../utils";
