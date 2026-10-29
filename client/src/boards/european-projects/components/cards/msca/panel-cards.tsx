@@ -38,7 +38,8 @@ export default function MscaPanelCards({ countryCode, callYear }: MscaPanelCards
   const validData = (data || []).filter((p) => p.panel_id);
   if (validData.length === 0) return null;
 
-  const sorted = [...validData].sort((a, b) => a.panel_id.localeCompare(b.panel_id));
+  const sortingField = viewMode === "projects" ? "total_projects" : "total_funding_project"
+  const sorted = validData.sort((a, b) => (b?.successful?.[sortingField] ?? 0) - (a?.successful?.[sortingField] ?? 0));
 
   return (
     <div className="msca-panel-section">
@@ -48,7 +49,7 @@ export default function MscaPanelCards({ countryCode, callYear }: MscaPanelCards
         </Title>
         <SegmentedControl className="fr-segmented--sm" name="msca-panel-view-mode">
           <SegmentedElement checked={viewMode === "projects"} label="Projets" onClick={() => setViewMode("projects")} value="projects" />
-          <SegmentedElement checked={viewMode === "funding"} label="Financements" onClick={() => setViewMode("funding")} value="funding" />
+          <SegmentedElement checked={viewMode === "funding"} label="Financements obtenus" onClick={() => setViewMode("funding")} value="funding" />
         </SegmentedControl>
       </div>
       <div className="msca-stat-cards">
