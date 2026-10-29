@@ -23,6 +23,10 @@ const titles: Record<string, { fr: string; en: string }> = {
     fr: "Part des candidats et des participants du pays",
     en: "Share of applicants and participants from the country",
   },
+  count: {
+    fr: "Part des projets du pays",
+    en: "Share of the country's projects",
+  },
 };
 const config : {
   id: string;
@@ -54,47 +58,81 @@ export default function PillarsFundingProportion({ displayType = "total_fund_eur
   const readingDataSuccessful = data.data.find((d) => d.stage === "successful" && d.pillar === readingDataEvaluated.pillar);
 
    switch (displayType) {
-    case "total_coordination_number":
-      config.comment = {
-        fr: <>Ce graphique présente, pour chaque pilier, la part du pays sélectionné dans l’ensemble des coordinations de projets évalués et lauréats, tous pays confondus.</>,
-        en: <>This chart shows, for each pillar, the selected country's share of all evaluated and successful project coordinations, across all countries.</>,
-        },
-        config.readingKey = {
-          fr: <>Dans le cadre des appels à projets concernant « {readingDataEvaluated.pilier_name_fr} », les entités du pays sélectionné coordonnent{" "}
-                {formatToPercent(readingDataEvaluated.proportion_coordination_number)} de l'ensemble des projets évalués et{" "}
-                {formatToPercent(readingDataSuccessful.proportion_coordination_number)} de l'ensemble des projets lauréats.</>,
-          en: <>Under calls for proposals concerning "{readingDataEvaluated.pilier_name_en}", entities from the selected country coordinate{" "}
-                {formatToPercent(readingDataEvaluated.proportion_coordination_number)} of all evaluated projects and{" "}
-                {formatToPercent(readingDataSuccessful.proportion_coordination_number)} of all successful projects.</>,
-        }
-      break;
-    
-    case "total_number_involved":
-      config.comment = {
-        fr: <>Ce graphique présente, pour chaque pilier, la part du pays sélectionné dans l'ensemble des candidats (entités présentes dans les propositions évaluées) et dans l'ensemble des participants (entités présentes dans les projets lauréats), tous pays confondus.</>,
-        en: <>This chart shows, for each pillar, the selected country's share of all applicants (entities named in evaluated proposals) and of all participants (entities named in successful projects), across all countries.</>,
-        },
-        config.readingKey = {
-          fr: <>Dans le cadre des appels à projets concernant « {readingDataEvaluated.pilier_name_fr} », les entités du pays sélectionné représentent {formatToPercent(readingDataEvaluated.proportion_number_involved)} de l'ensemble des candidats et{" "}
-          {formatToPercent(readingDataSuccessful.proportion_number_involved)} de l'ensemble des participants.</>,
-          en: <>Under calls for proposals concerning "{readingDataEvaluated.pilier_name_en}", entities from the selected country account for {formatToPercent(readingDataEvaluated.proportion_number_involved)} of all applicants and{" "}
-          {formatToPercent(readingDataSuccessful.proportion_number_involved)} of all participants.</>,
-        }
-      break;
+     case "total_coordination_number":
+       ((config.comment = {
+         fr: <>Ce graphique présente, pour chaque pilier, la part du pays sélectionné dans l’ensemble des coordinations de projets évalués et lauréats, tous pays confondus.</>,
+         en: <>This chart shows, for each pillar, the selected country's share of all evaluated and successful project coordinations, across all countries.</>,
+       }),
+         (config.readingKey = {
+           fr: (
+             <>
+               Dans le cadre des appels à projets concernant « {readingDataEvaluated.pilier_name_fr} », les entités du pays sélectionné coordonnent {formatToPercent(readingDataEvaluated.proportion_coordination_number)} de l'ensemble des projets
+               évalués et {formatToPercent(readingDataSuccessful.proportion_coordination_number)} de l'ensemble des projets lauréats.
+             </>
+           ),
+           en: (
+             <>
+               Under calls for proposals concerning "{readingDataEvaluated.pilier_name_en}", entities from the selected country coordinate {formatToPercent(readingDataEvaluated.proportion_coordination_number)} of all evaluated projects and{" "}
+               {formatToPercent(readingDataSuccessful.proportion_coordination_number)} of all successful projects.
+             </>
+           ),
+         }));
+       break;
 
-    default:
-      config.comment = {
-        fr: <>Ce graphique présente, pour chaque pilier, la part du pays sélectionné dans l’ensemble des financements demandés et obtenus par les participants de tous les pays.</>,
-        en: <>This chart shows, for each pillar, the selected country’s share of all funding requested and secured by participants from all countries.</>,
-        },
-        config.readingKey = {
-          fr: <>Dans le cadre des appels à projets concernant "{readingDataEvaluated.pilier_name_fr}", le montant des financements demandés par les participants du pays sélectionné représentent {formatToPercent(readingDataEvaluated.proportion)} de l'ensemble des financements demandés et{" "}
-          le montant des financements obtenus par les participants du pays sélectionné représentent {formatToPercent(readingDataSuccessful.proportion)} de l'ensemble des financements obtenus.</>,
-          en: <>Under "{readingDataEvaluated.pilier_name_en}" calls for proposals, the funding requested by participants from the selected country represents {formatToPercent(readingDataEvaluated.proportion)} of all funding requested and{" "}
-          the funding secured by participants from the selected country represents {formatToPercent(readingDataSuccessful.proportion)} of all funding secured.</>,
-        }
-      break;
-  }
+     case "total_number_involved":
+       ((config.comment = {
+         fr: (
+           <>
+             Ce graphique présente, pour chaque pilier, la part du pays sélectionné dans l'ensemble des candidats (entités présentes dans les propositions évaluées) et dans l'ensemble des participants (entités présentes dans les projets lauréats),
+             tous pays confondus.
+           </>
+         ),
+         en: <>This chart shows, for each pillar, the selected country's share of all applicants (entities named in evaluated proposals) and of all participants (entities named in successful projects), across all countries.</>,
+       }),
+         (config.readingKey = {
+           fr: (
+             <>
+               Dans le cadre des appels à projets concernant « {readingDataEvaluated.pilier_name_fr} », les entités du pays sélectionné représentent {formatToPercent(readingDataEvaluated.proportion_number_involved)} de l'ensemble des candidats et{" "}
+               {formatToPercent(readingDataSuccessful.proportion_number_involved)} de l'ensemble des participants.
+             </>
+           ),
+           en: (
+             <>
+               Under calls for proposals concerning "{readingDataEvaluated.pilier_name_en}", entities from the selected country account for {formatToPercent(readingDataEvaluated.proportion_number_involved)} of all applicants and{" "}
+               {formatToPercent(readingDataSuccessful.proportion_number_involved)} of all participants.
+             </>
+           ),
+         }));
+       break;
+
+     case "count":
+       config.comment = {
+         fr: <>Ce graphique présente, pour chaque pilier, la part du pays sélectionné dans l'ensemble des projets évalués et lauréats.</>,
+         en: <>This chart shows, for each pillar, the selected country's share of all evaluated and successful projects.</>,
+       };
+       break;
+
+     default:
+       ((config.comment = {
+         fr: <>Ce graphique présente, pour chaque pilier, la part du pays sélectionné dans l’ensemble des financements demandés et obtenus par les participants de tous les pays.</>,
+         en: <>This chart shows, for each pillar, the selected country’s share of all funding requested and secured by participants from all countries.</>,
+       }),
+         (config.readingKey = {
+           fr: (
+             <>
+               Dans le cadre des appels à projets concernant "{readingDataEvaluated.pilier_name_fr}", le montant des financements demandés par les participants du pays sélectionné représentent {formatToPercent(readingDataEvaluated.proportion)} de
+               l'ensemble des financements demandés et le montant des financements obtenus par les participants du pays sélectionné représentent {formatToPercent(readingDataSuccessful.proportion)} de l'ensemble des financements obtenus.
+             </>
+           ),
+           en: (
+             <>
+               Under "{readingDataEvaluated.pilier_name_en}" calls for proposals, the funding requested by participants from the selected country represents {formatToPercent(readingDataEvaluated.proportion)} of all funding requested and the funding
+               secured by participants from the selected country represents {formatToPercent(readingDataSuccessful.proportion)} of all funding secured.
+             </>
+           ),
+         }));
+       break;
+   }
 
 
   return <ChartWrapper config={config} options={options(data, displayType, (titles[displayType] ?? titles.total_fund_eur)[currentLang === "fr" ? "fr" : "en"])} />;

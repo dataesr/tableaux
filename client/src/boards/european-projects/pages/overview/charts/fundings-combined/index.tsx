@@ -42,6 +42,7 @@ export default function FundingCombined({ displayType = "total_fund_eur", groupB
   const total_coordination_number_rates = readingDataEvaluated?.total_coordination_number > 0 ? formatToRates(readingDataSuccessful.total_coordination_number / readingDataEvaluated.total_coordination_number) : 0;
   const total_number_involved_rates = readingDataEvaluated?.total_number_involved > 0 ? formatToRates(readingDataSuccessful.total_number_involved / readingDataEvaluated.total_number_involved) : 0;
   const total_fund_eur_rates = readingDataEvaluated?.total_fund_eur > 0 ? formatToRates(readingDataSuccessful.total_fund_eur / readingDataEvaluated.total_fund_eur) : 0;
+  const total_number_projects_rates = readingDataEvaluated?.count > 0 ? formatToRates(readingDataSuccessful.count / readingDataEvaluated.count) : 0;
 
   switch (displayType) {
     case "total_coordination_number":
@@ -74,6 +75,7 @@ export default function FundingCombined({ displayType = "total_fund_eur", groupB
         ),
       };
       break;
+
     case "total_number_involved":
       config.comment = {
         fr: <>Ce graphique présente la répartition, par pilier, du nombre de candidats et de participants du pays sélectionné et les taux de succès associé (nombre de participants / nombre de candidats).</>,
@@ -94,6 +96,28 @@ export default function FundingCombined({ displayType = "total_fund_eur", groupB
         ),
       };
       break;
+
+    case "count":
+      config.comment = {
+        fr: <>Ce graphique présente la répartition, par pilier, du nombre de projets du pays sélectionné et les taux de succès associés (nombre de projets lauréats / nombre de projets évalués).</>,
+        en: <>This chart shows the number of projects and success rates.</>,
+      };
+      config.readingKey = {
+        fr: (
+          <>
+            Dans le cadre des appels à projets concernant "{readingDataEvaluated?.name_fr || ""}", {formatNumber(readingDataEvaluated.count)} candidats du pays sélectionné figuraient dans les propositions évaluées et{" "}
+            {formatNumber(readingDataSuccessful.count)} sont devenus participants d'un projet lauréat, soit un taux de succès de {total_number_projects_rates}.
+          </>
+        ),
+        en: (
+          <>
+            Under "{readingDataEvaluated.name_en}" calls for proposals, {formatNumber(readingDataEvaluated.count)} applicants were named in evaluated proposals and {formatNumber(readingDataSuccessful.count)} of them became participants in successful
+            projects, a success rate of {total_number_projects_rates}.
+          </>
+        ),
+      };
+      break;
+
     default: //"total_fund_eur"
       config.comment = {
         fr: <>Ce graphique présente la répartition, par pilier, des financements demandés et obtenus par l'ensemble des participants du pays sélectionné et les taux de succès associé (montants obtenus / montants demandés).</>,
@@ -120,6 +144,7 @@ export default function FundingCombined({ displayType = "total_fund_eur", groupB
     total_fund_eur: { fr: "Répartition des financements et des taux de succès par pilier", en: "Breakdown of funding and success rates by pillar" },
     total_coordination_number: { fr: "Répartition des coordinations de projets évalués et lauréats par pilier", en: "Breakdown of evaluated and successful project coordinations by pilla" },
     total_number_involved: { fr: "Répartition du nombre de candidats et participants par pilier", en: "Breakdown of the number of candidates and participants by pillar" },
+    count: { fr: "Répartition des projets par pilier", en: "Breakdown of projects by pillar" },
   };
   const title = (titles[displayType] ?? titles.total_fund_eur)[currentLang === "fr" ? "fr" : "en"];
 

@@ -18,6 +18,7 @@ export default function PillarsFunding() {
             <option value="total_fund_eur">{getI18nLabel(i18nGlobal, "total-fund-eur")}</option>
             <option value="total_coordination_number">{getI18nLabel(i18nGlobal, "total-coordination-number")}</option>
             <option value="total_number_involved">{getI18nLabel(i18nGlobal, "total-number-involved")}</option>
+            <option value="count">{getI18nLabel(i18nGlobal, "total-projects")}</option>
           </select>
         </Col>
       </Row>

@@ -427,6 +427,10 @@
     "en": "Applicants & participants",
     "fr": "Candidats & participants"
   },
+  "total-projects": {
+    "en": "Number of projects",
+    "fr": "Nombre de projets"
+  },
   "total-subsidies": {
     "en": "Total subsidies",
     "fr": "Total subventions"

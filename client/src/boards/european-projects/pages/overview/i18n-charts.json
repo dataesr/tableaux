@@ -30,5 +30,21 @@
   "fundingProportion": {
     "fr": "Part des financements",
     "en": "Share of funding"
+  },
+  "proportion": {
+    "fr": "Part des financements",
+    "en": "Share of funding"
+  },
+  "total_coordination_number": {
+    "fr": "Part des coordinations",
+    "en": "Share of coordinations"
+  },
+  "total_number_involved": {
+    "fr": "Part des participants",
+    "en": "Share of participants"
+  },
+  "proportion_count": {
+    "fr": "Part des projets",
+    "en": "Share of projects"
   }
 }

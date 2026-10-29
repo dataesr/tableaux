@@ -6,13 +6,13 @@ import { getCssColor } from "../../../../../../utils/colors";
 import { getI18nLabel } from "../../../../../../utils";
 import i18n from "../../i18n-charts.json";
 
-type FundingItem = { code?: string; name_fr?: string; pilier_name_fr?: string; stage: string; total_fund_eur: number; total_coordination_number?: number; total_number_involved?: number };
+type FundingItem = { code?: string; name_fr?: string; pilier_name_fr?: string; stage: string; total_fund_eur: number; total_coordination_number?: number; total_number_involved?: number; count?: number };
 
 export default function Options(data: { data?: FundingItem[] } | null, displayType: string = "total_fund_eur", title?: string) {
   const items = data?.data;
   if (!items || items.length === 0) return null;
 
-  const valueKey = (["total_fund_eur", "total_coordination_number", "total_number_involved"].includes(displayType) ? displayType : "total_fund_eur") as "total_fund_eur" | "total_coordination_number" | "total_number_involved";
+  const valueKey = (["total_fund_eur", "total_coordination_number", "total_number_involved", "count"].includes(displayType) ? displayType : "total_fund_eur") as "total_fund_eur" | "total_coordination_number" | "total_number_involved" | "count";
   const isFunding = valueKey === "total_fund_eur";
   const divider = isFunding ? 1000000 : 1;
 
@@ -56,7 +56,7 @@ export default function Options(data: { data?: FundingItem[] } | null, displayTy
     xAxis: { categories, crosshair: true },
     yAxis: [
       {
-        title: { text: isFunding ? "Euros € (millions)" : valueKey === "total_coordination_number" ? "Coordinations" : "Participations" },
+        title: { text: isFunding ? "Euros € (millions)" : valueKey === "total_coordination_number" ? "Coordinations" : valueKey === "count" ? "Projets" : "Participations" },
         min: 0,
         gridLineColor: "var(--background-default-grey-hover)",
         gridLineWidth: 0.5,
@@ -77,7 +77,7 @@ export default function Options(data: { data?: FundingItem[] } | null, displayTy
         let html = `<strong>${this.x}</strong><br/>`;
         (this.points || []).forEach((point) => {
           const value = point.y || 0;
-          const formatted = point.series.type === "scatter" ? formatToRates(value / 100) : (isFunding ? formatToMillions(value * 1000000) : formatNumber(value));
+          const formatted = point.series.type === "scatter" ? formatToRates(value / 100) : isFunding ? formatToMillions(value * 1000000) : formatNumber(value);
           html += `<span style="color:${point.color}">●</span> ${point.series.name}: <strong>${formatted}</strong><br/>`;
         });
         return html;
