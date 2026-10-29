@@ -1,14 +1,13 @@
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
-
-import Template from "./template";
-import { GetData } from "./query";
-
-import { useGetParams } from "./utils";
 import { Col, Container, Row, Title } from "@dataesr/dsfr-plus";
 
-import "./styles.scss";
+import { GetData } from "./query";
+import { useGetParams } from "./utils";
 import RateCard from "../../../../components/cards/funds-cards/rate";
+import Template from "./template";
+
+import "./styles.scss";
 
 import i18n from "./i18n.json";
 
@@ -44,7 +43,7 @@ export default function SynthesisFocus() {
       <Container as="section" fluid className="fr-mb-2w">
         <Title as="h2">{currentLang === "en" ? "Key figures" : "Grands chiffres"}</Title>
         <Row gutters>
-          <Col xs={12} md={6}>
+          <Col xs={12} md={4}>
             <RateCard
               nb={dataCurrentCountry_successful.total_fund_eur / dataSuccessful.total_fund_eur}
               label={getI18nLabel("fundsShare.label")}
@@ -56,7 +55,7 @@ export default function SynthesisFocus() {
               denominatorLabel={getI18nLabel("labels.fundsShare.denominator")}
             />
           </Col>
-          <Col xs={12} md={6}>
+          <Col xs={12} md={4}>
             <RateCard
               nb={dataCurrentCountry_successful.total_involved / dataSuccessful.total_involved}
               label={getI18nLabel("participantsShare.label")}
@@ -68,7 +67,7 @@ export default function SynthesisFocus() {
               denominatorLabel={getI18nLabel("labels.participantsShare.denominator")}
             />
           </Col>
-          <Col xs={12} md={6}>
+          <Col xs={12} md={4}>
             <RateCard
               nb={dataCurrentCountry_successful.total_coordination_number / dataSuccessful.total_coordination_number}
               label={getI18nLabel("coordinationsShare.label")}
@@ -80,7 +79,7 @@ export default function SynthesisFocus() {
               denominatorLabel={getI18nLabel("labels.coordinationsShare.denominator")}
             />
           </Col>
-          <Col xs={12} md={6}>
+          <Col xs={12} md={4}>
             <RateCard
               nb={dataCurrentCountry_successful.total_fund_eur / dataCurrentCountry_evaluated.total_fund_eur}
               label={getI18nLabel("fundsSuccessRate.label")}
@@ -92,7 +91,7 @@ export default function SynthesisFocus() {
               denominatorLabel={getI18nLabel("labels.fundsSuccessRate.denominator")}
             />
           </Col>
-          <Col xs={12} md={6}>
+          <Col xs={12} md={4}>
             <RateCard
               nb={dataCurrentCountry_successful.total_involved / dataCurrentCountry_evaluated.total_involved}
               label={getI18nLabel("participantsSuccessRate.label")}
@@ -104,7 +103,7 @@ export default function SynthesisFocus() {
               denominatorLabel={getI18nLabel("labels.participantsSuccessRate.denominator")}
             />
           </Col>
-          <Col xs={12} md={6}>
+          <Col xs={12} md={4}>
             <RateCard
               nb={dataCurrentCountry_successful.total_coordination_number / dataCurrentCountry_evaluated.total_coordination_number}
               label={getI18nLabel("projectsSuccessRate.label")}
@@ -125,7 +124,7 @@ export default function SynthesisFocus() {
     <Container as="section" fluid className="fr-mb-2w">
       <Title as="h2">{currentLang === "en" ? "Key figures" : "Grands chiffres"}</Title>
       <Row gutters>
-        <Col md={6}>
+        <Col md={4}>
           <RateCard
             nb={dataSuccessful.entity.total_fund_eur / dataCurrentCountry_successful.total_fund_eur}
             label={getI18nLabel("EntityFundsShare.label")}
@@ -137,7 +136,7 @@ export default function SynthesisFocus() {
             denominatorLabel={getI18nLabel("labels.fundsShare.numerator")}
           />
         </Col>
-        <Col md={6}>
+        <Col md={4}>
           <RateCard
             nb={dataSuccessful.entity.total_involved / dataCurrentCountry_successful.total_involved}
             label={getI18nLabel("entityParticipantsShare.label")}
@@ -150,7 +149,7 @@ export default function SynthesisFocus() {
           />
         </Col>
 
-        <Col md={6}>
+        <Col md={4}>
           <RateCard
             nb={dataSuccessful.entity.total_coordination_number / dataCurrentCountry_successful.total_coordination_number}
             label={getI18nLabel("entityCoordinationsShare.label")}
@@ -162,7 +161,7 @@ export default function SynthesisFocus() {
             denominatorLabel={getI18nLabel("labels.coordinationsShare.numerator")}
           />
         </Col>
-        <Col md={6}>
+        <Col md={4}>
           <RateCard
             nb={dataSuccessful.entity.total_fund_eur / dataEvaluated.entity.total_fund_eur}
             label={getI18nLabel("fundsSuccessRate.label")}
@@ -174,7 +173,7 @@ export default function SynthesisFocus() {
             denominatorLabel={getI18nLabel("labels.fundsSuccessRate.denominator")}
           />
         </Col>
-        <Col md={6}>
+        <Col md={4}>
           <RateCard
             nb={dataSuccessful.entity.total_involved / dataEvaluated.entity.total_involved}
             label={getI18nLabel("participantsSuccessRate.label")}
@@ -186,7 +185,7 @@ export default function SynthesisFocus() {
             denominatorLabel={getI18nLabel("labels.participantsSuccessRate.denominator")}
           />
         </Col>
-        <Col md={6}>
+        <Col md={4}>
           <RateCard
             nb={dataSuccessful.entity.total_coordination_number / dataEvaluated.entity.total_coordination_number}
             label={getI18nLabel("projectsSuccessRate.label")}

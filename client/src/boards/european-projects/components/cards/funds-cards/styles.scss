@@ -1,11 +1,10 @@
 .ep-funds-card {
   padding: 1rem;
   padding-top: 20px;
-  background-color: var(--background-alt-grey);
-  border: 1px solid var(--border-default-grey);
+  background-color: var(--background-contrast-blue-france);
 
   &:hover {
-    background-color: var(--background-default-grey-hover);
+    background-color: var(--background-contrast-blue-france-hover);
   }
   
   .card-header {
@@ -104,15 +103,10 @@
   &.evaluated-card,
   &.successful-card {
     padding-bottom: 0;
-    background-color: var(--background-alt-grey);
     --card-text-color: var(--text-default-grey);
     position: relative;
     overflow: hidden;
-    
-    &:hover {
-      background-color: var(--background-default-grey-hover);
-    }
-    
+
     .label {
       line-height: 1.3;
     }

@@ -9,7 +9,7 @@ import i18nGlobal from "../../i18n-global.json";
 import i18nLocal from "./i18n.json";
 import RangeOfYears from "../../../../components/range-of-years";
 
-import styles from "./styles.module.scss";
+import "./styles.scss";
 
 const i18n = { ...i18nGlobal, ...i18nLocal };
 
@@ -251,14 +251,14 @@ export default function EpNavigator() {
           </Col>
           {/* Thématiques dépendantes du programme sélectionné */}
           <Col lg={3} xs={12}>
-            <div className={styles.dropdownContainer} ref={thematicsDropdownRef}>
+            <div className="dropdownContainer" ref={thematicsDropdownRef}>
               <label className="fr-label" htmlFor="select-thematics-label">
                 {getI18nLabel(i18n, "thematic_selection_title", currentLang)}
               </label>
               <button
                 aria-expanded={isThematicsOpen}
                 aria-haspopup="listbox"
-                className={`fr-select ${styles.dropdownButton}`}
+                className={`fr-select $"dropdownButton"`}
                 disabled={isLoadingThematics || !thematicsData || thematicsData.length === 0}
                 id="select-thematics-label"
                 onClick={() => setIsThematicsOpen(!isThematicsOpen)}
@@ -266,20 +266,20 @@ export default function EpNavigator() {
                 <span>{thematicsLabel}</span>
               </button>
               {isThematicsOpen && (
-                <div className={styles.dropdownMenu}>
-                  <div className={styles.checkboxGroup}>
+                <div className="dropdownMenu">
+                  <div className="checkboxGroup">
                     {thematicsData.map((thematic) => (
-                      <div key={thematic.id} className={styles.checkboxItem}>
+                      <div key={thematic.id} className="checkboxItem">
                         <Checkbox id={`thematic-${thematic.id}`} label={thematic[`label_${currentLang}`]} checked={selectedThematics.has(thematic.id)} onChange={() => handleThematicChange(thematic.id)} />
                       </div>
                     ))}
                   </div>
                   {selectedThematics.size > 0 && (
                     <>
-                      <button className={styles.bottomButton} onClick={handleApplyThematics}>
+                      <button className="bottomButton" onClick={handleApplyThematics}>
                         {getI18nLabel(i18n, "apply_selection", currentLang)}
                       </button>
-                      <button className={styles.bottomButton} onClick={handleClearThematics}>
+                      <button className="bottomButton" onClick={handleClearThematics}>
                         {getI18nLabel(i18n, "erase_selection", currentLang)}
                       </button>
                     </>
@@ -289,14 +289,14 @@ export default function EpNavigator() {
             </div>
           </Col>
           <Col lg={3} xs={12}>
-            <div className={styles.dropdownContainer} ref={destinationsDropdownRef}>
+            <div className="dropdownContainer" ref={destinationsDropdownRef}>
               <label className="fr-label" htmlFor="select-destinations-label">
                 {getI18nLabel(i18n, "destination_selection_title", currentLang)}
               </label>
               <button
                 aria-expanded={isDestinationsOpen}
                 aria-haspopup="listbox"
-                className={`fr-select ${styles.dropdownButton}`}
+                className={`fr-select $"dropdownButton"`}
                 disabled={isLoadingDestinations || !destinationsData || destinationsData.length === 0}
                 id="select-destinations-label"
                 onClick={() => setIsDestinationsOpen(!isDestinationsOpen)}
@@ -304,20 +304,20 @@ export default function EpNavigator() {
                 <span>{destinationsLabel}</span>
               </button>
               {isDestinationsOpen && (
-                <div className={styles.dropdownMenu}>
-                  <div className={styles.checkboxGroup}>
+                <div className="dropdownMenu">
+                  <div className="checkboxGroup">
                     {destinationsData.map((destination) => (
-                      <div key={destination.id} className={styles.checkboxItem}>
+                      <div key={destination.id} className="checkboxItem">
                         <Checkbox id={`destination-${destination.id}`} label={destination[`label_${currentLang}`]} checked={selectedDestinations.has(destination.id)} onChange={() => handleDestinationChange(destination.id)} />
                       </div>
                     ))}
                   </div>
                   {selectedDestinations.size > 0 && (
                     <>
-                      <button className={styles.bottomButton} onClick={handleApplyDestinations}>
+                      <button className="bottomButton" onClick={handleApplyDestinations}>
                         {getI18nLabel(i18n, "apply_selection", currentLang)}
                       </button>
-                      <button className={styles.bottomButton} onClick={handleClearDestinations}>
+                      <button className="bottomButton" onClick={handleClearDestinations}>
                         {getI18nLabel(i18n, "erase_selection", currentLang)}
                       </button>
                     </>
@@ -335,7 +335,7 @@ export default function EpNavigator() {
               </button>
             )}
             {isMoreFiltersOpen && (
-              <Container className={styles.moreFiltersContainer}>
+              <Container className="moreFiltersContainer fr-px-2w">
                 <Row>
                   <Col>
                     <RangeOfYears availableYears={["2021", "2022", "2023", "2024", "2025"]} defaultYears={["2021", "2022", "2023", "2024", "2025"]} />
@@ -349,7 +349,7 @@ export default function EpNavigator() {
                     </div>
                   </Col>
                 </Row>
-                <Row className={styles.moreFiltersFooter}>
+                <Row className="moreFiltersFooter">
                   <button type="button" className="fr-btn fr-btn--tertiary-no-outline fr-btn--sm" onClick={() => setIsMoreFiltersOpen(false)}>
                     {i18nFilters["less-filters"][currentLang]}
                   </button>
