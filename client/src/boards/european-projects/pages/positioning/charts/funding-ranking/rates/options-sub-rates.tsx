@@ -22,9 +22,6 @@ export default function Options(data, currentLang) {
         },
       },
     ],
-    tooltip: {
-      pointFormat: "Part des subventions : <b>{point.y:.2f} %</b>",
-    },
     plotOptions: {
       series: { dataLabels: { enabled: true } },
       column: {
@@ -37,7 +34,7 @@ export default function Options(data, currentLang) {
     },
     series: [
       {
-        name: "Projets évalués",
+        name: "Financements demandés",
         type: "column",
         color: getCssColor("evaluated-project"),
         data: data.map((item) => ({
@@ -51,9 +48,12 @@ export default function Options(data, currentLang) {
             format: "{point.rank_evaluated}e",
           },
         ],
+        tooltip: {
+          pointFormat: "Part des financements demandés : <b>{point.y:.2f} %</b>",
+        },
       },
       {
-        name: "Projets lauréats",
+        name: "Financements obtenus",
         type: "column",
         color: getCssColor("successful-project"),
         data: data.map((item) => ({
@@ -67,6 +67,9 @@ export default function Options(data, currentLang) {
             format: "{point.rank_successful}e",
           },
         ],
+        tooltip: {
+          pointFormat: "Part des financements obtenus : <b>{point.y:.2f} %</b>",
+        },
       },
     ],
   };
