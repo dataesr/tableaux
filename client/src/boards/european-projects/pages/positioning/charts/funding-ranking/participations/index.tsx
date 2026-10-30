@@ -73,13 +73,13 @@ export default function FundingRankingParticipations() {
           <Title as="h2" look="h4">
             {getI18nLabel("title")}
           </Title>
-          <Callout className="callout-style">
+          {/* <Callout className="callout-style">
             Ce graphique illustre le positionnement du pays sélectionné par rapport aux autres pays en fonction du nombre de participants impliqués dans les projets évalués et réussis (lauréats). La barre bleue représente le nombre de participants
             dans les projets évalués, tandis que la barre verte indique le nombre de participants dans les projets réussis. Le classement est basé sur ces deux critères, offrant une perspective comparative sur l'engagement des pays dans les projets
             européens.
             <br />
             Le second graphique présente le taux de succès des participants du pays sélectionné par rapport à la moyenne européenne, fournissant ainsi une évaluation de l'efficacité des participations nationales dans les projets financés.
-          </Callout>
+          </Callout> */}
         </Col>
       </Row>
       <Row>

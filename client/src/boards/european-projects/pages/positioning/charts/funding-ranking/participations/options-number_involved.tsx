@@ -27,11 +27,8 @@ export default function OptionsNumberInvolved(data: DataItem[], currentLang: str
     yAxis: {
       min: 0,
       title: {
-        text: "Euros € (millions)",
+        text: "Nombre de candidats et de participants (en milliers)",
       },
-    },
-    tooltip: {
-      pointFormat: "Nombre de candidats : <b>{point.y}</b>",
     },
     plotOptions: {
       series: { dataLabels: { enabled: true } },
@@ -59,6 +56,9 @@ export default function OptionsNumberInvolved(data: DataItem[], currentLang: str
             format: "{point.rank_number_involved_evaluated}e",
           },
         ],
+        tooltip: {
+            pointFormat: "Nombre de candidats : <b>{point.y}</b>",
+          },
       } as Highcharts.SeriesBarOptions,
       {
         type: "bar",
@@ -75,6 +75,10 @@ export default function OptionsNumberInvolved(data: DataItem[], currentLang: str
             format: "{point.rank_number_involved_successful}e",
           },
         ],
+        tooltip: {
+          pointFormat:
+            "Nombre de participants : {point.y}",
+          },
       } as Highcharts.SeriesBarOptions,
     ],
   };
