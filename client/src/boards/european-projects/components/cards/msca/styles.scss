@@ -95,21 +95,18 @@
   }
 
   // Variantes de couleur
+  &.candidats-card {
+    --card-primary-color: var(--average-success-rate-color);
+    background-color: var(--background-default-grey);
+  }
   &.funding-card {
     --card-primary-color: var(--successful-project-color);
-  }
-  &.candidats-card {
-    --card-primary-color: var(--success-rate-color);
-    background-color: var(--background-default-grey);
   }
   &.projects-card {
     --card-primary-color: var(--blue-france-main-525);
   }
-  &.fund-rate-cards {
-    --card-primary-color: #8b5cf6;
-  }
   &.rate-card {
-    --card-primary-color: var(--success-rate-color);
+    --card-primary-color: var(--average-success-rate-color);
     background-color: var(--background-default-grey);
   }
 

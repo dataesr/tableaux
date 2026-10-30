@@ -1,11 +1,12 @@
 import { useSearchParams } from "react-router-dom";
-import { getI18nLabel } from "../../../../../../utils";
+
 import { getCountryAdjectives } from "../../../../../../components/country-selector/utils";
-import { MscaSynthesisCards, MscaDestinationCards, MscaPanelCards } from "../../../../components/cards/msca";
+import { getI18nLabel } from "../../../../../../utils";
+import { MscaDestinationCards, MscaPanelCards, MscaSynthesisCards } from "../../../../components/cards/msca";
 import DestinationChart from "../../charts/destination-chart";
 import PanelChart from "../../charts/panel-chart";
-import { rangeOfYearsToApiFormat } from "../../url-utils";
 import i18n from "../../i18n.json";
+import { rangeOfYearsToApiFormat } from "../../url-utils";
 
 export default function SyntheseContent() {
   const [searchParams] = useSearchParams();

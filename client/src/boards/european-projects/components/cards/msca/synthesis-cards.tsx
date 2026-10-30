@@ -1,8 +1,9 @@
-import { useId } from "react";
+import { Col, Row } from "@dataesr/dsfr-plus";
 import { useQuery } from "@tanstack/react-query";
-import { Row, Col } from "@dataesr/dsfr-plus";
-import { getMscaSynthesis, MscaSynthesisResponse } from "../../../api/msca";
+import { useId } from "react";
+
 import { formatCurrency, formatNumber, formatToRates } from "../../../../../utils/format";
+import { getMscaSynthesis, MscaSynthesisResponse } from "../../../api/msca";
 
 import "./styles.scss";
 
@@ -81,7 +82,6 @@ export default function MscaSynthesisCards({
           secondaryLabel="candidats"
           progressValue={candidatShare}
           loading={isLoading}
-          variant="candidats-card"
           tooltipText={`Nombre de candidats ${adjMascPlural} sur le nombre total des candidats`}
         />
       </Col>
@@ -93,7 +93,6 @@ export default function MscaSynthesisCards({
           secondaryLabel="projets"
           progressValue={projectsShare}
           loading={isLoading}
-          variant="projects-card"
           tooltipText={`Nombre de projets lauréats impliquant au moins un participant ${countryAdj.m} sur le total des projets lauréats`}
         />
       </Col>
@@ -103,7 +102,7 @@ export default function MscaSynthesisCards({
           value={formatToRates(succesRateFunding)}
           progressValue={succesRateFunding}
           loading={isLoading}
-          variant="fund-rate-card"
+          variant="rate-card"
           tooltipText={`Montant des financements obtenus sur le montant des financements demandés par {}`}
         />
       </Col>
