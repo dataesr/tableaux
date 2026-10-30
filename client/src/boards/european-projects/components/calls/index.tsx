@@ -6,7 +6,10 @@ import { Container, Row, Col } from "@dataesr/dsfr-plus";
 
 const { VITE_APP_SERVER_URL } = import.meta.env;
 
+import translations from "./i18n.json";
 import "./styles.scss";
+
+type Language = "fr" | "en";
 
 type Props = {
   filter?: string;
@@ -126,6 +129,9 @@ export default function Calls({ filter }: Props) {
   const [searchParams] = useSearchParams();
   const rangeOfYears = searchParams.get("range_of_years");
 
+  const lang = searchParams.get("language") === "en" ? "en" : "fr";
+  const t = translations[lang];
+
   // le select n'est affiché que si aucun filtre n'est imposé par les props
   const hasFixedFilter = filter !== undefined && filter !== "";
   const [selectedFilter, setSelectedFilter] = useState("all");
@@ -186,15 +192,15 @@ export default function Calls({ filter }: Props) {
           <ul title="légende" className="legend">
             <li>
               <div className="item unavailable fr-mr-1w" />
-              unavailable
+              {t.unavailable}
             </li>
             <li>
               <div className="item incomplete fr-mr-1w" style={{ "--ratio": "50%" } as CSSProperties} />
-              incomplete
+              {t.incomplete}
             </li>
             <li>
               <div className="item complete fr-mr-1w" />
-              complete
+              {t.complete}
             </li>
           </ul>
         </Col>
