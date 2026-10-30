@@ -1,4 +1,8 @@
 {
+  "keyFigures": {
+    "fr": "Grands chiffres",
+    "en": "Key figures"
+  },
   "fundsShare": {
     "label": {
       "fr": "Part des financements obtenus par les participants du pays",

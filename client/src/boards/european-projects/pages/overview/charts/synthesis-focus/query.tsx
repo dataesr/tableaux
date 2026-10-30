@@ -1,6 +1,6 @@
 const { VITE_APP_SERVER_URL } = import.meta.env;
 
-export async function GetData(params: string) {
+export async function getData(params: string) {
   let url = `${VITE_APP_SERVER_URL}/european-projects/synthesis-focus`;
   if (params !== "") {
     url = `${VITE_APP_SERVER_URL}/european-projects/synthesis-focus?${params}`;
