@@ -60,16 +60,14 @@ export function readingKey(data) {
   return {
     fr: (
       <>
-        Dans ce classement, le pays "<strong>{topEvaluated.name_fr}</strong>" concentre la plus grande part des montants demandés (
-        {topEvaluated.total_evaluated_ratio}%), tandis que le pays "<strong>{topSuccessful.name_fr}</strong>" obtient la plus grande part des montants
-        accordés ({topSuccessful.total_successful_ratio}%).
+        Le pays <strong>{topEvaluated.name_fr}</strong> concentre{" "}
+        {topEvaluated.total_evaluated_ratio} % des financements demandés et {topSuccessful.total_successful_ratio} % des financements alloués.
       </>
     ),
     en: (
       <>
-        In this ranking, <strong>{topSuccessful.name_en}</strong> concentrates the largest share of requested amounts (
-        {topEvaluated.total_evaluated_ratio}%), while <strong>{topSuccessful.name_en}</strong> obtains the largest share of awarded amounts (
-        {topSuccessful.total_successful_ratio}%).
+        <strong>{topEvaluated.name_en}</strong> accounts for{" "}
+        {topEvaluated.total_evaluated_ratio}% of funding requested and {topSuccessful.total_successful_ratio}% of funding awarded.
       </>
     ),
   };

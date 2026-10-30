@@ -134,14 +134,12 @@ export default function FundingRankingSubsidies() {
             comment={{
               fr: (
                 <>
-                  Ce graphique représente le positionnement du pays sélectionné par rapport aux autres pays en fonction des montants de subventions demandés et obtenus. La barre bleue correspond aux montants demandés pour les projets évalués, la
-                  barre verte aux montants obtenus pour les projets réussis. Le taux de succès compare le pays sélectionné avec la moyenne européenne.
+                  Ce graphique présente le positionnement du pays sélectionné par rapport aux autres pays en fonction des financements demandés et obtenus. Le taux de succès compare le pays sélectionné avec la moyenne européenne.
                 </>
               ),
               en: (
                 <>
-                  This chart shows the positioning of the selected country compared to other countries based on the amounts of subsidies requested and obtained. The blue bar corresponds to the amounts requested for evaluated projects, the green bar
-                  to the amounts obtained for successful projects. The success rate compares the selected country with the European average.
+                  This chart shows the position of the selected country relative to the other countries based on funding requested and secured. The success rate compares the selected country with the European average.
                 </>
               ),
             }}

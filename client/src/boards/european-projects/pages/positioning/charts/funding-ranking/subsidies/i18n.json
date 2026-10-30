@@ -32,8 +32,8 @@
     "en": "Average success rate"
   },
   "configChart1a-title": {
-    "fr": "Classement des pays selon la part des montants demandés et obtenus (M€)",
-    "en": "Ranking of countries by share of amounts requested and obtained (M€)"
+    "fr": "Financements demandés et obtenus par les principaux pays bénéficiaires (M€)",
+    "en": "Funding requested and secured by top beneficiary countries (€M)"
   },
   "configChart1b-title": {
     "fr": "Taux de succès des financements",
