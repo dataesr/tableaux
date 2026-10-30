@@ -125,12 +125,14 @@ export default function FundingRankingProjects() {
             comment={{
               fr: (
                 <>
-                  Ce graphique représente le positionnement du pays sélectionné par rapport aux autres pays en fonction du nombre de projets évalués et lauréats. Le taux de succès est le rapport entre projets lauréats et projets évalués.
+                  Ce graphique présente le positionnement du pays sélectionné par rapport aux autres pays en fonction du nombre de projets évalués et lauréats. {""}
+                  Le taux de succès est le rapport entre le nombre de projets lauréats et le nombre projets évalués.
                 </>
               ),
               en: (
                 <>
-                  This chart shows the positioning of the selected country compared to other countries based on the number of evaluated and successful projects. The success rate is the ratio of successful projects to evaluated projects.
+                  This chart shows the positioning of the selected country compared to other countries based on the number of evaluated and successful projects.{ " "}
+                  The success rate is the ratio of successful projects number to evaluated projects number.
                 </>
               ),
             }}
