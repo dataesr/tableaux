@@ -64,30 +64,30 @@ export function readingKey(data) {
       <>
         {firstCountry.rank_involved_evaluated === firstCountry.rank_involved_successful ? (
           <>
-            Le pays "<strong>{firstCountry.name_fr}</strong>" arrive en{" "}
+            Le pays <strong>{firstCountry.name_fr}</strong> arrive en{" "}
             <strong>
               {firstCountry.rank_involved_evaluated}
               {getOrdinal(firstCountry.rank_involved_evaluated, "fr")}
             </strong>{" "}
-            position pour le nombre de participants dans les projets évalués (<strong>{firstCountry.total_number_involved_evaluated}</strong>) ainsi
-            que pour les participants dans les projets réussis (<strong>{firstCountry.total_number_involved_successful}</strong>). Son taux de succès
-            est de <strong>{firstCountry.ratio_involved.toFixed(1)}%</strong>.
+            position en nombre de candidats (<strong>{firstCountry.total_number_involved_evaluated}</strong>) 
+            et de participants (<strong>{firstCountry.total_number_involved_successful}</strong>), soit un taux de succès
+            de <strong>{firstCountry.ratio_involved.toFixed(1)}%</strong>.
           </>
         ) : (
           <>
-            Le pays "<strong>{firstCountry.name_fr}</strong>" arrive en{" "}
+            Le pays <strong>{firstCountry.name_fr}</strong> arrive en{" "}
             <strong>
               {firstCountry.rank_involved_evaluated}
               {getOrdinal(firstCountry.rank_involved_evaluated, "fr")}
             </strong>{" "}
-            position pour le nombre de participants dans les projets évalués (<strong>{firstCountry.total_number_involved_evaluated}</strong>) alors
-            qu'il arrive en{" "}
+            position en nombre de candidats (<strong>{firstCountry.total_number_involved_evaluated}</strong>) et
+            en{" "}
             <strong>
               {firstCountry.rank_involved_successful}
               {getOrdinal(firstCountry.rank_involved_successful, "fr")}
             </strong>{" "}
-            position pour les participants dans les projets réussis (<strong>{firstCountry.total_number_involved_successful}</strong>). Le taux de
-            succès est de <strong>{firstCountry.ratio_involved.toFixed(1)}%</strong>.
+            position en nombre de participants (<strong>{firstCountry.total_number_involved_successful}</strong>), soit un taux de
+            succès de <strong>{firstCountry.ratio_involved.toFixed(1)}%</strong>.
           </>
         )}
       </>
@@ -96,29 +96,29 @@ export function readingKey(data) {
       <>
         {firstCountry.rank_involved_evaluated === firstCountry.rank_involved_successful ? (
           <>
-            The country "<strong>{firstCountry.name_en}</strong>" ranks{" "}
+            <strong>{firstCountry.name_en}</strong> ranks{" "}
             <strong>
               {firstCountry.rank_involved_evaluated}
               {getOrdinal(firstCountry.rank_involved_evaluated, "en")}
             </strong>{" "}
-            for the number of participants in evaluated projects (<strong>{firstCountry.total_number_involved_evaluated}</strong>) as well as for
-            participants in successful projects (<strong>{firstCountry.total_number_involved_successful}</strong>). Its success rate is{" "}
-            <strong>{firstCountry.ratio_involved.toFixed(1)}%</strong>.
+            for both the number of applicants (<strong>{firstCountry.total_number_involved_evaluated}</strong>)
+            and the number of participants (<strong>{firstCountry.total_number_involved_successful}</strong>), a participant-level success rate
+            of <strong>{firstCountry.ratio_involved.toFixed(1)}%</strong>.
           </>
         ) : (
           <>
-            The country "<strong>{firstCountry.name_en}</strong>" ranks{" "}
+            <strong>{firstCountry.name_en}</strong> ranks{" "}
             <strong>
               {firstCountry.rank_involved_evaluated}
               {getOrdinal(firstCountry.rank_involved_evaluated, "en")}
             </strong>{" "}
-            for the number of participants in evaluated projects (<strong>{firstCountry.total_number_involved_evaluated}</strong>) while it ranks{" "}
+            for the number of applicants (<strong>{firstCountry.total_number_involved_evaluated}</strong>) and{" "}
             <strong>
               {firstCountry.rank_involved_successful}
               {getOrdinal(firstCountry.rank_involved_successful, "en")}
             </strong>{" "}
-            for participants in successful projects (<strong>{firstCountry.total_number_involved_successful}</strong>). The success rate is{" "}
-            <strong>{firstCountry.ratio_involved.toFixed(1)}%</strong>.
+            for the number of participants (<strong>{firstCountry.total_number_involved_successful}</strong>), a participant-level success rate
+            of <strong>{firstCountry.ratio_involved.toFixed(1)}%</strong>.
           </>
         )}
       </>
