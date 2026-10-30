@@ -135,14 +135,12 @@ export default function FundingRankingParticipations() {
             comment={{
               fr: (
                 <>
-                  Ce graphique représente le positionnement du pays sélectionné par rapport aux autres pays en fonction du nombre de participants impliqués dans les projets évalués et réussis. La barre bleue correspond aux participants dans les
-                  projets évalués, la barre verte aux participants dans les projets réussis. Le taux de succès compare le pays sélectionné avec la moyenne européenne.
+                  Ce graphique compare les taux de succès des pays les plus représentés en terme de candidats et de participants dans les projets.
                 </>
               ),
               en: (
                 <>
-                  This chart shows the positioning of the selected country compared to other countries based on the number of participants involved in evaluated and successful projects. The blue bar corresponds to participants in evaluated projects,
-                  the green bar to participants in successful projects. The success rate compares the selected country with the European average.
+                  This chart compares the success rates of the countries with the highest numbers of applicants and participants in projects.
                 </>
               ),
             }}
