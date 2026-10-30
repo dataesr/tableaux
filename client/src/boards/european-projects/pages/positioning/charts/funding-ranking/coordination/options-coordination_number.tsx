@@ -25,11 +25,8 @@ export default function OptionsCoordinationNumber(data: DataItem[], currentLang:
     yAxis: {
       min: 0,
       title: {
-        text: "Euros € (millions)",
+        text: "Nombre de projets",
       },
-    },
-    tooltip: {
-      pointFormat: "Nombre de coordinations : <b>{point.y}</b>",
     },
     plotOptions: {
       series: { dataLabels: { enabled: true } },
@@ -44,7 +41,7 @@ export default function OptionsCoordinationNumber(data: DataItem[], currentLang:
     series: [
       {
         type: "bar",
-        name: "Coordination de projets déposés",
+        name: "Coordination de projets évalués",
         color: getCssColor("evaluated-project"),
         data: data.map((item) => ({
           name: item[`name_${currentLang}` as keyof DataItem],
@@ -57,6 +54,9 @@ export default function OptionsCoordinationNumber(data: DataItem[], currentLang:
             format: "{point.rank_coordination_number_evaluated}e",
           },
         ],
+        tooltip: {
+          pointFormat: "Nombre de projets évalués coordonnés : <b>{point.y}</b>",
+        },
       } as Highcharts.SeriesBarOptions,
       {
         type: "bar",
@@ -73,6 +73,9 @@ export default function OptionsCoordinationNumber(data: DataItem[], currentLang:
             format: "{point.rank_coordination_number_successful}e",
           },
         ],
+        tooltip: {
+          pointFormat: "Nombre de projets lauréats coordonnés : <b>{point.y}</b>",
+        },
       } as Highcharts.SeriesBarOptions,
     ],
   };
