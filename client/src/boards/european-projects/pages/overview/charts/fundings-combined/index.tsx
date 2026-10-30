@@ -36,7 +36,7 @@ export default function FundingCombined({ displayType = "total_fund_eur", groupB
   const readingDataEvaluated = data.data.filter((d) => d.stage === "evaluated")[0];
   const readingDataSuccessful = data.data.filter((d) => d.stage === "successful" && d.code === readingDataEvaluated.code);
 
-  const total_coordination_number_rates = readingDataEvaluated?.total_coordination_number > 0 ? formatToRates(readingDataSuccessful.total_coordination_number / readingDataEvaluated.total_coordination_number) : 0;
+  const total_coordination_number_rates = readingDataEvaluated?.total_coordination_number > 0 ? formatToRates(readingDataSuccessful?.total_coordination_number ?? 0 / readingDataEvaluated.total_coordination_number) : 0;
   const total_number_involved_rates = readingDataEvaluated?.total_number_involved > 0 ? formatToRates(readingDataSuccessful.total_number_involved / readingDataEvaluated.total_number_involved) : 0;
   const total_fund_eur_rates = readingDataEvaluated?.total_fund_eur > 0 ? formatToRates(readingDataSuccessful.total_fund_eur / readingDataEvaluated.total_fund_eur) : 0;
   const total_number_projects_rates = readingDataEvaluated?.total_projects > 0 ? formatToRates(readingDataSuccessful.total_projects / readingDataEvaluated.total_projects) : 0;
@@ -62,13 +62,13 @@ export default function FundingCombined({ displayType = "total_fund_eur", groupB
         fr: (
           <>
             Dans le cadre des appels à projets concernant "{readingDataEvaluated?.name_fr || ""}", {formatNumber(readingDataEvaluated.total_coordination_number)} propositions ont été évaluées avec un participant du pays sélectionné comme coordinateur
-            et {formatNumber(readingDataSuccessful.total_coordination_number)} d'entre elles sont lauréates, soit un taux de succès de {total_coordination_number_rates}.
+            et {formatNumber(readingDataSuccessful?.total_coordination_number ?? 0)} d'entre elles sont lauréates, soit un taux de succès de {total_coordination_number_rates}.
           </>
         ),
         en: (
           <>
             Under "{readingDataEvaluated.name_en}" calls for proposals, {formatNumber(readingDataEvaluated.total_coordination_number)} proposals were evaluated with a participant from the selected country as coordinator, and{" "}
-            {formatNumber(readingDataSuccessful.total_coordination_number)} of them were successful, a success rate of {total_coordination_number_rates}.
+            {formatNumber(readingDataSuccessful?.total_coordination_number ?? 0)} of them were successful, a success rate of {total_coordination_number_rates}.
           </>
         ),
       };

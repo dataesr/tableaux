@@ -136,8 +136,8 @@
     "fr": "Coordinations en tant que participant"
   },
   "countries-collaborated": {
-    "en": "of countries that collaborated with the selected country",
-    "fr": "des pays ayant collaborés avec le pays sélectionné"
+    "en": "countries that have collaborated with the selected country",
+    "fr": "des pays ayant collaboré avec le pays sélectionné"
   },
   "country": {
     "en": "Country",
