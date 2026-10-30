@@ -34,7 +34,7 @@ export default function FundingCombined({ displayType = "total_fund_eur", groupB
 
   if (isLoading || !data) return <DefaultSkeleton />;
   const readingDataEvaluated = data.data.filter((d) => d.stage === "evaluated")[0];
-  const readingDataSuccessful = data.data.find((d) => d.stage === "successful" && d.code === readingDataEvaluated.code);
+  const readingDataSuccessful = data.data.filter((d) => d.stage === "successful" && d.code === readingDataEvaluated.code);
 
   const total_coordination_number_rates = readingDataEvaluated?.total_coordination_number > 0 ? formatToRates(readingDataSuccessful.total_coordination_number / readingDataEvaluated.total_coordination_number) : 0;
   const total_number_involved_rates = readingDataEvaluated?.total_number_involved > 0 ? formatToRates(readingDataSuccessful.total_number_involved / readingDataEvaluated.total_number_involved) : 0;
