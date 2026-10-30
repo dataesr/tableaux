@@ -6,7 +6,7 @@ import { definitions } from "./definitions";
 
 export default function DefinitionsPage() {
     return (
-        <main role="main">
+        <div>
             <Container fluid className="fm-etablissement-selector__wrapper">
                 <Container as="section">
                     <Row>
@@ -47,6 +47,6 @@ export default function DefinitionsPage() {
                     ))}
                 </Row>
             </Container>
-        </main>
+        </div>
     );
 }

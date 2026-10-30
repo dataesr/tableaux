@@ -105,7 +105,7 @@ export default function DisplayStructure() {
   const participantIsSuperOrganization = data?.hits?.hits?.[0]?._source?.participant_is_super_organization ?? 0
 
   return (
-    <main className="fundings">
+    <div className="fundings">
       <Container fluid className="fundings-gradient fr-mb-3w">
         <Container as="section">
           <Row gutters>
@@ -368,6 +368,6 @@ export default function DisplayStructure() {
             </>
           )}
       </Container>
-    </main>
+    </div>
   )
 }

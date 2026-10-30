@@ -33,7 +33,9 @@
 - Keep shared components shared only when a second board needs them. Boards must not import from one another except through `boards/integration/charts-registry.tsx`.
 - For new server routes, use the shared error classes and error middleware; use the repository logger instead of `console.log`.
 - Follow neighboring file conventions for imports, extensions, formatting, and language.
-- DSFR JavaScript is not loaded in this project. Do not rely on DSFR JS-only behaviors; use dsfr-plus components, native HTML behavior, or explicit React state.
+- DSFR JavaScript is loaded by `DSFRConfig` (`client/src/main.tsx`) and drives the modals of the shared Header and Footer (menu, theme, language). Outside those, do not rely on DSFR JS behaviors on React-owned nodes; use dsfr-plus components, native HTML behavior, or explicit React state.
+- There is a single header: `client/src/layout/header` (`Header`, own `i18n.json`), always used through `client/src/layout/layout.tsx` (`Layout`: header + `<main id="main-content">` + footer). Every board layout and page is a thin wrapper around `Layout` (`items` with Accueil first and the `home-4-line` icon, `serviceName` / `serviceTag` (title and tagline, default "Tableaux" and the generic tagline), `exploreLink` and `languageSelector` (both off by default), `themeSwitch` (on by default), `extra` (header tools), `navExtra` (right side of the menu bar), `before`, `footer`). Never hand-write `fr-header`, `fr-nav` menus, `<main>`, `<SwitchTheme />` or skiplinks in a board or page.
+- The skiplinks ("liens d'évitement": Contenu principal / Menu / Pied de page, RGAA 12.7) are rendered once, by `Header`. Targets are `#main-content` (`Layout`), `#main-menu` (the nav, only when there are items) and `#footer` (`Footer`); pages must not add their own `<main>`.
 - Do not invent DSFR markup from memory. Verify actual component APIs and examples before writing raw `fr-*` markup.
 - Do not hard-code colors or rely on inline layout styles in new UI code; use DSFR tokens/utilities and existing board styling patterns.
 
