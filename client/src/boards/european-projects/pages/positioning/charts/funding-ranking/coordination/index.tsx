@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 
 import { useSearchParams } from "react-router-dom";
-import Callout from "../../../../../../../components/callout.js";
+// import Callout from "../../../../../../../components/callout.js";
 import ChartFooter from "../../../../../../../components/chart-footer/index.js";
 import ChartWrapper from "../../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../../components/charts-skeletons/default";
@@ -71,12 +71,12 @@ export default function FundingRankingCoordination() {
           <Title as="h2" look="h4">
             {getI18nLabel("title")}
           </Title>
-          <Callout className="callout-style">
+          {/* <Callout className="callout-style">
             Ce graphique présente le classement des pays en fonction du nombre de coordinations de projets européens déposés et lauréats. Les coordinations représentent le rôle principal dans un projet européen. La barre bleue indique le nombre de
             coordinations de projets déposés (évalués), tandis que la barre verte indique le nombre de coordinations de projets lauréats.
             <br />
             Le second graphique illustre le taux de succès des coordinations de projets pour chaque pays, comparant le pays sélectionné à la moyenne européenne.
-          </Callout>
+          </Callout> */}
         </Col>
       </Row>
       <Row>
