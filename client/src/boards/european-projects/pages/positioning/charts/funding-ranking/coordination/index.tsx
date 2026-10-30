@@ -134,14 +134,12 @@ export default function FundingRankingCoordination() {
             comment={{
               fr: (
                 <>
-                  Ce graphique représente le positionnement du pays sélectionné par rapport aux autres pays en fonction du nombre de coordinations de projets déposés et lauréats. La barre bleue correspond aux coordinations déposées, la barre verte
-                  aux coordinations lauréates. Le taux de succès compare le pays sélectionné avec la moyenne européenne.
+                  Ce graphique compare les taux de succès des pays qui coordonnent le plus de projets.
                 </>
               ),
               en: (
                 <>
-                  This chart shows the positioning of the selected country compared to other countries based on the number of project coordinations submitted and winners. The blue bar corresponds to submitted coordinations, the green bar to winning
-                  coordinations. The success rate compares the selected country with the European average.
+                  This chart compares the success rates of the countries that coordinate the most projects.
                 </>
               ),
             }}
