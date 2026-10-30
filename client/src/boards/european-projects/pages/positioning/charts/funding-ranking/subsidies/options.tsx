@@ -21,9 +21,6 @@ export default function Options(data, currentLang) {
         },
       },
     ],
-    tooltip: {
-      pointFormat: "Financements : <b>{point.y:.1f} €</b>",
-    },
     plotOptions: {
       series: {
         dataLabels: { enabled: true },
@@ -52,6 +49,9 @@ export default function Options(data, currentLang) {
             format: "{point.rank_evaluated}e",
           },
         ],
+        tooltip: {
+          pointFormat: "Financements demandés: <b>{point.y:.1f} €</b>",
+        },
       },
       {
         type: "bar",
@@ -68,6 +68,9 @@ export default function Options(data, currentLang) {
             format: "{point.rank_successful}e",
           },
         ],
+        tooltip: {
+          pointFormat: "Financements obtenus: <b>{point.y:.1f} €</b>",
+        },
       },
     ],
   };
