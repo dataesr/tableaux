@@ -1,17 +1,15 @@
+import { Button, Col, Container, Modal, ModalContent, Row, Tag, TagGroup, Title } from "@dataesr/dsfr-plus";
 import { useQuery } from "@tanstack/react-query";
-import { Button, Col, Container, Row, Title, Modal, ModalContent, Tag, TagGroup } from "@dataesr/dsfr-plus";
 import { useState } from "react";
-import { useSearchParams, useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
-import { getCollaborations, getCollaborationsByCountry } from "./query";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
-import { useGetParams } from "./utils";
-
-import i18nGlobal from "../../../../i18n-global.json";
-import i18nLocal from "./i18n.json";
-import { getFlagEmoji } from "../../../../utils";
 import { getNeighbouringCountriesFromIso3 } from "../../../../../../utils";
-import { formatCurrency, formatToMillions } from "../../../../../../utils/format";
+import i18nGlobal from "../../../../i18n-global.json";
+import { getFlagEmoji } from "../../../../utils";
+import i18nLocal from "./i18n.json";
+import { getCollaborations, getCollaborationsByCountry } from "./query";
+import { useGetParams } from "./utils";
 
 type CollaborationDetail = {
   project_id: string;
@@ -206,11 +204,6 @@ export default function CountriesCollaborationsTable() {
                             {getI18nLabel("collaborations-count")} {sortColumn === "collaborations" && (sortDirection === "asc" ? "↑" : "↓")}
                           </button>
                         </th>
-                        <th>
-                          <button className="fr-btn fr-btn--tertiary-no-outline" onClick={() => handleSort("amount")}>
-                            {currentLang === "fr" ? "Montant" : "Amount"} {sortColumn === "amount" && (sortDirection === "asc" ? "↑" : "↓")}
-                          </button>
-                        </th>
                         <th style={{ minWidth: "120px" }}>{currentLang === "fr" ? "Évolution 2021-2025" : "Trend 2021-2025"}</th>
                       </tr>
                     </thead>
@@ -259,9 +252,6 @@ export default function CountriesCollaborationsTable() {
                                   setIsModalOpen(true);
                                 }}
                               />
-                            </td>
-                            <td className="fr-py-0" style={{ textAlign: "right" }}>
-                              {formatCurrency(collab.total_amount || 0)}
                             </td>
                             <td className="fr-py-0">
                               <div style={{ display: "flex", alignItems: "flex-end", gap: "2px", height: "24px", position: "relative" }}>
@@ -377,10 +367,6 @@ export default function CountriesCollaborationsTable() {
                     <div className="fr-col-12">
                       <TagGroup>
                         <Tag color="green-bourgeon">{processCollaborationDetails(collaborationDetails).stats.total} projets</Tag>
-                        <Tag color="green-emeraude">
-                          <span className="fr-icon-money-euro-circle-line fr-mr-1w" aria-hidden="true" />
-                          {formatCurrency(processCollaborationDetails(collaborationDetails).stats.totalBudget)}
-                        </Tag>
                         <Tag color="yellow-tournesol">
                           {processCollaborationDetails(collaborationDetails).stats.asCoordinator} en tant que coordinateur
                         </Tag>
@@ -427,20 +413,6 @@ export default function CountriesCollaborationsTable() {
                             </Tag>
                           </TagGroup>
                         </Col>
-                        <Col>
-                          <TagGroup>
-                            <Tag>
-                              <span className="fr-icon-money-euro-circle-line fr-mr-1w" aria-hidden="true" />
-                              Budget total :{" "}
-                              {formatCurrency(filterData(collaborationDetails, false).reduce((sum, item) => sum + (item.total_cost || 0), 0))}
-                            </Tag>
-                            <Tag>
-                              <span className="fr-icon-money-euro-box-line fr-mr-1w" aria-hidden="true" />
-                              Budget proposé :{" "}
-                              {formatToMillions(filterData(collaborationDetails, false).reduce((sum, item) => sum + (item.proposal_budget || 0), 0))}
-                            </Tag>
-                          </TagGroup>
-                        </Col>
                       </Row>
                     </Col>
 
@@ -454,8 +426,8 @@ export default function CountriesCollaborationsTable() {
                           const dataToExport = filterData(collaborationDetails, false);
                           const headers =
                             currentLang === "fr"
-                              ? ["Année", "ID Projet", "Rôle pays", "Rôle collab.", "Budget total", "Budget proposé"]
-                              : ["Year", "Project ID", "Country role", "Collab. role", "Total budget", "Proposed budget"];
+                              ? ["Année", "ID Projet", "Rôle pays", "Rôle collab."]
+                              : ["Year", "Project ID", "Country role", "Collab. role"];
                           const csvContent =
                             "data:text/csv;charset=utf-8," +
                             headers.join(",") +
@@ -465,10 +437,8 @@ export default function CountriesCollaborationsTable() {
                                 [
                                   item.call_year,
                                   item.project_id,
-                                  item.participates_as,
-                                  item.participates_as_collab,
-                                  item.total_cost || "",
-                                  item.proposal_budget || "",
+                                  item.country_code,
+                                  item.country_code_collab,
                                 ].join(","),
                               )
                               .join("\n");
@@ -498,8 +468,6 @@ export default function CountriesCollaborationsTable() {
                                 <th>ID Projet</th>
                                 <th>Rôle pays</th>
                                 <th>Rôle collab.</th>
-                                <th>Budget total</th>
-                                <th>Budget proposé</th>
                               </tr>
                             </thead>
                             <tbody>
@@ -507,10 +475,8 @@ export default function CountriesCollaborationsTable() {
                                 <tr key={`${item.project_id}-${index}`}>
                                   <td className="fr-py-0">{item.call_year}</td>
                                   <td className="fr-py-0">{item.project_id}</td> {/* TODO: lien vers commission ? */}
-                                  <td className="fr-py-0">{item.participates_as}</td>
-                                  <td className="fr-py-0">{item.participates_as_collab}</td>
-                                  <td className="fr-py-0">{formatToMillions(item.total_cost, 2)}</td>
-                                  <td className="fr-py-0">{item.proposal_budget ? `${formatToMillions(item.proposal_budget, 2)}` : "-"}</td>
+                                  <td className="fr-py-0">{item.country_code}</td>
+                                  <td className="fr-py-0">{item.country_code_collab}</td>
                                 </tr>
                               ))}
                             </tbody>
