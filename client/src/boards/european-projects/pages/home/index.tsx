@@ -18,6 +18,7 @@ import "./styles.scss";
 export default function Home() {
   const [searchParams] = useSearchParams();
   const currentLang = searchParams.get("language") || "fr";
+  const filtersParams = searchParams.toString();
 
   const { data: dataPillars, isLoading: isLoadinPillars } = useQuery({
     queryKey: ["ep/get-filters-values", "pillars"],
@@ -63,7 +64,7 @@ export default function Home() {
             <Row gutters className="fr-mt-3w">
               <Col>
                 <div className="ep-home__stats">
-                  <Link href="/european-projects/horizon-europe?section=synthesis" className="ep-home__stat-item ep-home__stat-item--blue">
+                  <Link href={`/european-projects/horizon-europe?section=synthesis&${filtersParams}`} className="ep-home__stat-item ep-home__stat-item--blue">
                     <span className="ep-home__stat-number">4</span>
                     <span className="ep-home__stat-label">Piliers Horizon Europe</span>
                   </Link>
