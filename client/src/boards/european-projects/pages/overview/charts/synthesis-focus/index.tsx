@@ -6,10 +6,10 @@ import { GetData } from "./query";
 import { useGetParams } from "./utils";
 import RateCard from "../../../../components/cards/funds-cards/rate";
 import Template from "./template";
+import { formatCurrency, formatCurrencyEn } from "../../../../../../utils/format";
+import i18n from "./i18n.json";
 
 import "./styles.scss";
-
-import i18n from "./i18n.json";
 
 export default function SynthesisFocus() {
   const [searchParams] = useSearchParams();
@@ -49,8 +49,8 @@ export default function SynthesisFocus() {
               label={getI18nLabel("fundsShare.label")}
               loading={false}
               tooltipText={getI18nLabel("fundsShare.tooltip")}
-              numerator={dataCurrentCountry_successful.total_fund_eur}
-              denominator={dataSuccessful.total_fund_eur}
+              numerator={currentLang === "fr" ? formatCurrency(dataCurrentCountry_successful.total_fund_eur) : formatCurrencyEn(dataCurrentCountry_successful.total_fund_eur)}
+              denominator={currentLang === "fr" ? formatCurrency(dataSuccessful.total_fund_eur) : formatCurrencyEn(dataSuccessful.total_fund_eur)}
               numeratorLabel={getI18nLabel("labels.fundsShare.numerator")}
               denominatorLabel={getI18nLabel("labels.fundsShare.denominator")}
             />
@@ -85,8 +85,8 @@ export default function SynthesisFocus() {
               label={getI18nLabel("fundsSuccessRate.label")}
               loading={false}
               tooltipText={getI18nLabel("fundsSuccessRate.tooltip")}
-              numerator={dataCurrentCountry_successful.total_fund_eur}
-              denominator={dataCurrentCountry_evaluated.total_fund_eur}
+              numerator={currentLang === "fr" ? formatCurrency(dataCurrentCountry_successful.total_fund_eur) : formatCurrencyEn(dataCurrentCountry_successful.total_fund_eur)}
+              denominator={currentLang === "fr" ? formatCurrency(dataCurrentCountry_evaluated.total_fund_eur) : formatCurrencyEn(dataCurrentCountry_evaluated.total_fund_eur)}
               numeratorLabel={getI18nLabel("labels.fundsSuccessRate.numerator")}
               denominatorLabel={getI18nLabel("labels.fundsSuccessRate.denominator")}
             />

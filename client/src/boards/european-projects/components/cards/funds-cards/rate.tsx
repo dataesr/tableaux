@@ -7,8 +7,8 @@ interface RateCardProps {
   label: string;
   loading: boolean;
   tooltipText?: string;
-  numerator?: number;
-  denominator?: number;
+  numerator?: string | number;
+  denominator?: string | number;
   numeratorLabel?: string;
   denominatorLabel?: string;
 }
