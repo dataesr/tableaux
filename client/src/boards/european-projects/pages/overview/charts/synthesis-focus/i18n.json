@@ -1,7 +1,7 @@
 {
   "fundsShare": {
     "label": {
-      "fr": "part des financements obtenus par les participants du pays",
+      "fr": "Part des financements obtenus par les participants du pays",
       "en": "Share of funding secured by participants from the country"
     },
     "tooltip": {
@@ -11,8 +11,8 @@
   },
   "participantsShare": {
     "label": {
-      "fr": "part des participants lauréats du pays",
-      "en": "share of the country's participants in successful projects"
+      "fr": "Taux de sélection (Nombre de projets évalués du pays / nombre de projets évalués tous pays)",
+      "en": "Selection rate (Number of projects evaluated in the country / number of projects evaluated across all countries)"
     },
     "tooltip": {
       "fr": "Nombre de participants du pays dans les projets lauréats sur le nombre total de participants dans les projest lauréats",
@@ -21,7 +21,7 @@
   },
   "coordinationsShare": {
     "label": {
-      "fr": "part des coordinations de projets du pays",
+      "fr": "Part des coordinations de projets du pays",
       "en": "share of projects coordinated by the country's participants"
     },
     "tooltip": {
@@ -31,8 +31,8 @@
   },
   "fundsSuccessRate": {
     "label": {
-      "fr": "taux de succès sur les financements",
-      "en": "funding success rate"
+      "fr": "Taux de succès sur les financements",
+      "en": "Funding success rate"
     },
     "tooltip": {
       "fr": "Montant des financements obtenus sur le montant des financements demandés par les participants du pays",
@@ -41,8 +41,8 @@
   },
   "participantsSuccessRate": {
     "label": {
-      "fr": "taux de succès individuel des participants du pays",
-      "en": "participant-level success rate for the country"
+      "fr": "Taux de succès des projets (nombre de projets lauréats / nombre de projets évalués)",
+      "en": "Project success rate (number of successful projects / number of projects assessed)"
     },
     "tooltip": {
       "fr": "Nombre de participants du pays dans les projets lauréats sur le nombre de participants du pays dans les projets évalués",
@@ -51,8 +51,8 @@
   },
   "projectsSuccessRate": {
     "label": {
-      "fr": "taux de succès des coordinations de projets",
-      "en": "coordination success rate"
+      "fr": "Taux de succès des coordinations de projets",
+      "en": "Coordination success rate"
     },
     "tooltip": {
       "fr": "Nombre de projets coordonnés par le pays dans les projets lauréats sur le nombre de projets coordonnés par le pays dans les projets évalués",
