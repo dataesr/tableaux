@@ -16,12 +16,12 @@
     "en": "Sort by successful projects"
   },
   "configChart2a-title": {
-    "fr": "Nombre de coordinations de projets déposés et lauréats",
-    "en": "Number of project coordinations submitted and winners"
+    "fr": "Nombre de coordinations de projets évalués et lauréats",
+    "en": "Number of evaluated and successful project coordinations"
   },
   "configChart2b-title": {
-    "fr": "Taux de succès sur le nombre de coordinations de projets lauréats",
-    "en": "Success rate on the number of winning project coordinations"
+    "fr": "Taux de succès des coordinations de projets",
+    "en": "Success rate of project coordinations"
   },
   "evaluated-projects": {
     "fr": "Projets évalués",
