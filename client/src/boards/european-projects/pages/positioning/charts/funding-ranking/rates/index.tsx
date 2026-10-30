@@ -33,28 +33,18 @@ export default function FundingRankingRates() {
   const configChartFundingRankingSubRates = {
     id: chartId,
     title: {
-      fr: "Classement des pays selon la part des montants demandés et obtenus (M€)",
-      en: "Ranking of countries by share of amounts requested and obtained (M€)",
+      fr: "Part des financements demandés et obtenus par les principaux pays bénéficiaires (M€)",
+      en: "Share of funding requested and secured by top beneficiary countries (€M)",
     },
     comment: {
       fr: (
         <>
-          Ce graphique présente deux colonnes par pays : la colonne <strong style={{ color: "var(--evaluated-project-color)" }}>bleue</strong>{" "}
-          représente la part des montants demandés (projets évalués) et la colonne{" "}
-          <strong style={{ color: "var(--successful-project-color)" }}>verte</strong> la part des montants obtenus (projets lauréats). Le chiffre
-          affiché sur chaque colonne indique le <strong>rang du pays</strong> dans le classement européen pour cette catégorie. Un écart important
-          entre les deux colonnes d'un même pays signale une différence de performance entre sa capacité à déposer des demandes et à obtenir des
-          subventions. Vous avez la possibilité de trier le classement soit par montant total évalué, soit par montant total obtenu.
+          Ce graphique présente la part de chaque pays dans l’ensemble des financements demandés et obtenus par les participants de tous les pays.
         </>
       ),
       en: (
         <>
-          This chart shows two columns per country: the <strong style={{ color: "var(--evaluated-project-color)" }}>blue</strong> column represents
-          the share of requested amounts (evaluated projects) and the <strong style={{ color: "var(--successful-project-color)" }}>green</strong>{" "}
-          column shows the share of obtained amounts (successful projects). The number displayed on each column indicates the country's{" "}
-          <strong>rank</strong> in the European ranking for that category. A significant gap between the two columns of the same country indicates a
-          difference in performance between its ability to submit applications and to obtain funding. You can sort the ranking either by total
-          evaluated amount or by total obtained amount.
+          This chart shows each country's share of all funding requested and secured by participants from all countries.
         </>
       ),
     },
@@ -91,14 +81,14 @@ export default function FundingRankingRates() {
 
   return (
     <Container fluid className="fr-mt-5w">
-      <Row>
+      {/* <Row>
         <Col>
           <Title as="h2" look="h4">
             {getI18nLabel("title")}
           </Title>
           <Callout className="callout-style">{getI18nLabel("callout")}</Callout>
         </Col>
-      </Row>
+      </Row> */}
       <Row>
         <Col>
           <fieldset className="fr-mb-2w">
