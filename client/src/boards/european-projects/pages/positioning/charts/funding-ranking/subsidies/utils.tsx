@@ -40,6 +40,12 @@ export function useGetParams() {
     params.push(`destinations=${destinationIds}`);
   }
 
+  // Récupérer le paramètre range_of_years et le convertir en call_year pour l'API
+  const rangeOfYears = searchParams.get("range_of_years");
+  if (rangeOfYears) {
+    params.push(`range_of_years=${rangeOfYears}`);
+  }
+
   if (searchParams.has("isEjo")) {
     params.push(isEjoParam());
   }
@@ -79,7 +85,7 @@ export function readingKey(data) {
               {firstCountry.rank_evaluated}
               {getOrdinal(firstCountry.rank_evaluated, "fr")}
             </strong>{" "}
-            position des demandes de financements (<strong>{(firstCountry.total_evaluated / 1000000).toFixed(1)} M€</strong>) et des financements obtenus (<strong>{(firstCountry.total_successful / 1000000).toFixed(1)} M€</strong>). 
+            position des demandes de financements (<strong>{(firstCountry.total_evaluated / 1000000).toFixed(1)} M€</strong>) et des financements obtenus (<strong>{(firstCountry.total_successful / 1000000).toFixed(1)} M€</strong>).
             Le taux de succès des financements est de{" "}
             <strong>{firstCountry.ratio.toFixed(1)}%</strong>.
           </>

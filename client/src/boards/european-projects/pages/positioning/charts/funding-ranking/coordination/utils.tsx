@@ -1,8 +1,9 @@
 import { useSearchParams } from "react-router-dom";
+
 import { getI18nLabel } from "../../../../../../../utils";
-import { isEjoParam } from "../../../../../utils/params";
 import i18n from "../../../../../i18n-global.json";
-  
+import { isEjoParam } from "../../../../../utils/params";
+
 export function useGetParams() {
   const [searchParams] = useSearchParams();
 
@@ -36,6 +37,12 @@ export function useGetParams() {
   const destinationIds = searchParams.get("destinationIds");
   if (destinationIds) {
     params.push(`destinations=${destinationIds}`);
+  }
+
+  // Récupérer le paramètre range_of_years et le convertir en call_year pour l'API
+  const rangeOfYears = searchParams.get("range_of_years");
+  if (rangeOfYears) {
+    params.push(`range_of_years=${rangeOfYears}`);
   }
 
   if (searchParams.has("isEjo")) {

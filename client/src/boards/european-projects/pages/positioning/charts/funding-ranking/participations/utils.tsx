@@ -37,6 +37,12 @@ export function useGetParams() {
     params.push(`destinations=${destinationIds}`);
   }
 
+  // Récupérer le paramètre range_of_years et le convertir en call_year pour l'API
+  const rangeOfYears = searchParams.get("range_of_years");
+  if (rangeOfYears) {
+    params.push(`range_of_years=${rangeOfYears}`);
+  }
+
   if (searchParams.has("isEjo")) {
     params.push(isEjoParam());
   }
@@ -75,7 +81,7 @@ export function readingKey(data) {
               {firstCountry.rank_involved_evaluated}
               {getOrdinal(firstCountry.rank_involved_evaluated, "fr")}
             </strong>{" "}
-            position en nombre de candidats (<strong>{firstCountry.total_number_involved_evaluated}</strong>) 
+            position en nombre de candidats (<strong>{firstCountry.total_number_involved_evaluated}</strong>)
             et de participants (<strong>{firstCountry.total_number_involved_successful}</strong>), soit un taux de succès
             de <strong>{firstCountry.ratio_involved.toFixed(1)}%</strong>.
           </>
@@ -136,7 +142,7 @@ export function renderDataTableParticipations(data, currentLang, selectedCountry
   // TODO: error with require "Cannot find name 'require'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig."
   const { getI18nLabel } = require("../../../../../../../utils");
   const i18n = require("../../../../../i18n-global.json");
-  
+
   if (!data || data.length === 0) return null;
 
   const labels = {
@@ -206,7 +212,7 @@ export function renderDataTableParticipations(data, currentLang, selectedCountry
 export function renderDataTableParticipationsSuccessRate(data, currentLang, selectedCountryCode) {
   const { getI18nLabel } = require("../../../../../../../utils");
   const i18n = require("../../../../../i18n-global.json");
-  
+
   if (!data || data.length === 0) return null;
 
   // Calculer le taux moyen

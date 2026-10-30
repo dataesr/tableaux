@@ -1,21 +1,18 @@
-import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
 import { Col, Container, Radio, Row, Title } from "@dataesr/dsfr-plus";
+import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 
-import { getData } from "./query";
-import { readingKey, useGetParams, renderDataTableParticipations, renderDataTableParticipationsSuccessRate } from "./utils";
-import optionsNumberInvolved from "./options-number_involved";
-import optionNumberInvolvedSuccessRate from "./options-number_involved-succes-rate";
+import { useSearchParams } from "react-router-dom";
+import ChartFooter from "../../../../../../../components/chart-footer/index.js";
 import ChartWrapper from "../../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../../components/charts-skeletons/default";
-import { useSearchParams } from "react-router-dom";
-
 import { EPChartsSources } from "../../../../../config.js";
-
 import i18nGlobal from "../../../../../i18n-global.json";
 import i18nLocal from "./i18n.json";
-import ChartFooter from "../../../../../../../components/chart-footer/index.js";
-// import Callout from "../../../../../../../components/callout.js";
+import optionsNumberInvolved from "./options-number_involved";
+import optionNumberInvolvedSuccessRate from "./options-number_involved-succes-rate";
+import { getData } from "./query";
+import { readingKey, renderDataTableParticipations, renderDataTableParticipationsSuccessRate, useGetParams } from "./utils";
 
 export default function FundingRankingParticipations() {
   const [searchParams] = useSearchParams();

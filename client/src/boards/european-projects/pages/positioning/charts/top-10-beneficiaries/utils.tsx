@@ -1,10 +1,10 @@
 import { useSearchParams } from "react-router-dom";
-import { formatToMillions, formatCurrency, formatCurrencyEn } from "../../../../../../utils/format";
+
 import { getI18nLabel } from "../../../../../../utils";
-import { isEjoParam } from "../../../../utils/params";
+import { formatCurrency, formatCurrencyEn, formatToMillions } from "../../../../../../utils/format";
 import i18n from "../../../../i18n-global.json";
 import { getCountryNameWithArticle } from "../../../../utils/country-mapping";
-
+import { isEjoParam } from "../../../../utils/params";
 
 export function useGetParams() {
   const [searchParams] = useSearchParams();
@@ -41,6 +41,12 @@ export function useGetParams() {
     params.push(`destinations=${destinationIds}`);
   }
 
+    // Récupérer le paramètre range_of_years et le convertir en call_year pour l'API
+  const rangeOfYears = searchParams.get("range_of_years");
+  if (rangeOfYears) {
+    params.push(`range_of_years=${rangeOfYears}`);
+  }
+
   if (searchParams.has("isEjo")) {
     params.push(isEjoParam());
   }
@@ -48,7 +54,7 @@ export function useGetParams() {
   // Ajouter le paramètre stage par défaut
   params.push("stage=successful");
 
-  return params.join("&");
+  return params.filter((item) => !!item).join("&");
 }
 
 export function readingKey(data) {
