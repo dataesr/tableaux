@@ -24,7 +24,7 @@ router.route("/european-projects/synthesis-focus").get(async (req, res) => {
     filters.destination_code = { $in: req.query.destinations.split(",") };
   }
   if (req.query.range_of_years) {
-    filters.call_year = { $in: req.query.range_of_years.split(",") };
+    filters.call_year = { $in: req.query.range_of_years.split(/[|,]/) };
   }
   if (req.query.isEjo) {
     filters["is_ejo"] = { $eq: req.query.isEjo === "true" ? true : false };

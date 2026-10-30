@@ -37,7 +37,6 @@ export default function SyntheseContent() {
 
   switch (contentType) {
     case "pillar-comparison":
-
     case "pillar-detail":
       return (
         <Container fluid className="fr-pb-3w" as="section">

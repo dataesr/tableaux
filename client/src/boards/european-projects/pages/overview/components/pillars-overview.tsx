@@ -1,13 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 
-import { Container, Row, Col } from "@dataesr/dsfr-plus";
+import { Col, Container, Row } from "@dataesr/dsfr-plus";
 import { formatToMillions } from "../../../../../utils/format";
-import { getData } from "../charts/funding/query";
-// import { getData as getDataProportion } from "../charts/pillars-funding-proportion/query";
-import { useGetParams } from "../charts/funding/utils";
 import EvaluatedCard from "../../../components/cards/funds-cards/evaluated";
 import SuccessfulCard from "../../../components/cards/funds-cards/succesful";
-// import SuccessRateCard from "../../../components/cards/funds-cards/success-rate";
+import { getData } from "../charts/funding/query";
+import { useGetParams } from "../charts/funding/utils";
 
 import "../charts/synthesis-focus/styles.scss";
 
@@ -18,16 +16,10 @@ export default function PillarsOverview() {
     queryFn: () => getData(params),
   });
 
-  // const { data: dataProportion, isLoading: isLoadingProportion } = useQuery({
-  //   queryKey: ["pillarsFundingProportion", params],
-  //   queryFn: () => getDataProportion(params),
-  // });
-
   const evaluatedItem = data?.data.find((item) => item.stage === "evaluated") || {};
   const successfulItem = data?.data.find((item) => item.stage === "successful") || {};
   const fundsEvaluated = evaluatedItem.total_fund_eur || 0;
   const fundsSuccessful = successfulItem.total_fund_eur || 0;
-  // const successRate = fundsEvaluated > 0 ? fundsSuccessful / fundsEvaluated : 0;
 
   if (isLoading) {
     return (
