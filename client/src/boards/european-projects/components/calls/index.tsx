@@ -9,8 +9,6 @@ const { VITE_APP_SERVER_URL } = import.meta.env;
 import translations from "./i18n.json";
 import "./styles.scss";
 
-type Language = "fr" | "en";
-
 type Props = {
   filter?: string;
 };
