@@ -72,34 +72,34 @@ export function readingKey(data, selectedCountryCode: string | null = null) {
   return {
     fr: (
       <>
-        Le pays "<strong>{country.name_fr}</strong>" arrive en{" "}
+        Le pays <strong>{country.name_fr}</strong> se place au{" "}
         <strong>
           {country.rank_projects_evaluated}
           {getOrdinal(country.rank_projects_evaluated, "fr")}
         </strong>{" "}
-        position pour le nombre de projets évalués (<strong>{country.total_projects_evaluated}</strong>)
-        {sameRank ? " ainsi que " : " alors qu'il arrive en "}
+        rang des pays en nombre de projets évalués (<strong>{country.total_projects_evaluated}</strong>)
+        {sameRank ? " ainsi qu'au " : " et au "}
         <strong>
           {country.rank_projects_successful}
           {getOrdinal(country.rank_projects_successful, "fr")}
         </strong>{" "}
-        position pour le nombre de projets lauréats (<strong>{country.total_projects_successful}</strong>). Son taux de succès est de <strong>{ratio}%</strong>.
+        rang en nombre de projets lauréats (<strong>{country.total_projects_successful}</strong>). Son taux de succès s'élève à <strong>{ratio}%</strong>.
       </>
     ),
     en: (
       <>
-        The country "<strong>{country.name_en}</strong>" ranks{" "}
+        <strong>{country.name_en}</strong> ranks{" "}
         <strong>
           {country.rank_projects_evaluated}
           {getOrdinal(country.rank_projects_evaluated, "en")}
         </strong>{" "}
-        for the number of evaluated projects (<strong>{country.total_projects_evaluated}</strong>)
-        {sameRank ? " as well as " : " while it ranks "}
+        among countries in terms of the number of evaluated projects (<strong>{country.total_projects_evaluated}</strong>)
+        {sameRank ? " as well as " : " and "}
         <strong>
           {country.rank_projects_successful}
           {getOrdinal(country.rank_projects_successful, "en")}
         </strong>{" "}
-        for the number of successful projects (<strong>{country.total_projects_successful}</strong>). Its success rate is <strong>{ratio}%</strong>.
+        in terms of the number of successful projects (<strong>{country.total_projects_successful}</strong>). Its success rate stands at <strong>{ratio}%</strong>.
       </>
     ),
   };
