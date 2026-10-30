@@ -2,6 +2,7 @@ import { useSearchParams } from "react-router-dom";
 
 import { getI18nLabel } from "../../../../../../../utils";
 import i18nGlobal from "../../../../../i18n-global.json";
+import { isEjoParam } from "../../../../../utils/params";
 import i18nLocal from "./i18n.json";
 
 const i18n = { ...i18nGlobal, ...i18nLocal };
@@ -42,7 +43,11 @@ export function useGetParams() {
     params.push(`range_of_years=${rangeOfYears}`);
   }
 
-  return params.join("&");
+  if (searchParams.has("isEjo")) {
+    params.push(isEjoParam());
+  }
+
+  return params.filter((item) => !!item).join("&");
 }
 
 const getOrdinal = (rank: number, lang: string) => {
