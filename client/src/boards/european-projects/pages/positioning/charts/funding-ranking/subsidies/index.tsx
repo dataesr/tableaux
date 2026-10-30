@@ -18,7 +18,7 @@ import { readingKey, renderDataTableSubsidies, renderDataTableSuccessRate, useGe
 export default function FundingRankingSubsidies() {
   const [searchParams] = useSearchParams();
   const currentLang = searchParams.get("language") || "fr";
-  const [sortBy, setSortBy] = useState("successful");
+  const [sortBy, setSortBy] = useState("requested");
   const params = useGetParams();
 
   const configChart1a = {
@@ -40,7 +40,7 @@ export default function FundingRankingSubsidies() {
 
   const prepareData = (data, sortKey) => {
     data.sort((a, b) => b[sortKey] - a[sortKey]);
-    if (sortBy === "evaluated") {
+    if (sortBy === "requested") {
       data.sort((a, b) => b.total_evaluated - a.total_evaluated);
     } else {
       data.sort((a, b) => b.total_successful - a.total_successful);
@@ -84,20 +84,20 @@ export default function FundingRankingSubsidies() {
           <fieldset className="fr-mb-2w">
             <legend>{getI18nLabel("sort-by")}</legend>
             <Radio
-              checked={sortBy === "evaluated"}
+              checked={sortBy === "requested"}
               className="fr-mb-1w"
-              defaultValue="evaluated"
-              label={getI18nLabel("sort-by-evaluated-project")}
+              defaultValue="requested"
+              label={getI18nLabel("sort-by-requested-funding")}
               name="FundingRankingSubsidies-radio"
               onChange={(e) => {
                 setSortBy((e.target as HTMLInputElement).value);
               }}
             />
             <Radio
-              checked={sortBy === "successful"}
+              checked={sortBy === "secured"}
               className="fr-mb-1w"
-              defaultValue="successful"
-              label={getI18nLabel("sort-by-successful-project")}
+              defaultValue="secured"
+              label={getI18nLabel("sort-by-secured-funding")}
               name="FundingRankingSubsidies-radio"
               onChange={(e) => {
                 setSortBy((e.target as HTMLInputElement).value);

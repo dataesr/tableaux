@@ -7,13 +7,13 @@
     "fr": "Trier par",
     "en": "Sort by"
   },
-  "sort-by-evaluated-project": {
-    "fr": "Trier par projets évalués",
-    "en": "Sort by evaluated projects"
+  "sort-by-submitted-projects": {
+    "fr": "Trier par coordinations de projets déposés",
+    "en": "Sort by coordinations of submitted projects"
   },
-  "sort-by-successful-project": {
-    "fr": "Trier par projets lauréats",
-    "en": "Sort by successful projects"
+  "sort-by-winning-projects": {
+    "fr": "Trier par coordinations de projets lauréats",
+    "en": "Sort by coordinations of winning projects"
   },
   "configChart2a-title": {
     "fr": "Nombre de coordinations de projets évalués et lauréats",

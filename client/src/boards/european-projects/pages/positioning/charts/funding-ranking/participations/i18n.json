@@ -7,13 +7,13 @@
     "fr": "Trier par",
     "en": "Sort by"
   },
-  "sort-by-evaluated-project": {
-    "fr": "Trier par projets évalués",
-    "en": "Sort by evaluated projects"
+  "sort-by-participants": {
+    "fr": "Trier par participants",
+    "en": "Sort by participants"
   },
-  "sort-by-successful-project": {
-    "fr": "Trier par projets lauréats",
-    "en": "Sort by successful projects"
+  "sort-by-candidates": {
+    "fr": "Trier par candidats",
+    "en": "Sort by candidates"
   },
   "configChart3a-title": {
     "fr": "Nombre de candidats et de participants par pays les plus représentés",

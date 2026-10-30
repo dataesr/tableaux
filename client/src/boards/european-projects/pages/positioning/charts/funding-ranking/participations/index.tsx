@@ -17,7 +17,7 @@ import { readingKey, renderDataTableParticipations, renderDataTableParticipation
 export default function FundingRankingParticipations() {
   const [searchParams] = useSearchParams();
   const currentLang = searchParams.get("language") || "fr";
-  const [sortBy, setSortBy] = useState("evaluated");
+  const [sortBy, setSortBy] = useState("candidates");
   const params = useGetParams();
 
   const configChart3a = {
@@ -39,10 +39,10 @@ export default function FundingRankingParticipations() {
 
   const prepareData = (data, sortKey) => {
     data.sort((a, b) => b[sortKey] - a[sortKey]);
-    if (sortBy === "evaluated") {
-      data.sort((a, b) => b.total_evaluated - a.total_evaluated);
+    if (sortBy === "candidates") {
+      data.sort((a, b) => b.total_number_involved_evaluated - a.total_number_involved_evaluated);
     } else {
-      data.sort((a, b) => b.total_successful - a.total_successful);
+      data.sort((a, b) => b.total_number_involved_successful - a.total_number_involved_successful);
     }
     // Add selected country if it is not in the top 10
     const dataToReturn = data.slice(0, 10);
@@ -84,20 +84,20 @@ export default function FundingRankingParticipations() {
           <fieldset className="fr-mb-2w">
             <legend>{getI18nLabel("sort-by")}</legend>
             <Radio
-              checked={sortBy === "evaluated"}
+              checked={sortBy === "candidates"}
               className="fr-mb-1w"
-              defaultValue="evaluated"
-              label={getI18nLabel("sort-by-evaluated-project")}
+              defaultValue="candidates"
+              label={getI18nLabel("sort-by-candidates")}
               name="FundingRankingParticipations-radio"
               onChange={(e) => {
                 setSortBy((e.target as HTMLInputElement).value);
               }}
             />
             <Radio
-              checked={sortBy === "successful"}
+              checked={sortBy === "participants"}
               className="fr-mb-1w"
-              defaultValue="successful"
-              label={getI18nLabel("sort-by-successful-project")}
+              defaultValue="participants"
+              label={getI18nLabel("sort-by-participants")}
               name="FundingRankingParticipations-radio"
               onChange={(e) => {
                 setSortBy((e.target as HTMLInputElement).value);

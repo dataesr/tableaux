@@ -20,7 +20,7 @@ import Callout from "../../../../../../../components/callout.js";
 export default function FundingRankingProjects() {
   const [searchParams] = useSearchParams();
   const currentLang = searchParams.get("language") || "fr";
-  const [sortBy, setSortBy] = useState("successful");
+  const [sortBy, setSortBy] = useState("evaluated");
   const params = useGetParams();
   const selectedCountry = searchParams.get("country_code");
 

@@ -41,7 +41,7 @@ export default function OptionsCoordinationNumber(data: DataItem[], currentLang:
     series: [
       {
         type: "bar",
-        name: "Coordination de projets évalués",
+        name: "Coordinations de projets évalués",
         color: getCssColor("evaluated-project"),
         data: data.map((item) => ({
           name: item[`name_${currentLang}` as keyof DataItem],
@@ -60,7 +60,7 @@ export default function OptionsCoordinationNumber(data: DataItem[], currentLang:
       } as Highcharts.SeriesBarOptions,
       {
         type: "bar",
-        name: "Coordination de projets lauréats",
+        name: "Coordinations de projets lauréats",
         color: getCssColor("successful-project"),
         data: data.map((item) => ({
           name: item[`name_${currentLang}` as keyof DataItem],
