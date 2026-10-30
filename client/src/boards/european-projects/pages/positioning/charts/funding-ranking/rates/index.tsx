@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Col, Container, Radio, Row, Title } from "@dataesr/dsfr-plus";
+import { Col, Container, Radio, Row } from "@dataesr/dsfr-plus";
 
 import { getData } from "./query";
 import { useGetParams, renderDataTable } from "./utils";
@@ -13,7 +13,7 @@ import { EPChartsSources } from "../../../../../config.js";
 
 import i18nGlobal from "../../../../../i18n-global.json";
 import i18nLocal from "./i18n.json";
-import Callout from "../../../../../../../components/callout.js";
+// import Callout from "../../../../../../../components/callout.js";
 import { readingKey } from "./utils.js";
 
 export default function FundingRankingRates() {

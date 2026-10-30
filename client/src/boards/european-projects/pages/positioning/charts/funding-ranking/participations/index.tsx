@@ -15,7 +15,7 @@ import { EPChartsSources } from "../../../../../config.js";
 import i18nGlobal from "../../../../../i18n-global.json";
 import i18nLocal from "./i18n.json";
 import ChartFooter from "../../../../../../../components/chart-footer/index.js";
-import Callout from "../../../../../../../components/callout.js";
+// import Callout from "../../../../../../../components/callout.js";
 
 export default function FundingRankingParticipations() {
   const [searchParams] = useSearchParams();
