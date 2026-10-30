@@ -1,11 +1,43 @@
-import { formatToMillions, formatToRates } from "../../../../../../utils/format";
+import { useSearchParams } from "react-router-dom";
+
 import { getI18nLabel } from "../../../../../../utils";
+import { formatToMillions, formatToRates } from "../../../../../../utils/format";
 import i18n from "../../../../i18n-global.json";
+import { isEjoParam } from "../../../../utils/params";
 
-export function getDefaultParams(searchParams) {
-  const params = [...searchParams].map(([key, value]) => `${key}=${value}`).join("&");
+export function useGetParams() {
+  const [searchParams] = useSearchParams();
 
-  return params + "&stage=successful";
+  const params: string[] = [];
+
+  // Récupérer le paramètre country_code s'il existe
+  const countryCode = searchParams.get("country_code");
+  if (countryCode) {
+    params.push(`country_code=${countryCode}`);
+  }
+
+  const destinationIds = searchParams.get("destinationIds");
+  if (destinationIds) {
+    params.push(`destinationIds=${destinationIds}`);
+  }
+
+  const rangeOfYears = searchParams.get("range_of_years");
+  if (rangeOfYears) {
+    params.push(`range_of_years=${rangeOfYears}`);
+  }
+
+  const thematicIds = searchParams.get("thematicIds");
+  if (thematicIds) {
+    params.push(`thematicIds=${thematicIds}`);
+  }
+
+  if (searchParams.has("isEjo")) {
+    params.push(isEjoParam());
+  }
+
+  const currentLang = searchParams.get("language") || "fr";
+
+  return { params: params.filter((item) => !!item).join("&"), currentLang };
 }
 
 export function successRatesReadingKey(data, displayType, currentLang) {

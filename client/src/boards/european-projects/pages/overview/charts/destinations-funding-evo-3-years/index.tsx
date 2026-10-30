@@ -1,23 +1,20 @@
 import { useQuery } from "@tanstack/react-query";
-import { useSearchParams } from "react-router-dom";
 import Cookies from "js-cookie";
+import { useState } from "react";
+import { useSearchParams } from "react-router-dom";
 
-import { GetData } from "./query";
-import optionsSubsidiesValues from "./options-values";
+import { Button, Col, Container, Row } from "@dataesr/dsfr-plus";
+import ChartWrapper from "../../../../../../components/chart-wrapper";
+import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
+import i18nGlobal from "../../../../i18n-global.json";
+import { normalizeIdForCssColorNames } from "../../../../utils";
+import i18nLocal from "./i18n.json";
 import optionsSubsidiesRates from "./options-rates";
 import optionsSubsidiesCountryRates from "./options-success-rates";
-
-import ChartWrapper from "../../../../../../components/chart-wrapper";
-import { getDefaultParams } from "./utils";
-import { Container, Row, Col, Button } from "@dataesr/dsfr-plus";
-import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
+import optionsSubsidiesValues from "./options-values";
+import { GetData } from "./query";
 import { RenderDataSubsidiesValuesAndRates } from "./render-data";
-import { useState } from "react";
-
-import i18nGlobal from "../../../../i18n-global.json";
-import i18nLocal from "./i18n.json";
-
-import { normalizeIdForCssColorNames } from "../../../../utils";
+import { getDefaultParams } from "./utils";
 
 const configChart1 = {
   id: "destinationsEvolutionFundingLines",

@@ -1,8 +1,9 @@
 import { useSearchParams } from "react-router-dom";
-import { formatToRates } from "../../../../../../utils/format";
+
 import { getI18nLabel } from "../../../../../../utils";
-import { isEjoParam } from "../../../../utils/params";
+import { formatToRates } from "../../../../../../utils/format";
 import i18n from "../../../../i18n-global.json";
+import { isEjoParam } from "../../../../utils/params";
 
 export function useGetParams() {
   const [searchParams] = useSearchParams();

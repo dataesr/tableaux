@@ -48,7 +48,3 @@ export function useGetParams() {
 
   return params.join("&");
 }
-
-export function getDefaultParams(searchParams) {
-  return [...searchParams].map(([key, value]) => `${key}=${value}`).join("&");
-}

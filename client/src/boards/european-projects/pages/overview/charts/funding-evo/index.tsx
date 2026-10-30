@@ -1,32 +1,28 @@
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 
-import { GetData } from "./query.js";
-import optionsValues from "./options-values.js";
-import optionsSuccessRates from "./options-success-rates.js";
-import ChartWrapper from "../../../../../../components/chart-wrapper/index.js";
-import { successRatesReadingKey, valuesSuccessReadingKey, renderDataTable, renderDataTableRates } from "./utils.js";
-import { Container, Row, Col } from "@dataesr/dsfr-plus";
-import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.js";
+import { Col, Container, Row } from "@dataesr/dsfr-plus";
 import { useState } from "react";
+import ChartWrapper from "../../../../../../components/chart-wrapper/index.js";
+import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.js";
 import { getI18nLabel } from "../../../../../../utils.js";
 import { EPChartsSources } from "../../../../config.js";
-
-import i18nLocal from "./i18n.json";
 import i18nGlobal from "../../../../i18n-global.json";
+import i18nLocal from "./i18n.json";
+import optionsSuccessRates from "./options-success-rates.js";
+import optionsValues from "./options-values.js";
+import { getData } from "./query.js";
+import { renderDataTable, renderDataTableRates, successRatesReadingKey, useGetParams, valuesSuccessReadingKey } from "./utils.js";
 
 export default function FundingEvo() {
   const [searchParams] = useSearchParams();
   const currentLang = searchParams.get("language") || "fr";
-  const thematicIds = searchParams.get("thematicIds");
-  const destinationIds = searchParams.get("destinationIds");
-  const countryCode = searchParams.get("country_code");
-  const rangeOfYears = searchParams.get("range_of_years");
   const [displayType, setDisplayType] = useState("total_fund_eur");
 
+  const { params } = useGetParams();
   const { data, isLoading } = useQuery({
-    queryKey: ["FundingEvo", destinationIds, thematicIds, rangeOfYears, countryCode],
-    queryFn: () => GetData(destinationIds, thematicIds, rangeOfYears, countryCode),
+    queryKey: ["FundingEvo", params],
+    queryFn: () => getData(params),
   });
 
   if (isLoading || !data)

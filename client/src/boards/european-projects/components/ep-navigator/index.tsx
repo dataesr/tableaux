@@ -1,13 +1,13 @@
-import { useState, useRef } from "react";
-import { useSearchParams } from "react-router-dom";
+import { Checkbox, Col, Container, Row } from "@dataesr/dsfr-plus";
 import { useQuery } from "@tanstack/react-query";
-import { Container, Row, Col, Checkbox } from "@dataesr/dsfr-plus";
+import { useRef, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 
-import { getFilters, getPrograms, getThematics, getDestinations } from "../../api";
+import RangeOfYears from "../../../../components/range-of-years";
 import { getI18nLabel } from "../../../../utils";
+import { getDestinations, getFilters, getPrograms, getThematics } from "../../api";
 import i18nGlobal from "../../i18n-global.json";
 import i18nLocal from "./i18n.json";
-import RangeOfYears from "../../../../components/range-of-years";
 
 import "./styles.scss";
 

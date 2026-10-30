@@ -1,32 +1,28 @@
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 
-import { GetData } from "./query";
-import optionsValues from "./options-values";
-import optionsSuccessRates from "./options-success-rates";
-
-import ChartWrapper from "../../../../../../components/chart-wrapper";
-import { successRatesReadingKey, valuesSuccessReadingKey, renderDataTable, renderDataTableRates } from "./utils";
-import { Container, Row, Col } from "@dataesr/dsfr-plus";
-import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
+import { Col, Container, Row } from "@dataesr/dsfr-plus";
 import { useState } from "react";
+import ChartWrapper from "../../../../../../components/chart-wrapper";
+import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 import { getI18nLabel } from "../../../../../../utils";
-
-import i18nLocal from "./i18n.json";
-import i18nGlobal from "../../../../i18n-global.json";
 import { EPChartsSources } from "../../../../config.js";
+import i18nGlobal from "../../../../i18n-global.json";
+import i18nLocal from "./i18n.json";
+import optionsSuccessRates from "./options-success-rates";
+import optionsValues from "./options-values";
+import { getData } from "./query";
+import { renderDataTable, renderDataTableRates, successRatesReadingKey, useGetParams, valuesSuccessReadingKey } from "./utils";
 
 export default function ProgramsFundingEvo3Years() {
   const [searchParams] = useSearchParams();
   const currentLang = searchParams.get("language") || "fr";
-  const programId = searchParams.get("programId");
-  const countryCode = searchParams.get("country_code");
-  const rangeOfYears = searchParams.get("range_of_years");
   const [displayType, setDisplayType] = useState("total_fund_eur");
 
+  const { params } = useGetParams();
   const { data, isLoading } = useQuery({
-    queryKey: ["ProgramsFundingEvo3Years", programId, rangeOfYears, countryCode],
-    queryFn: () => GetData(programId, rangeOfYears, countryCode),
+    queryKey: ["ProgramsFundingEvo3Years", params],
+    queryFn: () => getData(params),
   });
 
   if (isLoading || !data)
