@@ -48,6 +48,8 @@
     font-size: 2rem;
     font-weight: 700;
     color: var(--card-primary-color, var(--text-label-blue-ecume));
+    margin: 0;
+    margin-bottom: 0.3rem;
   }
   
   .funds{
@@ -138,9 +140,9 @@
   }
 
   &.success-rate-card {
-    background-color: var(--background-default-grey);
     --card-primary-color: var(--average-success-rate-color);
     --card-text-color: var(--text-default-grey);
+
   }
 
   // Variante pour les cartes de taux (RateCard)

@@ -32,6 +32,10 @@ router.route("/european-projects/overview/destination-funding").get(async (req, 
     filters["is_ejo"] = { $eq: req.query.isEjo === "true" ? true : false };
   }
 
+  if (req.query.range_of_years) {
+    filters.call_year = { $in: req.query.range_of_years.split(/[|,]/) };
+  }
+
   const data = await db
     .collection(collection_projects_entities)
     .aggregate([
@@ -43,7 +47,7 @@ router.route("/european-projects/overview/destination-funding").get(async (req, 
             stage: "$stage",
           },
           total_fund_eur: { $sum: "$calculated_fund" },
-          count: { $sum: 1 },
+          count: { $addToSet: "$_id" },
         },
       },
       {
@@ -52,7 +56,7 @@ router.route("/european-projects/overview/destination-funding").get(async (req, 
           destination: "$_id.destination",
           stage: "$_id.stage",
           total_fund_eur: 1,
-          count: 1,
+          count: { $size: "$count" },
         },
       },
       { $sort: { total_fund_eur: -1 } },

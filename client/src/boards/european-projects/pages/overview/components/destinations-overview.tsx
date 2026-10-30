@@ -24,13 +24,13 @@ export default function DestinationsOverview() {
   return (
     <Container fluid>
       <Row gutters>
-        <Col>
+        <Col xs={12} md={4}>
           <EvaluatedCard fund={formatToMillions(fundsEvaluated)} loading={isLoading} nb={evaluatedItem.count || 0} />
         </Col>
-        <Col>
+        <Col xs={12} md={4}>
           <SuccessfulCard fund={formatToMillions(fundsSuccessful)} loading={isLoading} nb={successfulItem.count || 0} />
         </Col>
-        <Col>
+        <Col xs={12} md={4}>
           <SuccessRateCard loading={isLoading} nb={successRate} />
         </Col>
       </Row>

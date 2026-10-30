@@ -33,6 +33,11 @@ export function useGetParams() {
     params.push(`thematics=${thematicIds}`);
   }
 
+  const rangeOfYears = searchParams.get("range_of_years");
+  if (rangeOfYears) {
+    params.push(`range_of_years=${encodeURIComponent(rangeOfYears)}`);
+  }
+
   if (searchParams.has("isEjo")) {
     params.push(isEjoParam());
   }
