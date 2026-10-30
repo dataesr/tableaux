@@ -127,6 +127,7 @@ export function readingKey(data) {
 }
 
 export function renderDataTableParticipations(data, currentLang, selectedCountryCode) {
+  // TODO: error with require "Cannot find name 'require'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig."
   const { getI18nLabel } = require("../../../../../../../utils");
   const i18n = require("../../../../../i18n-global.json");
   
