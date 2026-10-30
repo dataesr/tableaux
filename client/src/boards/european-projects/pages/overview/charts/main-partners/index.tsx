@@ -1,7 +1,7 @@
 import { useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 
-import { GetData } from "./query";
+import { getData } from "./query";
 import options from "./options";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import { readingKey, useGetParams, renderDataTable } from "./utils";
@@ -17,7 +17,7 @@ export default function MainPartners() {
 
   const { data, isLoading } = useQuery({
     queryKey: ["mainPartners", params],
-    queryFn: () => GetData(params),
+    queryFn: () => getData(params),
   });
 
   if (isLoading || !data) return <DefaultSkeleton />;

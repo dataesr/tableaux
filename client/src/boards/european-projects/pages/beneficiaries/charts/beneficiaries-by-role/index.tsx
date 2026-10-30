@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 
-import { GetData } from "./query";
+import { getData } from "./query";
 import options from "./options";
 
 import ChartWrapper from "../../../../../../components/chart-wrapper";
@@ -18,7 +18,7 @@ export default function BeneficiariesByRole() {
 
   const { data, isLoading } = useQuery({
     queryKey: ["beneficiariesByRole", params],
-    queryFn: () => GetData(params),
+    queryFn: () => getData(params),
   });
 
   if (isLoading || !data) return <DefaultSkeleton />;
@@ -26,7 +26,7 @@ export default function BeneficiariesByRole() {
   const config = {
     id: "beneficiariesByRole",
     title: {
-      fr: "Top 10 des bénéficiaires par rôle en fonction des subventions alloués",
+      fr: "Top 10 des bénéficiaires par rôle en fonction des subventions allouées",
       en: "Top 10 beneficiaries by role based on allocated funding",
     },
     comment: {

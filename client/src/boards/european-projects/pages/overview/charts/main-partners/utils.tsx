@@ -1,4 +1,5 @@
 import { useSearchParams } from "react-router-dom";
+
 import { getI18nLabel } from "../../../../../../utils";
 import { formatToMillions } from "../../../../../../utils/format";
 import i18n from "../../../../i18n-global.json";
@@ -45,14 +46,12 @@ export function useGetParams() {
     params.push(`years=${rangeOfYears}`);
   }
 
-  if (searchParams.has("isEjo")) {
-    params.push(isEjoParam());
-  }
+  if (searchParams.has("isEjo")) params.push(isEjoParam());
   // Ajouter le paramètre stage=successful
   // TODO: voir avec ZOE
   // params.push("stage=successful");
 
-  return params.join("&");
+  return params.filter((item) => !!item).join("&");
 }
 
 export function readingKey(data) {
