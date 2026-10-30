@@ -44,6 +44,7 @@ router.route("/european-projects/positioning/top-10-funding-ranking").get(async 
           total_fund_eur: { $sum: "$calculated_fund" },
           total_coordination_number: { $sum: "$coordination_number" },
           total_number_involved: { $sum: "$number_involved" },
+          projects: { $addToSet: "$project_id" },
         },
       },
       {
@@ -56,6 +57,7 @@ router.route("/european-projects/positioning/top-10-funding-ranking").get(async 
           stage: "$_id.stage",
           total_coordination_number: 1,
           total_number_involved: 1,
+          total_projects: { $size: "$projects" },
         },
       },
       {
@@ -95,6 +97,16 @@ router.route("/european-projects/positioning/top-10-funding-ranking").get(async 
               $cond: [{ $eq: ["$stage", "evaluated"] }, "$total_number_involved", 0],
             },
           },
+          total_projects_successful: {
+            $sum: {
+              $cond: [{ $eq: ["$stage", "successful"] }, "$total_projects", 0],
+            },
+          },
+          total_projects_evaluated: {
+            $sum: {
+              $cond: [{ $eq: ["$stage", "evaluated"] }, "$total_projects", 0],
+            },
+          },
         },
       },
       {
@@ -109,6 +121,8 @@ router.route("/european-projects/positioning/top-10-funding-ranking").get(async 
           total_coordination_number_evaluated: 1,
           total_number_involved_successful: 1,
           total_number_involved_evaluated: 1,
+          total_projects_successful: 1,
+          total_projects_evaluated: 1,
         },
       },
     ])
@@ -128,6 +142,7 @@ router.route("/european-projects/positioning/top-10-funding-ranking").get(async 
       ratio: (el.total_successful / el.total_evaluated) * 100,
       ratio_coordination_number: (el.total_coordination_number_successful / el.total_coordination_number_evaluated) * 100,
       ratio_involved: (el.total_number_involved_successful / el.total_number_involved_evaluated) * 100,
+      ratio_projects: el.total_projects_evaluated ? (el.total_projects_successful / el.total_projects_evaluated) * 100 : 0,
     };
   });
 
@@ -167,6 +182,18 @@ router.route("/european-projects/positioning/top-10-funding-ranking").get(async 
     dataWithRatio.find((el) => el.id === dataSortedInvolvedEvaluated[i].id).rank_involved_evaluated = i + 1;
   }
 
+  // add projects_successful rank to returned data
+  const dataSortedProjectsSuccessful = dataWithRatio.sort((a, b) => b.total_projects_successful - a.total_projects_successful);
+  for (let i = 0; i < dataSortedProjectsSuccessful.length; i++) {
+    dataWithRatio.find((el) => el.id === dataSortedProjectsSuccessful[i].id).rank_projects_successful = i + 1;
+  }
+
+  // add projects_evaluated rank to returned data
+  const dataSortedProjectsEvaluated = dataWithRatio.sort((a, b) => b.total_projects_evaluated - a.total_projects_evaluated);
+  for (let i = 0; i < dataSortedProjectsEvaluated.length; i++) {
+    dataWithRatio.find((el) => el.id === dataSortedProjectsEvaluated[i].id).rank_projects_evaluated = i + 1;
+  }
+
   return res.json(dataWithRatio);
 });
 
@@ -188,6 +215,7 @@ router.route("/european-projects/positioning/top-10-funding-ranking_indexes").ge
         calculated_fund: 1,
         coordination_number: 1,
         number_involved: 1,
+        total_projects: 1,
       },
       "idx_top-10-funding-ranking_covered",
     );

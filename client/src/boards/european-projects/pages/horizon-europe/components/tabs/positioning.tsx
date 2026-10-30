@@ -2,6 +2,7 @@
 import BoardsSuggestComponent from "../../../../../../components/boards-suggest-component";
 import FundingRankingCoordination from "../../../positioning/charts/funding-ranking/coordination";
 import FundingRankingParticipations from "../../../positioning/charts/funding-ranking/participations";
+import FundingRankingProjects from "../../../positioning/charts/funding-ranking/projects";
 import FundingRankingRates from "../../../positioning/charts/funding-ranking/rates";
 import FundingRankingSubsidies from "../../../positioning/charts/funding-ranking/subsidies";
 import Intro from "../../../positioning/charts/intro";
@@ -17,6 +18,8 @@ export default function PositionnementContent() {
       <FundingRankingRates />
       <FundingRankingParticipations />
       <FundingRankingCoordination />
+      <FundingRankingProjects />
+
       <BoardsSuggestComponent />
     </div>
   );

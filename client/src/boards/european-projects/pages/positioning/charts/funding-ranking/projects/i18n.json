@@ -1,0 +1,50 @@
+{
+  "title": {
+    "fr": "Focus sur le nombre de projets",
+    "en": "Focus on the number of projects"
+  },
+  "sort-by": {
+    "fr": "Trier par",
+    "en": "Sort by"
+  },
+  "sort-by-evaluated-project": {
+    "fr": "Trier par projets évalués",
+    "en": "Sort by evaluated projects"
+  },
+  "sort-by-successful-project": {
+    "fr": "Trier par projets lauréats",
+    "en": "Sort by successful projects"
+  },
+  "configChart4a-title": {
+    "fr": "Nombre de projets évalués et lauréats",
+    "en": "Number of evaluated and successful projects"
+  },
+  "configChart4b-title": {
+    "fr": "Taux de succès sur le nombre de projets",
+    "en": "Success rate on the number of projects"
+  },
+  "evaluated-projects": {
+    "fr": "Projets évalués",
+    "en": "Evaluated projects"
+  },
+  "successful-projects": {
+    "fr": "Projets lauréats",
+    "en": "Successful projects"
+  },
+  "rank-evaluated-projects": {
+    "fr": "Rang projets évalués",
+    "en": "Evaluated projects rank"
+  },
+  "rank-successful-projects": {
+    "fr": "Rang projets lauréats",
+    "en": "Successful projects rank"
+  },
+  "caption-projects": {
+    "fr": "Classement des pays selon le nombre de projets évalués et lauréats",
+    "en": "Ranking of countries by number of evaluated and successful projects"
+  },
+  "caption-projects-success-rate": {
+    "fr": "Taux de succès des pays sur le nombre de projets",
+    "en": "Country success rate on the number of projects"
+  }
+}
