@@ -16,8 +16,8 @@ export default function optionSuccessRate(data: DataItem[], currentLang: string)
   const average = total / data.length;
 
   const translations = {
-    fr: { successRate: "Taux de succès", average: "Moyenne des pays", successRateLabel: "Taux de succès sur les montants" },
-    en: { successRate: "Success rate", average: "Average of countries", successRateLabel: "Success rate on amounts" },
+    fr: { successRate: "Taux de succès", average: "Moyenne des pays", successRateLabel: "Taux de succès des financements" },
+    en: { successRate: "Success rate", average: "Average of countries", successRateLabel: "Funding success rate" },
   };
   const t = translations[currentLang as keyof typeof translations] || translations.en;
 
