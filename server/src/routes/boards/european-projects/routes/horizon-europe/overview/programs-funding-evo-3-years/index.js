@@ -44,6 +44,7 @@ router.route("/european-projects/overview/programs-funding-evo-3-years").get(asy
             total_fund_eur: { $sum: "$calculated_fund" },
             total_coordination_number: { $sum: "$coordination_number" },
             total_number_involved: { $sum: "$number_involved" },
+            projects: { $addToSet: "$project_id" },
           },
         },
         {
@@ -60,6 +61,7 @@ router.route("/european-projects/overview/programs-funding-evo-3-years").get(asy
                 total_fund_eur: "$total_fund_eur",
                 total_coordination_number: "$total_coordination_number",
                 total_number_involved: "$total_number_involved",
+                total_projects: { $size: "$projects" },
               },
             },
           },
@@ -130,6 +132,7 @@ router.route("/european-projects/overview/programs-funding-evo-3-years_indexes")
         calculated_fund: 1,
         coordination_number: 1,
         number_involved: 1,
+        project_id: 1,
       },
       "idx_programs-funding-evo-3-years_covered",
     );

@@ -17,7 +17,11 @@ export default function Options(data, displayType, currentLang): HighchartsOptio
 
   evaluatedData.programs[0].years.forEach((year) => years.add(year.year));
 
-  const valueKey = (["total_fund_eur", "total_coordination_number", "total_number_involved", "count"].includes(displayType) ? displayType : "total_fund_eur") as "total_fund_eur" | "total_coordination_number" | "total_number_involved" | "count";
+  const valueKey = (["total_fund_eur", "total_coordination_number", "total_number_involved", "count"].includes(displayType) ? displayType : "total_fund_eur") as
+    | "total_fund_eur"
+    | "total_coordination_number"
+    | "total_number_involved"
+    | "total_projects";
   const isFunding = valueKey === "total_fund_eur";
 
   const sortedYears = Array.from(years).sort();
@@ -51,7 +55,7 @@ export default function Options(data, displayType, currentLang): HighchartsOptio
     yAxis: [
       {
         title: {
-          text: displayType === "total_fund_eur" ? "Euros € (millions)" : displayType === "total_coordination_number" ? "Nombre de coordinations" : "Nombre de candidats et de participants",
+          text: displayType === "total_fund_eur" ? "Euros € (millions)" : displayType === "total_coordination_number" ? "Nombre de coordinations" : displayType === "total_projects" ? "Nombre de projets" : "Nombre de candidats et de participants",
         },
         min: 0,
         gridLineColor: "var(--background-default-grey-hover)",

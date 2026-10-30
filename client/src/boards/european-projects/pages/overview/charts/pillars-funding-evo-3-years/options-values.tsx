@@ -17,7 +17,11 @@ export default function Options(data, displayType, currentLang): HighchartsOptio
 
   evaluatedData.pillars[0].years.forEach((year) => years.add(year.year));
 
-  const valueKey = (["total_fund_eur", "total_coordination_number", "total_number_involved", "count"].includes(displayType) ? displayType : "total_fund_eur") as "total_fund_eur" | "total_coordination_number" | "total_number_involved" | "count";
+  const valueKey = (["total_fund_eur", "total_coordination_number", "total_number_involved", "count", "total_projects"].includes(displayType) ? displayType : "total_fund_eur") as
+    | "total_fund_eur"
+    | "total_coordination_number"
+    | "total_number_involved"
+    | "total_projects";
   const isFunding = valueKey === "total_fund_eur";
 
   // Créer les catégories combinées : Année - Pilier

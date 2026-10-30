@@ -15,7 +15,11 @@ export default function Options(data, displayType, currentLang): HighchartsOptio
 
   const filteredData = countryData.data;
 
-  const valueKey = (["total_fund_eur", "total_coordination_number", "total_number_involved", "count"].includes(displayType) ? displayType : "total_fund_eur") as "total_fund_eur" | "total_coordination_number" | "total_number_involved" | "count";
+  const valueKey = (["total_fund_eur", "total_coordination_number", "total_number_involved", "count"].includes(displayType) ? displayType : "total_fund_eur") as
+    | "total_fund_eur"
+    | "total_coordination_number"
+    | "total_number_involved"
+    | "total_projects";
   const isFunding = valueKey === "total_fund_eur";
   // liste de toutes les années/code disponibles en parcourant tous les items
   const years = new Set();

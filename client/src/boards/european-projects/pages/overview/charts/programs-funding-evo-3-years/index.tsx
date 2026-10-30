@@ -86,6 +86,7 @@ export default function ProgramsFundingEvo3Years() {
             <option value="total_fund_eur">{getI18nLabel(i18n, "total-fund-eur")}</option>
             <option value="total_coordination_number">{getI18nLabel(i18n, "total-coordination-number")}</option>
             <option value="total_number_involved">{getI18nLabel(i18n, "total-number-involved")}</option>
+            <option value="total_projects">{getI18nLabel(i18n, "total-projects")}</option>
           </select>
         </Col>
       </Row>

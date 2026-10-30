@@ -2,10 +2,29 @@ import { useQuery } from "@tanstack/react-query";
 
 import { getData } from "./query";
 import options from "./options";
-import { useGetParams, renderDataTable } from "./utils";
+import { useGetParams } from "./utils";
 
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
+
+const titles: Record<string, { fr: string; en: string }> = {
+  total_fund_eur: {
+    fr: "Part des financements demandés et obtenus par le pays sur l'ensemble des pays",
+    en: "Funding requested and obtained by the country on all countries",
+  },
+  total_coordination_number: {
+    fr: "Part des coordinations demandées et obtenues par le pays sur l'ensemble des pays",
+    en: "Coordinations requested and obtained by the country on all countries",
+  },
+  total_number_involved: {
+    fr: "Part des participations demandées et obtenues par le pays sur l'ensemble des pays",
+    en: "Participations requested and obtained by the country on all countries",
+  },
+  total_projects: {
+    fr: "Part des projets du pays sur l'ensemble des pays",
+    en: "Share of the country's projects on all countries",
+  },
+};
 
 const config = {
   id: "destinationFundingProportion",
@@ -17,7 +36,7 @@ const config = {
 };
 
 export default function DestinationFundingProportion({ displayType = "total_fund_eur" }: { displayType?: string }) {
-  const { params } = useGetParams();
+  const { params, currentLang } = useGetParams();
   const { data, isLoading } = useQuery({
     queryKey: [config.id, params],
     queryFn: () => getData(params),
@@ -25,5 +44,5 @@ export default function DestinationFundingProportion({ displayType = "total_fund
 
   if (isLoading || !data) return <DefaultSkeleton />;
 
-  return <ChartWrapper config={config} options={options(data, displayType)} renderData={() => renderDataTable(data)} />;
+  return <ChartWrapper config={config} options={options(data, displayType, (titles[displayType] ?? titles.total_fund_eur)[currentLang === "fr" ? "fr" : "en"])} />;
 }

@@ -6,12 +6,13 @@ import { getCssColor } from "../../../../../../utils/colors";
 import { getI18nLabel } from "../../../../../../utils";
 import i18n from "../../i18n-charts.json";
 
-export default function Options(data, displayType: string = "total_fund_eur") {
+export default function Options(data, displayType: string = "total_fund_eur", title?: string) {
   if (!data) return null;
 
-  const valueKey = displayType === "total_coordination_number" ? "proportion_coordination_number" : displayType === "total_number_involved" ? "proportion_number_involved" : "proportion";
+  const valueKey = displayType === "total_coordination_number" ? "proportion_coordination_number" : displayType === "total_number_involved" ? "proportion_number_involved" : displayType === "total_fund_eur" ? "proportion" : "proportion_projects";
 
   const newOptions: HighchartsInstance.Options = {
+    title: { text: title },
     xAxis: {
       type: "category",
       gridLineColor: "var(--background-default-grey-hover)",
@@ -27,7 +28,7 @@ export default function Options(data, displayType: string = "total_fund_eur") {
     },
     tooltip: {
       pointFormatter: function () {
-        return `${getI18nLabel(i18n, "fundingProportion")} : <b>${formatToPercent(this.y ?? 0)}</b>`;
+        return `${getI18nLabel(i18n, valueKey)} : <b>${formatToPercent(this.y ?? 0)}</b>`;
       },
     },
     plotOptions: {

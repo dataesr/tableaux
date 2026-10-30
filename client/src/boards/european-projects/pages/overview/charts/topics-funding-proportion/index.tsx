@@ -21,31 +21,22 @@ const titles: Record<string, { fr: string; en: string }> = {
     fr: "Part des participations demandées et obtenues par le pays sur l'ensemble des pays",
     en: "Participations requested and obtained by the country on all countries",
   },
+  total_projects: {
+    fr: "Part des projets du pays sur l'ensemble des pays",
+    en: "Share of the country's projects on all countries",
+  },
 };
 
 // TODO: clé de lecture + commentaires
 const config = {
   id: "thematicsFundingProportion",
-  title: {
-    fr: "Part des financement demandés et obtenus par le pays sur l'ensemble des pays",
-    en: "Funding requested and obtained by the country on all countries",
-  },
   comment: {
     fr: <>Part des financement demandés et obtenus par le pays sur l'ensemble des pays</>,
     en: <>Funding requested and obtained by the country on all countries</>,
   },
   readingKey: {
-    fr: (
-      <>
-        Pour le pilier "Excellence Scientifique", les projets ont demandé 5 835 M€ de subventions, et en ont obtenu 1 154.3 M€, soit un taux de succès
-        de 19.80 %.
-      </>
-    ),
-    en: (
-      <>
-        For the "Scientific Excellence" pillar, projects requested 5,835 M€ in funding and obtained 1,154.3 M€, representing a success rate of 19.8%.
-      </>
-    ),
+    fr: <>Pour le pilier "Excellence Scientifique", les projets ont demandé 5 835 M€ de subventions, et en ont obtenu 1 154.3 M€, soit un taux de succès de 19.80 %.</>,
+    en: <>For the "Scientific Excellence" pillar, projects requested 5,835 M€ in funding and obtained 1,154.3 M€, representing a success rate of 19.8%.</>,
   },
   sources: EPChartsSources,
   integrationURL: "/european-projects/components/pages/analysis/overview/charts/destination-funding-proportion",

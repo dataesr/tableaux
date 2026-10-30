@@ -20,9 +20,9 @@ const titles: Record<string, { fr: string; en: string }> = {
     fr: "Part des participations demandées et obtenues par le pays sur l'ensemble des pays",
     en: "Participations requested and obtained by the country on all countries",
   },
-  count: {
-    fr: "Part des projets du pays",
-    en: "Share of the country's projects",
+  total_projects: {
+    fr: "Part des projets du pays sur l'ensemble des pays",
+    en: "Share of the country's projects on all countries",
   },
 };
 
@@ -43,11 +43,7 @@ export default function ProgramsFundingProportion({ displayType = "total_fund_eu
     },
     readingKey: readingKey(data, isLoading),
     sources: EPChartsSources,
-    title: {
-      fr: "Part des financement demandés et obtenus par le pays sur l'ensemble des pays",
-      en: "Funding requested and obtained by the country on all countries",
-    },
-    integrationURL: "/european-projects/components/pages/analysis/overview/charts/destination-funding-proportion",
+    integrationURL: "/european-projects/components/pages/analysis/overview/charts/programs-funding-proportion",
   };
 
   return <ChartWrapper config={config} options={options(data, displayType, (titles[displayType] ?? titles.total_fund_eur)[currentLang === "fr" ? "fr" : "en"])} />;

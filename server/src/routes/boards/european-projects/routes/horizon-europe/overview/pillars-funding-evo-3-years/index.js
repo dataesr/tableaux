@@ -132,6 +132,7 @@ router.route("/european-projects/overview/pillars-funding-evo-3-years_indexes").
         calculated_fund: 1,
         coordination_number: 1,
         number_involved: 1,
+        project_id: 1,
       },
       "idx_pillars-funding-evo-3-years_covered",
     );
