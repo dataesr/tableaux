@@ -1,7 +1,8 @@
 import { useSearchParams } from "react-router-dom";
+
 import { getI18nLabel } from "../../../../../../../utils";
-import { isEjoParam } from "../../../../../utils/params";
 import i18n from "../../../../../i18n-global.json";
+import { isEjoParam } from "../../../../../utils/params";
 
 export function useGetParams() {
   const [searchParams] = useSearchParams();
@@ -42,7 +43,7 @@ export function useGetParams() {
     params.push(isEjoParam());
   }
 
-  return params.join("&");
+  return params.filter((item) => !!item).join("&");
 }
 
 export function readingKey(data) {

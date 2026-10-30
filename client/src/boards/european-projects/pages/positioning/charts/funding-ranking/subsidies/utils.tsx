@@ -1,8 +1,10 @@
 import { useSearchParams } from "react-router-dom";
+
+import { getI18nLabel } from "../../../../../../../utils";
 import { formatToMillions } from "../../../../../../../utils/format";
-  import { getI18nLabel } from "../../../../../../../utils";
-  import i18n from "../../../../../i18n-global.json";
-  
+import i18n from "../../../../../i18n-global.json";
+import { isEjoParam } from "../../../../../utils/params";
+
 export function useGetParams() {
   const [searchParams] = useSearchParams();
 
@@ -38,7 +40,11 @@ export function useGetParams() {
     params.push(`destinations=${destinationIds}`);
   }
 
-  return params.join("&");
+  if (searchParams.has("isEjo")) {
+    params.push(isEjoParam());
+  }
+
+  return params.filter((item) => !!item).join("&");
 }
 
 export function readingKey(data) {
@@ -131,7 +137,7 @@ export function readingKey(data) {
 
 export function renderDataTableSubsidies(data, currentLang, selectedCountryCode) {
 
-  
+
   if (!data || data.length === 0) return null;
 
   const labels = {

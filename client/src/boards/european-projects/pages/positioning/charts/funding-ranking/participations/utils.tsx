@@ -1,5 +1,7 @@
 import { useSearchParams } from "react-router-dom";
 
+import { isEjoParam } from "../../../../../utils/params";
+
 export function useGetParams() {
   const [searchParams] = useSearchParams();
 
@@ -35,7 +37,11 @@ export function useGetParams() {
     params.push(`destinations=${destinationIds}`);
   }
 
-  return params.join("&");
+  if (searchParams.has("isEjo")) {
+    params.push(isEjoParam());
+  }
+
+  return params.filter((item) => !!item).join("&");
 }
 
 export function readingKey(data) {
