@@ -818,6 +818,7 @@ router.route("/european-projects/erc/filters").get(async (req, res) => {
     db
       .collection(collection_erc_projects_synthese)
       .aggregate([
+        { $match: { "panel_code": { $ne: null } } },
         {
           $group: {
             _id: {

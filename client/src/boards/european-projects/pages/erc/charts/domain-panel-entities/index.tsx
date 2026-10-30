@@ -1,13 +1,13 @@
-import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 
-import { getAllData } from "./query";
-import Options from "./options";
+import { Col, Row, SegmentedControl, SegmentedElement } from "@dataesr/dsfr-plus";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 import { useChartColor } from "../../../../../../hooks/useChartColor";
-import { Row, Col, SegmentedControl, SegmentedElement } from "@dataesr/dsfr-plus";
-import { useGetParams, renderDataTable } from "./utils";
+import Options from "./options";
+import { getAllData } from "./query";
+import { renderDataTable, useGetParams } from "./utils";
 
 const SCIENTIFIC_DOMAINS = [
   { code: "ALL", labelFr: "Tous les domaines", labelEn: "All domains" },
