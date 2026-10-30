@@ -16,8 +16,8 @@ export default function optionCoordinationNumberSuccessRate(data: DataItem[], cu
   const average = total / data.length;
 
   const translations = {
-    fr: { successRate: "Taux de succès", average: "Moyenne", successRateLabel: "Taux de succès sur les participants" },
-    en: { successRate: "Success rate", average: "Average", successRateLabel: "Success rate on participants" },
+    fr: { successRate: "Taux de succès", average: "Moyenne", successRateLabel: "Taux de succès des coordinations de projets" },
+    en: { successRate: "Success rate", average: "Average", successRateLabel: "Success rate of project coordinations" },
   };
   const t = translations[currentLang as keyof typeof translations] || translations.en;
 
