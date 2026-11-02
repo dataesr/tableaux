@@ -121,6 +121,7 @@ router.route("/european-projects/collaborations/get-collaborations-by-entity").g
                       role: "$role",
                     },
                   },
+                  stage: { $first: "$stage" },
                   total_collaborations: { $addToSet: "$project_id" },
                 },
               },
@@ -183,18 +184,18 @@ router.route("/european-projects/collaborations/get-collaborations-by-entity").g
 
     if (!entityCollaborations.length) {
       return res.status(404).json({
-        id: entity_id,
-        name_fr: entityInfo.entities_name,
-        name_en: entityInfo.entities_name, // Comme il n'y a pas de champ name_en dans la base, on utilise le même
         collaborations: [],
+        id: entity_id,
+        name_en: entityInfo.entities_name, // Comme il n'y a pas de champ name_en dans la base, on utilise le même
+        name_fr: entityInfo.entities_name,
       });
     }
 
     res.status(200).json({
-      id: entity_id,
-      name_fr: entityInfo.entities_name,
-      name_en: entityInfo.entities_name, // Comme il n'y a pas de champ name_en dans la base, on utilise le même
       collaborations: entityCollaborations[0].collaborating_entities,
+      id: entity_id,
+      name_en: entityInfo.entities_name, // Comme il n'y a pas de champ name_en dans la base, on utilise le même
+      name_fr: entityInfo.entities_name,
     });
   } catch (error) {
     console.error("Error fetching entity collaborations:", error);
@@ -209,10 +210,10 @@ router.route("/european-projects/collaborations/get-collaborations-by-entity_ind
       recreateIndex(
         db.collection(collection_projects_entities),
         {
-          entities_id: 1,
-          project_id: 1,
-          entities_name: 1,
           country_code: 1,
+          entities_id: 1,
+          entities_name: 1,
+          project_id: 1,
           role: 1,
         },
         "idx_entity_collaborations_main",

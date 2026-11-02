@@ -1,21 +1,19 @@
+import { Button, Col, Row, Title } from "@dataesr/dsfr-plus";
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { Button, Row, Col, Title } from "@dataesr/dsfr-plus";
 
 import BoardsSuggestComponent from "../../../../../../components/boards-suggest-component";
 import Callout from "../../../../../../components/callout";
+import { getI18nLabel } from "../../../../../../utils";
+import { isAnEuropeanUnionCountry } from "../../../../../../utils/countries";
+import CollaborationsByContinent from "../../../collaborations/charts/collaborations-by-continent";
 import CountriesCollaborationsBubble from "../../../collaborations/charts/countries-collaborations-bubble";
 import CountriesCollaborationsTable from "../../../collaborations/charts/countries-collaborations-table";
 import CountryNeighbourgs from "../../../collaborations/charts/country-neighbourgs";
-// import CountryLanguages from "../../../collaborations/charts/countries-languages";
 import EntityVariablePie from "../../../collaborations/charts/entity-variable-pie";
-import MapOfEuropeCollaborationsFlow from "../../../collaborations/charts/map-of-europe-collaborations-flow";
-
-import { isAnEuropeanUnionCountry } from "../../../../../../utils/countries";
-import { getI18nLabel } from "../../../../../../utils";
-import EuropeanMap from "../../../collaborations/charts/european-map";
 import EuropeanCards from "../../../collaborations/charts/european-cards";
-import CollaborationsByContinent from "../../../collaborations/charts/collaborations-by-continent";
+import EuropeanMap from "../../../collaborations/charts/european-map";
+import MapOfEuropeCollaborationsFlow from "../../../collaborations/charts/map-of-europe-collaborations-flow";
 
 const i18n = {
   "collaboration-title": {
@@ -101,27 +99,24 @@ export default function CollaborationsContent() {
         </Col>
       </Row>
       {isAnEuropeanUnionCountry(searchParams.get("country_code") || "") && (
-        <>
-          <Title as="h2" look="h4" className="fr-mt-5w">
-            {getI18nLabel(i18n, "focus-on-europe-title", currentLang)}
-          </Title>
-          <Row gutters>
-            <Col xs={12} md={7}>
-              <EuropeanCards />
-            </Col>
-            <Col xs={12}>
-              <EuropeanMap />
-            </Col>
-          </Row>
-        </>
+        <Row gutters>
+          <Col xs={12}>
+            <Title as="h2" look="h4" className="fr-mt-5w">
+              {getI18nLabel(i18n, "focus-on-europe-title", currentLang)}
+            </Title>
+          </Col>
+          <Col xs={12}>
+            <EuropeanCards />
+          </Col>
+          <Col xs={12}>
+            <EuropeanMap />
+          </Col>
+        </Row>
       )}
       <Row gutters>
         <Col xs={12}>
           <CountryNeighbourgs />
         </Col>
-        {/* <Col>
-          <CountryLanguages />
-        </Col> */}
       </Row>
       <Row className="fr-mt-5w">
         <Col>
