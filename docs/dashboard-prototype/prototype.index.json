@@ -24,12 +24,12 @@
     },
     {
       "id": "skill-dashboard-prototype",
-      "title": "Skill: end-to-end dashboard prototype",
+      "title": "Skill: plan and orchestrate a whole dashboard prototype (delegates to new-board, new-chart, dsfr)",
       "path": ".claude/skills/dashboard-prototype/SKILL.md"
     },
     {
       "id": "skill-new-board",
-      "title": "Skill: scaffold a board",
+      "title": "Skill: scaffold a board (client folder, server router, fixtures, registration rules)",
       "path": ".claude/skills/new-board/SKILL.md"
     },
     {
@@ -47,21 +47,39 @@
     {
       "id": "board-client",
       "title": "Client board skeleton",
-      "description": "Routes, layouts and pages of a board. A reference to adapt, not a generator.",
+      "description": "Routes, layouts, pages, i18n, styles and sitemap config. A reference to adapt, not a generator.",
       "paths": [
         "client/src/boards/template/routes.tsx",
         "client/src/boards/template/title-i18n.json",
-        "client/src/boards/template/components/layouts/",
-        "client/src/boards/template/pages/home/",
+        "client/src/boards/template/styles.scss",
+        "client/src/boards/template/sitemap-config.ts",
+        "client/src/boards/template/components/styles.scss",
+        "client/src/boards/template/components/layouts/global-layout.tsx",
+        "client/src/boards/template/components/layouts/sidemenu-layout.tsx",
+        "client/src/boards/template/components/layouts/i18n.json",
+        "client/src/boards/template/components/sidemenu/",
+        "client/src/boards/template/pages/home/index.tsx",
         "client/src/boards/template/pages/overview/index.tsx"
-      ]
+      ],
+      "notes": "global-layout.tsx contains a theme button and a language selector built with DSFR JS-only attributes (data-fr-opened, aria-controls, fr-collapse); DSFR JS is not loaded, so do not copy those sections. The chart pages are not part of the skeleton; see the chart examples."
     },
     {
       "id": "board-server",
       "title": "Server router stub",
-      "description": "Minimal board router, a route and an .http request file. Add routes serving fixtures from a fixtures/ folder in a new board.",
+      "description": "Minimal board router, one route and an .http request file. The fixtures layer is the board-server-fixtures template.",
       "paths": [
         "server/src/routes/boards/template/"
+      ]
+    },
+    {
+      "id": "board-server-fixtures",
+      "title": "Server fixtures layer",
+      "description": "readFixture() helper isolating data access in one place, one example fixture with a provenance field, a fixture-backed route using the { data, provenance } envelope, and an .http test.",
+      "paths": [
+        "server/src/routes/boards/template/data/fixtures.js",
+        "server/src/routes/boards/template/data/fixtures/funded-labs.json",
+        "server/src/routes/boards/template/routes/overview.js",
+        "server/src/routes/boards/template/api-tests/overview/test.http"
       ]
     },
     {
@@ -83,6 +101,7 @@
         "Title"
       ],
       "package": "@dataesr/dsfr-plus",
+      "props": "Container / Row(gutters) / Col(md, ...) / Title(as)",
       "example": "client/src/boards/template/pages/overview/index.tsx"
     },
     {
@@ -91,7 +110,8 @@
         "ChartWrapper"
       ],
       "package": "client/src/components/chart-wrapper/index.tsx",
-      "example": "client/src/boards/template/pages/overview/charts/funded-labs/index.tsx"
+      "props": "ChartWrapper({ config: ChartConfig, options: HighchartsOptions, constructorType?, hideTitle?, legend?, renderData? }). ChartConfig: { id, title, description?, subtitle?, comment?, readingKey?, sources?, integrationURL?, idQuery? }",
+      "example": "client/src/boards/template/pages/overview/charts/funded-labs-example/index.tsx"
     },
     {
       "id": "chart-loading-skeletons",
@@ -101,7 +121,8 @@
         "MapSkeleton"
       ],
       "package": "client/src/components/charts-skeletons/",
-      "example": "client/src/boards/template/pages/overview/charts/funded-labs/index.tsx"
+      "props": "no props; render while isLoading",
+      "example": "client/src/boards/template/pages/overview/charts/funded-labs-example/index.tsx"
     },
     {
       "id": "chart-color-hook",
@@ -109,7 +130,59 @@
         "useChartColor"
       ],
       "package": "client/src/hooks/useChartColor.tsx",
-      "example": "client/src/boards/template/pages/overview/charts/funded-labs/index.tsx"
+      "props": "useChartColor(): string; used for the chart-container--<color> class",
+      "example": "client/src/boards/template/pages/overview/charts/funded-labs-example/index.tsx"
+    },
+    {
+      "id": "select",
+      "exports": [
+        "Select"
+      ],
+      "package": "client/src/components/select",
+      "props": "Select({ label?, size?, outline?, disabled?, multiple?, closeOnSelect?, fullWidth?, children, ... }); option/group subcomponents in the same folder",
+      "example": null
+    },
+    {
+      "id": "item-filter",
+      "exports": [
+        "ItemFilter",
+        "ItemFilterPanel"
+      ],
+      "package": "client/src/components/item-filter/index.tsx",
+      "props": "ItemFilter({ label, hint?, id?, items: FilterItem[], availableKeys?, selectedKey, onSelect, emptyLabel? }); FilterItem: { key, label, category?, count?, hint? }",
+      "example": null
+    },
+    {
+      "id": "range-of-years",
+      "exports": [
+        "RangeOfYears"
+      ],
+      "package": "client/src/components/range-of-years/index.tsx",
+      "props": "RangeOfYears({ availableYears: string[], defaultYears: string[], yearsByFramework? })",
+      "example": null
+    },
+    {
+      "id": "copy-button",
+      "exports": [
+        "CopyButton"
+      ],
+      "package": "client/src/components/copy-button/index.tsx",
+      "props": "CopyButton({ text: string, color?: DSFRColors })",
+      "example": null
+    }
+  ],
+  "chart_examples": [
+    {
+      "id": "funded-labs-example",
+      "title": "Bar chart calling the board's own route (fixtures)",
+      "path": "client/src/boards/template/pages/overview/charts/funded-labs-example/index.tsx",
+      "note": "The pattern to copy: useQuery on /template/overview/funded-labs, ChartWrapper, DefaultSkeleton, useChartColor."
+    },
+    {
+      "id": "funded-labs",
+      "title": "Legacy chart querying /elasticsearch from the browser",
+      "path": "client/src/boards/template/pages/overview/charts/funded-labs/index.tsx",
+      "note": "Component usage only. Do not copy its data access; a prototype's charts call the board's own server routes."
     }
   ],
   "data_sources": [
@@ -118,35 +191,54 @@
       "name": "Board JSON fixtures",
       "status": "allowed",
       "purpose": "Synthetic or public sample data served by the board's routes.",
-      "guide": "Keep representative fixture JSON in server/src/routes/boards/<board-id>/fixtures/. No production records, credentials or confidential data. Isolate the read in one place so an approved data access can replace it without changing the route path or response shape."
+      "guide": "docs/dashboard-prototype/guides/board-fixtures.md",
+      "classification": "synthetic or public, non-sensitive",
+      "owner": "prototype author"
     },
     {
       "id": "mongodb",
       "name": "Tableaux MongoDB",
       "status": "approval-required",
       "purpose": "Server-side connection in server/src/services/mongo.js (and mongo-accessibility.js).",
-      "guide": "Use fixtures unless the data owner approves the exact collections and read-only access. Read it from the board's server routes only, never from the browser."
+      "guide": "docs/dashboard-prototype/guides/mongodb.md",
+      "classification": "company data, per-collection",
+      "owner": "data owner per collection"
     },
     {
       "id": "elasticsearch",
       "name": "Elasticsearch (via the /elasticsearch proxy)",
       "status": "approval-required",
       "purpose": "Configured Elasticsearch indexes behind ES_TOKEN_* credentials.",
-      "guide": "Use fixtures unless the data owner approves a specific index, read-only access and data classification. Several existing boards call the proxy from the browser; do not copy that pattern, read it from the board's server routes."
+      "guide": "docs/dashboard-prototype/guides/elasticsearch.md",
+      "classification": "company data, per-index",
+      "owner": "data owner per index"
     },
     {
       "id": "paysage",
       "name": "Paysage API",
       "status": "approval-required",
-      "purpose": "PAYSAGE_API_URL / PAYSAGE_API_KEY, used by the board.",
-      "guide": "Use fixtures unless approved. Keep calls in the board."
+      "purpose": "PAYSAGE_API_URL / PAYSAGE_API_KEY, used by atlas and european-projects.",
+      "guide": "docs/dashboard-prototype/guides/paysage.md",
+      "classification": "referential data",
+      "owner": "Paysage owner"
     },
     {
       "id": "ods",
       "name": "Opendatasoft API",
       "status": "approval-required",
       "purpose": "ODS_API_URL / ODS_API_KEY, used by structures-finance.",
-      "guide": "Use fixtures unless the data owner approves the dataset and access."
+      "guide": "docs/dashboard-prototype/guides/ods.md",
+      "classification": "public open-data, key-gated",
+      "owner": "dataset owner"
+    },
+    {
+      "id": "external",
+      "name": "External public source (OpenAlex, EPO, Eurostat, ...)",
+      "status": "approval-required",
+      "purpose": "Public data not hosted by the project, as a snapshot into fixtures or a live call from the board's server.",
+      "guide": "docs/dashboard-prototype/guides/external.md",
+      "classification": "public, license-dependent",
+      "owner": "external provider; live calls need a platform egress decision"
     }
   ]
 }

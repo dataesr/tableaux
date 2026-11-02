@@ -39,9 +39,11 @@
       "maxLength": 500
     },
     "data_mode": {
-      "description": "fixtures: the board's routes read synthetic or public fixtures. approved-read-only-preview: routes read a source approved by its owner.",
+      "description": "How the board's routes read data. fixtures-dummy: invented values (UI must show a fictitious-data notice). fixtures-public-snapshot: a slice of a public source recorded in fixture_provenance. external-live: routes call an external public API with caching. approved-read-only-preview: routes read an owner-approved source.",
       "enum": [
-        "fixtures",
+        "fixtures-dummy",
+        "fixtures-public-snapshot",
+        "external-live",
         "approved-read-only-preview"
       ]
     },
@@ -56,9 +58,27 @@
           "mongodb",
           "elasticsearch",
           "paysage",
-          "ods"
+          "ods",
+          "external"
         ]
       }
+    },
+    "fixture_provenance": {
+      "description": "Required when data_mode is fixtures-public-snapshot. Records where the fixture data came from.",
+      "anyOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["source", "license"],
+          "properties": {
+            "source": { "type": "string", "minLength": 1 },
+            "license": { "type": "string", "minLength": 1 },
+            "retrievedAt": { "type": "string" },
+            "url": { "type": "string" }
+          }
+        },
+        { "type": "null" }
+      ]
     },
     "routes": {
       "description": "Backend contract: the board's own server routes, mounted from server/src/router.js.",
@@ -178,7 +198,7 @@
       "if": {
         "properties": {
           "data_mode": {
-            "const": "fixtures"
+            "enum": ["fixtures-dummy", "fixtures-public-snapshot"]
           }
         },
         "required": ["data_mode"]
@@ -188,6 +208,43 @@
           "data_sources": {
             "items": {
               "const": "board-fixtures"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "data_mode": {
+            "const": "fixtures-public-snapshot"
+          }
+        },
+        "required": ["data_mode"]
+      },
+      "then": {
+        "required": ["fixture_provenance"],
+        "properties": {
+          "fixture_provenance": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "data_mode": {
+            "const": "external-live"
+          }
+        },
+        "required": ["data_mode"]
+      },
+      "then": {
+        "properties": {
+          "data_sources": {
+            "contains": {
+              "const": "external"
             }
           }
         }

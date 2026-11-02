@@ -7,7 +7,8 @@ This document describes the current tableaux architecture for AI-assisted dashbo
 - The pilot targets Claude Code in an IDE with repository access. Browser-only and repository-less workflows are out of scope for now.
 - Prototype data is synthetic or public fixtures. Preview or production data requires explicit owner approval.
 - The backend is the existing Node.js/Express service; do not add a Python/FastAPI service.
-- Discovery and manifest-validation tools exist in the separate `dataesr-mcp` repository (`/tableaux` endpoint) but are not deployed. They read this repository from GitHub (branch `staging` by default), so `prototype.index.json` must be pushed before they work. They validate the manifest only, not generated code. No isolated sandbox exists for executing generated projects.
+- Discovery and manifest-validation tools exist in the separate `dataesr-mcp` repository (`/tableaux` endpoint) but are not deployed. They read this repository from GitHub (branch `staging` by default), so `prototype.index.json` must be pushed before they work. They validate the manifest and do static bundle checks only, not generated code. No isolated sandbox exists for executing generated projects.
+- Chat workflow gap: the MCP can plan and validate but cannot produce a board file bundle from chat. A `scaffold_board(id, routes)` tool that returns a bundle to import is a candidate future addition; it is not implemented.
 - Open decisions: approved preview datasets and their owners, whether to add executable sandbox validation, and whether submission stays manual import/review or moves to a restricted bot branch/PR flow.
 
 ## Board model
@@ -37,7 +38,7 @@ The chart iframe integration is a separate surface. When explicitly requested, f
 - **Chart wrapper:** `client/src/components/chart-wrapper/index.tsx`, `ChartWrapper({ config, options, constructorType?, hideTitle?, legend?, renderData? })`.
 - **Chart loading and colors:** `client/src/components/charts-skeletons/` and `client/src/hooks/useChartColor.tsx`.
 - **Chart example (component usage only):** `client/src/boards/template/pages/overview/charts/funded-labs/index.tsx` shows `ChartWrapper`, `useQuery`, skeletons and `useChartColor`. Like the other charts in that folder, it queries the production Elasticsearch proxy (`/elasticsearch`) directly from the browser and the template page does not render it. Do not copy that data access: a prototype's charts call the board's own server routes, which serve fixtures.
-- **Server router:** `server/src/routes/boards/template/` is a minimal stub (`/template/overview/test`). Add fixture-backed routes and a `fixtures/` folder to a new board's router; see "Board model" above.
+- **Server router:** `server/src/routes/boards/template/` is a minimal stub (`/template/overview/test`) plus a fixtures layer: `data/fixtures.js` (`readFixture()`), `data/fixtures/funded-labs.json`, and a fixture-backed route `/template/overview/funded-labs` returning `{ data, provenance }`. Add a `data/fixtures/` folder and fixture-backed routes to a new board's router; see "Board model" above.
 - **Shared UI:** `client/src/components/` and `@dataesr/dsfr-plus`, already listed in `client/package.json`.
 
 The examples show patterns, not a universal component API. Inspect actual exports and nearby usage before generating code.
@@ -51,6 +52,9 @@ The examples show patterns, not a universal component API. Inspect actual export
 | `elasticsearch` | Express `/elasticsearch` proxy (`ES_TOKEN_*`); several boards also call it from the browser | Approval required | Use fixtures unless the data owner approves a specific index, read-only access, and data classification; read it server-side from the board's routes, not from the browser |
 | `paysage` | `PAYSAGE_API_URL` / `PAYSAGE_API_KEY`, currently called separately from `atlas` and `european-projects` | Approval required | Use fixtures unless approved; reuse a shared client rather than a third copy |
 | `ods` | `ODS_API_URL` / `ODS_API_KEY`, used by `structures-finance` | Approval required | Use fixtures unless approved |
+| `external` | A public source not hosted by the project (OpenAlex, EPO, Eurostat, ...), as a snapshot into fixtures or a live call from the board's routes | Approval required | Record license, retrieval date and URL; a live call needs caching and a platform egress decision; check personal data (GDPR) |
+
+Data modes (`data_mode` in the manifest): `fixtures-dummy` (invented values; the UI shows a fictitious-data notice), `fixtures-public-snapshot` (a slice of a public source, recorded in `fixture_provenance`), `external-live` (routes call an external public API with caching), and `approved-read-only-preview` (an owner-approved source). Each source has a guide in [`guides/`](./guides/);
 
 The repository does not establish a separate preview database, approved dataset list, or service-owner approvals. Mark a source approved only after recording its owner, environment, allowed datasets/indexes, authentication, sensitivity, and fixture source. No credentials or production connection strings belong in this document.
 
@@ -69,7 +73,7 @@ The existing board servers share infrastructure but almost no data logic: one Mo
 
 `board.manifest.json` is proposed metadata kept at the board root when a generated bundle needs to travel separately. It does not replace dashboard metadata in MongoDB and is not consumed by the current runtime. Its useful part is the backend contract: `routes` lists the board's endpoints and `data_sources` what they read, so a data owner can review it before reading the code.
 
-The JSON Schema is [`board.manifest.schema.json`](./board.manifest.schema.json). `id` must match the intended client and server folder names and, at promotion, the MongoDB `boards.id`; every route path must start with `/<id>/` (the schema cannot check this, the MCP validator does). Set `data_mode` to `fixtures` unless the exact preview source was approved; the schema cannot grant access.
+The JSON Schema is [`board.manifest.schema.json`](./board.manifest.schema.json). `id` must match the intended client and server folder names and, at promotion, the MongoDB `boards.id`; every route path must start with `/<id>/` (the schema cannot check this, the MCP validator does). Set `data_mode` to a `fixtures-*` value unless the exact preview or live source was approved; the schema cannot grant access. `fixtures-public-snapshot` requires `fixture_provenance` (source, license, retrieval date, URL); `approved-read-only-preview` requires `preview_approval`.
 
 Example:
 
@@ -80,7 +84,7 @@ Example:
   "id": "research-funding",
   "name": "Research funding",
   "description": "Synthetic prototype of funding trends",
-  "data_mode": "fixtures",
+  "data_mode": "fixtures-dummy",
   "data_sources": ["board-fixtures"],
   "routes": [
     {

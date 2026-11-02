@@ -17,9 +17,9 @@ Référence : `client/src/boards/template/` et `server/src/routes/boards/templat
 
 ## Serveur (toujours : chaque board a son router, même avec des fixtures)
 
-1. Créer `server/src/routes/boards/<board-id>/index.js` qui agrège `routes/*.js` (cf. template).
-2. Chaque route : `router.route("/<board-id>/<page>/<endpoint>")`. Valider les paramètres en levant les erreurs de `server/src/commons/errors` (ex. `BadRequestError`) ; `checkQuery` (`server/src/routes/utils.js`) n'interrompt pas le handler. Accès Mongo via `server/src/services/mongo.js` seulement quand la source est approuvée.
-3. Prototype : lire des fixtures JSON synthétiques ou publiques dans `server/src/routes/boards/<board-id>/fixtures/`, avec l'accès aux données isolé en un seul endroit pour pouvoir le remplacer sans changer le chemin ni la forme de la réponse.
+1. Créer `server/src/routes/boards/<board-id>/index.js` qui agrège `routes/*.js` (cf. template) et un helper `data/fixtures.js` (`readFixture`) lisant `data/fixtures/*.json`.
+2. Chaque route : `router.route("/<board-id>/<page>/<endpoint>")`. Réponse au format `{ data, provenance }`. Valider les paramètres en levant les erreurs de `server/src/commons/errors` (ex. `BadRequestError`) ; `checkQuery` (`server/src/routes/utils.js`) n'interrompt pas le handler. Accès Mongo via `server/src/services/mongo.js` seulement quand la source est approuvée.
+3. Prototype : lire des fixtures JSON synthétiques ou publiques dans `server/src/routes/boards/<board-id>/data/fixtures/`, avec l'accès aux données isolé dans `readFixture` pour pouvoir le remplacer sans changer le chemin ni la forme de la réponse.
 4. Enregistrer le router dans `server/src/router.js` (import + `router.use`, ordre alphabétique).
 5. Ajouter un fichier `api-tests/<page>/*.http` (ex. `GET http://localhost:3000/api/<board-id>/...`).
 6. Code commun ou dédié : avant d'écrire un helper, chercher dans `server/src/commons`, `server/src/services`, `routes/utils.js` et les autres boards. Garder dans le board ce qui dépend du jeu de données (pipelines, noms de collections, vocabulaires de filtres, mise en forme des réponses). N'extraire vers `commons`/`services` que l'infrastructure neutre qu'un second board utilise déjà ; signaler les candidats au lieu de modifier le code partagé.

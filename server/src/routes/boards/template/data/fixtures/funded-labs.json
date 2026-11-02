@@ -1,0 +1,13 @@
+{
+  "provenance": {
+    "source": "synthetic sample for prototyping",
+    "license": "none - invented data",
+    "retrievedAt": null,
+    "url": null
+  },
+  "items": [
+    { "label": "Laboratoire exemple A", "value": 42 },
+    { "label": "Laboratoire exemple B", "value": 31 },
+    { "label": "Laboratoire exemple C", "value": 24 }
+  ]
+}
