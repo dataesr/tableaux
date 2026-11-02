@@ -31,7 +31,7 @@ export default function Options(data, currentLang) {
     series: [
       {
         type: "bar",
-        name: "Total subventions en euros",
+        name: "Financements (€)",
         colors: ["#1E3859"],
         colorByPoint: true,
         groupPadding: 0,

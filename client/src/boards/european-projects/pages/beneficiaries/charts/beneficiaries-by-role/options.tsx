@@ -31,6 +31,8 @@ export default function Options(data, currentLang) {
     (a, b) => b.total_fund_eur_coordination + b.total_fund_eur_partner - (a.total_fund_eur_coordination + a.total_fund_eur_partner),
   );
 
+  const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1)
+
   const newOptions: HighchartsInstance.Options = {
     chart: {
       height: sortedData.length * 30 + 150,
@@ -61,7 +63,7 @@ export default function Options(data, currentLang) {
       },
     ] as ChartSeriesData[],
     tooltip: {
-      pointFormat: "{series.name}: " + getI18nLabel("total-subsidies") + "<b>{point.y:,.0f}</b> €",
+      pointFormat: getI18nLabel("total-subsidies") + " en tant que {series.name} : " + "<b>{point.y:,.0f}</b> €",
     },
     plotOptions: {
       series: {
@@ -82,6 +84,9 @@ export default function Options(data, currentLang) {
     },
     legend: {
       enabled: true,
+      labelFormatter: function () {
+        return capitalize(this.name);
+      },
     },
   };
 
