@@ -25,8 +25,8 @@ export default function MainPartners() {
   const config = {
     id: "mainPartners",
     title: {
-      fr: "Liste des principaux bénéficiaires récupérants 50% des financements",
-      en: "List of main beneficiaries receiving 50% of subsidies",
+      fr: "Participants {} qui concentrent 50 % des financements obtenus par l'ensemble des équipes {}",
+      en: "Participants {} that account for 50% of the funding secured by all teams {}",
     },
     comment: {
       fr: (

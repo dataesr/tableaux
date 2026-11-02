@@ -12,7 +12,7 @@ import DefaultSkeleton from "../../../../../../components/charts-skeletons/defau
 const config = {
   id: "mainBeneficiaries",
   title: {
-    fr: "Principaux bénéficiaires qui concentrent 50 % des subventions allouées aux équipes",
+    fr: "Participants {} qui concentrent 50 % des financements allouées ",
     en: "Main beneficiaries who concentrate 50% of the grants allocated to teams",
   },
   subtitle: "",

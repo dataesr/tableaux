@@ -27,7 +27,7 @@ export default function BeneficiariesByRole() {
     id: "beneficiariesByRole",
     title: {
       fr: "Principaux participants bénéficiaires {} par rôle",
-      en: "Top 10 beneficiaries by role based on allocated funding",
+      en: "Top beneficiary participants {} by role",
     },
     comment: {
       fr: (
