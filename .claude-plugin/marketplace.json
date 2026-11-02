@@ -1,0 +1,15 @@
+{
+  "name": "dataesr-tableaux",
+  "description": "Claude Code marketplace for the dataesr/tableaux repository",
+  "owner": {
+    "name": "dataESR",
+    "url": "https://github.com/dataesr/tableaux"
+  },
+  "plugins": [
+    {
+      "name": "tableaux",
+      "source": "./plugins/tableaux",
+      "description": "Skills to plan, build, critique and check dashboards."
+    }
+  ]
+}

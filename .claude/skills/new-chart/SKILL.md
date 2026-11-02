@@ -17,28 +17,35 @@ Référence : `client/src/boards/european-projects/pages/overview/charts/program
 
 Créer `client/src/boards/<board>/pages/<page>/charts/<chart-name>/` (kebab-case) :
 
-- `query.tsx` — `getData(params)` : `fetch(\`${VITE_APP_SERVER_URL}/<board-id>/<page>/<endpoint>?${params}\`)`, avec `const { VITE_APP_SERVER_URL } = import.meta.env;`. Vérifier `response.ok` et lever une erreur sinon (ne pas renvoyer une erreur comme un succès vide). Si le board centralise ses hooks dans un dossier `api/`, y écrire le hook au lieu de ce fichier.
+- `query.tsx` — `getData(params)` : `fetch(\`${VITE_APP_SERVER_URL}/<board-id>/<page>/<endpoint>?${params}\`)`, avec `const { VITE_APP_SERVER_URL } = import.meta.env;`. Vérifier `response.ok`et lever une erreur sinon (ne pas renvoyer une erreur comme un succès vide). Si le board centralise ses hooks dans un dossier`api/`, y écrire le hook au lieu de ce fichier.
 - `options.tsx` — fonction pure, sans React, qui reçoit la réponse et renvoie **toujours** `createChartOptions(type, newOptions)` :
 
   ```tsx
-  import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js";
+  import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js"
 
-  import { createChartOptions } from "<…>/components/chart-wrapper/default-options";
-  import { getCssColor } from "<…>/utils/colors";
+  import { createChartOptions } from "<…>/components/chart-wrapper/default-options"
+  import { getCssColor } from "<…>/utils/colors"
 
   export default function getOptions(data) {
-    if (!data) return null;
+    if (!data) return null
     const newOptions: HighchartsInstance.Options = {
       xAxis: { type: "category" },
       yAxis: { min: 0, title: { text: "…" } },
-      tooltip: { pointFormatter: function () { return `… <b>${this.y}</b>`; } },
-      series: [{ type: "bar", name: "…", color: getCssColor("<token>"), data: data.data.map((item) => [item.label, item.value]) }],
-    };
-    return createChartOptions("bar", newOptions);
+      tooltip: {
+        pointFormatter: function () {
+          return `… <b>${this.y}</b>`
+        },
+      },
+      series: [
+        { type: "bar", name: "…", color: getCssColor("<token>"), data: data.data.map((item) => [item.label, item.value]) },
+      ],
+    }
+    return createChartOptions("bar", newOptions)
   }
   ```
 
   `createChartOptions` (`client/src/components/chart-wrapper/default-options.ts`) est la version partagée du `CreateChartOptions` de european-projects (`boards/european-projects/components/chart-ep.ts`, local à ce board : ne pas l'importer depuis un autre board). Il fournit fond, polices, couleurs de texte et de grille en tokens DSFR, tooltip, légende (désactivée par défaut : `legend: { enabled: true }` pour l'afficher), `credits`/`exporting` désactivés et accessibilité. Ne pas répéter ces réglages ; passer `"empty"` comme type quand chaque série fixe le sien. Attention : `deepMerge` concatène les tableaux, si bien qu'une **liste** d'axes (`yAxis: [a, b]`) est dupliquée et que les styles par défaut y écrasent ceux du graphique ; pour plusieurs axes, affecter `chartOptions.yAxis = [...]` après l'appel (exemple : `suivi-recherche/pages/bibliometrie/charts/comparaison-internationale/options.tsx`). Plusieurs variantes d'un même graphique → un fichier par variante (`options-values.tsx`, `options-rates.tsx`…), comme `european-projects/pages/positioning/charts/funding-evo-3-years/`.
+
 - `utils.tsx` — helpers du graphique : `useGetParams()` (lecture des `searchParams` → chaîne de paramètres + `currentLang`), `renderDataTable(data, currentLang)` (tableau `fr-table` accessible passé à `renderData`), `readingKey(data)` si le board affiche une clé de lecture. Ces fonctions lisent des valeurs déjà calculées par le serveur.
 - `index.tsx` — composant par défaut :
   - `useQuery({ queryKey: ["<board>-<chart-name>", params, …], queryFn: () => getData(params) })`. Tous les filtres et paramètres de la route vont dans la `queryKey`.

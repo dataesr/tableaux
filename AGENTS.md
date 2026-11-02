@@ -7,8 +7,8 @@
 - Boards live in `client/src/boards/<board-id>/`. Read the board-specific guidance in `client/src/boards/AGENTS.md` before changing a board.
 - Board records are stored in MongoDB and returned by `/admin/list-dashboards`. The frontend dynamically imports a board's `routes.tsx` using its record id. Creating a folder alone does not publish a board.
 - Server route modules are explicitly mounted from `server/src/router.js`. Read `server/src/routes/boards/AGENTS.md` before changing board APIs.
-- See `docs/dashboard-prototype/README.md` for the prototype architecture, component references, manifest and data-source constraints.
-- For DSFR UI and styling, consult `.claude/skills/dsfr/SKILL.md`; use the board and chart skills for those focused workflows.
+- See `plugins/tableaux/reference/README.md` for the prototype architecture, component references, manifest and data-source constraints.
+- The `dashboard` skill (modes `init`, `build`, `critique`, `accessibility`) and the `chart` and `dsfr` skills live in the `tableaux` plugin under `plugins/tableaux/skills/`. For DSFR UI and styling, consult `plugins/tableaux/skills/dsfr/SKILL.md`.
 
 ## Runtime and commands
 
@@ -19,8 +19,8 @@
 
 ## Safety and data
 
-- Use synthetic or public data in prompts and checked-in fixtures. Never include credentials, production records, or confidential data in prompts, fixtures, logs, or generated files.
-- A read-only preview source may be used only after its owner, datasets, environment, and access controls have been explicitly approved.
+- Never include credentials, production records, or confidential data in prompts, logs, or generated files. Do not create sample or fixture data for a dashboard; ask which data source to use (a repository source or a user-defined one) first.
+- Authenticated data sources (MongoDB, Elasticsearch, Paysage, ODS) are read-only only. The credentials are already configured on the server, so only the exact index or collection and the data classification need developer confirmation. A new source (not in the table above) also needs its token name, never its value, confirmed. Ask the questions in `plugins/tableaux/reference/guides/data-specs.md` first, and ask about fields before coding.
 - Do not create or modify MongoDB dashboard records, deployment settings, secrets, or production routes as part of prototyping without an explicit human-approved task.
 - Never read or print `.env` files or expose credentials. Client-side `VITE_*` variables are included in the built bundle and must not contain secrets.
 
@@ -32,8 +32,8 @@
 - Compute on the server, not in the browser. Filtering, aggregation, joins, ratios and success rates, rankings, sorting, top-N, period comparisons and derived geometry belong in the board's server route (MongoDB pipeline or route code, cached when the input is static), which returns chart-ready data sized to what is displayed. The client only maps that response to series, formats labels and renders. `european-projects` is the reference (e.g. `/european-projects/overview/programs-funding` returns totals and `successRateByProgram` already computed).
 - A local control (indicator, metric, tab, sort) must switch the chart instantly. Either the route returns ready-to-plot values for every option of the control, or the control is a query parameter of the route so each answer is fetched once and cached by `useQuery`. Never recompute a full dataset on each toggle; wrap any remaining client-side mapping in `useMemo` keyed on the data and the control.
 - Follow the nearest board's i18n pattern. Provide French text and English text when the board is multilingual.
-- Every board has its own server router under `server/src/routes/boards/<board-id>/`, even when it only serves synthetic or public fixtures, so that promotion replaces data access without changing the client contract.
-- Keep code dedicated to the board by default. Reuse existing `server/src/commons` and `server/src/services` code, and extract domain-neutral infrastructure into them only when a second board needs it; see `docs/dashboard-prototype/README.md` ("Common or dedicated code").
+- Every board has its own server router under `server/src/routes/boards/<board-id>/`, even when it serves a user-defined public source, so that promotion replaces data access without changing the client contract.
+- Keep code dedicated to the board by default. Reuse existing `server/src/commons` and `server/src/services` code, and extract domain-neutral infrastructure into them only when a second board needs it; see `plugins/tableaux/reference/README.md` ("Common or dedicated code").
 - Keep shared components shared only when a second board needs them. Boards must not import from one another except through `boards/integration/charts-registry.tsx`.
 - For new server routes, use the shared error classes and error middleware; use the repository logger instead of `console.log`.
 - Follow neighboring file conventions for imports, extensions, formatting, and language.

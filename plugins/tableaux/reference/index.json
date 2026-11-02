@@ -10,7 +10,7 @@
     {
       "id": "prototyping",
       "title": "Prototyping conventions, data sources, common vs dedicated code, manifest",
-      "path": "docs/dashboard-prototype/README.md"
+      "path": "plugins/tableaux/reference/README.md"
     },
     {
       "id": "agents-client",
@@ -23,24 +23,49 @@
       "path": "server/src/routes/boards/AGENTS.md"
     },
     {
-      "id": "skill-dashboard-prototype",
-      "title": "Skill: plan and orchestrate a whole dashboard prototype (delegates to new-board, new-chart, dsfr)",
-      "path": ".claude/skills/dashboard-prototype/SKILL.md"
+      "id": "skill-dashboard",
+      "title": "Skill /dashboard: modes init, build, critique and accessibility for tableaux dashboards",
+      "path": "plugins/tableaux/skills/dashboard/SKILL.md"
     },
     {
-      "id": "skill-new-board",
-      "title": "Skill: scaffold a board (client folder, server router, fixtures, registration rules)",
-      "path": ".claude/skills/new-board/SKILL.md"
+      "id": "skill-dashboard-init",
+      "title": "Dashboard mode init: clarify request, data source (repository or user-defined) and fields",
+      "path": "plugins/tableaux/skills/dashboard/reference/init.md"
     },
     {
-      "id": "skill-new-chart",
-      "title": "Skill: add a chart",
-      "path": ".claude/skills/new-chart/SKILL.md"
+      "id": "skill-dashboard-build",
+      "title": "Dashboard mode build: scaffold and implement a confirmed brief",
+      "path": "plugins/tableaux/skills/dashboard/reference/build.md"
+    },
+    {
+      "id": "skill-dashboard-critique",
+      "title": "Dashboard mode critique: read-only review of usability, data correctness, DSFR use and infrastructure fit",
+      "path": "plugins/tableaux/skills/dashboard/reference/critique.md"
+    },
+    {
+      "id": "skill-dashboard-accessibility",
+      "title": "Dashboard mode accessibility: read-only RGAA 4 / WCAG 2.1 AA review",
+      "path": "plugins/tableaux/skills/dashboard/reference/accessibility.md"
+    },
+    {
+      "id": "skill-chart",
+      "title": "Skill /chart: add a Highcharts chart to a board page",
+      "path": "plugins/tableaux/skills/chart/SKILL.md"
+    },
+    {
+      "id": "skill-chart-recipe",
+      "title": "Chart recipe: utils, index, ChartWrapper, states and registry",
+      "path": "plugins/tableaux/skills/chart/reference/new.md"
     },
     {
       "id": "skill-dsfr",
       "title": "Skill: DSFR UI and styling",
-      "path": ".claude/skills/dsfr/SKILL.md"
+      "path": "plugins/tableaux/skills/dsfr/SKILL.md"
+    },
+    {
+      "id": "data-specs",
+      "title": "Questions to clarify data source.",
+      "path": "plugins/tableaux/reference/guides/data-specs.md"
     }
   ],
   "templates": [
@@ -66,20 +91,9 @@
     {
       "id": "board-server",
       "title": "Server router stub",
-      "description": "Minimal board router, one route and an .http request file. The fixtures layer is the board-server-fixtures template.",
+      "description": "Minimal board router, one route and an .http request file.",
       "paths": [
         "server/src/routes/boards/template/"
-      ]
-    },
-    {
-      "id": "board-server-fixtures",
-      "title": "Server fixtures layer",
-      "description": "readFixture() helper isolating data access in one place, one example fixture with a provenance field, a fixture-backed route using the { data, provenance } envelope, and an .http test.",
-      "paths": [
-        "server/src/routes/boards/template/data/fixtures.js",
-        "server/src/routes/boards/template/data/fixtures/funded-labs.json",
-        "server/src/routes/boards/template/routes/overview.js",
-        "server/src/routes/boards/template/api-tests/overview/test.http"
       ]
     },
     {
@@ -87,7 +101,7 @@
       "title": "Board manifest JSON Schema",
       "description": "Schema of board.manifest.json; the README documents the fields and an example.",
       "paths": [
-        "docs/dashboard-prototype/board.manifest.schema.json"
+        "plugins/tableaux/reference/manifest.json"
       ]
     }
   ],
@@ -111,7 +125,7 @@
       ],
       "package": "client/src/components/chart-wrapper/index.tsx",
       "props": "ChartWrapper({ config: ChartConfig, options: HighchartsOptions, constructorType?, hideTitle?, legend?, renderData? }). ChartConfig: { id, title, description?, subtitle?, comment?, readingKey?, sources?, integrationURL?, idQuery? }",
-      "example": "client/src/boards/template/pages/overview/charts/funded-labs-example/index.tsx"
+      "example": "client/src/boards/template/pages/overview/charts/funded-labs/index.tsx"
     },
     {
       "id": "chart-options",
@@ -131,7 +145,7 @@
       ],
       "package": "client/src/components/charts-skeletons/",
       "props": "no props; render while isLoading",
-      "example": "client/src/boards/template/pages/overview/charts/funded-labs-example/index.tsx"
+      "example": "client/src/boards/template/pages/overview/charts/funded-labs/index.tsx"
     },
     {
       "id": "chart-color-hook",
@@ -140,7 +154,7 @@
       ],
       "package": "client/src/hooks/useChartColor.tsx",
       "props": "useChartColor(): string; used for the chart-container--<color> class",
-      "example": "client/src/boards/template/pages/overview/charts/funded-labs-example/index.tsx"
+      "example": "client/src/boards/template/pages/overview/charts/funded-labs/index.tsx"
     },
     {
       "id": "select",
@@ -202,58 +216,39 @@
   ],
   "data_sources": [
     {
-      "id": "board-fixtures",
-      "name": "Board JSON fixtures",
-      "status": "allowed",
-      "purpose": "Synthetic or public sample data served by the board's routes.",
-      "guide": "docs/dashboard-prototype/guides/board-fixtures.md",
-      "classification": "synthetic or public, non-sensitive",
-      "owner": "prototype author"
-    },
-    {
       "id": "mongodb",
       "name": "Tableaux MongoDB",
-      "status": "approval-required",
+      "status": "manual-confirmation",
       "purpose": "Server-side connection in server/src/services/mongo.js (and mongo-accessibility.js).",
-      "guide": "docs/dashboard-prototype/guides/mongodb.md",
-      "classification": "company data, per-collection",
-      "owner": "data owner per collection"
+      "guide": "plugins/tableaux/reference/guides/mongodb.md"
     },
     {
       "id": "elasticsearch",
       "name": "Elasticsearch (via the /elasticsearch proxy)",
-      "status": "approval-required",
+      "status": "manual-confirmation",
       "purpose": "Configured Elasticsearch indexes behind ES_TOKEN_* credentials.",
-      "guide": "docs/dashboard-prototype/guides/elasticsearch.md",
-      "classification": "company data, per-index",
-      "owner": "data owner per index"
+      "guide": "plugins/tableaux/reference/guides/elasticsearch.md"
     },
     {
       "id": "paysage",
       "name": "Paysage API",
-      "status": "approval-required",
+      "status": "manual-confirmation",
       "purpose": "PAYSAGE_API_URL / PAYSAGE_API_KEY, used by atlas and european-projects.",
-      "guide": "docs/dashboard-prototype/guides/paysage.md",
-      "classification": "referential data",
-      "owner": "Paysage owner"
+      "guide": "plugins/tableaux/reference/guides/paysage.md"
     },
     {
       "id": "ods",
       "name": "Opendatasoft API",
-      "status": "approval-required",
+      "status": "manual-confirmation",
       "purpose": "ODS_API_URL / ODS_API_KEY, used by structures-finance.",
-      "guide": "docs/dashboard-prototype/guides/ods.md",
-      "classification": "public open-data, key-gated",
-      "owner": "dataset owner"
+      "guide": "plugins/tableaux/reference/guides/ods.md"
     },
     {
       "id": "external",
       "name": "External public source (OpenAlex, EPO, Eurostat, ...)",
       "status": "approval-required",
-      "purpose": "Public data not hosted by the project, as a snapshot into fixtures or a live call from the board's server.",
-      "guide": "docs/dashboard-prototype/guides/external.md",
-      "classification": "public, license-dependent",
-      "owner": "external provider; live calls need a platform egress decision"
+      "purpose": "Public data not hosted by the project, called live from the board's server, or stored as a real, dated snapshot with a provenance record (see the external guide). No fixtures or hand-written data.",
+      "guide": "plugins/tableaux/reference/guides/external.md"
     }
   ]
 }
