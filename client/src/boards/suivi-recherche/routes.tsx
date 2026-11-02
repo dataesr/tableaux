@@ -1,11 +1,12 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 
-import NotFoundPage from "../../pages/not-found/index.tsx";
 import { useTitle } from "../../hooks/usePageTitle.tsx";
+import NotFoundPage from "../../pages/not-found/index.tsx";
 import { getI18nLabel } from "../../utils";
 import GlobalLayout from "./components/layouts/global-layout.tsx";
 import AccueilPage from "./pages/accueil/index.tsx";
 import BibliometriePage from "./pages/bibliometrie/index.tsx";
+import FinancementsPage from "./pages/financements/index.tsx";
 import i18n from "./title-i18n.json";
 
 import "./styles.scss";
@@ -22,6 +23,7 @@ export default function SuiviRechercheRoutes() {
         <Route index element={<Navigate to="accueil" replace />} />
         <Route path="accueil" element={<RouteWithTitle titleKey="accueil" element={<AccueilPage />} />} />
         <Route path="bibliometrie" element={<RouteWithTitle titleKey="bibliometrie" element={<BibliometriePage />} />} />
+        <Route path="financements" element={<RouteWithTitle titleKey="financements" element={<FinancementsPage />} />} />
         <Route path="plan-du-site" element={<Navigate to="/plan-du-site?from=suivi-recherche" replace />} />
       </Route>
       <Route path="*" element={<NotFoundPage />} />

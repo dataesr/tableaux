@@ -84,25 +84,25 @@ export default function SelectionBar() {
           </div>
           <Select
             label="De"
-            onSelectionChange={(key) => setParams({ debut: String(key) })}
-            selectedKey={selection ? String(selection.anneeDebut) : undefined}
+            onChange={(key) => setParams({ debut: String(key) })}
+            value={selection ? String(selection.anneeDebut) : undefined}
           >
-            {meta.data.annees.map((annee) => <SelectOption key={String(annee)}>{String(annee)}</SelectOption>)}
+            {meta.data.annees.sort((a, b) => b - a).map((annee) => <SelectOption key={String(annee)}>{String(annee)}</SelectOption>)}
           </Select>
           <Select
             label="À"
-            onSelectionChange={(key) => setParams({ fin: String(key) })}
-            selectedKey={selection ? String(selection.anneeFin) : undefined}
+            onChange={(key) => setParams({ fin: String(key) })}
+            value={selection ? String(selection.anneeFin) : undefined}
           >
-            {meta.data.annees.map((annee) => <SelectOption key={String(annee)}>{String(annee)}</SelectOption>)}
+            {meta.data.annees.sort((a, b) => b - a).map((annee) => <SelectOption key={String(annee)}>{String(annee)}</SelectOption>)}
           </Select>
           <Select
             label="Discipline (panels ERC)"
-            onSelectionChange={(key) => {
+            onChange={(key) => {
               const [type, code] = String(key).split(":");
               setParams({ domaine: type === "domaine" ? code : null, discipline: type === "discipline" ? code : null });
             }}
-            selectedKey={disciplineKey}
+            value={disciplineKey}
           >
             {[
               <SelectOption key="toutes">Toutes disciplines</SelectOption>,

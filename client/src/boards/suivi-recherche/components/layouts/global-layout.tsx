@@ -14,6 +14,7 @@ const BASE = "/suivi-recherche";
 const NAV_ITEMS = [
   { key: "accueil", to: `${BASE}/accueil` },
   { key: "bibliometrie", to: `${BASE}/bibliometrie` },
+  { key: "fundings", to: `${BASE}/financements` },
 ] as const;
 
 // Le header DSFR passe sa navigation dans une modale pilotée par le JS du DSFR, qui n'est pas chargé :

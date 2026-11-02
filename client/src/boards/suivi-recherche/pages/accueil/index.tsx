@@ -23,6 +23,20 @@ export default function AccueilPage() {
             </div>
           </div>
         </Col>
+        <Col xs="12" md="6" lg="4">
+          <div className="fr-card fr-enlarge-link">
+            <div className="fr-card__body">
+              <div className="fr-card__content">
+                <h2 className="fr-card__title">
+                  <Link to="/suivi-recherche/financements">Financements</Link>
+                </h2>
+                <p className="fr-card__desc">
+                  Suivi par financements de projets (ERC, ANR PIA).
+                </p>
+              </div>
+            </div>
+          </div>
+        </Col>
       </Row>
     </Container>
   );
