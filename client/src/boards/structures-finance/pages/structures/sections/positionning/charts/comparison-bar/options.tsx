@@ -166,7 +166,7 @@ export const createPositioningComparisonBarOptions = (
           y: d.value,
           color: d.isCurrentStructure
             ? `${getCssColor("scale-randomized-0-color")}`
-            : `${getCssColor("scale-8")}`,
+            : `${getCssColor("scale-7-color")}`,
         })),
       },
     ],

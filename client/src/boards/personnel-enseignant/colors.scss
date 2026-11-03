@@ -6,25 +6,25 @@
   // =========================================================================
 
   // --- Genre ---
-  --fm-hommes: var(--yellow-tournesol-main-731);
-  --fm-femmes: var(--pink-tuile-main-556);
+  --fm-hommes: var(--scale-10-color);
+  --fm-femmes: var(--scale-9-color);
 
   // --- Statut (3 groupes) ---
   --fm-statut-ec: var(--blue-france-main-525);
-  --fm-statut-titulaire: var(--green-emeraude-main-632);
-  --fm-statut-non-permanent: var(--purple-glycine-main-494);
+  --fm-statut-titulaire: var(--scale-2-color);
+  --fm-statut-non-permanent: var(--scale-7-color);
 
   // --- Catégories de personnel ---
   --fm-cat-pr: var(--blue-france-main-525);
-  --fm-cat-mcf: var(--green-emeraude-main-632);
-  --fm-cat-2nd-degre: var(--yellow-moutarde-main-679);
+  --fm-cat-mcf: var(--scale-2-color);
+  --fm-cat-2nd-degre: var(--scale-11-color);
 
   // --- Tranches d'âge ---
-  --fm-age-35-et-moins: var(--green-bourgeon-main-640);
-  --fm-age-35-et-moins-ec: var(--green-bourgeon-main-640);
-  --fm-age-36-55-ec: var(--blue-cumulus-main-526);
-  --fm-age-56-et-plus-ec: var(--orange-terre-battue-main-645);
+  --fm-age-35-et-moins: var(--scale-1-color);
+  --fm-age-35-et-moins-ec: var(--scale-1-color);
+  --fm-age-36-55-ec: var(--scale-6-color);
+  --fm-age-56-et-plus-ec: var(--scale-12-color);
 
   // --- Couleur background du tableau ---
-  --fm-home: var(--green-archipel-975);
+  --fm-home: var(--scale-38-color);
 }

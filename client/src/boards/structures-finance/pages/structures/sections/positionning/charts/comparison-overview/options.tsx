@@ -25,10 +25,10 @@ export interface ComparisonOverviewConfig {
 }
 
 const SERIES_COLORS = [
-  () => getCssColor("scale-2"),
-  () => getCssColor("scale-7"),
-  () => getCssColor("scale-8"),
-  () => getCssColor("scale-10"),
+  () => getCssColor("scale-1-color"),
+  () => getCssColor("scale-6-color"),
+  () => getCssColor("scale-7-color"),
+  () => getCssColor("scale-9-color"),
 ];
 
 export const createComparisonOverviewOptions = (

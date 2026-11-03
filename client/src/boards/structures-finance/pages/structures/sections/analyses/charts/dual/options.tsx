@@ -11,7 +11,7 @@ interface MetricConfig {
 }
 
 const INSTITUTION_DASH: Highcharts.DashStyleValue[] = ["ShortDash", "ShortDot", "Dash", "Dot", "LongDash"];
-const PREDECESSOR_SCALE = ["scale-2", "scale-3", "scale-5", "scale-6", "scale-7"];
+const PREDECESSOR_SCALE = ["scale-1-color", "scale-2-color", "scale-4-color", "scale-5-color", "scale-6-color"];
 
 const formatValue = (value: number, format: MetricConfig["format"]): string => {
   if (format === "euro") return `${Highcharts.numberFormat(value, 0, ",", " ")} €`;

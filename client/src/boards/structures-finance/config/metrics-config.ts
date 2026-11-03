@@ -10,19 +10,19 @@ export const METRICS_CONFIG = {
   effectif_sans_cpge_l: {
     label: "1er cycle (Cursus L)",
     format: "number" as const,
-    color: getCssColor("scale-2"),
+    color: getCssColor("scale-1-color"),
     category: "Effectifs",
   },
   effectif_sans_cpge_m: {
     label: "2ème cycle (Cursus M)",
     format: "number" as const,
-    color: getCssColor("scale-3"),
+    color: getCssColor("scale-2-color"),
     category: "Effectifs",
   },
   effectif_sans_cpge_d: {
     label: "3ème cycle (Cursus D)",
     format: "number" as const,
-    color: getCssColor("scale-4"),
+    color: getCssColor("scale-3-color"),
     category: "Effectifs",
   },
 
@@ -56,7 +56,7 @@ export const METRICS_CONFIG = {
   scsp_ipc: {
     label: "SCSP à prix constant",
     format: "euro" as const,
-    color: getCssColor("scale-2"),
+    color: getCssColor("scale-1-color"),
     category: "Finances",
   },
   scsp_par_etudiants: {
@@ -68,13 +68,13 @@ export const METRICS_CONFIG = {
   scsp_par_etudiants_ipc: {
     label: "SCSP par étudiant (à prix constant)",
     format: "euro" as const,
-    color: getCssColor("scale-2"),
+    color: getCssColor("scale-1-color"),
     category: "Finances",
   },
   scsp_etudiants: {
     label: "Étudiants financés par la SCSP",
     format: "number" as const,
-    color: getCssColor("scale-3"),
+    color: getCssColor("scale-2-color"),
     category: "Finances",
   },
   ressources_propres: {
@@ -86,7 +86,7 @@ export const METRICS_CONFIG = {
   ressources_propres_ipc: {
     label: "Ressources propres (à prix constant)",
     format: "euro" as const,
-    color: getCssColor("scale-2"),
+    color: getCssColor("scale-1-color"),
     category: "Finances",
   },
   charges_de_personnel: {
@@ -98,7 +98,7 @@ export const METRICS_CONFIG = {
   charges_de_personnel_ipc: {
     label: "Charges de personnel (à prix constant)",
     format: "euro" as const,
-    color: getCssColor("scale-2"),
+    color: getCssColor("scale-1-color"),
     category: "Finances",
   },
   produits_de_fonctionnement_encaissables: {
@@ -110,7 +110,7 @@ export const METRICS_CONFIG = {
   produits_de_fonctionnement_encaissables_ipc: {
     label: "Produits de fonctionnement (à prix constant)",
     format: "euro" as const,
-    color: getCssColor("scale-2"),
+    color: getCssColor("scale-1-color"),
     category: "Finances",
   },
   ressources_propres_encaissables: {
@@ -122,7 +122,7 @@ export const METRICS_CONFIG = {
   ressources_propres_encaissables_ipc: {
     label: "Ressources propres encaissables (à prix constant)",
     format: "euro" as const,
-    color: getCssColor("scale-2"),
+    color: getCssColor("scale-1-color"),
     category: "Finances",
   },
   recettes_propres: {
@@ -134,7 +134,7 @@ export const METRICS_CONFIG = {
   recettes_propres_ipc: {
     label: "Recettes propres (à prix constant)",
     format: "euro" as const,
-    color: getCssColor("scale-2"),
+    color: getCssColor("scale-1-color"),
     category: "Finances",
   },
   charges_de_fonctionnement_decaissables: {
@@ -146,7 +146,7 @@ export const METRICS_CONFIG = {
   charges_de_fonctionnement_decaissables_ipc: {
     label: "Charges de fonctionnement décaissables (à prix constant)",
     format: "euro" as const,
-    color: getCssColor("scale-2"),
+    color: getCssColor("scale-1-color"),
     category: "Santé financière",
   },
   charges_externes: {
@@ -158,7 +158,7 @@ export const METRICS_CONFIG = {
   charges_externes_ipc: {
     label: "Charges externes (à prix constant)",
     format: "euro" as const,
-    color: getCssColor("scale-2"),
+    color: getCssColor("scale-1-color"),
     category: "Finances",
   },
   charges_externes_produits_encaissables: {
@@ -177,7 +177,7 @@ export const METRICS_CONFIG = {
   excedent_brut_d_exploitation_ebe_ipc: {
     label: "Excédent brut d'exploitation (EBE) (à prix constant)",
     format: "euro" as const,
-    color: getCssColor("scale-2"),
+    color: getCssColor("scale-1-color"),
     category: "Finances",
   },
   acquisitions_d_immobilisations: {
@@ -189,7 +189,7 @@ export const METRICS_CONFIG = {
   acquisitions_d_immobilisations_ipc: {
     label: "Acquisitions d'immobilisations (à prix constant)",
     format: "euro" as const,
-    color: getCssColor("scale-2"),
+    color: getCssColor("scale-1-color"),
     category: "Santé financière",
   },
 
@@ -269,7 +269,7 @@ export const METRICS_CONFIG = {
   tot_ress_formation_ipc: {
     label: "Ressources formation (à prix constant)",
     format: "euro" as const,
-    color: getCssColor("scale-2"),
+    color: getCssColor("scale-1-color"),
     category: "Finances",
   },
   tot_ress_recherche: {
@@ -281,7 +281,7 @@ export const METRICS_CONFIG = {
   tot_ress_recherche_ipc: {
     label: "Ressources recherche (à prix constant)",
     format: "euro" as const,
-    color: getCssColor("scale-2"),
+    color: getCssColor("scale-1-color"),
     category: "Finances",
   },
   tot_ress_autres_recette: {
@@ -293,7 +293,7 @@ export const METRICS_CONFIG = {
   tot_ress_autres_recette_ipc: {
     label: "Autres ressources (à prix constant)",
     format: "euro" as const,
-    color: getCssColor("scale-2"),
+    color: getCssColor("scale-1-color"),
     category: "Finances",
   },
 
@@ -306,7 +306,7 @@ export const METRICS_CONFIG = {
   fonds_de_roulement_net_global_ipc: {
     label: "Fonds de roulement net global (à prix constant)",
     format: "euro" as const,
-    color: getCssColor("scale-2"),
+    color: getCssColor("scale-1-color"),
     category: "Santé financière",
   },
   besoin_en_fonds_de_roulement: {
@@ -318,7 +318,7 @@ export const METRICS_CONFIG = {
   besoin_en_fonds_de_roulement_ipc: {
     label: "Besoin en fonds de roulement (à prix constant)",
     format: "euro" as const,
-    color: getCssColor("scale-2"),
+    color: getCssColor("scale-1-color"),
     category: "Santé financière",
   },
   tresorerie: {
@@ -330,7 +330,7 @@ export const METRICS_CONFIG = {
   tresorerie_ipc: {
     label: "Trésorerie (à prix constant)",
     format: "euro" as const,
-    color: getCssColor("scale-2"),
+    color: getCssColor("scale-1-color"),
     category: "Santé financière",
   },
   fonds_de_roulement_en_jours_de_fonctionnement: {
@@ -342,13 +342,13 @@ export const METRICS_CONFIG = {
   tresorerie_en_jours_de_fonctionnement: {
     label: "Trésorerie en jours",
     format: "decimal" as const,
-    color: getCssColor("scale-2"),
+    color: getCssColor("scale-1-color"),
     category: "Santé financière",
   },
   charges_decaissables_produits_encaissables: {
     label: "Charges décaissables / Produits encaissables",
     format: "percent" as const,
-    color: getCssColor("scale-3"),
+    color: getCssColor("scale-2-color"),
     category: "Santé financière",
     suffix: "%",
   },
@@ -362,14 +362,14 @@ export const METRICS_CONFIG = {
   ressources_propres_produits_encaissables: {
     label: "Ressources propres / Produits encaissables",
     format: "percent" as const,
-    color: getCssColor("scale-2"),
+    color: getCssColor("scale-1-color"),
     category: "Santé financière",
     suffix: "%",
   },
   caf_acquisitions_d_immobilisations: {
     label: "CAF / Acquisitions d'immobilisations",
     format: "percent" as const,
-    color: getCssColor("scale-3"),
+    color: getCssColor("scale-2-color"),
     category: "Santé financière",
     suffix: "%",
   },
@@ -382,7 +382,7 @@ export const METRICS_CONFIG = {
   solde_budgetaire_ipc: {
     label: "Solde budgétaire (à prix constant)",
     format: "euro" as const,
-    color: getCssColor("scale-2"),
+    color: getCssColor("scale-1-color"),
     category: "Santé financière",
   },
   resultat_net_comptable: {
@@ -394,7 +394,7 @@ export const METRICS_CONFIG = {
   resultat_net_comptable_ipc: {
     label: "à prix constant",
     format: "euro" as const,
-    color: getCssColor("scale-2"),
+    color: getCssColor("scale-1-color"),
     category: "Santé financière",
   },
   resultat_net_comptable_hors_sie: {
@@ -406,7 +406,7 @@ export const METRICS_CONFIG = {
   resultat_net_comptable_hors_sie_ipc: {
     label: "Résultat net comptable hors SIE (à prix constant)",
     format: "euro" as const,
-    color: getCssColor("scale-2"),
+    color: getCssColor("scale-1-color"),
     category: "Santé financière",
   },
   capacite_d_autofinancement: {
@@ -418,13 +418,13 @@ export const METRICS_CONFIG = {
   capacite_d_autofinancement_ipc: {
     label: "Capacité d'autofinancement (à prix constant)",
     format: "euro" as const,
-    color: getCssColor("scale-2"),
+    color: getCssColor("scale-1-color"),
     category: "Santé financière",
   },
   caf_produits_encaissables: {
     label: "CAF / Produits encaissables",
     format: "percent" as const,
-    color: getCssColor("scale-3"),
+    color: getCssColor("scale-2-color"),
     category: "Santé financière",
     suffix: "%",
   },
@@ -438,43 +438,43 @@ export const METRICS_CONFIG = {
   effectif_sans_cpge_deg1: {
     label: "BAC + 1",
     format: "number" as const,
-    color: getCssColor("scale-2"),
+    color: getCssColor("scale-1-color"),
     category: "Effectifs",
   },
   effectif_sans_cpge_deg2: {
     label: "BAC + 2",
     format: "number" as const,
-    color: getCssColor("scale-3"),
+    color: getCssColor("scale-2-color"),
     category: "Effectifs",
   },
   effectif_sans_cpge_deg3: {
     label: "BAC + 3",
     format: "number" as const,
-    color: getCssColor("scale-4"),
+    color: getCssColor("scale-3-color"),
     category: "Effectifs",
   },
   effectif_sans_cpge_deg4: {
     label: "BAC + 4",
     format: "number" as const,
-    color: getCssColor("scale-5"),
+    color: getCssColor("scale-4-color"),
     category: "Effectifs",
   },
   effectif_sans_cpge_deg5: {
     label: "BAC + 5",
     format: "number" as const,
-    color: getCssColor("scale-6"),
+    color: getCssColor("scale-5-color"),
     category: "Effectifs",
   },
   effectif_sans_cpge_deg6: {
     label: "BAC + 6 et +",
     format: "number" as const,
-    color: getCssColor("scale-7"),
+    color: getCssColor("scale-6-color"),
     category: "Effectifs",
   },
   effectif_sans_cpge_deg9: {
     label: "Indéterminé",
     format: "number" as const,
-    color: getCssColor("scale-8"),
+    color: getCssColor("scale-7-color"),
     category: "Effectifs",
   },
 
@@ -487,43 +487,43 @@ export const METRICS_CONFIG = {
   effectif_sans_cpge_llsh: {
     label: "Lettres, Langues, SHS",
     format: "number" as const,
-    color: getCssColor("scale-2"),
+    color: getCssColor("scale-1-color"),
     category: "Effectifs",
   },
   effectif_sans_cpge_theo: {
     label: "Théologie",
     format: "number" as const,
-    color: getCssColor("scale-3"),
+    color: getCssColor("scale-2-color"),
     category: "Effectifs",
   },
   effectif_sans_cpge_si: {
     label: "Sciences et Ingénierie",
     format: "number" as const,
-    color: getCssColor("scale-4"),
+    color: getCssColor("scale-3-color"),
     category: "Effectifs",
   },
   effectif_sans_cpge_staps: {
     label: "STAPS",
     format: "number" as const,
-    color: getCssColor("scale-5"),
+    color: getCssColor("scale-4-color"),
     category: "Effectifs",
   },
   effectif_sans_cpge_sante: {
     label: "Santé",
     format: "number" as const,
-    color: getCssColor("scale-6"),
+    color: getCssColor("scale-5-color"),
     category: "Effectifs",
   },
   effectif_sans_cpge_veto: {
     label: "Vétérinaire",
     format: "number" as const,
-    color: getCssColor("scale-7"),
+    color: getCssColor("scale-6-color"),
     category: "Effectifs",
   },
   effectif_sans_cpge_interd: {
     label: "Pluridisciplinaire",
     format: "number" as const,
-    color: getCssColor("scale-8"),
+    color: getCssColor("scale-7-color"),
     category: "Effectifs",
   },
 
@@ -536,7 +536,7 @@ export const METRICS_CONFIG = {
   effectif_sans_cpge_dn: {
     label: "Diplôme national",
     format: "number" as const,
-    color: getCssColor("scale-2"),
+    color: getCssColor("scale-1-color"),
     category: "Effectifs",
   },
 
@@ -549,7 +549,7 @@ export const METRICS_CONFIG = {
   effectif_sans_cpge_ing: {
     label: "Effectifs ingénieur",
     format: "number" as const,
-    color: getCssColor("scale-2"),
+    color: getCssColor("scale-1-color"),
     category: "Effectifs",
   },
 
@@ -628,7 +628,7 @@ export const METRICS_CONFIG = {
   part_effectif_sans_cpge_ing: {
     label: "Part des effectifs ingénieur",
     format: "percent" as const,
-    color: getCssColor("scale-2"),
+    color: getCssColor("scale-1-color"),
     suffix: "%",
   },
   part_ress_formation: {

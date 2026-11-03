@@ -29,10 +29,10 @@ const VIEWS_CONFIG: Record<
         label: "Licence",
         color: getCssColor("scale-randomized-0-color"),
       },
-      effectif_sans_cpge_m: { label: "Master", color: getCssColor("scale-2") },
+      effectif_sans_cpge_m: { label: "Master", color: getCssColor("scale-1-color") },
       effectif_sans_cpge_d: {
         label: "Doctorat",
-        color: getCssColor("scale-3"),
+        color: getCssColor("scale-2-color"),
       },
     },
   },
@@ -55,31 +55,31 @@ const VIEWS_CONFIG: Record<
       },
       effectif_sans_cpge_deg1: {
         label: "BAC + 1",
-        color: getCssColor("scale-2"),
+        color: getCssColor("scale-1-color"),
       },
       effectif_sans_cpge_deg2: {
         label: "BAC + 2",
-        color: getCssColor("scale-3"),
+        color: getCssColor("scale-2-color"),
       },
       effectif_sans_cpge_deg3: {
         label: "BAC + 3",
-        color: getCssColor("scale-4"),
+        color: getCssColor("scale-3-color"),
       },
       effectif_sans_cpge_deg4: {
         label: "BAC + 4",
-        color: getCssColor("scale-5"),
+        color: getCssColor("scale-4-color"),
       },
       effectif_sans_cpge_deg5: {
         label: "BAC + 5",
-        color: getCssColor("scale-6"),
+        color: getCssColor("scale-5-color"),
       },
       effectif_sans_cpge_deg6: {
         label: "BAC + 6 et +",
-        color: getCssColor("scale-7"),
+        color: getCssColor("scale-6-color"),
       },
       effectif_sans_cpge_deg9: {
         label: "Indéterminé",
-        color: getCssColor("scale-8"),
+        color: getCssColor("scale-7-color"),
       },
     },
   },
@@ -102,31 +102,31 @@ const VIEWS_CONFIG: Record<
       },
       effectif_sans_cpge_llsh: {
         label: "Lettres, Langues, SHS",
-        color: getCssColor("scale-2"),
+        color: getCssColor("scale-1-color"),
       },
       effectif_sans_cpge_si: {
         label: "Sciences et Ingénierie",
-        color: getCssColor("scale-3"),
+        color: getCssColor("scale-2-color"),
       },
       effectif_sans_cpge_sante: {
         label: "Santé",
-        color: getCssColor("scale-4"),
+        color: getCssColor("scale-3-color"),
       },
       effectif_sans_cpge_staps: {
         label: "STAPS",
-        color: getCssColor("scale-5"),
+        color: getCssColor("scale-4-color"),
       },
       effectif_sans_cpge_theo: {
         label: "Théologie",
-        color: getCssColor("scale-6"),
+        color: getCssColor("scale-5-color"),
       },
       effectif_sans_cpge_veto: {
         label: "Vétérinaire",
-        color: getCssColor("scale-7"),
+        color: getCssColor("scale-6-color"),
       },
       effectif_sans_cpge_interd: {
         label: "Pluridisciplinaire",
-        color: getCssColor("scale-8"),
+        color: getCssColor("scale-7-color"),
       },
     },
   },
@@ -140,7 +140,7 @@ const VIEWS_CONFIG: Record<
       },
       effectif_sans_cpge_du: {
         label: "Diplômes d'établissement",
-        color: getCssColor("scale-2"),
+        color: getCssColor("scale-1-color"),
       },
     },
   },

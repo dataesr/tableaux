@@ -136,7 +136,7 @@ export const createComparisonBarOptions = (
         dataLabels: {
           enabled: false,
         },
-        color: getCssColor("scale-6"),
+        color: getCssColor("scale-5-color"),
         borderRadius: 4,
       },
     },
