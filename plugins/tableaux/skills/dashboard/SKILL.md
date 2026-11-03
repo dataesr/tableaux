@@ -1,29 +1,29 @@
 ---
 name: dashboard
-description: "Create and review tableaux dashboards (boards in dataesr/tableaux). Modes: init (clarify the request and the data source), build (scaffold and implement a confirmed brief), critique (read-only review of usability, data, DSFR and infrastructure), accessibility (read-only RGAA 4 / WCAG 2.1 AA review). Use when the user asks to start, plan, build, review or check a dashboard."
-argument-hint: "init | build | critique | accessibility, then the brief or board id"
+description: "Créer et relire des tableaux de bord (tableaux dans dataesr/tableaux). Modes : init (clarifier la demande et la source de données), build (créer la structure et implémenter un cahier des charges validé), critique (revue critique en lecture seule de l'ergonomie, des données, du DSFR et de l'infrastructure), accessibility (revue en lecture seule RGAA 4 / WCAG 2.1 AA). À utiliser lorsque l'utilisateur demande de démarrer, planifier, construire, relire ou vérifier un tableau de bord."
+argument-hint: "init | build | critique | accessibility, puis le cahier des charges ou l'identifiant du tableau"
 user-invocable: true
 ---
 
-# Dashboard
+# Tableau de bord
 
-Routes a dashboard task to the matching mode. Read the reference file for the mode before acting. Never use fixtures, sample data or invented numbers.
+Oriente une tâche de tableau de bord vers le mode correspondant. Lisez le fichier de référence du mode avant d'agir. N'utilisez jamais de jeux de test (fixtures), de données d'exemple ni de chiffres inventés.
 
 ## Modes
 
-| Mode | Reference | Writes files | Use when |
-|------|-----------|--------------|----------|
-| `init` | [reference/init.md](./reference/init.md) | No | Starting, scoping or planning a dashboard; choosing the data source |
-| `build` | [reference/build.md](./reference/build.md) | Yes | Implementing a dashboard from a confirmed brief |
-| `critique` | [reference/critique.md](./reference/critique.md) | No | Reviewing a board before or after a build |
-| `accessibility` | [reference/accessibility.md](./reference/accessibility.md) | No (unless asked to fix) | Checking a board against RGAA 4 / WCAG 2.1 AA |
+| Mode | Référence | Écrit des fichiers | Utiliser quand |
+|------|-----------|--------------------|----------------|
+| `init` | [reference/init.md](./reference/init.md) | Non | Démarrer, cadrer ou planifier un tableau de bord ; choisir la source de données |
+| `build` | [reference/build.md](./reference/build.md) | Oui | Implémenter un tableau de bord à partir d'un cahier des charges validé |
+| `critique` | [reference/critique.md](./reference/critique.md) | Non | Relire un tableau avant ou après une construction |
+| `accessibility` | [reference/accessibility.md](./reference/accessibility.md) | Non (sauf demande de correction) | Vérifier un tableau selon le RGAA 4 / WCAG 2.1 AA |
 
-Related skills: [chart](../chart/SKILL.md) for a single Highcharts chart, and [dsfr](../dsfr/SKILL.md) for UI and styling.
+Compétences associées : [chart](../chart/SKILL.md) pour un seul graphique Highcharts, et [dsfr](../dsfr/SKILL.md) pour l'interface et le style.
 
-## No argument
+## Aucun argument
 
-If no mode is given, show the table above and ask which mode to run, with the board id or brief if relevant. Do not run a mode on your own.
+Si aucun mode n'est indiqué, affichez le tableau ci-dessus et demandez quel mode lancer, avec l'identifiant du tableau ou le cahier des charges si pertinent. Ne lancez aucun mode de votre propre initiative.
 
-## Order
+## Ordre
 
-A new dashboard goes `init` → `build` → `critique` and `accessibility`. `build` runs the accessibility checks itself, so a separate `accessibility` run is only needed for an existing board or a second review.
+Un nouveau tableau de bord suit l'ordre `init` → `build` → `critique` et `accessibility`. `build` exécute lui-même les vérifications d'accessibilité ; une exécution séparée de `accessibility` n'est donc nécessaire que pour un tableau existant ou une seconde relecture.

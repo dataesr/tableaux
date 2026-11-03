@@ -1,42 +1,42 @@
-# Mode: critique
+# Mode : critique
 
-Read-only. Read the board's client and server code, and report findings. Do not edit files. For the accessibility checks, use the [accessibility](./accessibility.md) mode and include its blocking findings in the report.
+En lecture seule. Lisez le code client et serveur du tableau, et signalez les constats. Ne modifiez aucun fichier. Pour les vérifications d'accessibilité, utilisez le mode [accessibility](./accessibility.md) et incluez ses constats bloquants dans le rapport.
 
-Target: a board id or path, for example `client/src/boards/<board-id>`.
+Cible : un identifiant ou un chemin de tableau, par exemple `client/src/boards/<board-id>`.
 
-## Usability
+## Ergonomie
 
-- The page answers the question stated in the brief, and the first screen shows the main result.
-- Filters have clear labels, defaults and a visible reset. Changing a filter updates every chart it affects.
-- Each chart has a title, a unit, and a short description or source line (`ChartConfig`).
-- Empty, loading and error states are handled on every page. A filter that returns no data says so.
-- Labels are in the languages the board supports (French, and English if multilingual), with no mixed-language strings.
+- La page répond à la question énoncée dans le cahier des charges, et le premier écran affiche le résultat principal.
+- Les filtres ont des libellés clairs, des valeurs par défaut et une réinitialisation visible. Modifier un filtre met à jour chaque graphique concerné.
+- Chaque graphique a un titre, une unité et une courte description ou ligne de source (`ChartConfig`).
+- Les états vide, de chargement et d'erreur sont gérés sur chaque page. Un filtre qui ne renvoie aucune donnée l'indique.
+- Les libellés sont dans les langues prises en charge par le tableau (français, et anglais si multilingue), sans chaînes mêlant plusieurs langues.
 
-## Data correctness
+## Exactitude des données
 
-- The data source matches the confirmed brief. No fixtures, sample data or invented numbers appear in code, UI or routes.
-- Aggregations match their labels: metric, year, denominator and entity are the ones the user confirmed.
-- Duplicates, null values and multi-valued fields are handled as agreed with the developer and recorded in the manifest.
-- Time window and refresh cadence are stated in the UI or the summary.
-- Personal data is not shown or exported beyond what the brief allows; aggregates are preferred.
-- The browser never calls a data source directly; all access goes through the board's routes.
+- La source de données correspond au cahier des charges validé. Aucun jeu de test, aucune donnée d'exemple ni aucun chiffre inventé n'apparaît dans le code, l'interface ou les routes.
+- Les agrégations correspondent à leurs libellés : la métrique, l'année, le dénominateur et l'entité sont ceux confirmés par l'utilisateur.
+- Les doublons, valeurs nulles et champs multivalués sont traités comme convenu avec le développeur et consignés dans le manifeste.
+- La fenêtre temporelle et la fréquence de mise à jour sont indiquées dans l'interface ou le résumé.
+- Les données personnelles ne sont ni affichées ni exportées au-delà de ce que le cahier des charges autorise ; les données agrégées sont privilégiées.
+- Le navigateur n'appelle jamais directement une source de données ; tout accès passe par les routes du tableau.
 
-## DSFR use
+## Utilisation du DSFR
 
-- Components come from `@dataesr/dsfr-plus` and are used according to [dsfr](../../dsfr/SKILL.md); no raw `fr-*` markup invented from memory.
-- Colours and spacing use DSFR tokens and utilities; no hard-coded colours or inline layout styles in new code.
-- Headings follow one logical order, and the page uses the existing board layouts.
-- DSFR JavaScript-only behaviours are not relied on.
+- Les composants proviennent de `@dataesr/dsfr-plus` et sont utilisés conformément à [dsfr](../../dsfr/SKILL.md) ; aucun balisage `fr-*` brut inventé de mémoire.
+- Les couleurs et les espacements utilisent les tokens et utilitaires DSFR ; aucune couleur codée en dur ni aucun style de mise en page en ligne dans le nouveau code.
+- Les titres suivent un ordre logique unique, et la page utilise les mises en page existantes du tableau.
+- Aucun comportement réservé au JavaScript du DSFR n'est utilisé.
 
-## Infrastructure fit
+## Conformité à l'infrastructure
 
-- The board follows `client/src/boards/AGENTS.md` and `server/src/routes/boards/AGENTS.md`.
-- The server router is mounted in `server/src/router.js`, and route paths start with `/<board-id>/`.
-- Credentials and tokens stay on the server; no secret appears in client code, logs or the manifest.
-- Shared code is reused from `server/src/commons` or `server/src/services`; dataset logic stays in the board.
-- Expected data errors are shown on the page so the user can adjust filters.
-- Code in the board's own `server/src/routes/boards/<board-id>/` or `client/src/boards/<board-id>/` that is generic (for example an API client, a formatter, a DSFR wrapper, a sort or aggregation helper) and could be shared. Search `server/src/commons`, `server/src/services`, `client/src/components` and the other boards for a second use, and list each candidate with the files involved. Do not move code during a critique; the common-service decision belongs to `build`.
+- Le tableau respecte `client/src/boards/AGENTS.md` et `server/src/routes/boards/AGENTS.md`.
+- Le routeur serveur est monté dans `server/src/router.js`, et les chemins de route commencent par `/<board-id>/`.
+- Les identifiants et jetons restent côté serveur ; aucun secret n'apparaît dans le code client, les journaux ou le manifeste.
+- Le code partagé est réutilisé depuis `server/src/commons` ou `server/src/services` ; la logique propre au jeu de données reste dans le tableau.
+- Les erreurs de données attendues sont affichées sur la page afin que l'utilisateur puisse ajuster les filtres.
+- Code situé dans `server/src/routes/boards/<board-id>/` ou `client/src/boards/<board-id>/` qui est générique (par exemple un client API, un formateur, un wrapper DSFR, un helper de tri ou d'agrégation) et pourrait être partagé. Cherchez une seconde utilisation dans `server/src/commons`, `server/src/services`, `client/src/components` et dans les autres tableaux, et listez chaque candidat avec les fichiers concernés. Ne déplacez aucun code pendant une revue critique ; la décision de service commun revient à `build`.
 
-## Report
+## Rapport
 
-Group findings by section, with severity (blocking, should fix, note), the file and line, and a suggested fix. End with the checks that were not run.
+Regroupez les constats par section, avec leur gravité (bloquant, à corriger, remarque), le fichier et la ligne, et une correction suggérée. Terminez par les vérifications qui n'ont pas été exécutées.

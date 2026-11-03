@@ -1,40 +1,40 @@
-# Data specifications
+# Spécifications des données
 
-Ask these before any design or code, one source at a time. Use the `ask_user` form for grouped answers. Do not guess an answer that changes the data path.
+Posez ces questions avant toute conception ou tout code, une source à la fois. Utilisez le formulaire `ask_user` pour les réponses groupées. Ne devinez pas une réponse qui modifie le chemin des données.
 
-## 1. Source choice
+## 1. Choix de la source
 
-Ask first, before any other question. The answer is one of two:
+Posez cette question en premier, avant toute autre. La réponse est l'une des deux suivantes :
 
-- **Repository data source:** `mongodb`, `elasticsearch`, `paysage`, `ods`, or a source already listed in the repository. Continue with section 2.
-- **User-defined data source:** the user supplies the source (for example an external public API or a file they own). Continue with section 3.
+- **Source de données du dépôt :** `mongodb`, `elasticsearch`, `paysage`, `ods`, ou une source déjà listée dans le dépôt. Passez à la section 2.
+- **Source de données définie par l'utilisateur :** l'utilisateur fournit la source (par exemple une API publique externe ou un fichier qu'il possède). Passez à la section 3.
 
-The agent does not generate sample data in either case.
+Dans les deux cas, l'agent ne génère pas de données d'exemple.
 
-## 2. Repository sources (`mongodb`, `elasticsearch`, `paysage`, `ods`)
+## 2. Sources du dépôt (`mongodb`, `elasticsearch`, `paysage`, `ods`)
 
-These are read-only, and their credentials are already configured on the server. No token or key is requested from the user, and the agent never reads `.env` or prints a credential.
+Ces sources sont en lecture seule, et leurs identifiants sont déjà configurés sur le serveur. Aucun jeton ni aucune clé n'est demandé à l'utilisateur, et l'agent ne lit jamais `.env` et n'affiche jamais un identifiant.
 
-Every answer is required before the agent calls the source:
+Chaque réponse est obligatoire avant que l'agent n'interroge la source :
 
-- **Target:** the exact index (Elasticsearch), collection (MongoDB) or dataset (ODS, Paysage).
-- **Target confirmation:** the developer states in the session that the target and data classification are correct.
-- **Allowed reads:** mapping/schema reads (`GET _mapping`, field lists) are allowed after confirmation. Sample documents may be read only after confirmation, and only to inspect field names and types. Do not export or store documents in the repository.
-- **Fields:** The agent may read the elasticsearch mapping and ask about fields, but must not write aggregations until the answers are in:
-  - Which fields are needed? Suggest some fields from the mapping.
-  - What is the time window and the refresh cadence? Is the metric a snapshot or cumulative?
-  - Should the dashboard deduplicate records, and by which key?
-  - Which language should labels use (French, English or both)?
+- **Cible :** l'index exact (Elasticsearch), la collection (MongoDB) ou le jeu de données (ODS, Paysage).
+- **Confirmation de la cible :** le développeur indique dans la session que la cible et la classification des données sont correctes.
+- **Lectures autorisées :** les lectures de mapping ou de schéma (`GET _mapping`, listes de champs) sont autorisées après confirmation. Les documents d'exemple ne peuvent être lus qu'après confirmation, et uniquement pour inspecter les noms et types de champs. N'exportez ni ne stockez de documents dans le dépôt.
+- **Champs :** l'agent peut lire le mapping Elasticsearch et poser des questions sur les champs, mais il ne doit pas écrire d'agrégations tant que les réponses ne sont pas obtenues :
+  - Quels champs sont nécessaires ? Proposez quelques champs issus du mapping.
+  - Quelle est la fenêtre temporelle et la cadence d'actualisation ? La métrique est-elle un instantané ou un cumul ?
+  - Le tableau de bord doit-il dédupliquer les enregistrements, et selon quelle clé ?
+  - Dans quelle langue les libellés doivent-ils être rédigés (français, anglais ou les deux) ?
 
-## 3. User-defined and external sources
+## 3. Sources définies par l'utilisateur et sources externes
 
-A new source is not configured in the repository yet. Ask these with the `ask_user` form before any design:
+Une nouvelle source n'est pas encore configurée dans le dépôt. Posez ces questions avec le formulaire `ask_user` avant toute conception :
 
-- **Origin:** the URL, file or public API (for example OpenAlex, EPO, Eurostat). Licence, retrieval date, and a personal-data check (author-level data can fall under GDPR).
-- **Access:** does it need a key? If so, ask for the server environment variable name (for example `OPENALEX_API_KEY`) and whether it is already set. The value goes only into the server environment, never into the chat, the repository or client code.
-- **Mode:** a live call from the board's server, or a snapshot. A live call needs caching and a platform egress decision. See [external.md](./external.md).
-- **Build scope:** asked in `build`, once the code location is decided. A **common service** in `server/src/services/`, reusable by other boards, or a **board-only** build in `server/src/routes/boards/<board-id>/`. Default to board-only. Move code to a shared folder only when a second board needs it (root `AGENTS.md`, "Keep code dedicated to the board by default").
+- **Origine :** l'URL, le fichier ou l'API publique (par exemple OpenAlex, EPO, Eurostat). Licence, date de récupération, et vérification des données personnelles (les données au niveau des auteurs peuvent relever du RGPD).
+- **Accès :** la source nécessite-t-elle une clé ? Si oui, demandez le nom de la variable d'environnement du serveur (par exemple `OPENALEX_API_KEY`) et indiquez si elle est déjà définie. La valeur ne va que dans l'environnement du serveur, jamais dans le chat, le dépôt ou le code client.
+- **Mode :** un appel en direct depuis le serveur du tableau, ou un instantané. Un appel en direct nécessite une mise en cache et une décision d'accès réseau de la plateforme. Voir [external.md](./external.md).
+- **Périmètre de construction :** demandé en `build`, une fois l'emplacement du code décidé. Un **service commun** dans `server/src/services/`, réutilisable par d'autres tableaux, ou une construction **propre au tableau** dans `server/src/routes/boards/<board-id>/`. Par défaut, limitez-vous au tableau. Ne déplacez le code vers un dossier partagé que lorsqu'un second tableau en a besoin (`AGENTS.md` racine, « Garder le code dédié au tableau par défaut »).
 
-## 4. Output of the questions
+## 4. Résultat des questions
 
-Record the answers in the board manifest (`data_sources`) and summarise them in the final report. Do not create a separate planning file.
+Consignez les réponses dans le manifeste du tableau (`data_sources`) et résumez-les dans le rapport final. Ne créez pas de fichier de planification séparé.

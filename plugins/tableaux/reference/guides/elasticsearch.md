@@ -1,14 +1,14 @@
 # Elasticsearch
 
-Server-side access to the configured Elasticsearch clusters (`ES_TOKEN_*` credentials) through the Express `/elasticsearch` proxy. Credentials are already configured. **Target confirmation required**: the developer confirms the exact index and data classification before any read, and access must be read-only. See [`data-specs.md`](./data-specs.md).
+Accès côté serveur aux clusters Elasticsearch configurés (identifiants `ES_TOKEN_*`) via le proxy Express `/elasticsearch`. Les identifiants sont déjà configurés. **Confirmation de la cible requise** : le développeur confirme l'index exact et la classification des données avant toute lecture, et l'accès doit être en lecture seule. Voir [`data-specs.md`](./data-specs.md).
 
-## Constraints
+## Contraintes
 
-- The browser never calls the proxy. The board's server routes call it; the client calls the board's routes.
-- Several existing boards call `/elasticsearch` from the browser (`template`, `tableaux-doc`, `valorisation-recherche-innovation`, `financements-par-aap`, `teds`). That is a legacy pattern; do not copy it.
-- There is no repository-wide list of approved indexes. Record any approved index in the board's manifest and get it reviewed.
-- Field names and document shapes differ per index; inspect a sample document before writing aggregations.
+- Le navigateur n'appelle jamais le proxy. Les routes serveur du tableau l'appellent ; le client appelle les routes du tableau.
+- Plusieurs tableaux existants appellent `/elasticsearch` depuis le navigateur (`template`, `tableaux-doc`, `valorisation-recherche-innovation`, `financements-par-aap`, `teds`). C'est un schéma hérité ; ne le reproduisez pas.
+- Il n'existe aucune liste d'index approuvés à l'échelle du dépôt. Consignez tout index approuvé dans le manifeste du tableau et faites-le relire.
+- Les noms de champs et la structure des documents diffèrent selon l'index ; inspectez un document d'exemple avant d'écrire des agrégations.
 
-## Without confirmation
+## Sans confirmation
 
-Do not substitute sample data. If the developer has not confirmed access, stop and ask the data-source question (see [`data-specs.md`](./data-specs.md)).
+Ne substituez pas de données d'exemple. Si le développeur n'a pas confirmé l'accès, arrêtez-vous et posez la question sur la source de données (voir [`data-specs.md`](./data-specs.md)).

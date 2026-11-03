@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "Tableaux prototype board manifest",
-  "description": "Proposed metadata for a generated board (client folder and server routes); it does not register or authorize a dashboard.",
+  "title": "Manifeste de tableau du prototype Tableaux",
+  "description": "Métadonnées proposées pour un tableau généré (dossier client et routes serveur) ; il n'enregistre ni n'autorise aucun tableau de bord.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -22,7 +22,7 @@
     },
     "id": {
       "type": "string",
-      "description": "Board folder name (client and server) and, at promotion, matching MongoDB boards.id.",
+      "description": "Nom du dossier du tableau (client et serveur) et, lors de la promotion, `boards.id` correspondant dans MongoDB.",
       "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
       "minLength": 2,
       "maxLength": 50
@@ -38,7 +38,7 @@
       "maxLength": 500
     },
     "data_sources": {
-      "description": "Data sources read by the board's server routes. The browser never reads them directly.",
+      "description": "Sources de données lues par les routes serveur du tableau. Le navigateur ne les lit jamais directement.",
       "type": "array",
       "minItems": 1,
       "uniqueItems": true,
@@ -53,7 +53,7 @@
       }
     },
     "routes": {
-      "description": "Backend contract: the board's own server routes, mounted from server/src/router.js.",
+      "description": "Contrat backend : les routes serveur propres au tableau, montées depuis server/src/router.js.",
       "type": "array",
       "minItems": 1,
       "items": {
@@ -73,7 +73,7 @@
           },
           "path": {
             "type": "string",
-            "description": "Must start with /<id>/ where <id> is the board id.",
+            "description": "Doit commencer par /<id>/, où <id> est l'identifiant du tableau.",
             "pattern": "^/[a-z0-9]+(?:-[a-z0-9]+)*/[A-Za-z0-9_\\-/{}]+$"
           },
           "description": {
@@ -85,7 +85,7 @@
       }
     },
     "common_candidates": {
-      "description": "Helpers that look reusable by other boards and may be proposed for extraction into server/src/commons or services after review. Dataset-specific logic stays in the board.",
+      "description": "Utilitaires qui semblent réutilisables par d'autres tableaux et qui peuvent être proposés, après relecture, pour extraction vers server/src/commons ou services. La logique propre à un jeu de données reste dans le tableau.",
       "type": "array",
       "items": {
         "type": "object",

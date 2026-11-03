@@ -1,12 +1,12 @@
 # Opendatasoft (ODS)
 
-The Opendatasoft API, configured through `ODS_API_URL` / `ODS_API_KEY`, used by `structures-finance`. Credentials are already configured. **Target confirmation required**: the developer confirms the dataset before any read; access must be read-only. See [`data-specs.md`](./data-specs.md).
+L'API Opendatasoft, configurée via `ODS_API_URL` / `ODS_API_KEY`, utilisée par `structures-finance`. Les identifiants sont déjà configurés. **Confirmation de la cible requise** : le développeur confirme le jeu de données avant toute lecture ; l'accès doit être en lecture seule. Voir [`data-specs.md`](./data-specs.md).
 
-## Constraints
+## Contraintes
 
-- Call it from the board's server routes, never from the browser. `structures-finance` does this and adds an in-memory cache (about 5 minutes); follow that pattern for a live external call.
-- Cache live calls: external APIs have rate limits, and every response should survive an upstream hiccup.
+- Appelez-la depuis les routes serveur du tableau, jamais depuis le navigateur. `structures-finance` procède ainsi et ajoute un cache en mémoire (environ 5 minutes) ; suivez ce modèle pour un appel externe en direct.
+- Mettez en cache les appels en direct : les API externes ont des limites de débit, et chaque réponse doit résister à un incident en amont.
 
-## Without confirmation
+## Sans confirmation
 
-Do not substitute sample data. If the developer has not confirmed access, stop and ask the data-source question (see [`data-specs.md`](./data-specs.md)).
+Ne substituez pas de données d'exemple. Si le développeur n'a pas confirmé l'accès, arrêtez-vous et posez la question sur la source de données (voir [`data-specs.md`](./data-specs.md)).

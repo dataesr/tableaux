@@ -1,16 +1,16 @@
-# Mode: init
+# Mode : init
 
-Clarify the request and the data source. This mode writes no files and runs no queries.
+Clarifiez la demande et la source de données. Ce mode n'écrit aucun fichier et n'exécute aucune requête.
 
-## Steps
+## Étapes
 
-1. Read the root `AGENTS.md`, `client/src/boards/AGENTS.md` and `server/src/routes/boards/AGENTS.md`, and `plugins/tableaux/reference/README.md`.
-2. Ask for the goal, the audience and the question the dashboard answers, if not given.
-3. Ask for the **data source**, and do not continue until the user answers:
-   - a **repository data source** (MongoDB, Elasticsearch, Paysage or ODS, already used by a board in this repository), or
-   - a **user-defined data source** (a public source such as OpenAlex, EPO or Eurostat, or a new source the user supplies).
-   Never create fixtures or sample data in place of the answer. If the answer is missing, ask again.
-4. For a repository source, follow sections 1 and 2 of [data-specs.md](../../../reference/guides/data-specs.md): exact index or collection. Wait for manual confirmation in the session before any read. Do not build on a guess.
-5. For a user-defined source, follow section 3 of the same guide: URL, licence, retrieval date, and a choice between a live call and a one-off pull (see [external.md](../../../reference/guides/external.md)). Check that the source covers the question (a France-vs-countries comparison needs international coverage), and flag entity-linking risks (SIREN, ROR).
-6. Once the source is confirmed, ask about the fields the board needs. Read the mapping or a sample document before writing any query, and do not write queries before the answers are in.
-7. Summarise the brief: goal, audience, data source, confirmed fields, open questions. Then stop and suggest `build` as the next step.
+1. Lisez le `AGENTS.md` racine, `client/src/boards/AGENTS.md`, `server/src/routes/boards/AGENTS.md` et `plugins/tableaux/reference/README.md`.
+2. Demandez l'objectif, le public et la question à laquelle le tableau de bord répond, s'ils ne sont pas fournis.
+3. Demandez la **source de données**, et ne poursuivez pas tant que l'utilisateur n'a pas répondu :
+   - une **source de données du dépôt** (MongoDB, Elasticsearch, Paysage ou ODS, déjà utilisée par un tableau de ce dépôt), ou
+   - une **source de données définie par l'utilisateur** (une source publique comme OpenAlex, EPO ou Eurostat, ou une nouvelle source fournie par l'utilisateur).
+   Ne créez jamais de jeux de test ni de données d'exemple à la place de la réponse. Si la réponse manque, redemandez-la.
+4. Pour une source du dépôt, suivez les sections 1 et 2 de [data-specs.md](../../../reference/guides/data-specs.md) : index ou collection exacte. Attendez la confirmation manuelle dans la session avant toute lecture. Ne vous appuyez pas sur une supposition.
+5. Pour une source définie par l'utilisateur, suivez la section 3 du même guide : URL, licence, date de récupération, et choix entre un appel en direct et un téléchargement ponctuel (voir [external.md](../../../reference/guides/external.md)). Vérifiez que la source couvre la question (une comparaison France-pays nécessite une couverture internationale), et signalez les risques de rapprochement d'entités (SIREN, ROR).
+6. Une fois la source confirmée, interrogez sur les champs dont le tableau a besoin. Lisez le mapping ou un document d'exemple avant d'écrire une requête, et n'écrivez aucune requête avant d'avoir les réponses.
+7. Résumez le cahier des charges : objectif, public, source de données, champs confirmés, questions ouvertes. Arrêtez-vous ensuite et suggérez `build` comme étape suivante.

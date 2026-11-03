@@ -2,7 +2,7 @@
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "tableaux",
   "version": "0.1.0",
-  "description": "Skills to plan, build, critique and check dashboards (tableaux) in dataesr/tableaux: data-source confirmation, board scaffolding, charts, DSFR styling and accessibility review.",
+  "description": "Skills pour planifier, construire, critiquer et vérifier des tableaux de bord (tableaux) dans dataesr/tableaux : confirmation de la source de données, squelette de tableau, graphiques, mise en forme DSFR et revue d'accessibilité.",
   "author": {
     "name": "dataESR"
   },

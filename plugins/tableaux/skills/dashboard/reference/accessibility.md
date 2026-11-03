@@ -1,50 +1,50 @@
-# Mode: accessibility
+# Mode : accessibility
 
-Read-only by default. The target standard is RGAA 4 (the French public-sector reference, based on WCAG 2.1 AA). Read the page, component and chart code, and report findings with the criterion they relate to. Use [dsfr](../../dsfr/SKILL.md) for correct component usage before proposing a fix. Only change files if the user asks for fixes.
+En lecture seule par défaut. Le référentiel visé est le RGAA 4 (le référentiel français du secteur public, fondé sur WCAG 2.1 AA). Lisez le code des pages, des composants et des graphiques, et signalez les constats avec le critère auquel ils se rapportent. Utilisez [dsfr](../../dsfr/SKILL.md) pour un usage correct des composants avant de proposer une correction. Ne modifiez des fichiers que si l'utilisateur demande des corrections.
 
-Target: a board id or path, for example `client/src/boards/<board-id>`.
+Cible : un identifiant ou un chemin de tableau, par exemple `client/src/boards/<board-id>`.
 
-## Keyboard and focus
+## Clavier et focus
 
-- Every control (filters, tabs, chart toggles, table sorts, export or copy buttons) is reachable and operable with the keyboard only, in a logical order.
-- Focus is visible and never removed by custom styles. Closing a panel or a select returns focus to a sensible element.
-- No keyboard trap in custom widgets such as `ItemFilter` or `Select`.
-- Native elements (`button`, `a`, `select`) are used before ARIA roles on `div`.
+- Chaque contrôle (filtres, onglets, boutons de graphiques, tris de tableaux, boutons d'export ou de copie) est accessible et utilisable au clavier seul, dans un ordre logique.
+- Le focus est visible et jamais supprimé par des styles personnalisés. La fermeture d'un panneau ou d'un select renvoie le focus vers un élément pertinent.
+- Aucun piège clavier dans les widgets personnalisés tels que `ItemFilter` ou `Select`.
+- Les éléments natifs (`button`, `a`, `select`) sont privilégiés aux rôles ARIA sur des `div`.
 
-## Names, labels and language
+## Noms, libellés et langue
 
-- Every form control has a visible label, linked by `for`/`id` or by the component's `label` prop. Placeholders are not labels.
-- Buttons and links have a name that makes sense out of context (no bare "Voir plus", no icon-only control without a label).
-- The page has a `lang` attribute matching its language and a title that identifies the page.
-- Passages in another language are marked with `lang`.
+- Chaque champ de formulaire a un libellé visible, relié par `for`/`id` ou par la propriété `label` du composant. Les placeholders ne sont pas des libellés.
+- Les boutons et liens ont un nom compréhensible hors contexte (pas de « Voir plus » seul, pas de contrôle réduit à une icône sans libellé).
+- La page a un attribut `lang` correspondant à sa langue et un titre qui identifie la page.
+- Les passages dans une autre langue sont signalés par `lang`.
 
-## Colour and contrast
+## Couleur et contraste
 
-- Text and essential UI reach at least 4.5:1 contrast (3:1 for large text and UI components), using DSFR tokens.
-- Information is not conveyed by colour alone. Chart series have a second cue (pattern, marker, label, or a text legend entry).
-- No hard-coded colours in new code. Colours from `useChartColor` are checked against the background.
-- Content stays readable when text is zoomed to 200% and when the page reflows to 320 px width.
+- Le texte et les éléments essentiels de l'interface atteignent un contraste d'au moins 4,5:1 (3:1 pour les grands textes et les composants d'interface), en utilisant les tokens DSFR.
+- L'information n'est pas transmise par la couleur seule. Les séries de graphiques disposent d'un second repère (motif, marqueur, étiquette ou entrée de légende textuelle).
+- Aucune couleur codée en dur dans le nouveau code. Les couleurs issues de `useChartColor` sont vérifiées par rapport à l'arrière-plan.
+- Le contenu reste lisible lorsque le texte est agrandi à 200 % et lorsque la page se réorganise à une largeur de 320 px.
 
-## Charts and data
+## Graphiques et données
 
-- Every `ChartWrapper` chart has a text alternative: a title and description (`ChartConfig.description`) that state the takeaway, plus a data table or a summary when values matter.
-- Highcharts accessibility settings (keyboard navigation, screen-reader description) are not disabled without a reason.
-- Tooltip content is available on focus as well as on hover.
-- Loading, empty and error states are announced to assistive technology (`role="status"` or `role="alert"`, or the equivalent DSFR component).
-- Skeletons do not replace a message that the page is loading.
+- Chaque graphique `ChartWrapper` dispose d'une alternative textuelle : un titre et une description (`ChartConfig.description`) qui énoncent l'essentiel, ainsi qu'un tableau de données ou un résumé lorsque les valeurs comptent.
+- Les réglages d'accessibilité de Highcharts (navigation au clavier, description pour lecteur d'écran) ne sont pas désactivés sans raison.
+- Le contenu des info-bulles est accessible au focus comme au survol.
+- Les états de chargement, vide et d'erreur sont annoncés aux technologies d'assistance (`role="status"` ou `role="alert"`, ou le composant DSFR équivalent).
+- Les squelettes (skeletons) ne remplacent pas un message indiquant que la page se charge.
 
-## Structure and headings
+## Structure et titres
 
-- One `h1` per page; headings follow a logical order without skipped levels.
-- Landmarks (`header`, `nav`, `main`, `footer`) come from the board layouts; do not remove them.
-- Tables use `th` with `scope`, and a caption or an accessible name.
-- Skip links and repeated navigation are provided by the existing layouts; do not remove them.
+- Un seul `h1` par page ; les titres suivent un ordre logique, sans niveaux sautés.
+- Les repères (`header`, `nav`, `main`, `footer`) proviennent des mises en page des tableaux ; ne les supprimez pas.
+- Les tableaux utilisent `th` avec `scope`, ainsi qu'une légende ou un nom accessible.
+- Les liens d'évitement et la navigation répétée sont fournis par les mises en page existantes ; ne les supprimez pas.
 
-## Motion and media
+## Animation et médias
 
-- No content flashes more than three times per second. Animations respect `prefers-reduced-motion`.
-- Autoplaying media is avoided. Any image of text has an alternative.
+- Aucun contenu ne clignote plus de trois fois par seconde. Les animations respectent `prefers-reduced-motion`.
+- La lecture automatique des médias est évitée. Toute image de texte dispose d'une alternative.
 
-## Report
+## Rapport
 
-List blocking findings first (criterion, file and line, impact, fix), then should-fix and notes. State which checks were done by reading code only. Recommend a manual test with a keyboard and a screen reader on the final page, since this review does not run the page.
+Listez d'abord les constats bloquants (critère, fichier et ligne, impact, correction), puis les points à corriger et les remarques. Indiquez quelles vérifications ont été faites par simple lecture du code. Recommandez un test manuel au clavier et avec un lecteur d'écran sur la page finale, puisque cette relecture n'exécute pas la page.

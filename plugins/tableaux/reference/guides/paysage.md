@@ -1,12 +1,12 @@
-# Paysage API
+# API Paysage
 
-External referential API for French higher-education and research structures, configured through `PAYSAGE_API_URL` / `PAYSAGE_API_KEY`. Credentials are already configured. **Target confirmation required**: the developer confirms the dataset before any read; access must be read-only. See [`data-specs.md`](./data-specs.md).
+API de référentiel externe sur les structures de l'enseignement supérieur et de la recherche français, configurée via `PAYSAGE_API_URL` / `PAYSAGE_API_KEY`. Les identifiants sont déjà configurés. **Confirmation de la cible requise** : le développeur confirme le jeu de données avant toute lecture ; l'accès doit être en lecture seule. Voir [`data-specs.md`](./data-specs.md).
 
-## Constraints
+## Contraintes
 
-- Call it from the board's server routes, never from the browser.
-- `atlas` and `european-projects` each carry a duplicated Paysage client. Do not add a third copy: if your board needs Paysage, reuse or propose extracting a shared client into `server/src/services` (list it in `common_candidates`).
+- Appelez-la depuis les routes serveur du tableau, jamais depuis le navigateur.
+- `atlas` et `european-projects` contiennent chacun un client Paysage dupliqué. N'en ajoutez pas une troisième copie : si votre tableau a besoin de Paysage, réutilisez un client partagé ou proposez son extraction dans `server/src/services` (listez-le dans `common_candidates`).
 
-## Without confirmation
+## Sans confirmation
 
-Do not substitute sample data. If the developer has not confirmed access, stop and ask the data-source question (see [`data-specs.md`](./data-specs.md)).
+Ne substituez pas de données d'exemple. Si le développeur n'a pas confirmé l'accès, arrêtez-vous et posez la question sur la source de données (voir [`data-specs.md`](./data-specs.md)).

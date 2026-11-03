@@ -1,96 +1,96 @@
-# Dashboard prototyping conventions
+# Conventions de prototypage de tableaux de bord
 
-This document describes the current tableaux architecture for AI-assisted dashboard work. It is not an authorization to access every service present in the repository. Authenticated sources need the developer's manual confirmation before use (see the Data sources section).
+Ce document décrit l'architecture actuelle de tableaux pour le travail de création de tableaux de bord assisté par IA. Il n'autorise pas l'accès à tous les services présents dans le dépôt. Les sources authentifiées nécessitent la confirmation manuelle du développeur avant toute utilisation (voir la section Sources de données).
 
-## Scope and status
+## Périmètre et statut
 
-- Prototype data comes from a data source the user chooses at the start: a repository data source (MongoDB, Elasticsearch, Paysage, ODS) or a user-defined source. There are no fixtures and no generated sample data. A repository source requires the developer's manual confirmation and read access.
-- The backend is the existing Node.js/Express service; do not add a Python/FastAPI service.
-- Discovery and manifest-validation tools exist in the separate `dataesr-mcp` repository (`/tableaux` endpoint) but are not deployed. They read this repository from GitHub (branch `staging` by default), so `index.json` must be pushed before they work. They validate the manifest and do static bundle checks only, not generated code. No isolated sandbox exists for executing generated projects.
-- Chat workflow gap: the MCP can plan and validate but cannot produce a board file bundle from chat. A `scaffold_board(id, routes)` tool that returns a bundle to import is a candidate future addition; it is not implemented.
-- Open decisions: approved preview datasets and their owners, whether to add executable sandbox validation, and whether submission stays manual import/review or moves to a restricted bot branch/PR flow.
+- Les données du prototype proviennent d'une source de données que l'utilisateur choisit au départ : une source de données du dépôt (MongoDB, Elasticsearch, Paysage, ODS) ou une source définie par l'utilisateur. Il n'existe ni jeux de données de test (fixtures) ni données d'exemple générées. Une source du dépôt requiert la confirmation manuelle du développeur et un accès en lecture.
+- Le backend est le service Node.js/Express existant ; n'ajoutez pas de service Python/FastAPI.
+- Les outils de découverte et de validation de manifeste existent dans le dépôt distinct `dataesr-mcp` (endpoint `/tableaux`) mais ne sont pas déployés. Ils lisent ce dépôt depuis GitHub (branche `staging` par défaut), donc `index.json` doit être poussé avant qu'ils fonctionnent. Ils valident le manifeste et n'effectuent que des contrôles statiques du bundle, pas du code généré. Il n'existe aucun bac à sable isolé pour exécuter les projets générés.
+- Lacune du flux de discussion : le MCP peut planifier et valider, mais ne peut pas produire un bundle de fichiers de tableau depuis le chat. Un outil `scaffold_board(id, routes)` qui renvoie un bundle à importer est une évolution future envisageable ; il n'est pas implémenté.
+- Décisions en suspens : jeux de données de prévisualisation approuvés et leurs responsables, ajout éventuel d'une validation exécutable en bac à sable, et maintien de la soumission par import et relecture manuels, ou passage à un flux de branche ou de PR de bot restreint.
 
-## Board model
+## Modèle de tableau
 
-There is one prototype profile: a **board** made of a client folder and its own server routes. The browser calls only the board's routes (`/<board-id>/...`); those routes read the data. The data source is a server-side concern, so promotion can change the data access inside the route and leave the URL, response shape, and client code unchanged.
+Il existe un seul profil de prototype : un **tableau** composé d'un dossier client et de ses propres routes serveur. Le navigateur n'appelle que les routes du tableau (`/<board-id>/...`) ; ces routes lisent les données. La source de données relève du serveur : la promotion peut donc modifier l'accès aux données dans la route, tout en laissant inchangés l'URL, la forme de la réponse et le code client.
 
-| Part | Location | Notes |
+| Élément | Emplacement | Remarques |
 | --- | --- | --- |
-| Client board | `client/src/boards/<board-id>/` | Follows `client/src/boards/template/` |
-| Server routes | `server/src/routes/boards/<board-id>/` | Mounted from `server/src/router.js`; follows `server/src/routes/boards/template/` |
-| Data access | Inside the board's routes | Repository or user-defined source, see Data sources |
+| Tableau client | `client/src/boards/<board-id>/` | Suit `client/src/boards/template/` |
+| Routes serveur | `server/src/routes/boards/<board-id>/` | Montées depuis `server/src/router.js` ; suivent `server/src/routes/boards/template/` |
+| Accès aux données | Dans les routes du tableau | Source du dépôt ou définie par l'utilisateur, voir Sources de données |
 
-## Repository-native layout and registration
+## Structure native du dépôt et enregistrement
 
-Work directly in `client/src/boards/<board-id>/` and `server/src/routes/boards/<board-id>/`. A generated board should use the existing route/page/component conventions instead of adding a parallel `web/` application.
+Travaillez directement dans `client/src/boards/<board-id>/` et `server/src/routes/boards/<board-id>/`. Un tableau généré doit utiliser les conventions existantes de routes, de pages et de composants, au lieu d'ajouter une application `web/` parallèle.
 
-The root router obtains board records from `/admin/list-dashboards` and dynamically imports `client/src/boards/<record.id>/routes.tsx`. A folder alone does not publish a dashboard. Production registration additionally requires a MongoDB `boards` record whose `id` matches the folder. Do not create or update production records during prototyping. Treat registration as a human-reviewed promotion step.
+Le routeur racine obtient les enregistrements de tableaux depuis `/admin/list-dashboards` et importe dynamiquement `client/src/boards/<record.id>/routes.tsx`. Un dossier seul ne publie pas de tableau de bord. L'enregistrement en production requiert en plus un enregistrement MongoDB `boards` dont l'`id` correspond au dossier. Ne créez ni ne modifiez d'enregistrements de production pendant le prototypage. Traitez l'enregistrement comme une étape de promotion relue par un humain.
 
-The Express API is in `server/`. Every board creates its router and mounts it in `server/src/router.js`, even when its data source is user-defined. The server connects to MongoDB at startup, so running any board locally requires the MongoDB that repository developers already have. Backend work is still reviewed by the data owner: identify data ownership, input validation, and deployment exposure.
+L'API Express se trouve dans `server/`. Chaque tableau crée son routeur et le monte dans `server/src/router.js`, même lorsque sa source de données est définie par l'utilisateur. Le serveur se connecte à MongoDB au démarrage ; exécuter un tableau en local nécessite donc la base MongoDB dont disposent déjà les développeurs du dépôt. Le travail côté backend est tout de même relu par le responsable des données : identifiez la propriété des données, la validation des entrées et l'exposition au déploiement.
 
-The chart iframe integration is a separate surface. When explicitly requested, follow `client/src/boards/integration/README.md` and register the chart in `client/src/boards/integration/charts-registry.tsx`.
+L'intégration des graphiques en iframe est une surface distincte. Lorsqu'elle est explicitement demandée, suivez `client/src/boards/integration/README.md` et enregistrez le graphique dans `client/src/boards/integration/charts-registry.tsx`.
 
-## Existing implementation references
+## Références d'implémentation existantes
 
-- **Board routes/layout:** `client/src/boards/template/routes.tsx`, `client/src/boards/template/components/layouts/global-layout.tsx`, `client/src/boards/template/components/layouts/sidemenu-layout.tsx`.
-- **Page composition:** `client/src/boards/template/pages/home/index.tsx` and `client/src/boards/template/pages/overview/index.tsx`.
-- **Chart wrapper:** `client/src/components/chart-wrapper/index.tsx`, `ChartWrapper({ config, options, constructorType?, hideTitle?, legend?, renderData? })`.
-- **Chart options:** `client/src/components/chart-wrapper/default-options.ts`, `createChartOptions(type, options)`, the shared form of `european-projects`' `CreateChartOptions`. Every chart builds its Highcharts options with it (DSFR tokens, fonts, axes, tooltip, accessibility defaults). It concatenates axis lists, so set `yAxis`/`xAxis` arrays after the call.
-- **Chart reference (structure and data flow):** `client/src/boards/european-projects/pages/overview/charts/programs-funding/` (`index.tsx`, `query.tsx`, `options.tsx`, `utils.tsx` with `renderDataTable`) and its route `server/src/routes/boards/european-projects/routes/horizon-europe/overview/programs-funding/index.js`, which returns aggregates and success rates already computed.
-- **Where computation happens:** on the server. Routes return chart-ready data (aggregated, ranked, sorted, cut to what is displayed); the client maps it to series and formats it. A local chart control (indicator, tab) is a route parameter or is already answered in the response, so switching is instant.
-- **Chart loading and colors:** `client/src/components/charts-skeletons/` and `client/src/hooks/useChartColor.tsx`.
-- **Chart example (component usage only):** `client/src/boards/template/pages/overview/charts/funded-labs/index.tsx` shows `ChartWrapper`, `useQuery`, skeletons and `useChartColor`. Like the other charts in that folder, it queries the production Elasticsearch proxy (`/elasticsearch`) directly from the browser and the template page does not render it. Do not copy that data access: a prototype's charts call the board's own server routes.
-- **Server router:** `server/src/routes/boards/template/` is a minimal stub (`/template/overview/test`) with no data files. Add data access to a new board's router as described in "Board model" above.
-- **Shared UI:** `client/src/components/` and `@dataesr/dsfr-plus`, already listed in `client/package.json`.
+- **Routes et mise en page du tableau :** `client/src/boards/template/routes.tsx`, `client/src/boards/template/components/layouts/global-layout.tsx`, `client/src/boards/template/components/layouts/sidemenu-layout.tsx`.
+- **Composition des pages :** `client/src/boards/template/pages/home/index.tsx` et `client/src/boards/template/pages/overview/index.tsx`.
+- **Enveloppe de graphique :** `client/src/components/chart-wrapper/index.tsx`, `ChartWrapper({ config, options, constructorType?, hideTitle?, legend?, renderData? })`.
+- **Options de graphique :** `client/src/components/chart-wrapper/default-options.ts`, `createChartOptions(type, options)`, la forme partagée de `CreateChartOptions` de `european-projects`. Chaque graphique construit ses options Highcharts avec elle (tokens DSFR, polices, axes, infobulle, valeurs par défaut d'accessibilité). Elle concatène les listes d'axes ; définissez donc les tableaux `yAxis`/`xAxis` après l'appel.
+- **Référence de graphique (structure et flux de données) :** `client/src/boards/european-projects/pages/overview/charts/programs-funding/` (`index.tsx`, `query.tsx`, `options.tsx`, `utils.tsx` avec `renderDataTable`) et sa route `server/src/routes/boards/european-projects/routes/horizon-europe/overview/programs-funding/index.js`, qui renvoie des agrégats et des taux de réussite déjà calculés.
+- **Où les calculs ont lieu :** côté serveur. Les routes renvoient des données prêtes pour le graphique (agrégées, classées, triées, limitées à ce qui est affiché) ; le client les transforme en séries et les met en forme. Un contrôle local de graphique (indicateur, onglet) est un paramètre de route ou figure déjà dans la réponse, de sorte que le changement est instantané.
+- **Chargement et couleurs des graphiques :** `client/src/components/charts-skeletons/` et `client/src/hooks/useChartColor.tsx`.
+- **Exemple de graphique (usage des composants uniquement) :** `client/src/boards/template/pages/overview/charts/funded-labs/index.tsx` montre `ChartWrapper`, `useQuery`, les squelettes et `useChartColor`. Comme les autres graphiques de ce dossier, il interroge directement depuis le navigateur le proxy Elasticsearch de production (`/elasticsearch`), et la page modèle ne l'affiche pas. Ne copiez pas cet accès aux données : les graphiques d'un prototype appellent les routes serveur propres au tableau.
+- **Routeur serveur :** `server/src/routes/boards/template/` est un squelette minimal (`/template/overview/test`) sans fichier de données. Ajoutez l'accès aux données au routeur d'un nouveau tableau comme décrit dans « Modèle de tableau » ci-dessus.
+- **Interface partagée :** `client/src/components/` et `@dataesr/dsfr-plus`, déjà listés dans `client/package.json`.
 
-The examples show patterns, not a universal component API. Inspect actual exports and nearby usage before generating code.
+Les exemples montrent des modèles, et non une API de composants universelle. Inspectez les exports réels et les usages voisins avant de générer du code.
 
-## Data sources
+## Sources de données
 
-| Source id | Repository implementation | Prototype status | Required substitute / approval |
+| Identifiant de source | Implémentation dans le dépôt | Statut du prototype | Substitut requis / approbation |
 | --- | --- | --- | --- |
-| `mongodb` | `server/src/services/mongo.js` (and `mongo-accessibility.js`), read from board routes | Target confirmation | Developer confirms the exact collections and fields
-| `elasticsearch` | Express `/elasticsearch` proxy (`ES_TOKEN_*`); several boards also call it from the browser | Target confirmation | Developer confirms the exact index and fields; read it server-side from the board's routes, not from the browser |
-| `paysage` | `PAYSAGE_API_URL` / `PAYSAGE_API_KEY`, currently called separately from `atlas` and `european-projects` | Target confirmation | Developer confirms; reuse a shared client rather than a third copy |
-| `ods` | `ODS_API_URL` / `ODS_API_KEY`, used by `structures-finance` | Target confirmation | Developer confirms |
-| `external` | A public or user-defined source not hosted by the project (OpenAlex, EPO, Eurostat, a file the user supplies), called from the board's routes | Approval required | Record license, retrieval date and URL; a live call needs caching and a platform egress decision; |
+| `mongodb` | `server/src/services/mongo.js` (et `mongo-accessibility.js`), lu depuis les routes des tableaux | Confirmation de la cible | Le développeur confirme les collections et champs exacts
+| `elasticsearch` | Proxy Express `/elasticsearch` (`ES_TOKEN_*`) ; plusieurs tableaux l'appellent aussi depuis le navigateur | Confirmation de la cible | Le développeur confirme l'index et les champs exacts ; lisez-le côté serveur depuis les routes du tableau, et non depuis le navigateur |
+| `paysage` | `PAYSAGE_API_URL` / `PAYSAGE_API_KEY`, actuellement appelés séparément depuis `atlas` et `european-projects` | Confirmation de la cible | Le développeur confirme ; réutilisez un client partagé plutôt qu'une troisième copie |
+| `ods` | `ODS_API_URL` / `ODS_API_KEY`, utilisés par `structures-finance` | Confirmation de la cible | Le développeur confirme |
+| `external` | Une source publique ou définie par l'utilisateur, non hébergée par le projet (OpenAlex, OEB, Eurostat, un fichier fourni par l'utilisateur), appelée depuis les routes du tableau | Approbation requise | Consigner la licence, la date de récupération et l'URL ; un appel en direct nécessite une mise en cache et une décision d'egress de la plateforme ; |
 
-Each source has a guide in [`guides/`](./guides/); the questions to ask before using a source are in [`guides/data-specs.md`](./guides/data-specs.md).
+Chaque source dispose d'un guide dans [`guides/`](./guides/) ; les questions à poser avant d'utiliser une source se trouvent dans [`guides/data-specs.md`](./guides/data-specs.md).
 
-Repository sources (`mongodb`, `elasticsearch`, `paysage`, `ods`) are always read-only and their credentials are already configured, so no token is requested. The developer confirms, before any read, only the exact index or collection and the data classification. A new source needs its token name (never its value) confirmed as well. No credentials or production connection strings belong in this document.
+Les sources du dépôt (`mongodb`, `elasticsearch`, `paysage`, `ods`) sont toujours en lecture seule et leurs identifiants sont déjà configurés, de sorte qu'aucun jeton n'est demandé. Avant toute lecture, le développeur ne confirme que l'index ou la collection exacts et la classification des données. Une nouvelle source nécessite également la confirmation du nom de son jeton (jamais sa valeur). Aucun identifiant ni chaîne de connexion de production n'a sa place dans ce document.
 
-[`index.json`](./index.json) is the machine-readable form of this document: guidance files, template paths, components, and the data sources above with their status. The `dataesr-mcp` `/tableaux` server reads it, the `AGENTS.md` files, the skills, the template files, and the manifest schema from GitHub at request time and stores nothing itself. When you add or move a template, guidance file, component, or data source, update `index.json` in the same change.
+[`index.json`](./index.json) est la forme lisible par machine de ce document : fichiers de consignes, chemins des modèles, composants et sources de données ci-dessus avec leur statut. Le serveur `/tableaux` de `dataesr-mcp` lit depuis GitHub, au moment de la requête, ce fichier, les fichiers `AGENTS.md`, les skills, les fichiers modèles et le schéma du manifeste, et ne stocke rien lui-même. Lorsque vous ajoutez ou déplacez un modèle, un fichier de consignes, un composant ou une source de données, mettez à jour `index.json` dans la même modification.
 
-## Common or dedicated code
+## Code commun ou dédié
 
-The existing board servers share infrastructure but almost no data logic: one MongoDB connection and `boards` collection, `server/src/commons/errors` (used by few boards), `routes/utils.js`, and duplicated Paysage client code. No two boards read the same dataset. Before writing a helper for a new board:
+Les serveurs de tableaux existants partagent une infrastructure mais presque aucune logique de données : une connexion MongoDB et une collection `boards`, `server/src/commons/errors` (utilisé par peu de tableaux), `routes/utils.js`, et du code client Paysage dupliqué. Aucun couple de tableaux ne lit le même jeu de données. Avant d'écrire un utilitaire pour un nouveau tableau :
 
-1. Search `server/src/commons`, `server/src/services`, `server/src/routes/utils.js`, and other boards' routers for an existing equivalent, and reuse it.
-2. Put code in the board when it depends on its dataset: aggregation pipelines, collection names, filter vocabularies, response shaping. This is the default.
-3. Extract to `commons`/`services` only domain-neutral infrastructure that a second board needs: error handling, query validation, caching, external-API clients (Paysage, ODS), database access. Extract after the second real use, not speculatively.
-4. Never edit shared code silently for one board. List proposed extractions in the manifest's `common_candidates` and in the pull request for reviewer decision.
+1. Recherchez un équivalent existant dans `server/src/commons`, `server/src/services`, `server/src/routes/utils.js` et dans les routeurs des autres tableaux, et réutilisez-le.
+2. Placez le code dans le tableau lorsqu'il dépend de son jeu de données : pipelines d'agrégation, noms de collections, vocabulaires de filtres, mise en forme des réponses. C'est le comportement par défaut.
+3. Ne déplacez vers `commons`/`services` que l'infrastructure neutre au domaine dont un second tableau a besoin : gestion des erreurs, validation des requêtes, mise en cache, clients d'API externes (Paysage, ODS), accès à la base de données. Extrayez après la seconde utilisation réelle, pas de façon spéculative.
+4. Ne modifiez jamais silencieusement le code partagé pour un seul tableau. Listez les extractions proposées dans `common_candidates` du manifeste et dans la pull request, pour décision du relecteur.
 
-## Bundle manifest
+## Manifeste du bundle
 
-`board.manifest.json` is proposed metadata kept at the board root when a generated bundle needs to travel separately. It does not replace dashboard metadata in MongoDB and is not consumed by the current runtime. Its useful part is the backend contract: `routes` lists the board's endpoints and `data_sources` what they read, so a data owner can review it before reading the code.
+`board.manifest.json` est un ensemble de métadonnées proposées, conservé à la racine du tableau lorsqu'un bundle généré doit voyager séparément. Il ne remplace pas les métadonnées du tableau de bord dans MongoDB et n'est pas utilisé par le runtime actuel. Sa partie utile est le contrat backend : `routes` liste les points de terminaison du tableau et `data_sources` ce qu'ils lisent, afin qu'un responsable des données puisse le relire avant de lire le code.
 
-The JSON Schema is [`manifest.json`](./manifest.json). `id` must match the intended client and server folder names and, at promotion, the MongoDB `boards.id`; every route path must start with `/<id>/` (the schema cannot check this).
+Le schéma JSON est [`manifest.json`](./manifest.json). `id` doit correspondre aux noms prévus des dossiers client et serveur et, lors de la promotion, à `boards.id` dans MongoDB ; chaque chemin de route doit commencer par `/<id>/` (le schéma ne peut pas le vérifier).
 
-Example:
+Exemple :
 
 ```json
 {
   "$schema": "../../../../plugins/tableaux/reference/manifest.json",
   "schema_version": 1,
   "id": "research-funding",
-  "name": "Research funding",
-  "description": "Prototype of funding trends",
+  "name": "Financement de la recherche",
+  "description": "Prototype d'évolution des financements",
   "data_sources": ["mongodb"],
   "routes": [
     {
       "method": "GET",
       "path": "/research-funding/overview/funding-by-year",
-      "description": "Projects funded per year"
+      "description": "Projets financés par an"
     }
   ],
   "common_candidates": [],
@@ -98,51 +98,51 @@ Example:
 }
 ```
 
-## Plugin skills
+## Skills du plugin
 
-The workflow lives in the `tableaux` plugin at [`plugins/tableaux/`](../).
+Le flux de travail se trouve dans le plugin `tableaux`, à l'emplacement [`plugins/tableaux/`](../).
 
-### Install with GitHub Copilot CLI
+### Installer avec GitHub Copilot CLI
 
-From the repository root:
+Depuis la racine du dépôt :
 
 ```bash
 copilot plugin install ./plugins/tableaux
 ```
 
-### Install with Claude Code
+### Installer avec Claude Code
 
-The repository root holds a marketplace, [`.claude-plugin/marketplace.json`](../../../.claude-plugin/marketplace.json), that lists the `tableaux` plugin. From the repository root:
+La racine du dépôt contient une marketplace, [`.claude-plugin/marketplace.json`](../../../.claude-plugin/marketplace.json), qui liste le plugin `tableaux`. Depuis la racine du dépôt :
 
 ```bash
 claude plugin marketplace add ./
 claude plugin install tableaux@dataesr-tableaux --scope project
 ```
 
-Or from a Claude Code session:
+Ou depuis une session Claude Code :
 
 ```text
 /plugin marketplace add dataesr/tableaux
 /plugin install tableaux@dataesr-tableaux
 ```
 
-| Skill | Purpose |
+| Skill | Finalité |
 | --- | --- |
-| `/dashboard init` | Clarify the request and ask which data source to use (repository or user-defined), then the fields. Writes nothing. |
-| `/dashboard build` | Build the board from a confirmed brief: scaffold, server router, charts (`chart`) and styling (`dsfr`). |
-| `/dashboard critique` | Read-only checklist: usability, data correctness, DSFR use, infrastructure fit. |
-| `/dashboard accessibility` | Read-only checklist for RGAA / WCAG 2.1 AA: keyboard, labels, contrast, chart text alternatives, headings. |
-| `/chart new` | Add one Highcharts chart to a board page. |
-| `dsfr` | DSFR components, layout and styling rules, used by the modes above. |
+| `/dashboard init` | Clarifie la demande et demande quelle source de données utiliser (du dépôt ou définie par l'utilisateur), puis les champs. N'écrit rien. |
+| `/dashboard build` | Construit le tableau à partir d'un brief confirmé : squelette, routeur serveur, graphiques (`chart`) et mise en forme (`dsfr`). |
+| `/dashboard critique` | Liste de contrôle en lecture seule : ergonomie, exactitude des données, usage du DSFR, adéquation à l'infrastructure. |
+| `/dashboard accessibility` | Liste de contrôle en lecture seule pour le RGAA / WCAG 2.1 AA : clavier, libellés, contraste, alternatives textuelles des graphiques, titres. |
+| `/chart new` | Ajoute un graphique Highcharts à une page de tableau. |
+| `dsfr` | Composants, mise en page et règles de mise en forme du DSFR, utilisés par les modes ci-dessus. |
 
-## Checks and delivery
+## Vérifications et livraison
 
-Run the checks documented in the root `AGENTS.md` and report actual command outcomes.
+Exécutez les vérifications documentées dans le `AGENTS.md` racine et rapportez les résultats réels des commandes.
 
-At the time of writing:
+À la date de rédaction :
 
 ```powershell
 npm run build
 ```
 
-`npm run build` runs TypeScript compilation and Vite. Client lint exists but currently depends on ESLint 9 flat-config migration. The repository has no configured unit/browser/accessibility test runner, generic scaffold/import command, or pull-request validation workflow. An external archive therefore needs human import/review and these local checks; do not describe it as automatically validated or production-ready.
+`npm run build` exécute la compilation TypeScript et Vite. Le lint du client existe mais dépend actuellement de la migration vers la configuration plate d'ESLint 9. Le dépôt ne dispose d'aucun lanceur de tests unitaires, navigateur ou accessibilité configuré, ni de commande générique de squelette ou d'import, ni de flux de validation des pull requests. Une archive externe nécessite donc un import et une relecture manuels ainsi que ces vérifications locales ; ne la présentez pas comme validée automatiquement ni comme prête pour la production.

@@ -1,29 +1,29 @@
-# Recipe: add a chart
+# Procédure : ajouter un graphique
 
-Reference example: `client/src/boards/template/pages/overview/charts/funded-labs/`. Before writing, read a chart **from the same board** and match its style (separators, colours, filters, i18n).
+Exemple de référence : `client/src/boards/template/pages/overview/charts/funded-labs/`. Avant d'écrire, lisez un graphique **du même tableau** et reprenez son style (séparateurs, couleurs, filtres, i18n).
 
-## Steps
+## Étapes
 
-1. Create `client/src/boards/<board>/pages/<page>/charts/<chart-name>/` (kebab-case).
-2. `utils.tsx`: pure functions, no React.
-   - `getSeries(data)`: turns the API response into `{ categories, series }`. Handle missing or empty data explicitly; do not show an invalid response as an empty success.
-   - `getOptions(...)`: returns the Highcharts options object (`credits: { enabled: false }`, axis titles, and so on).
-3. `index.tsx`: default component.
+1. Créez `client/src/boards/<board>/pages/<page>/charts/<chart-name>/` (kebab-case).
+2. `utils.tsx` : fonctions pures, sans React.
+   - `getSeries(data)` : transforme la réponse de l'API en `{ categories, series }`. Gérez explicitement les données absentes ou vides ; n'affichez pas une réponse invalide comme un succès vide.
+   - `getOptions(...)` : renvoie l'objet d'options Highcharts (`credits: { enabled: false }`, titres d'axes, etc.).
+3. `index.tsx` : composant par défaut.
    - `const { VITE_APP_SERVER_URL } = import.meta.env;`
-   - Data: if the board has an `api/` folder, put the hook (`useQuery`) there and import it here. Otherwise call `useQuery` in the component, as the rest of the board does. Every filter goes in the `queryKey` (`["<board>-<chart-name>", ...filters]`).
-   - Distinguish loading, error and no result: `DefaultSkeleton` while loading, an `Alert` in place on error that keeps the filters, and an explanatory message when the request succeeds with no data. An error must not leave a skeleton on screen.
-   - Colours: `useChartColor`, `client/src/utils/colors.ts`, or the board's `colors.scss`. Never hard-code hex values in a new chart (dark theme).
-   - `config = { id, title, integrationURL: "/integration?chart_id=<id>" }` (plus `comment`, `sources` and `description` if the board uses them).
-   - Render: `<ChartWrapper config={config} options={options} />`. Never instantiate `HighchartsReact` directly.
-   - Text: go through the board's `i18n.json`, and `getI18nLabel` if the board is multilingual.
-4. Import the chart in `pages/<page>/index.tsx`.
-5. If the chart must be embeddable in an iframe, add it to `client/src/boards/integration/charts-registry.tsx` with the same `id`.
-6. If a new server route is needed, follow the server part of [dashboard build](../../dashboard/reference/build.md) and add an `.http` file in `api-tests/`. The chart calls only its own board's routes (`${VITE_APP_SERVER_URL}/<board-id>/...`), never `/elasticsearch` or another service directly.
+   - Données : si le tableau a un dossier `api/`, placez-y le hook (`useQuery`) et importez-le ici. Sinon, appelez `useQuery` dans le composant, comme le reste du tableau. Chaque filtre va dans la `queryKey` (`["<board>-<chart-name>", ...filters]`).
+   - Distinguez le chargement, l'erreur et l'absence de résultat : `DefaultSkeleton` pendant le chargement, une `Alert` en place en cas d'erreur qui conserve les filtres, et un message explicatif lorsque la requête réussit sans données. Une erreur ne doit pas laisser un squelette à l'écran.
+   - Couleurs : `useChartColor`, `client/src/utils/colors.ts`, ou le `colors.scss` du tableau. Ne codez jamais de valeurs hexadécimales en dur dans un nouveau graphique (thème sombre).
+   - `config = { id, title, integrationURL: "/integration?chart_id=<id>" }` (ainsi que `comment`, `sources` et `description` si le tableau les utilise).
+   - Rendu : `<ChartWrapper config={config} options={options} />`. N'instanciez jamais `HighchartsReact` directement.
+   - Textes : passez par le `i18n.json` du tableau, et par `getI18nLabel` si le tableau est multilingue.
+4. Importez le graphique dans `pages/<page>/index.tsx`.
+5. Si le graphique doit pouvoir être intégré dans une iframe, ajoutez-le à `client/src/boards/integration/charts-registry.tsx` avec le même `id`.
+6. Si une nouvelle route serveur est nécessaire, suivez la partie serveur de [dashboard build](../../dashboard/reference/build.md) et ajoutez un fichier `.http` dans `api-tests/`. Le graphique n'appelle que les routes de son propre tableau (`${VITE_APP_SERVER_URL}/<board-id>/...`), jamais `/elasticsearch` ni un autre service directement.
 
-## Accessibility
+## Accessibilité
 
-Filters: prefer dsfr-plus components (`Select`, `SegmentedControl`, and so on) or the ones in `client/src/components/` (`select`, `range-of-years`). Otherwise use unique `id`s (`useId`) and a `<label>` linked to the control. One field size per row. No information carried by colour alone. See the [dsfr](../../dsfr/SKILL.md) skill for layout pitfalls.
+Filtres : privilégiez les composants dsfr-plus (`Select`, `SegmentedControl`, etc.) ou ceux de `client/src/components/` (`select`, `range-of-years`). Sinon, utilisez des `id` uniques (`useId`) et un `<label>` relié au contrôle. Une seule taille de champ par ligne. Aucune information portée par la couleur seule. Voir la compétence [dsfr](../../dsfr/SKILL.md) pour les pièges de mise en page.
 
-## Verification
+## Vérification
 
-Run the checks in the root `AGENTS.md`. If possible, open the page locally and check the rendering, the states and keyboard accessibility.
+Lancez les vérifications du `AGENTS.md` racine. Si possible, ouvrez la page en local et vérifiez le rendu, les états et l'accessibilité au clavier.

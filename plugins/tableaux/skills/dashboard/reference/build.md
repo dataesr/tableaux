@@ -1,66 +1,66 @@
-# Mode: build
+# Mode : build
 
-Implement a dashboard from a confirmed brief. Run `init` first if there is no confirmed data source.
+Implémentez un tableau de bord à partir d'un cahier des charges validé. Lancez `init` d'abord s'il n'existe pas de source de données confirmée.
 
-## 1. Gate on the brief
+## 1. Vérifier le cahier des charges
 
-Stop unless the data source is confirmed: a repository source with manual confirmation, or a user-defined source with its licence and URL. Never fall back to fixtures, sample data or generated values.
+Arrêtez-vous tant que la source de données n'est pas confirmée : une source du dépôt avec confirmation manuelle, ou une source définie par l'utilisateur avec sa licence et son URL. Ne revenez jamais à des jeux de test (fixtures), à des données d'exemple ni à des valeurs générées.
 
-## 2. Plan the contract
+## 2. Planifier le contrat
 
-1. Read the AGENTS.md files listed in `init` step 1.
-2. Inspect an existing board with a similar page or chart. Check the real exports and types of any shared component before using it.
-3. Define the backend contract first: routes `/<board-id>/<page>/<endpoint>`, query parameters and response shapes `{ data, provenance }`. Agree it before building.
+1. Lisez les fichiers AGENTS.md listés à l'étape 1 de `init`.
+2. Inspectez un tableau existant comportant une page ou un graphique similaire. Vérifiez les exports et types réels de tout composant partagé avant de l'utiliser.
+3. Définissez d'abord le contrat backend : routes `/<board-id>/<page>/<endpoint>`, paramètres de requête et formats de réponse `{ data, provenance }`. Faites-le valider avant de construire.
 
-## 3. Scaffold the board
+## 3. Créer la structure du tableau
 
-Board id: kebab-case, identical to the folder name and to the `id` of the MongoDB `boards` document. Use the template as a reference, not a generator to copy in full.
+Identifiant du tableau : kebab-case, identique au nom du dossier et à l'`id` du document `boards` de MongoDB. Utilisez le modèle comme référence, et non comme générateur à copier intégralement.
 
 ### Client (`client/src/boards/<board-id>/`)
 
-1. Create only the files needed. Rename `TemplateRoutes` if the template is the starting point.
-2. Create or adapt `routes.tsx` and the pages.
-3. Update `title-i18n.json` (`fr` required, `en` if multilingual) and the `i18n.json` files of the layouts and sidemenu.
-4. Add `sitemap-config.ts` exporting `SITEMAP: BoardSitemapConfig` (example: `client/src/boards/devenir-etudiants/sitemap-config.ts`). It feeds the site map and the footer.
-5. Do **not** edit `client/src/router.tsx`. Board routes are loaded dynamically from the MongoDB list.
+1. Ne créez que les fichiers nécessaires. Renommez `TemplateRoutes` si le modèle sert de point de départ.
+2. Créez ou adaptez `routes.tsx` et les pages.
+3. Mettez à jour `title-i18n.json` (`fr` obligatoire, `en` si le tableau est multilingue) ainsi que les fichiers `i18n.json` des mises en page et du menu latéral.
+4. Ajoutez `sitemap-config.ts` exportant `SITEMAP: BoardSitemapConfig` (exemple : `client/src/boards/devenir-etudiants/sitemap-config.ts`). Il alimente le plan du site et le pied de page.
+5. **Ne modifiez pas** `client/src/router.tsx`. Les routes des tableaux sont chargées dynamiquement depuis la liste MongoDB.
 
-### Server (`server/src/routes/boards/<board-id>/`, every board has its own router)
+### Serveur (`server/src/routes/boards/<board-id>/`, chaque tableau possède son propre routeur)
 
-1. Create `index.js`, which aggregates `routes/*.js` (see the template). Do not add a `data/` folder or fixtures.
-2. Each route: `router.route("/<board-id>/<page>/<endpoint>")`. Response in the { data, provenance } format, ready for auditing: filters, aggregations, rates, rankings, sorting, and top-N calculations are performed in the route (Mongo pipeline or server-side code), never left to the browser.
-Any metric that users can change must either be a validated route parameter or already be available for every value in the response.
-Example: server/src/routes/boards/european-projects/routes/horizon-europe/overview/programs-funding/index.js. Validate parameters by throwing the error classes in `server/src/commons/errors` (for example `BadRequestError`). `checkQuery` in `server/src/routes/utils.js` does not stop the handler. Use Mongo through `server/src/services/mongo.js` only once the source is confirmed. 
-3. Data source: only the one confirmed in step 1. Isolate data access in a board helper, so the source can change without changing the route path or the response shape. If the source is new (not a repository source), ask before writing code whether it is a **common service** (`server/src/services/`, reusable by other boards) or a **board-only** build (`server/src/routes/boards/<board-id>/`). Default to board-only.
-4. Register the router in `server/src/router.js` (import and `router.use`, alphabetical order).
-5. Add `api-tests/<page>/*.http` files (for example `GET http://localhost:3000/api/<board-id>/...`).
-6. Shared or dedicated code: before writing a helper, search `server/src/commons`, `server/src/services`, `routes/utils.js` and the other boards. Keep in the board anything that depends on the dataset (pipelines, collection names, filter vocabularies, response shaping). Move code to `commons` or `services` only when a second board already uses it. List candidates instead of editing shared code (see the README, "Common or dedicated code").
+1. Créez `index.js`, qui agrège `routes/*.js` (voir le modèle). N'ajoutez pas de dossier `data/` ni de jeux de test (fixtures).
+2. Chaque route : `router.route("/<board-id>/<page>/<endpoint>")`. Réponse au format { data, provenance }, prête pour l'audit : filtres, agrégations, taux, classements, tris et calculs top-N sont effectués dans la route (pipeline Mongo ou code côté serveur), jamais laissés au navigateur.
+Toute métrique que l'utilisateur peut modifier doit être soit un paramètre de route validé, soit déjà disponible pour chaque valeur de la réponse.
+Exemple : server/src/routes/boards/european-projects/routes/horizon-europe/overview/programs-funding/index.js. Validez les paramètres en lançant les classes d'erreur de `server/src/commons/errors` (par exemple `BadRequestError`). `checkQuery` dans `server/src/routes/utils.js` n'interrompt pas le gestionnaire. N'utilisez Mongo via `server/src/services/mongo.js` qu'une fois la source confirmée.
+3. Source de données : uniquement celle confirmée à l'étape 1. Isolez l'accès aux données dans un helper propre au tableau, afin que la source puisse changer sans modifier le chemin de la route ni le format de réponse. Si la source est nouvelle (pas une source du dépôt), demandez avant d'écrire du code s'il s'agit d'un **service commun** (`server/src/services/`, réutilisable par d'autres tableaux) ou d'un développement **propre au tableau** (`server/src/routes/boards/<board-id>/`). Par défaut, propre au tableau.
+4. Enregistrez le routeur dans `server/src/router.js` (import et `router.use`, par ordre alphabétique).
+5. Ajoutez les fichiers `api-tests/<page>/*.http` (par exemple `GET http://localhost:3000/api/<board-id>/...`).
+6. Code commun ou propre : avant d'écrire un helper, cherchez dans `server/src/commons`, `server/src/services`, `routes/utils.js` et dans les autres tableaux. Gardez dans le tableau tout ce qui dépend du jeu de données (pipelines, noms de collections, vocabulaires de filtres, mise en forme des réponses). Ne déplacez du code vers `commons` ou `services` que lorsqu'un second tableau l'utilise déjà. Listez les candidats au lieu de modifier le code partagé (voir le README, « Code commun ou propre »).
 
-## 4. Charts and UI
+## 4. Graphiques et interface
 
-- For each chart, follow [chart](../../chart/SKILL.md). Charts call only the board's own routes, use `ChartWrapper`, and handle loading, error and empty states.
-- For layout, components and styling, follow [dsfr](../../dsfr/SKILL.md). Use DSFR tokens, not hard-coded colours.
+- Pour chaque graphique, suivez [chart](../../chart/SKILL.md). Les graphiques n'appellent que les routes propres au tableau, utilisent `ChartWrapper` et gèrent les états de chargement, d'erreur et vide.
+- Pour la mise en page, les composants et le style, suivez [dsfr](../../dsfr/SKILL.md). Utilisez les tokens DSFR, et non des couleurs codées en dur.
 
-## 5. Manifest (only when a portable bundle is requested)
+## 5. Manifeste (uniquement si un paquet portable est demandé)
 
-Write `board.manifest.json` at the board root and check it against `plugins/tableaux/reference/manifest.json`. Confirm that every route starts with `/<board-id>/`. Record the target confirmations for repository sources in `data_sources`. The manifest is documentation: it is not a registration or a permission.
+Rédigez `board.manifest.json` à la racine du tableau et vérifiez-le par rapport à `plugins/tableaux/reference/manifest.json`. Confirmez que chaque route commence par `/<board-id>/`. Consignez les confirmations cibles des sources du dépôt dans `data_sources`. Le manifeste est une documentation : ce n'est ni un enregistrement ni une autorisation.
 
-## 6. Registration
+## 6. Enregistrement
 
-The board appears only when a record exists in the MongoDB `boards` collection (`id`, `name_fr`, `name_en`, `description_fr`, `description_en`, `url`, and optionally `homePageVisible`, `isMultilingual`). Locally, use `POST /api/admin/add-dashboard` or the `/admin` page (disabled in production). For production, see the README section on it. Do not write to the database without explicit approval from the user. Creating a prototype does not imply registration, and no production metadata is changed without a clear request and human approval.
+Le tableau n'apparaît que lorsqu'un enregistrement existe dans la collection MongoDB `boards` (`id`, `name_fr`, `name_en`, `description_fr`, `description_en`, `url`, et optionnellement `homePageVisible`, `isMultilingual`). En local, utilisez `POST /api/admin/add-dashboard` ou la page `/admin` (désactivée en production). Pour la production, consultez la section du README qui s'y rapporte. N'écrivez pas dans la base de données sans approbation explicite de l'utilisateur. La création d'un prototype n'implique pas d'enregistrement, et aucune métadonnée de production n'est modifiée sans demande claire et approbation humaine.
 
-Do not assume a board folder is private, and do not expose credentials in client code.
+Ne supposez pas qu'un dossier de tableau est privé, et n'exposez pas d'identifiants dans le code client.
 
-## 7. Charts registry
+## 7. Registre des graphiques
 
-If a chart must be embeddable in an iframe, add it to `client/src/boards/integration/charts-registry.tsx` with the same `id`.
+Si un graphique doit pouvoir être intégré dans une iframe, ajoutez-le à `client/src/boards/integration/charts-registry.tsx` avec le même `id`.
 
-## 8. Checks
+## 8. Vérifications
 
-1. Run `npm run build` from the repository root. On Windows it fails on `rm -rf`; in that case run `npm -w client run build` and say so. `npm -w client run lint` is not configured.
-2. Exercise the routes with the `.http` files.
-3. If a local preview is available, give the route `http://localhost:5173/<board-id>` and ask for a manual check of responsive layout, themes, keyboard use, and empty or error states.
-4. Run the [accessibility](./accessibility.md) checklist on the UI and fix blocking findings before reporting.
+1. Lancez `npm run build` à la racine du dépôt. Sous Windows, il échoue sur `rm -rf` ; dans ce cas, lancez `npm -w client run build` et signalez-le. `npm -w client run lint` n'est pas configuré.
+2. Testez les routes avec les fichiers `.http`.
+3. Si un aperçu local est disponible, indiquez la route `http://localhost:5173/<board-id>` et demandez une vérification manuelle de la mise en page adaptative, des thèmes, de l'usage au clavier et des états vide ou d'erreur.
+4. Appliquez la [liste de contrôle accessibilité](./accessibility.md) à l'interface et corrigez les constats bloquants avant de rendre compte.
 
-## 9. Report
+## 9. Rapport
 
-List the files changed, the confirmed data source, the check results (with checks that were not run), accessibility findings still open, proposed common-code extractions, and what promotion needs: a matching MongoDB `boards` record, the confirmed data source wired in the routes, owner review of the routes, and an optional chart registry entry. Do not register the board, deploy, create a branch or open a pull request unless asked.
+Listez les fichiers modifiés, la source de données confirmée, les résultats des vérifications (en indiquant celles qui n'ont pas été exécutées), les constats d'accessibilité encore ouverts, les extractions de code commun proposées, et ce que la promotion requiert : un enregistrement `boards` MongoDB correspondant, la source de données confirmée branchée dans les routes, la relecture des routes par le responsable, et éventuellement une entrée dans le registre des graphiques. N'enregistrez pas le tableau, ne déployez pas, ne créez pas de branche et n'ouvrez pas de pull request sauf demande explicite.

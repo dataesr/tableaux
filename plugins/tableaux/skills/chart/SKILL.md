@@ -1,12 +1,12 @@
 ---
 name: chart
-description: "Add a Highcharts chart to a board page (charts/<name>/ folder with index.tsx and utils.tsx, ChartWrapper, useQuery). Use when asked to create, add or duplicate a chart in client/src/boards."
-argument-hint: "Board id, page and chart name"
+description: "Ajouter un graphique Highcharts à une page de tableau (dossier charts/<name>/ avec index.tsx et utils.tsx, ChartWrapper, useQuery). À utiliser lorsqu'on demande de créer, ajouter ou dupliquer un graphique dans client/src/boards."
+argument-hint: "Identifiant du tableau, page et nom du graphique"
 user-invocable: true
 ---
 
-# Chart
+# Graphique
 
-Adds one Highcharts chart. For a whole dashboard, use the [dashboard](../dashboard/SKILL.md) skill, which calls this one per chart.
+Ajoute un graphique Highcharts. Pour un tableau de bord complet, utilisez la compétence [dashboard](../dashboard/SKILL.md), qui appelle celle-ci pour chaque graphique.
 
-The recipe is in [reference/new.md](./reference/new.md). Read it before writing code, then read an existing chart in the same board and copy its style (separators, colours, filters, i18n).
+La procédure est dans [reference/new.md](./reference/new.md). Lisez-la avant d'écrire du code, puis lisez un graphique existant du même tableau et reprenez son style (séparateurs, couleurs, filtres, i18n).
