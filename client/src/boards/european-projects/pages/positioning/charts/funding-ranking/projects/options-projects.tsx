@@ -80,7 +80,7 @@ export default function OptionsProjects(data: DataItem[], currentLang: string): 
             format: "{point.rank_projects_successful}e",
           },
         ],
-      } as Highcharts.SeriesBarOptions,
+      } as Highcharts.SeriesOptions,
     ],
   };
   return CreateChartOptions("bar", newOptions);

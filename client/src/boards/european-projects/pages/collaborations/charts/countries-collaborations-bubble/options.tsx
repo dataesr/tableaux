@@ -5,7 +5,7 @@ import i18n from "./i18n.json";
 
 const rootStyles = getComputedStyle(document.documentElement);
 
-export default function Options(data, currentLang, nbToShow = 10) {
+export default function Options(data, currentLang, nbToShow = 10, stage = "successful") {
   if (!data) return null;
 
   function getI18nLabel(key) {
@@ -44,7 +44,7 @@ export default function Options(data, currentLang, nbToShow = 10) {
         color: rootStyles.getPropertyValue("--collaboration-color"),
         data: data.slice(0, nbToShow).map((item) => ({
           name: item[`country_name_${currentLang}`],
-          value: item?.by_year?.map((year) => year?.by_stage?.find((stage) => stage.stage === "successful")?.total_collaborations ?? 0).reduce((acc, cur) => acc + cur, 0),
+          value: item?.by_year?.map((year) => year?.by_stage?.find((st) => st.stage === stage)?.total_collaborations ?? 0).reduce((acc, cur) => acc + cur, 0),
         })),
         name: getI18nLabel("number-of-common-projects"),
         type: "packedbubble",

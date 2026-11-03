@@ -92,7 +92,7 @@ export default function Options(data, displayType, currentLang): HighchartsOptio
         },
         opposite: true,
         labels: {
-          formatter: function (this: Highcharts.AxisLabelsFormatterContextObject) {
+          formatter: function (this) {
             return `${this.value}%`;
           },
           style: { color: successRateColor },

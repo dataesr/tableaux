@@ -76,7 +76,7 @@ export default function OptionsCoordinationNumber(data: DataItem[], currentLang:
         tooltip: {
           pointFormat: "Nombre de projets lauréats coordonnés : <b>{point.y}</b>",
         },
-      } as Highcharts.SeriesBarOptions,
+      } as Highcharts.SeriesOptions,
     ],
   };
   return CreateChartOptions("bar", newOptions);
