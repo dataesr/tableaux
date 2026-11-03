@@ -170,18 +170,18 @@ function MenuModal({
           </legend>
           <div className="fr-fieldset__element">
             <Radio
-              defaultChecked={displayType === "chart"}
+              checked={displayType === "chart"}
               label={getI18nLabel(i18n, "chart")}
               name={`${modalId}_radio-hint`}
-              onClick={() => setDisplayType("chart")}
+              onChange={() => setDisplayType("chart")}
             />
           </div>
           <div className="fr-fieldset__element">
             <Radio
-              defaultChecked={displayType === "data"}
+              checked={displayType === "data"}
               label={getI18nLabel(i18n, "data")}
               name={`${modalId}_radio-hint`}
-              onClick={() => setDisplayType("data")}
+              onChange={() => setDisplayType("data")}
             />
           </div>
         </fieldset>
