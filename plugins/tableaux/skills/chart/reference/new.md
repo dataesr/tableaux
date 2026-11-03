@@ -51,7 +51,7 @@ Créez `client/src/boards/<board>/pages/<page>/charts/<chart-name>/` (kebab-case
     - erreur : une `Alert` en place qui conserve les filtres ; une erreur ne doit pas laisser un squelette à l'écran ;
     - succès sans données : un message explicatif.
   - `config = { id, idQuery?, title: { fr, en }, integrationURL: "/integration?chart_id=<id>" }` (ainsi que `comment`, `readingKey`, `sources` et `description` si le tableau les utilise).
-  - Rendu : `<ChartWrapper config={config} options={options} renderData={() => renderDataTable(data, currentLang)} />`, entouré du voile de recalcul du tableau. N'instanciez jamais `HighchartsReact` directement.
+  - Rendu : `<ChartWrapper config={config} options={options} renderData={() => renderDataTable(data, currentLang)} />`, entouré du voile de recalcul du tableau. Sans `renderData`, le wrapper affiche le tableau natif de Highcharts (`viewData`, module `export-data`) : c'est le défaut. Ne passez `renderData` que si ce tableau natif n'est pas lisible tel quel (clés qui ne sont pas des libellés, valeurs à formater, plusieurs axes, données non tracées) — et dans ce cas, vérifiez-le à l'écran. Le module d'accessibilité Highcharts activé par `createChartOptions` ne se désactive pas. N'instanciez jamais `HighchartsReact` directement.
 
 ## Couleurs et textes
 
@@ -66,7 +66,7 @@ Créez `client/src/boards/<board>/pages/<page>/charts/<chart-name>/` (kebab-case
 
 ## Accessibilité
 
-Filtres : privilégiez les composants dsfr-plus (`Select`, `SegmentedControl`, etc.) ou ceux de `client/src/components/` (`select`, `range-of-years`). Sinon, utilisez des `id` uniques (`useId`) et un `<label>` relié au contrôle. Une seule taille de champ par ligne. Aucune information portée par la couleur seule ; fournissez `renderData`. Voir la compétence [dsfr](../../dsfr/SKILL.md) pour les pièges de mise en page.
+L'accessibilité est complète (RGAA) et tout constat est bloquant. Filtres : les composants dsfr-plus (`Select`, `SegmentedControl`, etc.) ou ceux de `client/src/components/` (`select`, `range-of-years`) sont obligatoires dès qu'ils couvrent le besoin ; un composant partagé défaillant se corrige à la source, il n'est pas remplacé localement. `id` uniques (`useId`), un `<label>` visible relié à chaque contrôle, une seule taille de champ par ligne. Aucune information portée par la couleur seule ; un tableau de données lisible (natif par défaut, `renderData` si nécessaire) ; couleurs de séries par `getCssColor` / `useChartColor` (palette illustrative DSFR, lisible pour les daltoniens, contraste vérifié en thème sombre). Voir la compétence [dsfr](../../dsfr/SKILL.md) pour les pièges de mise en page.
 
 ## Vérification
 

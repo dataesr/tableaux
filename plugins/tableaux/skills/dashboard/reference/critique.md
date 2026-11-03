@@ -23,9 +23,12 @@ Cible : un identifiant ou un chemin de tableau, par exemple `client/src/boards/<
 
 ## Utilisation du DSFR
 
-- Les composants proviennent de `@dataesr/dsfr-plus` et sont utilisés conformément à [dsfr](../../dsfr/SKILL.md) ; aucun balisage `fr-*` brut inventé de mémoire.
-- Les couleurs et les espacements utilisent les tokens et utilitaires DSFR ; aucune couleur codée en dur ni aucun style de mise en page en ligne dans le nouveau code.
+- Les composants proviennent de `@dataesr/dsfr-plus` et sont utilisés conformément à [dsfr](../../dsfr/SKILL.md) ; aucun balisage `fr-*` brut inventé de mémoire ; **aucun composant DSFR réécrit à la main** (navigation, onglets, accordéon, modale, sélecteur…) — signalez chaque cas avec le composant dsfr-plus qui aurait dû servir.
+- Le header, les liens d'évitement, `<main>` et le pied de page viennent de `Layout` (`client/src/layout/layout.tsx`, PR #201 de Victor), identiques dans tous les tableaux : signalez comme bloquant tout `fr-header`, barre de navigation, `<main>`, `<SwitchTheme />` ou liens d'évitement écrits dans le tableau, et toute option du header (lien « Explorer », sélecteur de langue) activée différemment des autres tableaux. Le reste du layout (footer, liens d'évitement, barre de filtres, cartes de chiffres clés) suit le board `template` ; signalez toute divergence de design.
+- Le SCSS du tableau ne fait que disposer : signalez toute règle d'apparence (`color`, `background`, `border`, `box-shadow`, `border-radius`, `font-*`, états `:hover`/`:focus`/`[aria-current]`).
+- Les couleurs sont des tokens de décision DSFR utilisés pour leur rôle (pas d'hex, pas de primitive, pas de token d'état hors de son état) ; aucun style de mise en page en ligne dans le nouveau code.
 - Les titres suivent un ordre logique unique, et la page utilise les mises en page existantes du tableau.
+- Le tableau est branché à tous les périmètres transverses : `Footer` partagé, `sitemap-config.ts` et route `plan-du-site`, titres de page (`title-i18n.json` + `useTitle`), liens contact et accessibilité résolus pour `?from=<board-id>` (enregistrement MongoDB, audit `tableaux_<board-id>`). Signalez chaque périmètre manquant comme bloquant.
 - Aucun comportement réservé au JavaScript du DSFR n'est utilisé.
 
 ## Conformité à l'infrastructure
