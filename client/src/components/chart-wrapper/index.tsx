@@ -25,6 +25,7 @@ import "highcharts/es-modules/masters/modules/variwide.src.js"
 import "highcharts/es-modules/masters/modules/sankey.src.js"
 import "highcharts/es-modules/masters/modules/treemap.src.js"
 import "highcharts/es-modules/masters/modules/variable-pie.src.js"
+import "highcharts/es-modules/masters/i18n/fr-FR.src.js"
 
 import "./styles.scss"
 
