@@ -37,7 +37,7 @@ export const createComparisonOverviewOptions = (
   currentStructureId?: string,
   currentStructureName?: string
 ): Highcharts.Options => {
-  const series: (Highcharts.SeriesOptionsType | Highcharts.UnknownSeriesOptions)[] = [];
+  const series: Highcharts.SeriesOptionsType[] = [];
 
   let dataMin = Infinity;
   let dataMax = -Infinity;

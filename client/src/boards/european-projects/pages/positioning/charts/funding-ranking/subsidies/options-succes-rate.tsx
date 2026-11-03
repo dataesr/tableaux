@@ -73,7 +73,7 @@ export default function optionSuccessRate(data: DataItem[], currentLang: string)
             format: "{point.name}",
           },
         ],
-      } as Highcharts.SeriesOptions,
+      } as Highcharts.SeriesBarOptions,
     ],
   };
   return CreateChartOptions("bar", newOptions);

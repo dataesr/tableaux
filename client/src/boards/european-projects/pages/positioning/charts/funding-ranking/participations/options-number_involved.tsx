@@ -79,7 +79,7 @@ export default function OptionsNumberInvolved(data: DataItem[], currentLang: str
           pointFormat:
             "Nombre de participants : {point.y}",
           },
-      } as Highcharts.SeriesOptions,
+      } as Highcharts.SeriesBarOptions,
     ],
   };
   return CreateChartOptions("bar", newOptions);

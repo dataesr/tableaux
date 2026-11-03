@@ -73,7 +73,7 @@ export default function optionCoordinationNumberSuccessRate(data: DataItem[], cu
             format: "{point.name}",
           },
         ],
-      } as Highcharts.SeriesOptions,
+      } as Highcharts.SeriesBarOptions,
     ],
   };
   return CreateChartOptions("bar", newOptions);

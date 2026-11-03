@@ -74,7 +74,7 @@ export default function optionNumberInvolvedSuccessRate(data: DataItem[], curren
             format: "{point.name}",
           },
         ],
-      } as Highcharts.SeriesOptions,
+      } as Highcharts.SeriesBarOptions,
     ],
   };
   return CreateChartOptions("bar", newOptions);
