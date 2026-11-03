@@ -1,4 +1,5 @@
-import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js";
+import type Highcharts from "highcharts/es-modules/masters/highcharts.src.js";
+
 import { CreateChartOptions } from "../../../../../components/chart-ep";
 import { getCssColor } from "../../../../../../../utils/colors";
 import { getResponsiveChartHeight } from "../../../../../../../utils";
@@ -20,7 +21,7 @@ export default function OptionsProjects(data: DataItem[], currentLang: string): 
       ? { axis: "Nombre de projets", tooltip: "Nombre de projets", evaluated: "Projets évalués", successful: "Projets lauréats" }
       : { axis: "Number of projects", tooltip: "Number of projects", evaluated: "Evaluated projects", successful: "Successful projects" };
 
-  const newOptions: HighchartsInstance.Options = {
+  const newOptions: Highcharts.Options = {
     chart: {
       type: "bar",
       height: getResponsiveChartHeight(data.length),

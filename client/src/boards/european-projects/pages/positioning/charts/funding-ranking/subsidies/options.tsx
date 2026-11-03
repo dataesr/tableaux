@@ -1,12 +1,13 @@
-import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js";
-import { CreateChartOptions } from "../../../../../components/chart-ep";
-import { getCssColor } from "../../../../../../../utils/colors";
+import type Highcharts from "highcharts/es-modules/masters/highcharts.src.js";
+
 import { getResponsiveChartHeight } from "../../../../../../../utils";
+import { getCssColor } from "../../../../../../../utils/colors";
+import { CreateChartOptions } from "../../../../../components/chart-ep";
 
 export default function Options(data, currentLang) {
   if (!data) return null;
 
-  const newOptions: HighchartsInstance.Options = {
+  const newOptions: Highcharts.Options = {
     chart: {
       height: getResponsiveChartHeight(data.length),
     },

@@ -1,7 +1,8 @@
-import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js";
-import { CreateChartOptions } from "../../../../../components/chart-ep";
-import { getCssColor } from "../../../../../../../utils/colors";
+import type Highcharts from "highcharts/es-modules/masters/highcharts.src.js";
+
 import { getResponsiveChartHeight } from "../../../../../../../utils";
+import { getCssColor } from "../../../../../../../utils/colors";
+import { CreateChartOptions } from "../../../../../components/chart-ep";
 
 interface DataItem {
   name_fr: string;
@@ -15,7 +16,7 @@ interface DataItem {
 export default function OptionsCoordinationNumber(data: DataItem[], currentLang: string): Highcharts.Options | null {
   if (!data) return null;
 
-  const newOptions: HighchartsInstance.Options = {
+  const newOptions: Highcharts.Options = {
     chart: {
       height: getResponsiveChartHeight(data.length),
     },

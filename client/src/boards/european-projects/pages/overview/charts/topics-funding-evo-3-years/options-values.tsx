@@ -1,4 +1,4 @@
-import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js";
+import type Highcharts from "highcharts/es-modules/masters/highcharts.src.js";
 
 import { CreateChartOptions } from "../../../../components/chart-ep";
 import { formatToMillions } from "../../../../../../utils/format";
@@ -50,7 +50,7 @@ export default function Options(data, displayType, currentLang): HighchartsOptio
   const successRates = successful.map((valSuccessful, i) => (evaluated[i] ? (valSuccessful / evaluated[i]) * 100 : 0));
   const successRateColor = getCssColor("average-success-rate") || "#d75521";
 
-  const newOptions: HighchartsInstance.Options = {
+  const newOptions: Highcharts.Options = {
     chart: {
       events: {
         render(this: any) {

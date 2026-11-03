@@ -1,7 +1,8 @@
-import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js";
-import { CreateChartOptions } from "../../../../../components/chart-ep";
-import { getCssColor } from "../../../../../../../utils/colors";
+import type Highcharts from "highcharts/es-modules/masters/highcharts.src.js";
+
 import { getResponsiveChartHeight } from "../../../../../../../utils";
+import { getCssColor } from "../../../../../../../utils/colors";
+import { CreateChartOptions } from "../../../../../components/chart-ep";
 
 interface DataItem {
   name: string;
@@ -21,7 +22,7 @@ export default function optionNumberInvolvedSuccessRate(data: DataItem[], curren
   };
   const t = translations[currentLang as keyof typeof translations] || translations.en;
 
-  const newOptions: HighchartsInstance.Options = {
+  const newOptions: Highcharts.Options = {
     chart: {
       height: getResponsiveChartHeight(data.length),
     },
