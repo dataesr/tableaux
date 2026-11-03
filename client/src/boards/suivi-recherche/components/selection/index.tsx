@@ -54,7 +54,7 @@ export default function SelectionBar({ pays = false }: { pays?: boolean }) {
     : selection?.domaineCode ? `domaine:${selection.domaineCode}` : "toutes";
 
   return (
-    <div className="sr-selection">
+    <div className="sr-selection fr-background-alt--grey fr-py-3v">
       <Container>
         <div className="sr-selection__grid">
           {pays ? (

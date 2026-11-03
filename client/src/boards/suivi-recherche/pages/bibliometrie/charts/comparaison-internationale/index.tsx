@@ -43,10 +43,13 @@ export default function ComparaisonInternationale({ disciplines, meta, options, 
 
   const legend = (
     <ul className="sr-legende" aria-label="Légende">
-      <li><span className="sr-legende__pastille" style={{ backgroundColor: "var(--sr-focus)" }} />France</li>
+      <li>
+        <svg aria-hidden="true" height="12" width="24"><rect fill="var(--sr-focus)" height="12" width="24" /></svg>
+        France
+      </li>
       {continents.map((continent) => (
         <li key={continent}>
-          <span className="sr-legende__pastille" style={{ backgroundColor: getContinentColor(continent) }} />
+          <svg aria-hidden="true" height="12" width="24"><rect fill={getContinentColor(continent)} height="12" width="24" /></svg>
           {continent}
         </li>
       ))}

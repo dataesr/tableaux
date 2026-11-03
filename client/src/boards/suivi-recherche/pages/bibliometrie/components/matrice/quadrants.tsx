@@ -30,33 +30,35 @@ export default function Quadrants<P>({ cle, colonne, data, libelle, vide }: Quad
           const membres = data.quadrants[quadrant.key].flatMap((key) => pointsByCle.get(key) ?? []);
           return (
             <Col xs="12" md="6" key={quadrant.key}>
-              <div className={`sr-quadrant sr-quadrant--${quadrant.key}`}>
+              <div className="sr-quadrant fr-background-alt--grey fr-p-3w">
                 <h4 className="fr-text--md fr-text--bold fr-mb-0">{`${quadrant.titre} (${membres.length})`}</h4>
                 <p className="fr-text--sm fr-text-mention--grey fr-mb-1w">{quadrant.definition}</p>
                 {membres.length === 0 ? (
                   <p className="fr-text--sm fr-mb-0">{vide}</p>
                 ) : (
-                  <table className="sr-quadrant__table">
-                    <caption className="fr-sr-only">{quadrant.titre}</caption>
-                    <thead>
-                      <tr>
-                        <th scope="col">{colonne}</th>
-                        <th scope="col">{`Part ${formatPeriode(data.periodes.arrivee)}`}</th>
-                        <th scope="col">Évolution</th>
-                        <th scope="col">Articles</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {membres.map((p) => (
-                        <tr key={cle(p)} className={p.fiable ? undefined : "sr-quadrant__row--faible"}>
-                          <th scope="row">{libelle(p)}</th>
-                          <td>{formatPart(p.niveau.valeur)}</td>
-                          <td>{formatDynamique(p.dynamique)}</td>
-                          <td>{formatArticles(p.nb_articles)}</td>
+                  <div className="fr-table fr-table--no-caption fr-mb-0">
+                    <table>
+                      <caption>{quadrant.titre}</caption>
+                      <thead>
+                        <tr>
+                          <th scope="col">{colonne}</th>
+                          <th scope="col">{`Part ${formatPeriode(data.periodes.arrivee)}`}</th>
+                          <th scope="col">Évolution</th>
+                          <th scope="col">Articles</th>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                      </thead>
+                      <tbody>
+                        {membres.map((p) => (
+                          <tr key={cle(p)} className={p.fiable ? undefined : "fr-text-mention--grey"}>
+                            <th scope="row">{libelle(p)}</th>
+                            <td>{formatPart(p.niveau.valeur)}</td>
+                            <td>{formatDynamique(p.dynamique)}</td>
+                            <td>{formatArticles(p.nb_articles)}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
                 )}
               </div>
             </Col>

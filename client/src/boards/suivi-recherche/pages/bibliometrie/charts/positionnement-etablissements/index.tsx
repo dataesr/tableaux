@@ -19,9 +19,11 @@ import "../../components/matrice/styles.scss";
 
 const libelle = (p: EtablissementMatricePoint) => (
   <>
-    <span aria-hidden="true" className="sr-quadrant__pastille" style={{ backgroundColor: getEtablissementColor(p) }} />
+    <svg aria-hidden="true" className="fr-mr-1w" height="10" width="10">
+      <circle cx="5" cy="5" fill={getEtablissementColor(p)} r="5" />
+    </svg>
     {p.focus ? <strong>{p.nom}</strong> : p.nom}
-    {p.sigle && <span className="sr-quadrant__nom">{` ${p.sigle}`}</span>}
+    {p.sigle && <span className="fr-text-mention--grey">{` ${p.sigle}`}</span>}
   </>
 );
 
@@ -60,7 +62,7 @@ export default function PositionnementEtablissements({ disciplines, entiteNom, o
 
   const legend = data && (
     <div className="sr-matrice-legende">
-      <ul aria-label="Couleur">
+      <ul aria-label="Couleur" className="fr-text--sm fr-mb-0">
         {selection.entiteId !== ENTITE_NATIONALE && data.points.some((p) => p.focus) && (
           <li>
             <svg aria-hidden="true" height="14" width="14">

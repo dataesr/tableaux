@@ -19,9 +19,11 @@ type Point = Positionnement["points"][number];
 const cle = (p: Point) => p.discipline_code;
 const libelle = (p: Point) => (
   <>
-    <span aria-hidden="true" className="sr-quadrant__pastille" style={{ backgroundColor: getDomaineColor(p.domaine_code) }} />
-    <abbr title={p.discipline_nom}>{p.discipline_code}</abbr>
-    <span className="sr-quadrant__nom">{p.discipline_nom}</span>
+    <svg aria-hidden="true" className="fr-mr-1w" height="10" width="10">
+      <circle cx="5" cy="5" fill={getDomaineColor(p.domaine_code)} r="5" />
+    </svg>
+    <abbr className="fr-text--bold fr-mr-1w" title={p.discipline_nom}>{p.discipline_code}</abbr>
+    <span className="fr-text-mention--grey">{p.discipline_nom}</span>
   </>
 );
 
@@ -55,7 +57,7 @@ export default function PositionnementDisciplines({ entiteNom, options, selectio
 
   const legend = (
     <div className="sr-matrice-legende">
-      <ul aria-label="Couleur : domaine ERC">
+      <ul aria-label="Couleur : domaine ERC" className="fr-text--sm fr-mb-0">
         {domaines.map(([code, nom]) => (
           <li key={code}>
             <svg aria-hidden="true" height="14" width="14">

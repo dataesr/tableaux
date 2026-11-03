@@ -11,8 +11,8 @@ export default function LegendeTailles<P>({ data }: { data: Matrice<P> }) {
   const periode = formatPeriode(data.periodes.arrivee);
 
   return (
-    <ul aria-label={`Taille : nombre d'articles sur ${periode}`}>
-      <li className="sr-matrice-legende__titre">{`Taille : articles sur ${periode}`}</li>
+    <ul aria-label={`Taille : nombre d'articles sur ${periode}`} className="fr-text--sm fr-mb-0">
+      <li className="fr-text-mention--grey">{`Taille : articles sur ${periode}`}</li>
       {tailles.map((z) => {
         const d = getDiametre(z, zMin, zMax);
         return (

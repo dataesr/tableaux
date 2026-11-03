@@ -1,8 +1,4 @@
 .sr-selection {
-  background-color: var(--background-alt-grey);
-  border-block-end: 1px solid var(--border-default-grey);
-  padding-block: 0.75rem;
-
   // Grille à colonnes fixes : rien ne bouge quand le champ établissement s'active
   .sr-selection__grid {
     align-items: end;
@@ -32,24 +28,14 @@
     }
   }
 
-  // Champs compacts : pas de marge d'empilement, libellés serrés
+  // Champs alignés dans la barre : pas de marge d'empilement (dsfr §3.4)
   .fr-input-group,
   .fr-select-group,
   .fr-segmented {
     margin-block: 0;
   }
 
-  .fr-label {
-    font-size: 0.875rem;
-    margin-block-end: 0.25rem;
-  }
-
   .fr-input {
     margin-block-start: 0;
-  }
-
-  .fr-segmented__legend {
-    font-size: 0.875rem;
-    margin-block-end: 0.25rem;
   }
 }

@@ -13,5 +13,6 @@ export const SITEMAP: BoardSitemapConfig = {
     { label: "Bibliométrie : profil", href: `${BASE}/bibliometrie` },
     { label: "Bibliométrie : établissements", href: `${BASE}/bibliometrie?section=etablissements` },
     { label: "Bibliométrie : international", href: `${BASE}/bibliometrie?section=international` },
+    { label: "Financements", href: `${BASE}/financements` },
   ],
 }

@@ -20,7 +20,7 @@ type IndicateursProps = {
 export default function Indicateurs({ data, optionsLabel, selectionLabel }: IndicateursProps) {
   return (
     <section className="sr-indicateurs fr-mb-4w" aria-labelledby="sr-indicateurs-titre">
-      <div className="sr-indicateurs__selection">
+      <div className="fr-highlight fr-mb-3w">
         <h2 className="fr-h5 fr-mb-0" id="sr-indicateurs-titre">{selectionLabel}</h2>
         <p className="fr-text--sm fr-text-mention--grey fr-mb-0">{optionsLabel}</p>
       </div>
@@ -29,7 +29,7 @@ export default function Indicateurs({ data, optionsLabel, selectionLabel }: Indi
           const ratio: Ratio = data[key];
           return (
             <Col xs="12" md="4" key={key}>
-              <div className={`sr-indicateur sr-indicateur--${key}`}>
+              <div className="sr-indicateur fr-background-alt--grey fr-p-3w">
                 <div className="sr-indicateur__header">
                   <h3 className="fr-h6 fr-mb-0">{titre}</h3>
                   {key === "influence" && data.influence_provisoire && (

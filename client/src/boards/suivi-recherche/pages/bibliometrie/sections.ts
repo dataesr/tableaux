@@ -14,12 +14,3 @@ export function useSection(): Section {
   const [searchParams] = useSearchParams();
   return SECTIONS.find(({ id }) => id === searchParams.get("section")) ?? SECTIONS[0];
 }
-
-// Lien vers un onglet en gardant la sélection ; le premier onglet n'écrit pas `section`
-export function getSectionSearch(searchParams: URLSearchParams, section: Section): string {
-  const next = new URLSearchParams(searchParams);
-  if (section.id === SECTIONS[0].id) next.delete("section");
-  else next.set("section", section.id);
-  const search = next.toString();
-  return search ? `?${search}` : "";
-}
