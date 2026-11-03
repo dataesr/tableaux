@@ -1,8 +1,8 @@
+import { Col, Container, Row } from "@dataesr/dsfr-plus";
 import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
-import { Col, Container, Row } from "@dataesr/dsfr-plus";
-import { useState } from "react";
 import ChartWrapper from "../../../../../../components/chart-wrapper/index.js";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.js";
 import { getI18nLabel } from "../../../../../../utils.js";
@@ -36,7 +36,7 @@ export default function FundingEvo() {
   let titleChart1, commentChart1, titleChart2, commentChart2;
   switch (displayType) {
     case "total_coordination_number":
-      titleChart1 = { fr: "Evolution du nombre de coordinations demandées et obtenues", en: "Evolution of the number of coordinations applied for and obtained" };
+      titleChart1 = { fr: "Evolution du nombre de projets coordonnés par le pays sélectionné sur Horizon Europe", en: "Trends in the number of projects coordinated by the selected country under Horizon Europe" };
       commentChart1 = {
         fr: (
           <>
@@ -51,40 +51,40 @@ export default function FundingEvo() {
           </>
         ),
       };
-      titleChart2 = { fr: "Part des coordinations du pays demandées et obtenues par rapport au total des coordinations", en: "Percentage of country coordinations applied for and obtained as a proportion of total coordinations" };
+      titleChart2 = { fr: "Part des projets coordonnés par le pays sélectionné sur l'ensemble des coordinations", en: "Proportion of projects coordinated by the selected country out of the total number of coordination roles" };
       commentChart2 = {
         fr: <>Ce graphique montre le pourcentage de coordinations demandées et obtenues par le pays sélectionné par rapport au total des coordinations.</>,
         en: <>This chart shows the percentage of coordinations applied for and obtained by the selected country as a proportion of total coordinations.</>,
       };
       break;
     case "total_number_involved":
-      titleChart1 = { fr: "Evolution du nombre de participations demandées et obtenues", en: "Evolution of the number of participations applied for and obtained" };
+      titleChart1 = { fr: "Evolution du nombre de candidats et de participants du pays sélectionné sur Horizon Europe", en: "Trends in the number of applicants and participants from the selected country under Horizon Europe" };
       commentChart1 = {
         fr: <>Ce graphique montre l'évolution du nombre de participations demandées et obtenues sur le programme Horizon Europe. Les barres représentent les participations demandées et obtenues. La ligne indique le taux de succès correspondant.</>,
         en: (
           <>This chart shows the evolution of the number of participations applied for and obtained in the Horizon Europe programme. The bars represent the participations applied for and obtained. The line indicates the corresponding success rate.</>
         ),
       };
-      titleChart2 = { fr: "Part des participations du pays demandées et obtenues par rapport au total des participants", en: "Percentage of country participations applied for and obtained as a proportion of total participants" };
+      titleChart2 = { fr: "Part du nombre de candidats et de participants du pays sélectionné", en: "Proportion of the total number of candidates and participants from the selected country" };
       commentChart2 = {
         fr: <>Ce graphique montre le pourcentage de participations demandées et obtenues par le pays sélectionné par rapport au total des participants.</>,
         en: <>This chart shows the percentage of participations applied for and obtained by the selected country as a proportion of total participants.</>,
       };
       break;
     case "total_projects":
-      titleChart1 = { fr: "Evolution du nombre de projets demandés et obtenus", en: "Evolution of the number of projects applied for and obtained" };
+      titleChart1 = { fr: "Evolution du nombre de projets impliquant au moins un participant du pays sélectionné sur Horizon Europe", en: "Trends in the number of projects involving at least one participant from the selected country under Horizon Europe" };
       commentChart1 = {
         fr: <>Ce graphique montre l'évolution du nombre de projets demandés et obtenus sur le programme Horizon Europe. Les barres représentent les projets demandés et obtenus. La ligne indique le taux de succès correspondant.</>,
         en: <>This chart shows the evolution of the number of projects applied for and obtained in the Horizon Europe programme. The bars represent the projects applied for and obtained. The line indicates the corresponding success rate.</>,
       };
-      titleChart2 = { fr: "Part des projets du pays demandés et obtenus par rapport au total des projets", en: "Percentage of country projects applied for and obtained as a proportion of total projects" };
+      titleChart2 = { fr: "Part du nombre de projets impliquant au moins un participant du pays sélectionné", en: "Proportion of projects involving at least one participant from the selected country" };
       commentChart2 = {
         fr: <>Ce graphique montre le pourcentage de projets demandés et obtenus par le pays sélectionné par rapport au total des projets.</>,
         en: <>This chart shows the percentage of projects applied for and obtained by the selected country as a proportion of total projects.</>,
       };
       break;
     default:
-      titleChart1 = { fr: "Evolution des financements demandés et obtenus (M€)", en: "Financing applied for and obtained (€m) evolution" };
+      titleChart1 = { fr: "Evolution des financements demandés et obtenus (M€) sur Horizon Europe", en: "Trends in funding requested and awarded (M€) under Horizon Europe" };
       commentChart1 = {
         fr: (
           <>
@@ -99,7 +99,7 @@ export default function FundingEvo() {
           </>
         ),
       };
-      titleChart2 = { fr: "Part des financements du pays demandés et obtenus par rapport au total des participants", en: "Percentage of country funding applied for and obtained as a proportion of total participants" };
+      titleChart2 = { fr: "Part des financements demandés et obtenus par le pays sélectionné", en: "Proportion of funding requested and secured by the selected country" };
       commentChart2 = {
         fr: <>Ce graphique montre le pourcentage des financements demandés et obtenus par le pays sélectionné par rapport au total des participants.</>,
         en: <>This chart shows the percentage of funding applied for and obtained by the selected country as a proportion of total participants.</>,

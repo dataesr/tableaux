@@ -43,7 +43,7 @@ export default function FundingCombined({ displayType = "total_fund_eur", groupB
 
   switch (displayType) {
     case "total_coordination_number":
-      config.title = { fr: "Répartition des coordinations de projets évalués et lauréats par pilier", en: "Breakdown of evaluated and successful project coordinations by pilla" }
+      config.title = { fr: "Répartition des coordinations de projets évalués et lauréats par pilier sur Horizon Europe", en: "Breakdown of evaluated and successful project coordinations by pillar on Horizon Europe" }
       config.comment = {
         fr: (
           <>
@@ -75,7 +75,7 @@ export default function FundingCombined({ displayType = "total_fund_eur", groupB
       break;
 
     case "total_number_involved":
-      config.title = { fr: "Répartition du nombre de candidats et participants par pilier", en: "Breakdown of the number of candidates and participants by pillar" }
+      config.title = { fr: "Répartition du nombre de candidats et participants par pilier sur Horizon Europe", en: "Breakdown of the number of candidates and participants by pillar on Horizon Europe" }
       config.comment = {
         fr: <>Ce graphique présente la répartition, par pilier, du nombre de candidats et de participants du pays sélectionné et les taux de succès associé (nombre de participants / nombre de candidats).</>,
         en: <>This chart shows the breakdown, by pillar, of the number of applicants and participants from the selected country, together with the associated success rates (number of participants / number of applicants).</>,
@@ -97,7 +97,7 @@ export default function FundingCombined({ displayType = "total_fund_eur", groupB
       break;
 
     case "total_projects":
-      config.title = { fr: "Répartition des projets par pilier", en: "Breakdown of projects by pillar" }
+      config.title = { fr: "Répartition des projets par pilier sur Horizon Europe", en: "Breakdown of projects by pillar on Horizon Europe" }
       config.comment = {
         fr: <>Ce graphique présente la répartition, par pilier, du nombre de projets du pays sélectionné et les taux de succès associés (nombre de projets lauréats / nombre de projets évalués).</>,
         en: <>This chart shows the number of projects and success rates.</>,
@@ -119,7 +119,7 @@ export default function FundingCombined({ displayType = "total_fund_eur", groupB
       break;
 
     default: //"total_fund_eur"
-      config.title = { fr: "Répartition des financements et des taux de succès par pilier", en: "Breakdown of funding and success rates by pillar" }
+      config.title = { fr: "Répartition des financements et des taux de succès par pilier sur Horizon Europe", en: "Breakdown of funding and success rates by pillar on Horizon Europe" }
       config.comment = {
         fr: <>Ce graphique présente la répartition, par pilier, des financements demandés et obtenus par l'ensemble des participants du pays sélectionné et les taux de succès associé (montants obtenus / montants demandés).</>,
         en: <>This chart shows the breakdown, by pillar, of the funding requested and secured by all participants from the selected country, together with the associated success rates (funding secured / funding requested).</>,

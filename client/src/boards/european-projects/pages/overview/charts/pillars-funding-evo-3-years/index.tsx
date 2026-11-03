@@ -66,43 +66,43 @@ export default function PillarsFundingEvo3Years() {
     ...i18nGlobal,
   };
 
-switch (displayType) {
-  case "total_coordination_number":
-    configChart1.title = { fr: "Evolution des coordinations", en: "Evolution of coordinations" };
-    configChart1.comment = { fr: <></>, en: <></> };
-    configChart3.title = { fr: "Evolution de la part des coordinations", en: "Evolution of percentage of country coordinations" };
-    configChart3.comment = { fr: <></>, en: <></> };
-    break;
-  case "total_number_involved":
-    configChart1.title = { fr: "Evolution des participants", en: "Evolution of participants" };
-    configChart1.comment = { fr: <></>, en: <></> };
-    configChart3.title = { fr: "Evolution de la part des participants", en: "Evolution of percentage of participants" };
-    configChart3.comment = { fr: <></>, en: <></> };
-    break;
-  case "total_projects":
-    configChart1.title = { fr: "Evolution des projets", en: "Evolution of projects" };
-    configChart1.comment = { fr: <></>, en: <></> };
-    configChart3.title = { fr: "Evolution de la part des projets", en: "Evolution of percentage of projects" };
-    configChart3.comment = { fr: <></>, en: <></> };
-    break;
-  default:
-    configChart1.title = {
-      fr: "Evolution des financements demandés et obtenus (M€) sur Horizon Europe",
-      en: "Financing applied for and obtained (€m) evolution on Horizon Europe",
-    };
-    configChart1.comment = {
-      fr: <>Ce graphique montre l'évolution des financements demandés et obtenus pour les piliers du programme Horizon Europe. Les barres représentent les montants demandés et obtenus. Le point orange indique le taux de succès correspondant.</>,
-      en: <>This chart shows funding applied for and obtained for Horizon Europe pillars. The bars show amounts, the orange point shows success rate.</>,
-    };
-    configChart3.title = {
-      fr: "Part des financements du pays demandés et obtenus par rapport au total des participants",
-      en: "Percentage of country funding applied for and obtained as a proportion of total participants",
-    };
-    configChart3.comment = {
-      fr: <>Ce graphique montre le pourcentage des financements demandés et obtenus par le pays sélectionné par rapport au total des participants.</>,
-      en: <>This chart shows the percentage of funding applied for and obtained by the selected country as a proportion of total participants.</>,
-    };
-}
+  switch (displayType) {
+    case "total_coordination_number":
+      configChart1.title = { fr: "Evolution du nombre de projets coordonnés par le pays sélectionné sur Horizon Europe", en: "Trends in the number of projects coordinated by the selected country under Horizon Europe" };
+      configChart1.comment = { fr: <></>, en: <></> };
+      configChart3.title = { fr: "Part des projets coordonnés par le pays sélectionné sur l'ensemble des coordinations", en: "Proportion of projects coordinated by the selected country out of the total number of coordination roles" };
+      configChart3.comment = { fr: <></>, en: <></> };
+      break;
+    case "total_number_involved":
+      configChart1.title = { fr: "Evolution du nombre de candidats et de participants du pays sélectionné sur Horizon Europe", en: "Trends in the number of applicants and participants from the selected country under Horizon Europe" };
+      configChart1.comment = { fr: <></>, en: <></> };
+      configChart3.title = { fr: "Part du nombre de candidats et de participants du pays sélectionné", en: "Proportion of the total number of candidates and participants from the selected country" };
+      configChart3.comment = { fr: <></>, en: <></> };
+      break;
+    case "total_projects":
+      configChart1.title = { fr: "Evolution du nombre de projets impliquant au moins un participant du pays sélectionné sur Horizon Europe", en: "Trends in the number of projects involving at least one participant from the selected country under Horizon Europe" };
+      configChart1.comment = { fr: <></>, en: <></> };
+      configChart3.title = { fr: "Part du nombre de projets impliquant au moins un participant du pays sélectionné", en: "Proportion of projects involving at least one participant from the selected country" };
+      configChart3.comment = { fr: <></>, en: <></> };
+      break;
+    default:
+      configChart1.title = {
+        fr: "Evolution des financements demandés et obtenus (M€) sur Horizon Europe",
+        en: "Financing applied for and obtained (€m) evolution on Horizon Europe",
+      };
+      configChart1.comment = {
+        fr: <>Ce graphique montre l'évolution des financements demandés et obtenus pour les piliers du programme Horizon Europe. Les barres représentent les montants demandés et obtenus. Le point orange indique le taux de succès correspondant.</>,
+        en: <>This chart shows funding applied for and obtained for Horizon Europe pillars. The bars show amounts, the orange point shows success rate.</>,
+      };
+      configChart3.title = {
+        fr: "Part des financements demandés et obtenus par le pays sélectionné",
+        en: "Proportion of funding requested and secured by the selected country",
+      };
+      configChart3.comment = {
+        fr: <>Ce graphique montre le pourcentage des financements demandés et obtenus par le pays sélectionné par rapport au total des participants.</>,
+        en: <>This chart shows the percentage of funding applied for and obtained by the selected country as a proportion of total participants.</>,
+      };
+  }
 
   return (
     <Container fluid className="chart-container chart-container--default">
