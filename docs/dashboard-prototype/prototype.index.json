@@ -114,6 +114,15 @@
       "example": "client/src/boards/template/pages/overview/charts/funded-labs-example/index.tsx"
     },
     {
+      "id": "chart-options",
+      "exports": [
+        "createChartOptions"
+      ],
+      "package": "client/src/components/chart-wrapper/default-options.ts",
+      "props": "createChartOptions(type: chart type | \"empty\", options: Highcharts.Options): Highcharts.Options; deep-merges DSFR-token theme, axes, tooltip, legend (disabled by default), credits/exporting off, accessibility on. Axis arrays are concatenated (duplicated): assign multiple axes after the call",
+      "example": "client/src/boards/personnel-enseignant/pages/structures/components/charts/distribution-bar/options.tsx"
+    },
+    {
       "id": "chart-loading-skeletons",
       "exports": [
         "DefaultSkeleton",
@@ -172,6 +181,12 @@
     }
   ],
   "chart_examples": [
+    {
+      "id": "european-projects-programs-funding",
+      "title": "Reference chart: server-computed data, options via CreateChartOptions",
+      "path": "client/src/boards/european-projects/pages/overview/charts/programs-funding/",
+      "note": "Structure to copy: index.tsx (useQuery + ChartWrapper + renderData), query.tsx, options.tsx returning CreateChartOptions(type, options), utils.tsx (params, renderDataTable, readingKey). Its route server/src/routes/boards/european-projects/routes/horizon-europe/overview/programs-funding/index.js computes totals and success rates. In other boards use the shared createChartOptions."
+    },
     {
       "id": "funded-labs-example",
       "title": "Bar chart calling the board's own route (fixtures)",
