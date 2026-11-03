@@ -11,12 +11,13 @@ function optionLabel(entite: Entite) {
   return [entite.nom, entite.sigle && `(${entite.sigle})`, entite.ville && `· ${entite.ville}`].filter(Boolean).join(" ");
 }
 
-// Sélection commune aux onglets : périmètre d'analyse, période, discipline
-export default function SelectionBar() {
+// Sélection commune aux onglets : périmètre d'analyse, période, discipline.
+// `pays` : la vue compare des pays ; le choix d'établissement, sans effet, est remplacé par une mention fixe.
+export default function SelectionBar({ pays = false }: { pays?: boolean }) {
   const meta = useBiblioMeta();
   const disciplines = useBiblioDisciplines();
   const entites = useBiblioEntites();
-  const { niveau, etablissementId, selection, setParams } = useSelection(meta.data);
+  const { niveau, etablissementId, selection, setParams } = useSelection(meta.data, { pays });
   const datalistId = useId();
   const inputId = useId();
 
@@ -50,38 +51,50 @@ export default function SelectionBar() {
     <div className="sr-selection">
       <Container>
         <div className="sr-selection__grid">
-          <SegmentedControl className="fr-segmented--sm" label="Périmètre d'analyse" name="sr-niveau">
-            <SegmentedElement
-              checked={niveau === "national"}
-              label="France"
-              onClick={() => setParams({ niveau: null })}
-              value="national"
-            />
-            <SegmentedElement
-              checked={niveau === "etablissement"}
-              label="Un établissement"
-              onClick={() => setParams({ niveau: "etablissement" })}
-              value="etablissement"
-            />
-          </SegmentedControl>
-          {/* Toujours présent (désactivé au niveau national) : les champs suivants ne bougent pas */}
-          <div className="fr-input-group">
-            <label className="fr-label" htmlFor={inputId}>Établissement</label>
-            <input
-              autoComplete="off"
-              className="fr-input"
-              disabled={niveau !== "etablissement"}
-              id={inputId}
-              list={datalistId}
-              onChange={(event) => onSaisie(event.target.value)}
-              placeholder={niveau === "etablissement" ? `Nom, sigle ou ville (${etablissements.length} établissements)` : "Choisir « Un établissement »"}
-              type="search"
-              value={niveau === "etablissement" ? saisie : ""}
-            />
-            <datalist id={datalistId}>
-              {etablissements.map((entite) => <option key={entite.entite_id} value={optionLabel(entite)} />)}
-            </datalist>
-          </div>
+          {pays ? (
+            <div className="sr-selection__fixe">
+              <p className="fr-label">Périmètre d'analyse</p>
+              <p className="fr-mb-0">
+                <strong>Pays</strong>
+                <span className="fr-text-mention--grey">{" · France mise en avant ; le choix d'établissement ne s'applique pas ici"}</span>
+              </p>
+            </div>
+          ) : (
+            <>
+              <SegmentedControl className="fr-segmented--sm" label="Périmètre d'analyse" name="sr-niveau">
+                <SegmentedElement
+                  checked={niveau === "national"}
+                  label="France"
+                  onClick={() => setParams({ niveau: null })}
+                  value="national"
+                />
+                <SegmentedElement
+                  checked={niveau === "etablissement"}
+                  label="Un établissement"
+                  onClick={() => setParams({ niveau: "etablissement" })}
+                  value="etablissement"
+                />
+              </SegmentedControl>
+              {/* Toujours présent (désactivé au niveau national) : les champs suivants ne bougent pas */}
+              <div className="fr-input-group">
+                <label className="fr-label" htmlFor={inputId}>Établissement</label>
+                <input
+                  autoComplete="off"
+                  className="fr-input"
+                  disabled={niveau !== "etablissement"}
+                  id={inputId}
+                  list={datalistId}
+                  onChange={(event) => onSaisie(event.target.value)}
+                  placeholder={niveau === "etablissement" ? `Nom, sigle ou ville (${etablissements.length} établissements)` : "Choisir « Un établissement »"}
+                  type="search"
+                  value={niveau === "etablissement" ? saisie : ""}
+                />
+                <datalist id={datalistId}>
+                  {etablissements.map((entite) => <option key={entite.entite_id} value={optionLabel(entite)} />)}
+                </datalist>
+              </div>
+            </>
+          )}
           <Select
             label="De"
             onChange={(key) => setParams({ debut: String(key) })}

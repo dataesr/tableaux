@@ -19,3 +19,27 @@ GET http://localhost:3000/api/suivi-recherche/bibliometrie/evolution?entite_id=F
 ###
 # 400 attendu
 GET http://localhost:3000/api/suivi-recherche/bibliometrie/indicateurs?entite_id=FR&perimetre=inconnu&annee_debut=2015&annee_fin=2022
+
+###
+# Rubans déjà classés et positionnés pour les trois indicateurs (poids, influence, prestige)
+GET http://localhost:3000/api/suivi-recherche/bibliometrie/comparaison-internationale?perimetre=revues_sjr&annee_debut=2015&annee_fin=2022&entite_id=FR
+
+###
+# Matrice niveau × dynamique : points représentables, quadrants, bornes et tailles calculés par le serveur
+GET http://localhost:3000/api/suivi-recherche/bibliometrie/positionnement?entite_id=FR&perimetre=revues_sjr&annee_debut=2015&annee_fin=2022&indicateur=influence
+
+###
+# 400 attendu
+GET http://localhost:3000/api/suivi-recherche/bibliometrie/positionnement?entite_id=FR&perimetre=revues_sjr&annee_debut=2015&annee_fin=2022&indicateur=inconnu
+
+###
+# Matrice des établissements : sans groupe, celui de l'établissement sélectionné (ici le CNRS → organismes)
+GET http://localhost:3000/api/suivi-recherche/bibliometrie/positionnement-etablissements?entite_id=02feahw73&perimetre=revues_sjr&annee_debut=2015&annee_fin=2022&indicateur=influence
+
+###
+# Groupe explicite et filtre de domaine
+GET http://localhost:3000/api/suivi-recherche/bibliometrie/positionnement-etablissements?entite_id=FR&perimetre=revues_sjr&annee_debut=2015&annee_fin=2022&indicateur=poids&groupe=sante&domaine_code=LS
+
+###
+# 400 attendu
+GET http://localhost:3000/api/suivi-recherche/bibliometrie/positionnement-etablissements?entite_id=FR&perimetre=revues_sjr&annee_debut=2015&annee_fin=2022&indicateur=poids&groupe=inconnu

@@ -16,6 +16,11 @@
       > :last-child {
         grid-column: 1 / -1;
       }
+
+      // Mention fixe à la place du périmètre et de l'établissement (vue entre pays)
+      > .sr-selection__fixe {
+        grid-column: span 2;
+      }
     }
 
     @media (min-width: 78em) {

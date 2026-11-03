@@ -1,46 +1,46 @@
-import type { Indicateurs } from "../../../../api";
+import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js";
+
+import type { Evolution } from "../../../../api";
+import { createChartOptions } from "../../../../../../components/chart-wrapper/default-options.ts";
 import { getCssColor } from "../../../../../../utils/colors";
 import { formatPart, formatRatio } from "../../../../utils";
+import { SERIES } from "./utils.tsx";
 
-const SERIES = [
-  { key: "poids", name: "Poids", color: "sr-poids" },
-  { key: "influence", name: "Influence", color: "sr-influence" },
-  { key: "prestige", name: "Prestige", color: "sr-prestige" },
-] as const;
+// Les parts et ratios sont calculés par le serveur : ici, uniquement du mapping vers Highcharts
+export default function getOptions(data: Evolution, anneesProvisoires: number[]) {
+  // Le trait passe en pointillés à partir de la première année dont la fenêtre de citation n'est pas close
+  const premiereProvisoire = data.find((d) => anneesProvisoires.includes(d.annee_publication))?.annee_publication;
 
-export function getOptions(data: (Indicateurs & { annee_publication: number })[], anneesProvisoires: number[]) {
-  // Le trait passe en pointillés pour les années dont la fenêtre de citation n'est pas close
-  const premiereProvisoire = Math.min(...anneesProvisoires.filter((annee) => data.some((d) => d.annee_publication === annee)));
-
-  return {
-    chart: { type: "line", height: 400 },
-    credits: { enabled: false },
+  const newOptions: HighchartsInstance.Options = {
+    chart: { height: 400 },
     legend: { enabled: true },
-    title: { text: "" },
     xAxis: { allowDecimals: false, title: { text: "Année de publication" } },
     yAxis: {
       min: 0,
       title: { text: "Part mondiale" },
-      labels: { formatter: function (this: any) { return formatPart(this.value); } },
+      labels: { formatter: function () { return formatPart(Number(this.value)); } },
     },
     tooltip: {
       shared: true,
-      formatter: function (this: any) {
-        const lines = this.points.map((point) => {
-          const { indicateur, ratio } = point.point.options.custom;
-          return `<span style="color:${point.color}">●</span> ${point.series.name} : <b>${formatPart(point.y)}</b> = ${formatRatio(ratio, indicateur)}`;
+      formatter: function () {
+        const lines = (this.points ?? []).map((point) => {
+          const { indicateur, ratio } = point.options.custom ?? {};
+          return `<span style="color:${point.color}">●</span> ${point.series.name} : <b>${formatPart(point.y ?? null)}</b> = ${formatRatio(ratio, indicateur)}`;
         });
         return [`<b>${this.x}</b>`, ...lines].join("<br/>");
       },
     },
     series: SERIES.map(({ key, name, color }) => ({
+      type: "line",
       color: getCssColor(color),
       data: data.map((d) => ({ x: d.annee_publication, y: d[key].valeur, custom: { indicateur: key, ratio: d[key] } })),
       name,
-      ...(key === "influence" && Number.isFinite(premiereProvisoire) && {
+      ...(key === "influence" && premiereProvisoire !== undefined && {
         zoneAxis: "x",
         zones: [{ value: premiereProvisoire - 1 }, { dashStyle: "Dash" }],
       }),
     })),
   };
+
+  return createChartOptions("line", newOptions);
 }

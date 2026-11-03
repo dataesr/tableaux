@@ -1,37 +1,57 @@
-import { Alert, Col, Container, Notice, Row, SegmentedControl, SegmentedElement, Title, Toggle } from "@dataesr/dsfr-plus";
+import { Alert, Container, Notice, SegmentedControl, SegmentedElement, Title, Toggle } from "@dataesr/dsfr-plus";
+import { Link, Outlet, useLocation } from "react-router-dom";
 
 import DefaultSkeleton from "../../../../components/charts-skeletons/default.tsx";
-import { useBiblioDisciplines, useBiblioEntites, useBiblioIndicateurs, useBiblioMeta } from "../../api";
-import type { BiblioDiscipline, BiblioMeta, BiblioOptions, Selection } from "../../api";
+import { useBiblioDisciplines, useBiblioEntites, useBiblioMeta } from "../../api";
 import { useBiblioOptions, useSelection } from "../../hooks/use-selection";
-import { describeSelection } from "../../utils";
-import ComparaisonInternationale from "./charts/comparaison-internationale/index.tsx";
-import Evolution from "./charts/evolution/index.tsx";
-import PositionnementDisciplines from "./charts/positionnement/index.tsx";
-import Indicateurs from "./components/indicateurs/index.tsx";
+import { getOptionsLabel, PERIMETRE_LABELS } from "./context.ts";
+import type { BibliometrieContext } from "./context.ts";
 
-const PERIMETRE_LABELS = {
-  revues_sjr: "Revues classées par SJR",
-  toutes_revues_openalex: "Toutes les revues (OpenAlex)",
-};
+import "./styles.scss";
 
-export default function BibliometriePage() {
+const BASE = "/suivi-recherche/bibliometrie";
+
+// Une sous-page par question ; la sélection (paramètres d'URL) suit d'une sous-page à l'autre
+const SOUS_PAGES = [
+  { path: "profil", label: "Profil", question: "Où en est l'établissement sélectionné ?" },
+  { path: "etablissements", label: "Établissements", question: "Comment se situe-t-il parmi des établissements comparables ?" },
+  { path: "international", label: "International", question: "Comment se situe la France parmi les pays ?" },
+] as const;
+
+export default function BibliometrieLayout() {
+  const { pathname, search } = useLocation();
+  const pays = pathname.startsWith(`${BASE}/international`);
   const meta = useBiblioMeta();
   const disciplines = useBiblioDisciplines();
   const entites = useBiblioEntites();
-  const { selection, setParams } = useSelection(meta.data);
+  const { selection, setParams } = useSelection(meta.data, { pays });
   const options = useBiblioOptions(meta.data);
 
   const isLoading = meta.isLoading || disciplines.isLoading || entites.isLoading;
   const isError = meta.isError || disciplines.isError || entites.isError;
   const entiteNom = entites.data?.find((entite) => entite.entite_id === selection?.entiteId)?.nom ?? selection?.entiteId ?? "";
+  const courante = SOUS_PAGES.find(({ path }) => pathname.startsWith(`${BASE}/${path}`));
+  const optionsLabel = getOptionsLabel(options);
 
   return (
     <Container className="fr-my-4w">
       <Title as="h1" look="h3">Bibliométrie</Title>
-      <p className="fr-text--lead">
+      <p className="fr-text--lead fr-mb-2w">
         Poids, influence et prestige des publications scientifiques, en part de la production mondiale.
       </p>
+
+      <nav aria-label="Sections de la bibliométrie" className="sr-sous-nav fr-mb-3w">
+        <ul>
+          {SOUS_PAGES.map(({ path, label }) => (
+            <li key={path}>
+              <Link aria-current={courante?.path === path ? "page" : undefined} to={`${BASE}/${path}${search}`}>
+                {label}
+              </Link>
+            </li>
+          ))}
+        </ul>
+        {courante && <p className="fr-text--sm fr-text-mention--grey fr-mb-0">{courante.question}</p>}
+      </nav>
 
       {isLoading && <DefaultSkeleton height="200px" label="Chargement des données" />}
       {isError && (
@@ -44,9 +64,14 @@ export default function BibliometriePage() {
 
       {meta.data && disciplines.data && entites.data && (
         <>
-          <Row gutters className="fr-mb-2w">
-            <Col xs="12" md="6">
-              <SegmentedControl label="Revues de référence" name="sr-perimetre">
+          {/* Paramètres rarement changés : repliés, leur valeur courante reste lisible dans le résumé */}
+          <details className="sr-details fr-mb-3w">
+            <summary>
+              <span className="fr-text--bold">Paramètres de calcul</span>
+              <span className="fr-text--sm fr-text-mention--grey">{` · ${optionsLabel}`}</span>
+            </summary>
+            <div className="sr-details__contenu sr-parametres">
+              <SegmentedControl className="fr-segmented--sm" label="Revues de référence" name="sr-perimetre">
                 {meta.data.perimetres.map((perimetre) => (
                   <SegmentedElement
                     checked={options.perimetre === perimetre}
@@ -57,8 +82,6 @@ export default function BibliometriePage() {
                   />
                 ))}
               </SegmentedControl>
-            </Col>
-            <Col xs="12" md="6">
               <Toggle
                 checked={options.inclureMultidisciplinaires}
                 hint={meta.data.revues_multidisciplinaires.join(", ")}
@@ -66,75 +89,37 @@ export default function BibliometriePage() {
                 label="Prestige : inclure les revues multidisciplinaires"
                 onChange={(event) => setParams({ multi: event.target.checked ? null : "false" })}
               />
-            </Col>
-          </Row>
+            </div>
+          </details>
 
           {selection ? (
-            <BibliometrieContent
-              disciplines={disciplines.data}
-              entiteNom={entiteNom}
-              meta={meta.data}
-              options={options}
-              selection={selection}
+            <Outlet
+              context={{
+                disciplines: disciplines.data,
+                entiteNom,
+                entites: entites.data,
+                meta: meta.data,
+                options,
+                selection,
+              } satisfies BibliometrieContext}
             />
           ) : (
             <Notice closeMode="disallow" type="info">Choisissez un établissement dans la sélection ci-dessus.</Notice>
           )}
 
           {meta.data.methode.length > 0 && (
-            <section className="fr-mt-6w">
-              <Title as="h2" look="h5">Méthode</Title>
-              <ul>
+            <details className="sr-details fr-mt-6w">
+              <summary>
+                <span className="fr-text--bold">Méthode</span>
+                <span className="fr-text--sm fr-text-mention--grey"> · périmètre, comptage, indicateurs, années provisoires</span>
+              </summary>
+              <ul className="sr-details__contenu">
                 {meta.data.methode.map((texte) => <li key={texte}>{texte}</li>)}
               </ul>
-            </section>
+            </details>
           )}
         </>
       )}
     </Container>
-  );
-}
-
-type ContentProps = {
-  disciplines: BiblioDiscipline[];
-  entiteNom: string;
-  meta: BiblioMeta;
-  options: BiblioOptions;
-  selection: Selection;
-};
-
-function BibliometrieContent({ disciplines, entiteNom, meta, options, selection }: ContentProps) {
-  const indicateurs = useBiblioIndicateurs(selection, options);
-  const selectionLabel = describeSelection(selection, entiteNom, disciplines);
-  const optionsLabel = `${PERIMETRE_LABELS[options.perimetre]} · prestige ${options.inclureMultidisciplinaires ? "avec" : "sans"} les revues multidisciplinaires`;
-
-  return (
-    <>
-      {indicateurs.isLoading && <DefaultSkeleton height="160px" label="Chargement des indicateurs" />}
-      {indicateurs.isError && (
-        <Alert description="Les indicateurs n'ont pas pu être calculés pour cette sélection." title="Erreur de chargement" variant="error" />
-      )}
-      {indicateurs.data && indicateurs.data.nb_articles === 0 && (
-        <Notice className="fr-mb-4w" closeMode="disallow" type="info">
-          {`Aucun article pour ${selectionLabel}. Élargissez la période ou choisissez « Toutes disciplines ».`}
-        </Notice>
-      )}
-      {indicateurs.data && indicateurs.data.nb_articles > 0 && (
-        <>
-          <Indicateurs data={indicateurs.data} optionsLabel={optionsLabel} selectionLabel={selectionLabel} />
-          <Evolution meta={meta} options={options} selection={selection} selectionLabel={selectionLabel} />
-        </>
-      )}
-
-      <section className="fr-mt-6w">
-        <Title as="h2" look="h4">Comparaison internationale</Title>
-        <ComparaisonInternationale disciplines={disciplines} meta={meta} options={options} selection={selection} />
-      </section>
-
-      <section className="fr-mt-6w">
-        <Title as="h2" look="h4">Positionnement des disciplines : niveau × dynamique</Title>
-        <PositionnementDisciplines entiteNom={entiteNom} options={options} selection={selection} />
-      </section>
-    </>
   );
 }

@@ -53,10 +53,31 @@ export type Indicateurs = {
   prestige: Ratio;
 };
 
-export type ComparaisonRow = Indicateurs & {
-  annee_publication: number;
+export type Evolution = (Indicateurs & { annee_publication: number })[];
+
+export type Ruban = {
+  annees: { rang: number; ratio: Ratio | null }[];
+  // Bornes [bas, haut] de chaque point, dans l'ordre de `geometrie.abscisses`
+  data: [number, number][];
   entite_id: string;
   nom: string;
+};
+
+export type Etiquette = {
+  entite_id: string;
+  nom: string;
+  valeur: number;
+  y: number;
+};
+
+// Rubans déjà classés et positionnés par le serveur, pour chacun des trois indicateurs
+export type Comparaison = {
+  annees: number[];
+  annees_provisoires: number[];
+  // Abscisses [x, indice de l'année dans `annees`], communes à tous les rubans
+  geometrie: { abscisses: [number, number][]; demi_colonne: number; hauteur: number };
+  indicateurs: Record<Indicateur, { etiquettes: { debut: Etiquette[]; fin: Etiquette[] }; series: Ruban[] }>;
+  pays: { entite_id: string; nom: string }[];
 };
 
 export type PositionnementPoint = BiblioDiscipline & {
@@ -66,12 +87,54 @@ export type PositionnementPoint = BiblioDiscipline & {
   niveau_depart: Ratio;
 };
 
-export type Positionnement = {
+export type QuadrantKey = "hd" | "hg" | "bd" | "bg";
+
+// Champs communs à tout point d'une matrice niveau × dynamique, calculés par le serveur
+export type MatricePoint = {
+  dynamique: number | null;
+  fiable: boolean;
+  nb_articles: number;
+  niveau: Ratio;
+  niveau_depart: Ratio;
+  quadrant: QuadrantKey;
+};
+
+// Matrice niveau × dynamique : points représentables seulement, triés par nombre d'articles décroissant (ordre de tracé)
+export type Matrice<P> = {
+  bornes: { x: [number | null, number | null]; y: [number, number] };
+  // Clés des points non représentés (part nulle ou évolution non calculable)
+  exclus: string[];
   indicateur: Indicateur;
   periodes: { depart: [number, number]; arrivee: [number, number] };
-  points: PositionnementPoint[];
+  points: (P & MatricePoint)[];
   provisoire: boolean;
-  reference: Ratio;
+  // Clés des points de chaque quadrant, de la plus forte à la plus faible part
+  quadrants: Record<QuadrantKey, string[]>;
+  reference: { valeur: number | null };
+  seuil_fiabilite: number;
+  tailles: number[];
+};
+
+// Un point par discipline de l'entité ; référence : part de l'entité toutes disciplines
+export type Positionnement = Matrice<PositionnementPoint> & { reference: Ratio };
+
+export type EtablissementPoint = {
+  categorie: string;
+  entite_id: string;
+  // Établissement sélectionné, mis en avant
+  focus: boolean;
+  nom: string;
+  sigle: string | null;
+};
+
+export type GroupeEtablissements = { code: string; libelle: string; nb: number };
+
+// Un point par établissement du groupe ; référence : médiane des parts des établissements représentés
+export type PositionnementEtablissements = Matrice<EtablissementPoint> & {
+  groupe: string;
+  // Groupe de l'établissement sélectionné (null pour la France)
+  groupe_selection: string | null;
+  groupes: GroupeEtablissements[];
 };
 
 // Sélection commune aux onglets (bibliométrie, financements, innovation)
@@ -152,15 +215,16 @@ export const useBiblioIndicateurs = (selection: Selection, options: BiblioOption
 export const useBiblioEvolution = (selection: Selection, options: BiblioOptions) =>
   useQuery({
     queryKey: ["suivi-recherche", "bibliometrie", "evolution", ...filtersKey(selection, options)],
-    queryFn: () => fetchJson<(Indicateurs & { annee_publication: number })[]>(`${BASE_URL}/evolution?${toSearchParams(selection, options)}`),
+    queryFn: () => fetchJson<Evolution>(`${BASE_URL}/evolution?${toSearchParams(selection, options)}`),
     placeholderData: keepPreviousData,
   });
 
-// La comparaison porte sur les pays : l'entité sélectionnée n'entre pas dans la clé
+// La comparaison porte sur les pays : l'entité sélectionnée n'entre pas dans la clé.
+// Les trois indicateurs sont dans la même réponse : en changer ne relance pas de requête.
 export const useBiblioComparaison = (selection: Selection, options: BiblioOptions) =>
   useQuery({
     queryKey: ["suivi-recherche", "bibliometrie", "comparaison", ...filtersKey({ ...selection, entiteId: "" }, options)],
-    queryFn: () => fetchJson<ComparaisonRow[]>(`${BASE_URL}/comparaison-internationale?${toSearchParams(selection, options)}`),
+    queryFn: () => fetchJson<Comparaison>(`${BASE_URL}/comparaison-internationale?${toSearchParams(selection, options)}`),
     placeholderData: keepPreviousData,
   });
 
@@ -173,6 +237,22 @@ export const useBiblioPositionnement = (selection: Selection, options: BiblioOpt
     ],
     queryFn: () => fetchJson<Positionnement>(
       `${BASE_URL}/positionnement?${toSearchParams({ ...selection, disciplineCode: undefined, domaineCode: undefined }, options, { indicateur })}`,
+    ),
+    placeholderData: keepPreviousData,
+  });
+
+// Les points sont les établissements d'un groupe : la discipline sélectionnée s'applique.
+// Sans groupe, le serveur choisit celui de l'établissement sélectionné (ou les universités).
+export const useBiblioPositionnementEtablissements = (
+  selection: Selection,
+  options: BiblioOptions,
+  indicateur: Indicateur,
+  groupe?: string,
+) =>
+  useQuery({
+    queryKey: ["suivi-recherche", "bibliometrie", "positionnement-etablissements", indicateur, groupe ?? null, ...filtersKey(selection, options)],
+    queryFn: () => fetchJson<PositionnementEtablissements>(
+      `${BASE_URL}/positionnement-etablissements?${toSearchParams(selection, options, { indicateur, ...(groupe && { groupe }) })}`,
     ),
     placeholderData: keepPreviousData,
   });

@@ -4,5 +4,14 @@
   },
   "bibliometrie": {
     "fr": "Bibliométrie - Suivi de la recherche française"
+  },
+  "bibliometrie-profil": {
+    "fr": "Profil - Bibliométrie - Suivi de la recherche française"
+  },
+  "bibliometrie-etablissements": {
+    "fr": "Établissements - Bibliométrie - Suivi de la recherche française"
+  },
+  "bibliometrie-international": {
+    "fr": "International - Bibliométrie - Suivi de la recherche française"
   }
 }

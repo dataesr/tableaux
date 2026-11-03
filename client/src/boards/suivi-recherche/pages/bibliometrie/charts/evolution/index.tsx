@@ -1,10 +1,14 @@
 import { Alert } from "@dataesr/dsfr-plus";
+import { useMemo } from "react";
 
 import ChartWrapper from "../../../../../../components/chart-wrapper/index.tsx";
+import ChartBusy from "../../../../components/chart-busy/index.tsx";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useBiblioEvolution } from "../../../../api";
 import type { BiblioMeta, BiblioOptions, Selection } from "../../../../api";
-import { getOptions } from "./utils.tsx";
+import { useRenderTransition } from "../../../../hooks/use-render-transition";
+import getOptions from "./options.tsx";
+import { renderDataTable } from "./utils.tsx";
 
 type EvolutionProps = {
   meta: BiblioMeta;
@@ -14,12 +18,16 @@ type EvolutionProps = {
 };
 
 export default function Evolution({ meta, options, selection, selectionLabel }: EvolutionProps) {
-  const { data, isLoading, isError } = useBiblioEvolution(selection, options);
+  const { data, isLoading, isError, isPlaceholderData } = useBiblioEvolution(selection, options);
+  const provisoires = meta.annees_influence_provisoire;
+  // Nouvelles données appliquées une fois le grisé peint : le redessin n'est jamais muet
+  const { applied, busy } = useRenderTransition(data);
+  const chartOptions = useMemo(() => (applied ? getOptions(applied, provisoires) : null), [applied, provisoires]);
 
-  if (isLoading) return <DefaultSkeleton />;
-  if (isError || !data) {
+  if (isError) {
     return <Alert description="L'évolution annuelle n'a pas pu être chargée." title="Erreur de chargement" variant="error" />;
   }
+  if (isLoading || !applied || !chartOptions) return <DefaultSkeleton />;
 
   const config = {
     id: "suivi-recherche-bibliometrie-evolution",
@@ -36,5 +44,9 @@ export default function Evolution({ meta, options, selection, selectionLabel }: 
     },
   };
 
-  return <ChartWrapper config={config} options={getOptions(data, meta.annees_influence_provisoire)} />;
+  return (
+    <ChartBusy busy={isPlaceholderData || busy}>
+      <ChartWrapper config={config} options={chartOptions} renderData={() => renderDataTable(applied, provisoires)} />
+    </ChartBusy>
+  );
 }

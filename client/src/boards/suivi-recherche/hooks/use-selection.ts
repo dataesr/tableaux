@@ -8,7 +8,8 @@ export type Niveau = "national" | "etablissement";
 
 // La sélection vit dans l'URL : elle suit la navigation entre onglets et se partage par lien.
 // Les années disponibles viennent de biblio_meta, seule source d'années pour l'instant.
-export function useSelection(meta?: BiblioMeta) {
+// `pays` : vue entre pays (comparaison internationale), l'établissement choisi ne s'applique pas et reste dans l'URL.
+export function useSelection(meta?: BiblioMeta, { pays = false }: { pays?: boolean } = {}) {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const setParams = (updates: Record<string, string | null>) => {
@@ -23,7 +24,7 @@ export function useSelection(meta?: BiblioMeta) {
   const niveau: Niveau = searchParams.get("niveau") === "etablissement" ? "etablissement" : "national";
   const etablissementId = searchParams.get("entite");
 
-  if (!meta || (niveau === "etablissement" && !etablissementId)) {
+  if (!meta || (!pays && niveau === "etablissement" && !etablissementId)) {
     return { niveau, etablissementId, selection: null, setParams };
   }
 
@@ -40,7 +41,7 @@ export function useSelection(meta?: BiblioMeta) {
     anneeFin: Math.max(anneeDebut, anneeFin),
     disciplineCode: searchParams.get("discipline") ?? undefined,
     domaineCode: searchParams.get("domaine") ?? undefined,
-    entiteId: niveau === "etablissement" && etablissementId ? etablissementId : ENTITE_NATIONALE,
+    entiteId: !pays && niveau === "etablissement" && etablissementId ? etablissementId : ENTITE_NATIONALE,
   };
 
   return { niveau, etablissementId, selection, setParams };

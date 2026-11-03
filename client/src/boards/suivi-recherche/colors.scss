@@ -7,6 +7,9 @@
   // Entité mise en avant dans les comparaisons
   --sr-focus: var(--blue-france-sun-113-625);
 
+  // Autres établissements de la matrice des établissements : neutre, pour que l'établissement sélectionné ressorte
+  --sr-etablissement: var(--grey-625-425);
+
   // Continents (comparaison internationale)
   --sr-continent-europe: var(--green-emeraude-main-632);
   --sr-continent-asie: var(--purple-glycine-main-494);

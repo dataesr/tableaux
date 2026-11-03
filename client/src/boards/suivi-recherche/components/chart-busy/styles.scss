@@ -1,0 +1,38 @@
+.sr-chart-busy {
+  position: relative;
+}
+
+.sr-chart-busy__overlay {
+  align-items: center;
+  background-color: color-mix(in srgb, var(--background-default-grey) 70%, transparent);
+  color: var(--text-default-grey);
+  cursor: progress;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  inset: 0;
+  justify-content: center;
+  position: absolute;
+  z-index: 10;
+}
+
+.sr-chart-busy__spinner {
+  animation: sr-chart-busy-rotation 0.8s linear infinite;
+  border: 3px solid var(--border-default-grey);
+  border-radius: 50%;
+  border-top-color: var(--border-active-blue-france);
+  height: 2rem;
+  width: 2rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sr-chart-busy__spinner {
+    animation: none;
+  }
+}
+
+@keyframes sr-chart-busy-rotation {
+  to {
+    transform: rotate(360deg);
+  }
+}

@@ -1,0 +1,64 @@
+// Sous-navigation de la bibliométrie : liens (pas d'onglets DSFR, qui dépendent du JS DSFR non chargé)
+.sr-sous-nav {
+  ul {
+    border-block-end: 1px solid var(--border-default-grey);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 0.5rem;
+    list-style: none;
+    margin: 0 0 0.5rem;
+    padding: 0;
+  }
+
+  li {
+    padding: 0;
+  }
+
+  a {
+    background-image: none;
+    color: var(--text-action-high-grey);
+    display: block;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+
+    &[aria-current="page"] {
+      box-shadow: inset 0 -2px 0 0 var(--border-active-blue-france);
+      color: var(--text-active-blue-france);
+    }
+  }
+}
+
+// Blocs repliables natifs (<details>) : aucun JS nécessaire
+.sr-details {
+  border: 1px solid var(--border-default-grey);
+
+  summary {
+    cursor: pointer;
+    padding: 0.75rem 1rem;
+
+    &:hover {
+      background-color: var(--background-default-grey-hover);
+    }
+  }
+
+  &[open] summary {
+    border-block-end: 1px solid var(--border-default-grey);
+  }
+}
+
+.sr-details__contenu {
+  margin: 0;
+  padding: 1rem 1.5rem;
+}
+
+.sr-parametres {
+  align-items: start;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 3rem;
+
+  .fr-segmented,
+  .fr-toggle {
+    margin-block: 0;
+  }
+}

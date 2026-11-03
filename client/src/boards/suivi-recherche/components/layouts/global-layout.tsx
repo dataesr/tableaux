@@ -63,7 +63,7 @@ export default function GlobalLayout() {
               {NAV_ITEMS.map(({ key, to }) => (
                 <li key={key}>
                   <Link
-                    aria-current={pathname === to ? "page" : undefined}
+                    aria-current={pathname === to || pathname.startsWith(`${to}/`) ? "page" : undefined}
                     className="sr-nav__link"
                     onClick={() => setMenuOpen(false)}
                     to={`${to}${search}`}
@@ -77,7 +77,7 @@ export default function GlobalLayout() {
         </Container>
       </div>
       <main id="main-content" tabIndex={-1}>
-        {pathname !== `${BASE}/accueil` && <SelectionBar />}
+        {pathname !== `${BASE}/accueil` && <SelectionBar pays={pathname.startsWith(`${BASE}/bibliometrie/international`)} />}
         <Outlet />
       </main>
       <Footer href={`${BASE}/accueil`} title="Accueil - Suivi de la recherche française" />
