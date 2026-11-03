@@ -13,9 +13,6 @@ const DESTINATION_LABELS: Record<string, string> = {
   SE: "Staff Exchanges",
   COFUND: "COFUND",
   CITIZENS: "CITIZENS",
-  ITN: "Innovative Training Networks",
-  RISE: "Research and Innovation Staff Exchange",
-  IF: "Individual Fellowships",
 };
 
 type ViewMode = "projects" | "funding";
@@ -36,7 +33,7 @@ export default function MscaDestinationCards({ countryCode, callYear }: MscaDest
   if (isLoading) {
     return (
       <div className="msca-destination-section">
-        <h2>Types de financement</h2>
+        <h2>Par type de financement</h2>
         <div className="msca-stat-cards">
           {[1, 2, 3, 4].map((i) => (
             <MscaStatCardSkeleton key={i} />
@@ -60,7 +57,7 @@ export default function MscaDestinationCards({ countryCode, callYear }: MscaDest
     <div className="msca-destination-section">
       <div className="section-header">
         <Title as="h2" look="h5">
-          Types de financement
+          Par type de financement
         </Title>
         <SegmentedControl className="fr-segmented--sm" name="msca-destination-view-mode">
           <SegmentedElement checked={viewMode === "projects"} label="Projets" onClick={() => setViewMode("projects")} value="projects" />
