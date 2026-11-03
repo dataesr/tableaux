@@ -338,7 +338,7 @@ export default function EpNavigator() {
               <Container className="moreFiltersContainer fr-px-2w">
                 <Row>
                   <Col>
-                    <RangeOfYears availableYears={["2021", "2022", "2023", "2024", "2025"]} defaultYears={["2021", "2022", "2023", "2024", "2025"]} />
+                    <RangeOfYears availableYears={["2021", "2022", "2023", "2024", "2025", "2026"]} defaultYears={["2021", "2022", "2023", "2024", "2025"]} />
                   </Col>
                   <Col>
                     <div className="fr-checkbox-group fr-checkbox-group--sm">
