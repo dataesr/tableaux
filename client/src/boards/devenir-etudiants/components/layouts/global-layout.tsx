@@ -1,4 +1,5 @@
 import { Logo, Service } from "@dataesr/dsfr-plus";
+import { useEffect, useState } from "react";
 import { Link, Outlet, useLocation } from "react-router-dom";
 
 import Breadcrumb from "../../../../components/breadcrumb";
@@ -24,6 +25,23 @@ const NAV_ITEMS = [
 export default function GlobalLayout() {
   const { pathname, search } = useLocation();
   const isHomePageVisible = useDashboardVisibility("devenir-etudiants");
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  useEffect(() => {
+    setIsMenuOpen(false);
+  }, [pathname]);
+
+  useEffect(() => {
+    if (!isMenuOpen) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsMenuOpen(false);
+        document.getElementById("button-header")?.focus();
+      }
+    };
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [isMenuOpen]);
 
   if (!pathname) return null;
 
@@ -53,12 +71,14 @@ export default function GlobalLayout() {
                   <Logo text={import.meta.env.VITE_MINISTER_NAME} />
                   <div className="fr-header__navbar">
                     <button
-                      data-fr-opened="false"
+                      data-fr-opened={isMenuOpen ? "true" : "false"}
                       aria-controls="modal-header"
+                      aria-expanded={isMenuOpen}
                       title="Menu"
                       type="button"
                       id="button-header"
                       className="fr-btn--menu fr-btn"
+                      onClick={() => setIsMenuOpen((open) => !open)}
                     >
                       Menu
                     </button>
@@ -73,7 +93,7 @@ export default function GlobalLayout() {
             </div>
           </div>
         </div>
-        <div className="fr-header__menu fr-modal" id="modal-header" aria-labelledby="button-header">
+        <div className={`fr-header__menu fr-modal${isMenuOpen ? " fr-modal--opened" : ""}`} id="modal-header" aria-labelledby="button-header">
           <div className="fr-container">
             <button
               aria-controls="modal-header"
@@ -81,6 +101,7 @@ export default function GlobalLayout() {
               type="button"
               id="button-close-header"
               className="fr-btn--close fr-btn"
+              onClick={() => setIsMenuOpen(false)}
             >
               {getI18nLabel(i18n, "close")}
             </button>
