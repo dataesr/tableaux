@@ -377,6 +377,7 @@ export default function ChartWrapper({
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenIntegration, setIsOpenIntegration] = useState(false);
   const [displayType, setDisplayType] = useState("chart"); // ["chart", "data"]
+  const [displayAnnouncement, setDisplayAnnouncement] = useState("");
   const modalId = useId();
   const titleText = getTitleText(config.title, currentLang);
   const optionsLabel = `Options et données du graphique${titleText ? ` : ${titleText}` : ""}`;
@@ -446,6 +447,7 @@ export default function ChartWrapper({
 
   const changeDisplayType = (type: string) => {
     setDisplayType(type);
+    setDisplayAnnouncement(getI18nLabel(i18n, type === "data" ? "dataDisplayed" : "chartDisplayed"));
     if (renderData || !chart.current?.chart) return;
     const currentChart = chart.current.chart as CurrentChart;
     if (type === "data") currentChart.viewData();
@@ -455,6 +457,7 @@ export default function ChartWrapper({
   return (
     <section className="chart-container">
       {!hideTitle && <ChartTitle config={config} currentLang={currentLang} />}
+      <p className="fr-sr-only" role="status">{displayAnnouncement}</p>
       <div className="actions">
         <Button
           aria-label={optionsLabel}
