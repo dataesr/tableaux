@@ -439,7 +439,7 @@ export default function ChartWrapper({
       chartOptions: { title: { text: config?.title } },
       filename: config?.title ?? 'chart',
       showTable: displayType === 'data',
-      tableCaption: getI18nLabel(i18n, "data"),
+      tableCaption: titleText || getI18nLabel(i18n, "data"),
     }
   };
   const optionsTmp: HighchartsOptions = deepMerge(options, exportingOptions);
