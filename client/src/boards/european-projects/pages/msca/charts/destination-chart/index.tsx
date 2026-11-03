@@ -17,9 +17,6 @@ const DESTINATION_NAMES: Record<string, { fr: string; en: string }> = {
   SE: { fr: "Staff Exchanges", en: "Staff Exchanges" },
   COFUND: { fr: "COFUND", en: "COFUND" },
   CITIZENS: { fr: "CITIZENS", en: "CITIZENS" },
-  ITN: { fr: "Innovative Training Networks", en: "Innovative Training Networks" },
-  RISE: { fr: "RISE", en: "RISE" },
-  IF: { fr: "Individual Fellowships", en: "Individual Fellowships" },
 };
 
 interface DestinationChartProps {
