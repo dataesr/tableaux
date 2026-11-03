@@ -1,8 +1,8 @@
-import { useOutletContext } from "react-router-dom";
+import { createContext, useContext } from "react";
 
 import type { BiblioDiscipline, BiblioMeta, BiblioOptions, Entite, Selection } from "../../api";
 
-// Données et sélection communes aux sous-pages de la bibliométrie, chargées une fois par la mise en page
+// Données et sélection communes aux onglets de la bibliométrie, chargées une fois par la page
 export type BibliometrieContext = {
   disciplines: BiblioDiscipline[];
   entiteNom: string;
@@ -12,7 +12,15 @@ export type BibliometrieContext = {
   selection: Selection;
 };
 
-export const useBibliometrie = () => useOutletContext<BibliometrieContext>();
+const Context = createContext<BibliometrieContext | null>(null);
+
+export const BibliometrieProvider = Context.Provider;
+
+export function useBibliometrie(): BibliometrieContext {
+  const value = useContext(Context);
+  if (!value) throw new Error("useBibliometrie must be used inside BibliometrieProvider");
+  return value;
+}
 
 export const PERIMETRE_LABELS: Record<BiblioOptions["perimetre"], string> = {
   revues_sjr: "Revues classées par SJR",

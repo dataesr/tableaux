@@ -10,8 +10,8 @@ export const SITEMAP: BoardSitemapConfig = {
     "Retrouvez l'ensemble des pages du tableau de bord « Suivi de la recherche française ».",
   links: [
     { label: "Accueil", href: `${BASE}/accueil` },
-    { label: "Bibliométrie : profil", href: `${BASE}/bibliometrie/profil` },
-    { label: "Bibliométrie : établissements", href: `${BASE}/bibliometrie/etablissements` },
-    { label: "Bibliométrie : international", href: `${BASE}/bibliometrie/international` },
+    { label: "Bibliométrie : profil", href: `${BASE}/bibliometrie` },
+    { label: "Bibliométrie : établissements", href: `${BASE}/bibliometrie?section=etablissements` },
+    { label: "Bibliométrie : international", href: `${BASE}/bibliometrie?section=international` },
   ],
 }

@@ -4,6 +4,9 @@ const { VITE_APP_SERVER_URL } = import.meta.env;
 
 const BASE_URL = `${VITE_APP_SERVER_URL}/suivi-recherche/bibliometrie`;
 
+// Entité des indicateurs au niveau national (sans ror_id)
+export const ENTITE_NATIONALE = "FR";
+
 export type Perimetre = "toutes_revues_openalex" | "revues_sjr";
 
 export type Indicateur = "poids" | "influence" | "prestige";
@@ -161,17 +164,18 @@ async function fetchJson<T>(url: string): Promise<T> {
   return response.json();
 }
 
+// Noms des paramètres : plugins/tableaux/reference/url-parameters.md (mêmes noms que l'URL de la page ; ror_id absent = France)
 function toSearchParams(selection: Selection, options: BiblioOptions, extra: Record<string, string> = {}) {
   const params = new URLSearchParams({
-    annee_debut: String(selection.anneeDebut),
-    annee_fin: String(selection.anneeFin),
-    entite_id: selection.entiteId,
     inclure_multidisciplinaires: String(options.inclureMultidisciplinaires),
     perimetre: options.perimetre,
+    year_max: String(selection.anneeFin),
+    year_min: String(selection.anneeDebut),
     ...extra,
   });
-  if (selection.disciplineCode) params.set("discipline_code", selection.disciplineCode);
-  if (selection.domaineCode) params.set("domaine_code", selection.domaineCode);
+  if (selection.entiteId !== ENTITE_NATIONALE) params.set("ror_id", selection.entiteId);
+  if (selection.disciplineCode) params.set("discipline", selection.disciplineCode);
+  if (selection.domaineCode) params.set("domaine", selection.domaineCode);
   return params;
 }
 

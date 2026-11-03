@@ -9,6 +9,7 @@
 - Server route modules are explicitly mounted from `server/src/router.js`. Read `server/src/routes/boards/AGENTS.md` before changing board APIs.
 - See `plugins/tableaux/reference/README.md` for the prototype architecture, component references, manifest and data-source constraints.
 - The `dashboard` skill (modes `init`, `build`, `critique`, `accessibility`) and the `chart` and `dsfr` skills live in the `tableaux` plugin under `plugins/tableaux/skills/`. For DSFR UI and styling, consult `plugins/tableaux/skills/dsfr/SKILL.md`.
+- See `plugins/tableaux/reference/url-parameters.md` for URL and API parameter names shared across boards.
 
 ## Runtime and commands
 
@@ -31,6 +32,7 @@
 - Build every Highcharts options object with `createChartOptions(type, options)` from `client/src/components/chart-wrapper/default-options.ts` (the shared version of `european-projects`' `CreateChartOptions`): it applies the DSFR theme tokens, fonts, axes, tooltip, legend, credits and accessibility defaults. Pass only chart-specific options; do not restate those defaults or build a raw options object.
 - Compute on the server, not in the browser. Filtering, aggregation, joins, ratios and success rates, rankings, sorting, top-N, period comparisons and derived geometry belong in the board's server route (MongoDB pipeline or route code, cached when the input is static), which returns chart-ready data sized to what is displayed. The client only maps that response to series, formats labels and renders. `european-projects` is the reference (e.g. `/european-projects/overview/programs-funding` returns totals and `successRateByProgram` already computed).
 - A local control (indicator, metric, tab, sort) must switch the chart instantly. Either the route returns ready-to-plot values for every option of the control, or the control is a query parameter of the route so each answer is fetched once and cached by `useQuery`. Never recompute a full dataset on each toggle; wrap any remaining client-side mapping in `useMemo` keyed on the data and the control.
+- Name URL parameters as described in `plugins/tableaux/reference/url-parameters.md`: `snake_case`, the shared vocabulary for shared notions (`section` for the selected tab of a page, `paysage_id` / `ror_id` for structures, `year`, `year_min` / `year_max`, `region`, `country_code`, `language`), the same names in the page URL and the API route, no default value written to the URL, and old names rewritten so that existing links keep working.
 - Follow the nearest board's i18n pattern. Provide French text and English text when the board is multilingual.
 - Every board has its own server router under `server/src/routes/boards/<board-id>/`, even when it serves a user-defined public source, so that promotion replaces data access without changing the client contract.
 - Keep code dedicated to the board by default. Reuse existing `server/src/commons` and `server/src/services` code, and extract domain-neutral infrastructure into them only when a second board needs it; see `plugins/tableaux/reference/README.md` ("Common or dedicated code").

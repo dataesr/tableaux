@@ -1,37 +1,42 @@
-import { Alert, Container, Notice, SegmentedControl, SegmentedElement, Title, Toggle } from "@dataesr/dsfr-plus";
-import { Link, Outlet, useLocation } from "react-router-dom";
+import { Alert, Container, SegmentedControl, SegmentedElement, Title, Toggle } from "@dataesr/dsfr-plus";
+import { Link, useSearchParams } from "react-router-dom";
 
 import DefaultSkeleton from "../../../../components/charts-skeletons/default.tsx";
+import { useTitle } from "../../../../hooks/usePageTitle.tsx";
+import { getI18nLabel } from "../../../../utils";
 import { useBiblioDisciplines, useBiblioEntites, useBiblioMeta } from "../../api";
 import { useBiblioOptions, useSelection } from "../../hooks/use-selection";
-import { getOptionsLabel, PERIMETRE_LABELS } from "./context.ts";
-import type { BibliometrieContext } from "./context.ts";
+import i18n from "../../title-i18n.json";
+import { BibliometrieProvider, getOptionsLabel, PERIMETRE_LABELS } from "./context.ts";
+import EtablissementsSection from "./etablissements/index.tsx";
+import InternationalSection from "./international/index.tsx";
+import ProfilSection from "./profil/index.tsx";
+import { getSectionSearch, SECTIONS, useSection } from "./sections.ts";
 
 import "./styles.scss";
 
-const BASE = "/suivi-recherche/bibliometrie";
+const CONTENUS = {
+  profil: ProfilSection,
+  etablissements: EtablissementsSection,
+  international: InternationalSection,
+} as const;
 
-// Une sous-page par question ; la sélection (paramètres d'URL) suit d'une sous-page à l'autre
-const SOUS_PAGES = [
-  { path: "profil", label: "Profil", question: "Où en est l'établissement sélectionné ?" },
-  { path: "etablissements", label: "Établissements", question: "Comment se situe-t-il parmi des établissements comparables ?" },
-  { path: "international", label: "International", question: "Comment se situe la France parmi les pays ?" },
-] as const;
-
-export default function BibliometrieLayout() {
-  const { pathname, search } = useLocation();
-  const pays = pathname.startsWith(`${BASE}/international`);
+// Un onglet par question, choisi par le paramètre `section` ; la sélection suit d'un onglet à l'autre
+export default function BibliometriePage() {
+  const [searchParams] = useSearchParams();
+  const courante = useSection();
+  useTitle(getI18nLabel(i18n, courante.titleKey));
   const meta = useBiblioMeta();
   const disciplines = useBiblioDisciplines();
   const entites = useBiblioEntites();
-  const { selection, setParams } = useSelection(meta.data, { pays });
+  const { selection, setParams } = useSelection(meta.data, entites.data, { pays: courante.id === "international" });
   const options = useBiblioOptions(meta.data);
 
   const isLoading = meta.isLoading || disciplines.isLoading || entites.isLoading;
   const isError = meta.isError || disciplines.isError || entites.isError;
   const entiteNom = entites.data?.find((entite) => entite.entite_id === selection?.entiteId)?.nom ?? selection?.entiteId ?? "";
-  const courante = SOUS_PAGES.find(({ path }) => pathname.startsWith(`${BASE}/${path}`));
   const optionsLabel = getOptionsLabel(options);
+  const Contenu = CONTENUS[courante.id];
 
   return (
     <Container className="fr-my-4w">
@@ -42,15 +47,18 @@ export default function BibliometrieLayout() {
 
       <nav aria-label="Sections de la bibliométrie" className="sr-sous-nav fr-mb-3w">
         <ul>
-          {SOUS_PAGES.map(({ path, label }) => (
-            <li key={path}>
-              <Link aria-current={courante?.path === path ? "page" : undefined} to={`${BASE}/${path}${search}`}>
-                {label}
+          {SECTIONS.map((section) => (
+            <li key={section.id}>
+              <Link
+                aria-current={courante.id === section.id ? "page" : undefined}
+                to={{ search: getSectionSearch(searchParams, section) }}
+              >
+                {section.label}
               </Link>
             </li>
           ))}
         </ul>
-        {courante && <p className="fr-text--sm fr-text-mention--grey fr-mb-0">{courante.question}</p>}
+        <p className="fr-text--sm fr-text-mention--grey fr-mb-0">{courante.question}</p>
       </nav>
 
       {isLoading && <DefaultSkeleton height="200px" label="Chargement des données" />}
@@ -87,24 +95,24 @@ export default function BibliometrieLayout() {
                 hint={meta.data.revues_multidisciplinaires.join(", ")}
                 id="sr-multidisciplinaires"
                 label="Prestige : inclure les revues multidisciplinaires"
-                onChange={(event) => setParams({ multi: event.target.checked ? null : "false" })}
+                onChange={(event) => setParams({ inclure_multidisciplinaires: event.target.checked ? null : "false" })}
               />
             </div>
           </details>
 
-          {selection ? (
-            <Outlet
-              context={{
+          {selection && (
+            <BibliometrieProvider
+              value={{
                 disciplines: disciplines.data,
                 entiteNom,
                 entites: entites.data,
                 meta: meta.data,
                 options,
                 selection,
-              } satisfies BibliometrieContext}
-            />
-          ) : (
-            <Notice closeMode="disallow" type="info">Choisissez un établissement dans la sélection ci-dessus.</Notice>
+              }}
+            >
+              <Contenu />
+            </BibliometrieProvider>
           )}
 
           {meta.data.methode.length > 0 && (

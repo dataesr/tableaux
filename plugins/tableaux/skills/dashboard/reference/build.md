@@ -10,7 +10,7 @@ Arrêtez-vous tant que la source de données n'est pas confirmée : une source d
 
 1. Lisez les fichiers AGENTS.md listés à l'étape 1 de `init`.
 2. Inspectez un tableau existant comportant une page ou un graphique similaire. Vérifiez les exports et types réels de tout composant partagé avant de l'utiliser.
-3. Définissez d'abord le contrat backend : routes `/<board-id>/<page>/<endpoint>`, paramètres de requête et formats de réponse `{ data, provenance }`. Faites-le valider avant de construire.
+3. Définissez d'abord le contrat backend : routes `/<board-id>/<page>/<endpoint>`, paramètres de requête et formats de réponse `{ data, provenance }`. Nommez les paramètres selon [url-parameters](../../../reference/url-parameters.md) : mêmes noms dans l'URL de la page et dans la route, vocabulaire commun pour les notions partagées (`section` pour l'onglet sélectionné, `paysage_id` / `ror_id`, `year_min` / `year_max`…). Faites-le valider avant de construire.
 
 ## 3. Créer la structure du tableau
 
@@ -22,7 +22,8 @@ Identifiant du tableau : kebab-case, identique au nom du dossier et à l'`id` du
 2. Créez ou adaptez `routes.tsx` et les pages.
 3. Mettez à jour `title-i18n.json` (`fr` obligatoire, `en` si le tableau est multilingue) ainsi que les fichiers `i18n.json` des mises en page et du menu latéral.
 4. Ajoutez `sitemap-config.ts` exportant `SITEMAP: BoardSitemapConfig` (exemple : `client/src/boards/devenir-etudiants/sitemap-config.ts`). Il alimente le plan du site et le pied de page.
-5. **Ne modifiez pas** `client/src/router.tsx`. Les routes des tableaux sont chargées dynamiquement depuis la liste MongoDB.
+5. L'état d'une page qu'un utilisateur peut garder en favori ou partager (onglet sélectionné, structure, période, filtres) vit dans des paramètres d'URL nommés selon [url-parameters](../../../reference/url-parameters.md) : onglets dans `section` (une page = un chemin), aucune valeur par défaut écrite dans l'URL, une valeur invalide revient à la valeur par défaut.
+6. **Ne modifiez pas** `client/src/router.tsx`. Les routes des tableaux sont chargées dynamiquement depuis la liste MongoDB.
 
 ### Serveur (`server/src/routes/boards/<board-id>/`, chaque tableau possède son propre routeur)
 
@@ -37,7 +38,7 @@ Exemple : server/src/routes/boards/european-projects/routes/horizon-europe/overv
 
 ## 4. Graphiques et interface
 
-- Pour chaque graphique, suivez [chart](../../chart/SKILL.md). Les graphiques n'appellent que les routes propres au tableau, utilisent `ChartWrapper` et gèrent les états de chargement, d'erreur et vide.
+- Pour chaque graphique, suivez [chart](../../chart/SKILL.md). Les graphiques n'appellent que les routes propres au tableau, construisent leurs options avec `createChartOptions` (`client/src/components/chart-wrapper/default-options.ts`), ne font aucun calcul lourd dans le navigateur, utilisent `ChartWrapper` et gèrent les états de chargement, d'erreur et vide. Chaque graphique, carte de chiffres clés et tableau de données est grisé pendant qu'il est recalculé (appel API ou redessin ; voir le `AGENTS.md` racine).
 - Pour la mise en page, les composants et le style, suivez [dsfr](../../dsfr/SKILL.md). Utilisez les tokens DSFR, et non des couleurs codées en dur.
 
 ## 5. Manifeste (uniquement si un paquet portable est demandé)
@@ -57,7 +58,7 @@ Si un graphique doit pouvoir être intégré dans une iframe, ajoutez-le à `cli
 ## 8. Vérifications
 
 1. Lancez `npm run build` à la racine du dépôt. Sous Windows, il échoue sur `rm -rf` ; dans ce cas, lancez `npm -w client run build` et signalez-le. `npm -w client run lint` n'est pas configuré.
-2. Testez les routes avec les fichiers `.http`.
+2. Testez les routes avec les fichiers `.http`, et déroulez la liste de contrôle de [url-parameters](../../../reference/url-parameters.md).
 3. Si un aperçu local est disponible, indiquez la route `http://localhost:5173/<board-id>` et demandez une vérification manuelle de la mise en page adaptative, des thèmes, de l'usage au clavier et des états vide ou d'erreur.
 4. Appliquez la [liste de contrôle accessibilité](./accessibility.md) à l'interface et corrigez les constats bloquants avant de rendre compte.
 

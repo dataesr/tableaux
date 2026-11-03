@@ -1,6 +1,6 @@
 ---
 name: chart
-description: "Ajouter un graphique Highcharts à une page de tableau (dossier charts/<name>/ avec index.tsx et utils.tsx, ChartWrapper, useQuery). À utiliser lorsqu'on demande de créer, ajouter ou dupliquer un graphique dans client/src/boards."
+description: "Ajouter un graphique Highcharts à une page de tableau, sur le modèle de european-projects (dossier charts/<name>/ avec query.tsx, options.tsx construit avec createChartOptions, utils.tsx et index.tsx ; calculs côté serveur, ChartWrapper, useQuery). À utiliser lorsqu'on demande de créer, ajouter ou dupliquer un graphique dans client/src/boards."
 argument-hint: "Identifiant du tableau, page et nom du graphique"
 user-invocable: true
 ---

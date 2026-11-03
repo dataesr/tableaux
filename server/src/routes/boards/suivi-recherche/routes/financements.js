@@ -5,11 +5,11 @@ import { db } from "../../../../services/mongo.js";
 const router = new express.Router();
 
 router.route("/suivi-recherche/financements").get(async (req, res) => {
-  const { entite } = req.query
+  const { ror_id: rorId } = req.query
   const fundings = await db
     .collection("biblio_projects")
     .aggregate([
-      { $match: { rors: entite } },
+      { $match: { rors: rorId } },
       {
         $group: {
           _id: { year: "$year", type: "$type" },

@@ -12,11 +12,12 @@ const { VITE_APP_SERVER_URL } = import.meta.env;
 export default function FinancementsPage() {
   const [options, setOptions] = useState({})
   const [searchParams] = useSearchParams()
-  const entite = searchParams.get("entite")
+  // Établissement (identifiant ROR), voir plugins/tableaux/reference/url-parameters.md
+  const rorId = searchParams.get("ror_id")
 
   const { data, isLoading } = useQuery({
     queryKey: ["suivi-recherche", "financements"],
-    queryFn: () => fetch(`${VITE_APP_SERVER_URL}/suivi-recherche/financements?entite=${entite}`).then((response) => response.json()),
+    queryFn: () => fetch(`${VITE_APP_SERVER_URL}/suivi-recherche/financements?ror_id=${rorId}`).then((response) => response.json()),
     placeholderData: keepPreviousData,
   });
 

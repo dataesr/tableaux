@@ -11,13 +11,16 @@ function optionLabel(entite: Entite) {
   return [entite.nom, entite.sigle && `(${entite.sigle})`, entite.ville && `· ${entite.ville}`].filter(Boolean).join(" ");
 }
 
-// Sélection commune aux onglets : périmètre d'analyse, période, discipline.
+// Sélection commune aux pages : périmètre d'analyse, période, discipline (paramètres d'URL, voir use-selection).
 // `pays` : la vue compare des pays ; le choix d'établissement, sans effet, est remplacé par une mention fixe.
 export default function SelectionBar({ pays = false }: { pays?: boolean }) {
   const meta = useBiblioMeta();
   const disciplines = useBiblioDisciplines();
   const entites = useBiblioEntites();
-  const { niveau, etablissementId, selection, setParams } = useSelection(meta.data, { pays });
+  const { etablissement, selection, setParams } = useSelection(meta.data, entites.data, { pays });
+  // « Un établissement » choisi sans établissement encore saisi : état local, rien dans l'URL (ror_id absent = France)
+  const [choixEtablissement, setChoixEtablissement] = useState(false);
+  const niveau = etablissement || choixEtablissement ? "etablissement" : "national";
   const datalistId = useId();
   const inputId = useId();
 
@@ -25,9 +28,8 @@ export default function SelectionBar({ pays = false }: { pays?: boolean }) {
     () => (entites.data ?? []).filter((entite) => entite.entite_type === "etablissement"),
     [entites.data],
   );
-  const selected = etablissements.find((entite) => entite.entite_id === etablissementId);
   const [saisie, setSaisie] = useState("");
-  useEffect(() => setSaisie(selected ? optionLabel(selected) : ""), [selected]);
+  useEffect(() => setSaisie(etablissement ? optionLabel(etablissement) : ""), [etablissement]);
 
   const domaines = useMemo(
     () => [...new Map((disciplines.data ?? []).map((d) => [d.domaine_code, d.domaine_nom])).entries()],
@@ -40,8 +42,12 @@ export default function SelectionBar({ pays = false }: { pays?: boolean }) {
   const onSaisie = (value: string) => {
     setSaisie(value);
     const match = etablissements.find((entite) => optionLabel(entite) === value);
-    if (match) setParams({ entite: match.entite_id });
+    if (match) setParams({ ror_id: match.entite_id });
   };
+
+  // Bornes par défaut de la période : jamais écrites dans l'URL
+  const premiere = Math.min(...meta.data.annees);
+  const derniere = Math.max(...meta.data.annees);
 
   const disciplineKey = selection?.disciplineCode
     ? `discipline:${selection.disciplineCode}`
@@ -65,13 +71,16 @@ export default function SelectionBar({ pays = false }: { pays?: boolean }) {
                 <SegmentedElement
                   checked={niveau === "national"}
                   label="France"
-                  onClick={() => setParams({ niveau: null })}
+                  onClick={() => {
+                    setChoixEtablissement(false);
+                    setParams({ ror_id: null });
+                  }}
                   value="national"
                 />
                 <SegmentedElement
                   checked={niveau === "etablissement"}
                   label="Un établissement"
-                  onClick={() => setParams({ niveau: "etablissement" })}
+                  onClick={() => setChoixEtablissement(true)}
                   value="etablissement"
                 />
               </SegmentedControl>
@@ -97,17 +106,17 @@ export default function SelectionBar({ pays = false }: { pays?: boolean }) {
           )}
           <Select
             label="De"
-            onChange={(key) => setParams({ debut: String(key) })}
+            onChange={(key) => setParams({ year_min: Number(key) === premiere ? null : String(key) })}
             value={selection ? String(selection.anneeDebut) : undefined}
           >
-            {meta.data.annees.sort((a, b) => b - a).map((annee) => <SelectOption key={String(annee)}>{String(annee)}</SelectOption>)}
+            {[...meta.data.annees].sort((a, b) => b - a).map((annee) => <SelectOption key={String(annee)}>{String(annee)}</SelectOption>)}
           </Select>
           <Select
             label="À"
-            onChange={(key) => setParams({ fin: String(key) })}
+            onChange={(key) => setParams({ year_max: Number(key) === derniere ? null : String(key) })}
             value={selection ? String(selection.anneeFin) : undefined}
           >
-            {meta.data.annees.sort((a, b) => b - a).map((annee) => <SelectOption key={String(annee)}>{String(annee)}</SelectOption>)}
+            {[...meta.data.annees].sort((a, b) => b - a).map((annee) => <SelectOption key={String(annee)}>{String(annee)}</SelectOption>)}
           </Select>
           <Select
             label="Discipline (panels ERC)"

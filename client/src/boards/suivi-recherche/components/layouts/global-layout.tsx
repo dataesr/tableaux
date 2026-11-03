@@ -4,6 +4,7 @@ import { Link, Outlet, useLocation } from "react-router-dom";
 
 import Footer from "../../../../components/footer";
 import { getI18nLabel } from "../../../../utils";
+import { useSection } from "../../pages/bibliometrie/sections.ts";
 import SelectionBar from "../selection";
 import i18n from "./i18n.json";
 
@@ -22,6 +23,9 @@ const NAV_ITEMS = [
 export default function GlobalLayout() {
   const { pathname, search } = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
+  const section = useSection();
+  // Comparaison entre pays : le choix d'établissement ne s'applique pas
+  const pays = pathname === `${BASE}/bibliometrie` && section.id === "international";
 
   return (
     <>
@@ -77,7 +81,7 @@ export default function GlobalLayout() {
         </Container>
       </div>
       <main id="main-content" tabIndex={-1}>
-        {pathname !== `${BASE}/accueil` && <SelectionBar pays={pathname.startsWith(`${BASE}/bibliometrie/international`)} />}
+        {pathname !== `${BASE}/accueil` && <SelectionBar pays={pays} />}
         <Outlet />
       </main>
       <Footer href={`${BASE}/accueil`} title="Accueil - Suivi de la recherche française" />

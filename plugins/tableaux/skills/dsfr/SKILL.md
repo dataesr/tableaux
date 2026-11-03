@@ -81,7 +81,7 @@ Il reste du balisage de ce type dans le code existant (sélecteurs de thème / l
 ## 4. Composants propres à un board
 
 - **Composer d'abord** : la plupart des « composants sur mesure » sont des composants dsfr-plus + utilitaires typo/espacement.
-- **Les tokens font l'apparence DSFR** : couleurs par variables de décision (`var(--text-mention-grey)`, `var(--background-alt-grey)`, `var(--border-default-grey)`…), jamais d'hex — c'est ce qui garde le thème sombre gratuit. Ombres : `var(--raised-shadow)`, `var(--overlap-shadow)`. Pour les graphiques, les couleurs passent par `useChartColor`, `client/src/utils/colors.ts` et les `colors.scss` des boards, qui gèrent le thème.
+- **Les tokens font l'apparence DSFR** : couleurs par variables de décision (`var(--text-mention-grey)`, `var(--background-alt-grey)`, `var(--border-default-grey)`…), jamais d'hex — c'est ce qui garde le thème sombre gratuit. Ombres : `var(--raised-shadow)`, `var(--overlap-shadow)`. Pour les graphiques, le thème Highcharts vient de `createChartOptions` (`client/src/components/chart-wrapper/default-options.ts`) et les couleurs de séries passent par `useChartColor`, `client/src/utils/colors.ts` et les `colors.scss` des boards, qui gèrent le thème.
 - **Sémantique** : un vrai `<button type="button">` ou `<a href>` reçoit focus, teintes et clavier du DSFR ; un `div onClick` jamais. On surcharge les opinions DSFR non voulues (§3), on ne dégrade pas l'élément.
 - **SCSS** : colocalisé (`styles.scss` à côté du composant), classes préfixées par le board, en reprenant le préfixe déjà en place (ex. `ep-…` pour european-projects, `outcomes-…` pour devenir-etudiants, `atlas-…`) ; ne jamais créer de classe `fr-*`, propriétés logiques (`margin-inline`, `padding-block`), pas d'`!important`.
 - **Échelle d'extraction** : 1 usage = local au board ; besoin réel dans un 2ᵉ board = remonter dans `client/src/components/`. Jamais par anticipation, jamais par copier-coller entre boards. Un board n'importe pas les fichiers d'un autre board (seul `boards/integration/charts-registry.tsx` le fait, par construction).
@@ -90,7 +90,8 @@ Il reste du balisage de ce type dans le code existant (sélecteurs de thème / l
 
 - **Ordre** : structure avec de vraies données (libellés français réels, volumes réels) → mise en page → typo et couleurs → états interactifs → états limites → responsive.
 - **États de chaque élément interactif** : normal, survol, focus (dessin distinct du survol), actif, désactivé, chargement, erreur, vide.
-  - Chargement : `DefaultSkeleton` (ou les autres `charts-skeletons`) ; `Spinner` réservé aux actions.
+  - Chargement : `DefaultSkeleton` (ou les autres `charts-skeletons`) au premier chargement seulement ; `Spinner` réservé aux actions.
+  - Recalcul (filtre, indicateur, onglet, tri) : tout bloc qui dépend des données — graphique, carte de chiffres clés, tableau, liste — reste affiché mais **grisé** (voile semi-transparent sur `var(--background-default-grey)`, indicateur de chargement, `aria-busy`, texte en `role="status"`) pendant l'appel API et pendant le nouveau rendu. Référence : `boards/suivi-recherche/components/chart-busy/` et `hooks/use-render-transition.ts`.
   - Vide : un message qui explique quoi faire (changer de filtre, d'année…), pas un graphique vide.
   - Erreur attendue (filtre sans résultat, 4xx) : affichée sur place (`Alert`, `Notice`) sans démonter la page ni les filtres.
 - **États limites** : 0 élément, 1 élément, des centaines, des libellés très longs (noms d'établissements), années sans données.

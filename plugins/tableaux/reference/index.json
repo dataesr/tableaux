@@ -66,6 +66,11 @@
       "id": "data-specs",
       "title": "Questions pour clarifier la source de données.",
       "path": "plugins/tableaux/reference/guides/data-specs.md"
+    },
+    {
+      "id": "url-parameters",
+      "title": "Noms des paramètres d'URL et d'API communs aux tableaux",
+      "path": "plugins/tableaux/reference/url-parameters.md"
     }
   ],
   "templates": [

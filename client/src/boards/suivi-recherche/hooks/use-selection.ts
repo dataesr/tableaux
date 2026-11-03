@@ -1,18 +1,21 @@
 import { useSearchParams } from "react-router-dom";
 
-import type { BiblioMeta, BiblioOptions, Perimetre, Selection } from "../api";
+import { ENTITE_NATIONALE } from "../api";
+import type { BiblioMeta, BiblioOptions, Entite, Perimetre, Selection } from "../api";
 
-export const ENTITE_NATIONALE = "FR";
+export { ENTITE_NATIONALE };
 
-export type Niveau = "national" | "etablissement";
-
-// La sélection vit dans l'URL : elle suit la navigation entre onglets et se partage par lien.
-// Les années disponibles viennent de biblio_meta, seule source d'années pour l'instant.
-// `pays` : vue entre pays (comparaison internationale), l'établissement choisi ne s'applique pas et reste dans l'URL.
-export function useSelection(meta?: BiblioMeta, { pays = false }: { pays?: boolean } = {}) {
+// Noms et valeurs des paramètres d'URL : plugins/tableaux/reference/url-parameters.md
+//   ror_id               établissement (identifiant ROR) ; absent = France
+//   year_min, year_max   période ; absents = toute la période disponible
+//   discipline, domaine  discipline ou domaine ERC ; absents = toutes disciplines
+//   perimetre, inclure_multidisciplinaires   paramètres de calcul ; absents = revues SJR, avec multidisciplinaires
+//   section              onglet de la page Bibliométrie ; absent = profil
+// Une valeur par défaut n'est jamais écrite dans l'URL ; une valeur inconnue est ignorée.
+export function useSetParams() {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const setParams = (updates: Record<string, string | null>) => {
+  return (updates: Record<string, string | null>) => {
     const next = new URLSearchParams(searchParams);
     Object.entries(updates).forEach(([name, value]) => {
       if (value) next.set(name, value);
@@ -20,31 +23,39 @@ export function useSelection(meta?: BiblioMeta, { pays = false }: { pays?: boole
     });
     setSearchParams(next, { replace: true });
   };
+}
 
-  const niveau: Niveau = searchParams.get("niveau") === "etablissement" ? "etablissement" : "national";
-  const etablissementId = searchParams.get("entite");
+// La sélection vit dans l'URL : elle suit la navigation entre pages et se partage par lien.
+// Les années disponibles viennent de biblio_meta, seule source d'années pour l'instant.
+// `pays` : vue entre pays (comparaison internationale), l'établissement choisi ne s'applique pas et reste dans l'URL.
+export function useSelection(meta?: BiblioMeta, entites?: Entite[], { pays = false }: { pays?: boolean } = {}) {
+  const [searchParams] = useSearchParams();
+  const setParams = useSetParams();
 
-  if (!meta || (!pays && niveau === "etablissement" && !etablissementId)) {
-    return { niveau, etablissementId, selection: null, setParams };
-  }
+  const rorId = searchParams.get("ror_id");
+  const etablissement = rorId
+    ? entites?.find((entite) => entite.entite_type === "etablissement" && entite.entite_id === rorId)
+    : undefined;
+
+  if (!meta || !entites) return { etablissement, selection: null, setParams };
 
   const annees = meta.annees;
   const readYear = (name: string, fallback: number) => {
     const year = Number(searchParams.get(name));
     return annees.includes(year) ? year : fallback;
   };
-  const anneeDebut = readYear("debut", annees[0]);
-  const anneeFin = readYear("fin", annees[annees.length - 1]);
+  const anneeDebut = readYear("year_min", Math.min(...annees));
+  const anneeFin = readYear("year_max", Math.max(...annees));
 
   const selection: Selection = {
     anneeDebut: Math.min(anneeDebut, anneeFin),
     anneeFin: Math.max(anneeDebut, anneeFin),
     disciplineCode: searchParams.get("discipline") ?? undefined,
     domaineCode: searchParams.get("domaine") ?? undefined,
-    entiteId: !pays && niveau === "etablissement" && etablissementId ? etablissementId : ENTITE_NATIONALE,
+    entiteId: !pays && etablissement ? etablissement.entite_id : ENTITE_NATIONALE,
   };
 
-  return { niveau, etablissementId, selection, setParams };
+  return { etablissement, selection, setParams };
 }
 
 // Par défaut : revues classées SJR, prestige avec les revues multidisciplinaires
@@ -53,7 +64,7 @@ export function useBiblioOptions(meta?: BiblioMeta) {
   const perimetre = searchParams.get("perimetre") as Perimetre;
 
   const options: BiblioOptions = {
-    inclureMultidisciplinaires: searchParams.get("multi") !== "false",
+    inclureMultidisciplinaires: searchParams.get("inclure_multidisciplinaires") !== "false",
     perimetre: meta?.perimetres.includes(perimetre) ? perimetre : "revues_sjr",
   };
   return options;

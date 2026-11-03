@@ -12,6 +12,9 @@ const PERIMETRES = ["toutes_revues_openalex", "revues_sjr"];
 const DOMAINES = ["LS", "PE", "SH"];
 const INDICATEURS = ["poids", "influence", "prestige"];
 const CODE_PATTERN = /^[A-Za-z0-9]+$/;
+// Identifiant ROR sans le préfixe https://ror.org/
+const ROR_PATTERN = /^0[a-z0-9]{6}[0-9]{2}$/;
+const ENTITE_NATIONALE = "FR";
 // En dessous, la position d'une discipline dans la matrice est peu fiable
 const SEUIL_FIABILITE = 30;
 
@@ -23,28 +26,33 @@ function parseYear(value, name) {
   return year;
 }
 
-// Filtres communs à toutes les routes d'indicateurs, validés une fois
+// Filtres communs à toutes les routes d'indicateurs, validés une fois.
+// Noms des paramètres : plugins/tableaux/reference/url-parameters.md (ror_id absent = France).
 function parseFilters(query, { withEntite = true, withDiscipline = true } = {}) {
-  const { entite_id, perimetre, annee_debut, annee_fin, discipline_code, domaine_code, inclure_multidisciplinaires } = query;
+  const { ror_id, perimetre, year_min, year_max, discipline, domaine, inclure_multidisciplinaires } = query;
 
-  if (withEntite && (!entite_id || !CODE_PATTERN.test(entite_id))) throw new BadRequestError("entite_id is required");
+  if (ror_id && !ROR_PATTERN.test(ror_id)) throw new BadRequestError("invalid ror_id");
   if (!PERIMETRES.includes(perimetre)) throw new BadRequestError(`perimetre must be one of ${PERIMETRES.join(", ")}`);
-  const debut = parseYear(annee_debut, "annee_debut");
-  const fin = parseYear(annee_fin, "annee_fin");
-  if (debut > fin) throw new BadRequestError("annee_debut must be lower than or equal to annee_fin");
-  if (discipline_code && !CODE_PATTERN.test(discipline_code)) throw new BadRequestError("invalid discipline_code");
-  if (domaine_code && !DOMAINES.includes(domaine_code)) throw new BadRequestError(`domaine_code must be one of ${DOMAINES.join(", ")}`);
+  const debut = parseYear(year_min, "year_min");
+  const fin = parseYear(year_max, "year_max");
+  if (debut > fin) throw new BadRequestError("year_min must be lower than or equal to year_max");
+  if (discipline && !CODE_PATTERN.test(discipline)) throw new BadRequestError("invalid discipline");
+  if (domaine && !DOMAINES.includes(domaine)) throw new BadRequestError(`domaine must be one of ${DOMAINES.join(", ")}`);
+  if (inclure_multidisciplinaires !== undefined && !["true", "false"].includes(inclure_multidisciplinaires)) {
+    throw new BadRequestError("inclure_multidisciplinaires must be true or false");
+  }
 
+  const entiteId = ror_id ?? ENTITE_NATIONALE;
   const match = {
     perimetre,
     classement: CLASSEMENT,
     annee_publication: { $gte: debut, $lte: fin },
   };
-  if (withEntite) match.entite_id = { $in: [entite_id, MONDE] };
-  if (withDiscipline && discipline_code) match.discipline_code = discipline_code;
-  else if (withDiscipline && domaine_code) match.discipline_code = { $regex: `^${domaine_code}` };
+  if (withEntite) match.entite_id = { $in: [entiteId, MONDE] };
+  if (withDiscipline && discipline) match.discipline_code = discipline;
+  else if (withDiscipline && domaine) match.discipline_code = { $regex: `^${domaine}` };
 
-  return { entiteId: entite_id, debut, fin, match, multi: inclure_multidisciplinaires === "true" };
+  return { entiteId, debut, fin, match, multi: inclure_multidisciplinaires !== "false" };
 }
 
 const SUMS = {
@@ -342,8 +350,8 @@ router.route("/suivi-recherche/bibliometrie/positionnement").get(async (req, res
 router.route("/suivi-recherche/bibliometrie/positionnement-etablissements").get(async (req, res) => {
   const { debut, fin, match, multi } = parseFilters(req.query, { withEntite: false });
   const { indicateur, periodes, provisoire } = await parseMatrice(req.query, debut, fin);
-  const { entite_id: selectionId, groupe: groupeDemande } = req.query;
-  if (selectionId && !CODE_PATTERN.test(selectionId)) throw new BadRequestError("invalid entite_id");
+  // ror_id (validé par parseFilters) : établissement mis en avant et groupe par défaut
+  const { ror_id: selectionId, groupe: groupeDemande } = req.query;
   const groupesValides = [...GROUPES_ETABLISSEMENTS, GROUPE_AUTRES].map((groupe) => groupe.code);
   if (groupeDemande && !groupesValides.includes(groupeDemande)) throw new BadRequestError(`groupe must be one of ${groupesValides.join(", ")}`);
 
