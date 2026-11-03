@@ -4,7 +4,7 @@ import HEcallsRoutes from "./routes/horizon-europe/calls/index.js";
 import HEbeneficiariesRoutes from "./routes/horizon-europe/entities/beneficiaries/index.js";
 import HEtypeBeneficiariesRoutes from "./routes/horizon-europe/entities/type-beneficiaries/index.js";
 import HEcollaborationsRoutes from "./routes/horizon-europe/collaborations/index.js";
-import ercRoutes from "./routes/erc.js";
+import ercRoutes from "./routes/erc/index.js";
 import evolutionPcriRoutes from "./routes/evolution-pcri.js";
 import filtersRoutes from "./routes/filters.js";
 import mscaRoutes from "./routes/msca.js";

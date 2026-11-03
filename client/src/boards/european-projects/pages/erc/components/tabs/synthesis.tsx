@@ -1,14 +1,16 @@
-import { useSearchParams } from "react-router-dom";
+import { Title } from "@dataesr/dsfr-plus";
+
 import { ErcSynthesisCards, ErcDestinationCards, ErcPanelCards } from "../../../../components/cards/erc";
 import { getCountryAdjectives } from "../../../../../../components/country-selector/utils";
-import { rangeOfYearsToApiFormat } from "../../url-utils";
 import { getI18nLabel } from "../../../../../../utils";
-import PanelFundingChart from "../../charts/panel-funding";
+import { rangeOfYearsToApiFormat } from "../../url-utils";
+import { useSearchParams } from "react-router-dom";
 import DestinationChart from "../../charts/destination-chart";
 import PanelChart from "../../charts/panel-chart";
 import PanelDetailChart from "../../charts/panel-detail-chart";
+import PanelFundingChart from "../../charts/panel-funding";
+
 import i18n from "../../i18n.json";
-import { Title } from "@dataesr/dsfr-plus";
 
 export default function SyntheseContent() {
   const [searchParams] = useSearchParams();
@@ -24,7 +26,9 @@ export default function SyntheseContent() {
 
   return (
     <div>
-      <h2 className="fr-mb-3w">{getI18nLabel(i18n, "page.title", currentLang)}</h2>
+      <Title as="h2" className="fr-mb-3w">
+        {getI18nLabel(i18n, "page.title", currentLang)}
+      </Title>
       {/* Cartes de synthèse principales */}
       <ErcSynthesisCards countryCode={countryCode} callYear={callYear} countryAdj={countryAdj} />
       {/* Cartes par type de financement */}
@@ -41,8 +45,6 @@ export default function SyntheseContent() {
       {/* Graphique détaillé par panel ERC */}
       <PanelDetailChart countryCode={countryCode} callYear={callYear} currentLang={currentLang} />
       <PanelFundingChart countryAdjective={countryAdj.m} currentLang={currentLang} />
-      {/* TODO: Graph de performance avec croisement d'indicateurs Par panel, type de financement */}
-      {/* TODO: Stats par type de financement + genre du porteur + tranche age du porteur */}
     </div>
   );
 }

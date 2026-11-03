@@ -66,8 +66,8 @@ export default function ErcDestinationCards({ countryCode, callYear }: ErcDestin
               data={{
                 title: displayName,
                 code: destination.destination_code,
-                evaluatedCount: destination.evaluated?.total_involved || 0,
-                successfulCount: destination.successful?.total_involved || 0,
+                evaluatedCount: destination.evaluated?.total_projects || 0,
+                successfulCount: destination.successful?.total_projects || 0,
                 fundingAmount: destination.successful?.total_funding_entity || 0,
                 piCount: destination.successful?.total_pi || 0,
               }}

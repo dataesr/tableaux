@@ -37,8 +37,8 @@ export default function ErcSynthesisCards({
   // Calculer les métriques
   const totalBudgetSuccessful = data?.successful?.total_funding_project || 0;
   const totalBudgetEvaluated = data?.evaluated?.total_funding_project || 0;
-  const totalProjectsSuccessful = data?.successful?.total_involved || 0;
-  const totalProjectsEvaluated = data?.evaluated?.total_involved || 0;
+  const totalProjectsSuccessful = data?.successful?.total_projects || 0;
+  const totalProjectsEvaluated = data?.evaluated?.total_projects || 0;
   const totalPiSuccessful = data?.successful?.total_pi || 0;
 
   // Données du pays sélectionné
@@ -46,7 +46,7 @@ export default function ErcSynthesisCards({
   const countryEvaluated = data?.evaluated?.countries?.[0];
 
   const countryBudgetSuccessful = countrySuccessful?.total_funding_project || 0;
-  const countryProjectsSuccessful = countrySuccessful?.total_involved || 0;
+  const countryProjectsSuccessful = countrySuccessful?.total_projects || 0;
   const countryPiSuccessful = countrySuccessful?.total_pi || 0;
   const countryPiEvaluated = countryEvaluated?.total_pi || 0;
 
@@ -82,7 +82,7 @@ export default function ErcSynthesisCards({
       <Col xs={12} md={4}>
         {/* Part des projets lauréats */}
         <ErcCard
-          label={`Part des projets lauréats avec participation ${countryAdj.f}`}
+          label={`Part des projets lauréats avec porteurs ${countryAdj.m}`}
           value={formatToRates(projectsShare)}
           secondaryValue={formatNumber(countryProjectsSuccessful)}
           secondaryLabel="projets"
@@ -95,10 +95,10 @@ export default function ErcSynthesisCards({
       <Col xs={12} md={4}>
         {/* Part des porteurs (PI) */}
         <ErcCard
-          label={`Part des porteurs ${adjMascPlural} (PI) dans les projets lauréats`}
+          label={`Part des porteurs de projets lauréats ${adjMascPlural}`}
           value={formatToRates(piShare)}
           secondaryValue={formatNumber(countryPiSuccessful)}
-          secondaryLabel="porteurs"
+          secondaryLabel="porteurs de projets"
           progressValue={piShare}
           loading={isLoading}
           variant="pi-card"
@@ -123,20 +123,20 @@ export default function ErcSynthesisCards({
           value={formatToRates(successRateProjects)}
           progressValue={successRateProjects}
           loading={isLoading}
-          variant="rate-card"
+          variant="funding-rate-card"
           tooltipText="Ratio entre projets lauréats et projets évalués"
         />
       </Col>
       <Col xs={12} md={4}>
         {/* Taux de succès individuel des porteurs */}
         <ErcCard
-          label={`Taux de succès des porteurs ${adjMascPlural} (PI)`}
+          label={`Taux de succès des porteurs de projets ${adjMascPlural}`}
           value={formatToRates(countrySuccessRatePi)}
           secondaryValue={`${formatNumber(countryPiSuccessful)} / ${formatNumber(countryPiEvaluated)}`}
           secondaryLabel="lauréats / candidats"
           progressValue={countrySuccessRatePi}
           loading={isLoading}
-          variant="rate-card"
+          variant="funding-rate-card"
           tooltipText="Ratio entre porteurs lauréats et porteurs candidats"
         />
       </Col>

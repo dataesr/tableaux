@@ -9,6 +9,7 @@ export interface ErcCountryData {
   total_funding_entity: number;
   total_involved: number;
   total_pi: number;
+  total_projects: number;
 }
 
 export interface ErcSynthesisData {
@@ -16,6 +17,7 @@ export interface ErcSynthesisData {
   total_funding_entity: number;
   total_involved: number;
   total_pi: number;
+  total_projects: number;
   countries: ErcCountryData[];
 }
 
@@ -30,13 +32,13 @@ export interface ErcDestinationData {
   evaluated: {
     total_funding_project: number;
     total_funding_entity: number;
-    total_involved: number;
+    total_projects: number;
     total_pi: number;
   } | null;
   successful: {
     total_funding_project: number;
     total_funding_entity: number;
-    total_involved: number;
+    total_projects: number;
     total_pi: number;
   } | null;
 }
@@ -50,11 +52,13 @@ export interface ErcPanelData {
   evaluated: {
     total_funding_entity: number;
     total_involved: number;
+    total_projects: number;
     total_pi: number;
   } | null;
   successful: {
     total_funding_entity: number;
     total_involved: number;
+    total_projects: number;
     total_pi: number;
   } | null;
 }
@@ -65,6 +69,7 @@ export interface ErcEvolutionData {
   destination_name_en: string;
   total_funding_project: number;
   total_involved: number;
+  total_projects: number;
   total_pi: number;
 }
 
