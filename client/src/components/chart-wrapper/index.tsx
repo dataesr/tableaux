@@ -344,7 +344,7 @@ function ChartTitle({
   // Si title est un objet avec configuration
   return (
     <>
-      <Title as={config.title.size ? config.title.size : "h2"} className={config.title.className ? config.title.className : "fr-my-0"} look={config.title.look ? config.title.look : "h6"}>
+      <Title as={config.title.size ? config.title.size : "h2"} className={config.title.className ? config.title.className : "fr-my-0 fr-ml-1w"} look={config.title.look ? config.title.look : "h6"}>
         {config.title[currentLang]}
       </Title>
       {children}
@@ -460,21 +460,19 @@ export default function ChartWrapper({
 
   return (
     <section className="chart-container">
-      {!hideTitle && <ChartTitle config={config} currentLang={currentLang} />}
-      <p className="fr-sr-only" role="status">{displayAnnouncement}</p>
-      <div className="actions">
-        <Button
-          aria-label={optionsLabel}
-          icon="settings-5-line"
-          onClick={() => setIsOpen(true)}
-          size="sm"
-          style={{ minHeight: "1rem", padding: "0 0.5rem" }}
-          title={optionsLabel}
-          variant="text"
-        />
+      <p className="fr-sr-only" role="status">
+        {displayAnnouncement}
+      </p>
+      <div className="chart-header">
+        <div className="chart-header-title">
+          {!hideTitle && <ChartTitle config={config} currentLang={currentLang} />}
+        </div>
+        <div className="actions">
+          <Button aria-label={optionsLabel} icon="settings-5-line" onClick={() => setIsOpen(true)} size="sm" style={{ minHeight: "1rem", padding: "0 0.5rem" }} title={optionsLabel} variant="text" />
+        </div>
       </div>
       {displayType === "data" && renderData && options && <>{renderData(options)}</>}
-      {((displayType === "chart" && renderData) || (!renderData)) && optionsTmp && (
+      {((displayType === "chart" && renderData) || !renderData) && optionsTmp && (
         <figure className="chart" role={figureLabel ? "figure" : undefined} aria-label={figureLabel}>
           {figureLabel && <figcaption className="fr-sr-only">{figureLabel}</figcaption>}
           <HighchartsReact constructorType={constructorType} highcharts={Highcharts} options={optionsTmp} ref={chart} />
@@ -498,12 +496,7 @@ export default function ChartWrapper({
         setIsOpen={setIsOpen}
         setIsOpenIntegration={setIsOpenIntegration}
       />
-      <IntegrationModal
-        graphConfig={config}
-        isOpen={isOpenIntegration && !!config.integrationURL}
-        modalId={modalId}
-        setIsOpen={setIsOpenIntegration}
-      />
+      <IntegrationModal graphConfig={config} isOpen={isOpenIntegration && !!config.integrationURL} modalId={modalId} setIsOpen={setIsOpenIntegration} />
     </section>
   );
 }

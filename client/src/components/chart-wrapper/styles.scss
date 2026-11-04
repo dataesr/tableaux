@@ -1,5 +1,20 @@
+.chart-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.chart-header-title {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
 .actions {
   text-align: right;
+  flex: 0 0 auto;
+  margin-left: auto;
+  padding-top: 0.5rem;
 }
 
 .modal-actions {
