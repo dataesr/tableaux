@@ -36,7 +36,7 @@
     },
     "xAxisTitle": {
       "fr": "Nombre de porteurs de projets PI",
-      "en": "Number of project PIs"
+      "en": "Number of principal investigators"
     },
     "yAxisTitle": {
       "fr": "Financements (M€)",
