@@ -19,7 +19,11 @@ export default function MapOfEuropeCollaborationsFlow({ nbToShow }) {
     queryFn: () => getCollaborations(params),
   });
 
-  const dataMap = isLoading || !data ? [] : data.map((item) => ({ from: countryCode, to: item.country_code, weight: item.total_collaborations }));
+  const dataMap = isLoading || !data ? [] : data.map((item) => ({
+    from: countryCode,
+    to: item.country_code,
+    weight: item?.by_year?.map((year) => year?.by_stage?.find((stage) => stage.stage === "successful")?.total_collaborations ?? 0).reduce((acc, cur) => acc + cur, 0),
+  }));
 
   const config = {
     id: "map-of-europe-collaborations-flow",

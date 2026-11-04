@@ -33,7 +33,7 @@ export default function FundingValues() {
   if (isLoading || !data) return <DefaultSkeleton />;
   return (
     <div className="fr-mt-3w chart-container chart-container--default">
-      <ChartWrapper config={config} options={options(data, currentLang === "fr" ? "Financement obtenus (M€)" : "Funding (M€)", currentLang)} />
+      <ChartWrapper config={config} options={options(data, currentLang === "fr" ? "Financements obtenus (M€)" : "Funding (M€)", currentLang)} />
     </div>
   );
 }

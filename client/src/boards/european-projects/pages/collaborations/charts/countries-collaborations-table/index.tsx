@@ -114,7 +114,8 @@ export default function CountriesCollaborationsTable() {
   const sortedData = sortData(data);
   const displayedData = showAll ? sortedData : sortedData.slice(0, 10);
 
-  const total_collaborations = sortedData.reduce((acc, item) => acc + item.total_collaborations, 0);
+  const total_collaborations = data.map((item) => item?.by_year?.map((year) => year?.by_stage?.find((stage) => stage.stage === "successful")?.total_collaborations ?? 0)).flat()
+    .reduce((acc, cur) => acc + cur, 0).toLocaleString(currentLang);
 
   const handleCountryClick = (countryCode) => {
     const newSearchParams = new URLSearchParams(searchParams);
@@ -229,11 +230,11 @@ export default function CountriesCollaborationsTable() {
                                     <span
                                       className="fr-mx-1w"
                                       style={{
-                                        display: "inline-block",
-                                        width: "5px",
-                                        height: "5px",
                                         backgroundColor: "#000091",
                                         borderRadius: "50%",
+                                        display: "inline-block",
+                                        height: "5px",
+                                        width: "5px",
                                       }}
                                     />
                                   )
@@ -241,7 +242,7 @@ export default function CountriesCollaborationsTable() {
                               </button>
                             </td>
                             <td className="fr-py-0" style={{ textAlign: "center" }}>
-                              {collab.total_collaborations}
+                              {collab?.by_year?.map((year) => year?.by_stage?.find((stage) => stage.stage === "successful")?.total_collaborations ?? 0).reduce((acc, cur) => acc + cur, 0).toLocaleString(currentLang)}
                               <Button
                                 icon="eye-line"
                                 className="fr-ml-1w"
@@ -280,20 +281,20 @@ export default function CountriesCollaborationsTable() {
                                   position: relative;
                                 }
                                 .sparkline-bar::after {
-                                  content: attr(data-tooltip);
-                                  position: absolute;
-                                  bottom: 100%;
-                                  left: 50%;
-                                  transform: translateX(-50%);
                                   background: #333;
-                                  color: white;
-                                  padding: 4px 8px;
                                   border-radius: 4px;
+                                  bottom: 100%;
+                                  color: white;
+                                  content: attr(data-tooltip);
                                   font-size: 12px;
-                                  white-space: nowrap;
+                                  left: 50%;
                                   opacity: 0;
+                                  padding: 4px 8px;
                                   pointer-events: none;
+                                  position: absolute;
+                                  transform: translateX(-50%);
                                   transition: opacity 0.2s;
+                                  white-space: nowrap;
                                   z-index: 100;
                                 }
                                 .sparkline-bar:hover::after {

@@ -252,7 +252,6 @@ export default function ProjectsByFunder({ name, participantSuperOrganizationChi
   }
 
   const options: HighchartsInstance.Options = {
-    legend: { enabled: true },
     plotOptions: {
       bar: {
         dataLabels: {
