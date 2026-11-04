@@ -3,8 +3,6 @@ import { Badge, Col, Row } from "@dataesr/dsfr-plus";
 import type { Indicateurs as IndicateursType, Ratio } from "../../../../api";
 import { formatArticles, formatPart } from "../../../../utils";
 
-import "./styles.scss";
-
 const DEFINITIONS = [
   { key: "poids", titre: "Poids", definition: "Part des articles mondiaux" },
   { key: "influence", titre: "Influence", definition: "Part des articles du top 10 % des plus cités" },

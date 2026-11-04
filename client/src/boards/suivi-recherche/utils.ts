@@ -60,3 +60,7 @@ export function describeSelection(selection: Selection, entiteNom: string, disci
 export function normalize(text: string): string {
   return text.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").trim();
 }
+
+export function formatNombre(nombre: number): string {
+  return nombre.toLocaleString("fr-FR");
+}

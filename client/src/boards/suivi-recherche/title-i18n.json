@@ -13,5 +13,17 @@
   },
   "bibliometrie-international": {
     "fr": "International - Bibliométrie - Suivi de la recherche française"
+  },
+  "financements-profil": {
+    "fr": "Profil - Financements - Suivi de la recherche française"
+  },
+  "financements-etablissements": {
+    "fr": "Établissements - Financements - Suivi de la recherche française"
+  },
+  "financements-international": {
+    "fr": "International - Financements - Suivi de la recherche française"
+  },
+  "financements-test": {
+    "fr": "Test - Financements - Suivi de la recherche française"
   }
 }

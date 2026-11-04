@@ -156,7 +156,7 @@ export type BiblioOptions = {
 };
 
 // Une réponse en erreur fait passer la requête en état d'erreur, avec son statut
-async function fetchJson<T>(url: string): Promise<T> {
+export async function fetchJson<T>(url: string): Promise<T> {
   const response = await fetch(url);
   if (!response.ok) {
     throw new Error(`${response.status} ${response.statusText}`);

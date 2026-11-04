@@ -2,6 +2,7 @@ import { useSearchParams } from "react-router-dom";
 
 import { ENTITE_NATIONALE } from "../api";
 import type { BiblioMeta, BiblioOptions, Entite, Perimetre, Selection } from "../api";
+import type { ErcMeta } from "../api/erc.ts";
 
 export { ENTITE_NATIONALE };
 
@@ -10,7 +11,8 @@ export { ENTITE_NATIONALE };
 //   year_min, year_max   période ; absents = toute la période disponible
 //   discipline, domaine  discipline ou domaine ERC ; absents = toutes disciplines
 //   perimetre, inclure_multidisciplinaires   paramètres de calcul ; absents = revues SJR, avec multidisciplinaires
-//   section              onglet de la page Bibliométrie ; absent = profil
+//   section              onglet des pages Bibliométrie et Financements ; absent = profil
+//   type_bourse          types de bourse ERC, séparés par des virgules ; absent = erc_meta.types_bourse_defaut
 // Une valeur par défaut n'est jamais écrite dans l'URL ; une valeur inconnue est ignorée.
 export function useSetParams() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -68,4 +70,13 @@ export function useBiblioOptions(meta?: BiblioMeta) {
     perimetre: meta?.perimetres.includes(perimetre) ? perimetre : "revues_sjr",
   };
   return options;
+}
+
+// Types de bourse ERC retenus : codes connus de erc_meta, dans l'ordre de erc_meta ; aucun ou inconnus = types par défaut
+export function useTypesBourse(meta?: ErcMeta): string[] {
+  const [searchParams] = useSearchParams();
+  if (!meta) return [];
+  const demandes = searchParams.get("type_bourse")?.split(",") ?? [];
+  const types = meta.types_bourse.map(({ code }) => code).filter((code) => demandes.includes(code));
+  return types.length ? types : meta.types_bourse_defaut;
 }

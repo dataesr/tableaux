@@ -24,7 +24,7 @@ export default function SuiviRechercheRoutes() {
         <Route path="accueil" element={<RouteWithTitle titleKey="accueil" element={<AccueilPage />} />} />
         {/* Onglets dans le paramètre `section` (titre de l'onglet fixé par la page) */}
         <Route path="bibliometrie" element={<BibliometriePage />} />
-        <Route path="financements" element={<RouteWithTitle titleKey="financements" element={<FinancementsPage />} />} />
+        <Route path="financements" element={<FinancementsPage />} />
         <Route path="plan-du-site" element={<Navigate to="/plan-du-site?from=suivi-recherche" replace />} />
       </Route>
       <Route path="*" element={<NotFoundPage />} />

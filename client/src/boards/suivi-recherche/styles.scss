@@ -1,1 +1,16 @@
 @use "./colors.scss";
+
+// Carte de chiffre clé (bibliométrie, financements)
+.sr-indicateur {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  height: 100%;
+
+  .sr-indicateur__header {
+    align-items: center;
+    display: flex;
+    gap: 0.5rem;
+    justify-content: space-between;
+  }
+}

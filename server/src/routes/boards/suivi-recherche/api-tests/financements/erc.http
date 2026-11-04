@@ -1,0 +1,25 @@
+GET http://localhost:3000/api/suivi-recherche/financements/erc/meta
+
+###
+# France, toutes les années d'appel, types par défaut (STG, COG, ADG)
+GET http://localhost:3000/api/suivi-recherche/financements/erc/indicateurs
+
+###
+# Sorbonne Université, panels PE, appels 2021-2025 (exemple du contrat de données)
+GET http://localhost:3000/api/suivi-recherche/financements/erc/indicateurs?ror_id=02en5vm52&year_min=2021&year_max=2025&domaine=PE
+
+###
+# Avec Synergy et Proof of Concept (sans panel : comptés seulement pour « toutes disciplines »)
+GET http://localhost:3000/api/suivi-recherche/financements/erc/indicateurs?type_bourse=STG,COG,ADG,SYG,POC
+
+###
+# Période de la bibliométrie : ramenée aux années d'appel disponibles
+GET http://localhost:3000/api/suivi-recherche/financements/erc/evolution?year_min=2015&year_max=2025&discipline=LS2
+
+###
+# Aucune année d'appel dans la période : periode null
+GET http://localhost:3000/api/suivi-recherche/financements/erc/evolution?year_min=2015&year_max=2018
+
+###
+# 400 attendu
+GET http://localhost:3000/api/suivi-recherche/financements/erc/indicateurs?type_bourse=XXX

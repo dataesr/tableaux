@@ -4,7 +4,8 @@ import { Link, Outlet, useLocation } from "react-router-dom";
 
 import Footer from "../../../../components/footer";
 import { getI18nLabel } from "../../../../utils";
-import { useSection } from "../../pages/bibliometrie/sections.ts";
+import { useSection as useBibliometrieSection } from "../../pages/bibliometrie/sections.ts";
+import { useSection as useFinancementsSection } from "../../pages/financements/sections.ts";
 import SelectionBar from "../selection";
 import i18n from "./i18n.json";
 
@@ -23,9 +24,11 @@ const NAV_ITEMS = [
 export default function GlobalLayout() {
   const { pathname, search } = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
-  const section = useSection();
+  const bibliometrieSection = useBibliometrieSection();
+  const financementsSection = useFinancementsSection();
   // Comparaison entre pays : le choix d'établissement ne s'applique pas
-  const pays = pathname === `${BASE}/bibliometrie` && section.id === "international";
+  const pays = (pathname === `${BASE}/bibliometrie` && bibliometrieSection.id === "international")
+    || (pathname === `${BASE}/financements` && financementsSection.id === "international");
 
   return (
     <>
