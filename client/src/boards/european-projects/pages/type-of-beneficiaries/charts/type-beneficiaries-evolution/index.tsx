@@ -16,8 +16,8 @@ import { useGetParams } from "./utils";
 const config = {
   id: "typeBeneficiariesEvolution",
   title: {
-    fr: "Évolution des subventions par pays (en millions d'euros)",
-    en: "Evolution of funding by country (in millions of euros)",
+    fr: "Évolution des financements obtenus par pays par type d'entités",
+    en: "Evolution of secured funding by country",
   },
   description: {
     fr: "Évolution des financements obtenus par type d'entités selon les pays du top 10.",
@@ -51,9 +51,9 @@ export default function TypeOfBeneficiariesEvolution() {
 
   const entityTypes = [
     { value: "REC", label: getI18nLabel(i18n, "REC") },
+    { value: "HES", label: getI18nLabel(i18n, "HES") },
     { value: "PUB", label: getI18nLabel(i18n, "PUB") },
     { value: "PRC", label: getI18nLabel(i18n, "PRC") },
-    { value: "HES", label: getI18nLabel(i18n, "HES") },
     { value: "OTH", label: getI18nLabel(i18n, "OTH") },
   ];
 
