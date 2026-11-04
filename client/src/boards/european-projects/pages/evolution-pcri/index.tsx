@@ -16,7 +16,7 @@ export default function EvolutionPcri() {
     fr: (
       <>
         Evolution des programmes-cadres pour la recherche et l'innovation : <br />
-        de FP6 à Horizon Europe
+        du FP6 à Horizon Europe
       </>
     ),
     en: (

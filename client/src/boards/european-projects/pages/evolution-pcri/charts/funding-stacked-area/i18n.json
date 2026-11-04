@@ -1,19 +1,19 @@
 {
   "title": {
-    "fr": "Évolution globale du financement par framework",
-    "en": "Global funding evolution by framework"
+    "fr": "Évolution des financements alloués par la Commission européenne, par programme-cadre depuis le 6e PCRD",
+    "en": "Trends in funding awarded by the European Commission, by Framework Programme since FP6"
   },
   "comment": {
-    "fr": "Évolution du financement cumulé de tous les pays participants, par framework et par année.",
-    "en": "Evolution of cumulative funding for all participating countries, by framework and year."
+    "fr": "Évolution du total des financements obtenus par l'ensemble des pays participants depuis le FP6.",
+    "en": "Trends in total funding secured by all participating countries since FP6."
   },
   "x-axis-title": {
     "fr": "Année",
     "en": "Year"
   },
   "y-axis-title": {
-    "fr": "Financement total (M€)",
-    "en": "Total funding (M€)"
+    "fr": "Euros (M€)",
+    "en": "Euros (€M)"
   },
   "tooltip-year": {
     "fr": "Année",
