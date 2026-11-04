@@ -83,6 +83,8 @@ const { VITE_APP_URL } = import.meta.env;
 
 
 function IntegrationModal({ graphConfig, isOpen, modalId, setIsOpen }) {
+  const [searchParams] = useSearchParams();
+  const currentLang = searchParams.get("language") || "fr";
   const integrationCode = `<iframe \ntitle="${graphConfig.title}" \nwidth="800" \nheight="600" \nsrc="${VITE_APP_URL}${graphConfig.integrationURL}"></iframe>`;
   return (
     <Modal
@@ -92,7 +94,7 @@ function IntegrationModal({ graphConfig, isOpen, modalId, setIsOpen }) {
       size="lg"
     >
       <ModalTitle>
-        {getI18nLabel(i18n, "integrationModalTitle")}
+        {getI18nLabel(i18n, "integrationModalTitle", currentLang)}
       </ModalTitle>
       <ModalContent>
         <div className="text-right">
@@ -106,7 +108,7 @@ function IntegrationModal({ graphConfig, isOpen, modalId, setIsOpen }) {
             onClick={() => setIsOpen(false)}
             variant="secondary"
           >
-            {getI18nLabel(i18n, "close")}
+            {getI18nLabel(i18n, "close", currentLang)}
           </Button>
         </div>
       </ModalContent>
@@ -126,6 +128,8 @@ function MenuModal({
   setIsOpen,
   setIsOpenIntegration,
 }) {
+  const [currentSearchParams] = useSearchParams();
+  const currentLang = currentSearchParams.get("language") || "fr";
   const shareUrl = typeof window !== "undefined"
     ? new URL(window.location.pathname + window.location.search, VITE_APP_URL || window.location.origin).toString()
     : "";
@@ -159,19 +163,19 @@ function MenuModal({
           aria-hidden="true"
           className="fr-icon-bar-chart-box-line fr-mr-1w"
         />
-        {getI18nLabel(i18n, "modalTitle")}
+        {getI18nLabel(i18n, "modalTitle", currentLang)}
       </ModalTitle>
       <ModalContent className="modal-actions">
         <fieldset className="fr-fieldset">
           <legend
             className="fr-fieldset__legend--regular fr-fieldset__legend"
           >
-            {getI18nLabel(i18n, "displayType")}
+            {getI18nLabel(i18n, "displayType", currentLang)}
           </legend>
           <div className="fr-fieldset__element">
             <Radio
               checked={displayType === "chart"}
-              label={getI18nLabel(i18n, "chart")}
+              label={getI18nLabel(i18n, "chart", currentLang)}
               name={`${modalId}_radio-hint`}
               onChange={() => setDisplayType("chart")}
             />
@@ -179,7 +183,7 @@ function MenuModal({
           <div className="fr-fieldset__element">
             <Radio
               checked={displayType === "data"}
-              label={getI18nLabel(i18n, "data")}
+              label={getI18nLabel(i18n, "data", currentLang)}
               name={`${modalId}_radio-hint`}
               onChange={() => setDisplayType("data")}
             />
@@ -193,7 +197,7 @@ function MenuModal({
               onClick={downloadCSV}
               variant="text"
             >
-              {getI18nLabel(i18n, "downloadCSV")}
+              {getI18nLabel(i18n, "downloadCSV", currentLang)}
             </Button>
           </li>
           <li>
@@ -202,7 +206,7 @@ function MenuModal({
               onClick={downloadPNG}
               variant="text"
             >
-              {getI18nLabel(i18n, "downloadPNG")}
+              {getI18nLabel(i18n, "downloadPNG", currentLang)}
             </Button>
           </li>
           <li>
@@ -211,7 +215,7 @@ function MenuModal({
               onClick={printChart}
               variant="text"
             >
-              {getI18nLabel(i18n, "print")}
+              {getI18nLabel(i18n, "print", currentLang)}
             </Button>
           </li>
         </ul>
@@ -221,7 +225,7 @@ function MenuModal({
             <Col md={6} className="fr-mb-2w ">
               <div className="fr-share">
                 <Title as="h2" look="h6" className="fr-share__title">
-                  {getI18nLabel(i18n, "share")}
+                  {getI18nLabel(i18n, "share", currentLang)}
                 </Title>
                 <ul className="fr-btns-group fr-btns-group--inline-md fr-btns-group--equisized">
                   <li>
@@ -275,7 +279,7 @@ function MenuModal({
             <Col md={6}>
               <div>
                 <Title as="h2" look="h6" className="fr-mb-1w">
-                  {getI18nLabel(i18n, "integration")}
+                  {getI18nLabel(i18n, "integration", currentLang)}
                 </Title>
               </div>
               <div className="fr-mt-2w">
@@ -290,7 +294,7 @@ function MenuModal({
                   }}
                   variant="secondary"
                 >
-                  {getI18nLabel(i18n, "integration")}
+                  {getI18nLabel(i18n, "integration", currentLang)}
                 </Button>
               </div>
             </Col>
@@ -299,7 +303,7 @@ function MenuModal({
         <hr />
         <div className="fr-mt-2w fr-grid-row fr-grid-row--right">
           <Button onClick={() => setIsOpen(false)}>
-            {getI18nLabel(i18n, "close")}
+            {getI18nLabel(i18n, "close", currentLang)}
           </Button>
         </div>
       </ModalContent>
@@ -440,14 +444,14 @@ export default function ChartWrapper({
       chartOptions: { title: { text: config?.title } },
       filename: config?.title ?? 'chart',
       showTable: displayType === 'data',
-      tableCaption: options?.exporting?.tableCaption || titleText || getI18nLabel(i18n, "data"),
+      tableCaption: options?.exporting?.tableCaption || titleText || getI18nLabel(i18n, "data", currentLang),
     }
   };
   const optionsTmp: HighchartsOptions = deepMerge(options, exportingOptions);
 
   const changeDisplayType = (type: string) => {
     setDisplayType(type);
-    setDisplayAnnouncement(getI18nLabel(i18n, type === "data" ? "dataDisplayed" : "chartDisplayed"));
+    setDisplayAnnouncement(getI18nLabel(i18n, type === "data" ? "dataDisplayed" : "chartDisplayed", currentLang));
     if (renderData || !chart.current?.chart) return;
     const currentChart = chart.current.chart as CurrentChart;
     if (type === "data") currentChart.viewData();

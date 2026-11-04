@@ -71,38 +71,38 @@ export default function Footer({ href = "/", sitemapHref, title = "Accueil - Tab
         <div className="fr-footer__bottom">
           <ul className="fr-footer__bottom-list">
             <li className="fr-footer__bottom-item">
-              <a className="fr-footer__bottom-link" href={sitemapUrl} title={getI18nLabel(i18n, "sitemap")}>
-                {getI18nLabel(i18n, "sitemap")}
+              <a className="fr-footer__bottom-link" href={sitemapUrl} title={getI18nLabel(i18n, "sitemap", currentLang)}>
+                {getI18nLabel(i18n, "sitemap", currentLang)}
               </a>
             </li>
             {!isInProduction() && <li className="fr-footer__bottom-item">
-              <a className="fr-footer__bottom-link" href="/mentions-legales" title={getI18nLabel(i18n, "legalNotice")}>
-                {getI18nLabel(i18n, "legalNotice")}
+              <a className="fr-footer__bottom-link" href="/mentions-legales" title={getI18nLabel(i18n, "legalNotice", currentLang)}>
+                {getI18nLabel(i18n, "legalNotice", currentLang)}
               </a>
             </li>}
             {!isInProduction() && <li className="fr-footer__bottom-item">
-              <a className="fr-footer__bottom-link" href="/donnees-personnelles" title={getI18nLabel(i18n, "personalData")}>
-                {getI18nLabel(i18n, "personalData")}
+              <a className="fr-footer__bottom-link" href="/donnees-personnelles" title={getI18nLabel(i18n, "personalData", currentLang)}>
+                {getI18nLabel(i18n, "personalData", currentLang)}
               </a>
             </li>}
             {!isInProduction() && <li className="fr-footer__bottom-item">
-              <a className="fr-footer__bottom-link" href="/cgu" title={getI18nLabel(i18n, "cgu")}>
-                {getI18nLabel(i18n, "cgu")}
+              <a className="fr-footer__bottom-link" href="/cgu" title={getI18nLabel(i18n, "cgu", currentLang)}>
+                {getI18nLabel(i18n, "cgu", currentLang)}
               </a>
             </li>}
             <li className="fr-footer__bottom-item">
-              <a className="fr-footer__bottom-link" href="/cookies" title={getI18nLabel(i18n, "cookies")}>
-                {getI18nLabel(i18n, "cookies")}
+              <a className="fr-footer__bottom-link" href="/cookies" title={getI18nLabel(i18n, "cookies", currentLang)}>
+                {getI18nLabel(i18n, "cookies", currentLang)}
               </a>
             </li>
             <li className="fr-footer__bottom-item">
-              <a className="fr-footer__bottom-link" href={accessibilityUrl} title={getI18nLabel(i18n, "accessibility")}>
-                {getI18nLabel(i18n, "accessibility")}
+              <a className="fr-footer__bottom-link" href={accessibilityUrl} title={getI18nLabel(i18n, "accessibility", currentLang)}>
+                {getI18nLabel(i18n, "accessibility", currentLang)}
               </a>
             </li>
             <li className="fr-footer__bottom-item">
-              <a className="fr-footer__bottom-link" href={contactUrl} title={getI18nLabel(i18n, "contact")}>
-                {getI18nLabel(i18n, "contact")}
+              <a className="fr-footer__bottom-link" href={contactUrl} title={getI18nLabel(i18n, "contact", currentLang)}>
+                {getI18nLabel(i18n, "contact", currentLang)}
               </a>
             </li>
             <li className="fr-footer__bottom-item">
@@ -126,7 +126,7 @@ export default function Footer({ href = "/", sitemapHref, title = "Accueil - Tab
           <div className="fr-footer__bottom-copy">
             <p
               dangerouslySetInnerHTML={{
-                __html: getI18nLabel(i18n, "rightsReserved"),
+                __html: getI18nLabel(i18n, "rightsReserved", currentLang),
               }}
             />
           </div>
