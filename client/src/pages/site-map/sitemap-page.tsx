@@ -1,10 +1,11 @@
-import { Breadcrumb, Col, Container, Link, Row, Title } from "@dataesr/dsfr-plus";
+import { Col, Container, Link, Row, Title } from "@dataesr/dsfr-plus";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 
 import BoardSitemapPage, { type BoardSitemapConfig } from "./board-sitemap-page.tsx";
 
 import "./sitemap-styles.scss";
+import Breadcrumb from "../../components/breadcrumb/index.tsx";
 
 const { VITE_APP_SERVER_URL } = import.meta.env;
 
@@ -101,10 +102,7 @@ export default async function SitemapPage() {
     <div className="sitemap-page">
       <section className="sitemap-hero">
         <Container>
-          <Breadcrumb className="sitemap-hero__breadcrumb">
-            <Link href="/">Accueil</Link>
-            <Link>Plan du site</Link>
-          </Breadcrumb>
+          <Breadcrumb root="/" config={{"plan-du-site": {label: {fr: "Plan du site"}}}} />
           <p className="sitemap-hero__label">Navigation</p>
           <Title as="h1" look="h1" className="sitemap-hero__title">
             Plan du site

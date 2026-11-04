@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import {
   Badge,
-  Breadcrumb,
   Button,
   Col,
   Container,
@@ -18,6 +17,8 @@ import { useQuery } from "@tanstack/react-query";
 import SyntaxHighlighter from "react-syntax-highlighter";
 
 import { queryClient } from "../../main";
+import Breadcrumb from "../../components/breadcrumb";
+import navigationConfig from "./navigation-config.json";
 import UploadVersion from "./upload-version";
 
 const { VITE_APP_SERVER_URL, VITE_APP_TICKETOFFICE_URL } = import.meta.env;
@@ -158,12 +159,11 @@ export default function Dashboard() {
     <Container>
       <Row className="fr-mb-5w">
         <Col>
-          <Breadcrumb className="fr-m-0 fr-mt-1w">
-            <Link href="/admin">Admin - accueil</Link>
-            <Link>
-              <strong>Dashboard {dashboardId}</strong>
-            </Link>
-          </Breadcrumb>
+          <Breadcrumb
+            config={navigationConfig}
+            section={`Tableau ${dashboardId}`}
+            root="/"
+          />
           <Link
             href={`${VITE_APP_TICKETOFFICE_URL}/tableaux-contact?page=1&query=&searchInMessage=true&sort=DESC&status=choose`}
             target="_blank"

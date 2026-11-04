@@ -3,8 +3,9 @@ import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
-import Breadcrumb from "../../components/breadcrumb";
+import Breadcrumb from "../../../../components/breadcrumb";
 import { years } from "../../utils";
+import navigationConfig from "../../navigation-config.json";
 import PatentsByClass from "./charts/patents-by-class";
 import PatentsByYear from "./charts/patents-by-year";
 import PatentsCoApplicants from "./charts/patents-co-applicants";
@@ -71,11 +72,7 @@ export default function DisplayStructure() {
         <Container as="section">
           <Row gutters>
             <Col>
-              <Breadcrumb items={[
-                { href: "/valorisation-recherche-innovation/accueil", label: "Valorisation de la recherche - innovation" },
-                { href: "/valorisation-recherche-innovation/etablissement", label: "Vue par établissement" },
-                { label: name }
-              ]} />
+              <Breadcrumb config={{ ...navigationConfig, etablissement: { ...navigationConfig.etablissement, label: { fr: name } } }} />
             </Col>
           </Row>
           <Row gutters>

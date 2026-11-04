@@ -1,8 +1,11 @@
 import { Col, Container, Row, Title } from "@dataesr/dsfr-plus";
+import Breadcrumb from "../../../../components/breadcrumb";
+import navigationConfig from "../../navigation-config.json";
 
 export default function Overview() {
   return (
     <Container>
+      <Breadcrumb config={navigationConfig} />
       <Title as="h1">Overview Page</Title>
       <Row gutters>
         <Col>

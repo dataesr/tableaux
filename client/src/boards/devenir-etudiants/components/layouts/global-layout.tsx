@@ -1,10 +1,8 @@
 import { Logo, Service } from "@dataesr/dsfr-plus";
 import { useEffect, useState } from "react";
 import { Link, Outlet, useLocation } from "react-router-dom";
-
 import Breadcrumb from "../../../../components/breadcrumb";
 import Footer from "../../../../components/footer";
-import { useDashboardVisibility } from "../../../../hooks/useDashboardVisibility";
 import { getI18nLabel } from "../../../../utils";
 import i18n from "./i18n.json";
 import navigationConfig from "./navigation-config.json";
@@ -24,7 +22,6 @@ const NAV_ITEMS = [
 
 export default function GlobalLayout() {
   const { pathname, search } = useLocation();
-  const isHomePageVisible = useDashboardVisibility("devenir-etudiants");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
@@ -127,7 +124,7 @@ export default function GlobalLayout() {
       <main id="main-content" tabIndex={-1}>
         <div className="fr-container fr-pt-2w fr-pb-0">
           {NAV_ITEMS.some(({ to }) => pathname === to) && (
-            <Breadcrumb config={navigationConfig} homeHref={isHomePageVisible ? "/" : undefined} />
+            <Breadcrumb config={navigationConfig} />
           )}
         </div>
         <Outlet />

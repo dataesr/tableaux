@@ -3,8 +3,9 @@ import { useQuery } from "@tanstack/react-query"
 import { useEffect, useState } from "react"
 import { useSearchParams } from "react-router-dom"
 
-import Breadcrumb from "../../components/breadcrumb"
+import Breadcrumb from "../../../../components/breadcrumb"
 import CardSimple from "../../components/card-simple"
+import navigationConfig from "../../navigation-config.json"
 import { getEsQuery } from "../../utils.ts"
 import DisplayRegion from "./displayRegion.tsx"
 
@@ -77,10 +78,7 @@ export default function regions() {
           <Container as="section">
             <Row gutters>
               <Col xs="12">
-                <Breadcrumb items={[
-                  { href: "/financements-par-aap/accueil", label: "Financements par AAP" },
-                  { label: "Vue par région" },
-                ]} />
+                <Breadcrumb config={navigationConfig} />
               </Col>
             </Row>
             <Row gutters>

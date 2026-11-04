@@ -1,6 +1,5 @@
 import {
   Badge,
-  Breadcrumb,
   Button,
   Col,
   Container,
@@ -19,6 +18,8 @@ import { Fragment } from "react";
 import { useMemo, useState } from "react";
 import { queryClient } from "../../main";
 import Callout from "../atlas/components/callout";
+import Breadcrumb from "../../components/breadcrumb";
+import navigationConfig from "./navigation-config.json";
 
 import "./styles.scss";
 
@@ -442,12 +443,7 @@ export default function Home() {
     <Container fluid className="fr-mx-10w admin-home">
       <Row className="fr-mb-5w">
         <Col>
-          <Breadcrumb className="fr-m-0 fr-mt-1w">
-            <Link href="/">Accueil</Link>
-            <Link>
-              <strong>Administration de Tableaux</strong>
-            </Link>
-          </Breadcrumb>
+          <Breadcrumb config={navigationConfig} root="/" />
         </Col>
       </Row>
       <h2 className="fr-mb-2w">Gestion des tableaux de bord</h2>

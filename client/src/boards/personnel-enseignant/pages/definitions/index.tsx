@@ -1,5 +1,6 @@
 import { Container, Row, Col, Title } from "@dataesr/dsfr-plus";
-import Breadcrumb from "../../components/breadcrumb";
+import Breadcrumb from "../../../../components/breadcrumb";
+import navigationConfig from "../../navigation-config.json";
 import { definitions } from "./definitions";
 
 
@@ -11,12 +12,7 @@ export default function DefinitionsPage() {
                 <Container as="section">
                     <Row>
                         <Col>
-                            <Breadcrumb
-                                items={[
-                                    { label: "Accueil", href: "/personnel-enseignant/accueil" },
-                                    { label: "Définitions" },
-                                ]}
-                            />
+                            <Breadcrumb config={navigationConfig} />
                         </Col>
                     </Row>
                     <Row>

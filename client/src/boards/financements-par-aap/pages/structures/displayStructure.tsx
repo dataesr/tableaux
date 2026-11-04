@@ -16,8 +16,9 @@ import Overview from "../../charts/overview"
 import ProjectsByFunder from "../../charts/projects-by-funder"
 import ProjectsOverTimeByStructure from "../../charts/projects-over-time"
 import Regions from "../../charts/regions"
-import Breadcrumb from "../../components/breadcrumb"
+import Breadcrumb from "../../../../components/breadcrumb"
 import Cards from "../../components/cards"
+import navigationConfig from "../../navigation-config.json"
 import { getEsQuery, years } from "../../utils"
 import ProjectsData from "./components/projects-data"
 
@@ -110,11 +111,7 @@ export default function DisplayStructure() {
         <Container as="section">
           <Row gutters>
             <Col xs="12">
-              <Breadcrumb items={[
-                { href: "/financements-par-aap/accueil", label: "Financements par AAP" },
-                { href: "/financements-par-aap/etablissement", label: "Vue par établissement" },
-                { label: name }
-              ]} />
+              <Breadcrumb config={navigationConfig} section={name} />
             </Col>
           </Row>
           <Row gutters className="fr-grid-row--middle fr-mb-2w">

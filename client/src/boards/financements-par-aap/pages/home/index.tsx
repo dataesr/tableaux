@@ -2,8 +2,9 @@ import { Col, Container, Row, Text, Title } from "@dataesr/dsfr-plus";
 import { useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 
+import Breadcrumb from "../../../../components/breadcrumb";
 import Callout from "../../../../components/callout";
-import Breadcrumb from "../../components/breadcrumb";
+import navigationConfig from "../../navigation-config.json";
 
 import "./styles.scss";
 
@@ -24,10 +25,7 @@ export default function Home() {
         <Container>
           <Row>
             <Col xs="12">
-              <Breadcrumb items={[
-                { href: "/financements-par-aap/accueil", label: "Financements par AAP" },
-                { label: "Accueil" },
-              ]} />
+              <Breadcrumb config={navigationConfig} />
             </Col>
           </Row>
           <Row >

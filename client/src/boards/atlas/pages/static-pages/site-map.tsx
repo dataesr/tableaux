@@ -1,5 +1,6 @@
+import Breadcrumb from "../../../../components/breadcrumb";
+import navigationConfig from "../../navigation-config.json";
 import {
-  Breadcrumb,
   Container,
   Col,
   Row,
@@ -14,12 +15,7 @@ export default function SiteMap() {
     <Container as="main" id="main">
       <Row className="fr-mb-5w">
         <Col>
-          <Breadcrumb className="fr-m-0 fr-mt-1w">
-            <Link href="/atlas">Accueil</Link>
-            <Link>
-              <strong>Plan du site : Atlas des effectifs étudiants</strong>
-            </Link>
-          </Breadcrumb>
+          <Breadcrumb config={navigationConfig} />
         </Col>
       </Row>
       <Row>

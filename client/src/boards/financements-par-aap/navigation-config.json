@@ -1,0 +1,18 @@
+{
+  "financements-par-aap": {
+    "label": { "fr": "Financements par AAP" },
+    "link": "/financements-par-aap/accueil"
+  },
+  "accueil": {
+    "label": { "fr": "Accueil" },
+    "link": "/financements-par-aap/accueil"
+  },
+  "region": {
+    "label": { "fr": "Vue par région" },
+    "link": "/financements-par-aap/region"
+  },
+  "etablissement": {
+    "label": { "fr": "Vue par établissement" },
+    "link": "/financements-par-aap/etablissement"
+  }
+}

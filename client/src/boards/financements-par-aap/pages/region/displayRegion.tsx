@@ -15,8 +15,9 @@ import Laboratories from "../../charts/laboratories"
 import Overview from "../../charts/overview"
 import ProjectsByFunder from "../../charts/projects-by-funder"
 import ProjectsOverTime from "../../charts/projects-over-time"
-import Breadcrumb from "../../components/breadcrumb"
+import Breadcrumb from "../../../../components/breadcrumb"
 import Cards from "../../components/cards"
+import navigationConfig from "../../navigation-config.json"
 import { years } from "../../utils"
 import ProjectsData from "./components/projects-data"
 
@@ -64,11 +65,7 @@ export default function DisplayRegion() {
         <Container as="section">
           <Row gutters>
             <Col xs="12">
-              <Breadcrumb items={[
-                { href: "/financements-par-aap/accueil", label: "Financements par AAP" },
-                { href: "/financements-par-aap/region", label: "Vue par région" },
-                { label: region }
-              ]} />
+              <Breadcrumb config={navigationConfig} section={region} />
             </Col>
           </Row>
           <Row gutters className="fr-grid-row--middle fr-mb-2w">

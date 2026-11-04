@@ -1,0 +1,15 @@
+{
+  "template": {
+    "label": {
+      "fr": "Template"
+    },
+    "link": "/template/home"
+  },
+  "overview": {
+    "label": {
+      "fr": "Synthèse",
+      "en": "Overview"
+    },
+    "link": "/template/overview"
+  }
+}

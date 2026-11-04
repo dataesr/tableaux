@@ -1,5 +1,6 @@
-import { 
-  Breadcrumb,
+import Breadcrumb from "../../../../components/breadcrumb";
+import navigationConfig from "../../navigation-config.json";
+import {
   Container, Row, Col,
   Link,
   Title,
@@ -11,10 +12,7 @@ export default function Accessibility() {
     <Container as="main" id="main" className="fr-mt-2w">
       <Row>
         <Col>
-        <Breadcrumb>
-          <Link href="/atlas">Atlas des effectifs étudiant-e-s</Link>
-          <Link>Accessibilité</Link>
-        </Breadcrumb>
+        <Breadcrumb config={navigationConfig} />
         </Col>
       </Row>
       <Row>

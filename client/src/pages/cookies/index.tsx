@@ -7,6 +7,7 @@ import { getI18nLabel } from "../../utils";
 import Footer from "../../components/footer";
 import i18n from "../../components/cookies/cookie-consent/i18n.json";
 import { CookieConsentModalContent } from "../../components/cookies/cookie-consent/index";
+import Breadcrumb from "../../components/breadcrumb";
 
 export default function CookiePolicyPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -45,28 +46,9 @@ export default function CookiePolicyPage() {
     <>
       <HeaderTableaux />
       <Container>
+        <Breadcrumb root="/" config={{cookies: {label: {fr: getI18nLabel(i18n, "page.title")}}}}/>
         <Row>
           <Col>
-            <nav role="navigation" className="fr-breadcrumb" aria-label="vous êtes ici :">
-              <button className="fr-breadcrumb__button" aria-expanded="false" aria-controls="breadcrumb-1">
-                Voir le fil d'Ariane
-              </button>
-              <div className="fr-collapse" id="breadcrumb-1">
-                <ol className="fr-breadcrumb__list">
-                  <li>
-                    <a className="fr-breadcrumb__link" href="/">
-                      Accueil
-                    </a>
-                  </li>
-                  <li>
-                    <a className="fr-breadcrumb__link" aria-current="page">
-                      {getI18nLabel(i18n, "page.title")}
-                    </a>
-                  </li>
-                </ol>
-              </div>
-            </nav>
-
             <Title as="h1">{getI18nLabel(i18n, "page.title")}</Title>
             <Text size="lead">{getI18nLabel(i18n, "page.introduction")}</Text>
 

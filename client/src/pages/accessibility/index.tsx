@@ -1,8 +1,9 @@
-import { Breadcrumb, Container, Link, Text, Title } from "@dataesr/dsfr-plus";
+import { Container, Link, Text, Title } from "@dataesr/dsfr-plus";
 import { useSearchParams } from "react-router-dom";
 
 import AuditComponent from "./audit-component";
 import Callout from "../../components/callout";
+import Breadcrumb from "../../components/breadcrumb";
 
 const i18n = {
   home: {
@@ -120,10 +121,7 @@ export default function AccessibilityPage() {
 
   return (
     <Container as="main" role="main">
-      <Breadcrumb>
-        <Link href="/">{i18n.home[currentLang]}</Link>
-        <Link>{i18n.title[currentLang]}</Link>
-      </Breadcrumb>
+      <Breadcrumb root="/" config={{accessibility: {label: {fr: i18n.title[currentLang]}}}} />
       <Title>{i18n.title[currentLang]}</Title>
       <Callout>{i18n.callout[currentLang]}</Callout>
       <Title as="h2">{i18n["engagement-title"][currentLang]}</Title>

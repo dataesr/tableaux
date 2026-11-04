@@ -1,13 +1,13 @@
 import { useQuery } from "@tanstack/react-query";
-import { useSearchParams, useLocation } from "react-router-dom";
-
+import { useSearchParams } from "react-router-dom";
 import References from "./references";
 import { getReferences } from "../../../api";
-import { Breadcrumb, Link, Title } from "@dataesr/dsfr-plus";
+import { Title } from "@dataesr/dsfr-plus";
+import Breadcrumb from "../../../components/breadcrumb";
+import navigationConfig from "../navigation-config.json";
 
 export default function OtherGeographicalLevels() {
   const [searchParams] = useSearchParams();
-  const { pathname } = useLocation();
 
   const params = [...searchParams].map(([key, value]) => `${key}=${value}`).join("&");
 
@@ -18,11 +18,7 @@ export default function OtherGeographicalLevels() {
 
   return (
     <>
-      <Breadcrumb>
-        <Link href="/">Accueil</Link>
-        <Link href="/atlas">Atlas</Link>
-        <Link>{pathname.split("/")[2]}</Link>
-      </Breadcrumb>
+      <Breadcrumb config={navigationConfig} />
       <section>
         <Title as="h2">Autres niveaux géographiques disponibles</Title>
         <References data={dataReferences?.data || []} isLoading={isLoadingReferences} />

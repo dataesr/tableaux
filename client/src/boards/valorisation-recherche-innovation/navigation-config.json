@@ -1,0 +1,37 @@
+{
+  "valorisation-recherche-innovation": {
+    "label": {
+      "fr": "Valorisation de la recherche - innovation"
+    },
+    "link": "/valorisation-recherche-innovation/accueil"
+  },
+  "accueil": {
+    "label": {
+      "fr": "Accueil",
+      "en": "Home"
+    },
+    "link": "/valorisation-recherche-innovation/accueil"
+  },
+  "etablissement": {
+    "label": {
+      "fr": "Vue par établissement",
+      "en": "View by structure"
+    },
+    "link": "/valorisation-recherche-innovation/etablissement",
+    "startups": {
+      "label": {
+        "fr": "Start-ups"
+      }
+    },
+    "brevets": {
+      "label": {
+        "fr": "Brevets"
+      }
+    },
+    "academiques": {
+      "label": {
+        "fr": "Liens académiques"
+      }
+    }
+  }
+}

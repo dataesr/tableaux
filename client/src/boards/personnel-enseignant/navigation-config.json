@@ -1,0 +1,44 @@
+{
+  "personnel-enseignant": {
+    "label": {
+      "fr": "Accueil",
+      "en": "Home"
+    },
+    "link": "/personnel-enseignant/accueil"
+  },
+  "etablissements": {
+    "label": {
+      "fr": "Établissements",
+      "en": "Institutions"
+    },
+    "link": "/personnel-enseignant/etablissements"
+  },
+  "disciplines": {
+    "label": {
+      "fr": "Disciplines",
+      "en": "Disciplines"
+    },
+    "link": "/personnel-enseignant/disciplines"
+  },
+  "regions": {
+    "label": {
+      "fr": "Régions",
+      "en": "Regions"
+    },
+    "link": "/personnel-enseignant/regions"
+  },
+  "academies": {
+    "label": {
+      "fr": "Académies",
+      "en": "Academies"
+    },
+    "link": "/personnel-enseignant/academies"
+  },
+  "definitions": {
+    "label": {
+      "fr": "Définitions",
+      "en": "Definitions"
+    },
+    "link": "/personnel-enseignant/definitions"
+  }
+}

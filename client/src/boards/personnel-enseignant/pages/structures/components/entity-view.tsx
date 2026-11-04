@@ -8,17 +8,11 @@ import GroupesCnuSection from "../sections/groupes-cnu";
 import ComparaisonSection from "../sections/positionning";
 import DefaultSkeleton from "../../../../../components/charts-skeletons/default";
 import { SectionYearProvider } from "../../../../../components/section-year-select";
-import Breadcrumb from "../../../components/breadcrumb";
+import Breadcrumb from "../../../../../components/breadcrumb";
+import navigationConfig from "../../../navigation-config.json";
 import { IncompleteYearWarning } from "../../../components/incomplete-year";
 import EvolutionsSection from "../sections/analyses";
 import { getParamKey, formatDisciplineLabel } from "../utils";
-
-const VIEW_LABELS: Record<ViewType, { plural: string; singular: string; basePath: string }> = {
-    structure: { plural: "Établissements", singular: "établissement", basePath: "/personnel-enseignant/etablissements" },
-    discipline: { plural: "Disciplines", singular: "discipline", basePath: "/personnel-enseignant/disciplines" },
-    region: { plural: "Régions", singular: "région", basePath: "/personnel-enseignant/regions" },
-    academie: { plural: "Académies", singular: "académie", basePath: "/personnel-enseignant/academies" },
-};
 
 const POPULATION_SECTIONS = [
     "enseignants-chercheurs",
@@ -32,7 +26,6 @@ interface Props {
 
 export default function EntityView({ viewType }: Props) {
     const [searchParams, setSearchParams] = useSearchParams();
-    const labels = VIEW_LABELS[viewType];
 
     const selectedId = searchParams.get(getParamKey(viewType)) || "";
     const rawSection = searchParams.get("section") || "personnels";
@@ -145,13 +138,7 @@ export default function EntityView({ viewType }: Props) {
                 <Container as="section">
                     <Row>
                         <Col>
-                            <Breadcrumb
-                                items={[
-                                    { label: "Accueil", href: "/personnel-enseignant/accueil" },
-                                    { label: labels.plural, href: labels.basePath },
-                                    { label: entityName },
-                                ]}
-                            />
+                            <Breadcrumb config={navigationConfig} section={entityName} />
                         </Col>
                     </Row>
 

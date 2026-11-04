@@ -1,0 +1,38 @@
+{
+  "atlas": {
+    "label": {
+      "fr": "Atlas des effectifs étudiant-e-s"
+    },
+    "link": "/atlas"
+  },
+  "autres-niveaux-geographiques": {
+    "label": {
+      "fr": "Autres niveaux géographiques"
+    },
+    "link": "/atlas/autres-niveaux-geographiques"
+  },
+  "methodologie": {
+    "label": {
+      "fr": "Méthodologie"
+    },
+    "link": "/atlas/methodologie"
+  },
+  "mentions-legales": {
+    "label": {
+      "fr": "Mentions légales"
+    },
+    "link": "/atlas/mentions-legales"
+  },
+  "accessibilite": {
+    "label": {
+      "fr": "Accessibilité"
+    },
+    "link": "/atlas/accessibilite"
+  },
+  "plan-du-site": {
+    "label": {
+      "fr": "Plan du site : Atlas des effectifs étudiants"
+    },
+    "link": "/atlas/plan-du-site"
+  }
+}

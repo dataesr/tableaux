@@ -1,0 +1,6 @@
+{
+  "admin": {
+    "label": { "fr": "Administration de Tableaux" },
+    "link": "/admin"
+  }
+}

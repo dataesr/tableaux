@@ -1,11 +1,13 @@
 import { useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { Breadcrumb, Container, Row, Col, Link } from "@dataesr/dsfr-plus";
+import { Container, Row, Col } from "@dataesr/dsfr-plus"
 
 import { useTitle } from "../../hooks/usePageTitle.tsx";
 import { getFiltersValues } from "../../api/atlas.ts";
 import { getGeoLabel, setfavoriteIdsInCookie } from "../../utils.tsx";
+import Breadcrumb from "../../components/breadcrumb"
+import navigationConfig from "./navigation-config.json"
 import { Search } from "./pages/search/index.tsx";
 import YearsModalButton from "./components/header/years-modal-button.tsx";
 import { AtlasSideMenu } from "./components/side-menu-layout/index.tsx";
@@ -16,8 +18,7 @@ import "./styles.scss";
 
 export default function AtlasHeader() {
   const [searchParams] = useSearchParams();
-  const geoId = searchParams.get("geo_id") || "";
-  const shared: boolean = searchParams.has("shared");
+  const geoId = searchParams.get("geo_id") || ""
 
   useTitle("Tableaux - Atlas des effectifs étudiant-e-s");
 
@@ -38,13 +39,14 @@ export default function AtlasHeader() {
   if (isLoadingFiltersValues) {
     return (
       <Container as="main">
-        <Breadcrumb>
-          {shared && <Link href="/">Accueil</Link>}
-          <Link href="/atlas">Atlas des effectifs étudiant-e-s</Link>
-          <Link>Chargement des filtres en cours ...</Link>
-        </Breadcrumb>
+        <Breadcrumb
+          config={{
+            ...navigationConfig,
+            general: { label: { fr: "Chargement des filtres en cours ..." } },
+          }}
+        />
       </Container>
-    );
+    )
   }
 
   const geoLabel = getGeoLabel(geoId, filtersValues?.geo_id);
@@ -63,13 +65,9 @@ export default function AtlasHeader() {
         </Col>
       </Row>
 
-      <Breadcrumb>
-        {shared && <Link href={`/${shared ? "?shared" : ""}`}>Accueil</Link>}
-        <Link href={`/atlas${shared ? "?shared" : ""}`}>{shared ? "Atlas des effectifs étudiant-e-s" : "Accueil"}</Link>
-        {geoId && <Link>{geoLabel}</Link>}
-      </Breadcrumb>
+      <Breadcrumb config={navigationConfig} section={geoId && geoLabel}/>
 
       {!geoId ? <Search /> : <AtlasSideMenu geoLabel={geoLabel} level={getLevelFromGeoId({ geoId })} title={geoLabelFull} />}
     </Container>
-  );
+  )
 }

@@ -2,8 +2,9 @@ import { Col, Container, Row, Text, Title } from "@dataesr/dsfr-plus"
 import { useEffect, useState } from "react"
 import { useSearchParams } from "react-router-dom"
 
-import Breadcrumb from "../../components/breadcrumb"
+import Breadcrumb from "../../../../components/breadcrumb"
 import CardSimple from "../../components/card-simple"
+import navigationConfig from "../../navigation-config.json"
 import StructureSelector from "./components/structure-selector"
 import DisplayStructure from "./displayStructure"
 
@@ -34,10 +35,7 @@ export default function Structures() {
           <Container as="section">
             <Row gutters>
               <Col xs="12">
-                <Breadcrumb items={[
-                  { href: "/financements-par-aap/accueil", label: "Financements par AAP" },
-                  { label: "Vue par établissement" },
-                ]} />
+                <Breadcrumb config={navigationConfig} />
               </Col>
             </Row>
             <Row gutters>

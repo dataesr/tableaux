@@ -1,5 +1,6 @@
+import Breadcrumb from "../../../../components/breadcrumb";
+import navigationConfig from "../../navigation-config.json";
 import {
-  Breadcrumb,
   Col,
   Container,
   Link,
@@ -12,12 +13,7 @@ export default function Methodology() {
     <Container as="main">
       <Row className="fr-mb-5w">
         <Col>
-          <Breadcrumb className="fr-m-0 fr-mt-1w">
-            <Link href="/atlas">Accueil</Link>
-            <Link>
-              <strong>Méthodologie</strong>
-            </Link>
-          </Breadcrumb>
+          <Breadcrumb config={navigationConfig} />
         </Col>
       </Row>
 
