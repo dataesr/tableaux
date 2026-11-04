@@ -16,8 +16,8 @@
     "fr": "Organisme public"
   },
   "REC": {
-    "en": "Research",
-    "fr": "Recherche"
+    "en": "Research institution",
+    "fr": "Établissement de recherche"
   },
   "acronym": {
     "en": "Acronym",
@@ -164,8 +164,8 @@
     "fr": "Télécharger les données"
   },
   "entities": {
-    "en": "Entities",
-    "fr": "Entités"
+    "en": "Host institution",
+    "fr": "Établissement d'accueil"
   },
   "evaluated": {
     "en": "Evaluated",
@@ -256,7 +256,7 @@
     "fr": "Participations totales"
   },
   "pi": {
-    "en": "Project holders",
+    "en": "Principal investigators",
     "fr": "Porteurs de projets"
   },
   "pillar": {
