@@ -1,6 +1,9 @@
 import type { Ratio } from "../../../../api";
 import type { ErcEvolution } from "../../../../api/erc.ts";
 import { formatNombre, formatPart } from "../../../../utils";
+import type { UNITES } from "../../comptage.ts";
+
+type Unites = (typeof UNITES)[keyof typeof UNITES];
 
 export const INDICATEURS = [
   { key: "parts", label: "Parts dans l'ERC" },
@@ -27,30 +30,31 @@ export function formatRatio(ratio: Ratio, { numerateur, denominateur }: Serie["u
   return `${formatPart(ratio.valeur)} (${calcul})`;
 }
 
-// Séries du graphique et colonnes du tableau, pour l'indicateur choisi (ratios déjà calculés par le serveur)
-export function getSeries(data: ErcEvolution["annees"], indicateur: IndicateurEvolution, entiteNom: string): Serie[] {
+// Séries du graphique et colonnes du tableau, pour l'indicateur choisi (ratios déjà calculés par le serveur).
+// `libelles` : unités du mode de comptage des données affichées (projets ou porteurs).
+export function getSeries(data: ErcEvolution["annees"], indicateur: IndicateurEvolution, entiteNom: string, libelles: Unites): Serie[] {
   if (indicateur === "taux") {
-    const unites = { numerateur: "lauréats", denominateur: "candidatures" };
+    const unites = { numerateur: libelles.laureats, denominateur: libelles.candidatures };
     return [
       { name: entiteNom, color: "sr-focus", reference: false, ratios: data.map((d) => d.taux_succes), unites },
-      { name: "Ensemble des candidatures ERC", color: "sr-etablissement", reference: true, ratios: data.map((d) => d.taux_succes_reference), unites },
+      { name: `Ensemble des ${libelles.candidatures} ERC`, color: "sr-etablissement", reference: true, ratios: data.map((d) => d.taux_succes_reference), unites },
     ];
   }
   // Écart entre les deux courbes : lauréats au-dessus des candidatures = réussite supérieure à la moyenne
   return [
     {
-      name: "Part des candidatures ERC",
+      name: `Part des ${libelles.candidatures} ERC`,
       color: "sr-focus",
       reference: false,
       ratios: data.map((d) => d.part_candidatures),
-      unites: { numerateur: "candidatures", denominateur: "candidatures" },
+      unites: { numerateur: libelles.candidatures, denominateur: libelles.candidatures },
     },
     {
-      name: "Part des lauréats ERC",
+      name: `Part des ${libelles.laureats} ERC`,
       color: "sr-influence",
       reference: false,
       ratios: data.map((d) => d.part_laureats),
-      unites: { numerateur: "lauréats", denominateur: "lauréats" },
+      unites: { numerateur: libelles.laureats, denominateur: libelles.laureats },
     },
   ];
 }

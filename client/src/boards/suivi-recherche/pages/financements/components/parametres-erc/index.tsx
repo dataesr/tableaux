@@ -1,8 +1,10 @@
-import { Accordion, Checkbox, Fieldset } from "@dataesr/dsfr-plus";
+import { Accordion, Checkbox, Fieldset, Radio } from "@dataesr/dsfr-plus";
 import { useId } from "react";
 
-import type { ErcMeta } from "../../../../api/erc.ts";
+import { COMPTAGE_DEFAUT } from "../../../../api/erc.ts";
+import type { Comptage, ErcMeta, ErcOptions } from "../../../../api/erc.ts";
 import { useSetParams } from "../../../../hooks/use-selection";
+import { COMPTAGE_LABELS } from "../../comptage.ts";
 
 // Types proposés : les trois bourses individuelles (par défaut), Synergy et Proof of Concept.
 // PERA, SJI et ERC-OTHER (quelques dizaines de candidatures, presque aucun lauréat) ne sont pas proposés.
@@ -14,14 +16,15 @@ export function getTypesLabel(meta: ErcMeta, types: string[]): string {
 
 type ParametresErcProps = {
   meta: ErcMeta;
-  types: string[];
+  options: ErcOptions;
 };
 
 // Paramètres de calcul du bloc ERC, repliés : leur valeur courante reste lisible dans le titre
-export default function ParametresErc({ meta, types }: ParametresErcProps) {
+export default function ParametresErc({ meta, options: { comptage, types } }: ParametresErcProps) {
   const setParams = useSetParams();
   const idPrefix = useId();
   const proposes = meta.types_bourse.filter(({ code }) => TYPES_PROPOSES.includes(code));
+  const comptages = Object.keys(meta.modes_comptage) as Comptage[];
 
   const toggle = (code: string, checked: boolean) => {
     const next = meta.types_bourse
@@ -31,8 +34,13 @@ export default function ParametresErc({ meta, types }: ParametresErcProps) {
     setParams({ type_bourse: parDefaut ? null : next.join(",") });
   };
 
+  // Le mode par défaut n'apparaît pas dans le titre, comme il n'est pas écrit dans l'URL
+  const titre = [getTypesLabel(meta, types), comptage !== COMPTAGE_DEFAUT && `Comptage : ${COMPTAGE_LABELS[comptage]}`]
+    .filter(Boolean)
+    .join(" · ");
+
   return (
-    <Accordion className="fr-mb-3w" title={`Paramètres de calcul · ${getTypesLabel(meta, types)}`} titleAs="h3">
+    <Accordion className="fr-mb-3w" title={`Paramètres de calcul · ${titre}`} titleAs="h3">
       <Fieldset legend="Types de bourse" hint="Au moins un type doit rester coché.">
         {proposes.map(({ avec_panel, code, libelle }) => {
           const checked = types.includes(code);
@@ -49,6 +57,22 @@ export default function ParametresErc({ meta, types }: ParametresErcProps) {
             />
           );
         })}
+      </Fieldset>
+      <Fieldset
+        hint="Ne change les chiffres que pour les Synergy Grants, qui ont 2 à 4 porteurs par projet."
+        isInline
+        legend="Compter en"
+      >
+        {comptages.map((mode) => (
+          <Radio
+            checked={comptage === mode}
+            id={`${idPrefix}-comptage-${mode}`}
+            key={mode}
+            label={COMPTAGE_LABELS[mode]}
+            name={`${idPrefix}-comptage`}
+            onChange={() => setParams({ comptage: mode === COMPTAGE_DEFAUT ? null : mode })}
+          />
+        ))}
       </Fieldset>
     </Accordion>
   );

@@ -3,7 +3,7 @@ import { Accordion, Alert, Notice, Title } from "@dataesr/dsfr-plus";
 import DefaultSkeleton from "../../../../../components/charts-skeletons/default.tsx";
 import { useErcIndicateurs } from "../../../api/erc.ts";
 import ChartBusy from "../../../components/chart-busy/index.tsx";
-import { useTypesBourse } from "../../../hooks/use-selection";
+import { useErcOptions } from "../../../hooks/use-selection";
 import { formatPeriode, getDisciplineLabel } from "../../../utils";
 import ErcEvolutionChart from "../charts/erc-evolution/index.tsx";
 import ChiffresCles from "../components/chiffres-cles/index.tsx";
@@ -13,9 +13,9 @@ import { useFinancements } from "../context.ts";
 // « Où en est l'établissement sélectionné ? » : chiffres clés, puis un bloc par dispositif (ERC pour l'instant)
 export default function ProfilSection() {
   const { disciplines, entiteNom, ercMeta, selection } = useFinancements();
-  const types = useTypesBourse(ercMeta);
-  const indicateurs = useErcIndicateurs(selection, types);
-  const typesLabel = getTypesLabel(ercMeta, types);
+  const options = useErcOptions(ercMeta);
+  const indicateurs = useErcIndicateurs(selection, options);
+  const typesLabel = getTypesLabel(ercMeta, options.types);
   const data = indicateurs.data;
 
   // La période affichée est celle des années d'appel retenues par le serveur, pas celle demandée
@@ -42,6 +42,7 @@ export default function ProfilSection() {
       {data?.periode && data.nb_candidatures > 0 && (
         <ChartBusy busy={indicateurs.isPlaceholderData}>
           <ChiffresCles
+            comptage={data.comptage}
             erc={data}
             provisoire={data.annees_provisoires.length > 0}
             seuil={data.seuil_fiabilite}
@@ -53,14 +54,14 @@ export default function ProfilSection() {
 
       <section>
         <Title as="h2" look="h4">Bourses ERC</Title>
-        <ParametresErc meta={ercMeta} types={types} />
+        <ParametresErc meta={ercMeta} options={options} />
         {data?.periode && (
           <ErcEvolutionChart
             entiteNom={entiteNom}
             meta={ercMeta}
             selection={selection}
+            options={options}
             selectionLabel={selectionLabel}
-            types={types}
           />
         )}
         {ercMeta.methode.length > 0 && (

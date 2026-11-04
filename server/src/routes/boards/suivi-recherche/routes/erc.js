@@ -8,17 +8,18 @@ const router = new express.Router();
 const MONDE = "MONDE";
 const ENTITE_NATIONALE = "FR";
 const DOMAINES = ["LS", "PE", "SH"];
-// Textes de méthode d'erc_meta sur l'intensité de candidature, indicateur que le tableau n'affiche pas
-const METHODE_NON_AFFICHEE = /^Intensité de candidature/;
 const CODE_PATTERN = /^[A-Za-z0-9]+$/;
-// En dessous de ce nombre de candidatures, un taux de succès ou une part est signalé comme peu fiable
+// En dessous de ce nombre de candidatures (ou de porteurs candidats en mode pi), un taux de succès ou une part
+// est signalé comme peu fiable
 const SEUIL_FIABILITE = 20;
+// Comptage en projets ou en porteurs (PI) : champs de chaque mode dans erc_meta.modes_comptage
+const COMPTAGES = ["projets", "pi"];
+const COMPTAGE_DEFAUT = "projets";
 // Identifiant ROR sans le préfixe https://ror.org/
 const ROR_PATTERN = /^0[a-z0-9]{6}[0-9]{2}$/;
 
 async function getMeta() {
-  const meta = await (await getCollection("erc_meta")).findOne({}, { projection: { _id: 0, parametres: 0, controles: 0 } });
-  return { ...meta, methode: meta.methode.filter((texte) => !METHODE_NON_AFFICHEE.test(texte)) };
+  return (await getCollection("erc_meta")).findOne({}, { projection: { _id: 0, parametres: 0, controles: 0 } });
 }
 
 function parseYear(value, name) {
@@ -30,14 +31,16 @@ function parseYear(value, name) {
 }
 
 // Filtres communs aux routes ERC, mêmes noms que la bibliométrie (plugins/tableaux/reference/url-parameters.md),
-// plus `type_bourse` (codes séparés par des virgules ; absent = erc_meta.types_bourse_defaut).
+// plus `type_bourse` (codes séparés par des virgules ; absent = erc_meta.types_bourse_defaut)
+// et `comptage` (`projets` ou `pi` ; absent = projets).
 // La période demandée est ramenée aux années d'appel disponibles ; `periode` est null si elles ne se recoupent pas.
 function parseFilters(query, meta) {
-  const { ror_id, year_min, year_max, discipline, domaine, type_bourse } = query;
+  const { ror_id, year_min, year_max, discipline, domaine, type_bourse, comptage = COMPTAGE_DEFAUT } = query;
 
   if (ror_id && !ROR_PATTERN.test(ror_id)) throw new BadRequestError("invalid ror_id");
   if (discipline && !CODE_PATTERN.test(discipline)) throw new BadRequestError("invalid discipline");
   if (domaine && !DOMAINES.includes(domaine)) throw new BadRequestError(`domaine must be one of ${DOMAINES.join(", ")}`);
+  if (!COMPTAGES.includes(comptage)) throw new BadRequestError(`comptage must be one of ${COMPTAGES.join(", ")}`);
 
   const codes = meta.types_bourse.map((type) => type.code);
   const types = type_bourse ? type_bourse.split(",") : meta.types_bourse_defaut;
@@ -49,7 +52,11 @@ function parseFilters(query, meta) {
   const fin = Math.min(year_max ? parseYear(year_max, "year_max") : annees.at(-1), annees.at(-1));
 
   const disciplineMatch = discipline ?? (domaine ? { $regex: `^${domaine}` } : undefined);
+  // Champs sommés pour le mode choisi : on ne mélange jamais projets et porteurs dans un ratio
+  const [champCandidatures, champLaureats] = meta.modes_comptage[comptage];
   return {
+    champs: { candidatures: champCandidatures, laureats: champLaureats },
+    comptage,
     entiteId: ror_id ?? ENTITE_NATIONALE,
     periode: debut <= fin ? [debut, fin] : null,
     types,
@@ -61,13 +68,9 @@ function ratio(numerateur = 0, denominateur = 0) {
   return { valeur: denominateur ? numerateur / denominateur : null, numerateur, denominateur };
 }
 
-const SUMS_ERC = {
-  nb_candidatures: { $sum: "$nb_candidatures" },
-  nb_laureats: { $sum: "$nb_candidatures_retenues" },
-};
-
-// Effectifs ERC de l'entité et de MONDE (dénominateur des parts), par année d'appel
-async function loadEffectifs({ entiteId, periode, types, disciplineMatch }) {
+// Effectifs ERC de l'entité et de MONDE (dénominateur des parts), par année d'appel, dans le mode de comptage choisi.
+// Les clés restent nb_candidatures / nb_laureats quel que soit le mode.
+async function loadEffectifs({ champs, entiteId, periode, types, disciplineMatch }) {
   const [debut, fin] = periode;
   const match = {
     entite_id: { $in: [entiteId, MONDE] },
@@ -77,7 +80,15 @@ async function loadEffectifs({ entiteId, periode, types, disciplineMatch }) {
   if (disciplineMatch) match.discipline_code = disciplineMatch;
 
   return (await getCollection("erc_effectifs"))
-    .aggregate([{ $match: match }, { $group: { _id: { entite_id: "$entite_id", annee: "$annee_appel" }, ...SUMS_ERC } }])
+    .aggregate([{
+      $match: match,
+    }, {
+      $group: {
+        _id: { entite_id: "$entite_id", annee: "$annee_appel" },
+        nb_candidatures: { $sum: `$${champs.candidatures}` },
+        nb_laureats: { $sum: `$${champs.laureats}` },
+      },
+    }])
     .toArray();
 }
 
@@ -119,11 +130,12 @@ router.route("/suivi-recherche/financements/erc/meta").get(async (req, res) => {
 router.route("/suivi-recherche/financements/erc/indicateurs").get(async (req, res) => {
   const meta = await getMeta();
   const filters = parseFilters(req.query, meta);
-  if (!filters.periode) return res.json({ periode: null });
+  if (!filters.periode) return res.json({ comptage: filters.comptage, periode: null });
 
   const annees = range(filters.periode);
   const rows = await loadEffectifs(filters);
   return res.json({
+    comptage: filters.comptage,
     periode: filters.periode,
     seuil_fiabilite: SEUIL_FIABILITE,
     annees_provisoires: meta.annees_provisoires.filter((annee) => annees.includes(annee)),
@@ -135,10 +147,11 @@ router.route("/suivi-recherche/financements/erc/indicateurs").get(async (req, re
 router.route("/suivi-recherche/financements/erc/evolution").get(async (req, res) => {
   const meta = await getMeta();
   const filters = parseFilters(req.query, meta);
-  if (!filters.periode) return res.json({ periode: null, annees: [] });
+  if (!filters.periode) return res.json({ comptage: filters.comptage, periode: null, annees: [] });
 
   const rows = await loadEffectifs(filters);
   return res.json({
+    comptage: filters.comptage,
     periode: filters.periode,
     seuil_fiabilite: SEUIL_FIABILITE,
     annees: range(filters.periode).map((annee) => ({

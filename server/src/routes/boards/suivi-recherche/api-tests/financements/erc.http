@@ -21,5 +21,13 @@ GET http://localhost:3000/api/suivi-recherche/financements/erc/evolution?year_mi
 GET http://localhost:3000/api/suivi-recherche/financements/erc/evolution?year_min=2015&year_max=2018
 
 ###
+# Comptage en porteurs (PI), avec Synergy : plus de candidats et de lauréats qu'en projets
+GET http://localhost:3000/api/suivi-recherche/financements/erc/indicateurs?type_bourse=STG,COG,ADG,SYG&year_min=2023&year_max=2023&comptage=pi
+
+###
 # 400 attendu
 GET http://localhost:3000/api/suivi-recherche/financements/erc/indicateurs?type_bourse=XXX
+
+###
+# 400 attendu
+GET http://localhost:3000/api/suivi-recherche/financements/erc/indicateurs?comptage=porteurs

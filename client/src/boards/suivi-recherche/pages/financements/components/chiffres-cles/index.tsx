@@ -1,10 +1,13 @@
 import { Badge, Col, Row } from "@dataesr/dsfr-plus";
 import { useId } from "react";
 
-import type { ErcIndicateurs } from "../../../../api/erc.ts";
+import type { Comptage, ErcIndicateurs } from "../../../../api/erc.ts";
 import { formatNombre, formatPart } from "../../../../utils";
+import { UNITES } from "../../comptage.ts";
 
 type ChiffresClesProps = {
+  // Mode de comptage des effectifs affichés (réponse du serveur)
+  comptage: Comptage;
   erc: ErcIndicateurs;
   provisoire: boolean;
   selectionLabel: string;
@@ -14,25 +17,26 @@ type ChiffresClesProps = {
 
 // Chiffres clés de la sélection, au-dessus des blocs par dispositif (ERC pour l'instant ; ANR, IUF, médailles ensuite).
 // Chaque ratio est accompagné de son numérateur et de son dénominateur.
-export default function ChiffresCles({ erc, provisoire, selectionLabel, seuil, typesLabel }: ChiffresClesProps) {
+export default function ChiffresCles({ comptage, erc, provisoire, selectionLabel, seuil, typesLabel }: ChiffresClesProps) {
   const titreId = useId();
+  const unites = UNITES[comptage];
   const cartes = [
     {
-      titre: "Candidatures ERC",
+      titre: `${unites.Candidatures} ERC`,
       valeur: formatNombre(erc.nb_candidatures),
-      detail: `${formatPart(erc.part_candidatures.valeur)} des candidatures ERC (${formatNombre(erc.part_candidatures.numerateur)} / ${formatNombre(erc.part_candidatures.denominateur)})`,
+      detail: `${formatPart(erc.part_candidatures.valeur)} des ${unites.candidatures} ERC (${formatNombre(erc.part_candidatures.numerateur)} / ${formatNombre(erc.part_candidatures.denominateur)})`,
       ratio: false,
     },
     {
-      titre: "Lauréats ERC",
+      titre: `${unites.Laureats} ERC`,
       valeur: formatNombre(erc.nb_laureats),
-      detail: `${formatPart(erc.part_laureats.valeur)} des lauréats ERC (${formatNombre(erc.part_laureats.numerateur)} / ${formatNombre(erc.part_laureats.denominateur)})`,
+      detail: `${formatPart(erc.part_laureats.valeur)} des ${unites.laureats} ERC (${formatNombre(erc.part_laureats.numerateur)} / ${formatNombre(erc.part_laureats.denominateur)})`,
       ratio: false,
     },
     {
       titre: "Taux de succès ERC",
       valeur: formatPart(erc.taux_succes.valeur),
-      detail: `${formatNombre(erc.taux_succes.numerateur)} lauréats / ${formatNombre(erc.taux_succes.denominateur)} candidatures · ensemble de l'ERC : ${formatPart(erc.taux_succes_reference.valeur)} (${formatNombre(erc.taux_succes_reference.numerateur)} / ${formatNombre(erc.taux_succes_reference.denominateur)})`,
+      detail: `${formatNombre(erc.taux_succes.numerateur)} ${unites.laureats} / ${formatNombre(erc.taux_succes.denominateur)} ${unites.candidatures} · ensemble de l'ERC : ${formatPart(erc.taux_succes_reference.valeur)} (${formatNombre(erc.taux_succes_reference.numerateur)} / ${formatNombre(erc.taux_succes_reference.denominateur)})`,
       ratio: true,
     },
   ];
@@ -60,7 +64,7 @@ export default function ChiffresCles({ erc, provisoire, selectionLabel, seuil, t
       </Row>
       {!erc.fiable && (
         <p className="fr-text--xs fr-text-mention--grey fr-mt-2w fr-mb-0">
-          {`Moins de ${seuil} candidatures : le taux de succès et les parts varient fortement d'une candidature à l'autre et sont peu fiables.`}
+          {`Moins de ${seuil} ${unites.candidatures} : le taux de succès et les parts varient fortement d'une candidature à l'autre et sont peu fiables.`}
         </p>
       )}
     </section>

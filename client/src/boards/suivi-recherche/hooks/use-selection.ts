@@ -2,7 +2,8 @@ import { useSearchParams } from "react-router-dom";
 
 import { ENTITE_NATIONALE } from "../api";
 import type { BiblioMeta, BiblioOptions, Entite, Perimetre, Selection } from "../api";
-import type { ErcMeta } from "../api/erc.ts";
+import { COMPTAGE_DEFAUT } from "../api/erc.ts";
+import type { Comptage, ErcMeta, ErcOptions } from "../api/erc.ts";
 
 export { ENTITE_NATIONALE };
 
@@ -13,6 +14,7 @@ export { ENTITE_NATIONALE };
 //   perimetre, inclure_multidisciplinaires   paramètres de calcul ; absents = revues SJR, avec multidisciplinaires
 //   section              onglet des pages Bibliométrie et Financements ; absent = profil
 //   type_bourse          types de bourse ERC, séparés par des virgules ; absent = erc_meta.types_bourse_defaut
+//   comptage             effectifs ERC en projets ou en porteurs (`projets` | `pi`) ; absent = projets
 // Une valeur par défaut n'est jamais écrite dans l'URL ; une valeur inconnue est ignorée.
 export function useSetParams() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -72,11 +74,16 @@ export function useBiblioOptions(meta?: BiblioMeta) {
   return options;
 }
 
-// Types de bourse ERC retenus : codes connus de erc_meta, dans l'ordre de erc_meta ; aucun ou inconnus = types par défaut
-export function useTypesBourse(meta?: ErcMeta): string[] {
+// Paramètres de calcul ERC.
+// Types de bourse : codes connus de erc_meta, dans l'ordre de erc_meta ; aucun ou inconnus = types par défaut.
+// Comptage : un mode de erc_meta.modes_comptage ; inconnu = projets.
+export function useErcOptions(meta: ErcMeta): ErcOptions {
   const [searchParams] = useSearchParams();
-  if (!meta) return [];
   const demandes = searchParams.get("type_bourse")?.split(",") ?? [];
   const types = meta.types_bourse.map(({ code }) => code).filter((code) => demandes.includes(code));
-  return types.length ? types : meta.types_bourse_defaut;
+  const comptage = searchParams.get("comptage") as Comptage;
+  return {
+    comptage: Object.keys(meta.modes_comptage).includes(comptage) ? comptage : COMPTAGE_DEFAUT,
+    types: types.length ? types : meta.types_bourse_defaut,
+  };
 }

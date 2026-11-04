@@ -14,7 +14,8 @@ const AXES: Record<IndicateurEvolution, string> = {
 
 // Ratios calculés par le serveur : ici, uniquement du mapping vers Highcharts.
 // Chaque point porte son ratio : l'infobulle affiche le numérateur et le dénominateur.
-export default function getOptions(data: ErcEvolution["annees"], indicateur: IndicateurEvolution, series: Serie[], seuil: number) {
+// `peuFiable` : mention ajoutée à l'infobulle d'un point peu fiable (« moins de 20 candidatures »)
+export default function getOptions(data: ErcEvolution["annees"], indicateur: IndicateurEvolution, series: Serie[], peuFiable: string) {
   // Le trait passe en pointillés vers la première année d'appel provisoire (résultats pas tous publiés)
   const premiereProvisoire = data.findIndex((d) => d.provisoire);
 
@@ -32,7 +33,7 @@ export default function getOptions(data: ErcEvolution["annees"], indicateur: Ind
       formatter: function () {
         const lines = (this.points ?? []).map((point) => {
           const { ratio, unites, fiable } = point.options.custom ?? {};
-          const mention = fiable === false ? ` · ${PEU_FIABLE} (moins de ${seuil} candidatures)` : "";
+          const mention = fiable === false ? ` · ${PEU_FIABLE} (${peuFiable})` : "";
           return `<span style="color:${point.color}">●</span> ${point.series.name} : <b>${formatRatio(ratio, unites)}</b>${mention}`;
         });
         return [`<b>${this.x}</b>`, ...lines].join("<br/>");
