@@ -51,6 +51,7 @@ router.route("/european-projects/erc/evolution-by-panel").get(async (req, res) =
         total_funding_project: { $sum: "$calculated_fund" },
         total_funding_entity: { $sum: "$fund_ent_erc" },
         total_involved: { $sum: "$number_involved" },
+        projects: { $addToSet: "$project_id" },
         total_pi: { $sum: { $cond: [{ $eq: ["$role", "PI"] }, "$number_involved", 0] } },
       },
     },
@@ -66,6 +67,7 @@ router.route("/european-projects/erc/evolution-by-panel").get(async (req, res) =
         total_funding_project: 1,
         total_funding_entity: 1,
         total_involved: 1,
+        total_projects: { $size: "$projects" },
         total_pi: 1,
       },
     },
@@ -117,6 +119,7 @@ router.route("/european-projects/erc/evolution-by-panel_indexes").get(async (req
         fund_ent_erc: 1,
         number_involved: 1,
         role: 1,
+        project_id: 1,
       },
       "idx_evolution-by-panel_covered",
     );

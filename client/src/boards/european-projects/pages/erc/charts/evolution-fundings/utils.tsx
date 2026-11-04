@@ -1,6 +1,7 @@
 import { useSearchParams } from "react-router-dom";
 import { isEjoParam } from "../../../../utils/params";
 import type { EvolutionData, EvolutionItem } from "./query";
+import { getCssColor } from "../../../../../../utils/colors";
 
 export function useGetParams() {
   const [searchParams] = useSearchParams();
@@ -29,25 +30,6 @@ export const DESTINATION_LABELS: Record<string, { fr: string; en: string }> = {
   POC: { fr: "Proof of concept grants", en: "Proof of concept grants" },
 };
 
-// Variables CSS pour les couleurs des destinations ERC
-export const DESTINATION_CSS_VARS: Record<string, string> = {
-  ADG: "--erc-destination-adg-color",
-  COG: "--erc-destination-cog-color",
-  STG: "--erc-destination-stg-color",
-  SYG: "--erc-destination-syg-color",
-  POC: "--erc-destination-poc-color",
-};
-
-// Fonction pour récupérer la couleur d'une destination depuis le CSS
-export function getDestinationColor(destCode: string): string {
-  const rootStyles = getComputedStyle(document.documentElement);
-  const cssVar = DESTINATION_CSS_VARS[destCode];
-  if (cssVar) {
-    const color = rootStyles.getPropertyValue(cssVar).trim();
-    if (color) return color;
-  }
-  return "#666666";
-}
 
 export interface ProcessedEvolutionData {
   years: string[];
@@ -107,7 +89,7 @@ export function processEvolutionData(data: EvolutionData, currentLang: string = 
 
       return {
         name: DESTINATION_LABELS[destCode]?.[currentLang] || destCode,
-        color: getDestinationColor(destCode),
+        color: getCssColor(`erc-destination-${destCode.toLocaleLowerCase()}-color`),
         data: seriesData,
       };
     });
@@ -131,7 +113,7 @@ export function processEvolutionData(data: EvolutionData, currentLang: string = 
 
       return {
         name: DESTINATION_LABELS[destCode]?.[currentLang] || destCode,
-        color: getDestinationColor(destCode),
+        color: getCssColor(`erc-destination-${destCode.toLocaleLowerCase()}-color`),
         data: seriesData,
       };
     });

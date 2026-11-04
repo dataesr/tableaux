@@ -5,34 +5,12 @@ import type { ProcessedEvolutionPanelData } from "./utils";
 interface OptionsParams {
   processedData: ProcessedEvolutionPanelData;
   chartType: "weight" | "successRate";
-  countryAdjective?: string;
-  currentLang?: string;
-  startYear?: string;
 }
 
-export default function Options({
-  processedData,
-  chartType,
-  countryAdjective = "français",
-  currentLang = "fr",
-  startYear,
-}: OptionsParams): HighchartsInstance.Options | null {
+export default function Options({ processedData, chartType }: OptionsParams): HighchartsInstance.Options | null {
   if (!processedData || processedData.years.length === 0) return null;
 
   const series = chartType === "weight" ? processedData.weightSeries : processedData.successRateSeries;
-
-  // Déterminer l'année de départ pour le titre
-  const firstYear = startYear || processedData.years[0] || "2014";
-
-  // Titre dynamique selon le type de graphique
-  const titleText =
-    chartType === "weight"
-      ? currentLang === "fr"
-        ? `Poids des projets ${countryAdjective} lauréats par domaine depuis ${firstYear}`
-        : `Share of ${countryAdjective} successful projects by domain since ${firstYear}`
-      : currentLang === "fr"
-        ? `Taux de succès des projets ${countryAdjective} par domaine depuis ${firstYear}`
-        : `Success rate on ${countryAdjective} projects by domain since ${firstYear}`;
 
   const yAxisLabel = "%";
 
@@ -58,16 +36,6 @@ export default function Options({
   }));
 
   const newOptions: HighchartsInstance.Options = {
-    chart: {
-      height: 400,
-    },
-    title: {
-      text: titleText,
-      style: {
-        fontSize: "14px",
-        fontWeight: "600",
-      },
-    },
     xAxis: {
       categories: processedData.years,
       title: {

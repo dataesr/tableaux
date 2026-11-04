@@ -2,13 +2,6 @@ import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.sr
 import { CreateChartOptions } from "../../../../components/chart-ep";
 import type { EvolutionPanelDetailData, EvolutionPanelDetailItem } from "./query";
 
-// Labels des domaines scientifiques
-const DOMAIN_LABELS: Record<string, { fr: string; en: string }> = {
-  LS: { fr: "Sciences de la vie", en: "Life Sciences" },
-  PE: { fr: "Sciences physiques et ingénierie", en: "Physical Sciences & Engineering" },
-  SH: { fr: "Sciences sociales et humaines", en: "Social Sciences & Humanities" },
-};
-
 // Fonction de tri naturel pour les panel_id (ex: PE1, PE2, PE10 au lieu de PE1, PE10, PE2)
 function naturalSortPanelId(a: string, b: string): number {
   const regex = /^([A-Z]+)(\d+)$/;
@@ -27,10 +20,9 @@ interface OptionsEvolutionProps {
   data: EvolutionPanelDetailData;
   domain: string;
   chartType: "weight" | "successRate";
-  currentLang: string;
 }
 
-export default function OptionsEvolution({ data, domain, chartType, currentLang }: OptionsEvolutionProps): HighchartsInstance.Options | null {
+export default function OptionsEvolution({ data, domain, chartType }: OptionsEvolutionProps): HighchartsInstance.Options | null {
   if (!data || !data.country || !data.total) return null;
 
   // Filtrer par domaine sélectionné
@@ -111,29 +103,7 @@ export default function OptionsEvolution({ data, domain, chartType, currentLang 
     };
   });
 
-  // Titre dynamique
-  const domainLabel = DOMAIN_LABELS[domain]?.[currentLang as "fr" | "en"] || domain;
-  const firstYear = years[0] || "2014";
-  const titleText =
-    chartType === "weight"
-      ? currentLang === "fr"
-        ? `Poids des projets lauréats par panel (${domainLabel}) depuis ${firstYear}`
-        : `Share of successful projects by panel (${domainLabel}) since ${firstYear}`
-      : currentLang === "fr"
-        ? `Taux de succès par panel (${domainLabel}) depuis ${firstYear}`
-        : `Success rate by panel (${domainLabel}) since ${firstYear}`;
-
   const newOptions: HighchartsInstance.Options = {
-    chart: {
-      height: 450,
-    },
-    title: {
-      text: titleText,
-      style: {
-        fontSize: "14px",
-        fontWeight: "600",
-      },
-    },
     xAxis: {
       categories: years,
       title: {

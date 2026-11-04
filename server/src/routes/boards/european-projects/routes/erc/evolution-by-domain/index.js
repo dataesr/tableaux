@@ -48,6 +48,7 @@ router.route("/european-projects/erc/evolution-by-domain").get(async (req, res) 
         },
         total_funding_project: { $sum: "$calculated_fund" },
         total_involved: { $sum: "$number_involved" },
+        projects: { $addToSet: "$project_id" },
         total_pi: { $sum: { $cond: [{ $eq: ["$role", "PI"] }, "$number_involved", 0] } },
       },
     },
@@ -59,6 +60,7 @@ router.route("/european-projects/erc/evolution-by-domain").get(async (req, res) 
         domaine_name_scientifique: "$_id.domaine_name_scientifique",
         total_funding_project: 1,
         total_involved: 1,
+        total_projects: { $size: "$projects" },
         total_pi: 1,
       },
     },
@@ -107,6 +109,7 @@ router.route("/european-projects/erc/evolution-by-domain_indexes").get(async (re
         calculated_fund: 1,
         number_involved: 1,
         role: 1,
+        project_id: 1,
       },
       "idx_evolution-by-domain_covered",
     );
