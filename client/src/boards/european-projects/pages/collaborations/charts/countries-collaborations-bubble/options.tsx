@@ -5,7 +5,7 @@ import i18n from "./i18n.json";
 
 const rootStyles = getComputedStyle(document.documentElement);
 
-export default function Options(data, currentLang, nbToShow = 10, stage = "successful") {
+export default function Options(data, currentLang, nbToShow = 10) {
   if (!data) return null;
 
   function getI18nLabel(key) {
