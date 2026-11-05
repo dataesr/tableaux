@@ -84,7 +84,7 @@ export default function FundingEvo() {
       };
       break;
     default:
-      titleChart1 = { fr: "Evolution des financements demandés et obtenus (M€) sur Horizon Europe", en: "Trends in funding requested and awarded (M€) under Horizon Europe" };
+      titleChart1 = { fr: "Evolution des financements demandés et obtenus sur Horizon Europe", en: "Trends in funding requested and awarded under Horizon Europe" };
       commentChart1 = {
         fr: (
           <>

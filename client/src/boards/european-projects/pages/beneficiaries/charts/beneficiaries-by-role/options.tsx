@@ -43,7 +43,7 @@ export default function Options(data, currentLang) {
     yAxis: {
       min: 0,
       title: {
-        text: "Euros € (millions)",
+        text: "Euros (M€)",
       },
       gridLineColor: "var(--background-default-grey-hover)",
       gridLineWidth: 0.5,

@@ -80,13 +80,13 @@ export default function Options(data, displayType, currentLang): HighchartsOptio
     xAxis: { categories, crosshair: true },
     yAxis: [
       {
-        title: { text: displayType === "total_fund_eur" ? "Euros € (millions)" : displayType === "total_coordination_number" ? "Nombre de coordinations" : "Nombre de candidats et de participants" },
+        title: { text: displayType === "total_fund_eur" ? "Euros (M€)" : displayType === "total_coordination_number" ? "Nombre de projets coordonnés" : "Nombre de candidats et de participants" },
         min: 0,
         gridLineColor: "var(--background-default-grey-hover)",
         gridLineWidth: 0.5,
       },
       {
-        title: { text: `${getI18nLabel(i18n, "successRate", currentLang)} (%)` },
+        title: { style: { color: successRateColor }, text: `${getI18nLabel(i18n, "successRate", currentLang)} (%)` },
         opposite: true,
         min: 0,
         max: 100,

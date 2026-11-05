@@ -87,8 +87,8 @@ export default function ProgramsFundingEvo3Years() {
       break;
     default:
       configChart1.title = {
-        fr: "Evolution des financements demandés et obtenus (M€) sur Horizon Europe",
-        en: "Trends in funding requested and secured (M€) under Horizon Europe",
+        fr: "Evolution des financements demandés et obtenus sur Horizon Europe",
+        en: "Trends in funding requested and secured under Horizon Europe",
       };
       configChart1.comment = {
         fr: <>Ce graphique montre l'évolution des financements demandés et obtenus pour les programmes du programme Horizon Europe sur les trois dernières années. Les barres représentent les montants demandés et obtenus. La ligne verte indique le taux de

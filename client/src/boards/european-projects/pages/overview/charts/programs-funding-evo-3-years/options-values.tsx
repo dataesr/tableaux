@@ -1,10 +1,10 @@
 import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js";
 
-import { CreateChartOptions } from "../../../../components/chart-ep";
-import { formatNumber, formatToRates, formatToMillions } from "../../../../../../utils/format";
 import type { HighchartsOptions } from "../../../../../../components/chart-wrapper";
-import { getCssColor } from "../../../../../../utils/colors";
 import { getI18nLabel } from "../../../../../../utils";
+import { getCssColor } from "../../../../../../utils/colors";
+import { formatNumber, formatToMillions, formatToRates } from "../../../../../../utils/format";
+import { CreateChartOptions } from "../../../../components/chart-ep";
 import i18n from "../../i18n-charts.json";
 
 export default function Options(data, displayType, currentLang): HighchartsOptions {
@@ -55,7 +55,7 @@ export default function Options(data, displayType, currentLang): HighchartsOptio
     yAxis: [
       {
         title: {
-          text: displayType === "total_fund_eur" ? "Euros € (millions)" : displayType === "total_coordination_number" ? "Nombre de coordinations" : displayType === "total_projects" ? "Nombre de projets" : "Nombre de candidats et de participants",
+          text: displayType === "total_fund_eur" ? "Euros (M€)" : displayType === "total_coordination_number" ? "Nombre de projets coordonnés" : displayType === "total_projects" ? "Nombre de projets" : "Nombre de candidats et de participants",
         },
         min: 0,
         gridLineColor: "var(--background-default-grey-hover)",
@@ -63,12 +63,13 @@ export default function Options(data, displayType, currentLang): HighchartsOptio
       },
       {
         title: {
+          style: { color: "red" },
           text: `${getI18nLabel(i18n, "successRate", currentLang)} (%)`,
         },
         opposite: true,
         min: 0,
         max: 100,
-        labels: { format: "{value}%", style: { color: successRateColor } },
+        labels: { format: "{value}%", style: { color: "red" } },
       },
     ],
     tooltip: {

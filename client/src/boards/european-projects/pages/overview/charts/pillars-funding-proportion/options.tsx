@@ -21,7 +21,7 @@ export default function Options(data, displayType: string = "total_fund_eur", ti
     yAxis: {
       min: 0,
       title: {
-        text: "%",
+        text: "Part (%)",
       },
       gridLineColor: "var(--background-default-grey-hover)",
       gridLineWidth: 0.5,

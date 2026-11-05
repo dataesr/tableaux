@@ -40,7 +40,7 @@ export default function TopicsFundingEvo3Years() {
     id: "topicsEvolutionFundingLines",
     title: {
       fr: "Evolution des financements demandés et obtenus (M€) par thématique",
-      en: "Financing applied for and obtained (€m) evolution by topic",
+      en: "Evolution of financing applied for and obtained (M€) evolution by topic",
     },
     comment: {
       fr: (

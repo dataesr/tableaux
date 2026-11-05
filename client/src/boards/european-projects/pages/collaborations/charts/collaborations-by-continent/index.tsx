@@ -62,7 +62,7 @@ export default function CollaborationsByContinent() {
             <li key={item.name} className="collaborations-by-continent__legend-item">
               <span>{item.name}</span>
               <span className="collaborations-by-continent__legend-value">
-                {item.y.toLocaleString("fr-FR")}
+                {item.y.toLocaleString(currentLang)}
               </span>
             </li>
           ))}

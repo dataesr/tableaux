@@ -34,7 +34,7 @@ export default function FundingRankingRates() {
     id: chartId,
     title: {
       fr: "Part des financements demandés et obtenus par les principaux pays bénéficiaires (M€)",
-      en: "Share of funding requested and secured by top beneficiary countries (€M)",
+      en: "Share of funding requested and secured by top beneficiary countries (M€)",
     },
     comment: {
       fr: (

@@ -1,34 +1,20 @@
 import { useQuery } from "@tanstack/react-query";
 
-import { getData } from "./query";
-import options from "./options";
-import { useGetParams } from "./utils";
-
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 import { EPChartsSources } from "../../../../config.js";
+import options from "./options";
+import { getData } from "./query";
+import { useGetParams } from "./utils";
 
-const titles: Record<string, { fr: string; en: string }> = {
-  total_fund_eur: {
-    fr: "Part des financements demandés et obtenus par le pays sur l'ensemble des pays",
-    en: "Funding requested and obtained by the country on all countries",
-  },
-  total_coordination_number: {
-    fr: "Part des coordinations demandées et obtenues par le pays sur l'ensemble des pays",
-    en: "Coordinations requested and obtained by the country on all countries",
-  },
-  total_number_involved: {
-    fr: "Part des participations demandées et obtenues par le pays sur l'ensemble des pays",
-    en: "Participations requested and obtained by the country on all countries",
-  },
-  total_projects: {
-    fr: "Part des projets du pays sur l'ensemble des pays",
-    en: "Share of the country's projects on all countries",
-  },
-};
-
-// TODO: clé de lecture + commentaires
-const config = {
+const config: {
+    comment?: { fr: React.JSX.Element; en: React.JSX.Element };
+    id: string;
+    integrationURL: string;
+    readingKey?: { fr: React.JSX.Element; en: React.JSX.Element };
+    sources: typeof EPChartsSources;
+    title?: { en: string; fr: string; };
+  } = {
   id: "thematicsFundingProportion",
   comment: {
     fr: <>Part des financement demandés et obtenus par le pays sur l'ensemble des pays</>,
@@ -43,7 +29,36 @@ const config = {
 };
 
 export default function TopicsFundingProportion({ displayType = "total_fund_eur" }: { displayType: string }) {
-  const { params, currentLang } = useGetParams();
+  const { params } = useGetParams();
+
+  switch (displayType) {
+    case "total_fund_eur":
+      config.title = {
+        fr: "Part des financements demandés et obtenus par le pays sur l'ensemble des pays",
+        en: "Funding requested and obtained by the country on all countries",
+      }
+      break;
+    case "total_coordination_number":
+      config.title = {
+        fr: "Part des coordinations demandées et obtenues par le pays sur l'ensemble des pays",
+        en: "Coordinations requested and obtained by the country on all countries",
+      }
+      break;
+    case "total_number_involved":
+      config.title = {
+        fr: "Part des participations demandées et obtenues par le pays sur l'ensemble des pays",
+        en: "Participations requested and obtained by the country on all countries",
+      }
+      break;
+    case "total_projects":
+      config.title = {
+        fr: "Part des projets du pays sur l'ensemble des pays",
+        en: "Share of the country's projects on all countries",
+      }
+      break;
+    default:
+      break;
+  }
 
   const { data, isLoading } = useQuery({
     queryKey: [config.id, params],
@@ -52,5 +67,5 @@ export default function TopicsFundingProportion({ displayType = "total_fund_eur"
 
   if (isLoading || !data) return <DefaultSkeleton />;
 
-  return <ChartWrapper config={config} options={options(data, displayType, (titles[displayType] ?? titles.total_fund_eur)[currentLang === "fr" ? "fr" : "en"])} />;
+  return <ChartWrapper config={config} options={options(data, displayType)} />;
 }

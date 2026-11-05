@@ -22,7 +22,7 @@ export default function Options(data, currentLang) {
     yAxis: {
       min: 0,
       title: {
-        text: "Euros € (millions)",
+        text: "Euros (M€)",
       },
     },
     tooltip: {

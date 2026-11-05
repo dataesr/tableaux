@@ -58,13 +58,13 @@ export default function Options(data: { data?: FundingItem[] } | null, displayTy
     xAxis: { categories, crosshair: true },
     yAxis: [
       {
-        title: { text: isFunding ? "Euros € (millions)" : valueKey === "total_coordination_number" ? "Nombre de coordinations" : valueKey === "total_projects" ? "Nombre de projets" : "Nombre de candidats et de participants" },
+        title: { text: isFunding ? "Euros (M€)" : valueKey === "total_coordination_number" ? "Nombre de projets coordonnés" : valueKey === "total_projects" ? "Nombre de projets" : "Nombre de candidats et de participants" },
         min: 0,
         gridLineColor: "var(--background-default-grey-hover)",
         gridLineWidth: 0.5,
       },
       {
-        title: { text: getI18nLabel(i18n, "successRate"), style: { color: successRateColor } },
+        title: { text: `${getI18nLabel(i18n, "successRate")} (%)`, style: { color: successRateColor } },
         opposite: true,
         min: 0,
         max: 100,

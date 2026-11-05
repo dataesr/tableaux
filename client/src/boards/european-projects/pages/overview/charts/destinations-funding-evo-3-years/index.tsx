@@ -20,7 +20,7 @@ const configChart1 = {
   id: "destinationsEvolutionFundingLines",
   title: {
     fr: "Destinations - Evolution des financements demandés et obtenus (M€)",
-    en: "Destinations - Financing applied for and obtained (€m)",
+    en: "Destinations - Financing applied for and obtained (M€)",
   },
   description: {
     fr: "",

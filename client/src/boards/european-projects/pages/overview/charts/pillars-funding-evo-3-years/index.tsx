@@ -87,8 +87,8 @@ export default function PillarsFundingEvo3Years() {
       break;
     default:
       configChart1.title = {
-        fr: "Evolution des financements demandés et obtenus (M€) sur Horizon Europe",
-        en: "Financing applied for and obtained (€m) evolution on Horizon Europe",
+        fr: "Evolution des financements demandés et obtenus sur Horizon Europe",
+        en: "Financing applied for and obtained evolution on Horizon Europe",
       };
       configChart1.comment = {
         fr: <>Ce graphique montre l'évolution des financements demandés et obtenus pour les piliers du programme Horizon Europe. Les barres représentent les montants demandés et obtenus. Le point orange indique le taux de succès correspondant.</>,
