@@ -1,7 +1,6 @@
-import cn from "classnames"
-import { Logo } from "@dataesr/dsfr-plus"
+import { Button, Link, Logo } from "@dataesr/dsfr-plus"
 import { ReactNode, useEffect } from "react"
-import { Link, useSearchParams } from "react-router-dom"
+import { useSearchParams } from "react-router-dom"
 import TranslateButton from "../../components/translate-button"
 import { getI18nLabel } from "../../utils"
 import i18n from "./i18n.json"
@@ -31,25 +30,11 @@ type HeaderProps = {
   stickyNav?: boolean
   // Contenu additionnel aligné à droite dans la barre de menu (ex. sélecteur de pays)
   navExtra?: ReactNode
-  serviceHref?: string
+  serviceHref?: string // Lien du service ("/" par défaut)
   serviceName?: string // Titre du service (ex. « Enseignement supérieur, recherche et espace »)
   serviceTag?: string // Slogan du service (ex. « Ensemble de tableaux de bord de l'enseignement supérieur, de la recherche et de l'espace »)
 }
 
-const MENU_MODAL_ID = "header-menu-modal"
-const MENU_BUTTON_ID = "header-menu-button"
-
-// Ferme la modale DSFR après une navigation (le JS du DSFR est chargé par DSFRConfig).
-function concealModal(id: string) {
-  const dsfr = (window as unknown as { dsfr?: (el: HTMLElement | null) => { modal?: { conceal(): void } } }).dsfr
-  try {
-    dsfr?.(document.getElementById(id))?.modal?.conceal()
-  } catch {
-    // Le menu reste ouvert : sans conséquence
-  }
-}
-
-// Unique en-tête de l'application (DSFR), avec les liens d'évitement. Toujours utilisé via un layout.
 export default function Header({
   extra,
   items = [],
@@ -93,47 +78,46 @@ export default function Header({
         <nav aria-label={t("skipLinks")} className="fr-container" role="navigation">
           <ul className="fr-skiplinks__list">
             <li>
-              <a className="fr-link" href="#main-content">
+              <Link href="#main-content" isSimple>
                 {t("skipContent")}
-              </a>
+              </Link>
             </li>
             {hasNav && (
               <li>
-                <a className="fr-link" href="#main-menu">
+                <Link href="#main-menu" isSimple>
                   {t("skipMenu")}
-                </a>
+                </Link>
               </li>
             )}
             <li>
-              <a className="fr-link" href="#footer">
+              <Link href="#footer" isSimple>
                 {t("skipFooter")}
-              </a>
+              </Link>
             </li>
           </ul>
         </nav>
       </div>
-      <header className={cn("fr-header", { "header--sticky-nav": stickyNav && hasNav })} role="banner">
+      <header className={`fr-header${stickyNav && hasNav ? " header--sticky-nav" : ""}`} role="banner">
         <div className="fr-header__body">
           <div className="fr-container">
             <div className="fr-header__body-row">
               <div className="fr-header__brand fr-enlarge-link">
                 <div className="fr-header__brand-top">
-                  <Logo text={import.meta.env.VITE_MINISTER_NAME} />
+                  <Logo text={t("ministry")} />
                   <div className="fr-header__navbar">
-                    <button
-                      aria-controls={MENU_MODAL_ID}
-                      className="fr-btn--menu fr-btn"
+                    <Button
+                      aria-controls="header-menu-modal"
+                      className="fr-btn--menu"
                       data-fr-opened="false"
-                      id={MENU_BUTTON_ID}
+                      id="header-menu-button"
                       title={t("menu")}
-                      type="button"
                     >
                       {t("menu")}
-                    </button>
+                    </Button>
                   </div>
                 </div>
                 <div className="fr-header__service">
-                  <Link title={name} to={serviceHref}>
+                  <Link title={name} href={serviceHref}>
                     <p className="fr-header__service-title">{name}</p>
                   </Link>
                   {tag && <p className="fr-header__service-tagline">{tag}</p>}
@@ -144,9 +128,9 @@ export default function Header({
                   <ul className="fr-btns-group">
                     {exploreLink && (
                       <li>
-                        <a className="fr-btn fr-icon-layout-grid-line fr-btn--icon-left" href="/">
+                        <Button as="a" icon="layout-grid-line" iconPosition="left" href="/">
                           {t("explore")}
-                        </a>
+                        </Button>
                       </li>
                     )}
                     {extra && <li>{extra}</li>}
@@ -157,14 +141,15 @@ export default function Header({
                     )}
                     {themeSwitch && (
                       <li>
-                        <button
+                        <Button
                           aria-controls="fr-theme-modal"
-                          className="fr-btn fr-icon-theme-fill fr-btn--icon-left"
                           data-fr-opened="false"
+                          icon="theme-fill"
+                          iconPosition="left"
                           type="button"
                         >
                           {t("theme")}
-                        </button>
+                        </Button>
                       </li>
                     )}
                   </ul>
@@ -173,24 +158,18 @@ export default function Header({
             </div>
           </div>
         </div>
-        <div aria-labelledby={MENU_BUTTON_ID} className="fr-header__menu fr-modal" id={MENU_MODAL_ID}>
+        <div aria-labelledby="header-menu-button" className="fr-header__menu fr-modal" id="header-menu-modal">
           <div className="fr-container">
-            <button aria-controls={MENU_MODAL_ID} className="fr-btn--close fr-btn" title={t("close")} type="button">
+            <Button aria-controls="header-menu-modal" className="fr-btn--close" title={t("close")}>
               {t("close")}
-            </button>
+            </Button>
             <div className="fr-header__menu-links" />
             {hasNav && (
               <nav aria-label={t("mainNavigation")} className="fr-nav" id="main-menu" role="navigation">
                 <ul className="fr-nav__list">
                   {items.map(({ current, icon, key, label, to }) => (
                     <li className="fr-nav__item" key={key}>
-                      <Link
-                        aria-current={current ? "page" : undefined}
-                        className="fr-nav__link"
-                        onClick={() => concealModal(MENU_MODAL_ID)}
-                        target="_self"
-                        to={to}
-                      >
+                      <Link aria-current={current ? "page" : undefined} className="fr-nav__link" target="_self" href={to}>
                         {icon && <span aria-hidden="true" className={`fr-icon-${icon} fr-mr-1w`} />}
                         {label}
                       </Link>

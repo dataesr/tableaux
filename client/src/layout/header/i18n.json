@@ -1,4 +1,8 @@
 {
+  "ministry": {
+    "fr": "Ministère|de l'enseignement|supérieur,|de la recherche|et de l'espace",
+    "en": "Ministère|de l'enseignement|supérieur,|de la recherche|et de l'espace"
+  },
   "close": {
     "fr": "Fermer",
     "en": "Close"

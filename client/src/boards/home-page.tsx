@@ -37,9 +37,7 @@ export default function HomePage() {
   }
 
   return (
-    <Layout
-      exploreLink={false}
-    >
+    <Layout>
       <div className="home-page">
         <section className="home-hero">
           <Container>
