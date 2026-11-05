@@ -1,9 +1,10 @@
-import type { Matrice } from "../../../../api";
-import { formatArticles, formatPeriode } from "../../../../utils";
+import type { Matrice } from "../../api";
+import { formatPeriode } from "../../utils";
 import { getDiametre, TAILLE_MAX } from "./utils.tsx";
+import type { MatriceTextes } from "./utils.tsx";
 
 // Légende des tailles de bulles : trois tailles de référence fournies par le serveur
-export default function LegendeTailles<P>({ data }: { data: Matrice<P> }) {
+export default function LegendeTailles<P, I extends string>({ data, textes }: { data: Matrice<P, I>; textes: MatriceTextes }) {
   const { tailles } = data;
   if (tailles.length === 0) return null;
   const zMin = tailles[0];
@@ -11,8 +12,8 @@ export default function LegendeTailles<P>({ data }: { data: Matrice<P> }) {
   const periode = formatPeriode(data.periodes.arrivee);
 
   return (
-    <ul aria-label={`Taille : nombre d'articles sur ${periode}`} className="fr-text--sm fr-mb-0">
-      <li className="fr-text-mention--grey">{`Taille : articles sur ${periode}`}</li>
+    <ul aria-label={`Taille : nombre de ${textes.taille.unite} sur ${periode}`} className="fr-text--sm fr-mb-0">
+      <li className="fr-text-mention--grey">{`Taille : ${textes.taille.unite} sur ${periode}`}</li>
       {tailles.map((z) => {
         const d = getDiametre(z, zMin, zMax);
         return (
@@ -20,11 +21,11 @@ export default function LegendeTailles<P>({ data }: { data: Matrice<P> }) {
             <svg aria-hidden="true" height={TAILLE_MAX + 2} width={d + 2}>
               <circle cx={d / 2 + 1} cy={TAILLE_MAX / 2 + 1} fill="none" r={d / 2} stroke="currentColor" strokeWidth="1" />
             </svg>
-            {formatArticles(z)}
+            {textes.taille.format(z)}
           </li>
         );
       })}
-      <li>{`Bulle vide : moins de ${data.seuil_fiabilite} articles`}</li>
+      <li>{`Bulle vide : ${textes.peuFiable}`}</li>
     </ul>
   );
 }

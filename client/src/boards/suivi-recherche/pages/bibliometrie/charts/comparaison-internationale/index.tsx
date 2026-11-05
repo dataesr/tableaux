@@ -8,11 +8,11 @@ import { useBiblioComparaison } from "../../../../api";
 import type { BiblioDiscipline, BiblioMeta, BiblioOptions, Indicateur, Selection } from "../../../../api";
 import { useRenderTransition } from "../../../../hooks/use-render-transition";
 import { ENTITE_NATIONALE } from "../../../../hooks/use-selection";
-import { formatPeriode, getDisciplineLabel, INDICATEUR_LABELS } from "../../../../utils";
-import getOptions from "./options.tsx";
-import { getContinent, getContinentColor, renderDataTable } from "./utils.tsx";
+import getRubansOptions from "../../../../components/rubans/options.tsx";
+import { getContinent, LegendeRubans, TableRubans } from "../../../../components/rubans/utils.tsx";
+import { formatPart, formatPeriode, formatRatio, getDisciplineLabel, INDICATEUR_LABELS } from "../../../../utils";
 
-import "./styles.scss";
+import "../../../../components/rubans/styles.scss";
 
 type ComparaisonProps = {
   disciplines: BiblioDiscipline[];
@@ -29,10 +29,15 @@ export default function ComparaisonInternationale({ disciplines, meta, options, 
   // des rubans prend du temps. Toute nouvelle valeur (données ou indicateur) n'est appliquée qu'une fois le grisé peint.
   const demande = useMemo(() => ({ data, indicateur }), [data, indicateur]);
   const { applied, busy } = useRenderTransition(demande);
-  const chartOptions = useMemo(
-    () => (applied.data ? getOptions(applied.data, applied.indicateur, ENTITE_NATIONALE) : null),
-    [applied],
-  );
+  const chartOptions = useMemo(() => {
+    if (!applied.data) return null;
+    const { annees_provisoires: provisoires, indicateurs } = applied.data;
+    return getRubansOptions(applied.data, indicateurs[applied.indicateur], ENTITE_NATIONALE, {
+      calcul: (ratio) => `= ${formatRatio(ratio, applied.indicateur)}`,
+      marquee: (annee) => applied.indicateur === "influence" && provisoires.includes(annee),
+      valeur: formatPart,
+    });
+  }, [applied]);
   const continents = useMemo(
     () => [...new Set(meta.pays_compares.filter((pays) => pays !== ENTITE_NATIONALE).map(getContinent))].sort(),
     [meta.pays_compares],
@@ -41,20 +46,7 @@ export default function ComparaisonInternationale({ disciplines, meta, options, 
   const affiche = applied.indicateur;
   const provisoires = applied.data?.annees_provisoires ?? [];
 
-  const legend = (
-    <ul className="sr-legende" aria-label="Légende">
-      <li>
-        <svg aria-hidden="true" height="12" width="24"><rect fill="var(--sr-focus)" height="12" width="24" /></svg>
-        France
-      </li>
-      {continents.map((continent) => (
-        <li key={continent}>
-          <svg aria-hidden="true" height="12" width="24"><rect fill={getContinentColor(continent)} height="12" width="24" /></svg>
-          {continent}
-        </li>
-      ))}
-    </ul>
-  );
+  const legend = <LegendeRubans continents={continents} focus="France" />;
 
   const config = {
     id: "suivi-recherche-bibliometrie-comparaison-internationale",
@@ -100,7 +92,14 @@ export default function ComparaisonInternationale({ disciplines, meta, options, 
               config={config}
               legend={legend}
               options={chartOptions}
-              renderData={() => renderDataTable(applied.data!, affiche)}
+              renderData={() => (
+                <TableRubans
+                  annees={applied.data!.annees}
+                  caption={`${INDICATEUR_LABELS[affiche]} : part mondiale et rang des pays chaque année`}
+                  formatCellule={(ratio) => formatPart(ratio.valeur)}
+                  series={applied.data!.indicateurs[affiche].series}
+                />
+              )}
             />
           ) : (
             <Alert description="Aucune publication pour cette sélection : élargissez la période ou la discipline." title="Aucune donnée" variant="info" />

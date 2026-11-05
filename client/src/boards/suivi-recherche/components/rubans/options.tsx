@@ -1,19 +1,33 @@
 import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js";
 
-import type { Comparaison, Etiquette, Indicateur, Ruban } from "../../../../api";
-import { createChartOptions } from "../../../../../../components/chart-wrapper/default-options.ts";
-import { getFlagEmoji } from "../../../../../../utils";
-import { getCssColor } from "../../../../../../utils/colors";
-import { formatPart, formatRatio } from "../../../../utils";
+import type { Comparaison, Etiquette, Ratio, Ruban, Rubans } from "../../api";
+import { createChartOptions } from "../../../../components/chart-wrapper/default-options.ts";
+import { getFlagEmoji } from "../../../../utils";
+import { getCssColor } from "../../../../utils/colors";
 import { getContinent, getContinentColor } from "./utils.tsx";
 
+// Ce qui distingue un indicateur d'un autre : format de la valeur (étiquettes), calcul en toutes lettres (infobulle)
+export type RubansTextes = {
+  // « 11,7 % (567 / 4 862 lauréats) » ; `fiable` : faux sous le seuil d'effectifs de la route
+  calcul: (ratio: Ratio & { fiable?: boolean }) => string;
+  // Année marquée d'un astérisque (provisoire)
+  marquee: (annee: number) => boolean;
+  valeur: (valeur: number | null) => string;
+};
+
 // Les rangs, épaisseurs et transitions sont calculés par le serveur : ici, uniquement du mapping vers Highcharts
-export default function getOptions(data: Comparaison, indicateur: Indicateur, focusId: string) {
-  const { annees, annees_provisoires: provisoires, geometrie, indicateurs, pays } = data;
-  const { etiquettes, series } = indicateurs[indicateur];
+// `data` : années, pays et géométrie communs à tous les indicateurs ; `rubans` : ceux de l'indicateur affiché
+export default function getRubansOptions(
+  data: Pick<Comparaison, "annees" | "geometrie" | "pays">,
+  rubans: Rubans,
+  focusId: string,
+  textes: RubansTextes,
+) {
+  const { annees, geometrie, pays } = data;
+  const { etiquettes, series } = rubans;
   if (annees.length === 0) return null;
 
-  const focusColor = getCssColor("sr-focus");
+  const focusColor = getCssColor("sr-france");
   const continentColors = new Map<string, string>();
   const colorOf = (id: string) => {
     const continent = getContinent(id);
@@ -24,7 +38,7 @@ export default function getOptions(data: Comparaison, indicateur: Indicateur, fo
   // Noms à l'extérieur du tracé : graduations de deux axes verticaux, à gauche (début) et à droite (fin)
   const axe = (liste: Etiquette[], gauche: boolean): HighchartsInstance.YAxisOptions => {
     const libelles = new Map(liste.map(({ entite_id: id, nom, valeur, y }) => {
-      const texte = gauche ? `${getFlagEmoji(id)} ${nom} ${formatPart(valeur)}` : `${formatPart(valeur)} ${nom} ${getFlagEmoji(id)}`;
+      const texte = gauche ? `${getFlagEmoji(id)} ${nom} ${textes.valeur(valeur)}` : `${textes.valeur(valeur)} ${nom} ${getFlagEmoji(id)}`;
       return [y.toFixed(3), id === focusId ? `<b>${texte}</b>` : texte];
     }));
     return {
@@ -55,11 +69,7 @@ export default function getOptions(data: Comparaison, indicateur: Indicateur, fo
       min: annees[0] - geometrie.demi_colonne,
       max: annees[annees.length - 1] + geometrie.demi_colonne,
       tickPositions: annees,
-      labels: {
-        formatter: function () {
-          return indicateur === "influence" && provisoires.includes(Number(this.value)) ? `${this.value}*` : `${this.value}`;
-        },
-      },
+      labels: { formatter: function () { return textes.marquee(Number(this.value)) ? `${this.value}*` : `${this.value}`; } },
     },
     tooltip: {
       formatter: function () {
@@ -69,8 +79,8 @@ export default function getOptions(data: Comparaison, indicateur: Indicateur, fo
         const { rang, ratio } = ruban.annees[point.j];
         return [
           `<b>${ruban.nom}</b> · ${annees[point.j]}`,
-          `Rang ${rang} sur ${pays.length} · <b>${formatPart(ratio?.valeur ?? null)}</b>`,
-          ratio ? `= ${formatRatio(ratio, indicateur)}` : "",
+          `Rang ${rang} sur ${pays.length} · <b>${textes.valeur(ratio?.valeur ?? null)}</b>`,
+          ratio ? textes.calcul(ratio) : "",
         ].join("<br/>");
       },
     },

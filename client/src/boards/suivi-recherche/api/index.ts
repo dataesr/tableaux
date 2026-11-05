@@ -59,7 +59,8 @@ export type Indicateurs = {
 export type Evolution = (Indicateurs & { annee_publication: number })[];
 
 export type Ruban = {
-  annees: { rang: number; ratio: Ratio | null }[];
+  // `fiable` : renvoyé par les routes dont les ratios peuvent reposer sur de petits effectifs (taux de succès ERC)
+  annees: { rang: number; ratio: (Ratio & { fiable?: boolean }) | null }[];
   // Bornes [bas, haut] de chaque point, dans l'ordre de `geometrie.abscisses`
   data: [number, number][];
   entite_id: string;
@@ -73,13 +74,16 @@ export type Etiquette = {
   y: number;
 };
 
-// Rubans déjà classés et positionnés par le serveur, pour chacun des trois indicateurs
-export type Comparaison = {
+// Rubans d'un indicateur : noms en début et en fin de période, un ruban par pays
+export type Rubans = { etiquettes: { debut: Etiquette[]; fin: Etiquette[] }; series: Ruban[] };
+
+// Rubans déjà classés et positionnés par le serveur, pour chaque indicateur
+export type Comparaison<I extends string = Indicateur> = {
   annees: number[];
   annees_provisoires: number[];
   // Abscisses [x, indice de l'année dans `annees`], communes à tous les rubans
   geometrie: { abscisses: [number, number][]; demi_colonne: number; hauteur: number };
-  indicateurs: Record<Indicateur, { etiquettes: { debut: Etiquette[]; fin: Etiquette[] }; series: Ruban[] }>;
+  indicateurs: Record<I, Rubans>;
   pays: { entite_id: string; nom: string }[];
 };
 
@@ -96,18 +100,19 @@ export type QuadrantKey = "hd" | "hg" | "bd" | "bg";
 export type MatricePoint = {
   dynamique: number | null;
   fiable: boolean;
-  nb_articles: number;
   niveau: Ratio;
   niveau_depart: Ratio;
   quadrant: QuadrantKey;
+  // Aire de la bulle : articles (bibliométrie), lauréats (financements)
+  taille: number;
 };
 
 // Matrice niveau × dynamique : points représentables seulement, triés par nombre d'articles décroissant (ordre de tracé)
-export type Matrice<P> = {
+export type Matrice<P, I extends string = Indicateur> = {
   bornes: { x: [number | null, number | null]; y: [number, number] };
   // Clés des points non représentés (part nulle ou évolution non calculable)
   exclus: string[];
-  indicateur: Indicateur;
+  indicateur: I;
   periodes: { depart: [number, number]; arrivee: [number, number] };
   points: (P & MatricePoint)[];
   provisoire: boolean;

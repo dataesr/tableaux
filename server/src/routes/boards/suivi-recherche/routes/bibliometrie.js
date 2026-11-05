@@ -2,6 +2,15 @@ import express from "express";
 
 import { BadRequestError } from "../../../../commons/errors/index.js";
 import { getCollection } from "../collections.js";
+import {
+  computePeriodes,
+  GROUPE_AUTRES,
+  GROUPE_PAR_DEFAUT,
+  GROUPES_ETABLISSEMENTS,
+  groupeOf,
+  median,
+  shapeMatrice,
+} from "../matrice.js";
 import { computeAbscisses, computeRubans, DEMI_COLONNE, HAUTEUR } from "../rubans.js";
 
 const router = new express.Router();
@@ -81,72 +90,11 @@ function computeIndicators(entite = {}, monde = {}, multi = false) {
 
 // Périodes de départ et d'arrivée de la matrice : 1 à 3 années à chaque bout de la plage.
 // Pour l'influence, on écarte les années provisoires tant qu'il en reste au moins deux.
-function computePeriodes(debut, fin, annees, provisoires, consolidees) {
-  let ans = annees.filter((annee) => annee >= debut && annee <= fin);
-  if (consolidees) {
-    const stables = ans.filter((annee) => !provisoires.includes(annee));
-    if (stables.length >= 2) ans = stables;
-  }
-  if (ans.length < 2) return null;
-  const k = Math.max(1, Math.min(3, Math.floor(ans.length / 2)));
-  return { depart: [ans[0], ans[k - 1]], arrivee: [ans[ans.length - k], ans[ans.length - 1]] };
-}
-
 // Index des lignes agrégées par entité et par année : une recherche en O(1) au lieu d'un find par cellule
 function indexByEntiteAnnee(rows) {
   const index = new Map();
   rows.forEach((row) => index.set(`${row._id.entite_id}|${row._id.annee_publication}`, row));
   return (id, year) => index.get(`${id}|${year}`);
-}
-
-// Mise en forme commune aux matrices niveau × dynamique (disciplines, établissements) :
-// points représentables, quadrant, fiabilité, ordre de tracé, membres de chaque quadrant, bornes des axes, tailles de légende
-function shapeMatrice(points, ref, cle) {
-  // Représentable : part d'arrivée > 0 (échelle logarithmique) et dynamique calculable
-  const estRepresentable = (p) => (p.niveau.valeur ?? 0) > 0 && p.dynamique !== null;
-  const exclus = points.filter((p) => !estRepresentable(p) && p.nb_articles > 0).map(cle);
-  const enrichis = points
-    .filter(estRepresentable)
-    .map((p) => ({
-      ...p,
-      quadrant: `${p.dynamique >= 0 ? "h" : "b"}${p.niveau.valeur >= ref ? "d" : "g"}`,
-      fiable: p.nb_articles >= SEUIL_FIABILITE,
-    }))
-    // Grosses bulles d'abord : les petites, dessinées ensuite, restent visibles par-dessus
-    .sort((a, b) => b.nb_articles - a.nb_articles);
-
-  // Membres de chaque quadrant, de la plus forte à la plus faible part
-  const quadrants = Object.fromEntries(["hd", "hg", "bd", "bg"].map((key) => [
-    key,
-    enrichis.filter((p) => p.quadrant === key).sort((a, b) => b.niveau.valeur - a.niveau.valeur).map(cle),
-  ]));
-
-  // Cadre ajusté aux données (plus la référence), avec une petite marge
-  const xs = [ref, ...enrichis.map((p) => p.niveau.valeur)].filter((x) => x > 0);
-  const ys = [0, ...enrichis.map((p) => p.dynamique)];
-  const margeY = (Math.max(...ys) - Math.min(...ys)) * 0.08 || 1;
-  const tailles = enrichis.map((p) => p.nb_articles);
-  const tailleMin = tailles.length ? Math.min(...tailles) : 0;
-  const tailleMax = tailles.length ? Math.max(...tailles) : 0;
-
-  return {
-    points: enrichis,
-    exclus,
-    quadrants,
-    bornes: {
-      x: xs.length ? [Math.min(...xs) / 1.3, Math.max(...xs) * 1.3] : [null, null],
-      y: [Math.min(...ys) - margeY, Math.max(...ys) + margeY],
-    },
-    // Trois tailles de référence pour la légende : la plus petite, une intermédiaire, la plus grande
-    tailles: tailles.length ? [tailleMin, Math.round(tailleMin + (tailleMax - tailleMin) / 4), tailleMax] : [],
-  };
-}
-
-function median(values) {
-  if (values.length === 0) return null;
-  const sorted = [...values].sort((a, b) => a - b);
-  const mid = Math.floor(sorted.length / 2);
-  return sorted.length % 2 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
 }
 
 // Indicateur et périodes de départ / d'arrivée d'une matrice, validés une fois
@@ -163,28 +111,6 @@ async function parseMatrice(query, debut, fin) {
     provisoire: indicateur === "influence" && range(periodes.arrivee).some((annee) => provisoires.includes(annee)),
   };
 }
-
-// Regroupement des catégories d'établissements pour la matrice : on compare des établissements comparables
-const GROUPES_ETABLISSEMENTS = [
-  { code: "universites", libelle: "Universités", categories: ["Université", "Établissement public expérimental", "Communauté d'universités et établissements"] },
-  { code: "organismes", libelle: "Organismes de recherche", categories: ["Organisme de recherche"] },
-  { code: "sante", libelle: "Établissements de santé", categories: ["Centre hospitalier", "Centre de lutte contre le cancer", "Institut hospitalo-universitaire"] },
-  { code: "ecoles-ingenieurs", libelle: "Écoles d'ingénieurs", categories: ["École d'ingénieurs", "École nationale supérieure d'ingénieurs", "Institut national polytechnique"] },
-  {
-    code: "grands-etablissements",
-    libelle: "Grands établissements, ENS et instituts",
-    categories: ["Grand établissement", "Grand établissement relevant d'un autre département ministériel", "École normale supérieure", "Institut ou école extérieur aux universités"],
-  },
-  { code: "commerce-iep", libelle: "Écoles de commerce et IEP", categories: ["École de commerce et de management", "Institut d'étude politique"] },
-  {
-    code: "prive",
-    libelle: "Établissements privés",
-    categories: ["Établissement d'enseignement supérieur privé d'intérêt général", "Établissement privé d'enseignement universitaire", "Établissement d'enseignement supérieur privé rattachés à un EPSCP"],
-  },
-];
-const GROUPE_AUTRES = { code: "autres", libelle: "Autres établissements" };
-const GROUPE_PAR_DEFAUT = "universites";
-const groupeOf = (categorie) => GROUPES_ETABLISSEMENTS.find((groupe) => groupe.categories.includes(categorie))?.code ?? GROUPE_AUTRES.code;
 
 router.route("/suivi-recherche/bibliometrie/meta").get(async (req, res) => {
   const collection = await getCollection("biblio_meta");
@@ -332,7 +258,8 @@ router.route("/suivi-recherche/bibliometrie/positionnement").get(async (req, res
     const niveau = computeIndicators(entiteArrivee, sum(MONDE, "arrivee", code), multi)[indicateur];
     const niveauDepart = computeIndicators(sum(entiteId, "depart", code), sum(MONDE, "depart", code), multi)[indicateur];
     const dynamique = niveauDepart.valeur && niveau.valeur !== null ? (niveau.valeur / niveauDepart.valeur - 1) * 100 : null;
-    return { ...discipline, niveau, niveau_depart: niveauDepart, dynamique, nb_articles: entiteArrivee.nb_articles ?? 0 };
+    const nbArticles = entiteArrivee.nb_articles ?? 0;
+    return { ...discipline, niveau, niveau_depart: niveauDepart, dynamique, nb_articles: nbArticles, taille: nbArticles };
   });
 
   res.json({
@@ -341,7 +268,7 @@ router.route("/suivi-recherche/bibliometrie/positionnement").get(async (req, res
     provisoire,
     reference,
     seuil_fiabilite: SEUIL_FIABILITE,
-    ...shapeMatrice(points, reference.valeur ?? 0, (p) => p.discipline_code),
+    ...shapeMatrice(points, reference.valeur ?? 0, (p) => p.discipline_code, (p) => p.nb_articles >= SEUIL_FIABILITE),
   });
 });
 
@@ -407,6 +334,7 @@ router.route("/suivi-recherche/bibliometrie/positionnement-etablissements").get(
         niveau_depart: niveauDepart,
         dynamique,
         nb_articles: sum(id, "arrivee").nb_articles ?? 0,
+        taille: sum(id, "arrivee").nb_articles ?? 0,
         focus: id === selectionId,
       };
     });
@@ -424,7 +352,7 @@ router.route("/suivi-recherche/bibliometrie/positionnement-etablissements").get(
     groupe_selection: groupeSelection,
     reference: { valeur: reference },
     seuil_fiabilite: SEUIL_FIABILITE,
-    ...shapeMatrice(points, reference ?? 0, (p) => p.entite_id),
+    ...shapeMatrice(points, reference ?? 0, (p) => p.entite_id, (p) => p.nb_articles >= SEUIL_FIABILITE),
   });
 });
 

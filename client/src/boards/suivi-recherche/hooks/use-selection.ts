@@ -2,8 +2,8 @@ import { useSearchParams } from "react-router-dom";
 
 import { ENTITE_NATIONALE } from "../api";
 import type { BiblioMeta, BiblioOptions, Entite, Perimetre, Selection } from "../api";
-import { COMPTAGE_DEFAUT } from "../api/erc.ts";
-import type { Comptage, ErcMeta, ErcOptions } from "../api/erc.ts";
+import { COMPTAGE_DEFAUT, VIVIER_DEFAUT, VIVIERS } from "../api/erc.ts";
+import type { Comptage, ErcMeta, ErcOptions, Vivier } from "../api/erc.ts";
 
 export { ENTITE_NATIONALE };
 
@@ -15,6 +15,7 @@ export { ENTITE_NATIONALE };
 //   section              onglet des pages Bibliométrie et Financements ; absent = profil
 //   type_bourse          types de bourse ERC, séparés par des virgules ; absent = erc_meta.types_bourse_defaut
 //   comptage             effectifs ERC en projets ou en porteurs (`projets` | `pi`) ; absent = projets
+//   vivier               vivier de l'indice de candidature ERC (`top10` | `articles`) ; absent = top10
 // Une valeur par défaut n'est jamais écrite dans l'URL ; une valeur inconnue est ignorée.
 export function useSetParams() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -76,13 +77,15 @@ export function useBiblioOptions(meta?: BiblioMeta) {
 
 // Paramètres de calcul ERC.
 // Types de bourse : codes connus de erc_meta, dans l'ordre de erc_meta ; aucun ou inconnus = types par défaut.
-// Comptage : un mode de erc_meta.modes_comptage ; inconnu = projets.
+// Comptage : un mode de erc_meta.modes_comptage ; inconnu = projets. Vivier : top10 ou articles ; inconnu = top10.
 export function useErcOptions(meta: ErcMeta): ErcOptions {
   const [searchParams] = useSearchParams();
   const demandes = searchParams.get("type_bourse")?.split(",") ?? [];
   const types = meta.types_bourse.map(({ code }) => code).filter((code) => demandes.includes(code));
   const comptage = searchParams.get("comptage") as Comptage;
+  const vivier = searchParams.get("vivier") as Vivier;
   return {
+    vivier: VIVIERS.includes(vivier) ? vivier : VIVIER_DEFAUT,
     comptage: Object.keys(meta.modes_comptage).includes(comptage) ? comptage : COMPTAGE_DEFAUT,
     types: types.length ? types : meta.types_bourse_defaut,
   };

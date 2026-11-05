@@ -9,7 +9,7 @@ import PositionnementDisciplines from "../charts/positionnement/index.tsx";
 import Indicateurs from "../components/indicateurs/index.tsx";
 import { getOptionsLabel, useBibliometrie } from "../context.ts";
 
-// « Où en est l'établissement sélectionné ? » : chiffres clés, évolution annuelle, forces et faiblesses par discipline
+// « Où en est la France ou l'établissement sélectionné ? » : chiffres clés, évolution annuelle, forces et faiblesses par discipline
 export default function ProfilPage() {
   const { disciplines, entiteNom, meta, options, selection } = useBibliometrie();
   const indicateurs = useBiblioIndicateurs(selection, options);

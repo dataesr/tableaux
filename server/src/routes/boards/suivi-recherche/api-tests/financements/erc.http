@@ -31,3 +31,27 @@ GET http://localhost:3000/api/suivi-recherche/financements/erc/indicateurs?type_
 ###
 # 400 attendu
 GET http://localhost:3000/api/suivi-recherche/financements/erc/indicateurs?comptage=porteurs
+
+###
+# Indice de candidature sur tous les articles SJR (défaut : top 10 % des plus cités)
+GET http://localhost:3000/api/suivi-recherche/financements/erc/indicateurs?vivier=articles
+
+###
+# France et autres pays : rubans (part des lauréats, part des candidatures, taux de succès, indice) et rangs de la France
+GET http://localhost:3000/api/suivi-recherche/financements/erc/comparaison-internationale?domaine=PE
+
+###
+# 400 attendu
+GET http://localhost:3000/api/suivi-recherche/financements/erc/comparaison-internationale?vivier=tout
+
+###
+# Établissements : matrice part des lauréats × évolution, groupe de Sorbonne Université, et son rang
+GET http://localhost:3000/api/suivi-recherche/financements/erc/positionnement-etablissements?ror_id=02en5vm52
+
+###
+# Taux de succès des organismes de recherche
+GET http://localhost:3000/api/suivi-recherche/financements/erc/positionnement-etablissements?indicateur=taux_succes&groupe=organismes
+
+###
+# 400 attendu
+GET http://localhost:3000/api/suivi-recherche/financements/erc/positionnement-etablissements?groupe=inconnu

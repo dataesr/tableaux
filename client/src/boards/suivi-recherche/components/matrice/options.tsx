@@ -1,10 +1,11 @@
 import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js";
 
-import type { Matrice, MatricePoint } from "../../../../api";
-import { createChartOptions } from "../../../../../../components/chart-wrapper/default-options.ts";
-import { getCssColor } from "../../../../../../utils/colors";
-import { formatArticles, formatDynamique, formatPart, formatPeriode, formatRatio } from "../../../../utils";
+import type { Matrice, MatricePoint } from "../../api";
+import { createChartOptions } from "../../../../components/chart-wrapper/default-options.ts";
+import { getCssColor } from "../../../../utils/colors";
+import { formatDynamique, formatPart, formatPeriode } from "../../utils";
 import { QUADRANTS, TAILLE_MAX, TAILLE_MIN } from "./utils.tsx";
+import type { MatriceTextes } from "./utils.tsx";
 
 // Ce qui distingue une matrice d'une autre (disciplines, établissements) : nom, couleur, étiquette et infobulle des points
 export type MatriceRendu<P> = {
@@ -16,6 +17,7 @@ export type MatriceRendu<P> = {
   // Mise en avant (contour épais, étiquette prioritaire)
   focus?: (point: P & MatricePoint) => boolean;
   serie: string;
+  textes: MatriceTextes;
 };
 
 type Box = { x: number; y: number; width: number; height: number };
@@ -23,8 +25,9 @@ const intersects = (a: Box, b: Box) => a.x < b.x + b.width && b.x < a.x + a.widt
 
 // Quadrants, tri des bulles et bornes des axes viennent du serveur. Seul le placement des étiquettes,
 // qui dépend des positions en pixels, est calculé ici, à chaque rendu du graphique.
-export default function getMatriceOptions<P>(data: Matrice<P>, rendu: MatriceRendu<P>) {
-  const { bornes, indicateur, periodes, points, reference } = data;
+export default function getMatriceOptions<P, I extends string>(data: Matrice<P, I>, rendu: MatriceRendu<P>) {
+  const { bornes, periodes, points, reference } = data;
+  const { textes } = rendu;
   const referenceX = (reference.valeur ?? 0) * 100;
   const mentionColor = getCssColor("text-mention-grey");
   const titleColor = getCssColor("text-title-grey");
@@ -137,7 +140,7 @@ export default function getMatriceOptions<P>(data: Matrice<P>, rendu: MatriceRen
       max: bornes.x[1] !== null ? bornes.x[1] * 100 : undefined,
       startOnTick: false,
       endOnTick: false,
-      title: { text: `Niveau : part mondiale ${formatPeriode(periodes.arrivee)} (échelle logarithmique)` },
+      title: { text: textes.axeX },
       labels: { formatter: function () { return formatPart(Number(this.value) / 100); } },
       plotLines: [{
         value: referenceX,
@@ -153,7 +156,7 @@ export default function getMatriceOptions<P>(data: Matrice<P>, rendu: MatriceRen
       max: bornes.y[1],
       startOnTick: false,
       endOnTick: false,
-      title: { text: `Dynamique : évolution relative de la part depuis ${formatPeriode(periodes.depart)}` },
+      title: { text: textes.axeY },
       labels: { formatter: function () { return formatDynamique(Number(this.value)); } },
       plotLines: [{ value: 0, color: mentionColor, width: 1.5, zIndex: 3 }],
     },
@@ -174,10 +177,10 @@ export default function getMatriceOptions<P>(data: Matrice<P>, rendu: MatriceRen
         return [
           ...rendu.entete(p),
           `<i>${quadrant?.titre}</i>`,
-          `Part ${formatPeriode(periodes.arrivee)} : <b>${formatPart(p.niveau.valeur)}</b> = ${formatRatio(p.niveau, indicateur)}`,
-          `Part ${formatPeriode(periodes.depart)} : ${formatPart(p.niveau_depart.valeur)} = ${formatRatio(p.niveau_depart, indicateur)}`,
+          `${textes.niveau} ${formatPeriode(periodes.arrivee)} : <b>${formatPart(p.niveau.valeur)}</b> = ${textes.calcul(p.niveau)}`,
+          `${textes.niveau} ${formatPeriode(periodes.depart)} : ${formatPart(p.niveau_depart.valeur)} = ${textes.calcul(p.niveau_depart)}`,
           `Évolution relative : <b>${formatDynamique(p.dynamique)}</b>`,
-          `Taille : ${formatArticles(p.nb_articles)} articles sur ${formatPeriode(periodes.arrivee)}${p.fiable ? "" : " (peu fiable)"}`,
+          `Taille : ${textes.taille.format(p.taille)} ${textes.taille.unite} sur ${formatPeriode(periodes.arrivee)}${p.fiable ? "" : ` (peu fiable : ${textes.peuFiable})`}`,
         ].join("<br/>");
       },
     },
@@ -190,10 +193,10 @@ export default function getMatriceOptions<P>(data: Matrice<P>, rendu: MatriceRen
         return {
           x: p.niveau.valeur! * 100,
           y: p.dynamique,
-          z: p.nb_articles,
+          z: p.taille,
           color,
           custom: p,
-          labelrank: p.nb_articles,
+          labelrank: p.taille,
           // Sous le seuil de fiabilité : bulle vide, la position est peu fiable ; point mis en avant : contour épais
           marker: {
             ...(!p.fiable && { fillColor: "transparent" }),

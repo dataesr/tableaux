@@ -9,6 +9,8 @@ import { useErcMeta } from "../../api/erc.ts";
 import { useSelection } from "../../hooks/use-selection";
 import i18n from "../../title-i18n.json";
 import { FinancementsProvider } from "./context.ts";
+import EtablissementsSection from "./etablissements/index.tsx";
+import InternationalSection from "./international/index.tsx";
 import ProfilSection from "./profil/index.tsx";
 import { SECTIONS, useSection } from "./sections.ts";
 import TestSection from "./test/index.tsx";
@@ -16,6 +18,8 @@ import TestSection from "./test/index.tsx";
 // Onglets dont le contenu est prêt ; les autres annoncent qu'ils sont en préparation
 const CONTENUS: Partial<Record<(typeof SECTIONS)[number]["id"], ComponentType>> = {
   profil: ProfilSection,
+  etablissements: EtablissementsSection,
+  international: InternationalSection,
   test: TestSection,
 };
 

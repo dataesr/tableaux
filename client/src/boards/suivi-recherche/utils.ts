@@ -64,3 +64,9 @@ export function normalize(text: string): string {
 export function formatNombre(nombre: number): string {
   return nombre.toLocaleString("fr-FR");
 }
+
+// Indice autour de 1 (1 = comme la référence) : deux décimales
+export function formatIndice(valeur: number | null): string {
+  if (valeur === null) return "—";
+  return valeur.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}

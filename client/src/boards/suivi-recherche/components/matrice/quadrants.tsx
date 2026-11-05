@@ -2,24 +2,26 @@ import { Col, Row } from "@dataesr/dsfr-plus";
 import { useMemo } from "react";
 import type { ReactNode } from "react";
 
-import type { Matrice, MatricePoint } from "../../../../api";
-import { formatArticles, formatDynamique, formatPart, formatPeriode } from "../../../../utils";
+import type { Matrice, MatricePoint } from "../../api";
+import { formatDynamique, formatPart, formatPeriode } from "../../utils";
 import { QUADRANTS } from "./utils.tsx";
+import type { MatriceTextes } from "./utils.tsx";
 
-type QuadrantsProps<P> = {
+type QuadrantsProps<P, I extends string> = {
   // Clé d'un point, la même que celle des listes `data.quadrants`
   cle: (point: P & MatricePoint) => string;
   // Intitulé de la première colonne (« Discipline », « Établissement »)
   colonne: string;
-  data: Matrice<P>;
+  data: Matrice<P, I>;
   // Libellé d'un point dans la première colonne
   libelle: (point: P & MatricePoint) => ReactNode;
+  textes: MatriceTextes;
   // Message d'un quadrant vide
   vide: string;
 };
 
 // Tableaux « Qui est dans chaque quadrant ? » : membres et ordre fournis par le serveur
-export default function Quadrants<P>({ cle, colonne, data, libelle, vide }: QuadrantsProps<P>) {
+export default function Quadrants<P, I extends string>({ cle, colonne, data, libelle, textes, vide }: QuadrantsProps<P, I>) {
   const pointsByCle = useMemo(() => new Map(data.points.map((p) => [cle(p), p])), [cle, data]);
 
   return (
@@ -42,9 +44,9 @@ export default function Quadrants<P>({ cle, colonne, data, libelle, vide }: Quad
                       <thead>
                         <tr>
                           <th scope="col">{colonne}</th>
-                          <th scope="col">{`Part ${formatPeriode(data.periodes.arrivee)}`}</th>
+                          <th scope="col">{`${textes.niveau} ${formatPeriode(data.periodes.arrivee)}`}</th>
                           <th scope="col">Évolution</th>
-                          <th scope="col">Articles</th>
+                          <th scope="col">{textes.taille.colonne}</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -53,7 +55,7 @@ export default function Quadrants<P>({ cle, colonne, data, libelle, vide }: Quad
                             <th scope="row">{libelle(p)}</th>
                             <td>{formatPart(p.niveau.valeur)}</td>
                             <td>{formatDynamique(p.dynamique)}</td>
-                            <td>{formatArticles(p.nb_articles)}</td>
+                            <td>{textes.taille.format(p.taille)}</td>
                           </tr>
                         ))}
                       </tbody>

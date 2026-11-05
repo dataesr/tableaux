@@ -8,12 +8,13 @@ import { useBiblioPositionnement } from "../../../../api";
 import type { BiblioOptions, Indicateur, Positionnement, Selection } from "../../../../api";
 import { useRenderTransition } from "../../../../hooks/use-render-transition";
 import { formatPart, formatPeriode, INDICATEUR_LABELS } from "../../../../utils";
-import LegendeTailles from "../../components/matrice/legende-tailles.tsx";
-import Quadrants from "../../components/matrice/quadrants.tsx";
+import LegendeTailles from "../../../../components/matrice/legende-tailles.tsx";
+import Quadrants from "../../../../components/matrice/quadrants.tsx";
+import { getBiblioMatriceTextes } from "../../matrice-textes.ts";
 import getOptions from "./options.tsx";
 import { getDomaineColor } from "./utils.tsx";
 
-import "../../components/matrice/styles.scss";
+import "../../../../components/matrice/styles.scss";
 
 type Point = Positionnement["points"][number];
 const cle = (p: Point) => p.discipline_code;
@@ -67,7 +68,7 @@ export default function PositionnementDisciplines({ entiteNom, options, selectio
           </li>
         ))}
       </ul>
-      {data && <LegendeTailles data={data} />}
+      {data && <LegendeTailles data={data} textes={getBiblioMatriceTextes(data)} />}
     </div>
   );
 
@@ -122,7 +123,7 @@ export default function PositionnementDisciplines({ entiteNom, options, selectio
             options={chartOptions}
           />
 
-          <Quadrants cle={cle} colonne="Discipline" data={data} libelle={libelle} vide="Aucune discipline." />
+          <Quadrants textes={getBiblioMatriceTextes(data)} cle={cle} colonne="Discipline" data={data} libelle={libelle} vide="Aucune discipline." />
         </ChartBusy>
       )}
     </>

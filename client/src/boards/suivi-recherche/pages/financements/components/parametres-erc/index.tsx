@@ -1,10 +1,11 @@
 import { Accordion, Checkbox, Fieldset, Radio } from "@dataesr/dsfr-plus";
 import { useId } from "react";
 
-import { COMPTAGE_DEFAUT } from "../../../../api/erc.ts";
+import { COMPTAGE_DEFAUT, VIVIER_DEFAUT, VIVIERS } from "../../../../api/erc.ts";
 import type { Comptage, ErcMeta, ErcOptions } from "../../../../api/erc.ts";
 import { useSetParams } from "../../../../hooks/use-selection";
 import { COMPTAGE_LABELS } from "../../comptage.ts";
+import { VIVIER_LABELS } from "../../indice.ts";
 
 // Types proposés : les trois bourses individuelles (par défaut), Synergy et Proof of Concept.
 // PERA, SJI et ERC-OTHER (quelques dizaines de candidatures, presque aucun lauréat) ne sont pas proposés.
@@ -17,10 +18,12 @@ export function getTypesLabel(meta: ErcMeta, types: string[]): string {
 type ParametresErcProps = {
   meta: ErcMeta;
   options: ErcOptions;
+  // Choix du vivier : seulement là où l'indice de candidature est affiché
+  avecVivier?: boolean;
 };
 
 // Paramètres de calcul du bloc ERC, repliés : leur valeur courante reste lisible dans le titre
-export default function ParametresErc({ meta, options: { comptage, types } }: ParametresErcProps) {
+export default function ParametresErc({ avecVivier = true, meta, options: { comptage, types, vivier } }: ParametresErcProps) {
   const setParams = useSetParams();
   const idPrefix = useId();
   const proposes = meta.types_bourse.filter(({ code }) => TYPES_PROPOSES.includes(code));
@@ -34,8 +37,12 @@ export default function ParametresErc({ meta, options: { comptage, types } }: Pa
     setParams({ type_bourse: parDefaut ? null : next.join(",") });
   };
 
-  // Le mode par défaut n'apparaît pas dans le titre, comme il n'est pas écrit dans l'URL
-  const titre = [getTypesLabel(meta, types), comptage !== COMPTAGE_DEFAUT && `Comptage : ${COMPTAGE_LABELS[comptage]}`]
+  // Les valeurs par défaut n'apparaissent pas dans le titre, comme elles ne sont pas écrites dans l'URL
+  const titre = [
+    getTypesLabel(meta, types),
+    comptage !== COMPTAGE_DEFAUT && `Comptage : ${COMPTAGE_LABELS[comptage]}`,
+    avecVivier && vivier !== VIVIER_DEFAUT && `Vivier : ${VIVIER_LABELS[vivier].toLowerCase()}`,
+  ]
     .filter(Boolean)
     .join(" · ");
 
@@ -74,6 +81,23 @@ export default function ParametresErc({ meta, options: { comptage, types } }: Pa
           />
         ))}
       </Fieldset>
+      {avecVivier && (
+        <Fieldset
+          hint="Articles parus dans les revues classées SJR les 3 années précédant l'appel, discipline par discipline."
+          legend="Vivier de l'indice de candidature"
+        >
+          {VIVIERS.map((mode) => (
+            <Radio
+              checked={vivier === mode}
+              id={`${idPrefix}-vivier-${mode}`}
+              key={mode}
+              label={VIVIER_LABELS[mode]}
+              name={`${idPrefix}-vivier`}
+              onChange={() => setParams({ vivier: mode === VIVIER_DEFAUT ? null : mode })}
+            />
+          ))}
+        </Fieldset>
+      )}
     </Accordion>
   );
 }

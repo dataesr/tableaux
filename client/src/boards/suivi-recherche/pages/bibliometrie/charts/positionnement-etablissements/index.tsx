@@ -9,13 +9,14 @@ import ChartBusy from "../../../../components/chart-busy/index.tsx";
 import { useRenderTransition } from "../../../../hooks/use-render-transition";
 import { ENTITE_NATIONALE } from "../../../../hooks/use-selection";
 import { formatPart, formatPeriode, getDisciplineLabel, INDICATEUR_LABELS } from "../../../../utils";
-import LegendeTailles from "../../components/matrice/legende-tailles.tsx";
-import Quadrants from "../../components/matrice/quadrants.tsx";
+import LegendeTailles from "../../../../components/matrice/legende-tailles.tsx";
+import Quadrants from "../../../../components/matrice/quadrants.tsx";
+import { getBiblioMatriceTextes } from "../../matrice-textes.ts";
 import getOptions from "./options.tsx";
 import { cle, getEtablissementColor } from "./utils.tsx";
 import type { EtablissementMatricePoint } from "./utils.tsx";
 
-import "../../components/matrice/styles.scss";
+import "../../../../components/matrice/styles.scss";
 
 const libelle = (p: EtablissementMatricePoint) => (
   <>
@@ -78,7 +79,7 @@ export default function PositionnementEtablissements({ disciplines, entiteNom, o
           {groupeLibelle}
         </li>
       </ul>
-      <LegendeTailles data={data} />
+      <LegendeTailles data={data} textes={getBiblioMatriceTextes(data)} />
     </div>
   );
 
@@ -150,7 +151,7 @@ export default function PositionnementEtablissements({ disciplines, entiteNom, o
                 legend={legend}
                 options={chartOptions}
               />
-              <Quadrants cle={cle} colonne="Établissement" data={data} libelle={libelle} vide="Aucun établissement." />
+              <Quadrants textes={getBiblioMatriceTextes(data)} cle={cle} colonne="Établissement" data={data} libelle={libelle} vide="Aucun établissement." />
             </>
           ) : (
             <Alert
