@@ -18,7 +18,7 @@ import { readingKey, renderDataTableCoordination, renderDataTableCoordinationSuc
 export default function FundingRankingCoordination() {
   const [searchParams] = useSearchParams();
   const currentLang = searchParams.get("language") || "fr";
-  const [sortBy, setSortBy] = useState("submitted");
+  const [sortBy, setSortBy] = useState("winning");
   const params = useGetParams();
 
   const { data, isLoading } = useQuery({

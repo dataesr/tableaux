@@ -17,7 +17,7 @@ import { readingKey, renderDataTableParticipations, renderDataTableParticipation
 export default function FundingRankingParticipations() {
   const [searchParams] = useSearchParams();
   const currentLang = searchParams.get("language") || "fr";
-  const [sortBy, setSortBy] = useState("candidates");
+  const [sortBy, setSortBy] = useState("participants");
   const params = useGetParams();
 
   const configChart3a = {

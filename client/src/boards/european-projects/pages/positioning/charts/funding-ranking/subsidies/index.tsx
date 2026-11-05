@@ -18,7 +18,7 @@ import { readingKey, renderDataTableSubsidies, renderDataTableSuccessRate, useGe
 export default function FundingRankingSubsidies() {
   const [searchParams] = useSearchParams();
   const currentLang = searchParams.get("language") || "fr";
-  const [sortBy, setSortBy] = useState("requested");
+  const [sortBy, setSortBy] = useState("secured");
   const params = useGetParams();
 
   const configChart1a = {
