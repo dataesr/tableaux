@@ -21,14 +21,21 @@ export default function FundingRankingSubsidies() {
   const [sortBy, setSortBy] = useState("secured");
   const params = useGetParams();
 
+  const i18n = { ...i18nGlobal, ...i18nLocal };
+  function getI18nLabel(key) {
+    return i18n[key][currentLang];
+  }
+
   const configChart1a = {
     id: "fundingRankingSub",
     integrationURL: `/integration?chart_id=FundingRankingSubsidies&${params}`,
+    title: getI18nLabel("configChart1a-title"),
   };
 
   const configChart1b = {
     id: "fundingRankingSubSuccessRate",
     integrationURL: `/integration?chart_id=FundingRankingSubsidies&${params}`,
+    title: getI18nLabel("configChart1b-title"),
   };
 
   const { data, isLoading } = useQuery({
@@ -38,13 +45,9 @@ export default function FundingRankingSubsidies() {
 
   if (isLoading || !data) return <DefaultSkeleton />;
 
-  const prepareData = (data, sortKey) => {
-    data.sort((a, b) => b[sortKey] - a[sortKey]);
-    if (sortBy === "requested") {
-      data.sort((a, b) => b.total_evaluated - a.total_evaluated);
-    } else {
-      data.sort((a, b) => b.total_successful - a.total_successful);
-    }
+  const prepareData = (data) => {
+    const sortKey = sortBy === "requested" ? "total_evaluated" : "total_successful"
+    data.sort((a, b) => b[sortKey] - a[sortKey])
     // Add selected country if it is not in the top 10
     const dataToReturn = data.slice(0, 10);
     const selectedCountry = searchParams.get("country_code");
@@ -58,11 +61,6 @@ export default function FundingRankingSubsidies() {
     }
     return dataToReturn;
   };
-
-  const i18n = { ...i18nGlobal, ...i18nLocal };
-  function getI18nLabel(key) {
-    return i18n[key][currentLang];
-  }
 
   return (
     <Container fluid className="fr-mt-5w">
@@ -108,23 +106,17 @@ export default function FundingRankingSubsidies() {
       </Row>
       <Row className="chart-container chart-container--default">
         <Col xs={12}>
-          <Title as="h3" look="h5" className="fr-mb-0">
-            {getI18nLabel("configChart1a-title")}
-          </Title>
           <ChartWrapper
             config={configChart1a}
-            options={optionsSub(prepareData(data, "total_successful"), currentLang)}
-            renderData={() => renderDataTableSubsidies(prepareData(data, "total_successful"), currentLang, searchParams.get("country_code") ?? null)}
+            options={optionsSub(prepareData(data), currentLang)}
+            renderData={() => renderDataTableSubsidies(prepareData(data), currentLang, searchParams.get("country_code") ?? null)}
           />
         </Col>
         <Col xs={12}>
-          <Title as="h3" look="h5" className="fr-mb-0">
-            {getI18nLabel("configChart1b-title")}
-          </Title>
           <ChartWrapper
             config={configChart1b}
-            options={optionSubSuccessRate(prepareData(data, "total_successful"), currentLang)}
-            renderData={() => renderDataTableSuccessRate(prepareData(data, "total_successful"), currentLang, searchParams.get("country_code") ?? null)}
+            options={optionSubSuccessRate(prepareData(data), currentLang)}
+            renderData={() => renderDataTableSuccessRate(prepareData(data), currentLang, searchParams.get("country_code") ?? null)}
           />
         </Col>
         <Col xs={12} md={12} className="chart-footer">

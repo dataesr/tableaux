@@ -18,7 +18,7 @@ export default function Options(data, currentLang) {
       {
         min: 0,
         title: {
-          text: "%",
+          text: "Part (%)",
         },
       },
     ],

@@ -41,7 +41,7 @@ export default function optionSuccessRate(data: DataItem[], currentLang: string)
       ],
       min: 0,
       title: {
-        text: `${t.successRate} %`,
+        text: `${t.successRate} (%)`,
       },
     },
     tooltip: {

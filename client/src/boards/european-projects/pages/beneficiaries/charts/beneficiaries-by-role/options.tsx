@@ -1,8 +1,8 @@
 import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js";
 
-import { CreateChartOptions } from "../../../../components/chart-ep";
 import { getCssColor } from "../../../../../../utils/colors";
 import { formatToMillions } from "../../../../../../utils/format";
+import { CreateChartOptions } from "../../../../components/chart-ep";
 
 import i18n from "./i18n.json";
 

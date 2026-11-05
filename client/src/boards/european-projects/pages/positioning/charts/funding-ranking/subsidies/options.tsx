@@ -2,6 +2,7 @@ import type Highcharts from "highcharts/es-modules/masters/highcharts.src.js";
 
 import { getResponsiveChartHeight } from "../../../../../../../utils";
 import { getCssColor } from "../../../../../../../utils/colors";
+import { formatToMillionsLang } from "../../../../../../../utils/format";
 import { CreateChartOptions } from "../../../../../components/chart-ep";
 
 export default function Options(data, currentLang) {
@@ -40,9 +41,10 @@ export default function Options(data, currentLang) {
         name: "Financements demandés",
         color: getCssColor("evaluated-project"),
         data: data.map((item) => ({
+          label: formatToMillionsLang(item.total_evaluated, 1, currentLang),
           name: item[`name_${currentLang}`],
-          y: item.total_evaluated,
           rank_evaluated: item.rank_evaluated,
+          y: item.total_evaluated,
         })),
         dataLabels: [
           {
@@ -51,7 +53,7 @@ export default function Options(data, currentLang) {
           },
         ],
         tooltip: {
-          pointFormat: "Financements demandés: <b>{point.y:.1f} €</b>",
+          pointFormat: "Financements demandés: <b>{point.label}</b>",
         },
       },
       {
@@ -59,9 +61,10 @@ export default function Options(data, currentLang) {
         name: "Financements obtenus",
         color: getCssColor("successful-project"),
         data: data.map((item) => ({
+          label: formatToMillionsLang(item.total_successful, 1, currentLang),
           name: item[`name_${currentLang}`],
-          y: item.total_successful,
           rank_successful: item.rank_successful,
+          y: item.total_successful,
         })),
         dataLabels: [
           {
@@ -70,7 +73,7 @@ export default function Options(data, currentLang) {
           },
         ],
         tooltip: {
-          pointFormat: "Financements obtenus: <b>{point.y:.1f} €</b>",
+          pointFormat: "Financements obtenus: <b>{point.label}</b>",
         },
       },
     ],
