@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import Breadcrumb from "../../../../components/breadcrumb";
 import { useDashboardVisibility } from "../../../../hooks/useDashboardVisibility";
@@ -23,23 +22,6 @@ const NAV_ITEMS = [
 export default function GlobalLayout() {
   const { pathname, search } = useLocation();
   const isHomePageVisible = useDashboardVisibility("devenir-etudiants");
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  useEffect(() => {
-    setIsMenuOpen(false);
-  }, [pathname]);
-
-  useEffect(() => {
-    if (!isMenuOpen) return;
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        setIsMenuOpen(false);
-        document.getElementById("button-header")?.focus();
-      }
-    };
-    document.addEventListener("keydown", onKeyDown);
-    return () => document.removeEventListener("keydown", onKeyDown);
-  }, [isMenuOpen]);
 
   if (!pathname) return null;
 

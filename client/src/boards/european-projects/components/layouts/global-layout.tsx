@@ -18,10 +18,7 @@ export default function GlobalLayout() {
   const filtersParams = searchParams.toString();
 
   useEffect(() => {
-    if (!searchParams.get("language")) {
-      searchParams.set("language", "fr"); // default value
-      setSearchParams(searchParams);
-    }
+    // language=fr par défaut : posé par le Header (languageSelector)
     if (!searchParams.get("country_code")) {
       searchParams.set("country_code", "FRA"); // default value
       setSearchParams(searchParams);
