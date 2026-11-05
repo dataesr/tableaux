@@ -49,13 +49,8 @@ export default function TypeOfBeneficiariesEvolution() {
   const params = useGetParams(searchParams);
   const color = useChartColor();
 
-  const entityTypes = [
-    { value: "REC", label: getI18nLabel(i18n, "REC") },
-    { value: "HES", label: getI18nLabel(i18n, "HES") },
-    { value: "PUB", label: getI18nLabel(i18n, "PUB") },
-    { value: "PRC", label: getI18nLabel(i18n, "PRC") },
-    { value: "OTH", label: getI18nLabel(i18n, "OTH") },
-  ];
+  const entityTypes = ["REC", "HES", "PUB", "PRC", "OTH"]
+    .map((value) => ({ label: getI18nLabel(i18n, value), value }))
 
   const { data, isLoading } = useQuery({
     queryKey: [config.id, params, selectedEntityType],
