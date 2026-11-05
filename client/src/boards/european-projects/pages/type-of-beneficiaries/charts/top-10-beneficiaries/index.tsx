@@ -13,11 +13,25 @@ import { useGetParams } from "./utils";
 
 import i18n from "./i18n.json";
 
-export default function Top10CountriesByTypeOfBeneficiaries() {
+interface CountryAdjectives {
+  m: string;
+  f: string;
+}
+
+interface Top10CountriesByTypeOfBeneficiariesProps {
+  countryAdj?: CountryAdjectives;
+}
+
+
+export default function Top10CountriesByTypeOfBeneficiaries({ 
+  countryAdj = { m: "français", f: "française" } }: 
+  Top10CountriesByTypeOfBeneficiariesProps) {
   const [searchParams] = useSearchParams();
   const currentLang = searchParams.get("language") || "fr";
   const params = useGetParams(searchParams);
   const color = useChartColor();
+
+  const adjMascPlural = countryAdj.m.endsWith("s") ? countryAdj.m : `${countryAdj.m}s`;
 
   const { data, isLoading } = useQuery({
     queryKey: ["top10CountriesByTypeOfBeneficiaries", params],
@@ -33,6 +47,7 @@ export default function Top10CountriesByTypeOfBeneficiaries() {
 
   const countryCode = data?.data?.[0]?.country_code || searchParams.get("country_code") || "";
   const countryInfo = COUNTRY_MAPPING[countryCode];
+  console.log(countryInfo)
 
   // Nom avec article en français ("La France"), nom seul en anglais ("France")
   const countryNameFr = countryInfo?.name?.fr || data?.data?.[0]?.country_name_fr || countryCode;
@@ -52,32 +67,32 @@ export default function Top10CountriesByTypeOfBeneficiaries() {
   const config = {
     id: "top10beneficiaries",
     title: {
-      fr: "Financements obtenus par type d'entités (en millions d'euros)",
-      en: "Funding obtained by type of entities (in millions of euros)",
+      fr: `Financements obtenus par type de participants ${adjMascPlural}`,
+      en: `Funding secured by type of ${adjMascPlural} participants`,
     },
     comment: {
       fr: (
         <>
-          Ce graphique présente la répartition des subventions Horizon Europe obtenus par <strong>{countryNameFrLower}</strong> selon le type d'entités bénéficiaires : organismes de recherche (REC), organismes publics (PUB), entreprises privées
-          (PRC), établissements d'enseignement supérieur (HES) et autres (OTH). Les montants sont exprimés en millions d'euros.
+          Ce graphique présente la répartition des financements obtenus par {countryNameFrLower} selon le type d'entités : établissements de recherche (REC), organismes publics (PUB), entreprises privées
+          (PRC), établissements d'enseignement supérieur (HES) et autres (OTH)
         </>
       ),
       en: (
         <>
-          This chart shows the distribution of Horizon Europe grants obtained by <strong>{countryNameEn}</strong> by type of beneficiary entity: research organisations (REC), public bodies (PUB), private companies (PRC), higher education institutions
-          (HES) and others (OTH). Amounts are expressed in millions of euros.
+          This chart shows the distribution of funding secured by {countryNameEn} by type of entity: research organisations (REC), public bodies (PUB), private companies (PRC), higher education institutions
+          (HES) and others (OTH).
         </>
       ),
     },
     readingKey: {
       fr: (
         <>
-          Pour <strong>{countryNameFrLower}</strong>, le type d'entité ayant reçu le plus de financements est <strong>{dominantLabel}</strong> avec <strong>{dominantAmount} M€</strong> alloués.
+          Les {dominantLabel} {adjMascPlural} ont obtenu {dominantAmount} M€.
         </>
       ),
       en: (
         <>
-          For <strong>{countryNameEn}</strong>, the entity type receiving the most Horizon Europe funding is <strong>{dominantLabel}</strong> with <strong>{dominantAmount} M€</strong> awarded.
+          {adjMascPlural} {dominantLabel} secured €{dominantAmount}M.
         </>
       ),
     },
