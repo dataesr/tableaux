@@ -47,9 +47,8 @@ export function useGetParams() {
   }
 
   if (searchParams.has("isEjo")) params.push(isEjoParam());
-  // Ajouter le paramètre stage=successful
-  // TODO: voir avec ZOE
-  // params.push("stage=successful");
+
+  params.push("stage=successful");
 
   return params.filter((item) => !!item).join("&");
 }

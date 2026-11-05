@@ -1,0 +1,44 @@
+// Les éléments additionnels (sélecteur de pays, liens…) s'alignent sur les boutons DSFR du header
+.fr-header__tools-links .fr-btns-group {
+  align-items: center;
+
+  > li {
+    display: flex;
+    align-items: center;
+  }
+}
+
+.fr-nav__list .header-nav-extra {
+  display: flex;
+  align-items: center;
+}
+
+@media (min-width: 992px) {
+  .fr-nav__list .header-nav-extra {
+    margin-inline-start: auto;
+  }
+}
+
+// Barre de navigation fixe : le header ne génère plus de boîte pour que le menu
+// soit collant par rapport à la page entière et non à son seul parent.
+.fr-header.header--sticky-nav {
+  display: contents;
+
+  // Le fond et l'ombre portent normalement sur .fr-header, qui n'a plus de boîte ici
+  .fr-header__body,
+  .fr-header__menu {
+    background-color: var(--background-raised-grey);
+  }
+
+  .fr-header__body {
+    position: relative;
+    z-index: 1002;
+  }
+
+  .fr-header__menu {
+    position: sticky;
+    top: 0px;
+    z-index: 1001;
+    filter: drop-shadow(var(--raised-shadow));
+  }
+}

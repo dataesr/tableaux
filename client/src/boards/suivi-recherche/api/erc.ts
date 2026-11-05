@@ -220,9 +220,11 @@ export const useErcComparaison = (selection: Selection, options: ErcOptions) =>
     placeholderData: keepPreviousData,
   });
 
-// Sans groupe : celui de l'établissement sélectionné, sinon les universités (choix du serveur)
-export const useErcPositionnement = (selection: Selection, options: ErcOptions, indicateur: IndicateurMatrice, groupe?: string) =>
+// Sans groupe : celui de l'établissement sélectionné, sinon les universités (choix du serveur).
+// `enabled` : faux quand le bloc ERC est masqué (paramètre `dispositif`)
+export const useErcPositionnement = (selection: Selection, options: ErcOptions, indicateur: IndicateurMatrice, groupe?: string, enabled = true) =>
   useQuery({
+    enabled,
     queryKey: ["suivi-recherche", "erc", "positionnement-etablissements", indicateur, groupe ?? null, ...filtersKey(selection, options)],
     queryFn: () => {
       const params = toSearchParams(selection, options);

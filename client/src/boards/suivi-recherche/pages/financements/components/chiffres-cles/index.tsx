@@ -18,7 +18,7 @@ type ChiffresClesProps = {
   typesLabel: string;
 };
 
-// Chiffres clés de la sélection, au-dessus des blocs par dispositif (ERC pour l'instant ; ANR, IUF, médailles ensuite).
+// Chiffres clés ERC de la sélection, en tête de la section « Bourses ERC » (titre h3, cartes h4).
 // Chaque ratio est accompagné de son numérateur et de son dénominateur.
 export default function ChiffresCles({ comptage, erc, selectionLabel, typesLabel }: ChiffresClesProps) {
   const unites = UNITES[comptage];
@@ -71,5 +71,5 @@ export default function ChiffresCles({ comptage, erc, selectionLabel, typesLabel
       && "Indice provisoire : pour les articles récents, le top 10 % des plus cités n'est pas définitif (fenêtre de citation pas close).",
   ].filter((note): note is string => Boolean(note));
 
-  return <Cartes cartes={cartes} notes={notes} sousTitre={`Bourses ERC : ${typesLabel}`} titre={selectionLabel} />;
+  return <Cartes cartes={cartes} notes={notes} sousTitre={`Bourses ERC : ${typesLabel}`} titre={selectionLabel} titreAs="h3" />;
 }

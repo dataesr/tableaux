@@ -1,14 +1,14 @@
 // ── Variables ──────────────────────────────────────────────────────────────
-$ep-blue: #003399;
-$ep-teal: #006a6f;
-$ep-purple: #6358a5;
-$ep-orange: #c75000;
+$ep-blue: var(--scale-7-color);
+$ep-teal: var(--text-label-green-menthe);
+$ep-purple: var(--text-label-orange-terre-battue);
+$ep-orange: var(--scale-5-color);
 
 // ── Hero ───────────────────────────────────────────────────────────────────
 .ep-home {
 
   &__hero {
-    background: linear-gradient(150deg, var(--background-contrast-blue-france) 0%, var(--background-contrast-blue-ecume) 100%);
+    background: var(--background-contrast-blue-france);
     border-bottom: 3px solid $ep-blue;
     padding: 3rem 0 2rem;
 
@@ -18,7 +18,7 @@ $ep-orange: #c75000;
       font-weight: 700;
       letter-spacing: 0.12em;
       text-transform: uppercase;
-      color: #fff;
+      color: var(--text-default-grey);
       background-color: $ep-blue;
       padding: 0.2rem 0.65rem;
       border-radius: 2px;
@@ -68,7 +68,7 @@ $ep-orange: #c75000;
     flex: 1;
     min-width: 150px;
     padding: 1rem 1.25rem;
-    background: #fff;
+    background: var(--background-default-grey);
     border-bottom: 3px solid currentColor;
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.07);
     text-decoration: none !important;
@@ -112,6 +112,10 @@ $ep-orange: #c75000;
       background: var(--background-contrast-blue-france);
 
     }
+  }
+
+  &__section-link {
+    text-align: center;
   }
 
   &__section-title {

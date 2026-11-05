@@ -1,25 +1,20 @@
 import { Link } from 'react-router-dom';
 import { createElement } from "react";
+import type { AnchorHTMLAttributes } from "react";
 
-type RouterLinkProps = {
-  href: string;
+type RouterLinkProps =  AnchorHTMLAttributes<HTMLAnchorElement> & {
+  href?: string;
   replace?: boolean;
-  target?: string;
-  children?: any;
 };
 
-export default function RouterLink({ href, replace, target, children }: RouterLinkProps) {
+export default function RouterLink({ href, replace, target, children, ...props }: RouterLinkProps) {
   if (target === "_blank") {
-    return createElement("a", { href, target }, children);
+    return createElement("a", { ...props, href, target }, children);
   }
 
   if (!href) {
     return createElement("span", null, children);
   }
 
-  const linkElement: any = Link;
-  const linkAttributes = Object.create(null);
-  linkAttributes.to = href;
-  linkAttributes.replace = replace;
-  return createElement(linkElement, linkAttributes, children);
+  return createElement(Link, { ...props, to: href, replace, target }, children)
 }

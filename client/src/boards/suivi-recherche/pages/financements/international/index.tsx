@@ -1,4 +1,4 @@
-import { Alert, Notice, Title } from "@dataesr/dsfr-plus";
+import { Alert, Notice } from "@dataesr/dsfr-plus";
 
 import DefaultSkeleton from "../../../../../components/charts-skeletons/default.tsx";
 import { useErcComparaison } from "../../../api/erc.ts";
@@ -8,6 +8,7 @@ import { useErcOptions } from "../../../hooks/use-selection";
 import { formatPeriode, getDisciplineLabel } from "../../../utils";
 import ErcRubans, { formatCalcul, formatValeur, getPeuFiable, INDICATEURS_PAYS, PEU_FIABLE } from "../charts/erc-rubans/index.tsx";
 import Cartes from "../components/cartes/index.tsx";
+import Dispositifs from "../components/dispositifs/index.tsx";
 import type { Carte } from "../components/cartes/index.tsx";
 import MethodeErc from "../components/methode-erc/index.tsx";
 import ParametresErc, { getTypesLabel } from "../components/parametres-erc/index.tsx";
@@ -35,8 +36,8 @@ function getCartes(data: Comparaison): Carte[] {
   });
 }
 
-// « Comment se situe la France parmi les pays ? » : la sélection d'établissement ne s'applique pas
-export default function InternationalSection() {
+// Bloc ERC : chiffres clés et rubans de la France parmi les pays
+function ErcInternational() {
   const { disciplines, ercMeta, selection } = useFinancements();
   const options = useErcOptions(ercMeta);
   const { data, isError, isLoading, isPlaceholderData } = useErcComparaison(selection, options);
@@ -57,26 +58,34 @@ export default function InternationalSection() {
           <Cartes
             cartes={getCartes(comparaison)}
             sousTitre={`Bourses ERC : ${getTypesLabel(ercMeta, options.types)} · rang parmi les ${comparaison.pays.length} pays comparés`}
+            titreAs="h3"
             titre={`France · appels ${formatPeriode(comparaison.periode)} · ${disciplineLabel}`}
           />
         </ChartBusy>
       )}
-
-      <section>
-        <Title as="h2" look="h4">Bourses ERC</Title>
-        <ParametresErc meta={ercMeta} options={options} />
-        {(isLoading || comparaison || isError) && (
-          <ErcRubans
-            data={comparaison}
-            disciplineLabel={disciplineLabel}
-            isError={isError}
-            isLoading={isLoading}
-            isPlaceholderData={isPlaceholderData}
-            meta={ercMeta}
-          />
-        )}
-        <MethodeErc meta={ercMeta} />
-      </section>
+      <ParametresErc meta={ercMeta} options={options} />
+      {(isLoading || comparaison || isError) && (
+        <ErcRubans
+          data={comparaison}
+          disciplineLabel={disciplineLabel}
+          isError={isError}
+          isLoading={isLoading}
+          isPlaceholderData={isPlaceholderData}
+          meta={ercMeta}
+        />
+      )}
+      <MethodeErc meta={ercMeta} />
     </>
+  );
+}
+
+// « Comment se situe la France parmi les pays ? » : la sélection d'établissement ne s'applique pas
+export default function InternationalSection() {
+  return (
+    <Dispositifs
+      contenus={{
+        erc: { bloc: <ErcInternational /> },
+      }}
+    />
   );
 }

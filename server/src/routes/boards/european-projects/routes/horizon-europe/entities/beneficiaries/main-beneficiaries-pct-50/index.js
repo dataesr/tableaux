@@ -115,6 +115,7 @@ router
           entities_name: 1,
           entities_acronym: 1,
           fund_eur: 1,
+          stage: 1,
         },
         "idx_main_beneficiaries_pct_50_covered",
       );

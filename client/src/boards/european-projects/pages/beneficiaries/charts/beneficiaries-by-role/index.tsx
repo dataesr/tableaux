@@ -33,6 +33,7 @@ export default function BeneficiariesByRole({
   const { data, isLoading } = useQuery({
     queryKey: ["beneficiariesByRole", params],
     queryFn: () => getData(params),
+    enabled: !!params,
   });
 
   if (isLoading || !data) return <DefaultSkeleton />;

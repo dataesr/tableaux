@@ -4,6 +4,7 @@ import { FormattedMessage, IntlProvider } from "react-intl";
 import { useSearchParams } from "react-router-dom";
 
 import DefaultSkeleton from "../../../../components/charts-skeletons/default";
+import { getI18nLabel } from "../../../../utils";
 import { getFiltersValues } from "../../api";
 import ErcCard from "../../components/cards/erc";
 import MscaCard from "../../components/cards/msca";
@@ -25,10 +26,6 @@ export default function Home() {
     queryFn: () => getFiltersValues("pillars"),
   });
 
-  function getI18nLabel(key) {
-    return i18n[key][currentLang];
-  }
-
   const messages = {}
   Object.keys(i18n).forEach((key) => {
     messages[key] = i18n[key][currentLang]
@@ -41,9 +38,9 @@ export default function Home() {
           <Container>
             <Row gutters>
               <Col xs={12} md={8}>
-                <p className="ep-home__hero-badge">TABLEAU DE BORD</p>
+                <p className="ep-home__hero-badge">{getI18nLabel(i18n, "dashboard-badge", currentLang)}</p>
                 <Title as="h1" look="h2" className="ep-home__hero-title">
-                  {getI18nLabel("title1")}
+                  {getI18nLabel(i18n, "title1", currentLang)}
                 </Title>
                 <p className="ep-home__hero-description">
                   <FormattedMessage
@@ -57,7 +54,7 @@ export default function Home() {
               </Col>
               <Col className="ep-home__hero-logo-col">
                 <Link href="https://ec.europa.eu/programmes/horizon2020/" target="_blank">
-                  <img src="https://commission.europa.eu/themes/contrib/oe_theme/dist/ec/images/logo/positive/logo-ec--fr.svg" alt="Lien vers la page officielle du programme Horizon Europe" className="ep-home__hero-logo" />
+                  <img src="https://commission.europa.eu/themes/contrib/oe_theme/dist/ec/images/logo/positive/logo-ec--fr.svg" alt={getI18nLabel(i18n, "logo-alt", currentLang)} className="ep-home__hero-logo" />
                 </Link>
               </Col>
             </Row>
@@ -66,19 +63,19 @@ export default function Home() {
                 <div className="ep-home__stats">
                   <Link href={`/european-projects/horizon-europe?section=synthesis&${filtersParams}`} className="ep-home__stat-item ep-home__stat-item--blue">
                     <span className="ep-home__stat-number">4</span>
-                    <span className="ep-home__stat-label">Piliers Horizon Europe</span>
+                    <span className="ep-home__stat-label">{getI18nLabel(i18n, "stat-pillars", currentLang)}</span>
                   </Link>
                   <Link href="/european-projects/msca" className="ep-home__stat-item ep-home__stat-item--teal">
                     <span className="ep-home__stat-number">MSCA</span>
-                    <span className="ep-home__stat-label">Actions Marie Skłodowska-Curie</span>
+                    <span className="ep-home__stat-label">{getI18nLabel(i18n, "stat-msca", currentLang)}</span>
                   </Link>
                   <Link href="/european-projects/erc" className="ep-home__stat-item ep-home__stat-item--purple">
                     <span className="ep-home__stat-number">ERC</span>
-                    <span className="ep-home__stat-label">Conseil Européen de la Recherche</span>
+                    <span className="ep-home__stat-label">{getI18nLabel(i18n, "stat-erc", currentLang)}</span>
                   </Link>
                   <Link href="/european-projects/evolution-pcri" className="ep-home__stat-item ep-home__stat-item--orange">
                     <span className="ep-home__stat-number">FP6→HE</span>
-                    <span className="ep-home__stat-label">Évolution des programmes-cadres</span>
+                    <span className="ep-home__stat-label">{getI18nLabel(i18n, "stat-programme-evolution", currentLang)}</span>
                   </Link>
                 </div>
               </Col>
@@ -89,7 +86,7 @@ export default function Home() {
         <section className="ep-home__section">
           <Container>
             <Title as="h2" look="h4" className="ep-home__section-title">
-              Les 4 piliers d'Horizon Europe
+              {getI18nLabel(i18n, "pillars-title", currentLang)}
             </Title>
             <Row gutters>
               {isLoadinPillars && (
@@ -105,7 +102,7 @@ export default function Home() {
               {dataPillars &&
                 dataPillars.map((pillar) => (
                   <Col xs={12} md={6} key={pillar.id}>
-                    <PillarCard description={getI18nLabel(`${pillar.id}-description`)} title={pillar[`label_${currentLang}`]} subtitle={pillar.id} to={`/european-projects/horizon-europe?section=synthesis&pillarId=${pillar.id}`} titleAs="h3" />
+                    <PillarCard description={getI18nLabel(i18n, `${pillar.id.replace(".", "-")}-description`, currentLang)} title={pillar[`label_${currentLang}`]} subtitle={pillar.id} to={`/european-projects/horizon-europe?section=synthesis&pillarId=${pillar.id}`} titleAs="h3" />
                   </Col>
                 ))}
             </Row>
@@ -115,14 +112,14 @@ export default function Home() {
         <section className="ep-home__section ep-home__section--alt">
           <Container>
             <Title as="h2" look="h4" className="ep-home__section-title">
-              Focus
+              {getI18nLabel(i18n, "focus-title", currentLang)}
             </Title>
             <Row gutters>
               <Col xs={12} md={6}>
                 <MscaCard
                   title="MSCA"
-                  subtitle="Actions Marie Sklodowska-Curie"
-                  description="Le programme européen « Actions Marie Skłodowska-Curie » (MSCA) est le programme de référence de l'Union européenne pour la mobilité, la formation et le développement de la carrière des chercheurs. Au sein du programme-cadre « Horizon Europe », il est intégré au pilier 1 dédié à la science d'excellence."
+                  subtitle={getI18nLabel(i18n, "msca-subtitle", currentLang)}
+                  description={getI18nLabel(i18n, "msca-description", currentLang)}
                   to="/european-projects/msca"
                   titleAs="h3"
                 />
@@ -130,8 +127,8 @@ export default function Home() {
               <Col xs={12} md={6}>
                 <ErcCard
                   title="ERC"
-                  subtitle="Le Conseil Européen de la Recherche"
-                  description="L'ERC (European Research Council) finance des projets de recherche exploratoire, aux frontières de la connaissance, dans tous les domaines de la science et de la technologie. Le seul critère de sélection est celui de l'excellence scientifique."
+                  subtitle={getI18nLabel(i18n, "erc-subtitle", currentLang)}
+                  description={getI18nLabel(i18n, "erc-description", currentLang)}
                   to="/european-projects/erc"
                   titleAs="h3"
                 />
@@ -146,9 +143,9 @@ export default function Home() {
               <Col xs={12}>
                 <Timeline />
               </Col>
-              <Col xs={12} className="text-center">
+              <Col xs={12} className="ep-home__section-link">
                 <Link href="/european-projects/evolution-pcri" className="fr-link fr-link--icon-right">
-                  Visualisez et analysez l'évolution des programmes européens de recherche
+                  {getI18nLabel(i18n, "timeline-link", currentLang)}
                   <span className="fr-fi-arrow-right-line fr-link__icon fr-link__icon--right" />
                 </Link>
               </Col>

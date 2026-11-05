@@ -6,6 +6,7 @@ import { useTitle } from "../../../../hooks/usePageTitle.tsx";
 import { getI18nLabel } from "../../../../utils";
 import { useBiblioDisciplines, useBiblioEntites, useBiblioMeta } from "../../api";
 import { useErcMeta } from "../../api/erc.ts";
+import { usePrixMeta } from "../../api/prix.ts";
 import { useSelection } from "../../hooks/use-selection";
 import i18n from "../../title-i18n.json";
 import { FinancementsProvider } from "./context.ts";
@@ -32,6 +33,7 @@ export default function FinancementsPage() {
   const disciplines = useBiblioDisciplines();
   const entites = useBiblioEntites();
   const ercMeta = useErcMeta();
+  const prixMeta = usePrixMeta();
   const { selection, setParams } = useSelection(meta.data, entites.data, { pays: courante.id === "international" });
 
   const isLoading = meta.isLoading || disciplines.isLoading || entites.isLoading || ercMeta.isLoading;
@@ -41,9 +43,9 @@ export default function FinancementsPage() {
 
   return (
     <Container className="fr-my-4w">
-      <Title as="h1" look="h3">Financements</Title>
+      <Title as="h1" look="h3">Financements et distinctions</Title>
       <p className="fr-text--lead fr-mb-2w">
-        Candidatures et lauréats des appels à projets compétitifs (ERC, puis ANR, IUF et médailles).
+        Candidatures et lauréats des appels à projets compétitifs (ERC, puis ANR), nominations à l'IUF et médailles du CNRS.
       </p>
 
       {isLoading && <DefaultSkeleton height="200px" label="Chargement des données" />}
@@ -68,7 +70,9 @@ export default function FinancementsPage() {
               {section.id === courante.id && (
                 <>
                   <p className="fr-text-mention--grey fr-mb-3w">{section.question}</p>
-                  <FinancementsProvider value={{ disciplines: disciplines.data, entiteNom, ercMeta: ercMeta.data, selection }}>
+                  <FinancementsProvider
+                    value={{ disciplines: disciplines.data, entiteNom, ercMeta: ercMeta.data, prixMeta: prixMeta.data, prixMetaError: prixMeta.isError, selection }}
+                  >
                     {Contenu ? <Contenu /> : (
                       <Notice closeMode="disallow" type="info">
                         Cet onglet est en préparation : les indicateurs de financement y seront ajoutés prochainement.

@@ -8,7 +8,6 @@ import "remixicon/fonts/remixicon.css";
 
 import CookieConsent from "./components/cookies/cookie-consent/index.js";
 import MatomoTracker from "./components/matomo-tracker/index.js";
-import { HtmlLangSync } from "./components/html-lang-sync.js";
 import RouterLink from "./components/router-link.js";
 import { ScrollToTop } from "./components/scroll-to-top.js";
 import AppRoutes from "./router.js";
@@ -27,7 +26,6 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     <BrowserRouter>
       <QueryClientProvider client={queryClient}>
         <ScrollToTop />
-        <HtmlLangSync />
         <MatomoTracker />
         <ToastContextProvider>
           <DSFRConfig routerComponent={RouterLink}>

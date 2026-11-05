@@ -37,6 +37,7 @@ export default function MainPartners({
   const { data, isLoading } = useQuery({
     queryKey: ["mainPartners", params],
     queryFn: () => getData(params),
+    enabled: !!params,
   });
 
   if (isLoading || !data) return <DefaultSkeleton />;

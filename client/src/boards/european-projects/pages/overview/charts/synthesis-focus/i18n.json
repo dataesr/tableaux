@@ -15,12 +15,22 @@
   },
   "participantsShare": {
     "label": {
-      "fr": "Taux de sélection (Nombre de projets évalués du pays / nombre de projets évalués tous pays)",
-      "en": "Selection rate (Number of projects evaluated in the country / number of projects evaluated across all countries)"
+      "fr": "Part du nombre de participants du pays sélectionné",
+      "en": "Share of participant number from the country"
     },
     "tooltip": {
       "fr": "Nombre de participants du pays dans les projets lauréats sur le nombre total de participants dans les projest lauréats",
       "en": "Number of participants from the country in successful projects as a proportion of the total number of participants in successful projects"
+    }
+  },
+  "applicantsShare": {
+    "label": {
+      "fr": "Part des candidats du pays sélectionné",
+      "en": "Share of applicants from the country"
+    },
+    "tooltip": {
+      "fr": "Nombre de candidats du pays sélectionné rapporté au nombre total de candidats dans les projets évalués",
+      "en": "Number of applicants from the selected country as a proportion of the total number of applicants in evaluated projects"
     }
   },
   "coordinationsShare": {
@@ -45,12 +55,12 @@
   },
   "participantsSuccessRate": {
     "label": {
-      "fr": "Taux de succès des projets (nombre de projets lauréats / nombre de projets évalués)",
-      "en": "Project success rate (number of successful projects / number of projects assessed)"
+      "fr": "Taux de succès individuel des participants",
+      "en": "Participant level success rate"
     },
     "tooltip": {
-      "fr": "Nombre de participants du pays dans les projets lauréats sur le nombre de participants du pays dans les projets évalués",
-      "en": "Number of participants from the country in successful projects as a proportion of the number of participants from the country in evaluated projects"
+      "fr": "Nombre de participants sur le nombre de candidats du pays sélectionné",
+      "en": "Number of participants as a proportion of the number of applicants from the selected country"
     }
   },
   "projectsSuccessRate": {
@@ -84,6 +94,16 @@
         "en": "Total participants"
       }
     },
+    "applicantsShare": {
+      "numerator": {
+        "fr": "Candidats du pays",
+        "en": "Country applicants"
+      },
+      "denominator": {
+        "fr": "Total candidats",
+        "en": "Total applicants"
+      }
+    },
     "coordinationsShare": {
       "numerator": {
         "fr": "Coordinations du pays",
@@ -106,12 +126,12 @@
     },
     "participantsSuccessRate": {
       "numerator": {
-        "fr": "Participants lauréats",
-        "en": "Successful participants"
+        "fr": "Participants",
+        "en": "Participants"
       },
       "denominator": {
-        "fr": "Participants évalués",
-        "en": "Evaluated participants"
+        "fr": "Candidats",
+        "en": "Applicants"
       }
     },
     "projectsSuccessRate": {
