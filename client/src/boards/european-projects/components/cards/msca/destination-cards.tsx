@@ -62,7 +62,7 @@ export default function MscaDestinationCards({ countryCode, callYear }: MscaDest
         </Title>
         <SegmentedControl className="fr-segmented--sm" name="msca-destination-view-mode">
           <SegmentedElement checked={viewMode === "projects"} label="Projets" onClick={() => setViewMode("projects")} value="projects" />
-          <SegmentedElement checked={viewMode === "funding"} label="Financements obtenus" onClick={() => setViewMode("funding")} value="funding" />
+          <SegmentedElement checked={viewMode === "funding"} label="Financements" onClick={() => setViewMode("funding")} value="funding" />
         </SegmentedControl>
       </div>
       <div className="msca-stat-cards">
