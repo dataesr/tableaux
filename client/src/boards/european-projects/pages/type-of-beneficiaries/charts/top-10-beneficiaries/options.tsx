@@ -24,7 +24,7 @@ export default function Options(data, currentLang) {
     yAxis: [
       {
         title: {
-          text: getI18nLabel("xAxis-label"),
+          text: "Euros (M€)",
         },
         gridLineColor: "var(--background-default-grey-hover)",
         gridLineWidth: 0.5,
@@ -57,6 +57,12 @@ export default function Options(data, currentLang) {
         color: rootStyles.getPropertyValue("--beneficiarie-type-REC-color"),
       },
       {
+        name: getI18nLabel("HES"),
+        data: data.data.map((country) => country.types.find((item) => item.cordis_type_entity_code === "HES")?.total_fund_eur || 0),
+        type: "column",
+        color: rootStyles.getPropertyValue("--beneficiarie-type-HES-color"),
+      },
+      {
         name: getI18nLabel("PUB"),
         data: data.data.map((country) => country.types.find((item) => item.cordis_type_entity_code === "PUB")?.total_fund_eur || 0),
         type: "column",
@@ -67,12 +73,6 @@ export default function Options(data, currentLang) {
         data: data.data.map((country) => country.types.find((item) => item.cordis_type_entity_code === "PRC")?.total_fund_eur || 0),
         type: "column",
         color: rootStyles.getPropertyValue("--beneficiarie-type-PRC-color"),
-      },
-      {
-        name: getI18nLabel("HES"),
-        data: data.data.map((country) => country.types.find((item) => item.cordis_type_entity_code === "HES")?.total_fund_eur || 0),
-        type: "column",
-        color: rootStyles.getPropertyValue("--beneficiarie-type-HES-color"),
       },
       {
         name: getI18nLabel("OTH"),
