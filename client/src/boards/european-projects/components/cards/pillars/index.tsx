@@ -21,13 +21,13 @@ function matchPiliarId(idFromDb) {
 function matchPiliarIdCollors(idFromDb) {
   switch (idFromDb) {
     case "HORIZON.1":
-      return "pillar-p1-color";
+      return "p1-color";
     case "HORIZON.2":
-      return "pillar-p2-color";
+      return "p2-color";
     case "HORIZON.3":
-      return "pillar-p3-color";
+      return "p3-color";
     case "HORIZON.4":
-      return "pillar-p4-color";
+      return "p4-color";
     default:
       return idFromDb;
   }
