@@ -91,7 +91,7 @@
         "client/src/boards/template/pages/home/index.tsx",
         "client/src/boards/template/pages/overview/index.tsx"
       ],
-      "notes": "global-layout.tsx contient un bouton de thème et un sélecteur de langue construits avec des attributs réservés au JS du DSFR (data-fr-opened, aria-controls, fr-collapse) ; le JS du DSFR n'est pas chargé, donc ne copiez pas ces sections. Les pages de graphiques ne font pas partie du squelette ; voir les exemples de graphiques."
+      "notes": "global-layout.tsx contient un bouton de thème et un sélecteur de langue construits avec des attributs réservés au JS du DSFR (data-fr-opened, aria-controls, fr-collapse) ; ces sections ne doivent pas être copiées dans une nouvelle page, car elles reposent sur le JS du DSFR et ne fonctionnent pas sur des nœuds gérés par React. Les pages de graphiques ne font pas partie du squelette ; voir les exemples de graphiques."
     },
     {
       "id": "board-server",

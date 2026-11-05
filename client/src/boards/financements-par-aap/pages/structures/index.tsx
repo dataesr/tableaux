@@ -29,7 +29,7 @@ export default function Structures() {
     structure ? (
       <DisplayStructure />
     ) : (
-      <main className="fundings">
+      <div className="fundings">
         <Container fluid className="fundings-gradient fr-mb-3w">
           <Container as="section">
             <Row gutters>
@@ -76,7 +76,7 @@ export default function Structures() {
             ))}
           </Row>
         </Container>
-      </main>
+      </div>
     )
   )
 };
