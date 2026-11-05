@@ -44,6 +44,7 @@ export default function SynthesisFocus() {
         <Title as="h2">{getI18nLabel("keyFigures")}</Title>
         <Row gutters>
           <Col xs={12} md={4}>
+            {/*cards successful funding country share*/}
             <RateCard
               nb={dataCurrentCountry_successful.total_fund_eur / dataSuccessful.total_fund_eur}
               label={getI18nLabel("fundsShare.label")}
@@ -56,18 +57,20 @@ export default function SynthesisFocus() {
             />
           </Col>
           <Col xs={12} md={4}>
+            {/*cards evaluated involved country share*/}
             <RateCard
-              nb={dataCurrentCountry_successful.total_involved / dataSuccessful.total_involved}
-              label={getI18nLabel("participantsShare.label")}
+              nb={dataCurrentCountry_evaluated.total_involved / dataEvaluated.total_involved}
+              label={getI18nLabel("applicantsShare.label")}
               loading={false}
-              tooltipText={getI18nLabel("participantsShare.tooltip")}
-              numerator={Math.trunc(dataCurrentCountry_successful.total_involved)}
-              denominator={Math.trunc(dataSuccessful.total_involved)}
-              numeratorLabel={getI18nLabel("labels.participantsShare.numerator")}
-              denominatorLabel={getI18nLabel("labels.participantsShare.denominator")}
+              tooltipText={getI18nLabel("applicantsShare.tooltip")}
+              numerator={Math.trunc(dataCurrentCountry_evaluated.total_involved)}
+              denominator={Math.trunc(dataEvaluated.total_involved)}
+              numeratorLabel={getI18nLabel("labels.applicantsShare.numerator")}
+              denominatorLabel={getI18nLabel("labels.applicantsShare.denominator")}
             />
           </Col>
           <Col xs={12} md={4}>
+            {/*cards successful coord country share*/}
             <RateCard
               nb={dataCurrentCountry_successful.total_coordination_number / dataSuccessful.total_coordination_number}
               label={getI18nLabel("coordinationsShare.label")}
@@ -80,6 +83,7 @@ export default function SynthesisFocus() {
             />
           </Col>
           <Col xs={12} md={4}>
+            {/*cards funding country success*/}
             <RateCard
               nb={dataCurrentCountry_successful.total_fund_eur / dataCurrentCountry_evaluated.total_fund_eur}
               label={getI18nLabel("fundsSuccessRate.label")}
@@ -92,6 +96,7 @@ export default function SynthesisFocus() {
             />
           </Col>
           <Col xs={12} md={4}>
+            {/*cards involved country success*/}
             <RateCard
               nb={dataCurrentCountry_successful.total_involved / dataCurrentCountry_evaluated.total_involved}
               label={getI18nLabel("participantsSuccessRate.label")}
@@ -104,6 +109,7 @@ export default function SynthesisFocus() {
             />
           </Col>
           <Col xs={12} md={4}>
+            {/*cards coord country success*/}
             <RateCard
               nb={dataCurrentCountry_successful.total_coordination_number / dataCurrentCountry_evaluated.total_coordination_number}
               label={getI18nLabel("projectsSuccessRate.label")}
