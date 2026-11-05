@@ -44,6 +44,9 @@ router
       if (req.query.isEjo) {
         filters["is_ejo"] = { $eq: req.query.isEjo === "true" ? true : false };
       }
+      if (req.query.stage) {
+        filters.stage = req.query.stage;
+      }
 
       filters.framework = "Horizon Europe";
 
@@ -115,6 +118,7 @@ router
           entities_name: 1,
           entities_acronym: 1,
           fund_eur: 1,
+          stage: 1,
         },
         "idx_main_beneficiaries_pct_50_covered",
       );

@@ -49,6 +49,10 @@ router
         filters["is_ejo"] = { $eq: req.query.isEjo === "true" ? true : false };
       }
 
+      if (req.query.stage) {
+        filters.stage = req.query.stage;
+      }
+
       const data = await db
         .collection(collection_projects_entities)
         .aggregate([
@@ -139,6 +143,7 @@ router
           cordis_type_entity_code: 1,
           fund_eur: 1,
           call_year: 1,
+          stage: 1,
         },
         "idx_top10_countries_by_type_of_beneficiaries_covered",
       );

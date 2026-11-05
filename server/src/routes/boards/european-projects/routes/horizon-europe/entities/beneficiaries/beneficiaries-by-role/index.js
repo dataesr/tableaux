@@ -42,8 +42,9 @@ router
         filters["is_ejo"] = { $eq: req.query.isEjo === "true" ? true : false };
       }
 
-      filters.country_code = req.query.country_code; // Filtre obligatoire TODO
+      filters.country_code = req.query.country_code;
 
+      if (req.query.stage) filters.stage = req.query.stage;
       const data = await db
         .collection(collection_projects_entities)
         .aggregate([
@@ -74,10 +75,26 @@ router
                 country_name_fr: "$_id.country_name_fr",
                 country_name_en: "$_id.country_name_en",
               },
-              roles: {
-                $push: {
-                  role: "$_id.role",
-                  total_fund_eur: "$total_fund_eur",
+              total_fund_eur_coordination: {
+                $sum: {
+                  $cond: [
+                    {
+                      $eq: [{ $toLower: { $ifNull: ["$_id.role", ""] } }, "coordinator"],
+                    },
+                    "$total_fund_eur",
+                    0,
+                  ],
+                },
+              },
+              total_fund_eur_partner: {
+                $sum: {
+                  $cond: [
+                    {
+                      $ne: [{ $toLower: { $ifNull: ["$_id.role", ""] } }, "coordinator"],
+                    },
+                    "$total_fund_eur",
+                    0,
+                  ],
                 },
               },
               total_fund_eur: { $sum: "$total_fund_eur" },
@@ -92,57 +109,8 @@ router
               country_code: "$_id.country_code",
               country_name_fr: "$_id.country_name_fr",
               country_name_en: "$_id.country_name_en",
-              total_fund_eur_coordination: {
-                $ifNull: [
-                  {
-                    $arrayElemAt: [
-                      {
-                        $map: {
-                          input: {
-                            $filter: {
-                              input: "$roles",
-                              cond: {
-                                $eq: [
-                                  { $toLower: "$$this.role" },
-                                  "coordinator",
-                                ],
-                              },
-                            },
-                          },
-                          as: "item",
-                          in: "$$item.total_fund_eur",
-                        },
-                      },
-                      0,
-                    ],
-                  },
-                  0,
-                ],
-              },
-              total_fund_eur_partner: {
-                $ifNull: [
-                  {
-                    $arrayElemAt: [
-                      {
-                        $map: {
-                          input: {
-                            $filter: {
-                              input: "$roles",
-                              cond: {
-                                $eq: [{ $toLower: "$$this.role" }, "partner"],
-                              },
-                            },
-                          },
-                          as: "item",
-                          in: "$$item.total_fund_eur",
-                        },
-                      },
-                      0,
-                    ],
-                  },
-                  0,
-                ],
-              },
+              total_fund_eur_coordination: 1,
+              total_fund_eur_partner: 1,
               total_fund_eur: 1,
             },
           },
@@ -185,6 +153,7 @@ router
           country_name_fr: 1,
           country_name_en: 1,
           fund_eur: 1,
+          stage: 1,
         },
         "idx_beneficiaries_by_role_covered",
       );

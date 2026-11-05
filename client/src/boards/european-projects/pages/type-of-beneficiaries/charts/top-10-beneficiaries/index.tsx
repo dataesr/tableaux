@@ -12,6 +12,7 @@ import { EPChartsSources } from "../../../../config";
 import { COUNTRY_MAPPING } from "../../../../utils/country-mapping";
 
 import i18n from "./i18n.json";
+import { getI18nLabel } from "../../../../../../utils";
 
 interface CountryAdjectives {
   m: string;
@@ -41,10 +42,6 @@ export default function Top10CountriesByTypeOfBeneficiaries({
 
   if (isLoading || !data) return <DefaultSkeleton />;
 
-  function getI18nLabel(key) {
-    return i18n[key][currentLang];
-  }
-
   const countryCode = data?.data?.[0]?.country_code || searchParams.get("country_code") || "";
   const countryInfo = COUNTRY_MAPPING[countryCode];
   console.log(countryInfo)
@@ -59,7 +56,7 @@ export default function Top10CountriesByTypeOfBeneficiaries({
   // Clé de lecture : type dominant
   const types = data?.data?.[0]?.types || [];
   const dominant = types.reduce((max, t) => (t.total_fund_eur > (max?.total_fund_eur ?? 0) ? t : max), null);
-  const dominantLabel = dominant ? getI18nLabel(dominant.cordis_type_entity_code) : "";
+  const dominantLabel = dominant ? getI18nLabel(i18n, dominant.cordis_type_entity_code, currentLang) : "";
   const dominantAmount = dominant
     ? new Intl.NumberFormat(currentLang === "fr" ? "fr-FR" : "en-US", { maximumFractionDigits: 0 }).format(dominant.total_fund_eur / 1_000_000)
     : "";
