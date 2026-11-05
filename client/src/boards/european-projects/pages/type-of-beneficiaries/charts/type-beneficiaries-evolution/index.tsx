@@ -16,7 +16,7 @@ import { useGetParams } from "./utils";
 const config = {
   id: "typeBeneficiariesEvolution",
   title: {
-    fr: "Évolution des financements obtenus par pays par type d'entités",
+    fr: "Évolution des financements obtenus par pays et par type d'entités",
     en: "Evolution of secured funding by country",
   },
   description: {
