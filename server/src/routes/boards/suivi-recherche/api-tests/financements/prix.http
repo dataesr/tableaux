@@ -1,0 +1,20 @@
+### Prix : méta (groupes, libellés des prix, méthode)
+GET http://localhost:3000/api/suivi-recherche/financements/prix/meta
+
+### Chiffres clés de tous les groupes de prix, Aix-Marseille Université, 2021-2025
+GET http://localhost:3000/api/suivi-recherche/financements/prix/indicateurs?ror_id=035xkbk20&year_min=2021&year_max=2025
+
+### Même chose en SH : nominations françaises non classées renvoyées dans non_classes
+GET http://localhost:3000/api/suivi-recherche/financements/prix/indicateurs?ror_id=035xkbk20&year_min=2021&year_max=2025&domaine=SH
+
+### Nominations par année, médailles du CNRS, France
+GET http://localhost:3000/api/suivi-recherche/financements/prix/evolution?distinction=MEDAILLES_CNRS&year_min=2015&year_max=2025
+
+### Matrice des universités pour l'IUF, établissement mis en avant
+GET http://localhost:3000/api/suivi-recherche/financements/prix/positionnement-etablissements?ror_id=035xkbk20&year_min=2020&year_max=2025
+
+### Matrice des organismes, discipline PE1
+GET http://localhost:3000/api/suivi-recherche/financements/prix/positionnement-etablissements?groupe=organismes&discipline=PE1&year_min=2020&year_max=2025
+
+### 400 : distinction inconnue
+GET http://localhost:3000/api/suivi-recherche/financements/prix/evolution?distinction=NOBEL

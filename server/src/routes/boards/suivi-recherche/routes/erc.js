@@ -13,7 +13,7 @@ import {
   VIVIER_DEFAUT,
   VIVIERS,
 } from "../erc-indice.js";
-import { computePeriodes, GROUPE_AUTRES, GROUPE_PAR_DEFAUT, GROUPES_ETABLISSEMENTS, groupeOf, median, shapeMatrice } from "../matrice.js";
+import { CODES_GROUPES, computePeriodes, loadGroupeEtablissements, median, shapeMatrice } from "../matrice.js";
 import { computeAbscisses, computeRubans, DEMI_COLONNE, HAUTEUR } from "../rubans.js";
 
 const router = new express.Router();
@@ -321,22 +321,11 @@ router.route("/suivi-recherche/financements/erc/positionnement-etablissements").
   const meta = await getMeta();
   const { indicateur = INDICATEURS_MATRICE[0], groupe: groupeDemande } = req.query;
   if (!INDICATEURS_MATRICE.includes(indicateur)) throw new BadRequestError(`indicateur must be one of ${INDICATEURS_MATRICE.join(", ")}`);
-  const groupesValides = [...GROUPES_ETABLISSEMENTS, GROUPE_AUTRES].map(({ code }) => code);
-  if (groupeDemande && !groupesValides.includes(groupeDemande)) throw new BadRequestError(`groupe must be one of ${groupesValides.join(", ")}`);
+  if (groupeDemande && !CODES_GROUPES.includes(groupeDemande)) throw new BadRequestError(`groupe must be one of ${CODES_GROUPES.join(", ")}`);
   const filters = parseFilters(req.query, meta);
   const selectionId = req.query.ror_id ?? null;
 
-  const etablissements = (await (await getCollection("entites"))
-    .find({ selecteur: true, entite_type: "etablissement" }, { projection: { _id: 0, entite_id: 1, nom: 1, sigle: 1, categorie: 1 } })
-    .toArray())
-    .map((etablissement) => ({ ...etablissement, groupe: groupeOf(etablissement.categorie) }));
-  // Sans groupe demandé : celui de l'établissement sélectionné, sinon les universités
-  const groupeSelection = etablissements.find(({ entite_id: id }) => id === selectionId)?.groupe ?? null;
-  const groupe = groupeDemande ?? groupeSelection ?? GROUPE_PAR_DEFAUT;
-  const membres = etablissements.filter((etablissement) => etablissement.groupe === groupe);
-  const groupes = [...GROUPES_ETABLISSEMENTS, GROUPE_AUTRES]
-    .map(({ code, libelle }) => ({ code, libelle, nb: etablissements.filter((etablissement) => etablissement.groupe === code).length }))
-    .filter(({ nb }) => nb > 0);
+  const { groupe, groupeSelection, groupes, membres } = await loadGroupeEtablissements(await getCollection("entites"), selectionId, groupeDemande);
   const contexte = { comptage: filters.comptage, indicateur, groupe, groupes, groupe_selection: groupeSelection };
 
   // Années d'appel consolidées de la période choisie, en deux périodes

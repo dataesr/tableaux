@@ -283,9 +283,9 @@ router.route("/suivi-recherche/bibliometrie/positionnement-etablissements").get(
   if (groupeDemande && !groupesValides.includes(groupeDemande)) throw new BadRequestError(`groupe must be one of ${groupesValides.join(", ")}`);
 
   const etablissements = (await (await getCollection("entites"))
-    .find({ selecteur: true, entite_type: "etablissement" }, { projection: { _id: 0, entite_id: 1, nom: 1, sigle: 1, categorie: 1 } })
+    .find({ selecteur: true, entite_type: "etablissement" }, { projection: { _id: 0, entite_id: 1, nom: 1, sigle: 1, categorie: 1, groupe_etablissement: 1 } })
     .toArray())
-    .map((etablissement) => ({ ...etablissement, groupe: groupeOf(etablissement.categorie) }));
+    .map(({ groupe_etablissement, ...etablissement }) => ({ ...etablissement, groupe: groupe_etablissement ?? groupeOf(etablissement.categorie) }));
 
   // Sans groupe demandé : celui de l'établissement sélectionné, sinon les universités
   const groupeSelection = etablissements.find((etablissement) => etablissement.entite_id === selectionId)?.groupe ?? null;

@@ -11,8 +11,9 @@ import DoubleCompte from "../components/double-compte/index.tsx";
 import MethodeErc from "../components/methode-erc/index.tsx";
 import ParametresErc, { getTypesLabel } from "../components/parametres-erc/index.tsx";
 import { useFinancements } from "../context.ts";
+import PrixProfil from "./prix.tsx";
 
-// « Où en est la France ou l'établissement sélectionné ? » : chiffres clés, puis un bloc par dispositif (ERC pour l'instant)
+// « Où en est la France ou l'établissement sélectionné ? » : chiffres clés, puis un bloc par dispositif (ERC, prix et distinctions)
 export default function ProfilSection() {
   const { disciplines, entiteNom, ercMeta, selection } = useFinancements();
   const options = useErcOptions(ercMeta);
@@ -28,33 +29,32 @@ export default function ProfilSection() {
   return (
     <>
       {selection.entiteId !== ENTITE_NATIONALE && <DoubleCompte />}
-      {indicateurs.isLoading && <DefaultSkeleton height="160px" label="Chargement des chiffres clés" />}
-      {indicateurs.isError && (
-        <Alert description="Les chiffres clés n'ont pas pu être calculés pour cette sélection." title="Erreur de chargement" variant="error" />
-      )}
-      {data && !data.periode && (
-        <Notice className="fr-mb-4w" closeMode="disallow" type="info">
-          {`Aucun appel ERC dans la période choisie : les appels disponibles vont de ${formatPeriode([Math.min(...ercMeta.annees), Math.max(...ercMeta.annees)])}.`}
-        </Notice>
-      )}
-      {data?.periode && data.nb_candidatures === 0 && (
-        <Notice className="fr-mb-4w" closeMode="disallow" type="info">
-          {`Aucune candidature ERC pour ${selectionLabel}. Élargissez la période, choisissez « Toutes disciplines » ou d'autres types de bourse.`}
-        </Notice>
-      )}
-      {data?.periode && data.nb_candidatures > 0 && (
-        <ChartBusy busy={indicateurs.isPlaceholderData}>
-          <ChiffresCles
-            comptage={data.comptage}
-            erc={data}
-            selectionLabel={selectionLabel}
-            typesLabel={typesLabel}
-          />
-        </ChartBusy>
-      )}
-
       <section>
         <Title as="h2" look="h4">Bourses ERC</Title>
+        {indicateurs.isLoading && <DefaultSkeleton height="160px" label="Chargement des chiffres clés" />}
+        {indicateurs.isError && (
+          <Alert description="Les chiffres clés n'ont pas pu être calculés pour cette sélection." title="Erreur de chargement" variant="error" />
+        )}
+        {data && !data.periode && (
+          <Notice className="fr-mb-4w" closeMode="disallow" type="info">
+            {`Aucun appel ERC dans la période choisie : les appels disponibles vont de ${formatPeriode([Math.min(...ercMeta.annees), Math.max(...ercMeta.annees)])}.`}
+          </Notice>
+        )}
+        {data?.periode && data.nb_candidatures === 0 && (
+          <Notice className="fr-mb-4w" closeMode="disallow" type="info">
+            {`Aucune candidature ERC pour ${selectionLabel}. Élargissez la période, choisissez « Toutes disciplines » ou d'autres types de bourse.`}
+          </Notice>
+        )}
+        {data?.periode && data.nb_candidatures > 0 && (
+          <ChartBusy busy={indicateurs.isPlaceholderData}>
+            <ChiffresCles
+              comptage={data.comptage}
+              erc={data}
+              selectionLabel={selectionLabel}
+              typesLabel={typesLabel}
+            />
+          </ChartBusy>
+        )}
         <ParametresErc meta={ercMeta} options={options} />
         {data?.periode && (
           <ErcEvolutionChart
@@ -67,6 +67,7 @@ export default function ProfilSection() {
         )}
         <MethodeErc meta={ercMeta} />
       </section>
+      <PrixProfil />
     </>
   );
 }

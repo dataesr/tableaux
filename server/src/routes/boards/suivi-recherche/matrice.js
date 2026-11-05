@@ -84,3 +84,24 @@ export const GROUPES_ETABLISSEMENTS = [
 export const GROUPE_AUTRES = { code: "autres", libelle: "Autres établissements" };
 export const GROUPE_PAR_DEFAUT = "universites";
 export const groupeOf = (categorie) => GROUPES_ETABLISSEMENTS.find((groupe) => groupe.categories.includes(categorie))?.code ?? GROUPE_AUTRES.code;
+
+// Établissements comparables pour une matrice : groupe demandé, sinon celui de l'établissement sélectionné,
+// sinon les universités. `entites` : collection des entités (établissements du sélecteur seulement).
+export async function loadGroupeEtablissements(entites, selectionId, groupeDemande) {
+  const etablissements = (await entites
+    .find({ selecteur: true, entite_type: "etablissement" }, { projection: { _id: 0, entite_id: 1, nom: 1, sigle: 1, categorie: 1, groupe_etablissement: 1 } })
+    .toArray())
+    .map(({ groupe_etablissement, ...etablissement }) => ({ ...etablissement, groupe: groupe_etablissement ?? groupeOf(etablissement.categorie) }));
+  const groupeSelection = etablissements.find(({ entite_id: id }) => id === selectionId)?.groupe ?? null;
+  const groupe = groupeDemande ?? groupeSelection ?? GROUPE_PAR_DEFAUT;
+  return {
+    groupe,
+    groupeSelection,
+    membres: etablissements.filter((etablissement) => etablissement.groupe === groupe),
+    groupes: [...GROUPES_ETABLISSEMENTS, GROUPE_AUTRES]
+      .map(({ code, libelle }) => ({ code, libelle, nb: etablissements.filter((etablissement) => etablissement.groupe === code).length }))
+      .filter(({ nb }) => nb > 0),
+  };
+}
+
+export const CODES_GROUPES = [...GROUPES_ETABLISSEMENTS, GROUPE_AUTRES].map(({ code }) => code);

@@ -45,25 +45,25 @@ export default function InternationalSection() {
 
   return (
     <>
-      {isLoading && <DefaultSkeleton height="160px" label="Chargement des chiffres clés" />}
-      {isError && <Alert description="Les chiffres clés n'ont pas pu être calculés." title="Erreur de chargement" variant="error" />}
-      {data && !data.periode && (
-        <Notice className="fr-mb-4w" closeMode="disallow" type="info">
-          {`Aucun appel ERC dans la période choisie : les appels disponibles vont de ${formatPeriode([Math.min(...ercMeta.annees), Math.max(...ercMeta.annees)])}.`}
-        </Notice>
-      )}
-      {comparaison && (
-        <ChartBusy busy={isPlaceholderData}>
-          <Cartes
-            cartes={getCartes(comparaison)}
-            sousTitre={`Bourses ERC : ${getTypesLabel(ercMeta, options.types)} · rang parmi les ${comparaison.pays.length} pays comparés`}
-            titre={`France · appels ${formatPeriode(comparaison.periode)} · ${disciplineLabel}`}
-          />
-        </ChartBusy>
-      )}
-
       <section>
         <Title as="h2" look="h4">Bourses ERC</Title>
+        {isLoading && <DefaultSkeleton height="160px" label="Chargement des chiffres clés" />}
+        {isError && <Alert description="Les chiffres clés n'ont pas pu être calculés." title="Erreur de chargement" variant="error" />}
+        {data && !data.periode && (
+          <Notice className="fr-mb-4w" closeMode="disallow" type="info">
+            {`Aucun appel ERC dans la période choisie : les appels disponibles vont de ${formatPeriode([Math.min(...ercMeta.annees), Math.max(...ercMeta.annees)])}.`}
+          </Notice>
+        )}
+        {comparaison && (
+          <ChartBusy busy={isPlaceholderData}>
+            <Cartes
+              cartes={getCartes(comparaison)}
+              sousTitre={`Bourses ERC : ${getTypesLabel(ercMeta, options.types)} · rang parmi les ${comparaison.pays.length} pays comparés`}
+              titreAs="h3"
+              titre={`France · appels ${formatPeriode(comparaison.periode)} · ${disciplineLabel}`}
+            />
+          </ChartBusy>
+        )}
         <ParametresErc meta={ercMeta} options={options} />
         {(isLoading || comparaison || isError) && (
           <ErcRubans
