@@ -11,11 +11,6 @@ const collection_projects_entities = "european-projects_projects-entities";
 router
   .route("/european-projects/type-beneficiaries/type-beneficiaries-evolution")
   .get(async (req, res) => {
-    console.log(
-      "Fetching type beneficiaries evolution with filters:",
-      req.query,
-    );
-
     if (!req.query.country_code) {
       return res.status(400).json({ error: "Le code pays est requis" });
     }
