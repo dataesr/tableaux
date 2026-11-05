@@ -1,5 +1,6 @@
-const { VITE_APP_SERVER_URL } = import.meta.env;
 import allCountries from "./all-countries.json";
+
+const { VITE_APP_SERVER_URL } = import.meta.env;
 
 export function getCountryInfo(iso3) {
   const data = allCountries.find((country) => country.cca3 === iso3);

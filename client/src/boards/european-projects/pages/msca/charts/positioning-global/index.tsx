@@ -1,17 +1,16 @@
-import { useState } from "react";
+import { Col, Row, SegmentedControl, SegmentedElement, Title } from "@dataesr/dsfr-plus";
 import { useQuery } from "@tanstack/react-query";
-import { Col, Row, SegmentedControl, SegmentedElement } from "@dataesr/dsfr-plus";
-
-import { getData } from "./query";
-import Options from "./options";
-import { useGetParams, processPositioningData, renderDataTable } from "./utils";
-import i18n from "./i18n.json";
-import { getI18nLabel } from "../../../../../../utils";
-import { getCountryNameWithDe, getCountryNameWithArticle } from "../../../../utils/country-mapping";
-import { formatCurrency, formatCurrencyEn, formatNumber } from "../../../../../../utils/format";
+import { useState } from "react";
 
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
+import { getI18nLabel } from "../../../../../../utils";
+import { formatCurrency, formatCurrencyEn, formatNumber } from "../../../../../../utils/format";
+import { getCountryNameWithArticle, getCountryNameWithDe } from "../../../../utils/country-mapping";
+import i18n from "./i18n.json";
+import Options from "./options";
+import { getData } from "./query";
+import { processPositioningData, renderDataTable, useGetParams } from "./utils";
 
 type MetricType = "projects" | "funding";
 
@@ -63,15 +62,14 @@ const getConfig = (metric: MetricType, values: Record<string, string>, lang: str
   const commentKey = isProjects ? "comment-projects" : "comment-funding";
   const readingKeyKey = isProjects ? "reading-key-projects" : "reading-key-funding";
   const text = (key: string, l: string) => withPlaceholders(getI18nLabel(i18n, key, l), values);
-  const title = text("main-title-with-country", lang);
 
   return {
     id: isProjects ? "mscaPositioningGlobalProjects" : "mscaPositioningGlobalFunding",
     idQuery: "mscaPositioningGlobal",
-    title: { fr: title, en: title, className: "fr-mt-2w fr-ml-1w" },
+    title: getI18nLabel(i18n, isProjects ? "chart-title-projects" : "chart-title-funding", lang),
     comment: { fr: <>{text(commentKey, "fr")}</>, en: <>{text(commentKey, "en")}</> },
     readingKey: { fr: <>{text(readingKeyKey, "fr")}</>, en: <>{text(readingKeyKey, "en")}</> },
-    integrationURL: isProjects ? "/european-projects/components/pages/msca/charts/positioning-global" : "/european-projects/components/pages/msca/charts/positioning-global-funding",
+    integrationURL: `/european-projects/components/pages/msca/charts/${isProjects ? "positioning-global" : "positioning-global-funding"}`,
   };
 };
 
@@ -96,7 +94,7 @@ export default function PositioningGlobalChart({ countryCode: propCountryCode, c
       <div className="fr-alert fr-alert--info">
         <p>{getI18nLabel(i18n, "no-data", currentLang)}</p>
       </div>
-    );
+    )
   }
 
   const options = Options({ processedData, currentLang });
@@ -105,6 +103,13 @@ export default function PositioningGlobalChart({ countryCode: propCountryCode, c
 
   return (
     <>
+      <Row>
+        <Col>
+          <Title as="h2" look="h5">
+            {withPlaceholders(getI18nLabel(i18n, "main-title-with-country", currentLang), values)}
+          </Title>
+        </Col>
+      </Row>
       <Row className="fr-mb-1w">
         <Col className="text-right">
           <SegmentedControl className="fr-segmented--sm" name="positioning-global-metric" label={getI18nLabel(i18n, "display-type", currentLang)}>

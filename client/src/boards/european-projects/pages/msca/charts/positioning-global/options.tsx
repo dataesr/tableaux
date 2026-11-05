@@ -1,9 +1,10 @@
 import Highcharts from "highcharts/es-modules/masters/highcharts.src.js";
+
+import { getI18nLabel } from "../../../../../../utils";
 import { CreateChartOptions } from "../../../../components/chart-ep";
+import i18n from "./i18n.json";
 import type { ProcessedPositioningData } from "./utils";
 import { getChartColors } from "./utils";
-import { getI18nLabel } from "../../../../../../utils";
-import i18n from "./i18n.json";
 
 interface OptionsParams {
   processedData: ProcessedPositioningData;
@@ -12,11 +13,6 @@ interface OptionsParams {
 
 export default function Options({ processedData, currentLang = "fr" }: OptionsParams): Highcharts.Options | null {
   if (!processedData || processedData.countries.length === 0) return null;
-
-  const titleText =
-    processedData.metric === "projects"
-      ? getI18nLabel(i18n, "chart-title-projects", currentLang)
-      : getI18nLabel(i18n, "chart-title-funding", currentLang);
 
   const yAxisLabel =
     processedData.metric === "projects" ? getI18nLabel(i18n, "y-axis-projects", currentLang) : getI18nLabel(i18n, "y-axis-funding", currentLang);
@@ -40,13 +36,6 @@ export default function Options({ processedData, currentLang = "fr" }: OptionsPa
   const newOptions: Highcharts.Options = {
     chart: {
       height: 450,
-    },
-    title: {
-      text: titleText,
-      style: {
-        fontSize: "14px",
-        fontWeight: "600",
-      },
     },
     xAxis: {
       categories,

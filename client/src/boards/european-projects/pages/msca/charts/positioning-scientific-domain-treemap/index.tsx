@@ -19,9 +19,8 @@ const config = {
   id: "mscaPositioningScientificDomainTreemap",
   idQuery: "mscaPositioningScientificDomainTreemap",
   title: {
-    en: getI18nLabel(i18n, "title", "en"),
-    fr: getI18nLabel(i18n, "title", "fr"),
-    className: "fr-mt-2w fr-ml-1w",
+    en: getI18nLabel(i18n, "chart-title", "en"),
+    fr: getI18nLabel(i18n, "chart-title", "fr"),
   },
   comment: {
     fr: <>{getI18nLabel(i18n, "comment", "fr")}</>,
@@ -56,9 +55,6 @@ function PositioningScientificDomainTreemapInner({ currentLang: propLang }: Posi
 
   const options = Options({ data });
 
-  const title = getI18nLabel(i18n, "chart-title", currentLang);
-  config.title.fr = title;
-  config.title.en = title;
   return (
     <div className="positioning-scientific-domain-treemap-chart">
       <div className="chart-container chart-container--default">

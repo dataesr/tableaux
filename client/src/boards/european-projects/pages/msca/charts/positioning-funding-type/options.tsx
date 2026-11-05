@@ -1,9 +1,10 @@
 import Highcharts from "highcharts/es-modules/masters/highcharts.src.js";
-import { CreateChartOptions } from "../../../../components/chart-ep";
-import type { ProcessedPositioningByFundingTypeData } from "./utils";
-import { getChartColors, FUNDING_TYPES } from "./utils";
+
 import { getI18nLabel } from "../../../../../../utils";
+import { CreateChartOptions } from "../../../../components/chart-ep";
 import i18n from "./i18n.json";
+import type { ProcessedPositioningByFundingTypeData } from "./utils";
+import { getChartColors } from "./utils";
 
 interface OptionsParams {
   processedData: ProcessedPositioningByFundingTypeData;
@@ -12,15 +13,6 @@ interface OptionsParams {
 
 export default function Options({ processedData, currentLang = "fr" }: OptionsParams): Highcharts.Options | null {
   if (!processedData || processedData.countries.length === 0) return null;
-
-    /*retrieving the name of the funding type for title chart*/
-    const fundingTypeLabel = FUNDING_TYPES.find((t) => t.code === processedData.fundingType)?.label[currentLang] ?? processedData.fundingType;
-
-    /*replacement of type code with type label*/
-    const titleText =
-    processedData.metric === "projects"
-      ? getI18nLabel(i18n, "chart-title-projects", currentLang).replace("{fundingType}", fundingTypeLabel)
-      : getI18nLabel(i18n, "chart-title-funding", currentLang).replace("{fundingType}", fundingTypeLabel);
 
   const yAxisLabel =
     processedData.metric === "projects" ? getI18nLabel(i18n, "y-axis-projects", currentLang) : getI18nLabel(i18n, "y-axis-funding", currentLang);
@@ -44,13 +36,6 @@ export default function Options({ processedData, currentLang = "fr" }: OptionsPa
   const newOptions: Highcharts.Options = {
     chart: {
       height: 450,
-    },
-    title: {
-      text: titleText,
-      style: {
-        fontSize: "14px",
-        fontWeight: "600",
-      },
     },
     xAxis: {
       categories,
