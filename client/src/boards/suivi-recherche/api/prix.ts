@@ -98,9 +98,11 @@ export const usePrixEvolution = (selection: Selection, distinction: string) =>
     placeholderData: keepPreviousData,
   });
 
-// Sans groupe : celui de l'établissement sélectionné, sinon les universités (choix du serveur)
-export const usePrixPositionnement = (selection: Selection, distinction: string, groupe?: string) =>
+// Sans groupe : celui de l'établissement sélectionné, sinon les universités (choix du serveur).
+// `enabled` : faux quand le bloc des prix est masqué (paramètre `dispositif`)
+export const usePrixPositionnement = (selection: Selection, distinction: string, groupe?: string, enabled = true) =>
   useQuery({
+    enabled,
     queryKey: ["suivi-recherche", "prix", "positionnement-etablissements", distinction, groupe ?? null, ...filtersKey(selection)],
     queryFn: () => {
       const params = toSearchParams(selection, distinction);

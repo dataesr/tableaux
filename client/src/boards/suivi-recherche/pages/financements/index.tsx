@@ -43,7 +43,7 @@ export default function FinancementsPage() {
 
   return (
     <Container className="fr-my-4w">
-      <Title as="h1" look="h3">Financements</Title>
+      <Title as="h1" look="h3">Financements et distinctions</Title>
       <p className="fr-text--lead fr-mb-2w">
         Candidatures et lauréats des appels à projets compétitifs (ERC, puis ANR), nominations à l'IUF et médailles du CNRS.
       </p>

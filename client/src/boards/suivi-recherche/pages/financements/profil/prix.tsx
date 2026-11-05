@@ -1,4 +1,4 @@
-import { Alert, Title } from "@dataesr/dsfr-plus";
+import { Alert } from "@dataesr/dsfr-plus";
 
 import DefaultSkeleton from "../../../../../components/charts-skeletons/default.tsx";
 import { usePrixIndicateurs } from "../../../api/prix.ts";
@@ -29,7 +29,7 @@ function getCartes(data: Periode): Carte[] {
   });
 }
 
-// Bloc « Prix et distinctions » du profil : chiffres clés et nominations par année
+// Bloc « Prix et distinctions » du profil (en-tête : BlocDispositif) : chiffres clés et nominations par année
 export default function PrixProfil() {
   const { disciplines, entiteNom, prixMeta, prixMetaError, selection } = useFinancements();
   const indicateurs = usePrixIndicateurs(selection);
@@ -45,8 +45,7 @@ export default function PrixProfil() {
     : [];
 
   return (
-    <section className="fr-mt-6w">
-      <Title as="h2" look="h4">Prix et distinctions</Title>
+    <>
       {(prixMetaError || indicateurs.isError) && (
         <Alert description="Les prix et distinctions n'ont pas pu être chargés." title="Erreur de chargement" variant="error" />
       )}
@@ -72,6 +71,6 @@ export default function PrixProfil() {
           <MethodePrix meta={prixMeta} />
         </>
       )}
-    </section>
+    </>
   );
 }

@@ -16,6 +16,7 @@ export { ENTITE_NATIONALE };
 //   type_bourse          types de bourse ERC, séparés par des virgules ; absent = erc_meta.types_bourse_defaut
 //   comptage             effectifs ERC en projets ou en porteurs (`projets` | `pi`) ; absent = projets
 //   vivier               vivier de l'indice de candidature ERC (`top10` | `articles`) ; absent = top10
+//   dispositif           blocs affichés de la page Financements et distinctions (`erc`, `anr`, `prix`), séparés par des virgules ; absent = tous
 // Une valeur par défaut n'est jamais écrite dans l'URL ; une valeur inconnue est ignorée.
 export function useSetParams() {
   const [searchParams, setSearchParams] = useSearchParams();

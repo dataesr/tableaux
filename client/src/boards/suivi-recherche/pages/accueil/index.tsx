@@ -41,9 +41,9 @@ export default function AccueilPage() {
                 <div className="fr-card__body">
                   <div className="fr-card__content">
                     <h2 className="fr-card__title">
-                      <Link to="/suivi-recherche/financements">Financements</Link>
+                      <Link to="/suivi-recherche/financements">Financements et distinctions</Link>
                     </h2>
-                    <p className="fr-card__desc">Suivi par financements de projets (ERC, ANR PIA).</p>
+                    <p className="fr-card__desc">Bourses ERC, projets ANR, nominations à l'IUF et médailles du CNRS d'un pays ou d'un établissement.</p>
                   </div>
                 </div>
               </div>
