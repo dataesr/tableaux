@@ -32,79 +32,42 @@ router
       filters.call_year = { $in: callYears };
     }
     if (req.query.isEjo) {
-      filters["is_ejo"] = { $eq: req.query.isEjo === "true" ? true : false };
+      filters.is_ejo = { $eq: req.query.isEjo === "true" ? true : false };
     }
+    filters.stage = "successful";
 
     try {
       const collaborations = await db
         .collection(collection_collaborations)
         .aggregate([
           { $match: { ...filters } },
-          // 1. Projets distincts par (pays, année, stage)
           {
             $group: {
               _id: {
                 country_code: "$country_code_collab",
                 call_year: "$call_year",
-                stage: "$stage",
               },
               country_name_fr: { $first: "$country_name_fr_collab" },
               country_name_en: { $first: "$country_name_en_collab" },
-              project_ids: { $addToSet: "$project_id" },
+              unique_project_ids: { $addToSet: "$project_id" },
+              total_cost: { $sum: "$total_cost" },
             },
           },
-          // 2. Tri pour que les by_stage soient ordonnés
-          { $sort: { "_id.stage": 1 } },
-          // 3. Regroupement par (pays, année) : les stages deviennent by_stage
-          {
-            $group: {
-              _id: {
-                country_code: "$_id.country_code",
-                call_year: "$_id.call_year",
-              },
-              country_name_fr: { $first: "$country_name_fr" },
-              country_name_en: { $first: "$country_name_en" },
-              // unique_project_ids: { $push: "$unique_project_ids" },
-              stage_project_ids: { $push: "$project_ids" },
-              by_stage: {
-                $push: {
-                  stage: "$_id.stage",
-                  total_collaborations: { $size: "$project_ids" },
-                },
-              },
-            },
-          },
-          // 4. Projets distincts de l'année (union des projets de tous ses stages)
-          {
-            $set: {
-              year_project_ids: {
-                $reduce: {
-                  input: "$stage_project_ids",
-                  initialValue: [],
-                  in: { $setUnion: ["$$value", "$$this"] },
-                },
-              },
-            },
-          },
-          // 5. Tri pour que les by_year soient ordonnés
-          { $sort: { "_id.call_year": 1 } },
-          // 6. Regroupement par pays : les années deviennent by_year
           {
             $group: {
               _id: "$_id.country_code",
               country_name_fr: { $first: "$country_name_fr" },
               country_name_en: { $first: "$country_name_en" },
-              all_project_ids: { $push: "$year_project_ids" },
+              unique_project_ids: { $push: "$unique_project_ids" },
+              total_amount: { $sum: "$total_cost" },
               by_year: {
                 $push: {
                   year: "$_id.call_year",
-                  total_collaborations: { $size: "$year_project_ids" },
-                  by_stage: "$by_stage",
+                  count: { $size: "$unique_project_ids" },
                 },
               },
             },
           },
-          // 7. Total distinct du pays + mise en forme
           {
             $project: {
               _id: 0,
@@ -114,12 +77,13 @@ router
               total_collaborations: {
                 $size: {
                   $reduce: {
-                    input: "$all_project_ids",
+                    input: "$unique_project_ids",
                     initialValue: [],
                     in: { $setUnion: ["$$value", "$$this"] },
                   },
                 },
               },
+              total_amount: 1,
               by_year: 1,
             },
           },

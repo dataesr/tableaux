@@ -91,10 +91,10 @@ export default function CollaborationsContent() {
         </Col>
       </Row>
       <Row gutters>
-        <Col md={7}>
+        <Col md={6}>
           <CountriesCollaborationsTable />
         </Col>
-        <Col md={5}>
+        <Col md={6}>
           <CollaborationsByContinent />
         </Col>
       </Row>

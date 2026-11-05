@@ -45,8 +45,9 @@ router.route("/european-projects/collaborations/get-collaborations-by-entity").g
     additionalFilters.call_year = { $in: callYears };
   }
   if (req.query.isEjo) {
-    filters["is_ejo"] = { $eq: req.query.isEjo === "true" ? true : false };
+    filters.is_ejo = { $eq: req.query.isEjo === "true" ? true : false };
   }
+  filters.stage = "successful";
 
   // Construire le match pour le lookup total_projects
   const totalProjectsMatchConditions = [{ $eq: ["$entities_id", "$$entityId"] }];
@@ -71,7 +72,7 @@ router.route("/european-projects/collaborations/get-collaborations-by-entity").g
     totalProjectsMatchConditions.push({ $in: ["$destination_code", destinations] });
   }
   if (req.query.isEjo) {
-    totalProjectsMatchConditions["is_ejo"] = { $eq: req.query.isEjo === "true" ? true : false };
+    totalProjectsMatchConditions.is_ejo = { $eq: req.query.isEjo === "true" ? true : false };
   }
 
   try {

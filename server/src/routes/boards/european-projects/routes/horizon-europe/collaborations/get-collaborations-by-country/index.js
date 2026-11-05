@@ -36,8 +36,9 @@ router.route("/european-projects/collaborations/get-collaborations-by-country").
     filters.call_year = { $in: callYears };
   }
   if (req.query.isEjo) {
-    filters["is_ejo"] = { $eq: req.query.isEjo === "true" ? true : false };
+    filters.is_ejo = { $eq: req.query.isEjo === "true" ? true : false };
   }
+  filters.stage = "successful";
 
   try {
     const collaborations = await db

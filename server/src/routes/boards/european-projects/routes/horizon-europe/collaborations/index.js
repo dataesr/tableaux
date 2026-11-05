@@ -1,10 +1,10 @@
 import express from "express";
 
-import get_entitiesRoutes from "./get-entities/index.js";
-import get_suggested_entitiesRoutes from "./get-suggested-entities/index.js";
-import get_collaborationsRoutes from "./get-collaborations/index.js";
 import get_collaborations_by_countryRoutes from "./get-collaborations-by-country/index.js";
 import get_collaborations_by_entityRoutes from "./get-collaborations-by-entity/index.js";
+import get_collaborationsRoutes from "./get-collaborations/index.js";
+import get_entitiesRoutes from "./get-entities/index.js";
+import get_suggested_entitiesRoutes from "./get-suggested-entities/index.js";
 
 const router = new express.Router();
 

@@ -44,7 +44,7 @@ export default function Options(data, currentLang, nbToShow = 10, stage = "succe
         color: rootStyles.getPropertyValue("--collaboration-color"),
         data: data.slice(0, nbToShow).map((item) => ({
           name: item[`country_name_${currentLang}`],
-          value: item?.by_year?.map((year) => year?.by_stage?.find((st) => st.stage === stage)?.total_collaborations ?? 0).reduce((acc, cur) => acc + cur, 0),
+          value: item?.total_collaborations ?? 0,
         })),
         name: getI18nLabel("number-of-common-projects"),
         type: "packedbubble",

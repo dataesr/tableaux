@@ -22,7 +22,7 @@ export default function MapOfEuropeCollaborationsFlow({ nbToShow }) {
   const dataMap = isLoading || !data ? [] : data.map((item) => ({
     from: countryCode,
     to: item.country_code,
-    weight: item?.by_year?.map((year) => year?.by_stage?.find((stage) => stage.stage === "successful")?.total_collaborations ?? 0).reduce((acc, cur) => acc + cur, 0),
+    weight: item?.total_collaborations ?? 0,
   }));
 
   const config = {

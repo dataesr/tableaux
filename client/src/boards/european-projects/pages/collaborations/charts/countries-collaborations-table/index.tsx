@@ -114,8 +114,7 @@ export default function CountriesCollaborationsTable() {
   const sortedData = sortData(data);
   const displayedData = showAll ? sortedData : sortedData.slice(0, 10);
 
-  const total_collaborations = data.map((item) => item?.by_year?.map((year) => year?.by_stage?.find((stage) => stage.stage === "successful")?.total_collaborations ?? 0)).flat()
-    .reduce((acc, cur) => acc + cur, 0).toLocaleString(currentLang);
+  const total_collaborations = data.map((item) => item?.total_collaborations ?? 0).reduce((acc, cur) => acc + cur, 0).toLocaleString(currentLang);
 
   const handleCountryClick = (countryCode) => {
     const newSearchParams = new URLSearchParams(searchParams);
@@ -242,7 +241,7 @@ export default function CountriesCollaborationsTable() {
                               </button>
                             </td>
                             <td className="fr-py-0" style={{ textAlign: "center" }}>
-                              {collab?.by_year?.map((year) => year?.by_stage?.find((stage) => stage.stage === "successful")?.total_collaborations ?? 0).reduce((acc, cur) => acc + cur, 0).toLocaleString(currentLang)}
+                              {(collab?.total_collaborations ?? 0).toLocaleString(currentLang)}
                               <Button
                                 icon="eye-line"
                                 className="fr-ml-1w"
