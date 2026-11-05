@@ -1,0 +1,54 @@
+{
+  "close": {
+    "fr": "Fermer",
+    "en": "Close"
+  },
+  "explore": {
+    "fr": "Explorer d'autres tableaux de bord",
+    "en": "Explore dashboards"
+  },
+  "languagesSelector": {
+    "fr": "Sélectionner une langue",
+    "en": "Select a language"
+  },
+  "mainNavigation": {
+    "fr": "Menu principal",
+    "en": "Main menu"
+  },
+  "menu": {
+    "fr": "Menu",
+    "en": "Menu"
+  },
+  "serviceName": {
+    "fr": "Tableaux",
+    "en": "Tableaux"
+  },
+  "serviceTag": {
+    "fr": "Ensemble de tableaux de bord de l'enseignement supérieur, de la recherche et de l'espace",
+    "en": "Dashboards of higher education, research and space"
+  },
+  "skipContent": {
+    "fr": "Contenu principal",
+    "en": "Main content"
+  },
+  "skipFooter": {
+    "fr": "Pied de page",
+    "en": "Footer"
+  },
+  "skipLinks": {
+    "fr": "Accès rapide",
+    "en": "Quick access"
+  },
+  "skipMenu": {
+    "fr": "Menu principal",
+    "en": "Main menu"
+  },
+  "tagline": {
+    "fr": "Si c'était pas super ça s'appellerait juste data",
+    "en": "If it wasn't great it would just be data"
+  },
+  "theme": {
+    "fr": "Paramètres d'affichage",
+    "en": "Display settings"
+  }
+}

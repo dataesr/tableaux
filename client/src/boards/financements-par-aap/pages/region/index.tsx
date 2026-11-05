@@ -72,7 +72,7 @@ export default function regions() {
     region ? (
       <DisplayRegion />
     ) : (
-      <main className="fundings">
+      <div className="fundings">
         <Container fluid className="fundings-gradient fr-mb-3w">
           <Container as="section">
             <Row gutters>
@@ -113,7 +113,7 @@ export default function regions() {
             ))}
           </Row>
         </Container>
-      </main>
+      </div>
     )
   )
 };

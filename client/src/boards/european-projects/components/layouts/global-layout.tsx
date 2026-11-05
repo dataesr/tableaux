@@ -1,18 +1,19 @@
-import { Container } from "@dataesr/dsfr-plus";
-import { useEffect, useState } from "react";
-import { Link, Outlet, useLocation, useSearchParams } from "react-router-dom";
+import { useEffect } from "react";
+import { useLocation, useSearchParams } from "react-router-dom";
 
 import CountrySelector from "../../../../components/country-selector/selector";
-import Footer from "../../../../components/footer";
+import { Layout } from "../../../../layout/layout";
 import i18n from "./i18n.json";
 
 import "../styles.scss";
 import "../../colors.scss";
+import { getI18nLabel } from "../../../../utils";
+
+const BASE = "/european-projects";
 
 export default function GlobalLayout() {
   const { pathname } = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const currentLang = searchParams.get("language") || "fr";
   const filtersParams = searchParams.toString();
 
@@ -35,106 +36,23 @@ export default function GlobalLayout() {
     }
   }, [searchParams, setSearchParams]);
 
-  useEffect(() => {
-    setIsMenuOpen(false);
-  }, [pathname]);
-
   if (!pathname) return null;
-  const is = (str: string): boolean => pathname?.startsWith(str);
+  const is = (str: string): boolean => pathname.startsWith(str);
+  const label = (key: string) => i18n[key][currentLang];
 
-  function getI18nLabel(key) {
-    return i18n[key][currentLang];
-  }
+  const items = [
+    { key: "home", icon: "home-4-line", label: label("home"), to: `${BASE}/accueil`, current: pathname === `${BASE}/accueil` },
+    { key: "he", label: label("he"), to: `${BASE}/horizon-europe?section=synthesis&${filtersParams}`, current: is(`${BASE}/horizon-europe`) },
+    { key: "msca", label: "Focus MSCA", to: `${BASE}/msca?${filtersParams}`, current: is(`${BASE}/msca`) },
+    { key: "erc", label: "Focus ERC", to: `${BASE}/erc?${filtersParams}`, current: is(`${BASE}/erc`) },
+    { key: "evolutionPcri", label: label("evolutionPcri"), to: `${BASE}/evolution-pcri`, current: is(`${BASE}/evolution-pcri`) },
+    { key: "entities", label: label("entities"), to: `${BASE}/entities?${filtersParams}`, current: is(`${BASE}/entities`) },
+    { key: "methodology", label: label("methodology"), to: `${BASE}/methodology?${filtersParams}`, current: is(`${BASE}/methodology`) },
+  ];
+
   return (
     <div className="ep-styles">
-      <header role="banner" className="fr-header">
-        <div className="fr-header__body">
-          <div className="fr-container">
-            <div className="fr-header__body-row">
-              <div className="fr-header__brand fr-enlarge-link">
-                <div className="fr-header__brand-top">
-                  <div className="fr-header__logo">
-                    <a href="/" title="Accueil - Tableaux">
-                      <p className="fr-logo">
-                        Ministère
-                        <br />
-                        de l'Enseignement
-                        <br />
-                        Supérieur,
-                        <br />
-                        de la Recherche
-                        <br />
-                        et de l'Espace
-                      </p>
-                    </a>
-                  </div>
-                  <div className="fr-header__navbar">
-                    <button
-                      data-fr-opened={isMenuOpen ? "true" : "false"}
-                      aria-controls="main-navigation"
-                      aria-expanded={isMenuOpen}
-                      title="Menu"
-                      type="button"
-                      id="button-header"
-                      className="fr-btn--menu fr-btn"
-                      onClick={() => setIsMenuOpen((open) => !open)}
-                    >
-                      Menu
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </header>
-      <nav id="main-navigation" className={`ep-sticky-nav fr-nav${isMenuOpen ? " ep-nav-open" : ""}`} role="navigation" aria-label="Menu principal">
-        <Container>
-          <ul className="fr-nav__list">
-            <li className="fr-nav__item">
-              <Link to="/european-projects/accueil" target="_self" {...(pathname === "/european-projects/accueil" && { "aria-current": "page" })} className="fr-nav__link">
-                <span className="fr-icon-home-4-line fr-mr-1w" aria-hidden="true" />
-                {getI18nLabel("home")}
-              </Link>
-            </li>
-            <li className="fr-nav__item">
-              <Link to={`/european-projects/horizon-europe?section=synthesis&${filtersParams}`} target="_self" {...(is("/european-projects/horizon-europe") && { "aria-current": "page" })} className="fr-nav__link">
-                {getI18nLabel("he")}
-              </Link>
-            </li>
-            <li className="fr-nav__item">
-              <Link to={`/european-projects/msca?${filtersParams}`} target="_self" {...(is("/european-projects/msca") && { "aria-current": "page" })} className="fr-nav__link">
-                Focus MSCA
-              </Link>
-            </li>
-            <li className="fr-nav__item">
-              <Link to={`/european-projects/erc?${filtersParams}`} target="_self" {...(is("/european-projects/erc") && { "aria-current": "page" })} className="fr-nav__link">
-                Focus ERC
-              </Link>
-            </li>
-            <li className="fr-nav__item">
-              <Link to="/european-projects/evolution-pcri" target="_self" {...(is("/european-projects/evolution-pcri") && { "aria-current": "page" })} className="fr-nav__link">
-                {getI18nLabel("evolutionPcri")}
-              </Link>
-            </li>
-            <li>
-              <Link to={`/european-projects/entities?${filtersParams}`} target="_self" {...(is("/european-projects/entities") && { "aria-current": "page" })} className="fr-nav__link">
-                {getI18nLabel("entities")}
-              </Link>
-            </li>
-            <li>
-              <Link to={`/european-projects/methodology?${filtersParams}`} target="_self" {...(is("/european-projects/methodology") && { "aria-current": "page" })} className="fr-nav__link">
-                {getI18nLabel("methodology")}
-              </Link>
-            </li>
-            <li className="fr-nav__item" style={{ marginLeft: "auto" }}>
-              <CountrySelector />
-            </li>
-          </ul>
-        </Container>
-      </nav>
-      <Outlet />
-      <Footer />
+      <Layout items={items} languageSelector navExtra={<CountrySelector />} serviceHref={`${BASE}/accueil`} serviceTag={getI18nLabel(i18n, "tagline")} />
     </div>
   );
 }

@@ -4,8 +4,7 @@ import { useEffect, useState } from "react"
 import { Link as RouterLink } from "react-router-dom"
 
 import boardMediaPlaceholder from "../assets/board-media-placeholder.svg"
-import Footer from "../components/footer"
-import HeaderTableaux from "../layout/header.tsx"
+import { Layout } from "../layout/layout"
 
 import "./home-styles.scss"
 
@@ -38,8 +37,9 @@ export default function HomePage() {
   }
 
   return (
-    <>
-      <HeaderTableaux />
+    <Layout
+      exploreLink={false}
+    >
       <div className="home-page">
         <section className="home-hero">
           <Container>
@@ -48,8 +48,9 @@ export default function HomePage() {
                 <p className="home-hero__label">ENSEIGNEMENT SUPÉRIEUR, RECHERCHE ET ESPACE</p>
                 <h1 className="home-hero__title">Explorez les données ...</h1>
                 <p className="home-hero__description">
-                  DataESR est la plateforme de visualisation des données de l'enseignement supérieur, de la recherche et de l'espace. Accédez à des tableaux de bord interactifs, cartes et graphiques sur les effectifs étudiants, les formations, la
-                  recherche, les finances et plus encore.
+                  DataESR est la plateforme de visualisation des données de l'enseignement supérieur, de la recherche et de
+                  l'espace. Accédez à des tableaux de bord interactifs, cartes et graphiques sur les effectifs étudiants, les
+                  formations, la recherche, les finances et plus encore.
                 </p>
               </Col>
             </Row>
@@ -93,7 +94,6 @@ export default function HomePage() {
           </Container>
         </section>
       </div>
-      <Footer />
-    </>
+    </Layout>
   )
 }
