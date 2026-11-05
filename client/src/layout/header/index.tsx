@@ -2,6 +2,7 @@ import cn from "classnames"
 import { Logo } from "@dataesr/dsfr-plus"
 import { ReactNode, useEffect } from "react"
 import { Link, useSearchParams } from "react-router-dom"
+import TranslateButton from "../../components/translate-button"
 import { getI18nLabel } from "../../utils"
 import i18n from "./i18n.json"
 
@@ -37,10 +38,6 @@ type HeaderProps = {
 
 const MENU_MODAL_ID = "header-menu-modal"
 const MENU_BUTTON_ID = "header-menu-button"
-const LANGUAGES = [
-  { code: "fr", label: "FR - Français" },
-  { code: "en", label: "EN - English" },
-]
 
 // Ferme la modale DSFR après une navigation (le JS du DSFR est chargé par DSFRConfig).
 function concealModal(id: string) {
@@ -87,13 +84,6 @@ export default function Header({
     }
   }, [languageSelector, urlLang, setSearchParams])
 
-  const changeLanguage = (code: string) => {
-    setSearchParams((params) => {
-      params.set("language", code)
-      return params
-    })
-  }
-
   const name = serviceName ?? t("serviceName")
   const tag = serviceTag ?? t("serviceTag")
 
@@ -132,7 +122,6 @@ export default function Header({
                   <div className="fr-header__navbar">
                     <button
                       aria-controls={MENU_MODAL_ID}
-                      aria-haspopup="menu"
                       className="fr-btn--menu fr-btn"
                       data-fr-opened="false"
                       id={MENU_BUTTON_ID}
@@ -163,37 +152,7 @@ export default function Header({
                     {extra && <li>{extra}</li>}
                     {languageSelector && (
                       <li>
-                        <nav aria-label={t("languagesSelector")} className="fr-translate fr-nav" role="navigation">
-                          <div className="fr-nav__item">
-                            <button
-                              aria-controls="header-translate-menu"
-                              aria-expanded="false"
-                              className="fr-translate__btn fr-btn"
-                              title={t("languagesSelector")}
-                              type="button"
-                            >
-                              {lang.toUpperCase()}
-                              <span className="fr-hidden-lg"> - {lang === "fr" ? "Français" : "English"}</span>
-                            </button>
-                            <div className="fr-collapse fr-translate__menu fr-menu" id="header-translate-menu">
-                              <ul className="fr-menu__list">
-                                {LANGUAGES.map(({ code, label }) => (
-                                  <li key={code}>
-                                    <button
-                                      aria-current={lang === code ? "true" : undefined}
-                                      className="fr-translate__language fr-nav__link"
-                                      lang={code}
-                                      onClick={() => changeLanguage(code)}
-                                      type="button"
-                                    >
-                                      {label}
-                                    </button>
-                                  </li>
-                                ))}
-                              </ul>
-                            </div>
-                          </div>
-                        </nav>
+                        <TranslateButton />
                       </li>
                     )}
                     {themeSwitch && (
