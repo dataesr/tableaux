@@ -66,10 +66,10 @@ export default function Options({ processedData, currentLang = "fr" }: OptionsPa
       useHTML: true,
       shared: false,
       formatter: function () {
-        const ctx = this as unknown as { x: string; y: number };
+        const ctx = this as unknown as { key: string; y: number; };
         const fmt = (v: number) => (processedData.metric === "funding" ? `${v.toFixed(1)} M€` : `${Math.round(v)}`);
         return [
-          `<b>Position : ${ctx.x}</b>`,
+          `<b>${ctx.key}</b>`,
           `${yAxisLabel}\u00a0: <b>${fmt(ctx.y)}</b>`,
           `<span style="color:${colors.avgTop10}">&#9135;</span> ${labelAvgTop10}\u00a0: <b>${fmt(avgTop10Display)}</b>`,
           `<span style="color:${colors.avgAll}">&#8943;</span> ${labelAvgAll}\u00a0: <b>${fmt(avgAllDisplay)}</b>`,

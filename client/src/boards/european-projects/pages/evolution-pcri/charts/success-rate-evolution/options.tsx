@@ -112,7 +112,7 @@ export default function Options(data: EvolutionDataItem[], currentLang: string =
     tooltip: {
       shared: true,
       formatter: function () {
-        let s = `<b>${getI18nLabel("tooltip-year")} ${this.x}</b><br/>`;
+        let s = `<b>${getI18nLabel("tooltip-year")} ${this.key}</b><br/>`;
 
         this.points?.forEach((point) => {
           const year = years[point.index];

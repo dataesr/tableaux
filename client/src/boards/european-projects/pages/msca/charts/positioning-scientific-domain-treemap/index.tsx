@@ -1,13 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
 
-import { getData } from "./query";
-import Options from "./options";
-import { useGetParams } from "./utils";
-import i18n from "./i18n.json";
-import { getI18nLabel } from "../../../../../../utils";
-
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
+import { getI18nLabel } from "../../../../../../utils";
+import { formatToMillionsLang } from "../../../../../../utils/format";
+import i18n from "./i18n.json";
+import Options from "./options";
+import { getData } from "./query";
+import { useGetParams } from "./utils";
+
 import "./styles.scss";
 
 interface PositioningScientificDomainTreemapProps {
@@ -35,7 +36,7 @@ const config = {
 
 function PositioningScientificDomainTreemapInner({ currentLang: propLang }: PositioningScientificDomainTreemapProps) {
   const { params, currentLang: urlLang } = useGetParams();
-  const currentLang = propLang || urlLang;
+  const currentLang: string = propLang || urlLang;
 
   const { data, isLoading } = useQuery({
     queryKey: ["mscaPositioningScientificDomainTreemap", params],
@@ -44,6 +45,7 @@ function PositioningScientificDomainTreemapInner({ currentLang: propLang }: Posi
   });
 
   if (isLoading || !data) return <DefaultSkeleton />;
+  const allData = data.map((d) => ({ ...d, label: formatToMillionsLang(d.value, 1, currentLang as "en" | "fr") }))
 
   if (data.length === 0) {
     return (
@@ -53,7 +55,7 @@ function PositioningScientificDomainTreemapInner({ currentLang: propLang }: Posi
     );
   }
 
-  const options = Options({ data });
+  const options = Options({ data: allData });
 
   return (
     <div className="positioning-scientific-domain-treemap-chart">

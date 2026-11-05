@@ -129,7 +129,7 @@ export default function Options({ data, currentLang = "fr" }: OptionsParams) {
         const points = this.points;
         if (!points) return "";
 
-        const destinationCode = String(this.x);
+        const destinationCode = String(this.key);
         const destinationName = DESTINATION_NAMES[destinationCode]?.[currentLang] || destinationCode;
 
         let html = `<strong>${destinationName}</strong><br/>`;
