@@ -1,14 +1,14 @@
+import { SegmentedControl, SegmentedElement } from "@dataesr/dsfr-plus";
+import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
-import { SegmentedControl, SegmentedElement } from "@dataesr/dsfr-plus";
 
-import { getData, MscaPanelChartItem } from "./query";
-import OptionsProjects from "./options";
-import OptionsFunding from "./options-funding";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
-import { formatNumber, formatCurrency, formatToRates } from "../../../../../../utils/format";
+import { formatCurrency, formatNumber, formatToRates } from "../../../../../../utils/format";
+import OptionsProjects from "./options";
+import OptionsFunding from "./options-funding";
+import { getData, MscaPanelChartItem } from "./query";
 
 interface PanelChartProps {
   countryCode?: string;
@@ -138,9 +138,11 @@ function PanelChartProjects({ countryCode, callYear, currentLang = "fr" }: Panel
       ),
     },
     integrationURL: "/european-projects/components/pages/msca/charts/panel-chart",
+    title: {
+      en: "Number of projects by scientific panel",
+      fr: "Nombre de projets par panel scientifique",
+    }
   };
-
-
 
   return (
     <div className="fr-my-3w chart-container chart-container--default">
@@ -200,8 +202,11 @@ function PanelChartFunding({ countryCode, callYear, currentLang = "fr" }: PanelC
       ),
     },
     integrationURL: "/european-projects/components/pages/msca/charts/panel-chart-funding",
+    title: {
+      en: "Funding by scientific panel",
+      fr: "Financements par panel scientifique",
+    },
   };
-
 
   return (
     <div className="fr-my-3w chart-container chart-container--default">

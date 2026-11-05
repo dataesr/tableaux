@@ -1,7 +1,8 @@
 import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js";
+
+import { formatNumber, formatToRates } from "../../../../../../utils/format";
 import { CreateChartOptions } from "../../../../components/chart-ep";
 import type { MscaPanelChartItem } from "./query";
-import { formatNumber, formatToRates } from "../../../../../../utils/format";
 
 interface OptionsParams {
   data: MscaPanelChartItem[];
@@ -27,8 +28,6 @@ export default function Options({ data, currentLang = "fr" }: OptionsParams) {
   const successfulColor = rootStyles.getPropertyValue("--successful-project-color").trim() || "#233e41";
   const successRateColor = rootStyles.getPropertyValue("--average-success-rate-color").trim() || "#d75521";
 
-  const titleText = currentLang === "fr" ? "Nombre de projets par panel scientifique" : "Number of projects by scientific panel";
-
   const newOptions: HighchartsInstance.Options = {
     chart: {
       height: 400,
@@ -50,10 +49,6 @@ export default function Options({ data, currentLang = "fr" }: OptionsParams) {
           });
         },
       },
-    },
-    title: {
-      text: titleText,
-      style: { fontSize: "14px", fontWeight: "600" },
     },
     xAxis: {
       categories,

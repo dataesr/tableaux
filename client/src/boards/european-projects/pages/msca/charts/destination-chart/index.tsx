@@ -126,33 +126,37 @@ function DestinationChartProjects({ countryCode, callYear, currentLang = "fr" }:
     comment: {
       fr: (
         <>
-          Ce graphique présente le nombre de projets évalués et lauréats pour chaque type de financement (Postdoctoral Fellowships, Doctoral Networks, Staff Exchanges, etc.). 
+          Ce graphique présente le nombre de projets évalués et lauréats pour chaque type de financement (Postdoctoral Fellowships, Doctoral Networks, Staff Exchanges, etc.).
           La ligne orange indique le taux de succès dans chaque type, soit le rapport entre les projets lauréats et les projets évalués.
         </>
       ),
       en: (
         <>
-          This chart shows the number of projects evaluated and successful projects for each action type (Postdoctoral Fellowships, Doctoral Networks, Staff Exchanges, etc.). 
+          This chart shows the number of projects evaluated and successful projects for each action type (Postdoctoral Fellowships, Doctoral Networks, Staff Exchanges, etc.).
           The orange line shows the success rate in each type, i.e. the ratio of successful projects to projects evaluated.
         </>
       ),
-      },
-      readingKey: {
-        fr: (
-          <>
-            Dans le cadre des appels à projets "{destinationName}", sur {formatNumber(countryEval)} propositions évaluées{" "}
-            {formatNumber(countrySucc)} d'entre elles sont lauréates, soit un taux de succès de {formatToRates(successRate)}.
-          </>
-        ),
-        en: (
-          <>
-            Under "{destinationName}" calls for proposals, of the {formatNumber(countryEval)} proposals evaluated,{" "}
-            {formatNumber(countrySucc)} were successful, a success rate of {formatToRates(successRate)}.
-          </>
-        ),
-      },
-      integrationURL: "/european-projects/components/pages/msca/charts/destination-chart",
-    };
+    },
+    readingKey: {
+      fr: (
+        <>
+          Dans le cadre des appels à projets "{destinationName}", sur {formatNumber(countryEval)} propositions évaluées{" "}
+          {formatNumber(countrySucc)} d'entre elles sont lauréates, soit un taux de succès de {formatToRates(successRate)}.
+        </>
+      ),
+      en: (
+        <>
+          Under "{destinationName}" calls for proposals, of the {formatNumber(countryEval)} proposals evaluated,{" "}
+          {formatNumber(countrySucc)} were successful, a success rate of {formatToRates(successRate)}.
+        </>
+      ),
+    },
+    title: {
+      en: "Breakdown of the number of projects and success rates by action type",
+      fr: "Répartition du nombre de projets et des taux de succès par type de financement",
+    },
+    integrationURL: "/european-projects/components/pages/msca/charts/destination-chart",
+  };
 
   return (
     <div className="fr-my-3w chart-container chart-container--default">
@@ -213,8 +217,11 @@ function DestinationChartFunding({ countryCode, callYear, currentLang = "fr" }: 
       ),
     },
     integrationURL: "/european-projects/components/pages/msca/charts/destination-chart-funding",
+    title: {
+      en: "Breakdown of funding and success rates by action type",
+      fr: "Répartition des financements et des taux de succès par type de financement",
+    },
   };
-
 
   return (
     <div className="fr-my-3w chart-container chart-container--default">
