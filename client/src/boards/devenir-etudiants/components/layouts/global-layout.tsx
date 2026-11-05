@@ -46,7 +46,7 @@ export default function GlobalLayout() {
         title: "Accueil - Parcours des néo-bacheliers inscrits en L1 en 2019 - Ministère de l'enseignement supérieur, de la recherche et de l'espace",
       }}
       items={items}
-      serviceHref="/"
+      serviceHref={isHomePageVisible ? "/" : BASE}
       serviceTag={getI18nLabel(i18n, "tagline")}
     />
   );

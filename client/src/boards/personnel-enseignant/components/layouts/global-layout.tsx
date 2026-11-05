@@ -24,7 +24,7 @@ export default function GlobalLayout() {
     <Layout
       footer={{ href: `${BASE}/accueil`, title: "#dataESR tableaux de bord" }}
       items={items}
-      serviceHref="/"
+      serviceHref={`${BASE}/accueil`}
       serviceTag="Tableau de bord du personnel enseignant des établissements d'enseignement supérieur français"
     />
   );

@@ -19,7 +19,7 @@ export default function GlobalLayout() {
   const is = (str: string): boolean => pathname.startsWith(str);
 
   const items = [
-    { key: "home", label: getI18nLabel(i18n, "home"), icon: "home-4-line", to: `${BASE}/accueil`, current: pathname === `${BASE}/accueil` },
+    { key: "home", label: getI18nLabel(i18n, "home"), icon: "home-4-line", to: `${BASE}/accueil`, current: is(`${BASE}/accueil`) },
     {
       key: "etablissements",
       label: "Vue par établissement",
@@ -39,7 +39,7 @@ export default function GlobalLayout() {
     <Layout
       footer={{ href: `${BASE}/accueil`, title: "#dataESR tableaux de bord" }}
       items={items}
-      serviceHref="/"
+      serviceHref={`${BASE}/accueil`}
       serviceName="#dataESR tableaux de bord"
       serviceTag="Financement des établissements d'enseignement supérieur français"
     />

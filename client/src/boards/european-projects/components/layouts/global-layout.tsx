@@ -18,7 +18,6 @@ export default function GlobalLayout() {
   const filtersParams = searchParams.toString();
 
   useEffect(() => {
-    // language=fr par défaut : posé par le Header (languageSelector)
     if (!searchParams.get("country_code")) {
       searchParams.set("country_code", "FRA"); // default value
       setSearchParams(searchParams);
@@ -38,7 +37,7 @@ export default function GlobalLayout() {
   const label = (key: string) => i18n[key][currentLang];
 
   const items = [
-    { key: "home", icon: "home-4-line", label: label("home"), to: `${BASE}/accueil`, current: pathname === `${BASE}/accueil` },
+    { key: "home", icon: "home-4-line", label: label("home"), to: `${BASE}/accueil`, current: is(`${BASE}/accueil`) },
     { key: "he", label: label("he"), to: `${BASE}/horizon-europe?section=synthesis&${filtersParams}`, current: is(`${BASE}/horizon-europe`) },
     { key: "msca", label: "Focus MSCA", to: `${BASE}/msca?${filtersParams}`, current: is(`${BASE}/msca`) },
     { key: "erc", label: "Focus ERC", to: `${BASE}/erc?${filtersParams}`, current: is(`${BASE}/erc`) },
