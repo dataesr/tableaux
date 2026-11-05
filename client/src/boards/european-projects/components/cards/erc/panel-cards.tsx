@@ -45,8 +45,8 @@ interface AggregatedPanelData {
   panel_lib: string;
   domaine_scientifique: string;
   domaine_name_scientifique: string;
-  evaluated_involved: number;
-  successful_involved: number;
+  evaluated_projects: number;
+  successful_projects: number;
   total_funding_entity: number;
   total_pi: number;
 }
@@ -55,8 +55,8 @@ interface AggregatedPanelData {
 interface AggregatedDomainData {
   domain_code: string;
   domain_name: string;
-  evaluated_involved: number;
-  successful_involved: number;
+  evaluated_projects: number;
+  successful_projects: number;
   total_funding_entity: number;
   total_pi: number;
   panels: AggregatedPanelData[];
@@ -113,8 +113,8 @@ export default function ErcPanelCards({ countryCode, callYear, destinationCode }
     panel_lib: panel.panel_lib,
     domaine_scientifique: panel.domaine_scientifique,
     domaine_name_scientifique: panel.domaine_name_scientifique,
-    evaluated_involved: panel.evaluated?.total_involved || 0,
-    successful_involved: panel.successful?.total_involved || 0,
+    evaluated_projects: panel.evaluated?.total_projects || 0,
+    successful_projects: panel.successful?.total_projects || 0,
     total_funding_entity: panel.successful?.total_funding_entity || 0,
     total_pi: panel.successful?.total_pi || 0,
   }));
@@ -128,15 +128,15 @@ export default function ErcPanelCards({ countryCode, callYear, destinationCode }
           acc[domain] = {
             domain_code: domain,
             domain_name: panel.domaine_name_scientifique || domain,
-            evaluated_involved: 0,
-            successful_involved: 0,
+            evaluated_projects: 0,
+            successful_projects: 0,
             total_funding_entity: 0,
             total_pi: 0,
             panels: [],
           };
         }
-        acc[domain].evaluated_involved += panel.evaluated_involved;
-        acc[domain].successful_involved += panel.successful_involved;
+        acc[domain].evaluated_projects += panel.evaluated_projects;
+        acc[domain].successful_projects += panel.successful_projects;
         acc[domain].total_funding_entity += panel.total_funding_entity;
         acc[domain].total_pi += panel.total_pi;
         acc[domain].panels.push(panel);
@@ -185,7 +185,7 @@ interface DomainCardProps {
 
 function DomainCard({ data, isExpanded, onToggle, viewMode }: DomainCardProps) {
   const domainVars = DOMAIN_CSS_VARS[data.domain_code] || { color: "#6b7280", bg: "#6b728020" };
-  const successRate = data.evaluated_involved > 0 ? data.successful_involved / data.evaluated_involved : 0;
+  const successRate = data.evaluated_projects > 0 ? data.successful_projects / data.evaluated_projects : 0;
 
   return (
     <div className="erc-domain-card" style={{ borderLeftColor: domainVars.color }}>
@@ -200,8 +200,8 @@ function DomainCard({ data, isExpanded, onToggle, viewMode }: DomainCardProps) {
           {viewMode === "projects" ? (
             <>
               <div className="stat">
-                <span className="stat-value">{formatNumber(data.successful_involved)}</span>
-                <span className="stat-label">lauréats</span>
+                <span className="stat-value">{formatNumber(data.successful_projects)}</span>
+                <span className="stat-label">projets lauréats</span>
               </div>
               <div className="stat">
                 <span className="stat-value success-rate">{formatToRates(successRate)}</span>
@@ -211,7 +211,7 @@ function DomainCard({ data, isExpanded, onToggle, viewMode }: DomainCardProps) {
             <>
               <div className="stat">
                 <span className="stat-value">{formatNumber(data.total_pi)}</span>
-                <span className="stat-label">PI</span>
+                <span className="stat-label">PI lauréats</span>
               </div>
               <div className="stat">
                 <span className="stat-value funding">{formatCurrency(data.total_funding_entity)}</span>
@@ -236,8 +236,8 @@ function DomainCard({ data, isExpanded, onToggle, viewMode }: DomainCardProps) {
                     title: panel.panel_id,
                     code: panel.domaine_scientifique,
                     subtitle: panel.panel_name,
-                    evaluatedCount: panel.evaluated_involved,
-                    successfulCount: panel.successful_involved,
+                    evaluatedCount: panel.evaluated_projects,
+                    successfulCount: panel.successful_projects,
                     fundingAmount: panel.total_funding_entity,
                     piCount: panel.total_pi,
                   }}

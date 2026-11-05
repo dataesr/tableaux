@@ -1,0 +1,13 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "tableaux",
+  "version": "0.1.0",
+  "description": "Skills pour planifier, construire, critiquer et vérifier des tableaux de bord (tableaux) dans dataesr/tableaux : confirmation de la source de données, squelette de tableau, graphiques, mise en forme DSFR et revue d'accessibilité.",
+  "author": {
+    "name": "dataESR"
+  },
+  "homepage": "https://github.com/dataesr/tableaux",
+  "repository": "https://github.com/dataesr/tableaux",
+  "license": "MIT",
+  "keywords": ["dashboards", "highcharts", "dsfr", "accessibility", "rgaa"]
+}

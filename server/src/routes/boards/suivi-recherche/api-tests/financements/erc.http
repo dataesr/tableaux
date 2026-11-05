@@ -1,0 +1,57 @@
+GET http://localhost:3000/api/suivi-recherche/financements/erc/meta
+
+###
+# France, toutes les années d'appel, types par défaut (STG, COG, ADG)
+GET http://localhost:3000/api/suivi-recherche/financements/erc/indicateurs
+
+###
+# Sorbonne Université, panels PE, appels 2021-2025 (exemple du contrat de données)
+GET http://localhost:3000/api/suivi-recherche/financements/erc/indicateurs?ror_id=02en5vm52&year_min=2021&year_max=2025&domaine=PE
+
+###
+# Avec Synergy et Proof of Concept (sans panel : comptés seulement pour « toutes disciplines »)
+GET http://localhost:3000/api/suivi-recherche/financements/erc/indicateurs?type_bourse=STG,COG,ADG,SYG,POC
+
+###
+# Période de la bibliométrie : ramenée aux années d'appel disponibles
+GET http://localhost:3000/api/suivi-recherche/financements/erc/evolution?year_min=2015&year_max=2025&discipline=LS2
+
+###
+# Aucune année d'appel dans la période : periode null
+GET http://localhost:3000/api/suivi-recherche/financements/erc/evolution?year_min=2015&year_max=2018
+
+###
+# Comptage en porteurs (PI), avec Synergy : plus de candidats et de lauréats qu'en projets
+GET http://localhost:3000/api/suivi-recherche/financements/erc/indicateurs?type_bourse=STG,COG,ADG,SYG&year_min=2023&year_max=2023&comptage=pi
+
+###
+# 400 attendu
+GET http://localhost:3000/api/suivi-recherche/financements/erc/indicateurs?type_bourse=XXX
+
+###
+# 400 attendu
+GET http://localhost:3000/api/suivi-recherche/financements/erc/indicateurs?comptage=porteurs
+
+###
+# Indice de candidature sur tous les articles SJR (défaut : top 10 % des plus cités)
+GET http://localhost:3000/api/suivi-recherche/financements/erc/indicateurs?vivier=articles
+
+###
+# France et autres pays : rubans (part des lauréats, part des candidatures, taux de succès, indice) et rangs de la France
+GET http://localhost:3000/api/suivi-recherche/financements/erc/comparaison-internationale?domaine=PE
+
+###
+# 400 attendu
+GET http://localhost:3000/api/suivi-recherche/financements/erc/comparaison-internationale?vivier=tout
+
+###
+# Établissements : matrice part des lauréats × évolution, groupe de Sorbonne Université, et son rang
+GET http://localhost:3000/api/suivi-recherche/financements/erc/positionnement-etablissements?ror_id=02en5vm52
+
+###
+# Taux de succès des organismes de recherche
+GET http://localhost:3000/api/suivi-recherche/financements/erc/positionnement-etablissements?indicateur=taux_succes&groupe=organismes
+
+###
+# 400 attendu
+GET http://localhost:3000/api/suivi-recherche/financements/erc/positionnement-etablissements?groupe=inconnu

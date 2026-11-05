@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 
-import { GetData } from "./query";
+import { getData } from "./query";
 import options from "./options";
 
 import ChartWrapper from "../../../../../../components/chart-wrapper";
@@ -18,7 +18,7 @@ export default function BeneficiariesByRole() {
 
   const { data, isLoading } = useQuery({
     queryKey: ["beneficiariesByRole", params],
-    queryFn: () => GetData(params),
+    queryFn: () => getData(params),
   });
 
   if (isLoading || !data) return <DefaultSkeleton />;
@@ -26,21 +26,22 @@ export default function BeneficiariesByRole() {
   const config = {
     id: "beneficiariesByRole",
     title: {
-      fr: "Top 10 des bénéficiaires par rôle en fonction des subventions alloués",
-      en: "Top 10 beneficiaries by role based on allocated funding",
+      fr: "Principaux participants bénéficiaires {} par rôle",
+      en: "Top beneficiary participants {} by role",
     },
     comment: {
       fr: (
         <>
-          Ce graphique présente les 10 principaux bénéficiaires de financements européens, classés par montant total décroissant (somme des
-          subventions en tant que coordinateur et partenaire). Chaque barre représente un bénéficiaire, décomposée entre la part reçue en tant que
-          coordinateur et la part reçue en tant que partenaire.
+          Ce graphique présente les 10 principaux bénéficiaires des financements alloués par la CE, classés par montant total décroissant (somme des
+          financements en tant que coordinateur et partenaire). Chaque barre représente un participant bénéficiaire, décomposée entre la part obtenue en tant que
+          coordinateur et celle en tant que partenaire.
         </>
       ),
       en: (
         <>
-          This chart presents the top 10 beneficiaries of European funding, ranked by total funding in descending order (sum of grants as coordinator
-          and partner). Each bar represents a beneficiary, broken down between the share received as coordinator and the share received as partner.
+          This chart shows the top 10 beneficiaries of funding awarded by the EC, ranked by total amount in descending order (sum of
+          funding received as coordinator and as partner). Each bar represents a beneficiary participant, broken down into the share secured as
+          coordinator and the share secured as partner.
         </>
       ),
     },

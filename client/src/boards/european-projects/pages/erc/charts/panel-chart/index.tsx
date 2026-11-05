@@ -10,7 +10,10 @@ import OptionsFunding from "./options-funding";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 
+import { getI18nLabel } from "../../../../../../utils";
 import { formatNumber, formatToRates, formatCurrency } from "../../../../../../utils/format";
+import i18nGlobal from "../../../../i18n-global.json";
+import i18n from "../../i18n.json";
 
 interface PanelChartProps {
   countryCode?: string;
@@ -22,32 +25,12 @@ const configProjects = {
   id: "ercPanelChartProjects",
   idQuery: "ercPanelChart",
   comment: {
-    fr: (
-      <>
-        Ce graphique présente le nombre de projets évalués et lauréats par domaine scientifique ERC (Sciences de la vie, Sciences physiques et
-        ingénierie, Sciences sociales et humaines). La ligne orange représente le taux de succès pour chaque domaine.
-      </>
-    ),
-    en: (
-      <>
-        This chart shows the number of evaluated and successful projects by ERC scientific domain (Life Sciences, Physical Sciences and Engineering,
-        Social Sciences and Humanities). The orange line represents the success rate for each domain.
-      </>
-    ),
+    fr: <>{getI18nLabel(i18n, "panelChart.projects.comment", "fr")}</>,
+    en: <>{getI18nLabel(i18n, "panelChart.projects.comment", "en")}</>,
   },
   readingKey: {
-    fr: (
-      <>
-        Les barres bleues représentent les projets évalués, les barres vertes les projets lauréats. Un taux de succès élevé indique une meilleure
-        performance pour ce domaine scientifique.
-      </>
-    ),
-    en: (
-      <>
-        Blue bars represent evaluated projects, green bars represent successful projects. A high success rate indicates better performance for that
-        scientific domain.
-      </>
-    ),
+    fr: <>{getI18nLabel(i18n, "panelChart.projects.readingKey", "fr")}</>,
+    en: <>{getI18nLabel(i18n, "panelChart.projects.readingKey", "en")}</>,
   },
   integrationURL: "/european-projects/components/pages/erc/charts/panel-chart",
 };
@@ -56,41 +39,14 @@ const configFunding = {
   id: "ercPanelChartFunding",
   idQuery: "ercPanelChart",
   comment: {
-    fr: (
-      <>
-        Ce graphique présente les financements demandés et obtenus par domaine scientifique ERC (Sciences de la vie, Sciences physiques et ingénierie,
-        Sciences sociales et humaines). La ligne orange représente le taux de succès en termes de financement.
-      </>
-    ),
-    en: (
-      <>
-        This chart shows the requested and obtained funding by ERC scientific domain (Life Sciences, Physical Sciences and Engineering, Social
-        Sciences and Humanities). The orange line represents the success rate in terms of funding.
-      </>
-    ),
+    fr: <>{getI18nLabel(i18n, "panelChart.funding.comment", "fr")}</>,
+    en: <>{getI18nLabel(i18n, "panelChart.funding.comment", "en")}</>,
   },
   readingKey: {
-    fr: (
-      <>
-        Les barres bleues représentent les financements demandés, les barres vertes les financements obtenus. Un taux de succès élevé indique une
-        meilleure performance pour ce domaine scientifique.
-      </>
-    ),
-    en: (
-      <>
-        Blue bars represent requested funding, green bars represent obtained funding. A high success rate indicates better performance for that
-        scientific domain.
-      </>
-    ),
+    fr: <>{getI18nLabel(i18n, "panelChart.funding.readingKey", "fr")}</>,
+    en: <>{getI18nLabel(i18n, "panelChart.funding.readingKey", "en")}</>,
   },
   integrationURL: "/european-projects/components/pages/erc/charts/panel-chart-funding",
-};
-
-// Labels des domaines scientifiques
-const DOMAIN_LABELS: Record<string, { fr: string; en: string }> = {
-  LS: { fr: "Sciences de la vie", en: "Life Sciences" },
-  PE: { fr: "Sciences physiques et ingénierie", en: "Physical Sciences & Engineering" },
-  SH: { fr: "Sciences sociales et humaines", en: "Social Sciences & Humanities" },
 };
 
 // Ordre de tri des domaines
@@ -151,8 +107,8 @@ function aggregateByDomain(data: PanelChartItem[]) {
     }
 
     const agg = domainAggregates.get(domain)!;
-    agg.evaluatedCount += item.evaluated?.total_involved || 0;
-    agg.successfulCount += item.successful?.total_involved || 0;
+    agg.evaluatedCount += item.evaluated?.total_projects || 0;
+    agg.successfulCount += item.successful?.total_projects || 0;
     agg.evaluatedFunding += item.evaluated?.total_funding_entity || 0;
     agg.successfulFunding += item.successful?.total_funding_entity || 0;
   });
@@ -169,19 +125,19 @@ function renderDataTableProjects(data: PanelChartItem[], currentLang: string) {
 
   return (
     <table className="fr-table">
-      <caption>{currentLang === "fr" ? "Projets par domaine scientifique ERC" : "Projects by ERC scientific domain"}</caption>
+      <caption>{getI18nLabel(i18n, "panelChart.projects.title", currentLang)}</caption>
       <thead>
         <tr>
-          <th>{currentLang === "fr" ? "Domaine scientifique" : "Scientific domain"}</th>
-          <th>{currentLang === "fr" ? "Projets évalués" : "Evaluated"}</th>
-          <th>{currentLang === "fr" ? "Projets lauréats" : "Successful"}</th>
-          <th>{currentLang === "fr" ? "Taux de succès" : "Success rate"}</th>
+          <th>{getI18nLabel(i18n, "panelFunding.tableScientificDomain", currentLang)}</th>
+          <th>{getI18nLabel(i18nGlobal, "evaluated-projects", currentLang)}</th>
+          <th>{getI18nLabel(i18nGlobal, "successful-projects", currentLang)}</th>
+          <th>{getI18nLabel(i18nGlobal, "success-rate", currentLang)}</th>
         </tr>
       </thead>
       <tbody>
         {sortedDomains.map((item) => {
           const successRate = item.evaluatedCount > 0 ? item.successfulCount / item.evaluatedCount : 0;
-          const name = DOMAIN_LABELS[item.domain]?.[currentLang] || item.domainName;
+          const name = getI18nLabel(i18n, `domains.${item.domain}`, currentLang) || item.domainName;
 
           return (
             <tr key={item.domain}>
@@ -202,19 +158,19 @@ function renderDataTableFunding(data: PanelChartItem[], currentLang: string) {
 
   return (
     <table className="fr-table">
-      <caption>{currentLang === "fr" ? "Financements par domaine scientifique ERC" : "Funding by ERC scientific domain"}</caption>
+      <caption>{getI18nLabel(i18n, "panelChart.funding.title", currentLang)}</caption>
       <thead>
         <tr>
-          <th>{currentLang === "fr" ? "Domaine scientifique" : "Scientific domain"}</th>
-          <th>{currentLang === "fr" ? "Financements demandés" : "Requested"}</th>
-          <th>{currentLang === "fr" ? "Financements obtenus" : "Obtained"}</th>
-          <th>{currentLang === "fr" ? "Taux de succès" : "Success rate"}</th>
+          <th>{getI18nLabel(i18n, "panelFunding.tableScientificDomain", currentLang)}</th>
+          <th>{getI18nLabel(i18nGlobal, "requested-amount-millions", currentLang)}</th>
+          <th>{getI18nLabel(i18nGlobal, "obtained-amount-millions", currentLang)}</th>
+          <th>{getI18nLabel(i18nGlobal, "success-rate", currentLang)}</th>
         </tr>
       </thead>
       <tbody>
         {sortedDomains.map((item) => {
           const successRate = item.evaluatedFunding > 0 ? item.successfulFunding / item.evaluatedFunding : 0;
-          const name = DOMAIN_LABELS[item.domain]?.[currentLang] || item.domainName;
+          const name = getI18nLabel(i18n, `domains.${item.domain}`, currentLang) || item.domainName;
 
           return (
             <tr key={item.domain}>
@@ -309,25 +265,11 @@ export default function PanelChart({ countryCode, callYear, currentLang: propLan
     <div className="fr-my-3w">
       <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "1rem" }}>
         <SegmentedControl className="fr-segmented--sm" name="panel-chart-view-mode">
-          <SegmentedElement
-            checked={viewMode === "projects"}
-            label={currentLang === "fr" ? "Projets" : "Projects"}
-            onClick={() => setViewMode("projects")}
-            value="projects"
-          />
-          <SegmentedElement
-            checked={viewMode === "funding"}
-            label={currentLang === "fr" ? "Financements" : "Funding"}
-            onClick={() => setViewMode("funding")}
-            value="funding"
-          />
+          <SegmentedElement checked={viewMode === "projects"} label={getI18nLabel(i18nGlobal, "projects", currentLang)} onClick={() => setViewMode("projects")} value="projects" />
+          <SegmentedElement checked={viewMode === "funding"} label={getI18nLabel(i18nGlobal, "total-fund-eur", currentLang)} onClick={() => setViewMode("funding")} value="funding" />
         </SegmentedControl>
       </div>
-      {viewMode === "projects" ? (
-        <PanelChartProjects countryCode={countryCode} callYear={callYear} currentLang={currentLang} />
-      ) : (
-        <PanelChartFunding countryCode={countryCode} callYear={callYear} currentLang={currentLang} />
-      )}
+      {viewMode === "projects" ? <PanelChartProjects countryCode={countryCode} callYear={callYear} currentLang={currentLang} /> : <PanelChartFunding countryCode={countryCode} callYear={callYear} currentLang={currentLang} />}
     </div>
   );
 }

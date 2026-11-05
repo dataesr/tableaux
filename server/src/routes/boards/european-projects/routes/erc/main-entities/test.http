@@ -1,0 +1,5 @@
+### Route
+GET http://localhost:3000/api/european-projects/erc/main-entities?call_year=&country_code=&destination_code=&isEjo=&limit=
+
+### Création du covered index
+GET http://localhost:3000/api/european-projects/erc/main-entities_indexes

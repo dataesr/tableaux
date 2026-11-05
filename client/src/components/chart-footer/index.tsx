@@ -55,14 +55,14 @@ export default function ChartFooter({
     <div className="chart-footer">
       {comment && (
         <>
-          <strong>{getI18nLabel(i18n, "comment")} </strong>
+          <strong>{getI18nLabel(i18n, "comment", currentLang)} </strong>
           {comment[currentLang] || comment.fr}
         </>
       )}
 
       {readingKey && (
         <div>
-          <strong>{getI18nLabel(i18n, "readingKey")} </strong>
+          <strong>{getI18nLabel(i18n, "readingKey", currentLang)} </strong>
           {readingKey[currentLang] || readingKey.fr}
         </div>
       )}
@@ -78,7 +78,7 @@ export default function ChartFooter({
           }}
         >
           <div>
-            <strong>{getI18nLabel(i18n, "sources")} </strong>
+            <strong>{getI18nLabel(i18n, "sources", currentLang)} </strong>
             {sources.map((source, index) => (
               <span key={`graph-footer-source-${index}`}>
                 <Link href={source.url[currentLang] || source.url.fr} target="_blank" title={`${source.label[currentLang] || source.label.fr} - Nouvelle fenêtre`} rel="noopener noreferrer">
@@ -87,7 +87,7 @@ export default function ChartFooter({
                 {(source?.update) && (
                   <>
                     {' '}
-                    <i>(<strong>{getI18nLabel(i18n, "update")}</strong> {source.update.toLocaleDateString(currentLang === "fr" ? "fr-FR" : "en-US")})</i>
+                    <i>(<strong>{getI18nLabel(i18n, "update", currentLang)}</strong> {source.update.toLocaleDateString(currentLang === "fr" ? "fr-FR" : "en-US")})</i>
                   </>
                 )}
                 {(index < sources.length - 1) && (<span>, </span>)}

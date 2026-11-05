@@ -4,8 +4,8 @@
     "en": "European Projects Dashboard (Horizon Europe)"
   },
   "bloc1": {
-    "fr": "Le programme <b>Horizon Europe</b> repose sur <b>quatre piliers</b> complémentaires qui structurent son action en faveur de la recherche et de l’innovation en Europe.",
-    "en": "The <b>Horizon Europe</b> program is based on <b>four complementary pillars</b> that structure its action in favor of research and innovation in Europe."
+    "fr": "Le programme <b>Horizon Europe</b><glossary>he</glossary> repose sur <b>quatre piliers</b> complémentaires qui structurent son action en faveur de la recherche et de l’innovation en Europe.",
+    "en": "The <b>Horizon Europe</b><glossary>he</glossary> program is based on <b>four complementary pillars</b> that structure its action in favor of research and innovation in Europe."
   },
   "HORIZON.1-title": {
     "fr": "Science d’excellence",

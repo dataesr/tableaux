@@ -39,25 +39,7 @@ export const createScatterOptions = (
       });
     });
 
-  const colors = [
-    getCssColor("scale-1"),
-    getCssColor("scale-2"),
-    getCssColor("scale-3"),
-    getCssColor("scale-4"),
-    getCssColor("scale-5"),
-    getCssColor("scale-6"),
-    getCssColor("scale-7"),
-    getCssColor("scale-8"),
-    getCssColor("scale-9"),
-    getCssColor("scale-10"),
-    getCssColor("scale-11"),
-    getCssColor("scale-12"),
-    getCssColor("ress-droits-inscription"),
-    getCssColor("ress-valorisation"),
-    getCssColor("ress-anr-hors-ia"),
-    getCssColor("ress-contrats-recherche"),
-    getCssColor("ress-autres-ressources"),
-  ];
+  const colors = Array.from({ length: 17 }, (_, i) => getCssColor(`scale-randomized-${i}-color`));
   const series = Array.from(regionGroups.entries())
     .sort(([regionA], [regionB]) =>
       regionA.localeCompare(regionB, "fr", { sensitivity: "base" })

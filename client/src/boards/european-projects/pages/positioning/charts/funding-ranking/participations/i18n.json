@@ -1,27 +1,27 @@
 {
   "title": {
-    "fr": "Focus sur les candidats et participants",
+    "fr": "Focus sur les candidats et les participants",
     "en": "Focus on candidates and participants"
   },
   "sort-by": {
     "fr": "Trier par",
     "en": "Sort by"
   },
-  "sort-by-evaluated-project": {
-    "fr": "Trier par projets évalués",
-    "en": "Sort by evaluated projects"
+  "sort-by-participants": {
+    "fr": "Trier par participants",
+    "en": "Sort by participants"
   },
-  "sort-by-successful-project": {
-    "fr": "Trier par projets lauréats",
-    "en": "Sort by successful projects"
+  "sort-by-candidates": {
+    "fr": "Trier par candidats",
+    "en": "Sort by candidates"
   },
   "configChart3a-title": {
-    "fr": "Nombre de candidats et de participants",
-    "en": "Number of candidates and participants"
+    "fr": "Nombre de candidats et de participants par pays les plus représentés",
+    "en": "Number of applicants and participants by most represented countries"
   },
   "configChart3b-title": {
-    "fr": "Taux de succès sur le nombre de candidats et de participants",
-    "en": "Success rate on the number of candidates and participants"
+    "fr": "Taux de succès individuel des participants",
+    "en": "Participant level success rate"
   },
   "evaluated-projects": {
     "fr": "Projets évalués",

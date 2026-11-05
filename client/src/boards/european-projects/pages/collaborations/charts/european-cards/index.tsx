@@ -1,10 +1,11 @@
+import { Badge, Col, Row, Text } from "@dataesr/dsfr-plus";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
-import { Row, Col, Text, Badge } from "@dataesr/dsfr-plus";
 
-import { useGetParams } from "./utils";
-import { getEuropeanCollaborations, CollaborationData } from "./query";
 import { isAnEuropeanUnionCountry } from "../../../../../../utils/countries";
+import { CollaborationData, getEuropeanCollaborations } from "./query";
+import { useGetParams } from "./utils";
+
 import "../../../../../../components/charts-skeletons/styles.scss";
 import "./styles.scss";
 

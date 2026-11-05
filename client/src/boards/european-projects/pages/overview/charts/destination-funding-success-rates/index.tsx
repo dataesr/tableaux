@@ -1,11 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 
-import { getData } from "./query";
-import options from "./options";
-import { useGetParams, renderDataTable } from "./utils";
-
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
+import options from "./options";
+import { getData } from "./query";
+import { renderDataTable, useGetParams } from "./utils";
 
 const config = {
   id: "destinationFundingSuccessRates",

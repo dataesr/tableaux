@@ -1,0 +1,12 @@
+// Paramètres de calcul, dans l'accordéon
+.sr-parametres {
+  align-items: start;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 3rem;
+
+  .fr-segmented,
+  .fr-toggle {
+    margin-block: 0;
+  }
+}

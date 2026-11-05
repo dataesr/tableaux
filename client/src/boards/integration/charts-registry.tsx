@@ -34,6 +34,10 @@ export const chartsRegistry = {
     () =>
       import("../european-projects/pages/positioning/charts/funding-ranking/participations")
   ),
+  FundingRankingProjects: lazy(
+    () =>
+      import("../european-projects/pages/positioning/charts/funding-ranking/projects")
+  ),
   fundingRankingCoordination: lazy(
     () =>
       import("../european-projects/pages/positioning/charts/funding-ranking/coordination")

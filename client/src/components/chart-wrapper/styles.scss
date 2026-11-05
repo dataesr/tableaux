@@ -1,5 +1,20 @@
+.chart-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.chart-header-title {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
 .actions {
   text-align: right;
+  flex: 0 0 auto;
+  margin-left: auto;
+  padding-top: 0.5rem;
 }
 
 .modal-actions {
@@ -54,6 +69,9 @@ figure {
 }
 
 // highchart-data-table
+.highcharts-data-table {
+  overflow-x: auto;
+}
 .highcharts-data-table table {
   border-collapse: collapse;
   border-spacing: 0;
@@ -63,15 +81,18 @@ figure {
   font-family: sans-serif;
   font-size: 0.9em;
 }
-.highcharts-data-table td, .highcharts-data-table th, .highcharts-data-table caption {
+.highcharts-data-table td,
+.highcharts-data-table th,
+.highcharts-data-table caption {
   border: 1px solid silver;
   padding: 0.5em;
 }
-.highcharts-data-table tr:nth-child(even), .highcharts-data-table thead tr {
+.highcharts-data-table tr:nth-child(even),
+.highcharts-data-table thead tr {
   background: var(--background-default-grey);
 }
 .highcharts-data-table tr:hover {
-  background: #6a6a6a;
+  background: var(--background-default-grey-hover);
 }
 .highcharts-data-table caption {
   background: var(--background-default-grey);

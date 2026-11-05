@@ -1,5 +1,5 @@
-import { normalizeIdForCssColorNames } from "../../../../utils";
 import type { HighchartsOptions } from "../../../../../../components/chart-wrapper";
+import { normalizeIdForCssColorNames } from "../../../../utils";
 
 export default function Options(data, displayType): HighchartsOptions {
   if (!data) return null;
@@ -29,27 +29,6 @@ export default function Options(data, displayType): HighchartsOptions {
         },
       },
     ],
-    // yAxis: [
-    //   {
-    //     lineWidth: 1,
-    //     lineColor: "#E6E6E6",
-    //     min: 0,
-    //     max: 100,
-    //     title: {
-    //       text: "%",
-    //     },
-    //   },
-    //   {
-    //     min: 0,
-    //     max: 100,
-    //     title: {
-    //       text: "",
-    //     },
-    //     lineWidth: 1,
-    //     lineColor: "#E6E6E6",
-    //     left: "75%",
-    //   },
-    // ],
     plotOptions: {
       line: {
         marker: {

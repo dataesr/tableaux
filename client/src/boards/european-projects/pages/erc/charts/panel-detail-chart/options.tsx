@@ -1,19 +1,16 @@
 import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js";
 import { CreateChartOptions } from "../../../../components/chart-ep";
 import { PanelDetailItem } from "./query";
+import { getI18nLabel } from "../../../../../../utils";
+import { getCssColor } from "../../../../../../utils/colors";
+import { formatNumber, formatToRates } from "../../../../../../utils/format";
+import i18nGlobal from "../../../../i18n-global.json";
+import i18n from "../../i18n.json";
 
-// Mapping des domaines vers les variables CSS
-const DOMAIN_CSS_VARS: Record<string, string> = {
-  LS: "--erc-domain-ls-color",
-  PE: "--erc-domain-pe-color",
-  SH: "--erc-domain-sh-color",
-};
-
-// Labels des domaines scientifiques
-const DOMAIN_LABELS: Record<string, { fr: string; en: string }> = {
-  LS: { fr: "Sciences de la vie", en: "Life Sciences" },
-  PE: { fr: "Sciences physiques et ingénierie", en: "Physical Sciences & Engineering" },
-  SH: { fr: "Sciences sociales et humaines", en: "Social Sciences & Humanities" },
+const DOMAIN_COLORS: Record<string, string> = {
+  LS: "erc-domain-ls-color",
+  PE: "erc-domain-pe-color",
+  SH: "erc-domain-sh-color",
 };
 
 // Fonction de tri naturel pour les panel_id (ex: PE1, PE2, PE10 au lieu de PE1, PE10, PE2)
@@ -37,58 +34,79 @@ interface OptionsProjectsProps {
 }
 
 export default function OptionsProjects({ data, domain, currentLang }: OptionsProjectsProps) {
-  // Filtrer par domaine sélectionné
   const filteredData = data.filter((item) => item.domaine_scientifique === domain);
 
   if (filteredData.length === 0) return null;
 
-  // Trier par ordre naturel des panel_id
   const sortedData = [...filteredData].sort((a, b) => naturalSortPanelId(a.panel_id, b.panel_id));
 
-  // Préparer les données pour le graphique
   const categories = sortedData.map((item) => item.panel_name);
-  const evaluatedData = sortedData.map((item) => item.evaluated?.total_involved || 0);
-  const successfulData = sortedData.map((item) => item.successful?.total_involved || 0);
+  const evaluatedData = sortedData.map((item) => item.evaluated?.total_projects || 0);
+  const successfulData = sortedData.map((item) => item.successful?.total_projects || 0);
   const successRates = sortedData.map((item) => {
-    const evaluated = item.evaluated?.total_involved || 0;
-    const successful = item.successful?.total_involved || 0;
+    const evaluated = item.evaluated?.total_projects || 0;
+    const successful = item.successful?.total_projects || 0;
     return evaluated > 0 ? (successful / evaluated) * 100 : 0;
   });
 
-  // Couleurs depuis les variables CSS
-  const rootStyles = getComputedStyle(document.documentElement);
-  const domainColor = rootStyles.getPropertyValue(DOMAIN_CSS_VARS[domain] || "--erc-domain-ls-color").trim() || "#6b7280";
-  const successRateColor = rootStyles.getPropertyValue("--average-success-rate-color").trim() || "#d75521";
+  const evaluatedColor = getCssColor("evaluated-project-color");
+  const successRateColor = getCssColor("average-success-rate-color");
+  const domainColor = getCssColor(DOMAIN_COLORS[domain] || DOMAIN_COLORS.LS);
+
+  const domainLabel = getI18nLabel(i18n, `domains.${domain}`, currentLang);
+  const titleText = getI18nLabel(i18n, "panelDetail.projectsTitle", currentLang).replace("{domain}", domainLabel);
 
   const newOptions: HighchartsInstance.Options = {
     chart: {
       height: 400,
+      events: {
+        render(this: any) {
+          (this._stems || []).forEach((el: any) => el.destroy());
+          this._stems = [];
+          const scatter = this.series.find((s: any) => s.type === "scatter");
+          if (!scatter) return;
+          const y0 = (this.yAxis[1] as any).toPixels(0);
+          scatter.points.forEach((point: any) => {
+            if (point.plotX == null || point.plotY == null) return;
+            this._stems.push(
+              this.renderer
+                .path(["M", this.plotLeft + point.plotX, y0, "L", this.plotLeft + point.plotX, this.plotTop + point.plotY])
+                .attr({ stroke: successRateColor, "stroke-width": 1.5, dashstyle: "Dot", zIndex: 3 })
+                .add(),
+            );
+          });
+        },
+      },
     },
     title: {
-      text: currentLang === "fr" ? `Projets par panel - ${DOMAIN_LABELS[domain]?.fr || domain}` : `Projects by panel - ${DOMAIN_LABELS[domain]?.en || domain}`,
+      text: titleText,
+      style: {
+        fontSize: "14px",
+        fontWeight: "600",
+      },
     },
     xAxis: {
       categories,
+      crosshair: true,
       title: {
-        text: currentLang === "fr" ? "Panel" : "Panel",
+        text: getI18nLabel(i18n, "panelDetail.panel", currentLang),
       },
       labels: {
         rotation: -45,
-        style: {
-          fontSize: "11px",
-        },
+        style: { fontSize: "11px" },
       },
     },
     yAxis: [
       {
         title: {
-          text: currentLang === "fr" ? "Nombre de projets" : "Number of projects",
+          text: getI18nLabel(i18nGlobal, "total-projects", currentLang),
+          style: { fontSize: "13px" },
         },
         min: 0,
       },
       {
         title: {
-          text: currentLang === "fr" ? "Taux de succès (%)" : "Success rate (%)",
+          text: getI18nLabel(i18nGlobal, "success-rate-percent", currentLang),
           style: { fontSize: "13px", color: successRateColor },
         },
         opposite: true,
@@ -100,6 +118,11 @@ export default function OptionsProjects({ data, domain, currentLang }: OptionsPr
         },
       },
     ],
+    legend: {
+      align: "center",
+      verticalAlign: "bottom",
+      layout: "horizontal",
+    },
     tooltip: {
       shared: true,
       useHTML: true,
@@ -107,72 +130,63 @@ export default function OptionsProjects({ data, domain, currentLang }: OptionsPr
         const points = this.points;
         if (!points || points.length === 0) return "";
 
-        // Utiliser l'index de la catégorie
-        const categoryIndex = typeof this.x === "number" ? this.x : categories.indexOf(String(this.x));
-        const panelData = sortedData[categoryIndex];
-        if (!panelData) return "";
+        const panelData = sortedData[points[0].index];
+        const header = panelData ? `${panelData.panel_id} - ${panelData.panel_name}` : String(this.x);
 
-        const evaluated = panelData.evaluated?.total_involved || 0;
-        const successful = panelData.successful?.total_involved || 0;
-        const rate = evaluated > 0 ? ((successful / evaluated) * 100).toFixed(1) : "0";
-
-        return `
-          <div style="padding: 8px;">
-            <strong>${panelData.panel_id}</strong><br/>
-            <span style="color: #666; font-size: 11px;">${panelData.panel_name}</span><br/><br/>
-            <span style="color: var(--evaluated-project-color);">●</span> ${currentLang === "fr" ? "Projets évalués" : "Evaluated"}: <strong>${evaluated.toLocaleString()}</strong><br/>
-            <span style="color: ${domainColor};">●</span> ${currentLang === "fr" ? "Projets lauréats" : "Successful"}: <strong>${successful.toLocaleString()}</strong><br/>
-            <span style="color: var(--average-success-rate-color);">●</span> ${currentLang === "fr" ? "Taux de succès" : "Success rate"}: <strong>${rate}%</strong>
-          </div>
-        `;
+        let html = `<strong>${header}</strong><br/>`;
+        points.forEach((point) => {
+          const value = point.y || 0;
+          const formatted = point.series.type === "scatter" ? formatToRates(value / 100) : formatNumber(value);
+          html += `<span style="color:${point.color}">●</span> ${point.series.name}: <strong>${formatted}</strong><br/>`;
+        });
+        return html;
       },
-    },
-    legend: {
-      align: "center" as const,
-      verticalAlign: "bottom" as const,
     },
     plotOptions: {
       column: {
-        borderRadius: 3,
-        groupPadding: 0.1,
-        pointPadding: 0.05,
-      },
-      spline: {
-        marker: {
-          enabled: true,
-          radius: 4,
-        },
-        lineWidth: 2,
+        grouping: true,
+        borderWidth: 0,
+        borderRadius: 2,
       },
     },
     series: [
       {
-        name: currentLang === "fr" ? "Projets évalués" : "Evaluated projects",
         type: "column",
+        name: getI18nLabel(i18nGlobal, "evaluated-projects", currentLang),
+        color: evaluatedColor,
         data: evaluatedData,
-        color: "var(--evaluated-project-color)",
         yAxis: 0,
       },
       {
-        name: currentLang === "fr" ? "Projets lauréats" : "Successful projects",
         type: "column",
-        data: successfulData,
+        name: getI18nLabel(i18nGlobal, "successful-projects", currentLang),
         color: domainColor,
+        data: successfulData,
         yAxis: 0,
       },
       {
-        name: currentLang === "fr" ? "Taux de succès" : "Success rate",
-        type: "spline",
+        type: "scatter",
+        name: getI18nLabel(i18nGlobal, "success-rate", currentLang),
+        color: successRateColor,
         data: successRates,
-        color: "var(--average-success-rate-color)",
         yAxis: 1,
-        tooltip: {
-          valueSuffix: " %",
+        pointPlacement: 0,
+        marker: { symbol: "circle", radius: 6 },
+        dataLabels: {
+          enabled: true,
+          formatter: function () {
+            return formatToRates(((this as any).y || 0) / 100);
+          },
+          y: -10,
+          style: {
+            fontSize: "11px",
+            fontWeight: "600",
+            color: successRateColor,
+            textOutline: "none",
+          },
         },
-        marker: {
-          symbol: "circle",
-        },
-      },
+        zIndex: 5,
+      } as any,
     ],
   };
 

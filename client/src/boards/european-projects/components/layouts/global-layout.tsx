@@ -30,7 +30,7 @@ export default function GlobalLayout() {
       setSearchParams(searchParams);
     }
     if (!searchParams.get("isEjo")) {
-      searchParams.set("isEjo", "true"); // default value
+      searchParams.set("isEjo", "false"); // default value
       setSearchParams(searchParams);
     }
   }, [searchParams, setSearchParams]);

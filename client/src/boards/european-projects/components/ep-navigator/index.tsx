@@ -1,15 +1,15 @@
-import { useState, useRef } from "react";
-import { useSearchParams } from "react-router-dom";
+import { Checkbox, Col, Container, Row } from "@dataesr/dsfr-plus";
 import { useQuery } from "@tanstack/react-query";
-import { Container, Row, Col, Checkbox } from "@dataesr/dsfr-plus";
+import { useRef, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 
-import { getFilters, getPrograms, getThematics, getDestinations } from "../../api";
+import RangeOfYears from "../../../../components/range-of-years";
 import { getI18nLabel } from "../../../../utils";
+import { getDestinations, getFilters, getPrograms, getThematics } from "../../api";
 import i18nGlobal from "../../i18n-global.json";
 import i18nLocal from "./i18n.json";
-import RangeOfYears from "../../../../components/range-of-years";
 
-import styles from "./styles.module.scss";
+import "./styles.scss";
 
 const i18n = { ...i18nGlobal, ...i18nLocal };
 
@@ -17,8 +17,8 @@ const i18nFilters = {
   "more-filters": { fr: "Plus de filtres", en: "More filters" },
   "less-filters": { fr: "Afficher moins", en: "Show less" },
   isEjo: {
-    fr: "Exclure les organisations internationales, organisations intergouvernementales, agences européennes liées à la CE, structures communes comme le CERN, l'ESA, réseaux EIT, GEANT ou COST",
-    en: "Exclure les organisations internationales, organisations intergouvernementales, agences européennes liées à la CE, structures communes comme le CERN, l'ESA, réseaux EIT, GEANT ou COST",
+    fr: "Inclure les organisations internationales, organisations intergouvernementales, agences européennes liées à la CE, structures communes comme le CERN, l'ESA, réseaux EIT, GEANT ou COST",
+    en: "Include international organizations, intergovernmental organizations, European agencies affiliated with the European Commission, joint structures such as CERN and ESA, and networks such as EIT, GEANT, and COST",
   },
 };
 
@@ -51,7 +51,7 @@ export default function EpNavigator() {
   const pillarId = searchParams.get("pillarId") || undefined;
   const programId = searchParams.get("programId") || undefined;
   const thematicIds = searchParams.get("thematicIds") || undefined;
-  const isEjo = searchParams.get("isEjo") || true;
+  const isEjo = searchParams.get("isEjo") || "false";
 
   // récupération de tous les piliers de la base de données
   const { data: pillarsData } = useQuery({
@@ -83,8 +83,8 @@ export default function EpNavigator() {
 
   // récupération des toutes les destinations des thématiques sélectionnées
   const { data: destinationsData, isLoading: isLoadingDestinations } = useQuery({
-    queryKey: ["ep/destinations", thematicIds],
-    queryFn: () => getDestinations(thematicIds!.split(",")),
+    queryKey: ["ep/destinations", programId, thematicIds],
+    queryFn: () => getDestinations({ programs: programId ? [programId] : [], thematics: thematicIds!.split(",") }),
     enabled: !!thematicIds,
     staleTime: 0, // Forcer la requête à être considérée comme périmée immédiatement
     gcTime: 0, // Ne pas mettre en cache
@@ -162,17 +162,17 @@ export default function EpNavigator() {
   const thematicsLabel =
     selectedThematics.size > 0
       ? `${selectedThematics.size} ${getI18nLabel(i18n, "n_selected", currentLang)}`
-      : getI18nLabel(i18n, "no-selection", currentLang);
+      : getI18nLabel(i18n, "thema_no_selection", currentLang);
   const destinationsLabel =
     selectedDestinations.size > 0
       ? `${selectedDestinations.size} ${getI18nLabel(i18n, "n_selected", currentLang)}`
-      : getI18nLabel(i18n, "no-selection", currentLang);
+      : getI18nLabel(i18n, "destination_no_selection", currentLang);
 
     function handleIsEjoToggle(isEjoChk: boolean) {
       searchParams.set("isEjo", isEjoChk ? "true" : "false");
       setSearchParams(searchParams);
     }
-  
+
   return (
     <>
       <Container>
@@ -204,7 +204,7 @@ export default function EpNavigator() {
                 setSearchParams(newSearchParams);
               }}
             >
-              <option value="">{getI18nLabel(i18n, "no-selection", currentLang)}</option>
+              <option value="">{getI18nLabel(i18n, "pillar_no_selection", currentLang)}</option>
               {pillarsData &&
                 pillarsData.map((pillar: FilterItem) => (
                   <option key={pillar.id} value={pillar.id}>
@@ -240,7 +240,7 @@ export default function EpNavigator() {
                 setSearchParams(newSearchParams);
               }}
             >
-              <option value="">{getI18nLabel(i18n, "no-selection", currentLang)}</option>
+              <option value="">{getI18nLabel(i18n, "program_no_selection", currentLang)}</option>
               {programsData &&
                 programsData.map((program: FilterItem) => (
                   <option key={program.id} value={program.id}>
@@ -251,14 +251,14 @@ export default function EpNavigator() {
           </Col>
           {/* Thématiques dépendantes du programme sélectionné */}
           <Col lg={3} xs={12}>
-            <div className={styles.dropdownContainer} ref={thematicsDropdownRef}>
+            <div className="dropdownContainer" ref={thematicsDropdownRef}>
               <label className="fr-label" htmlFor="select-thematics-label">
                 {getI18nLabel(i18n, "thematic_selection_title", currentLang)}
               </label>
               <button
                 aria-expanded={isThematicsOpen}
                 aria-haspopup="listbox"
-                className={`fr-select ${styles.dropdownButton}`}
+                className={`fr-select $"dropdownButton"`}
                 disabled={isLoadingThematics || !thematicsData || thematicsData.length === 0}
                 id="select-thematics-label"
                 onClick={() => setIsThematicsOpen(!isThematicsOpen)}
@@ -266,20 +266,20 @@ export default function EpNavigator() {
                 <span>{thematicsLabel}</span>
               </button>
               {isThematicsOpen && (
-                <div className={styles.dropdownMenu}>
-                  <div className={styles.checkboxGroup}>
+                <div className="dropdownMenu">
+                  <div className="checkboxGroup">
                     {thematicsData.map((thematic) => (
-                      <div key={thematic.id} className={styles.checkboxItem}>
+                      <div key={thematic.id} className="checkboxItem">
                         <Checkbox id={`thematic-${thematic.id}`} label={thematic[`label_${currentLang}`]} checked={selectedThematics.has(thematic.id)} onChange={() => handleThematicChange(thematic.id)} />
                       </div>
                     ))}
                   </div>
                   {selectedThematics.size > 0 && (
                     <>
-                      <button className={styles.bottomButton} onClick={handleApplyThematics}>
+                      <button className="bottomButton" onClick={handleApplyThematics}>
                         {getI18nLabel(i18n, "apply_selection", currentLang)}
                       </button>
-                      <button className={styles.bottomButton} onClick={handleClearThematics}>
+                      <button className="bottomButton" onClick={handleClearThematics}>
                         {getI18nLabel(i18n, "erase_selection", currentLang)}
                       </button>
                     </>
@@ -289,14 +289,14 @@ export default function EpNavigator() {
             </div>
           </Col>
           <Col lg={3} xs={12}>
-            <div className={styles.dropdownContainer} ref={destinationsDropdownRef}>
+            <div className="dropdownContainer" ref={destinationsDropdownRef}>
               <label className="fr-label" htmlFor="select-destinations-label">
                 {getI18nLabel(i18n, "destination_selection_title", currentLang)}
               </label>
               <button
                 aria-expanded={isDestinationsOpen}
                 aria-haspopup="listbox"
-                className={`fr-select ${styles.dropdownButton}`}
+                className={`fr-select $"dropdownButton"`}
                 disabled={isLoadingDestinations || !destinationsData || destinationsData.length === 0}
                 id="select-destinations-label"
                 onClick={() => setIsDestinationsOpen(!isDestinationsOpen)}
@@ -304,20 +304,20 @@ export default function EpNavigator() {
                 <span>{destinationsLabel}</span>
               </button>
               {isDestinationsOpen && (
-                <div className={styles.dropdownMenu}>
-                  <div className={styles.checkboxGroup}>
+                <div className="dropdownMenu">
+                  <div className="checkboxGroup">
                     {destinationsData.map((destination) => (
-                      <div key={destination.id} className={styles.checkboxItem}>
+                      <div key={destination.id} className="checkboxItem">
                         <Checkbox id={`destination-${destination.id}`} label={destination[`label_${currentLang}`]} checked={selectedDestinations.has(destination.id)} onChange={() => handleDestinationChange(destination.id)} />
                       </div>
                     ))}
                   </div>
                   {selectedDestinations.size > 0 && (
                     <>
-                      <button className={styles.bottomButton} onClick={handleApplyDestinations}>
+                      <button className="bottomButton" onClick={handleApplyDestinations}>
                         {getI18nLabel(i18n, "apply_selection", currentLang)}
                       </button>
-                      <button className={styles.bottomButton} onClick={handleClearDestinations}>
+                      <button className="bottomButton" onClick={handleClearDestinations}>
                         {getI18nLabel(i18n, "erase_selection", currentLang)}
                       </button>
                     </>
@@ -335,21 +335,21 @@ export default function EpNavigator() {
               </button>
             )}
             {isMoreFiltersOpen && (
-              <Container className={styles.moreFiltersContainer}>
+              <Container className="moreFiltersContainer fr-px-2w">
                 <Row>
                   <Col>
-                    <RangeOfYears availableYears={["2021", "2022", "2023", "2024", "2025"]} defaultYears={["2021", "2022", "2023", "2024", "2025"]} />
+                    <RangeOfYears availableYears={["2021", "2022", "2023", "2024", "2025", "2026"]} defaultYears={["2021", "2022", "2023", "2024", "2025"]} />
                   </Col>
                   <Col>
                     <div className="fr-checkbox-group fr-checkbox-group--sm">
-                      <input onChange={() => handleIsEjoToggle(isEjo === "true" ? false : true)} checked={isEjo === "true"} id="isEjo-checkbox" type="checkbox" aria-describedby="Prendre en compte tous les organismes ou non" />
+                      <input onChange={() => handleIsEjoToggle(isEjo === "true" ? false : true)} checked={isEjo === "false"} id="isEjo-checkbox" type="checkbox" aria-describedby="Prendre en compte tous les organismes ou non" />
                       <label className="fr-label" htmlFor="isEjo-checkbox">
                         {i18nFilters["isEjo"][currentLang]}
                       </label>
                     </div>
                   </Col>
                 </Row>
-                <Row className={styles.moreFiltersFooter}>
+                <Row className="moreFiltersFooter">
                   <button type="button" className="fr-btn fr-btn--tertiary-no-outline fr-btn--sm" onClick={() => setIsMoreFiltersOpen(false)}>
                     {i18nFilters["less-filters"][currentLang]}
                   </button>

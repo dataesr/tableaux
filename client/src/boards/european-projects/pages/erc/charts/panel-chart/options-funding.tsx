@@ -1,20 +1,17 @@
 import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js";
 import { CreateChartOptions } from "../../../../components/chart-ep";
 import type { PanelChartItem } from "./query";
+import { getI18nLabel } from "../../../../../../utils";
+import { getCssColor } from "../../../../../../utils/colors";
 import { formatCurrency, formatToRates } from "../../../../../../utils/format";
+import i18nGlobal from "../../../../i18n-global.json";
+import i18n from "../../i18n.json";
 
 // Mapping des domaines vers les variables CSS
 const DOMAIN_CSS_VARS: Record<string, string> = {
-  LS: "--erc-domain-ls-color",
-  PE: "--erc-domain-pe-color",
-  SH: "--erc-domain-sh-color",
-};
-
-// Labels des domaines scientifiques
-const DOMAIN_LABELS: Record<string, { fr: string; en: string }> = {
-  LS: { fr: "Sciences de la vie", en: "Life Sciences" },
-  PE: { fr: "Sciences physiques et ingénierie", en: "Physical Sciences & Engineering" },
-  SH: { fr: "Sciences sociales et humaines", en: "Social Sciences & Humanities" },
+  LS: "erc-domain-ls-color",
+  PE: "erc-domain-pe-color",
+  SH: "erc-domain-sh-color",
 };
 
 // Ordre de tri des domaines
@@ -72,8 +69,7 @@ export default function OptionsFunding({ data, currentLang = "fr" }: OptionsPara
   const categories = sortedDomains.map((d) => d.domain);
 
   // Récupérer les couleurs CSS
-  const rootStyles = getComputedStyle(document.documentElement);
-  const getDomainColor = (domain: string) => rootStyles.getPropertyValue(DOMAIN_CSS_VARS[domain] || "--erc-domain-ls-color").trim() || "#666666";
+  const getDomainColor = (domain: string) => getCssColor(DOMAIN_CSS_VARS[domain] || DOMAIN_CSS_VARS.LS);
 
   // Préparer les données pour les barres (en millions d'euros)
   const evaluatedData = sortedDomains.map((d) => d.evaluatedFunding / 1000000);
@@ -88,14 +84,32 @@ export default function OptionsFunding({ data, currentLang = "fr" }: OptionsPara
   });
 
   // Récupérer les autres couleurs CSS
-  const evaluatedColor = rootStyles.getPropertyValue("--evaluated-project-color").trim() || "#009099";
-  const successRateColor = rootStyles.getPropertyValue("--average-success-rate-color").trim() || "#d75521";
+  const evaluatedColor = getCssColor("evaluated-project-color");
+  const successRateColor = getCssColor("average-success-rate-color");
 
-  const titleText = currentLang === "fr" ? "Financements par domaine scientifique ERC" : "Funding by ERC scientific domain";
+  const titleText = getI18nLabel(i18n, "panelChart.funding.title", currentLang);
 
   const newOptions: HighchartsInstance.Options = {
     chart: {
       height: 400,
+      events: {
+        render(this: any) {
+          (this._stems || []).forEach((el: any) => el.destroy());
+          this._stems = [];
+          const scatter = this.series.find((s: any) => s.type === "scatter");
+          if (!scatter) return;
+          const y0 = (this.yAxis[1] as any).toPixels(0);
+          scatter.points.forEach((point: any) => {
+            if (point.plotX == null || point.plotY == null) return;
+            this._stems.push(
+              this.renderer
+                .path(["M", this.plotLeft + point.plotX, y0, "L", this.plotLeft + point.plotX, this.plotTop + point.plotY])
+                .attr({ stroke: successRateColor, "stroke-width": 1.5, dashstyle: "Dot", zIndex: 3 })
+                .add(),
+            );
+          });
+        },
+      },
     },
     title: {
       text: titleText,
@@ -110,7 +124,7 @@ export default function OptionsFunding({ data, currentLang = "fr" }: OptionsPara
       labels: {
         formatter: function () {
           const code = this.value as string;
-          return DOMAIN_LABELS[code]?.[currentLang] || code;
+          return getI18nLabel(i18n, `domains.${code}`, currentLang);
         },
         style: { fontSize: "12px" },
       },
@@ -118,7 +132,7 @@ export default function OptionsFunding({ data, currentLang = "fr" }: OptionsPara
     yAxis: [
       {
         title: {
-          text: currentLang === "fr" ? "Financements (M€)" : "Funding (M€)",
+          text: getI18nLabel(i18n, "panelChart.funding.yAxis", currentLang),
           style: { fontSize: "13px" },
         },
         min: 0,
@@ -130,7 +144,7 @@ export default function OptionsFunding({ data, currentLang = "fr" }: OptionsPara
       },
       {
         title: {
-          text: currentLang === "fr" ? "Taux de succès (%)" : "Success rate (%)",
+          text: getI18nLabel(i18nGlobal, "success-rate-percent", currentLang),
           style: { fontSize: "13px", color: successRateColor },
         },
         opposite: true,
@@ -155,7 +169,7 @@ export default function OptionsFunding({ data, currentLang = "fr" }: OptionsPara
         if (!points) return "";
 
         const domainCode = String(this.x);
-        const domainName = DOMAIN_LABELS[domainCode]?.[currentLang] || domainCode;
+        const domainName = getI18nLabel(i18n, `domains.${domainCode}`, currentLang);
 
         let html = `<strong>${domainName}</strong><br/>`;
 
@@ -163,7 +177,7 @@ export default function OptionsFunding({ data, currentLang = "fr" }: OptionsPara
           const seriesName = point.series.name;
           const value = point.y || 0;
 
-          if (point.series.type === "line") {
+          if (point.series.type === "scatter") {
             html += `<span style="color:${point.color}">●</span> ${seriesName}: <strong>${formatToRates(value / 100)}</strong><br/>`;
           } else {
             html += `<span style="color:${point.color}">●</span> ${seriesName}: <strong>${formatCurrency(value * 1000000)}</strong><br/>`;
@@ -179,39 +193,44 @@ export default function OptionsFunding({ data, currentLang = "fr" }: OptionsPara
         borderWidth: 0,
         borderRadius: 2,
       },
-      line: {
-        marker: {
-          enabled: true,
-          radius: 5,
-        },
-        lineWidth: 2,
-      },
     },
     series: [
       {
         type: "column",
-        name: currentLang === "fr" ? "Financements demandés" : "Requested funding",
+        name: getI18nLabel(i18nGlobal, "requested-amount-millions", currentLang),
         color: evaluatedColor,
         data: evaluatedData,
         yAxis: 0,
       },
       {
         type: "column",
-        name: currentLang === "fr" ? "Financements obtenus" : "Obtained funding",
+        name: getI18nLabel(i18nGlobal, "obtained-amount-millions", currentLang),
         data: successfulData,
         yAxis: 0,
       },
       {
-        type: "line",
-        name: currentLang === "fr" ? "Taux de succès" : "Success rate",
+        type: "scatter",
+        name: getI18nLabel(i18nGlobal, "success-rate", currentLang),
         color: successRateColor,
         data: successRates,
         yAxis: 1,
-        marker: {
-          symbol: "circle",
+        pointPlacement: 0,
+        marker: { symbol: "circle", radius: 6 },
+        dataLabels: {
+          enabled: true,
+          formatter: function () {
+            return formatToRates(((this as any).y || 0) / 100);
+          },
+          y: -10,
+          style: {
+            fontSize: "11px",
+            fontWeight: "600",
+            color: successRateColor,
+            textOutline: "none",
+          },
         },
         zIndex: 5,
-      },
+      } as any,
     ],
   };
 

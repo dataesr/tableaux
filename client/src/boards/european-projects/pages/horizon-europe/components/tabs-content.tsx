@@ -1,0 +1,120 @@
+import { useSearchParams } from "react-router-dom";
+
+import i18n from "../../../i18n-global.json";
+import AxesContent from "./tabs/axes";
+import CallsContent from "./tabs/calls";
+import CheckEICAccelerator from "../../../components/check-eic-accelerator";
+import CollaborationsContent from "./tabs/collaborations";
+import EntitiesContent from "./tabs/entities";
+import PositionnementContent from "./tabs/positioning";
+import StructureIdentity from "./structure-identity";
+import SyntheseContent from "./tabs/synthesis";
+
+export default function TabsContent() {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeTab = searchParams.get("section") || "synthesis";
+
+  const currentLang = searchParams.get("language") || "en";
+
+  function getIntlLabel(key: string): string {
+    return i18n[key][currentLang as "fr" | "en"] || i18n[key]["en"];
+  }
+
+  // Fonction pour changer d'onglet
+  const handleTabChange = (newTab: "synthesis" | "axes" | "positioning" | "collaborations" | "entities" | "calls") => {
+    const newParams = new URLSearchParams(searchParams);
+    newParams.set("section", newTab);
+    setSearchParams(newParams);
+  };
+
+  return (
+    <div>
+      <CheckEICAccelerator />
+      <StructureIdentity />
+      <nav className="fr-nav" role="navigation" aria-label="Menu principal">
+        <ul className="fr-nav__list">
+          <li className="fr-nav__item">
+            <button
+              className="fr-nav__link"
+              onClick={(e) => {
+                e.preventDefault();
+                handleTabChange("synthesis");
+              }}
+              aria-current={activeTab === "synthesis" ? "page" : undefined}
+            >
+              {getIntlLabel("synthesis")}
+            </button>
+          </li>
+          <li className="fr-nav__item">
+            <button
+              className="fr-nav__link"
+              onClick={(e) => {
+                e.preventDefault();
+                handleTabChange("axes");
+              }}
+              aria-current={activeTab === "axes" ? "page" : undefined}
+            >
+              {getIntlLabel("axes")}
+            </button>
+          </li>
+          <li className="fr-nav__item">
+            <button
+              className="fr-nav__link"
+              onClick={(e) => {
+                e.preventDefault();
+                handleTabChange("positioning");
+              }}
+              aria-current={activeTab === "positioning" ? "page" : undefined}
+            >
+              {getIntlLabel("positioning")}
+            </button>
+          </li>
+          <li className="fr-nav__item">
+            <button
+              className="fr-nav__link"
+              onClick={(e) => {
+                e.preventDefault();
+                handleTabChange("collaborations");
+              }}
+              aria-current={activeTab === "collaborations" ? "page" : undefined}
+            >
+              {getIntlLabel("collaborations")}
+            </button>
+          </li>
+          <li className="fr-nav__item">
+            <button
+              className="fr-nav__link"
+              onClick={(e) => {
+                e.preventDefault();
+                handleTabChange("entities");
+              }}
+              aria-current={activeTab === "entities" ? "page" : undefined}
+            >
+              {getIntlLabel("country-entities")}
+            </button>
+          </li>
+          <li className="fr-nav__item">
+            <button
+              className="fr-nav__link"
+              onClick={(e) => {
+                e.preventDefault();
+                handleTabChange("calls");
+              }}
+              aria-current={activeTab === "calls" ? "page" : undefined}
+            >
+              {getIntlLabel("calls")}
+            </button>
+          </li>
+        </ul>
+      </nav>
+      <div className="fr-mt-3w">
+        {activeTab === "synthesis" && <SyntheseContent />}
+        {activeTab === "axes" && <AxesContent />}
+        {activeTab === "positioning" && <PositionnementContent />}
+        {activeTab === "collaborations" && <CollaborationsContent />}
+        {activeTab === "entities" && <EntitiesContent />}
+        {activeTab === "calls" && <CallsContent />}
+      </div>
+    </div>
+  );
+}

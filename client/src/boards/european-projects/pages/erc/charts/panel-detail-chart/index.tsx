@@ -10,20 +10,16 @@ import OptionsFunding from "./options-funding";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 
+import { getI18nLabel } from "../../../../../../utils";
 import { formatNumber, formatToRates, formatCurrency } from "../../../../../../utils/format";
+import i18nGlobal from "../../../../i18n-global.json";
+import i18n from "../../i18n.json";
 
 interface PanelDetailChartProps {
   countryCode?: string;
   callYear?: string;
   currentLang?: string;
 }
-
-// Labels des domaines scientifiques
-const DOMAIN_LABELS: Record<string, { fr: string; en: string }> = {
-  LS: { fr: "Sciences de la vie", en: "Life Sciences" },
-  PE: { fr: "Sciences physiques et ingénierie", en: "Physical Sciences & Engineering" },
-  SH: { fr: "Sciences sociales et humaines", en: "Social Sciences & Humanities" },
-};
 
 // Variables CSS pour les couleurs de domaine
 const DOMAIN_CSS_VARS: Record<string, string> = {
@@ -145,24 +141,24 @@ function useGetParams() {
 function renderDataTableProjects(data: PanelDetailItem[], domain: string, currentLang: string) {
   const filteredData = data.filter((item) => item.domaine_scientifique === domain).sort((a, b) => naturalSortPanelId(a.panel_id, b.panel_id));
 
-  const domainLabel = DOMAIN_LABELS[domain]?.[currentLang as "fr" | "en"] || domain;
+  const domainLabel = getI18nLabel(i18n, `domains.${domain}`, currentLang);
 
   return (
     <table className="fr-table">
-      <caption>{currentLang === "fr" ? `Projets par panel - ${domainLabel}` : `Projects by panel - ${domainLabel}`}</caption>
+      <caption>{getI18nLabel(i18n, "panelDetail.projectsTitle", currentLang).replace("{domain}", domainLabel)}</caption>
       <thead>
         <tr>
-          <th>{currentLang === "fr" ? "Panel" : "Panel"}</th>
-          <th>{currentLang === "fr" ? "Nom" : "Name"}</th>
-          <th>{currentLang === "fr" ? "Projets évalués" : "Evaluated"}</th>
-          <th>{currentLang === "fr" ? "Projets lauréats" : "Successful"}</th>
-          <th>{currentLang === "fr" ? "Taux de succès" : "Success rate"}</th>
+          <th>{getI18nLabel(i18n, "panelDetail.panel", currentLang)}</th>
+          <th>{getI18nLabel(i18n, "panelDetail.name", currentLang)}</th>
+          <th>{getI18nLabel(i18nGlobal, "evaluated-projects", currentLang)}</th>
+          <th>{getI18nLabel(i18nGlobal, "successful-projects", currentLang)}</th>
+          <th>{getI18nLabel(i18nGlobal, "success-rate", currentLang)}</th>
         </tr>
       </thead>
       <tbody>
         {filteredData.map((item) => {
-          const evaluated = item.evaluated?.total_involved || 0;
-          const successful = item.successful?.total_involved || 0;
+          const evaluated = item.evaluated?.total_projects || 0;
+          const successful = item.successful?.total_projects || 0;
           const successRate = evaluated > 0 ? successful / evaluated : 0;
 
           return (
@@ -183,18 +179,18 @@ function renderDataTableProjects(data: PanelDetailItem[], domain: string, curren
 function renderDataTableFunding(data: PanelDetailItem[], domain: string, currentLang: string) {
   const filteredData = data.filter((item) => item.domaine_scientifique === domain).sort((a, b) => naturalSortPanelId(a.panel_id, b.panel_id));
 
-  const domainLabel = DOMAIN_LABELS[domain]?.[currentLang as "fr" | "en"] || domain;
+  const domainLabel = getI18nLabel(i18n, `domains.${domain}`, currentLang);
 
   return (
     <table className="fr-table">
-      <caption>{currentLang === "fr" ? `Financements par panel - ${domainLabel}` : `Funding by panel - ${domainLabel}`}</caption>
+      <caption>{getI18nLabel(i18n, "panelDetail.fundingTitle", currentLang).replace("{domain}", domainLabel)}</caption>
       <thead>
         <tr>
-          <th>{currentLang === "fr" ? "Panel" : "Panel"}</th>
-          <th>{currentLang === "fr" ? "Nom" : "Name"}</th>
-          <th>{currentLang === "fr" ? "Financements demandés" : "Requested"}</th>
-          <th>{currentLang === "fr" ? "Financements obtenus" : "Obtained"}</th>
-          <th>{currentLang === "fr" ? "Taux de succès" : "Success rate"}</th>
+          <th>{getI18nLabel(i18n, "panelDetail.panel", currentLang)}</th>
+          <th>{getI18nLabel(i18n, "panelDetail.name", currentLang)}</th>
+          <th>{getI18nLabel(i18n, "panelDetail.requested", currentLang)}</th>
+          <th>{getI18nLabel(i18n, "panelDetail.obtained", currentLang)}</th>
+          <th>{getI18nLabel(i18nGlobal, "success-rate", currentLang)}</th>
         </tr>
       </thead>
       <tbody>
@@ -265,7 +261,7 @@ export default function PanelDetailChart({ countryCode: propCountryCode, callYea
         <SegmentedControl className="fr-segmented--sm" name="panel-detail-domain">
           {availableDomains.map((domain) => {
             const domainColor = DOMAIN_CSS_VARS[domain];
-            const label = DOMAIN_LABELS[domain]?.[currentLang as "fr" | "en"] || domain;
+            const label = getI18nLabel(i18n, `domains.${domain}`, currentLang);
             return (
               <SegmentedElement
                 key={domain}
@@ -281,8 +277,8 @@ export default function PanelDetailChart({ countryCode: propCountryCode, callYea
 
         {/* Sélecteur projets/financements */}
         <SegmentedControl className="fr-segmented--sm" name="panel-detail-view-mode">
-          <SegmentedElement checked={viewMode === "projects"} label={currentLang === "fr" ? "Projets" : "Projects"} onClick={() => setViewMode("projects")} value="projects" />
-          <SegmentedElement checked={viewMode === "funding"} label={currentLang === "fr" ? "Financements" : "Funding"} onClick={() => setViewMode("funding")} value="funding" />
+          <SegmentedElement checked={viewMode === "projects"} label={getI18nLabel(i18nGlobal, "projects", currentLang)} onClick={() => setViewMode("projects")} value="projects" />
+          <SegmentedElement checked={viewMode === "funding"} label={getI18nLabel(i18n, "panelDetail.funding", currentLang)} onClick={() => setViewMode("funding")} value="funding" />
         </SegmentedControl>
       </div>
 

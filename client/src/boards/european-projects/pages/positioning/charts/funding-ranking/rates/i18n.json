@@ -11,12 +11,12 @@
     "fr": "Trier par",
     "en": "Sort by"
   },
-  "sort-by-evaluated-project": {
-    "fr": "Trier par projets évalués",
-    "en": "Sort by evaluated projects"
+  "sort-by-requested-funding": {
+    "fr": "Trier par financements demandés",
+    "en": "Sort by requested funding"
   },
-  "sort-by-successful-project": {
-    "fr": "Trier par projets lauréats",
-    "en": "Sort by successful projects"
+  "sort-by-secured-funding": {
+    "fr": "Trier par financements obtenus",
+    "en": "Sort by secured funding"
   }
 }

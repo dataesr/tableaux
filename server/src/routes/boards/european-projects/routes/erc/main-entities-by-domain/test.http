@@ -1,0 +1,5 @@
+### Route
+GET http://localhost:3000/api/european-projects/erc/main-entities-by-domain?call_year=&country_code=&domaine_scientifique=&isEjo=&limit=&panel_id=
+
+### Création du covered index
+GET http://localhost:3000/api/european-projects/erc/main-entities-by-domain_indexes

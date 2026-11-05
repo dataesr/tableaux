@@ -181,8 +181,8 @@ export default function EntitiesTable({ entityId }) {
                       {displayedData.map((item) => (
                         <tr key={item._id}>
                           <td className="fr-p-1w">{`${getFlagEmoji(item.country_code)} ${item.entities_name}`}</td>
-                          <td className="fr-p-1w text-center">{item.projects.length.toLocaleString()}</td>
-                          <td className="fr-p-1w text-center">{item.total_projects.toLocaleString()}</td>
+                          <td className="fr-p-1w text-center">{item.projects.length.toLocaleString(currentLang)}</td>
+                          <td className="fr-p-1w text-center">{item.total_projects.toLocaleString(currentLang)}</td>
                           <td className="fr-p-1w text-center">
                             {item.total_projects > 0 ? `${((item.projects.length / item.total_projects) * 100).toFixed(1)}%` : "-"}
                           </td>

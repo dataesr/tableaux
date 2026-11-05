@@ -1,15 +1,16 @@
 import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Container, Button, Badge, Title } from "@dataesr/dsfr-plus";
-import EpNavigator from "../../components/ep-navigator/index";
-import TabsContent from "./components/TabsContent";
+
 import { getCountryInfo } from "../../../../components/country-selector/utils";
+import { getFlagEmoji, getI18nLabel } from "../../../../utils";
+import Breadcrumb from "../../../../components/breadcrumb";
+import EpNavigator from "../../components/ep-navigator/index";
+import TabsContent from "./components/tabs-content";
 
 import navigationConfig from "../../navigation-config.json";
-
+import i18nGlobal from "../../i18n-global.json";
 import "./styles.scss";
-import Breadcrumb from "../../../../components/breadcrumb";
-import { getFlagEmoji } from "../../../../utils";
 
 function FloatingFilters() {
   const [searchParams] = useSearchParams();
@@ -30,8 +31,8 @@ function FloatingFilters() {
     destinationIds: { fr: "Destinations", en: "Destinations" },
     structureid: { fr: "Identifiant Paysage de la structure", en: "Paysage ID" },
     isEjo: {
-      fr: "Exclure les organisations internationales, organisations intergouvernementales, agences européennes liées à la CE, structures communes comme le CERN, l'ESA, réseaux EIT, GEANT ou COST",
-      en: "Exclure les organisations internationales, organisations intergouvernementales, agences européennes liées à la CE, structures communes comme le CERN, l'ESA, réseaux EIT, GEANT ou COST",
+      fr: "Inclure les organisations internationales, organisations intergouvernementales, agences européennes liées à la CE, structures communes comme le CERN, l'ESA, réseaux EIT, GEANT ou COST",
+      en: "Include international organizations, intergovernmental organizations, European agencies affiliated with the European Commission, joint structures such as CERN and ESA, and networks such as EIT, GEANT, and COST",
     },
   };
 
@@ -66,7 +67,7 @@ function FloatingFilters() {
         ret = (
           <>
             <span>{i18n[param[0]][currentLang]}</span>
-            {param[1] === "true" ? (
+            {param[1] === "false" ? (
               <Badge color="success" className="fr-mx-1w">
                 {currentLang === "fr" ? "activé" : "enabled"}
               </Badge>
@@ -93,8 +94,8 @@ function FloatingFilters() {
 
   return (
     <div>
-      <Button data-fr-opened="false" aria-controls="modal" icon="filter-fill" className="ep-filter-button" variant="secondary">
-        Filtres actifs
+      <Button data-fr-opened="false" aria-controls="modal" icon="filter-fill" className="ep-filter-button" size="sm" variant="primary">
+        {getI18nLabel(i18nGlobal, "active-filters")}
         <Badge className="fr-ml-1w" size="sm">
           {filteredEntries.length}
         </Badge>
@@ -106,14 +107,14 @@ function FloatingFilters() {
               <div className="fr-modal__body">
                 <div className="fr-modal__header">
                   <button aria-controls="modal" title="Fermer" type="button" className="fr-btn--close fr-btn">
-                    Fermer
+                    {getI18nLabel(i18nGlobal, "close")}
                     {allEntries}
                   </button>
                 </div>
                 <div className="fr-modal__content">
                   <Title as="h2" id="modal-title" className="fr-modal__title">
                     <span className="fr-icon-arrow-right-line fr-icon--lg" aria-hidden="true" />
-                    Filtres actifs
+                    {getI18nLabel(i18nGlobal, "active-filters")}
                   </Title>
                   <ul>{filteredEntries.map((param) => showParam(param))}</ul>
                 </div>
@@ -151,8 +152,9 @@ export default function HorizonEurope() {
     const handleScroll = () => {
       // On ignore le scroll tant que la modale est ouverte
       if (isModalOpenRef.current) return;
-      setCollapsed(window.scrollY > 100);
-    };;
+      const y = window.scrollY;
+      setCollapsed((prev) => (prev ? y > 20 : y > 150)); // évite la boucle replier/déplier #143
+    };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => {

@@ -1,8 +1,9 @@
 import { useSearchParams } from "react-router-dom";
+
 import { getI18nLabel } from "../../../../../../../utils";
-import { isEjoParam } from "../../../../../utils/params";
 import i18n from "../../../../../i18n-global.json";
-  
+import { isEjoParam } from "../../../../../utils/params";
+
 export function useGetParams() {
   const [searchParams] = useSearchParams();
 
@@ -36,6 +37,12 @@ export function useGetParams() {
   const destinationIds = searchParams.get("destinationIds");
   if (destinationIds) {
     params.push(`destinations=${destinationIds}`);
+  }
+
+  // Récupérer le paramètre range_of_years et le convertir en call_year pour l'API
+  const rangeOfYears = searchParams.get("range_of_years");
+  if (rangeOfYears) {
+    params.push(`range_of_years=${rangeOfYears}`);
   }
 
   if (searchParams.has("isEjo")) {
@@ -72,27 +79,28 @@ export function readingKey(data) {
       <>
         {firstCountry.rank_coordination_number_evaluated === firstCountry.rank_coordination_number_successful ? (
           <>
-            Le pays "<strong>{firstCountry.name_fr}</strong>" arrive en{" "}
+            Le pays <strong>{firstCountry.name_fr}</strong> se place en{" "}
             <strong>
               {firstCountry.rank_coordination_number_evaluated}
               {getOrdinal(firstCountry.rank_coordination_number_evaluated, "fr")}
             </strong>{" "}
-            position pour le nombre de coordinations évaluées (<strong>{firstCountry.total_coordination_number_evaluated}</strong>) ainsi que pour les coordinations réussies (<strong>{firstCountry.total_coordination_number_successful}</strong>). Son
-            taux de succès est de <strong>{firstCountry?.ratio_coordination_number?.toFixed(1)}%</strong>.
+            position pour la coordination de projets évalués (<strong>{firstCountry.total_coordination_number_evaluated}</strong>) et de projets lauréats (<strong>{firstCountry.total_coordination_number_successful}</strong>). Son
+            taux de succès des coordinations de projets est de <strong>{firstCountry?.ratio_coordination_number?.toFixed(1)}%</strong>.
           </>
         ) : (
           <>
-            Le pays "<strong>{firstCountry.name_fr}</strong>" arrive en{" "}
+            Le pays <strong>{firstCountry.name_fr}</strong> se place en{" "}
             <strong>
               {firstCountry.rank_coordination_number_evaluated}
               {getOrdinal(firstCountry.rank_coordination_number_evaluated, "fr")}
             </strong>{" "}
-            position pour le nombre de coordinations évaluées (<strong>{firstCountry.total_coordination_number_evaluated}</strong>) alors qu'il arrive en{" "}
+            position pour la coordination de projets évalués (<strong>{firstCountry.total_coordination_number_evaluated}</strong>) et en {" "}
             <strong>
               {firstCountry.rank_coordination_number_successful}
               {getOrdinal(firstCountry.rank_coordination_number_successful, "fr")}
             </strong>{" "}
-            position pour les coordinations réussies (<strong>{firstCountry.total_coordination_number_successful}</strong>). Le taux de succès est de <strong>{firstCountry?.ratio_coordination_number?.toFixed(1)}%</strong>.
+            position pour la coordination de projets lauréats (<strong>{firstCountry.total_coordination_number_successful}</strong>). Son
+            taux de succès des coordinations de projets est de <strong>{firstCountry?.ratio_coordination_number?.toFixed(1)}%</strong>.
           </>
         )}
       </>
@@ -101,27 +109,28 @@ export function readingKey(data) {
       <>
         {firstCountry.rank_coordination_number_evaluated === firstCountry.rank_coordination_number_successful ? (
           <>
-            The country "<strong>{firstCountry.name_en}</strong>" ranks{" "}
+            <strong>{firstCountry.name_en}</strong> ranks{" "}
             <strong>
               {firstCountry.rank_coordination_number_evaluated}
               {getOrdinal(firstCountry.rank_coordination_number_evaluated, "en")}
             </strong>{" "}
-            for the number of evaluated coordinations (<strong>{firstCountry.total_coordination_number_evaluated}</strong>) as well as for successful coordinations (<strong>{firstCountry.total_coordination_number_successful}</strong>). Its success
-            rate is <strong>{firstCountry?.ratio_coordination_number?.toFixed(1)}%</strong>.
+            for both evaluated project coordinations (<strong>{firstCountry.total_coordination_number_evaluated}</strong>) and successful project coordinations (<strong>{firstCountry.total_coordination_number_successful}</strong>).{" "}
+            Its success rate of project coordinations is <strong>{firstCountry?.ratio_coordination_number?.toFixed(1)}%</strong>.
           </>
         ) : (
           <>
-            The country "<strong>{firstCountry.name_en}</strong>" ranks{" "}
+            <strong>{firstCountry.name_en}</strong> ranks{" "}
             <strong>
               {firstCountry.rank_coordination_number_evaluated}
               {getOrdinal(firstCountry.rank_coordination_number_evaluated, "en")}
             </strong>{" "}
-            for the number of evaluated coordinations (<strong>{firstCountry?.total_coordination_number_evaluated}</strong>) while it ranks{" "}
+            for evaluated project coordinations (<strong>{firstCountry?.total_coordination_number_evaluated}</strong>) and{" "}
             <strong>
               {firstCountry.rank_coordination_number_successful}
               {getOrdinal(firstCountry?.rank_coordination_number_successful, "en")}
             </strong>{" "}
-            for successful coordinations (<strong>{firstCountry?.total_coordination_number_successful}</strong>). The success rate is <strong>{firstCountry?.ratio_coordination_number?.toFixed(1)}%</strong>.
+            for successful project coordinations (<strong>{firstCountry?.total_coordination_number_successful}</strong>). Its
+            coordination success rate is <strong>{firstCountry?.ratio_coordination_number?.toFixed(1)}%</strong>.
           </>
         )}
       </>

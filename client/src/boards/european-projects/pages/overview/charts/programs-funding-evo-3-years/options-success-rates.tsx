@@ -27,6 +27,7 @@ export default function Options(data, displayType, currentLang): HighchartsOptio
     yAxis: {
       gridLineColor: "var(--background-default-grey-hover)",
       gridLineWidth: 0.5,
+      title: { text: "Part (%)" }
     },
     xAxis: [
       { ...commonXAxis, left: "0%" },

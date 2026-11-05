@@ -12,9 +12,7 @@ const DESTINATION_LABELS: Record<string, string> = {
   DN: "Doctoral Networks",
   SE: "Staff Exchanges",
   COFUND: "COFUND",
-  ITN: "Innovative Training Networks",
-  RISE: "Research and Innovation Staff Exchange",
-  IF: "Individual Fellowships",
+  CITIZENS: "CITIZENS",
 };
 
 type ViewMode = "projects" | "funding";
@@ -35,7 +33,7 @@ export default function MscaDestinationCards({ countryCode, callYear }: MscaDest
   if (isLoading) {
     return (
       <div className="msca-destination-section">
-        <h2>Types de financement</h2>
+        <h2>Par type de financement</h2>
         <div className="msca-stat-cards">
           {[1, 2, 3, 4].map((i) => (
             <MscaStatCardSkeleton key={i} />
@@ -47,11 +45,19 @@ export default function MscaDestinationCards({ countryCode, callYear }: MscaDest
 
   if (!data || data.length === 0) return null;
 
+  const ORDER = Object.keys(DESTINATION_LABELS);
+  const rank = (code: string) => {
+    const i = ORDER.indexOf(code);
+    return i === -1 ? ORDER.length : i;
+  };
+
+  const sortedData = [...data].sort((a, b) => rank(a.destination_code) - rank(b.destination_code));
+
   return (
     <div className="msca-destination-section">
       <div className="section-header">
         <Title as="h2" look="h5">
-          Types de financement
+          Par type de financement
         </Title>
         <SegmentedControl className="fr-segmented--sm" name="msca-destination-view-mode">
           <SegmentedElement checked={viewMode === "projects"} label="Projets" onClick={() => setViewMode("projects")} value="projects" />
@@ -59,7 +65,7 @@ export default function MscaDestinationCards({ countryCode, callYear }: MscaDest
         </SegmentedControl>
       </div>
       <div className="msca-stat-cards">
-        {data.map((dest) => (
+        {sortedData.map((dest) => (
           <MscaStatCard key={dest.destination_code} data={dest} viewMode={viewMode} />
         ))}
       </div>

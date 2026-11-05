@@ -1,4 +1,6 @@
-export function getDefaultParams(searchParams) {
+import { isEjoParam } from "../../../../utils/params";
+
+export function useGetParams(searchParams) {
   const params: string[] = [];
 
   const countryCode = searchParams.get("country_code");
@@ -19,7 +21,9 @@ export function getDefaultParams(searchParams) {
   const rangeOfYears = searchParams.get("range_of_years");
   if (rangeOfYears) params.push(`years=${rangeOfYears}`);
 
+  if (searchParams.has("isEjo")) params.push(isEjoParam());
+
   params.push("stage=successful");
 
-  return params.join("&");
+  return params.filter((item) => !!item).join("&");
 }

@@ -1,8 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 
-import { GetData } from "./query";
-import { getDefaultParams } from "./utils";
+import { getData } from "./query";
+import { useGetParams } from "./utils";
 import { RenderData } from "./render-data";
 import options from "./options";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
@@ -16,12 +16,12 @@ import i18n from "./i18n.json";
 export default function Top10CountriesByTypeOfBeneficiaries() {
   const [searchParams] = useSearchParams();
   const currentLang = searchParams.get("language") || "fr";
-  const params = getDefaultParams(searchParams);
+  const params = useGetParams(searchParams);
   const color = useChartColor();
 
   const { data, isLoading } = useQuery({
     queryKey: ["top10CountriesByTypeOfBeneficiaries", params],
-    queryFn: () => GetData(params),
+    queryFn: () => getData(params),
     enabled: !!params,
   });
 

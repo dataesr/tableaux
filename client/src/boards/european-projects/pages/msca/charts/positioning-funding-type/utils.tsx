@@ -9,9 +9,8 @@ export const FUNDING_TYPES = [
   { code: "DN", label: { fr: "Doctoral Networks (DN)", en: "Doctoral Networks (DN)" } },
   { code: "SE", label: { fr: "Staff Exchanges (SE)", en: "Staff Exchanges (SE)" } },
   { code: "COFUND", label: { fr: "COFUND", en: "COFUND" } },
-  { code: "ITN", label: { fr: "Innovative Training Networks (ITN)", en: "Innovative Training Networks (ITN)" } },
-  { code: "RISE", label: { fr: "RISE", en: "RISE" } },
-  { code: "IF", label: { fr: "Individual Fellowships (IF)", en: "Individual Fellowships (IF)" } },
+  { code: "CITIZENS", label: {fr: "MSCA and Citizens", en: "MSCA and Citizens"} },
+
 ] as const;
 
 export type FundingTypeCode = (typeof FUNDING_TYPES)[number]["code"];
@@ -116,9 +115,9 @@ export function renderDataTable(processedData: ProcessedPositioningByFundingType
 
   return (
     <table className="fr-table">
-      <caption>
+      {/* <caption> => title in i18n.json
         {currentLang === "fr" ? "Classement des pays par nombre de participants MSCA" : "Country ranking by number of MSCA participants"}
-      </caption>
+      </caption> */}
       <thead>
         <tr>
           {headers.map((header, i) => (

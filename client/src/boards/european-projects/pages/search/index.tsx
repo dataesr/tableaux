@@ -105,7 +105,7 @@ export default function Search() {
 
   const { data: dataDestinations } = useQuery({
     queryKey: ["ep/get-destinations-from-thematics", selectedThematics],
-    queryFn: () => getDestinations(selectedThematics),
+    queryFn: () => getDestinations({ thematics: selectedThematics }),
   });
 
   useEffect(() => {

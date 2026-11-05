@@ -1,43 +1,30 @@
+@use "../colors.scss";
+
 :root {
   // =========================================================================
   // COULEURS SÉMANTIQUES — Personnel Enseignant
   // =========================================================================
 
   // --- Genre ---
-  --fm-hommes: var(--yellow-tournesol-main-731);
-  --fm-femmes: var(--pink-tuile-main-556);
+  --fm-hommes: var(--scale-10-color);
+  --fm-femmes: var(--scale-9-color);
 
   // --- Statut (3 groupes) ---
   --fm-statut-ec: var(--blue-france-main-525);
-  --fm-statut-titulaire: var(--green-emeraude-main-632);
-  --fm-statut-non-permanent: var(--purple-glycine-main-494);
+  --fm-statut-titulaire: var(--scale-2-color);
+  --fm-statut-non-permanent: var(--scale-7-color);
 
   // --- Catégories de personnel ---
   --fm-cat-pr: var(--blue-france-main-525);
-  --fm-cat-mcf: var(--green-emeraude-main-632);
-  --fm-cat-2nd-degre: var(--yellow-moutarde-main-679);
+  --fm-cat-mcf: var(--scale-2-color);
+  --fm-cat-2nd-degre: var(--scale-11-color);
 
   // --- Tranches d'âge ---
-  --fm-age-35-et-moins: var(--green-bourgeon-main-640);
-  --fm-age-35-et-moins-ec: var(--green-bourgeon-main-640);
-  --fm-age-36-55-ec: var(--blue-cumulus-main-526);
-  --fm-age-56-et-plus-ec: var(--orange-terre-battue-main-645);
+  --fm-age-35-et-moins: var(--scale-1-color);
+  --fm-age-35-et-moins-ec: var(--scale-1-color);
+  --fm-age-36-55-ec: var(--scale-6-color);
+  --fm-age-56-et-plus-ec: var(--scale-12-color);
 
   // --- Couleur background du tableau ---
-  --fm-home: var(--green-archipel-975);
-
-  --scale-1: var(--blue-france-main-525);
-  --scale-2: var(--green-emeraude-main-632);
-  --scale-3: var(--yellow-tournesol-main-731);
-  --scale-4: var(--pink-tuile-main-556);
-  --scale-5: var(--purple-glycine-main-494);
-  --scale-6: var(--orange-terre-battue-main-645);
-  --scale-7: var(--green-bourgeon-main-640);
-  --scale-8: var(--blue-ecume-main-400);
-  --scale-9: var(--brown-cafe-creme-main-782);
-  --scale-10: var(--green-menthe-main-548);
-  --scale-11: var(--blue-cumulus-main-526);
-  --scale-12: var(--pink-macaron-main-689);
-  --scale-13: var(--yellow-moutarde-main-679);
-  --scale-14: var(--green-archipel-main-557);
+  --fm-home: var(--scale-38-color);
 }

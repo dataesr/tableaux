@@ -1,0 +1,26 @@
+// import FundingRanking from "../../../positioning/charts/funding-ranking";
+import BoardsSuggestComponent from "../../../../../../components/boards-suggest-component";
+import FundingRankingCoordination from "../../../positioning/charts/funding-ranking/coordination";
+import FundingRankingParticipations from "../../../positioning/charts/funding-ranking/participations";
+import FundingRankingProjects from "../../../positioning/charts/funding-ranking/projects";
+import FundingRankingRates from "../../../positioning/charts/funding-ranking/rates";
+import FundingRankingSubsidies from "../../../positioning/charts/funding-ranking/subsidies";
+import Intro from "../../../positioning/charts/intro";
+import Top10Beneficiaries from "../../../positioning/charts/top-10-beneficiaries";
+
+export default function PositionnementContent() {
+  return (
+    <div className="fr-pb-3w">
+      {/** TODO: Permettre l'intégration comme pour le chartWrapper */}
+      <Intro />
+      <Top10Beneficiaries />
+      <FundingRankingSubsidies />
+      <FundingRankingRates />
+      <FundingRankingParticipations />
+      <FundingRankingCoordination />
+      <FundingRankingProjects />
+
+      <BoardsSuggestComponent />
+    </div>
+  );
+}

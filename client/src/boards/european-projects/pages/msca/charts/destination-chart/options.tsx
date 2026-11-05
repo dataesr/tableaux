@@ -22,7 +22,18 @@ interface OptionsParams {
 export default function Options({ data, currentLang = "fr" }: OptionsParams) {
   if (!data || data.length === 0) return null;
 
-  const sortedData = [...data].sort((a, b) => a.destination_code.localeCompare(b.destination_code));
+  // const sortedData = [...data].sort((a, b) => a.destination_code.localeCompare(b.destination_code));
+
+  const destinationOrder = Object.keys(DESTINATION_NAMES);
+
+  const getOrder = (code: string) => {
+    const idx = destinationOrder.indexOf(code);
+    return idx === -1 ? Number.MAX_SAFE_INTEGER : idx; // codes inconnus à la fin
+  };
+
+  const sortedData = [...data].sort(
+    (a, b) => getOrder(a.destination_code) - getOrder(b.destination_code),
+  );
 
   const categories = sortedData.map((d) => d.destination_code);
   const evaluatedData = sortedData.map((d) => d.evaluated?.total_projects || 0);
@@ -38,7 +49,7 @@ export default function Options({ data, currentLang = "fr" }: OptionsParams) {
   const successfulColor = rootStyles.getPropertyValue("--successful-project-color").trim() || "#233e41";
   const successRateColor = rootStyles.getPropertyValue("--average-success-rate-color").trim() || "#d75521";
 
-  const titleText = currentLang === "fr" ? "Projets par type de financement MSCA" : "Projects by MSCA action type";
+  const titleText = currentLang === "fr" ? "Répartition du nombre de projets et des taux de succès par type de financement" : "Breakdown of the number of projects and success rates by action type";
 
   const newOptions: HighchartsInstance.Options = {
     chart: {

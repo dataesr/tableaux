@@ -1,0 +1,5 @@
+### Route
+GET http://localhost:3000/api/european-projects/overview/pillars-funding-proportion?country_code=&isEjo=&pillars=
+
+### Création du covered index
+GET http://localhost:3000/api/european-projects/overview/pillars-funding-proportion_indexes

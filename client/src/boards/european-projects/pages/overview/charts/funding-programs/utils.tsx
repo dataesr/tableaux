@@ -36,9 +36,14 @@ export function useGetParams() {
     params.push(`structureid=${structureId}`);
   }
 
-    if (searchParams.has("isEjo")) {
-      params.push(isEjoParam());
-    }
+  const rangeOfYears = searchParams.get("range_of_years");
+  if (rangeOfYears) {
+    params.push(`range_of_years=${encodeURIComponent(rangeOfYears)}`);
+  }
+
+  if (searchParams.has("isEjo")) {
+    params.push(isEjoParam());
+  }
 
   return params.join("&");
 }
