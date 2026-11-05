@@ -40,8 +40,9 @@ export default function GlobalLayout() {
       before={pathname !== `${BASE}/accueil` && <SelectionBar pays={pays} />}
       footer={{ href: `${BASE}/accueil`, title: "Accueil - Suivi de la recherche française" }}
       items={items}
+      exploreLink
       serviceHref={`${BASE}/accueil`}
       serviceTag={getI18nLabel(i18n, "tagline")}
     />
-  );
+  )
 }

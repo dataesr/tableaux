@@ -1,7 +1,7 @@
+import cn from "classnames"
 import { Logo } from "@dataesr/dsfr-plus"
 import { ReactNode, useEffect } from "react"
 import { Link, useSearchParams } from "react-router-dom"
-
 import { getI18nLabel } from "../../utils"
 import i18n from "./i18n.json"
 
@@ -26,6 +26,8 @@ type HeaderProps = {
   languageSelector?: boolean
   // Bouton « Paramètres d'affichage » (true par défaut)
   themeSwitch?: boolean
+  // La barre de navigation reste fixe
+  stickyNav?: boolean
   // Contenu additionnel aligné à droite dans la barre de menu (ex. sélecteur de pays)
   navExtra?: ReactNode
   serviceHref?: string
@@ -57,6 +59,7 @@ export default function Header({
   exploreLink = false,
   languageSelector = false,
   themeSwitch = true,
+  stickyNav = false,
   navExtra,
   serviceHref = "/",
   serviceName,
@@ -119,7 +122,7 @@ export default function Header({
           </ul>
         </nav>
       </div>
-      <header className="fr-header" role="banner">
+      <header className={cn("fr-header", { "header--sticky-nav": stickyNav && hasNav })} role="banner">
         <div className="fr-header__body">
           <div className="fr-container">
             <div className="fr-header__body-row">

@@ -1,6 +1,5 @@
 import { ComponentProps, ReactNode } from "react";
-import { Outlet } from "react-router-dom";
-
+import { Outlet } from "react-router-dom"
 import Footer from "../components/footer";
 import Header from "./header";
 
@@ -23,7 +22,7 @@ export function Layout({ before, children, footer, ...headerProps }: LayoutProps
       </main>
       <Footer {...footer} />
     </>
-  );
+  )
 }
 
 export default Layout;

@@ -20,6 +20,7 @@ export function Layout({ languageSelector = false }) {
       }
       languageSelector={languageSelector}
       serviceName="Atlas des effectifs étudiants"
+      serviceTag=""
     />
-  );
+  )
 }
