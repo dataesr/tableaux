@@ -49,6 +49,10 @@ const configProjects = {
       </>
     ),
   },
+  // title: {
+  // fr: "Nombre de projets lauréats par type de financement ERC",
+  // en: "Top beneficiary countries",
+  // },
   integrationURL: "/european-projects/components/pages/erc/charts/destination-chart",
 };
 
