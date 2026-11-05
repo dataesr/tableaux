@@ -4,7 +4,7 @@ import { Row, Col } from "@dataesr/dsfr-plus";
 import { useSearchParams } from "react-router-dom";
 import { getErcSynthesis, ErcSynthesisResponse } from "../../../api/erc";
 import { formatCurrency, formatNumber, formatToRates } from "../../../../../utils/format";
-import { getCountryNameWithDe, getCountryNameWithArticle } from "../../../utils/country-mapping";
+import { getCountryNameWithArticle } from "../../../utils/country-mapping";
 
 import "./styles.scss";
 
@@ -19,7 +19,6 @@ interface ErcSynthesisCardsProps {
   destinationCode?: string;
   countryAdj?: CountryAdjectives;
 }
-
 
 
 export default function ErcSynthesisCards({
@@ -76,7 +75,6 @@ export default function ErcSynthesisCards({
   const [searchParams] = useSearchParams();
   const lang = (searchParams.get("language") === "en" ? "en" : "fr") as "fr" | "en";
   const country = getCountryNameWithArticle(countryCode, lang).replace(/^(Le |La |Les |L')/, (m) => m.toLowerCase());
-  console.log(data)
 
   return (
     <Row className="erc-synthesis-cards" gutters>
