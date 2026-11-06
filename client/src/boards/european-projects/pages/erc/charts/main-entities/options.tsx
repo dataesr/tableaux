@@ -1,6 +1,6 @@
 import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js";
 import { CreateChartOptions } from "../../../../components/chart-ep";
-import { formatCurrency } from "../../../../../../utils/format";
+import { formatCurrency, formatToMillions } from "../../../../../../utils/format";
 import { getCssColor } from "../../../../../../utils/colors";
 import type { ErcMainEntitiesData } from "./query";
 
@@ -45,7 +45,7 @@ export default function Options(data: ErcMainEntitiesData, currentLang: string):
         dataLabels: {
           enabled: true,
           formatter: function () {
-            return formatCurrency(this.y ?? 0);
+            return formatToMillions(this.y ?? 0);
           },
         },
       },

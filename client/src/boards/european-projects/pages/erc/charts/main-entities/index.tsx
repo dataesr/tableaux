@@ -20,6 +20,15 @@ const ERC_DESTINATIONS = [
   { code: "SyG", labelFr: "Synergy grants (SyG)", labelEn: "Synergy grants (SyG)" },
 ];
 
+interface CountryAdjectives {
+  m: string;
+  f: string;
+}
+
+interface ErcMainEntitiesProps {
+  countryAdj?: CountryAdjectives;
+}
+
 function useGetParams() {
   const [searchParams] = useSearchParams();
   const params: string[] = [];
@@ -42,7 +51,7 @@ function renderDataTable(data: { list: { acronym: string | null; name: string; t
         <tr>
           <th scope="col">{lang === "fr" ? "Acronyme" : "Acronym"}</th>
           <th scope="col">{lang === "fr" ? "Nom" : "Name"}</th>
-          <th scope="col">{lang === "fr" ? "Financement (€)" : "Funding (€)"}</th>
+          <th scope="col">{lang === "fr" ? "Financements (€)" : "Funding (€)"}</th>
         </tr>
       </thead>
       <tbody>
@@ -58,7 +67,10 @@ function renderDataTable(data: { list: { acronym: string | null; name: string; t
   );
 }
 
-export default function ErcMainEntities() {
+export default function ErcMainEntities({ 
+  countryAdj = { m: "français", f: "française" } }: 
+  ErcMainEntitiesProps
+) {
   const { params: urlParams, currentLang } = useGetParams();
   const [selectedDestination, setSelectedDestination] = useState("ALL");
   const [displayLimit, setDisplayLimit] = useState(10);
@@ -66,6 +78,8 @@ export default function ErcMainEntities() {
 
   const queryParams = selectedDestination === "ALL" ? urlParams : `${urlParams}&destination_code=${selectedDestination}`;
 
+  const adjMascPlural = countryAdj.m.endsWith("s") ? countryAdj.m : `${countryAdj.m}s`; 
+  
   const { data: allData, isLoading } = useQuery({
     queryKey: ["ercMainEntities", queryParams],
     queryFn: () => getAllData(queryParams),
@@ -77,12 +91,12 @@ export default function ErcMainEntities() {
   const data = allData ? { ...allData, list: displayedList } : undefined;
 
   const destLabel = ERC_DESTINATIONS.find((d) => d.code === selectedDestination);
-  const titleSuffixFr = destLabel && selectedDestination !== "ALL" ? ` — ${destLabel.labelFr}` : "";
-  const titleSuffixEn = destLabel && selectedDestination !== "ALL" ? ` — ${destLabel.labelEn}` : "";
+  const titleSuffixFr = destLabel && selectedDestination !== "ALL" ? `${destLabel.labelFr}` : "";
+  const titleSuffixEn = destLabel && selectedDestination !== "ALL" ? `${destLabel.labelEn}` : "";
 
   const isShowingAll = displayLimit >= totalCount;
   const titleConfig = {
-    fr: isShowingAll ? `Financement obtenu par tous les établissements d'accueil d'une ERC${titleSuffixFr}` : `Financement obtenu par les ${displayLimit} principaux établissements d'accueil d'une ERC${titleSuffixFr}`,
+    fr: isShowingAll ? `Financements ERC ${titleSuffixFr} obtenus par les établissements d'accueil ${adjMascPlural}` : `Financements ERC ${titleSuffixFr} obtenus par les ${displayLimit} principaux établissements d'accueil`,
     en: isShowingAll ? `Funding secured by all host institutions of an ERC grant${titleSuffixEn}` : `Funding secured by the top ${displayLimit} host institutions of an ERC grant${titleSuffixEn}`,
     className: "fr-mt-2w fr-ml-1w",
   };
