@@ -71,6 +71,7 @@ export default function getOptions(data, currentLang) {
         dataLabels: {
           enabled: true,
           formatter: function () {
+            if (!this.y) return null; 
             return formatToMillions(this.y ?? 0);
           },
         },
