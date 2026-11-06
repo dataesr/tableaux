@@ -48,14 +48,7 @@ export default function GlobalLayout() {
 
   return (
     <div className="ep-styles">
-      <Layout
-        items={items}
-        stickyNav
-        languageSelector
-        navExtra={<CountrySelector />}
-        serviceHref={`${BASE}/accueil`}
-        serviceTag={getI18nLabel(i18n, "tagline")}
-      />
+      <Layout exploreLink items={items} languageSelector navExtra={<CountrySelector />} serviceHref={`${BASE}/accueil`} serviceTag={getI18nLabel(i18n, "tagline")} stickyNav />
     </div>
-  )
+  );
 }
