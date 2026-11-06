@@ -1,23 +1,23 @@
 import { useQuery } from "@tanstack/react-query";
-import { useSearchParams } from "react-router-dom";
 import { useState } from "react";
+import { useSearchParams } from "react-router-dom";
 
-import { GetData } from "./query";
-import { getDefaultParams } from "./utils";
-import { getI18nLabel } from "../../../../../../utils";
-import i18n from "../../../../i18n-global.json";
-import { RenderData } from "./render-data";
-import options from "./options";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 import { useChartColor } from "../../../../../../hooks/useChartColor";
+import { getI18nLabel } from "../../../../../../utils";
 import { EPChartsSources } from "../../../../config";
+import i18n from "../../../../i18n-global.json";
+import options from "./options";
+import { getData } from "./query";
+import { RenderData } from "./render-data";
+import { useGetParams } from "./utils";
 
 const config = {
   id: "typeBeneficiariesEvolution",
   title: {
-    fr: "Évolution des subventions par pays (en millions d'euros)",
-    en: "Evolution of funding by country (in millions of euros)",
+    fr: "Évolution des financements obtenus par pays et par type d'entités",
+    en: "Evolution of secured funding by country",
   },
   description: {
     fr: "Évolution des financements obtenus par type d'entités selon les pays du top 10.",
@@ -46,20 +46,20 @@ export default function TypeOfBeneficiariesEvolution() {
   const currentLang = searchParams.get("language") || "fr";
   const selectedCountry = searchParams.get("country_code") || undefined;
   const [selectedEntityType, setSelectedEntityType] = useState("REC");
-  const params = getDefaultParams(searchParams);
+  const params = useGetParams(searchParams);
   const color = useChartColor();
 
   const entityTypes = [
     { value: "REC", label: getI18nLabel(i18n, "REC") },
+    { value: "HES", label: getI18nLabel(i18n, "HES") },
     { value: "PUB", label: getI18nLabel(i18n, "PUB") },
     { value: "PRC", label: getI18nLabel(i18n, "PRC") },
-    { value: "HES", label: getI18nLabel(i18n, "HES") },
     { value: "OTH", label: getI18nLabel(i18n, "OTH") },
   ];
 
   const { data, isLoading } = useQuery({
     queryKey: [config.id, params, selectedEntityType],
-    queryFn: () => GetData(params, selectedEntityType),
+    queryFn: () => getData(params, selectedEntityType),
     enabled: !!params,
   });
 

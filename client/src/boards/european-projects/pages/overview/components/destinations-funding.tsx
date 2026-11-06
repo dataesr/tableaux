@@ -18,6 +18,7 @@ export default function DestinationsFunding() {
             <option value="total_fund_eur">{getI18nLabel(i18nGlobal, "total-fund-eur")}</option>
             <option value="total_coordination_number">{getI18nLabel(i18nGlobal, "total-coordination-number")}</option>
             <option value="total_number_involved">{getI18nLabel(i18nGlobal, "total-number-involved")}</option>
+            <option value="total_projects">{getI18nLabel(i18nGlobal, "total-projects")}</option>
           </select>
         </Col>
       </Row>
@@ -26,7 +27,6 @@ export default function DestinationsFunding() {
           <FundingCombined displayType={displayType} groupBy="destination" />
         </Col>
       </Row>
-
       <Row className="fr-mt-1w">
         <Col>
           <DestinationFundingProportion displayType={displayType} />

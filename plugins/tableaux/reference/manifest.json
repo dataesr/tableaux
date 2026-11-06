@@ -1,0 +1,119 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Manifeste de tableau du prototype Tableaux",
+  "description": "Métadonnées proposées pour un tableau généré (dossier client et routes serveur) ; il n'enregistre ni n'autorise aucun tableau de bord.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "id",
+    "name",
+    "description",
+    "data_sources",
+    "routes",
+    "features"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "schema_version": {
+      "const": 1
+    },
+    "id": {
+      "type": "string",
+      "description": "Nom du dossier du tableau (client et serveur) et, lors de la promotion, `boards.id` correspondant dans MongoDB.",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+      "minLength": 2,
+      "maxLength": 50
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120
+    },
+    "description": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500
+    },
+    "data_sources": {
+      "description": "Sources de données lues par les routes serveur du tableau. Le navigateur ne les lit jamais directement.",
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "elasticsearch",
+          "mongodb",
+          "paysage",
+          "ods",
+          "other"
+        ]
+      }
+    },
+    "routes": {
+      "description": "Contrat backend : les routes serveur propres au tableau, montées depuis server/src/router.js.",
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "method",
+          "path",
+          "description"
+        ],
+        "properties": {
+          "method": {
+            "enum": [
+              "GET",
+              "POST"
+            ]
+          },
+          "path": {
+            "type": "string",
+            "description": "Doit commencer par /<id>/, où <id> est l'identifiant du tableau.",
+            "pattern": "^/[a-z0-9]+(?:-[a-z0-9]+)*/[A-Za-z0-9_\\-/{}]+$"
+          },
+          "description": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 300
+          }
+        }
+      }
+    },
+    "common_candidates": {
+      "description": "Utilitaires qui semblent réutilisables par d'autres tableaux et qui peuvent être proposés, après relecture, pour extraction vers server/src/commons ou services. La logique propre à un jeu de données reste dans le tableau.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name",
+          "reason"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "features": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+        "maxLength": 64
+      }
+    }
+  }
+}

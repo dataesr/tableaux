@@ -81,7 +81,7 @@ export default function EntitySelector({ viewType }: Props) {
         navigate(`/personnel-enseignant/regions?geo_id=${encodeURIComponent(_geoId)}&section=enseignants-chercheurs`);
     };
     return (
-        <main>
+        <div>
             <Container fluid className="fm-etablissement-selector__wrapper">
                 <Container as="section">
                     <Row>
@@ -170,6 +170,6 @@ export default function EntitySelector({ viewType }: Props) {
                     </Row>
                 </Container>
             )}
-        </main>
+        </div>
     );
 }

@@ -1,7 +1,8 @@
 import { useSearchParams } from "react-router-dom";
+
 import { getI18nLabel } from "../../../../../../utils";
-import { isEjoParam } from "../../../../utils/params";
 import i18n from "../../../../i18n-global.json";
+import { isEjoParam } from "../../../../utils/params";
 
 export function useGetParams() {
   const [searchParams] = useSearchParams();
@@ -37,6 +38,12 @@ export function useGetParams() {
   if (structureId) {
     params.push(`structureid=${structureId}`);
   }
+
+  const rangeOfYears = searchParams.get("range_of_years");
+  if (rangeOfYears) {
+    params.push(`range_of_years=${encodeURIComponent(rangeOfYears)}`);
+  }
+
   if (searchParams.has("isEjo")) {
     params.push(isEjoParam());
   }

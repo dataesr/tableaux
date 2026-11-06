@@ -28,10 +28,8 @@ export async function getThematics(
   return values;
 }
 
-export async function getDestinations(
-  thematics: string[]
-) {  
-  const url = `${VITE_APP_SERVER_URL}/european-projects/destinations-from-thematics?thematics=${thematics.join(",")}`;
+export async function getDestinations({ programs = [], thematics }: { programs?: string[], thematics: string[] }) {
+  const url = `${VITE_APP_SERVER_URL}/european-projects/destinations-from-thematics?thematics=${thematics.join(",")}${ (programs?.length ?? 0) > 0 ? "&programs=" + programs.join(",") : "" }`;
   const values = await fetch(url).then((response) => response.json());
   return values;
 }

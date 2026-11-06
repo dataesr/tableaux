@@ -1,7 +1,7 @@
 const i18n = {
   title: {
-    fr: "Entités",
-    en: "Entities",
+    fr: "Établissements d’accueil",
+    en: "Host institutions",
   },
   hint: {
     fr: "Découvrez les entités impliquées dans les projets européens, leurs rôles et leurs collaborations.",

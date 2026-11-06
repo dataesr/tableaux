@@ -1,16 +1,15 @@
+import { Col, Container, Row, Title } from "@dataesr/dsfr-plus";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 
+import { formatCurrency, formatCurrencyEn } from "../../../../../../utils/format";
+import RateCard from "../../../../components/cards/funds-cards/rate";
+import i18n from "./i18n.json";
+import { getData } from "./query";
 import Template from "./template";
-import { GetData } from "./query";
-
 import { useGetParams } from "./utils";
-import { Col, Container, Row, Title } from "@dataesr/dsfr-plus";
 
 import "./styles.scss";
-import RateCard from "../../../../components/cards/funds-cards/rate";
-
-import i18n from "./i18n.json";
 
 export default function SynthesisFocus() {
   const [searchParams] = useSearchParams();
@@ -29,7 +28,7 @@ export default function SynthesisFocus() {
 
   const { data, isLoading } = useQuery({
     queryKey: ["SynthesisFocus", params],
-    queryFn: () => GetData(params),
+    queryFn: () => getData(params),
   });
 
   if (isLoading || !data) return <Template />;
@@ -42,76 +41,82 @@ export default function SynthesisFocus() {
   if (!structureId) {
     return (
       <Container as="section" fluid className="fr-mb-2w">
-        <Title as="h2">{currentLang === "en" ? "Key figures" : "Grands chiffres"}</Title>
+        <Title as="h2">{getI18nLabel("keyFigures")}</Title>
         <Row gutters>
-          <Col xs={12} md={6}>
+          <Col xs={12} md={4}>
+            {/*cards successful funding country share*/}
             <RateCard
               nb={dataCurrentCountry_successful.total_fund_eur / dataSuccessful.total_fund_eur}
               label={getI18nLabel("fundsShare.label")}
               loading={false}
               tooltipText={getI18nLabel("fundsShare.tooltip")}
-              numerator={dataCurrentCountry_successful.total_fund_eur}
-              denominator={dataSuccessful.total_fund_eur}
+              numerator={currentLang === "fr" ? formatCurrency(dataCurrentCountry_successful.total_fund_eur) : formatCurrencyEn(dataCurrentCountry_successful.total_fund_eur)}
+              denominator={currentLang === "fr" ? formatCurrency(dataSuccessful.total_fund_eur) : formatCurrencyEn(dataSuccessful.total_fund_eur)}
               numeratorLabel={getI18nLabel("labels.fundsShare.numerator")}
               denominatorLabel={getI18nLabel("labels.fundsShare.denominator")}
             />
           </Col>
-          <Col xs={12} md={6}>
+          <Col xs={12} md={4}>
+            {/*cards evaluated involved country share*/}
             <RateCard
-              nb={dataCurrentCountry_successful.total_involved / dataSuccessful.total_involved}
-              label={getI18nLabel("participantsShare.label")}
+              nb={dataCurrentCountry_evaluated.total_involved / dataEvaluated.total_involved}
+              label={getI18nLabel("applicantsShare.label")}
               loading={false}
-              tooltipText={getI18nLabel("participantsShare.tooltip")}
-              numerator={dataCurrentCountry_successful.total_involved}
-              denominator={dataSuccessful.total_involved}
-              numeratorLabel={getI18nLabel("labels.participantsShare.numerator")}
-              denominatorLabel={getI18nLabel("labels.participantsShare.denominator")}
+              tooltipText={getI18nLabel("applicantsShare.tooltip")}
+              numerator={Math.trunc(dataCurrentCountry_evaluated.total_involved)}
+              denominator={Math.trunc(dataEvaluated.total_involved)}
+              numeratorLabel={getI18nLabel("labels.applicantsShare.numerator")}
+              denominatorLabel={getI18nLabel("labels.applicantsShare.denominator")}
             />
           </Col>
-          <Col xs={12} md={6}>
+          <Col xs={12} md={4}>
+            {/*cards successful coord country share*/}
             <RateCard
               nb={dataCurrentCountry_successful.total_coordination_number / dataSuccessful.total_coordination_number}
               label={getI18nLabel("coordinationsShare.label")}
               loading={false}
               tooltipText={getI18nLabel("coordinationsShare.tooltip")}
-              numerator={dataCurrentCountry_successful.total_coordination_number}
-              denominator={dataSuccessful.total_coordination_number}
+              numerator={Math.trunc(dataCurrentCountry_successful.total_coordination_number)}
+              denominator={Math.trunc(dataSuccessful.total_coordination_number)}
               numeratorLabel={getI18nLabel("labels.coordinationsShare.numerator")}
               denominatorLabel={getI18nLabel("labels.coordinationsShare.denominator")}
             />
           </Col>
-          <Col xs={12} md={6}>
+          <Col xs={12} md={4}>
+            {/*cards funding country success*/}
             <RateCard
               nb={dataCurrentCountry_successful.total_fund_eur / dataCurrentCountry_evaluated.total_fund_eur}
               label={getI18nLabel("fundsSuccessRate.label")}
               loading={false}
               tooltipText={getI18nLabel("fundsSuccessRate.tooltip")}
-              numerator={dataCurrentCountry_successful.total_fund_eur}
-              denominator={dataCurrentCountry_evaluated.total_fund_eur}
+              numerator={currentLang === "fr" ? formatCurrency(dataCurrentCountry_successful.total_fund_eur) : formatCurrencyEn(dataCurrentCountry_successful.total_fund_eur)}
+              denominator={currentLang === "fr" ? formatCurrency(dataCurrentCountry_evaluated.total_fund_eur) : formatCurrencyEn(dataCurrentCountry_evaluated.total_fund_eur)}
               numeratorLabel={getI18nLabel("labels.fundsSuccessRate.numerator")}
               denominatorLabel={getI18nLabel("labels.fundsSuccessRate.denominator")}
             />
           </Col>
-          <Col xs={12} md={6}>
+          <Col xs={12} md={4}>
+            {/*cards involved country success*/}
             <RateCard
               nb={dataCurrentCountry_successful.total_involved / dataCurrentCountry_evaluated.total_involved}
               label={getI18nLabel("participantsSuccessRate.label")}
               loading={false}
               tooltipText={getI18nLabel("participantsSuccessRate.tooltip")}
-              numerator={dataCurrentCountry_successful.total_involved}
-              denominator={dataCurrentCountry_evaluated.total_involved}
+              numerator={Math.trunc(dataCurrentCountry_successful.total_involved)}
+              denominator={Math.trunc(dataCurrentCountry_evaluated.total_involved)}
               numeratorLabel={getI18nLabel("labels.participantsSuccessRate.numerator")}
               denominatorLabel={getI18nLabel("labels.participantsSuccessRate.denominator")}
             />
           </Col>
-          <Col xs={12} md={6}>
+          <Col xs={12} md={4}>
+            {/*cards coord country success*/}
             <RateCard
               nb={dataCurrentCountry_successful.total_coordination_number / dataCurrentCountry_evaluated.total_coordination_number}
               label={getI18nLabel("projectsSuccessRate.label")}
               loading={false}
               tooltipText={getI18nLabel("projectsSuccessRate.tooltip")}
-              numerator={dataCurrentCountry_successful.total_coordination_number}
-              denominator={dataCurrentCountry_evaluated.total_coordination_number}
+              numerator={Math.trunc(dataCurrentCountry_successful.total_coordination_number)}
+              denominator={Math.trunc(dataCurrentCountry_evaluated.total_coordination_number)}
               numeratorLabel={getI18nLabel("labels.projectsSuccessRate.numerator")}
               denominatorLabel={getI18nLabel("labels.projectsSuccessRate.denominator")}
             />
@@ -123,77 +128,77 @@ export default function SynthesisFocus() {
 
   return (
     <Container as="section" fluid className="fr-mb-2w">
-      <Title as="h2">{currentLang === "en" ? "Key figures" : "Grands chiffres"}</Title>
+      <Title as="h2">{getI18nLabel("keyFigures")}</Title>
       <Row gutters>
-        <Col md={6}>
+        <Col md={4}>
           <RateCard
             nb={dataSuccessful.entity.total_fund_eur / dataCurrentCountry_successful.total_fund_eur}
             label={getI18nLabel("EntityFundsShare.label")}
             loading={false}
             tooltipText={getI18nLabel("EntityFundsShare.tooltip")}
-            numerator={dataSuccessful.entity.total_fund_eur}
-            denominator={dataCurrentCountry_successful.total_fund_eur}
+            numerator={currentLang === "fr" ? formatCurrency(dataSuccessful.entity.total_fund_eur) : formatCurrencyEn(dataSuccessful.entity.total_fund_eur)}
+            denominator={currentLang === "fr" ? formatCurrency(dataCurrentCountry_successful.total_fund_eur) : formatCurrencyEn(dataCurrentCountry_successful.total_fund_eur)}
             numeratorLabel={getI18nLabel("labels.EntityFundsShare.numerator")}
             denominatorLabel={getI18nLabel("labels.fundsShare.numerator")}
           />
         </Col>
-        <Col md={6}>
+        <Col md={4}>
           <RateCard
             nb={dataSuccessful.entity.total_involved / dataCurrentCountry_successful.total_involved}
             label={getI18nLabel("entityParticipantsShare.label")}
             loading={false}
             tooltipText={getI18nLabel("entityParticipantsShare.tooltip")}
-            numerator={dataSuccessful.entity.total_involved}
-            denominator={dataCurrentCountry_successful.total_involved}
+            numerator={Math.trunc(dataSuccessful.entity.total_involved)}
+            denominator={Math.trunc(dataCurrentCountry_successful.total_involved)}
             numeratorLabel={getI18nLabel("labels.entityParticipantsShare.numerator")}
             denominatorLabel={getI18nLabel("labels.participantsShare.numerator")}
           />
         </Col>
 
-        <Col md={6}>
+        <Col md={4}>
           <RateCard
             nb={dataSuccessful.entity.total_coordination_number / dataCurrentCountry_successful.total_coordination_number}
             label={getI18nLabel("entityCoordinationsShare.label")}
             loading={false}
             tooltipText={getI18nLabel("entityCoordinationsShare.tooltip")}
-            numerator={dataSuccessful.entity.total_coordination_number}
-            denominator={dataCurrentCountry_successful.total_coordination_number}
+            numerator={Math.trunc(dataSuccessful.entity.total_coordination_number)}
+            denominator={Math.trunc(dataCurrentCountry_successful.total_coordination_numberMath.trunc)}
             numeratorLabel={getI18nLabel("labels.entityCoordinationsShare.numerator")}
             denominatorLabel={getI18nLabel("labels.coordinationsShare.numerator")}
           />
         </Col>
-        <Col md={6}>
+        <Col md={4}>
           <RateCard
             nb={dataSuccessful.entity.total_fund_eur / dataEvaluated.entity.total_fund_eur}
             label={getI18nLabel("fundsSuccessRate.label")}
             loading={false}
             tooltipText={getI18nLabel("fundsSuccessRate.tooltip")}
-            numerator={dataSuccessful.entity.total_fund_eur}
-            denominator={dataEvaluated.entity.total_fund_eur}
+            numerator={currentLang === "fr" ? formatCurrency(dataSuccessful.entity.total_fund_eur) : formatCurrencyEn(dataSuccessful.entity.total_fund_eur)}
+            denominator={currentLang === "fr" ? formatCurrency(dataEvaluated.entity.total_fund_eur) : formatCurrencyEn(dataEvaluated.entity.total_fund_eur)}
             numeratorLabel={getI18nLabel("labels.fundsSuccessRate.numerator")}
             denominatorLabel={getI18nLabel("labels.fundsSuccessRate.denominator")}
           />
         </Col>
-        <Col md={6}>
+        <Col md={4}>
           <RateCard
             nb={dataSuccessful.entity.total_involved / dataEvaluated.entity.total_involved}
             label={getI18nLabel("participantsSuccessRate.label")}
             loading={false}
             tooltipText={getI18nLabel("participantsSuccessRate.tooltip")}
-            numerator={dataSuccessful.entity.total_involved}
-            denominator={dataEvaluated.entity.total_involved}
+            numerator={Math.trunc(dataSuccessful.entity.total_involved)}
+            denominator={Math.trunc(dataEvaluated.entity.total_involved)}
             numeratorLabel={getI18nLabel("labels.participantsSuccessRate.numerator")}
             denominatorLabel={getI18nLabel("labels.participantsSuccessRate.denominator")}
           />
         </Col>
-        <Col md={6}>
+        <Col md={4}>
           <RateCard
             nb={dataSuccessful.entity.total_coordination_number / dataEvaluated.entity.total_coordination_number}
             label={getI18nLabel("projectsSuccessRate.label")}
             loading={false}
             tooltipText={getI18nLabel("projectsSuccessRate.tooltip")}
-            numerator={dataSuccessful.entity.total_coordination_number}
-            denominator={dataEvaluated.entity.total_coordination_number}
+            numerator={Math.trunc(dataSuccessful.entity.total_coordination_number)}
+            denominator={Math.trunc(dataEvaluated.entity.total_coordination_number)}
             numeratorLabel={getI18nLabel("labels.projectsSuccessRate.numerator")}
             denominatorLabel={getI18nLabel("labels.projectsSuccessRate.denominator")}
           />

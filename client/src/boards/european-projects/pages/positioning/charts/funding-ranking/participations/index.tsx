@@ -1,26 +1,23 @@
-import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
 import { Col, Container, Radio, Row, Title } from "@dataesr/dsfr-plus";
+import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 
-import { getData } from "./query";
-import { readingKey, useGetParams, renderDataTableParticipations, renderDataTableParticipationsSuccessRate } from "./utils";
-import optionsNumberInvolved from "./options-number_involved";
-import optionNumberInvolvedSuccessRate from "./options-number_involved-succes-rate";
+import { useSearchParams } from "react-router-dom";
+import ChartFooter from "../../../../../../../components/chart-footer/index.js";
 import ChartWrapper from "../../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../../components/charts-skeletons/default";
-import { useSearchParams } from "react-router-dom";
-
 import { EPChartsSources } from "../../../../../config.js";
-
 import i18nGlobal from "../../../../../i18n-global.json";
 import i18nLocal from "./i18n.json";
-import ChartFooter from "../../../../../../../components/chart-footer/index.js";
-import Callout from "../../../../../../../components/callout.js";
+import optionsNumberInvolved from "./options-number_involved";
+import optionNumberInvolvedSuccessRate from "./options-number_involved-succes-rate";
+import { getData } from "./query";
+import { readingKey, renderDataTableParticipations, renderDataTableParticipationsSuccessRate, useGetParams } from "./utils";
 
 export default function FundingRankingParticipations() {
   const [searchParams] = useSearchParams();
   const currentLang = searchParams.get("language") || "fr";
-  const [sortBy, setSortBy] = useState("evaluated");
+  const [sortBy, setSortBy] = useState("candidates");
   const params = useGetParams();
 
   const configChart3a = {
@@ -42,10 +39,10 @@ export default function FundingRankingParticipations() {
 
   const prepareData = (data, sortKey) => {
     data.sort((a, b) => b[sortKey] - a[sortKey]);
-    if (sortBy === "evaluated") {
-      data.sort((a, b) => b.total_evaluated - a.total_evaluated);
+    if (sortBy === "candidates") {
+      data.sort((a, b) => b.total_number_involved_evaluated - a.total_number_involved_evaluated);
     } else {
-      data.sort((a, b) => b.total_successful - a.total_successful);
+      data.sort((a, b) => b.total_number_involved_successful - a.total_number_involved_successful);
     }
     // Add selected country if it is not in the top 10
     const dataToReturn = data.slice(0, 10);
@@ -73,13 +70,13 @@ export default function FundingRankingParticipations() {
           <Title as="h2" look="h4">
             {getI18nLabel("title")}
           </Title>
-          <Callout className="callout-style">
+          {/* <Callout className="callout-style">
             Ce graphique illustre le positionnement du pays sélectionné par rapport aux autres pays en fonction du nombre de participants impliqués dans les projets évalués et réussis (lauréats). La barre bleue représente le nombre de participants
             dans les projets évalués, tandis que la barre verte indique le nombre de participants dans les projets réussis. Le classement est basé sur ces deux critères, offrant une perspective comparative sur l'engagement des pays dans les projets
             européens.
             <br />
             Le second graphique présente le taux de succès des participants du pays sélectionné par rapport à la moyenne européenne, fournissant ainsi une évaluation de l'efficacité des participations nationales dans les projets financés.
-          </Callout>
+          </Callout> */}
         </Col>
       </Row>
       <Row>
@@ -87,20 +84,20 @@ export default function FundingRankingParticipations() {
           <fieldset className="fr-mb-2w">
             <legend>{getI18nLabel("sort-by")}</legend>
             <Radio
-              checked={sortBy === "evaluated"}
+              checked={sortBy === "candidates"}
               className="fr-mb-1w"
-              defaultValue="evaluated"
-              label={getI18nLabel("sort-by-evaluated-project")}
+              defaultValue="candidates"
+              label={getI18nLabel("sort-by-candidates")}
               name="FundingRankingParticipations-radio"
               onChange={(e) => {
                 setSortBy((e.target as HTMLInputElement).value);
               }}
             />
             <Radio
-              checked={sortBy === "successful"}
+              checked={sortBy === "participants"}
               className="fr-mb-1w"
-              defaultValue="successful"
-              label={getI18nLabel("sort-by-successful-project")}
+              defaultValue="participants"
+              label={getI18nLabel("sort-by-participants")}
               name="FundingRankingParticipations-radio"
               onChange={(e) => {
                 setSortBy((e.target as HTMLInputElement).value);
@@ -135,14 +132,12 @@ export default function FundingRankingParticipations() {
             comment={{
               fr: (
                 <>
-                  Ce graphique représente le positionnement du pays sélectionné par rapport aux autres pays en fonction du nombre de participants impliqués dans les projets évalués et réussis. La barre bleue correspond aux participants dans les
-                  projets évalués, la barre verte aux participants dans les projets réussis. Le taux de succès compare le pays sélectionné avec la moyenne européenne.
+                  Ce graphique compare les taux de succès des pays les plus représentés en terme de candidats et de participants dans les projets.
                 </>
               ),
               en: (
                 <>
-                  This chart shows the positioning of the selected country compared to other countries based on the number of participants involved in evaluated and successful projects. The blue bar corresponds to participants in evaluated projects,
-                  the green bar to participants in successful projects. The success rate compares the selected country with the European average.
+                  This chart compares the success rates of the countries with the highest numbers of applicants and participants in projects.
                 </>
               ),
             }}

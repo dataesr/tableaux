@@ -91,7 +91,7 @@ export default function CountryNeighbourgs() {
                   </Badge>
                 </h3>
                 <p className="fr-tile__desc">
-                  Les pays frontaliers comptabilisent <strong>{neighbouringCountriesSum.toLocaleString()}</strong> projets, soit{" "}
+                  Les pays frontaliers comptabilisent <strong>{neighbouringCountriesSum.toLocaleString(currentLang)}</strong> projets, soit{" "}
                   <strong>{Math.floor((neighbouringCountriesSum / total_collaborations) * 100)} %</strong> des collaborations totales.
                   <br />
                   <br />

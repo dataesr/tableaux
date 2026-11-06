@@ -1,0 +1,12 @@
+{
+  "fr": {
+    "unavailable": "Résultats non disponibles",
+    "incomplete": "Résultats partiels",
+    "complete": "Résultats complets"
+  },
+  "en": {
+    "unavailable": "Results unavailable",
+    "incomplete": "Partial results",
+    "complete": "Complete results"
+  }
+}

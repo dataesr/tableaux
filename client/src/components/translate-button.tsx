@@ -1,42 +1,83 @@
-import { useEffect } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
+
+import "./translate-button.scss";
+
+const LANGUAGES = [
+    { code: "fr", label: "Français" },
+    { code: "en", label: "English" },
+] as const;
 
 export default function TranslateButton() {
     const [searchParams, setSearchParams] = useSearchParams();
-    const currentLang = searchParams.get("language") || "fr";
+    const currentLang = searchParams.get("language") === "en" ? "en" : "fr";
+    const [isOpen, setIsOpen] = useState(false);
+    const menuId = useId();
+    const navRef = useRef<HTMLElement>(null);
+    const buttonRef = useRef<HTMLButtonElement>(null);
 
     useEffect(() => {
-        if (!searchParams.get("language")) {
-            searchParams.set("language", "fr");
-            setSearchParams(searchParams);
-        }
-    }, [searchParams, setSearchParams]);
-
-    useEffect(() => {
-        const lang = searchParams.get("language") || "fr";
-        document.documentElement.lang = lang;
-    }, [searchParams]);
+        if (!isOpen) return;
+        const onClick = (e: MouseEvent) => {
+            if (!navRef.current?.contains(e.target as Node)) setIsOpen(false);
+        };
+        const onKeyDown = (e: KeyboardEvent) => {
+            if (e.key !== "Escape") return;
+            setIsOpen(false);
+            buttonRef.current?.focus();
+        };
+        document.addEventListener("click", onClick);
+        document.addEventListener("keydown", onKeyDown);
+        return () => {
+            document.removeEventListener("click", onClick);
+            document.removeEventListener("keydown", onKeyDown);
+        };
+    }, [isOpen]);
 
     return (
-        <div className="fr-header__tools">
-            <div className="fr-header__tools-links">
-                <nav role="navigation" className="fr-translate fr-nav">
-                    <div className="fr-nav__item">
-                        <button aria-controls="translate" aria-expanded="false" type="button" title={currentLang === "en" ? "EN - English" : "FR - Français"} className="fr-translate__btn fr-btn">{currentLang === "en" ? "EN" : "FR"}<span className="fr-hidden-lg">&nbsp;- {currentLang === "en" ? "English" : "Français"}</span>
-                        </button>
-                        <div className="fr-collapse fr-translate__menu fr-menu" id="translate">
-                            <ul className="fr-menu__list">
-                                <li>
-                                    <a className="fr-translate__language fr-nav__link" lang="fr" href="?language=fr" aria-current={currentLang === "fr" ? "true" : undefined}>FR - Français</a>
+        <nav ref={navRef} role="navigation" className="fr-translate fr-nav">
+            <div className="fr-nav__item">
+                <button
+                    aria-controls={menuId}
+                    aria-expanded={isOpen}
+                    className="fr-translate__btn fr-btn fr-btn--tertiary"
+                    onClick={() => setIsOpen((open) => !open)}
+                    ref={buttonRef}
+                    title="Sélectionner une langue"
+                    type="button"
+                >
+                    {currentLang.toUpperCase()}<span className="fr-hidden-lg">&nbsp;- {LANGUAGES.find(({ code }) => code === currentLang)!.label}</span>
+                </button>
+                <div
+                    className={`fr-collapse fr-translate__menu fr-menu${isOpen ? " fr-collapse--expanded" : ""}`}
+                    id={menuId}
+                >
+                    <ul className="fr-menu__list">
+                        {LANGUAGES.map(({ code, label }) => {
+                            const params = new URLSearchParams(searchParams);
+                            params.set("language", code);
+                            return (
+                                <li key={code}>
+                                    <a
+                                        aria-current={code === currentLang ? "true" : undefined}
+                                        className="fr-translate__language fr-nav__link"
+                                        href={`?${params.toString()}`}
+                                        hrefLang={code}
+                                        lang={code}
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            setSearchParams(params);
+                                            setIsOpen(false);
+                                        }}
+                                    >
+                                        {code.toUpperCase()} - {label}
+                                    </a>
                                 </li>
-                                <li>
-                                    <a className="fr-translate__language fr-nav__link" lang="en" href="?language=en" aria-current={currentLang === "en" ? "true" : undefined}>EN - English</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </nav>
+                            );
+                        })}
+                    </ul>
+                </div>
             </div>
-        </div>
+        </nav>
     );
 }

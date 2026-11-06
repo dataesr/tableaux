@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Col, Container, Radio, Row, Title } from "@dataesr/dsfr-plus";
+import { Col, Container, Radio, Row } from "@dataesr/dsfr-plus";
 
 import { getData } from "./query";
 import { useGetParams, renderDataTable } from "./utils";
@@ -13,13 +13,13 @@ import { EPChartsSources } from "../../../../../config.js";
 
 import i18nGlobal from "../../../../../i18n-global.json";
 import i18nLocal from "./i18n.json";
-import Callout from "../../../../../../../components/callout.js";
+// import Callout from "../../../../../../../components/callout.js";
 import { readingKey } from "./utils.js";
 
 export default function FundingRankingRates() {
   const [searchParams] = useSearchParams();
   const currentLang = searchParams.get("language") || "fr";
-  const [sortBy, setSortBy] = useState("evaluated");
+  const [sortBy, setSortBy] = useState("requested");
   const params = useGetParams();
 
   const chartId = "fundingRankingRates";
@@ -33,28 +33,18 @@ export default function FundingRankingRates() {
   const configChartFundingRankingSubRates = {
     id: chartId,
     title: {
-      fr: "Classement des pays selon la part des montants demandés et obtenus (M€)",
-      en: "Ranking of countries by share of amounts requested and obtained (M€)",
+      fr: "Part des financements demandés et obtenus par les principaux pays bénéficiaires (M€)",
+      en: "Share of funding requested and secured by top beneficiary countries (M€)",
     },
     comment: {
       fr: (
         <>
-          Ce graphique présente deux colonnes par pays : la colonne <strong style={{ color: "var(--evaluated-project-color)" }}>bleue</strong>{" "}
-          représente la part des montants demandés (projets évalués) et la colonne{" "}
-          <strong style={{ color: "var(--successful-project-color)" }}>verte</strong> la part des montants obtenus (projets lauréats). Le chiffre
-          affiché sur chaque colonne indique le <strong>rang du pays</strong> dans le classement européen pour cette catégorie. Un écart important
-          entre les deux colonnes d'un même pays signale une différence de performance entre sa capacité à déposer des demandes et à obtenir des
-          subventions. Vous avez la possibilité de trier le classement soit par montant total évalué, soit par montant total obtenu.
+          Ce graphique présente la part de chaque pays dans l’ensemble des financements demandés et obtenus par les participants de tous les pays.
         </>
       ),
       en: (
         <>
-          This chart shows two columns per country: the <strong style={{ color: "var(--evaluated-project-color)" }}>blue</strong> column represents
-          the share of requested amounts (evaluated projects) and the <strong style={{ color: "var(--successful-project-color)" }}>green</strong>{" "}
-          column shows the share of obtained amounts (successful projects). The number displayed on each column indicates the country's{" "}
-          <strong>rank</strong> in the European ranking for that category. A significant gap between the two columns of the same country indicates a
-          difference in performance between its ability to submit applications and to obtain funding. You can sort the ranking either by total
-          evaluated amount or by total obtained amount.
+          This chart shows each country's share of all funding requested and secured by participants from all countries.
         </>
       ),
     },
@@ -65,7 +55,7 @@ export default function FundingRankingRates() {
 
   const prepareData = (data, sortKey) => {
     data.sort((a, b) => b[sortKey] - a[sortKey]);
-    if (sortBy === "evaluated") {
+    if (sortBy === "requested") {
       data.sort((a, b) => b.total_evaluated - a.total_evaluated);
     } else {
       data.sort((a, b) => b.total_successful - a.total_successful);
@@ -91,33 +81,33 @@ export default function FundingRankingRates() {
 
   return (
     <Container fluid className="fr-mt-5w">
-      <Row>
+      {/* <Row>
         <Col>
           <Title as="h2" look="h4">
             {getI18nLabel("title")}
           </Title>
           <Callout className="callout-style">{getI18nLabel("callout")}</Callout>
         </Col>
-      </Row>
+      </Row> */}
       <Row>
         <Col>
           <fieldset className="fr-mb-2w">
             <legend>{getI18nLabel("sort-by")}</legend>
             <Radio
-              checked={sortBy === "evaluated"}
+              checked={sortBy === "requested"}
               className="fr-mb-1w"
-              defaultValue="evaluated"
-              label={getI18nLabel("sort-by-evaluated-project")}
+              defaultValue="requested"
+              label={getI18nLabel("sort-by-requested-funding")}
               name="FundingRankingRates-radio"
               onChange={(e) => {
                 setSortBy((e.target as HTMLInputElement).value);
               }}
             />
             <Radio
-              checked={sortBy === "successful"}
+              checked={sortBy === "secured"}
               className="fr-mb-1w"
-              defaultValue="successful"
-              label={getI18nLabel("sort-by-successful-project")}
+              defaultValue="secured"
+              label={getI18nLabel("sort-by-secured-funding")}
               name="FundingRankingRates-radio"
               onChange={(e) => {
                 setSortBy((e.target as HTMLInputElement).value);

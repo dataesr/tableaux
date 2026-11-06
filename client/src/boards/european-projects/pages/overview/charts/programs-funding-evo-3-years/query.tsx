@@ -1,14 +1,12 @@
 const { VITE_APP_SERVER_URL } = import.meta.env;
 
-export async function GetData(programId: string | null, rangeOfYears: string | null, countryCode: string | null) {
-  const params: string[] = [];
-
-  if (programId) params.push(`programs=${programId}`);
-  if (countryCode) params.push(`country_code=${countryCode}`);
-  if (rangeOfYears) params.push(`range_of_years=${rangeOfYears}`);
+export async function getData(params: string) {
+  if (params === "") {
+    return [];
+  }
 
   const baseUrl = `${VITE_APP_SERVER_URL}/european-projects/overview/programs-funding-evo-3-years`;
-  const finalUrl = params.length ? `${baseUrl}?${params.join("&")}` : baseUrl;
+  const finalUrl = params.length ? `${baseUrl}?${params}` : baseUrl;
 
   return fetch(finalUrl).then((response) => response.json());
 }

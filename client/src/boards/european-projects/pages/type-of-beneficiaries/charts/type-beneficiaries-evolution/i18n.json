@@ -8,16 +8,16 @@
     "en": "Years"
   },
   "fund_eur": {
-    "fr": "Financement (millions €)",
-    "en": "Funding (millions €)"
+    "fr": "Euros (M€)",
+    "en": "Euros (M€)"
   },
   "evolution": {
     "fr": "Évolution",
     "en": "Evolution"
   },
   "REC": {
-    "fr": "Recherche",
-    "en": "Research"
+    "fr": "Établissement de recherche",
+    "en": "Research institution"
   },
   "PUB": {
     "fr": "Organisme public",

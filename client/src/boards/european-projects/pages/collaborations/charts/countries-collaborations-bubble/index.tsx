@@ -1,15 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
 
-import { useGetParams } from "./utils";
-import { getData } from "./query";
-import options from "./options";
+import { useSearchParams } from "react-router-dom";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
-import { useSearchParams } from "react-router-dom";
-
+import { getI18nLabel } from "../../../../../../utils";
 import i18nGlobal from "../../../../i18n-global.json";
 import i18nLocal from "./i18n.json";
-import { getI18nLabel } from "../../../../../../utils";
+import options from "./options";
+import { getData } from "./query";
+import { useGetParams } from "./utils";
 
 const i18n = { ...i18nGlobal, ...i18nLocal };
 

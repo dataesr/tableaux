@@ -1,0 +1,259 @@
+{
+  "schema_version": 1,
+  "description": "Index lisible par machine des ressources de prototypage de tableaux de bord. Lu par le serveur /tableaux de dataesr-mcp depuis GitHub ; à garder synchronisé avec README.md.",
+  "guidance": [
+    {
+      "id": "agents",
+      "title": "Consignes du dépôt (à lire en premier)",
+      "path": "AGENTS.md"
+    },
+    {
+      "id": "prototyping",
+      "title": "Conventions de prototypage, sources de données, code commun ou dédié, manifeste",
+      "path": "plugins/tableaux/reference/README.md"
+    },
+    {
+      "id": "agents-client",
+      "title": "Consignes du tableau client",
+      "path": "client/src/boards/AGENTS.md"
+    },
+    {
+      "id": "agents-server",
+      "title": "Consignes de l'API des tableaux",
+      "path": "server/src/routes/boards/AGENTS.md"
+    },
+    {
+      "id": "skill-dashboard",
+      "title": "Skill /dashboard : modes init, build, critique et accessibility pour les tableaux de bord",
+      "path": "plugins/tableaux/skills/dashboard/SKILL.md"
+    },
+    {
+      "id": "skill-dashboard-init",
+      "title": "Mode init du tableau de bord : clarifier la demande, la source de données (dépôt ou définie par l'utilisateur) et les champs",
+      "path": "plugins/tableaux/skills/dashboard/reference/init.md"
+    },
+    {
+      "id": "skill-dashboard-build",
+      "title": "Mode build du tableau de bord : squelette et implémentation d'un brief confirmé",
+      "path": "plugins/tableaux/skills/dashboard/reference/build.md"
+    },
+    {
+      "id": "skill-dashboard-critique",
+      "title": "Mode critique du tableau de bord : revue en lecture seule de l'ergonomie, de l'exactitude des données, de l'usage du DSFR et de l'adéquation à l'infrastructure",
+      "path": "plugins/tableaux/skills/dashboard/reference/critique.md"
+    },
+    {
+      "id": "skill-dashboard-accessibility",
+      "title": "Mode accessibility du tableau de bord : revue en lecture seule RGAA 4 / WCAG 2.1 AA",
+      "path": "plugins/tableaux/skills/dashboard/reference/accessibility.md"
+    },
+    {
+      "id": "skill-chart",
+      "title": "Skill /chart : ajouter un graphique Highcharts à une page de tableau",
+      "path": "plugins/tableaux/skills/chart/SKILL.md"
+    },
+    {
+      "id": "skill-chart-recipe",
+      "title": "Recette de graphique : utils, index, ChartWrapper, états et registre",
+      "path": "plugins/tableaux/skills/chart/reference/new.md"
+    },
+    {
+      "id": "skill-dsfr",
+      "title": "Skill : interface et mise en forme DSFR",
+      "path": "plugins/tableaux/skills/dsfr/SKILL.md"
+    },
+    {
+      "id": "data-specs",
+      "title": "Questions pour clarifier la source de données.",
+      "path": "plugins/tableaux/reference/guides/data-specs.md"
+    },
+    {
+      "id": "url-parameters",
+      "title": "Noms des paramètres d'URL et d'API communs aux tableaux",
+      "path": "plugins/tableaux/reference/url-parameters.md"
+    }
+  ],
+  "templates": [
+    {
+      "id": "board-client",
+      "title": "Squelette de tableau client",
+      "description": "Routes, mises en page, pages, i18n, styles et configuration du plan du site. Une référence à adapter, pas un générateur.",
+      "paths": [
+        "client/src/boards/template/routes.tsx",
+        "client/src/boards/template/title-i18n.json",
+        "client/src/boards/template/styles.scss",
+        "client/src/boards/template/sitemap-config.ts",
+        "client/src/boards/template/components/styles.scss",
+        "client/src/boards/template/components/layouts/global-layout.tsx",
+        "client/src/boards/template/components/layouts/sidemenu-layout.tsx",
+        "client/src/boards/template/components/layouts/i18n.json",
+        "client/src/boards/template/components/sidemenu/",
+        "client/src/boards/template/pages/home/index.tsx",
+        "client/src/boards/template/pages/overview/index.tsx"
+      ],
+      "notes": "global-layout.tsx contient un bouton de thème et un sélecteur de langue construits avec des attributs réservés au JS du DSFR (data-fr-opened, aria-controls, fr-collapse) ; ces sections ne doivent pas être copiées dans une nouvelle page, car elles reposent sur le JS du DSFR et ne fonctionnent pas sur des nœuds gérés par React. Les pages de graphiques ne font pas partie du squelette ; voir les exemples de graphiques."
+    },
+    {
+      "id": "board-server",
+      "title": "Squelette de routeur serveur",
+      "description": "Routeur de tableau minimal, une route et un fichier de requête .http.",
+      "paths": [
+        "server/src/routes/boards/template/"
+      ]
+    },
+    {
+      "id": "manifest-schema",
+      "title": "Schéma JSON du manifeste de tableau",
+      "description": "Schéma de board.manifest.json ; le README documente les champs et un exemple.",
+      "paths": [
+        "plugins/tableaux/reference/manifest.json"
+      ]
+    }
+  ],
+  "components": [
+    {
+      "id": "dsfr-layout",
+      "exports": [
+        "Container",
+        "Row",
+        "Col",
+        "Title"
+      ],
+      "package": "@dataesr/dsfr-plus",
+      "props": "Container / Row(gutters) / Col(md, ...) / Title(as)",
+      "example": "client/src/boards/template/pages/overview/index.tsx"
+    },
+    {
+      "id": "chart-wrapper",
+      "exports": [
+        "ChartWrapper"
+      ],
+      "package": "client/src/components/chart-wrapper/index.tsx",
+      "props": "ChartWrapper({ config: ChartConfig, options: HighchartsOptions, constructorType?, hideTitle?, legend?, renderData? }). ChartConfig: { id, title, description?, subtitle?, comment?, readingKey?, sources?, integrationURL?, idQuery? }",
+      "example": "client/src/boards/template/pages/overview/charts/funded-labs/index.tsx"
+    },
+    {
+      "id": "chart-options",
+      "exports": [
+        "createChartOptions"
+      ],
+      "package": "client/src/components/chart-wrapper/default-options.ts",
+      "props": "createChartOptions(type: chart type | \"empty\", options: Highcharts.Options): Highcharts.Options ; fusionne en profondeur le thème à tokens DSFR, les axes, l'infobulle, la légende (désactivée par défaut), les crédits et l'export désactivés, et l'accessibilité activée. Les listes d'axes sont concaténées (dupliquées) : affectez plusieurs axes après l'appel",
+      "example": "client/src/boards/personnel-enseignant/pages/structures/components/charts/distribution-bar/options.tsx"
+    },
+    {
+      "id": "chart-loading-skeletons",
+      "exports": [
+        "DefaultSkeleton",
+        "ListSkeleton",
+        "MapSkeleton"
+      ],
+      "package": "client/src/components/charts-skeletons/",
+      "props": "aucune prop ; à afficher pendant isLoading",
+      "example": "client/src/boards/template/pages/overview/charts/funded-labs/index.tsx"
+    },
+    {
+      "id": "chart-color-hook",
+      "exports": [
+        "useChartColor"
+      ],
+      "package": "client/src/hooks/useChartColor.tsx",
+      "props": "useChartColor(): string ; utilisé pour la classe chart-container--<color>",
+      "example": "client/src/boards/template/pages/overview/charts/funded-labs/index.tsx"
+    },
+    {
+      "id": "select",
+      "exports": [
+        "Select"
+      ],
+      "package": "client/src/components/select",
+      "props": "Select({ label?, size?, outline?, disabled?, multiple?, closeOnSelect?, fullWidth?, children, ... }) ; sous-composants option/group dans le même dossier",
+      "example": null
+    },
+    {
+      "id": "item-filter",
+      "exports": [
+        "ItemFilter",
+        "ItemFilterPanel"
+      ],
+      "package": "client/src/components/item-filter/index.tsx",
+      "props": "ItemFilter({ label, hint?, id?, items: FilterItem[], availableKeys?, selectedKey, onSelect, emptyLabel? }); FilterItem: { key, label, category?, count?, hint? }",
+      "example": null
+    },
+    {
+      "id": "range-of-years",
+      "exports": [
+        "RangeOfYears"
+      ],
+      "package": "client/src/components/range-of-years/index.tsx",
+      "props": "RangeOfYears({ availableYears: string[], defaultYears: string[], yearsByFramework? })",
+      "example": null
+    },
+    {
+      "id": "copy-button",
+      "exports": [
+        "CopyButton"
+      ],
+      "package": "client/src/components/copy-button/index.tsx",
+      "props": "CopyButton({ text: string, color?: DSFRColors })",
+      "example": null
+    }
+  ],
+  "chart_examples": [
+    {
+      "id": "european-projects-programs-funding",
+      "title": "Graphique de référence : données calculées côté serveur, options via CreateChartOptions",
+      "path": "client/src/boards/european-projects/pages/overview/charts/programs-funding/",
+      "note": "Structure à copier : index.tsx (useQuery + ChartWrapper + renderData), query.tsx, options.tsx renvoyant CreateChartOptions(type, options), utils.tsx (params, renderDataTable, readingKey). Sa route server/src/routes/boards/european-projects/routes/horizon-europe/overview/programs-funding/index.js calcule les totaux et les taux de réussite. Dans les autres tableaux, utilisez le createChartOptions partagé."
+    },
+    {
+      "id": "funded-labs-example",
+      "title": "Graphique en barres appelant la route propre au tableau (jeux de test)",
+      "path": "client/src/boards/template/pages/overview/charts/funded-labs-example/index.tsx",
+      "note": "Le modèle à copier : useQuery sur /template/overview/funded-labs, ChartWrapper, DefaultSkeleton, useChartColor."
+    },
+    {
+      "id": "funded-labs",
+      "title": "Graphique historique interrogeant /elasticsearch depuis le navigateur",
+      "path": "client/src/boards/template/pages/overview/charts/funded-labs/index.tsx",
+      "note": "Usage des composants uniquement. Ne copiez pas son accès aux données ; les graphiques d'un prototype appellent les routes serveur propres au tableau."
+    }
+  ],
+  "data_sources": [
+    {
+      "id": "mongodb",
+      "name": "Tableaux MongoDB",
+      "status": "manual-confirmation",
+      "purpose": "Connexion côté serveur dans server/src/services/mongo.js (et mongo-accessibility.js).",
+      "guide": "plugins/tableaux/reference/guides/mongodb.md"
+    },
+    {
+      "id": "elasticsearch",
+      "name": "Elasticsearch (via le proxy /elasticsearch)",
+      "status": "manual-confirmation",
+      "purpose": "Index Elasticsearch configurés derrière les identifiants ES_TOKEN_*.",
+      "guide": "plugins/tableaux/reference/guides/elasticsearch.md"
+    },
+    {
+      "id": "paysage",
+      "name": "Paysage API",
+      "status": "manual-confirmation",
+      "purpose": "PAYSAGE_API_URL / PAYSAGE_API_KEY, utilisés par atlas et european-projects.",
+      "guide": "plugins/tableaux/reference/guides/paysage.md"
+    },
+    {
+      "id": "ods",
+      "name": "Opendatasoft API",
+      "status": "manual-confirmation",
+      "purpose": "ODS_API_URL / ODS_API_KEY, utilisés par structures-finance.",
+      "guide": "plugins/tableaux/reference/guides/ods.md"
+    },
+    {
+      "id": "external",
+      "name": "Source publique externe (OpenAlex, OEB, Eurostat, ...)",
+      "status": "approval-required",
+      "purpose": "Données publiques non hébergées par le projet, appelées en direct depuis le serveur du tableau, ou stockées sous forme d'instantané réel et daté avec un enregistrement de provenance (voir le guide external). Ni jeux de test ni données écrites à la main.",
+      "guide": "plugins/tableaux/reference/guides/external.md"
+    }
+  ]
+}

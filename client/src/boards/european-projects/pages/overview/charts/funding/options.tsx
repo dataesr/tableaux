@@ -6,10 +6,8 @@ import { getCssColor } from "../../../../../../utils/colors";
 import { getI18nLabel, getResponsiveChartHeight } from "../../../../../../utils";
 import i18n from "../../i18n-charts.json";
 
-export default function Options(data, displayType, title) {
+export default function Options(data, title) {
   if (!data) return null;
-
-  console.log(displayType);
 
   const newOptions: HighchartsInstance.Options = {
     chart: { height: getResponsiveChartHeight(data.data.length) },
@@ -20,7 +18,7 @@ export default function Options(data, displayType, title) {
     yAxis: {
       min: 0,
       title: {
-        text: "Euros € (millions)",
+        text: "Euros (M€)",
       },
       gridLineColor: "var(--background-default-grey-hover)",
       gridLineWidth: 0.5,

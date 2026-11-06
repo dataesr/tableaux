@@ -1,0 +1,5 @@
+### Route
+GET http://localhost:3000/api/european-projects/overview/projects-types-2?country_code=&destination_code=&isEjo=&pilier_code=&programme_code=&thema_code=
+
+### Création du covered index
+GET http://localhost:3000/api/european-projects/overview/projects-types-2_indexes

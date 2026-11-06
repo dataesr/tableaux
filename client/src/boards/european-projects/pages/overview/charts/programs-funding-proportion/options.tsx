@@ -1,15 +1,15 @@
 import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js";
 
-import { CreateChartOptions } from "../../../../components/chart-ep";
-import { formatToPercent } from "../../../../../../utils/format";
-import { getCssColor } from "../../../../../../utils/colors";
 import { getI18nLabel } from "../../../../../../utils";
+import { getCssColor } from "../../../../../../utils/colors";
+import { formatToPercent } from "../../../../../../utils/format";
+import { CreateChartOptions } from "../../../../components/chart-ep";
 import i18n from "../../i18n-charts.json";
 
-export default function Options(data, displayType: string = "total_fund_eur", title?: string) {
+export default function options(data, displayType: string = "total_fund_eur", title?: string) {
   if (!data) return null;
 
-  const valueKey = displayType === "total_coordination_number" ? "proportion_coordination_number" : displayType === "total_number_involved" ? "proportion_number_involved" : "proportion";
+    const valueKey = displayType === "total_coordination_number" ? "proportion_coordination_number" : displayType === "total_number_involved" ? "proportion_number_involved" : displayType === "total_fund_eur" ? "proportion" : "proportion_projects";
 
   const newOptions: HighchartsInstance.Options = {
     title: { text: title },
@@ -21,14 +21,14 @@ export default function Options(data, displayType: string = "total_fund_eur", ti
     yAxis: {
       min: 0,
       title: {
-        text: "%",
+        text: "Part (%)",
       },
       gridLineColor: "var(--background-default-grey-hover)",
       gridLineWidth: 0.5,
     },
     tooltip: {
       pointFormatter: function () {
-        return `${getI18nLabel(i18n, "fundingProportion")} : <b>${formatToPercent(this.y ?? 0)}</b>`;
+        return `${getI18nLabel(i18n, valueKey)} : <b>${formatToPercent(this.y ?? 0)}</b>`;
       },
     },
     plotOptions: {

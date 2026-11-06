@@ -1,7 +1,8 @@
-import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js";
-import { CreateChartOptions } from "../../../../../components/chart-ep";
-import { getCssColor } from "../../../../../../../utils/colors";
+import type Highcharts from "highcharts/es-modules/masters/highcharts.src.js";
+
 import { getResponsiveChartHeight } from "../../../../../../../utils";
+import { getCssColor } from "../../../../../../../utils/colors";
+import { CreateChartOptions } from "../../../../../components/chart-ep";
 
 interface DataItem {
   name_fr: string;
@@ -15,7 +16,7 @@ interface DataItem {
 export default function OptionsNumberInvolved(data: DataItem[], currentLang: string): Highcharts.Options | null {
   if (!data) return null;
 
-  const newOptions: HighchartsInstance.Options = {
+  const newOptions: Highcharts.Options = {
     chart: {
       type: "bar",
       height: getResponsiveChartHeight(data.length),
@@ -27,11 +28,8 @@ export default function OptionsNumberInvolved(data: DataItem[], currentLang: str
     yAxis: {
       min: 0,
       title: {
-        text: "Euros € (millions)",
+        text: "Nombre de candidats et de participants (en milliers)",
       },
-    },
-    tooltip: {
-      pointFormat: "Nombre de candidats : <b>{point.y}</b>",
     },
     plotOptions: {
       series: { dataLabels: { enabled: true } },
@@ -59,6 +57,9 @@ export default function OptionsNumberInvolved(data: DataItem[], currentLang: str
             format: "{point.rank_number_involved_evaluated}e",
           },
         ],
+        tooltip: {
+            pointFormat: "Nombre de candidats : <b>{point.y}</b>",
+          },
       } as Highcharts.SeriesBarOptions,
       {
         type: "bar",
@@ -75,6 +76,10 @@ export default function OptionsNumberInvolved(data: DataItem[], currentLang: str
             format: "{point.rank_number_involved_successful}e",
           },
         ],
+        tooltip: {
+          pointFormat:
+            "Nombre de participants : {point.y}",
+          },
       } as Highcharts.SeriesBarOptions,
     ],
   };

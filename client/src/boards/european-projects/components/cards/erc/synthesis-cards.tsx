@@ -1,8 +1,10 @@
 import { useId } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Row, Col } from "@dataesr/dsfr-plus";
+import { useSearchParams } from "react-router-dom";
 import { getErcSynthesis, ErcSynthesisResponse } from "../../../api/erc";
 import { formatCurrency, formatNumber, formatToRates } from "../../../../../utils/format";
+import { getCountryNameWithArticle } from "../../../utils/country-mapping";
 
 import "./styles.scss";
 
@@ -17,6 +19,7 @@ interface ErcSynthesisCardsProps {
   destinationCode?: string;
   countryAdj?: CountryAdjectives;
 }
+
 
 export default function ErcSynthesisCards({
   countryCode = "FRA",
@@ -37,23 +40,28 @@ export default function ErcSynthesisCards({
   // Calculer les métriques
   const totalBudgetSuccessful = data?.successful?.total_funding_project || 0;
   const totalBudgetEvaluated = data?.evaluated?.total_funding_project || 0;
-  const totalProjectsSuccessful = data?.successful?.total_involved || 0;
-  const totalProjectsEvaluated = data?.evaluated?.total_involved || 0;
+  const totalProjectsSuccessful = data?.successful?.total_projects || 0;
+  const totalProjectsEvaluated = data?.evaluated?.total_projects || 0;
   const totalPiSuccessful = data?.successful?.total_pi || 0;
+  const totalPiEvaluated = data?.evaluated?.total_pi || 0;
 
   // Données du pays sélectionné
   const countrySuccessful = data?.successful?.countries?.[0];
   const countryEvaluated = data?.evaluated?.countries?.[0];
 
   const countryBudgetSuccessful = countrySuccessful?.total_funding_project || 0;
-  const countryProjectsSuccessful = countrySuccessful?.total_involved || 0;
+  const countryBudgetEvaluated = countryEvaluated?.total_funding_project || 0;
+  // const countryProjectsSuccessful = countrySuccessful?.total_projects || 0;
+  const countryProjectsEvaluated = countryEvaluated?.total_projects || 0;
   const countryPiSuccessful = countrySuccessful?.total_pi || 0;
   const countryPiEvaluated = countryEvaluated?.total_pi || 0;
 
   // Parts du pays
   const budgetShare = totalBudgetSuccessful > 0 ? countryBudgetSuccessful / totalBudgetSuccessful : 0;
-  const projectsShare = totalProjectsSuccessful > 0 ? countryProjectsSuccessful / totalProjectsSuccessful : 0;
+  const piShareEvaluated = totalPiEvaluated > 0 ? countryPiEvaluated / totalPiEvaluated : 0;
   const piShare = totalPiSuccessful > 0 ? countryPiSuccessful / totalPiSuccessful : 0;
+
+  // const projectsShareEvaluated = totalProjectsEvaluated > 0 ? countryProjectsEvaluated / totalProjectsEvaluated : 0;
 
   // Taux de succès
   const successRateFunding = totalBudgetEvaluated > 0 ? totalBudgetSuccessful / totalBudgetEvaluated : 0;
@@ -61,83 +69,87 @@ export default function ErcSynthesisCards({
   const countrySuccessRatePi = countryPiEvaluated > 0 ? countryPiSuccessful / countryPiEvaluated : 0;
 
   // Adjectifs avec pluriel (ajout du "s" pour le pluriel si nécessaire)
-  const adjFemPlural = countryAdj.f.endsWith("s") ? countryAdj.f : `${countryAdj.f}s`;
+  // const adjFemPlural = countryAdj.f.endsWith("s") ? countryAdj.f : `${countryAdj.f}s`;
   const adjMascPlural = countryAdj.m.endsWith("s") ? countryAdj.m : `${countryAdj.m}s`;
+
+  const [searchParams] = useSearchParams();
+  const lang = (searchParams.get("language") === "en" ? "en" : "fr") as "fr" | "en";
+  const country = getCountryNameWithArticle(countryCode, lang).replace(/^(Le |La |Les |L')/, (m) => m.toLowerCase());
 
   return (
     <Row className="erc-synthesis-cards" gutters>
       <Col xs={12} md={4}>
         {/* Part du budget capté */}
         <ErcCard
-          label={`Part du budget capté par les équipes ${adjFemPlural}`}
+          label={`Part des financements obtenus par ${country}`}
           value={formatToRates(budgetShare)}
           secondaryValue={formatCurrency(countryBudgetSuccessful)}
           secondaryLabel="obtenus"
           progressValue={budgetShare}
           loading={isLoading}
           variant="budget-card"
-          tooltipText={`Budget total lauréat: ${formatCurrency(totalBudgetSuccessful)}`}
+          tooltipText={`Financements obtenus par ${country} sur le total des financements (${formatCurrency(totalBudgetSuccessful)})`}
         />
       </Col>
       <Col xs={12} md={4}>
         {/* Part des projets lauréats */}
         <ErcCard
-          label={`Part des projets lauréats avec participation ${countryAdj.f}`}
-          value={formatToRates(projectsShare)}
-          secondaryValue={formatNumber(countryProjectsSuccessful)}
-          secondaryLabel="projets"
-          progressValue={projectsShare}
+          label={`Part des candidats ${adjMascPlural}`}
+          value={formatToRates(piShareEvaluated)}
+          secondaryValue={formatNumber(countryPiEvaluated)}
+          secondaryLabel="candidats"
+          progressValue={piShareEvaluated}
           loading={isLoading}
           variant="projects-card"
-          tooltipText={`Total projets lauréats: ${formatNumber(totalProjectsSuccessful)}`}
+          tooltipText={`Nombre de candidats ${adjMascPlural} sur le total des candidats (${formatNumber(totalPiEvaluated)})`}
         />
       </Col>
       <Col xs={12} md={4}>
         {/* Part des porteurs (PI) */}
         <ErcCard
-          label={`Part des porteurs ${adjMascPlural} (PI) dans les projets lauréats`}
+          label={`Part des porteurs de projets ${adjMascPlural}`}
           value={formatToRates(piShare)}
           secondaryValue={formatNumber(countryPiSuccessful)}
-          secondaryLabel="porteurs"
+          secondaryLabel="porteurs de projets"
           progressValue={piShare}
           loading={isLoading}
           variant="pi-card"
-          tooltipText={`Total porteurs: ${formatNumber(totalPiSuccessful)}`}
+          tooltipText={`Nombre de porteurs de projets ${adjMascPlural} sur le total des porteurs de projets (${formatNumber(totalPiSuccessful)})`}
         />
       </Col>
       <Col xs={12} md={4}>
         {/* Taux de succès sur les financements */}
         <ErcCard
-          label="Taux de succès global sur les financements"
+          label="Taux de succès des financements"
           value={formatToRates(successRateFunding)}
           progressValue={successRateFunding}
           loading={isLoading}
           variant="funding-rate-card"
-          tooltipText="Ratio entre financements lauréats et financements demandés"
+          tooltipText={`Financements obtenus sur financements demandés (${formatCurrency(countryBudgetEvaluated)})`}
         />
       </Col>
       <Col xs={12} md={4}>
         {/* Taux de succès sur le nombre de projets */}
         <ErcCard
-          label="Taux de succès global sur le nombre de projets"
+          label="Taux de succès des projets"
           value={formatToRates(successRateProjects)}
           progressValue={successRateProjects}
           loading={isLoading}
-          variant="rate-card"
-          tooltipText="Ratio entre projets lauréats et projets évalués"
+          variant="funding-rate-card"
+          tooltipText={`Nombre de projets lauréats sur le nombre de projets évalués (${formatNumber(countryProjectsEvaluated)})`}
         />
       </Col>
       <Col xs={12} md={4}>
         {/* Taux de succès individuel des porteurs */}
         <ErcCard
-          label={`Taux de succès des porteurs ${adjMascPlural} (PI)`}
+          label={`Taux de succès des porteurs de projets ${adjMascPlural}`}
           value={formatToRates(countrySuccessRatePi)}
-          secondaryValue={`${formatNumber(countryPiSuccessful)} / ${formatNumber(countryPiEvaluated)}`}
-          secondaryLabel="lauréats / candidats"
+          // secondaryValue={`${formatNumber(countryPiSuccessful)} / `}
+          // secondaryLabel="lauréats / candidats"
           progressValue={countrySuccessRatePi}
           loading={isLoading}
-          variant="rate-card"
-          tooltipText="Ratio entre porteurs lauréats et porteurs candidats"
+          variant="funding-rate-card"
+          tooltipText={`Nombre de porteurs lauréats sur le nombre de candidats ${adjMascPlural} (${formatNumber(countryPiEvaluated)})`}
         />
       </Col>
     </Row>

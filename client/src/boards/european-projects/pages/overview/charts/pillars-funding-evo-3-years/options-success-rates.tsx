@@ -1,9 +1,9 @@
 import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js";
-import type { HighchartsOptions } from "../../../../../../components/chart-wrapper";
 
-import { CreateChartOptions } from "../../../../components/chart-ep";
-import { getCssColor } from "../../../../../../utils/colors";
+import type { HighchartsOptions } from "../../../../../../components/chart-wrapper";
 import { getI18nLabel } from "../../../../../../utils";
+import { getCssColor } from "../../../../../../utils/colors";
+import { CreateChartOptions } from "../../../../components/chart-ep";
 import i18n from "../../i18n-charts.json";
 
 export default function Options(data, displayType, currentLang): HighchartsOptions {
@@ -16,17 +16,18 @@ export default function Options(data, displayType, currentLang): HighchartsOptio
   filteredData.find((item) => item.stage === "evaluated").pillars[0].years.forEach((year) => years.add(year.year));
 
   const commonXAxis = {
-    type: "category" as const,
     categories: Array.from(years).map(String),
-    width: "48%",
-    offset: 0,
     gridLineWidth: 0,
+    offset: 0,
+    type: "category" as const,
+    width: "48%",
   };
 
   const newOptions: HighchartsInstance.Options = {
     yAxis: {
       gridLineColor: "var(--background-default-grey-hover)",
       gridLineWidth: 0.5,
+      title: { text: "Part (%)" },
     },
     xAxis: [
       { ...commonXAxis, left: "0%" },

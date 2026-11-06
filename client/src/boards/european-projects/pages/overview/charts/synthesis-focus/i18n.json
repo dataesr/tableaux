@@ -1,7 +1,11 @@
 {
+  "keyFigures": {
+    "fr": "Grands chiffres",
+    "en": "Key figures"
+  },
   "fundsShare": {
     "label": {
-      "fr": "part des financements obtenus par les participants du pays",
+      "fr": "Part des financements obtenus par les participants du pays",
       "en": "Share of funding secured by participants from the country"
     },
     "tooltip": {
@@ -11,17 +15,27 @@
   },
   "participantsShare": {
     "label": {
-      "fr": "part des participants lauréats du pays",
-      "en": "share of the country's participants in successful projects"
+      "fr": "Part du nombre de participants du pays sélectionné",
+      "en": "Share of participant number from the country"
     },
     "tooltip": {
       "fr": "Nombre de participants du pays dans les projets lauréats sur le nombre total de participants dans les projest lauréats",
       "en": "Number of participants from the country in successful projects as a proportion of the total number of participants in successful projects"
     }
   },
+  "applicantsShare": {
+    "label": {
+      "fr": "Part des candidats du pays sélectionné",
+      "en": "Share of applicants from the country"
+    },
+    "tooltip": {
+      "fr": "Nombre de candidats du pays sélectionné rapporté au nombre total de candidats dans les projets évalués",
+      "en": "Number of applicants from the selected country as a proportion of the total number of applicants in evaluated projects"
+    }
+  },
   "coordinationsShare": {
     "label": {
-      "fr": "part des coordinations de projets du pays",
+      "fr": "Part des coordinations de projets du pays",
       "en": "share of projects coordinated by the country's participants"
     },
     "tooltip": {
@@ -31,8 +45,8 @@
   },
   "fundsSuccessRate": {
     "label": {
-      "fr": "taux de succès sur les financements",
-      "en": "funding success rate"
+      "fr": "Taux de succès sur les financements",
+      "en": "Funding success rate"
     },
     "tooltip": {
       "fr": "Montant des financements obtenus sur le montant des financements demandés par les participants du pays",
@@ -41,18 +55,18 @@
   },
   "participantsSuccessRate": {
     "label": {
-      "fr": "taux de succès individuel des participants du pays",
-      "en": "participant-level success rate for the country"
+      "fr": "Taux de succès individuel des participants",
+      "en": "Participant level success rate"
     },
     "tooltip": {
-      "fr": "Nombre de participants du pays dans les projets lauréats sur le nombre de participants du pays dans les projets évalués",
-      "en": "Number of participants from the country in successful projects as a proportion of the number of participants from the country in evaluated projects"
+      "fr": "Nombre de participants sur le nombre de candidats du pays sélectionné",
+      "en": "Number of participants as a proportion of the number of applicants from the selected country"
     }
   },
   "projectsSuccessRate": {
     "label": {
-      "fr": "taux de succès des coordinations de projets",
-      "en": "coordination success rate"
+      "fr": "Taux de succès des coordinations de projets",
+      "en": "Coordination success rate"
     },
     "tooltip": {
       "fr": "Nombre de projets coordonnés par le pays dans les projets lauréats sur le nombre de projets coordonnés par le pays dans les projets évalués",
@@ -80,6 +94,16 @@
         "en": "Total participants"
       }
     },
+    "applicantsShare": {
+      "numerator": {
+        "fr": "Candidats du pays",
+        "en": "Country applicants"
+      },
+      "denominator": {
+        "fr": "Total candidats",
+        "en": "Total applicants"
+      }
+    },
     "coordinationsShare": {
       "numerator": {
         "fr": "Coordinations du pays",
@@ -102,12 +126,12 @@
     },
     "participantsSuccessRate": {
       "numerator": {
-        "fr": "Participants lauréats",
-        "en": "Successful participants"
+        "fr": "Participants",
+        "en": "Participants"
       },
       "denominator": {
-        "fr": "Participants évalués",
-        "en": "Evaluated participants"
+        "fr": "Candidats",
+        "en": "Applicants"
       }
     },
     "projectsSuccessRate": {

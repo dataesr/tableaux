@@ -1,31 +1,28 @@
+import { Col, Container, Row } from "@dataesr/dsfr-plus";
 import { useQuery } from "@tanstack/react-query";
+import React, { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
-import { GetData } from "./query";
-import optionsValues from "./options-values";
-import optionsSuccessRates from "./options-success-rates";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
-import { successRatesReadingKey, valuesSuccessReadingKey, renderDataTable, renderDataTableRates } from "./utils";
-import { Container, Row, Col } from "@dataesr/dsfr-plus";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
-import { useState } from "react";
 import { getI18nLabel } from "../../../../../../utils";
 import { EPChartsSources } from "../../../../config.js";
-
-import i18nLocal from "./i18n.json";
 import i18nGlobal from "../../../../i18n-global.json";
+import i18nLocal from "./i18n.json";
+import optionsSuccessRates from "./options-success-rates";
+import optionsValues from "./options-values";
+import { getData } from "./query";
+import { renderDataTable, renderDataTableRates, successRatesReadingKey, useGetParams, valuesSuccessReadingKey } from "./utils";
 
 export default function PillarsFundingEvo3Years() {
   const [searchParams] = useSearchParams();
   const currentLang = searchParams.get("language") || "fr";
-  const pillarId = searchParams.get("pillarId");
-  const countryCode = searchParams.get("country_code");
-  const rangeOfYears = searchParams.get("range_of_years");
   const [displayType, setDisplayType] = useState("total_fund_eur");
 
+  const { params } = useGetParams();
   const { data, isLoading } = useQuery({
-    queryKey: ["PillarsFundingEvo3Years", pillarId, rangeOfYears, countryCode],
-    queryFn: () => GetData(pillarId, rangeOfYears, countryCode),
+    queryKey: ["PillarsFundingEvo3Years", params],
+    queryFn: () => getData(params),
   });
 
   if (isLoading || !data)
@@ -36,41 +33,29 @@ export default function PillarsFundingEvo3Years() {
       </>
     );
 
-  const configChart1 = {
+  const configChart1: {
+    id: string;
+    title?: { fr: string; en: string };
+    comment?: { fr: React.JSX.Element; en: React.JSX.Element };
+    readingKey: any;
+    sources: any;
+    integrationURL: string;
+  } = {
     id: "pillarsEvolutionFundingLines",
-    title: {
-      fr: "Evolution des financements demandés et obtenus (M€) sur Horizon Europe",
-      en: "Financing applied for and obtained (€m) evolution on Horizon Europe",
-    },
-    comment: {
-      fr: (
-        <>
-          Ce graphique montre l'évolution des financements demandés et obtenus pour les piliers du programme Horizon Europe sur les trois dernières années. Les barres représentent les montants demandés et obtenus. La ligne verte indique le taux de
-          succès correspondant.
-        </>
-      ),
-      en: (
-        <>
-          This chart shows the evolution of funding applied for and obtained for the pillars of the Horizon Europe programme over the last three years. The bars represent the amounts applied for and obtained. The line indicates the corresponding
-          success rate.
-        </>
-      ),
-    },
     readingKey: valuesSuccessReadingKey(data, displayType),
     sources: EPChartsSources,
     integrationURL: "/european-projects/components/pages/analysis/overview/charts/projects-types-3",
   };
 
-  const configChart3 = {
+  const configChart3: {
+    id: string;
+    title?: { fr: string; en: string };
+    comment?: { fr: React.JSX.Element; en: React.JSX.Element };
+    readingKey: any;
+    sources: any;
+    integrationURL: string;
+  } = {
     id: "pillarsEvolutionFundingLinesSuccessRate",
-    title: {
-      fr: "Part des financements du pays demandés et obtenus par rapport au total des participants",
-      en: "Percentage of country funding applied for and obtained as a proportion of total participants",
-    },
-    comment: {
-      fr: <>Ce graphique montre le pourcentage des financements demandés et obtenus par le pays sélectionné par rapport au total des participants.</>,
-      en: <>This chart shows the percentage of funding applied for and obtained by the selected country as a proportion of total participants.</>,
-    },
     readingKey: successRatesReadingKey(data, displayType),
     sources: EPChartsSources,
     integrationURL: "/european-projects/components/pages/analysis/overview/charts/projects-types-3",
@@ -81,6 +66,44 @@ export default function PillarsFundingEvo3Years() {
     ...i18nGlobal,
   };
 
+  switch (displayType) {
+    case "total_coordination_number":
+      configChart1.title = { fr: "Evolution du nombre de projets coordonnés par le pays sélectionné sur Horizon Europe", en: "Trends in the number of projects coordinated by the selected country under Horizon Europe" };
+      configChart1.comment = { fr: <></>, en: <></> };
+      configChart3.title = { fr: "Part des projets coordonnés par le pays sélectionné sur l'ensemble des coordinations", en: "Proportion of projects coordinated by the selected country out of the total number of coordination roles" };
+      configChart3.comment = { fr: <></>, en: <></> };
+      break;
+    case "total_number_involved":
+      configChart1.title = { fr: "Evolution du nombre de candidats et de participants du pays sélectionné sur Horizon Europe", en: "Trends in the number of applicants and participants from the selected country under Horizon Europe" };
+      configChart1.comment = { fr: <></>, en: <></> };
+      configChart3.title = { fr: "Part du nombre de candidats et de participants du pays sélectionné", en: "Proportion of the total number of candidates and participants from the selected country" };
+      configChart3.comment = { fr: <></>, en: <></> };
+      break;
+    case "total_projects":
+      configChart1.title = { fr: "Evolution du nombre de projets impliquant au moins un participant du pays sélectionné sur Horizon Europe", en: "Trends in the number of projects involving at least one participant from the selected country under Horizon Europe" };
+      configChart1.comment = { fr: <></>, en: <></> };
+      configChart3.title = { fr: "Part du nombre de projets impliquant au moins un participant du pays sélectionné", en: "Proportion of projects involving at least one participant from the selected country" };
+      configChart3.comment = { fr: <></>, en: <></> };
+      break;
+    default:
+      configChart1.title = {
+        fr: "Evolution des financements demandés et obtenus sur Horizon Europe",
+        en: "Financing applied for and obtained evolution on Horizon Europe",
+      };
+      configChart1.comment = {
+        fr: <>Ce graphique montre l'évolution des financements demandés et obtenus pour les piliers du programme Horizon Europe. Les barres représentent les montants demandés et obtenus. Le point orange indique le taux de succès correspondant.</>,
+        en: <>This chart shows funding applied for and obtained for Horizon Europe pillars. The bars show amounts, the orange point shows success rate.</>,
+      };
+      configChart3.title = {
+        fr: "Part des financements demandés et obtenus par le pays sélectionné",
+        en: "Proportion of funding requested and secured by the selected country",
+      };
+      configChart3.comment = {
+        fr: <>Ce graphique montre le pourcentage des financements demandés et obtenus par le pays sélectionné par rapport au total des participants.</>,
+        en: <>This chart shows the percentage of funding applied for and obtained by the selected country as a proportion of total participants.</>,
+      };
+  }
+
   return (
     <Container fluid className="chart-container chart-container--default">
       <Row className="fr-my-1w">
@@ -89,6 +112,7 @@ export default function PillarsFundingEvo3Years() {
             <option value="total_fund_eur">{getI18nLabel(i18n, "total-fund-eur")}</option>
             <option value="total_coordination_number">{getI18nLabel(i18n, "total-coordination-number")}</option>
             <option value="total_number_involved">{getI18nLabel(i18n, "total-number-involved")}</option>
+            <option value="total_projects">{getI18nLabel(i18nGlobal, "total-projects")}</option>
           </select>
         </Col>
       </Row>

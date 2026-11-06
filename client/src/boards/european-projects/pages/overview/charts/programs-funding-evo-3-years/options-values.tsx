@@ -1,10 +1,10 @@
 import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js";
 
-import { CreateChartOptions } from "../../../../components/chart-ep";
-import { formatToMillions } from "../../../../../../utils/format";
 import type { HighchartsOptions } from "../../../../../../components/chart-wrapper";
-import { getCssColor } from "../../../../../../utils/colors";
 import { getI18nLabel } from "../../../../../../utils";
+import { getCssColor } from "../../../../../../utils/colors";
+import { formatNumber, formatToMillions, formatToRates } from "../../../../../../utils/format";
+import { CreateChartOptions } from "../../../../components/chart-ep";
 import i18n from "../../i18n-charts.json";
 
 export default function Options(data, displayType, currentLang): HighchartsOptions {
@@ -16,6 +16,13 @@ export default function Options(data, displayType, currentLang): HighchartsOptio
   const successfulData = filteredData.find((item) => item.stage === "successful");
 
   evaluatedData.programs[0].years.forEach((year) => years.add(year.year));
+
+  const valueKey = (["total_fund_eur", "total_coordination_number", "total_number_involved", "count"].includes(displayType) ? displayType : "total_fund_eur") as
+    | "total_fund_eur"
+    | "total_coordination_number"
+    | "total_number_involved"
+    | "total_projects";
+  const isFunding = valueKey === "total_fund_eur";
 
   const sortedYears = Array.from(years).sort();
 
@@ -44,14 +51,11 @@ export default function Options(data, displayType, currentLang): HighchartsOptio
         },
       },
     },
-    xAxis: {
-      categories: sortedYears.map(String),
-      crosshair: true,
-    },
+    xAxis: { categories: sortedYears.map(String), crosshair: true },
     yAxis: [
       {
         title: {
-          text: displayType === "total_fund_eur" ? "M€" : "Nombre",
+          text: displayType === "total_fund_eur" ? "Euros (M€)" : displayType === "total_coordination_number" ? "Nombre de projets coordonnés" : displayType === "total_projects" ? "Nombre de projets" : "Nombre de candidats et de participants",
         },
         min: 0,
         gridLineColor: "var(--background-default-grey-hover)",
@@ -59,37 +63,30 @@ export default function Options(data, displayType, currentLang): HighchartsOptio
       },
       {
         title: {
+          style: { color: "red" },
           text: `${getI18nLabel(i18n, "successRate", currentLang)} (%)`,
         },
         opposite: true,
         min: 0,
         max: 100,
-        labels: {
-          formatter: function (this: Highcharts.AxisLabelsFormatterContextObject) {
-            return `${this.value}%`;
-          },
-          style: { color: successRateColor },
-        },
-        gridLineColor: "var(--background-default-grey-hover)",
-        gridLineWidth: 0.5,
+        labels: { format: "{value}%", style: { color: "red" } },
       },
     ],
     tooltip: {
       shared: true,
+      useHTML: true,
+      formatter: function () {
+        let html = `<strong>${this.category}</strong><br/>`;
+        (this.points || []).forEach((point) => {
+          const value = point.y || 0;
+          const formatted = point.series.type === "scatter" ? formatToRates(value / 100) : isFunding ? formatToMillions(value * 1000000) : formatNumber(value);
+          html += `<span style="color:${point.color}">●</span> ${point.series.name}: <strong>${formatted}</strong><br/>`;
+        });
+        return html;
+      },
     },
     plotOptions: {
-      column: {
-        grouping: false,
-        shadow: false,
-        borderWidth: 0,
-        borderRadius: 0,
-        dataLabels: {
-          enabled: true,
-          formatter: function () {
-            return displayType === "total_fund_eur" ? formatToMillions(this.y as number) : (this.y as number);
-          },
-        },
-      },
+      column: { borderRadius: 2, borderWidth: 0, grouping: true },
     },
     series: [
       // Série pour les projets évalués
@@ -107,8 +104,7 @@ export default function Options(data, displayType, currentLang): HighchartsOptio
           });
           return data;
         })(),
-        pointPadding: 0.3,
-        pointPlacement: -0.2,
+        yAxis: 0,
       },
       // Série pour les projets lauréats
       {
@@ -125,8 +121,7 @@ export default function Options(data, displayType, currentLang): HighchartsOptio
           });
           return data;
         })(),
-        pointPadding: 0.3,
-        pointPlacement: 0.2,
+        yAxis: 0,
       },
       // Série pour les taux de succès
       {
@@ -149,7 +144,7 @@ export default function Options(data, displayType, currentLang): HighchartsOptio
           });
           return data;
         })(),
-        marker: { enabled: true, radius: 6 },
+        marker: { symbol: "circle", radius: 6 },
         dataLabels: {
           enabled: true,
           formatter: function () {
@@ -158,6 +153,7 @@ export default function Options(data, displayType, currentLang): HighchartsOptio
           y: -10,
           style: { fontSize: "11px", fontWeight: "600", textOutline: "none" },
         },
+        zIndex: 5,
       },
     ],
   };

@@ -20,7 +20,7 @@ const configChart1 = {
   id: "EvolutionFundingLines",
   title: {
     fr: "Evolution des financements demandés et obtenus (M€)",
-    en: "Financing applied for and obtained (€m)",
+    en: "Financing applied for and obtained (M€)",
   },
   description: {
     fr: "",

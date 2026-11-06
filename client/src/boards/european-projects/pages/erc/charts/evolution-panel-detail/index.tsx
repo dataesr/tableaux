@@ -49,7 +49,7 @@ const configWeight = {
   title: {
     en: "Share of successful projects by panel",
     fr: "Poids des projets lauréats par panel",
-    className: "fr-mt-2w fr-ml-1w",
+    className: "fr-my-1w fr-ml-1w",
   },
   comment: {
     fr: <>Ce graphique présente l'évolution du poids des projets lauréats du pays sélectionné par rapport au total européen, ventilé par panel ERC au sein du domaine scientifique sélectionné.</>,
@@ -68,7 +68,7 @@ const configSuccessRate = {
   title: {
     en: "Success rate by panel",
     fr: "Taux de succès par panel",
-    className: "fr-mt-2w fr-ml-1w",
+    className: "fr-my-1w fr-ml-1w",
   },
   comment: {
     fr: <>Ce graphique présente l'évolution du taux de succès des projets du pays sélectionné, calculé comme le ratio entre projets lauréats et projets évalués, ventilé par panel ERC au sein du domaine scientifique sélectionné.</>,
@@ -106,20 +106,6 @@ export default function EvolutionPanelDetail({ currentLang: propLang }: Evolutio
   // S'assurer que le domaine sélectionné est disponible
   const effectiveDomain = availableDomains.includes(selectedDomain) ? selectedDomain : availableDomains[0];
 
-  const weightOptions = OptionsEvolution({
-    data,
-    domain: effectiveDomain,
-    chartType: "weight",
-    currentLang,
-  });
-
-  const successRateOptions = OptionsEvolution({
-    data,
-    domain: effectiveDomain,
-    chartType: "successRate",
-    currentLang,
-  });
-
   return (
     <div className="evolution-panel-detail">
       <Title as="h3">{currentLang === "fr" ? "Évolution par panel ERC" : "Evolution by ERC panel"}</Title>
@@ -146,12 +132,28 @@ export default function EvolutionPanelDetail({ currentLang: propLang }: Evolutio
 
       {/* Graphique 1: Poids des projets par panel */}
       <div className="fr-mb-4w chart-container chart-container--default">
-        <ChartWrapper config={configWeight} options={weightOptions} renderData={() => null} />
+        <ChartWrapper
+          config={configWeight}
+          options={OptionsEvolution({
+            data,
+            domain: effectiveDomain,
+            chartType: "weight",
+          })}
+          renderData={() => null}
+        />
       </div>
 
       {/* Graphique 2: Taux de succès par panel */}
       <div className="fr-mb-4w chart-container chart-container--default">
-        <ChartWrapper config={configSuccessRate} options={successRateOptions} renderData={() => null} />
+        <ChartWrapper
+          config={configSuccessRate}
+          options={OptionsEvolution({
+            data,
+            domain: effectiveDomain,
+            chartType: "successRate",
+          })}
+          renderData={() => null}
+        />
       </div>
     </div>
   );

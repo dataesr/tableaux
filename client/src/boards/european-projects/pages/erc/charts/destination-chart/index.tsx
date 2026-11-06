@@ -49,6 +49,10 @@ const configProjects = {
       </>
     ),
   },
+  // title: {
+  // fr: "Nombre de projets lauréats par type de financement ERC",
+  // en: "Top beneficiary countries",
+  // },
   integrationURL: "/european-projects/components/pages/erc/charts/destination-chart",
 };
 
@@ -143,8 +147,8 @@ function renderDataTableProjects(data: DestinationChartItem[], currentLang: stri
       </thead>
       <tbody>
         {sortedData.map((item) => {
-          const evaluated = item.evaluated?.total_involved || 0;
-          const successful = item.successful?.total_involved || 0;
+          const evaluated = item.evaluated?.total_projects || 0;
+          const successful = item.successful?.total_projects || 0;
           const successRate = evaluated > 0 ? successful / evaluated : 0;
           const name = DESTINATION_NAMES[item.destination_code]?.[currentLang] || item.destination_name_en;
 

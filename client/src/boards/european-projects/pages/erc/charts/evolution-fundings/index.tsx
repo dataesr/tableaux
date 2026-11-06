@@ -22,7 +22,7 @@ const configWeight = {
   title: {
     en: "Share of successful projects",
     fr: "Poids des projets lauréats",
-    className: "fr-mt-2w fr-ml-1w",
+    className: "fr-my-1w fr-ml-1w",
   },
   comment: {
     fr: <>Ce graphique présente l'évolution du poids des projets lauréats du pays sélectionné par rapport au total européen, ventilé par type de financement ERC.</>,
@@ -41,7 +41,7 @@ const configSuccessRate = {
   title: {
     en: "Success rate",
     fr: "Taux de succès",
-    className: "fr-mt-2w fr-ml-1w",
+    className: "fr-my-1w fr-ml-1w",
   },
   comment: {
     fr: <>Ce graphique présente l'évolution du taux de succès des projets du pays sélectionné, calculé comme le ratio entre projets lauréats et projets évalués, ventilé par type de financement ERC.</>,
@@ -76,20 +76,6 @@ export default function EvolutionFundingsCharts({ countryAdjective = "français"
     );
   }
 
-  const weightOptions = Options({
-    processedData,
-    chartType: "weight",
-    countryAdjective,
-    currentLang,
-  });
-
-  const successRateOptions = Options({
-    processedData,
-    chartType: "successRate",
-    countryAdjective,
-    currentLang,
-  });
-
   return (
     <div className="evolution-charts">
       <Title as="h3">
@@ -98,12 +84,26 @@ export default function EvolutionFundingsCharts({ countryAdjective = "français"
 
       {/* Graphique 1: Poids des projets */}
       <div className="fr-mb-4w chart-container chart-container--default">
-        <ChartWrapper config={configWeight} options={weightOptions} renderData={() => renderDataTable(processedData, "weight", currentLang)} />
+        <ChartWrapper
+          config={configWeight}
+          options={Options({
+            processedData,
+            chartType: "weight",
+          })}
+          renderData={() => renderDataTable(processedData, "weight", currentLang)}
+        />
       </div>
 
       {/* Graphique 2: Taux de succès */}
       <div className="fr-mb-4w chart-container chart-container--default">
-        <ChartWrapper config={configSuccessRate} options={successRateOptions} renderData={() => renderDataTable(processedData, "successRate", currentLang)} />
+        <ChartWrapper
+          config={configSuccessRate}
+          options={Options({
+            processedData,
+            chartType: "successRate",
+          })}
+          renderData={() => renderDataTable(processedData, "successRate", currentLang)}
+        />
       </div>
     </div>
   );

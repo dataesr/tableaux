@@ -328,7 +328,7 @@
     "id": "pillarsEvolutionFundingLines",
     "title": {
       "fr": "Pilliers - Evolution des financements demandés et obtenus (M€)",
-      "en": "Pilars - Trends in funding requested and secured (€M)"
+      "en": "Pilars - Trends in funding requested and secured (M€)"
     },
     "description": {
       "fr": "",
@@ -367,7 +367,7 @@
     "id": "programsEvolutionFundingLines",
     "title": {
       "fr": "Programmes - Evolution des financements demandés et obtenus (M€)",
-      "en": "Programs - Trends in funding requested and secured (€M)"
+      "en": "Programs - Trends in funding requested and secured (M€)"
     },
     "description": {
       "fr": "",
@@ -406,7 +406,7 @@
     "id": "topicsEvolutionFundingLines",
     "title": {
       "fr": "Thématiques - Evolution des financements demandés et obtenus (M€)",
-      "en": "Themes - Trends in funding requested and secured (€M)"
+      "en": "Themes - Trends in funding requested and secured (M€)"
     },
     "description": {
       "fr": "",
@@ -445,7 +445,7 @@
     "id": "destinationsEvolutionFundingLines",
     "title": {
       "fr": "Destinations - Evolution des financements demandés et obtenus (M€)",
-      "en": "Destinations - Trends in funding requested and secured (€M)"
+      "en": "Destinations - Trends in funding requested and secured (M€)"
     },
     "description": {
       "fr": "",

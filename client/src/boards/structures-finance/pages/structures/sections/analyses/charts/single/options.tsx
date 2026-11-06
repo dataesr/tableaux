@@ -12,7 +12,7 @@ interface MetricConfig {
   color: string;
 }
 
-const PREDECESSOR_SCALE = ["scale-2", "scale-3", "scale-5", "scale-6", "scale-7"];
+const PREDECESSOR_SCALE = ["scale-1-color", "scale-2-color", "scale-4-color", "scale-5-color", "scale-6-color"];
 const PREDECESSOR_DASH: Highcharts.DashStyleValue[] = ["ShortDash", "ShortDot", "Dash", "Dot", "LongDash"];
 
 const formatValue = (value: number, format: MetricConfig["format"]): string => {
@@ -59,7 +59,7 @@ export const createSingleChartOptions = (
     if (isIPCMetric && refIpc) name = `${name} (IPC ${refIpc})`;
 
     const color = group.isCurrent
-      ? (isIPCMetric ? getCssColor("blue-france-main-525") : getCssColor("scale-4"))
+      ? (isIPCMetric ? getCssColor("blue-france-main-525") : getCssColor("scale-3-color"))
       : getCssColor(PREDECESSOR_SCALE[predecessorIndex % PREDECESSOR_SCALE.length]);
 
     const dashStyle: Highcharts.DashStyleValue = group.isCurrent

@@ -59,7 +59,7 @@ export default function DisplayRegion() {
   }
 
   return (
-    <main className="fundings">
+    <div className="fundings">
       <Container fluid className="fundings-gradient fr-mb-3w">
         <Container as="section">
           <Row gutters>
@@ -288,6 +288,6 @@ export default function DisplayRegion() {
             </>
           )}
       </Container>
-    </main>
+    </div>
   )
 }

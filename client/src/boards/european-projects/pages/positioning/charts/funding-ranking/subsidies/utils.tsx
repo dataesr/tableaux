@@ -1,8 +1,10 @@
 import { useSearchParams } from "react-router-dom";
+
+import { getI18nLabel } from "../../../../../../../utils";
 import { formatToMillions } from "../../../../../../../utils/format";
-  import { getI18nLabel } from "../../../../../../../utils";
-  import i18n from "../../../../../i18n-global.json";
-  
+import i18n from "../../../../../i18n-global.json";
+import { isEjoParam } from "../../../../../utils/params";
+
 export function useGetParams() {
   const [searchParams] = useSearchParams();
 
@@ -38,7 +40,17 @@ export function useGetParams() {
     params.push(`destinations=${destinationIds}`);
   }
 
-  return params.join("&");
+  // Récupérer le paramètre range_of_years et le convertir en call_year pour l'API
+  const rangeOfYears = searchParams.get("range_of_years");
+  if (rangeOfYears) {
+    params.push(`range_of_years=${rangeOfYears}`);
+  }
+
+  if (searchParams.has("isEjo")) {
+    params.push(isEjoParam());
+  }
+
+  return params.filter((item) => !!item).join("&");
 }
 
 export function readingKey(data) {
@@ -68,28 +80,28 @@ export function readingKey(data) {
       <>
         {firstCountry.rank_evaluated === firstCountry.rank_successful ? (
           <>
-            Le pays "<strong>{firstCountry.name_fr}</strong>" arrive en{" "}
+            Le pays <strong>{firstCountry.name_fr}</strong> arrive en{" "}
             <strong>
               {firstCountry.rank_evaluated}
               {getOrdinal(firstCountry.rank_evaluated, "fr")}
             </strong>{" "}
-            position pour la demande de subventions (<strong>{(firstCountry.total_evaluated / 1000000).toFixed(1)} M€</strong>) ainsi que pour les
-            subventions allouées (<strong>{(firstCountry.total_successful / 1000000).toFixed(1)} M€</strong>). Son taux de succès est de{" "}
+            position des demandes de financements (<strong>{(firstCountry.total_evaluated / 1000000).toFixed(1)} M€</strong>) et des financements obtenus (<strong>{(firstCountry.total_successful / 1000000).toFixed(1)} M€</strong>).
+            Le taux de succès des financements est de{" "}
             <strong>{firstCountry.ratio.toFixed(1)}%</strong>.
           </>
         ) : (
           <>
-            Le pays "<strong>{firstCountry.name_fr}</strong>" arrive en{" "}
+            Le pays <strong>{firstCountry.name_fr}</strong> arrive en{" "}
             <strong>
               {firstCountry.rank_evaluated}
               {getOrdinal(firstCountry.rank_evaluated, "fr")}
             </strong>{" "}
-            position pour la demande de subventions (<strong>{(firstCountry.total_evaluated / 1000000).toFixed(1)} M€</strong>) alors qu'il arrive en{" "}
+            position des demande de financements (<strong>{(firstCountry.total_evaluated / 1000000).toFixed(1)} M€</strong>) et en{" "}
             <strong>
               {firstCountry.rank_successful}
               {getOrdinal(firstCountry.rank_successful, "fr")}
             </strong>{" "}
-            position pour les subventions allouées (<strong>{(firstCountry.total_successful / 1000000).toFixed(1)} M€</strong>). Le taux de succès est
+            position des financements obtenus (<strong>{(firstCountry.total_successful / 1000000).toFixed(1)} M€</strong>). Le taux de succès des financements est
             de <strong>{firstCountry.ratio.toFixed(1)}%</strong>.
           </>
         )}
@@ -99,28 +111,28 @@ export function readingKey(data) {
       <>
         {firstCountry.rank_evaluated === firstCountry.rank_successful ? (
           <>
-            The country "<strong>{firstCountry.name_en}</strong>" ranks{" "}
+            The country <strong>{firstCountry.name_en}</strong> ranks{" "}
             <strong>
               {firstCountry.rank_evaluated}
               {getOrdinal(firstCountry.rank_evaluated, "en")}
             </strong>{" "}
-            for subsidy requests (<strong>{(firstCountry.total_evaluated / 1000000).toFixed(1)} M€</strong>) as well as for allocated subsidies (
-            <strong>{(firstCountry.total_successful / 1000000).toFixed(1)} M€</strong>). Its success rate is{" "}
+            for both funding requested (<strong>€{(firstCountry.total_evaluated / 1000000).toFixed(1)}M</strong>) and funding secured (
+            <strong>€{(firstCountry.total_successful / 1000000).toFixed(1)}M</strong>). Its funding success rate is{" "}
             <strong>{firstCountry.ratio.toFixed(1)}%</strong>.
           </>
         ) : (
           <>
-            The country "<strong>{firstCountry.name_en}</strong>" ranks{" "}
+            The country <strong>{firstCountry.name_en}</strong> ranks{" "}
             <strong>
               {firstCountry.rank_evaluated}
               {getOrdinal(firstCountry.rank_evaluated, "en")}
             </strong>{" "}
-            for subsidy requests (<strong>{(firstCountry.total_evaluated / 1000000).toFixed(1)} M€</strong>) while it ranks{" "}
+            for funding requested (<strong>€{(firstCountry.total_evaluated / 1000000).toFixed(1)}M</strong>) while it ranks{" "}
             <strong>
               {firstCountry.rank_successful}
               {getOrdinal(firstCountry.rank_successful, "en")}
             </strong>{" "}
-            for allocated subsidies (<strong>{(firstCountry.total_successful / 1000000).toFixed(1)} M€</strong>). The success rate is{" "}
+            for funding secured (<strong>€{(firstCountry.total_successful / 1000000).toFixed(1)}M</strong>). Its funding success rate is{" "}
             <strong>{firstCountry.ratio.toFixed(1)}%</strong>.
           </>
         )}
@@ -131,7 +143,7 @@ export function readingKey(data) {
 
 export function renderDataTableSubsidies(data, currentLang, selectedCountryCode) {
 
-  
+
   if (!data || data.length === 0) return null;
 
   const labels = {

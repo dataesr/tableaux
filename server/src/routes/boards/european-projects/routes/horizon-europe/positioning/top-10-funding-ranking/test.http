@@ -1,0 +1,5 @@
+### Route
+GET http://localhost:3000/api/european-projects/positioning/top-10-funding-ranking?destinations=&isEjo=&pillars=&programs=&thematics=
+
+### Création du covered index
+GET http://localhost:3000/api/european-projects/positioning/top-10-funding-ranking_indexes

@@ -1,7 +1,8 @@
-import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js";
-import { CreateChartOptions } from "../../../../../components/chart-ep";
-import { getCssColor } from "../../../../../../../utils/colors";
+import type Highcharts from "highcharts/es-modules/masters/highcharts.src.js";
+
 import { getResponsiveChartHeight } from "../../../../../../../utils";
+import { getCssColor } from "../../../../../../../utils/colors";
+import { CreateChartOptions } from "../../../../../components/chart-ep";
 
 interface DataItem {
   name: string;
@@ -16,12 +17,12 @@ export default function optionCoordinationNumberSuccessRate(data: DataItem[], cu
   const average = total / data.length;
 
   const translations = {
-    fr: { successRate: "Taux de succès", average: "Moyenne", successRateLabel: "Taux de succès sur les participants" },
-    en: { successRate: "Success rate", average: "Average", successRateLabel: "Success rate on participants" },
+    fr: { successRate: "Taux de succès", average: "Moyenne", successRateLabel: "Taux de succès des coordinations de projets" },
+    en: { successRate: "Success rate", average: "Average", successRateLabel: "Success rate of project coordinations" },
   };
   const t = translations[currentLang as keyof typeof translations] || translations.en;
 
-  const newOptions: HighchartsInstance.Options = {
+  const newOptions: Highcharts.Options = {
     chart: {
       height: getResponsiveChartHeight(data.length),
     },

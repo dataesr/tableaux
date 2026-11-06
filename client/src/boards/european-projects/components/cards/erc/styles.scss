@@ -6,14 +6,13 @@
   padding: 1rem;
   padding-top: 20px;
   padding-bottom: 0;
-  background-color: var(--background-alt-grey);
-  border: 1px solid var(--border-default-grey);
+  background-color: var(--background-contrast-blue-france);
   position: relative;
   overflow: hidden;
   height: 100%;
 
   &:hover {
-    background-color: var(--background-default-grey-hover);
+    background-color: var(--background-contrast-blue-france-hover);
   }
 
   .card-header {
@@ -109,7 +108,7 @@
   }
 
   &.rate-card {
-    --card-primary-color: var(--success-rate-color);
+    --card-primary-color: var(--average-success-rate-color);
     background-color: var(--background-default-grey);
   }
 
@@ -196,12 +195,11 @@
 // Card statistique générique
 .erc-stat-card {
   padding: 1.25rem;
-  background-color: var(--background-default-grey);
-  border: 1px solid var(--border-default-grey);
-  border-top: 3px solid var(--border-default-grey);
+  background-color: var(--background-contrast-blue-france);
+  border-top: 3px solid var(--blue-france-main-525);
 
   &:hover {
-    background-color: var(--background-default-grey-hover);
+    background-color: var(--background-contrast-blue-france-hover);
   }
 
   .stat-card-header {
@@ -235,6 +233,7 @@
     margin: -0.5rem 0 1rem 0;
     line-height: 1.4;
     display: -webkit-box;
+    line-clamp: 2;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
@@ -293,7 +292,7 @@
     .rate-value {
       font-size: 1.125rem;
       font-weight: 700;
-      color: var(--success-rate-color);
+      color: var(--average-success-rate-color);
     }
   }
 
@@ -402,7 +401,7 @@
     .rate-value {
       font-size: 1.25rem;
       font-weight: 700;
-      color: var(--success-rate-color);
+      color: var(--average-success-rate-color);
     }
   }
 }
@@ -503,7 +502,7 @@
         }
 
         &.success-rate {
-          color: var(--success-rate-color);
+          color: var(--average-success-rate-color);
         }
       }
 
@@ -597,6 +596,7 @@
     margin: 0 0 1rem 0;
     line-height: 1.4;
     display: -webkit-box;
+    line-clamp: 2;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
@@ -663,7 +663,7 @@
     .rate-value {
       font-size: 1.125rem;
       font-weight: 700;
-      color: var(--success-rate-color);
+      color: var(--average-success-rate-color);
     }
   }
 

@@ -23,9 +23,9 @@ export default function Options(data, currentLang, selectedCountry?: string) {
     },
     xAxis: {
       categories: data.years,
-      title: {
-        text: getI18nLabel("years"),
-      },
+      // title: {
+      //   text: getI18nLabel("years"),
+      // },
       crosshair: true,
       accessibility: {
         description: "Years",

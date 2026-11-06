@@ -1,12 +1,6 @@
-import { formatToMillions, formatToRates } from "../../../../../../utils/format";
 import { getI18nLabel } from "../../../../../../utils";
+import { formatToMillions, formatToRates } from "../../../../../../utils/format";
 import i18n from "../../../../i18n-global.json";
-
-export function getDefaultParams(searchParams) {
-  const params = [...searchParams].map(([key, value]) => `${key}=${value}`).join("&");
-
-  return params + "&stage=successful";
-}
 
 export function successRatesReadingKey(data, displayType, currentLang) {
   const dataSelectedCountry = data?.filter((item) => item.country !== "all")[0];

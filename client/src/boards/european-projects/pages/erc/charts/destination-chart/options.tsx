@@ -34,13 +34,13 @@ export default function Options({ data, currentLang = "fr" }: OptionsParams) {
   const categories = sortedData.map((d) => d.destination_code);
 
   // Préparer les données pour les barres
-  const evaluatedData = sortedData.map((d) => d.evaluated?.total_involved || 0);
-  const successfulData = sortedData.map((d) => d.successful?.total_involved || 0);
+  const evaluatedData = sortedData.map((d) => d.evaluated?.total_projects || 0);
+  const successfulData = sortedData.map((d) => d.successful?.total_projects || 0);
 
   // Calculer les taux de succès
   const successRates = sortedData.map((d) => {
-    const evaluated = d.evaluated?.total_involved || 0;
-    const successful = d.successful?.total_involved || 0;
+    const evaluated = d.evaluated?.total_projects || 0;
+    const successful = d.successful?.total_projects || 0;
     return evaluated > 0 ? (successful / evaluated) * 100 : 0;
   });
 

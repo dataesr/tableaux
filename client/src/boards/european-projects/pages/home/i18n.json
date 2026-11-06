@@ -1,42 +1,94 @@
 {
+  "dashboard-badge": {
+    "fr": "TABLEAU DE BORD",
+    "en": "DASHBOARD"
+  },
   "title1": {
     "fr": "Tableau de bord des projets européens (Horizon Europe)",
     "en": "European Projects Dashboard (Horizon Europe)"
   },
   "bloc1": {
-    "fr": "Le programme <b>Horizon Europe</b> repose sur <b>quatre piliers</b> complémentaires qui structurent son action en faveur de la recherche et de l’innovation en Europe.",
-    "en": "The <b>Horizon Europe</b> program is based on <b>four complementary pillars</b> that structure its action in favor of research and innovation in Europe."
+    "fr": "Le programme <b>Horizon Europe</b><glossary>he</glossary> repose sur <b>quatre piliers</b> complémentaires qui structurent son action en faveur de la recherche et de l’innovation en Europe.",
+    "en": "The <b>Horizon Europe</b><glossary>he</glossary> program is based on <b>four complementary pillars</b> that structure its action in favor of research and innovation in Europe."
   },
-  "HORIZON.1-title": {
+  "HORIZON-1-title": {
     "fr": "Science d’excellence",
     "en": "Excellent Science"
   },
-  "HORIZON.1-description": {
+  "HORIZON-1-description": {
     "fr": "Ce pilier soutient la recherche fondamentale de haut niveau, en finançant les chercheurs et les projets les plus prometteurs, notamment à travers le Conseil européen de la recherche (ERC) et les bourses Marie Skłodowska-Curie. Il vise à renforcer l'excellence scientifique de l’Union.",
     "en": "This pillar supports high-level fundamental research by funding the most promising researchers and projects, notably through the European Research Council (ERC) and Marie Skłodowska-Curie grants. It aims to strengthen the scientific excellence of the Union."
   },
-  "HORIZON.2-title": {
+  "HORIZON-2-title": {
     "fr": "Problématiques mondiales et compétitivité industrielle européenne",
     "en": "Global Challenges and European Industrial Competitiveness"
   },
-  "HORIZON.2-description": {
+  "HORIZON-2-description": {
     "fr": "Ce pilier finance des projets collaboratifs pour répondre aux grands défis sociétaux (santé, climat, énergie, sécurité, alimentation...) tout en stimulant l’innovation industrielle. Il est organisé en *clusters* thématiques favorisant les synergies entre les disciplines.",
     "en": "It funds collaborative projects to address major societal challenges (health, climate, energy, security, food...) while stimulating industrial innovation. It is organized into thematic *clusters* that promote synergies between disciplines."
   },
-  "HORIZON.3-title": {
+  "HORIZON-3-title": {
     "fr": "Europe innovante",
     "en": "Innovative Europe"
   },
-  "HORIZON.3-description": {
+  "HORIZON-3-description": {
     "fr": "Ce pilier encourage l’émergence d’innovations de rupture et soutient les start-ups, les PME innovantes et les nouvelles technologies via des instruments comme le Conseil européen de l’innovation (EIC).",
     "en": "This pillar encourages the emergence of breakthrough innovations and supports start-ups, innovative SMEs, and new technologies through instruments such as the European Innovation Council (EIC)."
   },
-  "HORIZON.4-title": {
+  "HORIZON-4-title": {
     "fr": "Élargir la participation et renforcer l’Espace européen de la recherche",
     "en": "Widening Participation and Strengthening the European Research Area"
   },
-  "HORIZON.4-description": {
+  "HORIZON-4-description": {
     "fr": "Ce dernier pilier vise à réduire les écarts entre les pays et régions de l’UE en matière de recherche et d’innovation. Il soutient les pays moins représentés dans les projets européens et renforce la coopération scientifique à l’échelle du continent.",
     "en": "This last pillar aims to reduce disparities between EU countries and regions in terms of research and innovation. It supports countries that are less represented in European projects and strengthens scientific cooperation across the continent."
+  },
+  "logo-alt": {
+    "fr": "Lien vers la page officielle du programme Horizon Europe",
+    "en": "Link to the official Horizon Europe programme page"
+  },
+  "stat-pillars": {
+    "fr": "Piliers Horizon Europe",
+    "en": "Horizon Europe pillars"
+  },
+  "stat-msca": {
+    "fr": "Actions Marie Skłodowska-Curie",
+    "en": "Marie Skłodowska-Curie Actions"
+  },
+  "stat-erc": {
+    "fr": "Conseil européen de la recherche",
+    "en": "European Research Council"
+  },
+  "stat-programme-evolution": {
+    "fr": "Évolution des programmes-cadres",
+    "en": "Framework programme evolution"
+  },
+  "pillars-title": {
+    "fr": "Les 4 piliers d’Horizon Europe",
+    "en": "The 4 pillars of Horizon Europe"
+  },
+  "focus-title": {
+    "fr": "Focus",
+    "en": "Focus"
+  },
+  "msca-subtitle": {
+    "fr": "Actions Marie Skłodowska-Curie",
+    "en": "Marie Skłodowska-Curie Actions"
+  },
+  "msca-description": {
+    "fr": "Le programme européen « Actions Marie Skłodowska-Curie » (MSCA) est le programme de référence de l’Union européenne pour la mobilité, la formation et le développement de la carrière des chercheurs. Au sein du programme-cadre « Horizon Europe », il est intégré au pilier 1 dédié à la science d’excellence.",
+    "en": "The Marie Skłodowska-Curie Actions (MSCA) programme is the European Union’s flagship programme for researchers’ mobility, training and career development. Within the Horizon Europe framework programme, it is part of Pillar 1, dedicated to excellent science."
+  },
+  "erc-subtitle": {
+    "fr": "Le Conseil européen de la recherche",
+    "en": "The European Research Council"
+  },
+  "erc-description": {
+    "fr": "L’ERC (Conseil européen de la recherche) finance des projets de recherche exploratoire, aux frontières de la connaissance, dans tous les domaines de la science et de la technologie. Le seul critère de sélection est celui de l’excellence scientifique.",
+    "en": "The ERC (European Research Council) funds exploratory research projects at the frontiers of knowledge in all fields of science and technology. The sole selection criterion is scientific excellence."
+  },
+  "timeline-link": {
+    "fr": "Visualisez et analysez l’évolution des programmes européens de recherche",
+    "en": "Explore and analyse the evolution of European research programmes"
   }
 }

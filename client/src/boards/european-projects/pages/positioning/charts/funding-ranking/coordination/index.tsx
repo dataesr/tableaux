@@ -1,26 +1,24 @@
-import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
 import { Col, Container, Radio, Row, Title } from "@dataesr/dsfr-plus";
+import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 
-import { getData } from "./query";
-import { readingKey, useGetParams, renderDataTableCoordination, renderDataTableCoordinationSuccessRate } from "./utils";
-import optionsCoordinationNumber from "./options-coordination_number";
-import optionCoordinationNumberSuccessRate from "./options-coordination_number-succes-rate";
+import { useSearchParams } from "react-router-dom";
+// import Callout from "../../../../../../../components/callout.js";
+import ChartFooter from "../../../../../../../components/chart-footer/index.js";
 import ChartWrapper from "../../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../../components/charts-skeletons/default";
-import { useSearchParams } from "react-router-dom";
-
 import { EPChartsSources } from "../../../../../config.js";
-
 import i18nGlobal from "../../../../../i18n-global.json";
 import i18nLocal from "./i18n.json";
-import ChartFooter from "../../../../../../../components/chart-footer/index.js";
-import Callout from "../../../../../../../components/callout.js";
+import optionsCoordinationNumber from "./options-coordination_number";
+import optionCoordinationNumberSuccessRate from "./options-coordination_number-succes-rate";
+import { getData } from "./query";
+import { readingKey, renderDataTableCoordination, renderDataTableCoordinationSuccessRate, useGetParams } from "./utils";
 
 export default function FundingRankingCoordination() {
   const [searchParams] = useSearchParams();
   const currentLang = searchParams.get("language") || "fr";
-  const [sortBy, setSortBy] = useState("evaluated");
+  const [sortBy, setSortBy] = useState("submitted");
   const params = useGetParams();
 
   const { data, isLoading } = useQuery({
@@ -42,10 +40,10 @@ export default function FundingRankingCoordination() {
 
   const prepareData = (data, sortKey) => {
     data.sort((a, b) => b[sortKey] - a[sortKey]);
-    if (sortBy === "evaluated") {
-      data.sort((a, b) => b.total_evaluated - a.total_evaluated);
+    if (sortBy === "submitted") {
+      data.sort((a, b) => b.total_coordination_number_evaluated - a.total_coordination_number_evaluated);
     } else {
-      data.sort((a, b) => b.total_successful - a.total_successful);
+      data.sort((a, b) => b.total_coordination_number_successful - a.total_coordination_number_successful);
     }
     // Add selected country if it is not in the top 10
     const dataToReturn = data.slice(0, 10);
@@ -73,12 +71,12 @@ export default function FundingRankingCoordination() {
           <Title as="h2" look="h4">
             {getI18nLabel("title")}
           </Title>
-          <Callout className="callout-style">
+          {/* <Callout className="callout-style">
             Ce graphique présente le classement des pays en fonction du nombre de coordinations de projets européens déposés et lauréats. Les coordinations représentent le rôle principal dans un projet européen. La barre bleue indique le nombre de
             coordinations de projets déposés (évalués), tandis que la barre verte indique le nombre de coordinations de projets lauréats.
             <br />
             Le second graphique illustre le taux de succès des coordinations de projets pour chaque pays, comparant le pays sélectionné à la moyenne européenne.
-          </Callout>
+          </Callout> */}
         </Col>
       </Row>
       <Row>
@@ -86,20 +84,20 @@ export default function FundingRankingCoordination() {
           <fieldset className="fr-mb-2w">
             <legend>{getI18nLabel("sort-by")}</legend>
             <Radio
-              checked={sortBy === "evaluated"}
+              checked={sortBy === "submitted"}
               className="fr-mb-1w"
-              defaultValue="evaluated"
-              label={getI18nLabel("sort-by-evaluated-project")}
+              defaultValue="submitted"
+              label={getI18nLabel("sort-by-submitted-projects")}
               name="FundingRankingCoordination-radio"
               onChange={(e) => {
                 setSortBy((e.target as HTMLInputElement).value);
               }}
             />
             <Radio
-              checked={sortBy === "successful"}
+              checked={sortBy === "winning"}
               className="fr-mb-1w"
-              defaultValue="successful"
-              label={getI18nLabel("sort-by-successful-project")}
+              defaultValue="winning"
+              label={getI18nLabel("sort-by-winning-projects")}
               name="FundingRankingCoordination-radio"
               onChange={(e) => {
                 setSortBy((e.target as HTMLInputElement).value);
@@ -134,14 +132,12 @@ export default function FundingRankingCoordination() {
             comment={{
               fr: (
                 <>
-                  Ce graphique représente le positionnement du pays sélectionné par rapport aux autres pays en fonction du nombre de coordinations de projets déposés et lauréats. La barre bleue correspond aux coordinations déposées, la barre verte
-                  aux coordinations lauréates. Le taux de succès compare le pays sélectionné avec la moyenne européenne.
+                  Ce graphique compare les taux de succès des pays qui coordonnent le plus de projets.
                 </>
               ),
               en: (
                 <>
-                  This chart shows the positioning of the selected country compared to other countries based on the number of project coordinations submitted and winners. The blue bar corresponds to submitted coordinations, the green bar to winning
-                  coordinations. The success rate compares the selected country with the European average.
+                  This chart compares the success rates of the countries that coordinate the most projects.
                 </>
               ),
             }}

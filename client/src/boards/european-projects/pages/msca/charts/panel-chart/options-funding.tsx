@@ -27,7 +27,7 @@ export default function OptionsFunding({ data, currentLang = "fr" }: OptionsPara
   const successfulColor = rootStyles.getPropertyValue("--successful-project-color").trim() || "#233e41";
   const successRateColor = rootStyles.getPropertyValue("--average-success-rate-color").trim() || "#d75521";
 
-  const titleText = currentLang === "fr" ? "Financements par panel scientifique MSCA" : "Funding by MSCA scientific panel";
+  const titleText = currentLang === "fr" ? "Financements par panel scientifique" : "Funding by scientific panel";
 
   const newOptions: HighchartsInstance.Options = {
     chart: {

@@ -42,5 +42,13 @@
   "integrationModalTitle": {
     "fr": "Intégrer ce graphique dans un autre site",
     "en": "Embed this chart in another website"
+  },
+  "chartDisplayed": {
+    "fr": "Graphique affiché",
+    "en": "Chart displayed"
+  },
+  "dataDisplayed": {
+    "fr": "Tableau de données affiché",
+    "en": "Data table displayed"
   }
 }

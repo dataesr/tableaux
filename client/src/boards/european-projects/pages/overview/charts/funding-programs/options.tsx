@@ -1,12 +1,11 @@
 import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js";
 
-import { CreateChartOptions } from "../../../../components/chart-ep";
-import { formatToMillions } from "../../../../../../utils/format";
-import { getCssColor } from "../../../../../../utils/colors";
 import { getI18nLabel, getResponsiveChartHeight } from "../../../../../../utils";
-// import i18n from "../../i18n-charts.json";
+import { getCssColor } from "../../../../../../utils/colors";
+import { formatToMillions } from "../../../../../../utils/format";
+import { CreateChartOptions } from "../../../../components/chart-ep";
 
-export default function Options(data, title, currentLang) {
+export default function options(data, currentLang) {
   if (!data) return null;
 
   const i18n = {
@@ -58,9 +57,6 @@ export default function Options(data, title, currentLang) {
       type: "column",
       height: getResponsiveChartHeight(categories.length),
     },
-    title: {
-      text: title,
-    },
     xAxis: {
       categories,
       labels: {
@@ -70,7 +66,7 @@ export default function Options(data, title, currentLang) {
     yAxis: {
       min: 0,
       title: {
-        text: "Euros € (millions)",
+        text: "Euros (M€)",
       },
     },
     plotOptions: {

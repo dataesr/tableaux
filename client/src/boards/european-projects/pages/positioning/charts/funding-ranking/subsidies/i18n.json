@@ -1,19 +1,19 @@
 {
   "title": {
-    "fr": "Focus sur les subventions",
-    "en": "Focus on subsidies"
+    "fr": "Focus sur les Financements",
+    "en": "Focus on funding"
   },
   "sort-by": {
     "fr": "Trier par",
     "en": "Sort by"
   },
-  "sort-by-evaluated-project": {
-    "fr": "Trier par projets évalués",
-    "en": "Sort by evaluated projects"
+  "sort-by-requested-funding": {
+    "fr": "Trier par financements demandés",
+    "en": "Sort by requested funding"
   },
-  "sort-by-successful-project": {
-    "fr": "Trier par projets lauréats",
-    "en": "Sort by successful projects"
+  "sort-by-secured-funding": {
+    "fr": "Trier par financements obtenus",
+    "en": "Sort by secured funding"
   },
   "evaluated-projects": {
     "fr": "Projets évalués",
@@ -32,11 +32,11 @@
     "en": "Average success rate"
   },
   "configChart1a-title": {
-    "fr": "Classement des pays selon la part des montants demandés et obtenus (M€)",
-    "en": "Ranking of countries by share of amounts requested and obtained (M€)"
+    "fr": "Financements demandés et obtenus par les principaux pays bénéficiaires (M€)",
+    "en": "Funding requested and secured by top beneficiary countries (M€)"
   },
   "configChart1b-title": {
-    "fr": "Taux de succès sur les montants par pays",
-    "en": "Success rate on amounts by country"
+    "fr": "Taux de succès des financements",
+    "en": "Success funding rates"
   }
 }

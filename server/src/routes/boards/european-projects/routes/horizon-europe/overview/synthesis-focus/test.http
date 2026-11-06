@@ -1,0 +1,6 @@
+### Route
+GET http://localhost:3000/api/european-projects/synthesis-focus?country_code=&destinations=&isEjo=&pillars=&programs=&range_of_years=&structureid=&thematics=
+
+### Création du covered index
+GET http://localhost:3000/api/european-projects/synthesis-focus_indexes
+

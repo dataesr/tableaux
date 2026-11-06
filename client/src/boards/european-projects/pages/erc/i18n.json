@@ -36,7 +36,7 @@
     },
     "xAxisTitle": {
       "fr": "Nombre de porteurs de projets PI",
-      "en": "Number of project PIs"
+      "en": "Number of principal investigators"
     },
     "yAxisTitle": {
       "fr": "Financements (M€)",
@@ -77,6 +77,74 @@
     "tableFunding": {
       "fr": "Financement (M€)",
       "en": "Funding (M€)"
+    }
+  },
+  "panelChart": {
+    "projects": {
+      "title": {
+        "fr": "Projets par domaine scientifique ERC",
+        "en": "Projects by ERC scientific domain"
+      },
+      "comment": {
+        "fr": "Ce graphique présente le nombre de projets évalués et lauréats par domaine scientifique ERC. Les points orange indiquent le taux de succès pour chaque domaine.",
+        "en": "This chart shows the number of evaluated and successful projects by ERC scientific domain. The orange points indicate the success rate for each domain."
+      },
+      "readingKey": {
+        "fr": "Les barres bleues représentent les projets évalués. Les barres lauréates reprennent la couleur de leur domaine scientifique. Un taux de succès élevé indique une meilleure performance.",
+        "en": "Blue bars represent evaluated projects. Successful project bars use their scientific domain color. A high success rate indicates better performance."
+      },
+      "yAxis": {
+        "fr": "Nombre de projets",
+        "en": "Number of projects"
+      }
+    },
+    "funding": {
+      "title": {
+        "fr": "Financements par domaine scientifique ERC",
+        "en": "Funding by ERC scientific domain"
+      },
+      "comment": {
+        "fr": "Ce graphique présente les financements demandés et obtenus par domaine scientifique ERC. La ligne orange représente le taux de succès en termes de financement.",
+        "en": "This chart shows requested and obtained funding by ERC scientific domain. The orange line represents the funding success rate."
+      },
+      "readingKey": {
+        "fr": "Les barres bleues représentent les financements demandés. Les barres des financements obtenus reprennent la couleur de leur domaine scientifique. Un taux de succès élevé indique une meilleure performance.",
+        "en": "Blue bars represent requested funding. Obtained funding bars use their scientific domain color. A high success rate indicates better performance."
+      },
+      "yAxis": {
+        "fr": "Financements (M€)",
+        "en": "Funding (M€)"
+      }
+    }
+  },
+  "panelDetail": {
+    "projectsTitle": {
+      "fr": "Projets par panel - {domain}",
+      "en": "Projects by panel - {domain}"
+    },
+    "fundingTitle": {
+      "fr": "Financements par panel - {domain}",
+      "en": "Funding by panel - {domain}"
+    },
+    "panel": {
+      "fr": "Panel",
+      "en": "Panel"
+    },
+    "name": {
+      "fr": "Nom",
+      "en": "Name"
+    },
+    "funding": {
+      "fr": "Financements",
+      "en": "Funding"
+    },
+    "requested": {
+      "fr": "Financements demandés",
+      "en": "Requested funding"
+    },
+    "obtained": {
+      "fr": "Financements obtenus",
+      "en": "Obtained funding"
     }
   },
   "evolution": {

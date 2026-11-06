@@ -25,6 +25,7 @@ import "highcharts/es-modules/masters/modules/variwide.src.js"
 import "highcharts/es-modules/masters/modules/sankey.src.js"
 import "highcharts/es-modules/masters/modules/treemap.src.js"
 import "highcharts/es-modules/masters/modules/variable-pie.src.js"
+import "highcharts/es-modules/masters/i18n/fr-FR.src.js"
 
 import "./styles.scss"
 
@@ -82,6 +83,8 @@ const { VITE_APP_URL } = import.meta.env;
 
 
 function IntegrationModal({ graphConfig, isOpen, modalId, setIsOpen }) {
+  const [searchParams] = useSearchParams();
+  const currentLang = searchParams.get("language") || "fr";
   const integrationCode = `<iframe \ntitle="${graphConfig.title}" \nwidth="800" \nheight="600" \nsrc="${VITE_APP_URL}${graphConfig.integrationURL}"></iframe>`;
   return (
     <Modal
@@ -91,7 +94,7 @@ function IntegrationModal({ graphConfig, isOpen, modalId, setIsOpen }) {
       size="lg"
     >
       <ModalTitle>
-        {getI18nLabel(i18n, "integrationModalTitle")}
+        {getI18nLabel(i18n, "integrationModalTitle", currentLang)}
       </ModalTitle>
       <ModalContent>
         <div className="text-right">
@@ -102,11 +105,10 @@ function IntegrationModal({ graphConfig, isOpen, modalId, setIsOpen }) {
         </SyntaxHighlighter>
         <div className="fr-mt-2w text-right">
           <Button
-            color="beige-gris-galet"
             onClick={() => setIsOpen(false)}
             variant="secondary"
           >
-            {getI18nLabel(i18n, "close")}
+            {getI18nLabel(i18n, "close", currentLang)}
           </Button>
         </div>
       </ModalContent>
@@ -126,6 +128,8 @@ function MenuModal({
   setIsOpen,
   setIsOpenIntegration,
 }) {
+  const [currentSearchParams] = useSearchParams();
+  const currentLang = currentSearchParams.get("language") || "fr";
   const shareUrl = typeof window !== "undefined"
     ? new URL(window.location.pathname + window.location.search, VITE_APP_URL || window.location.origin).toString()
     : "";
@@ -154,36 +158,34 @@ function MenuModal({
       size="sm"
       tabIndex={isOpen ? 0 : -1}
     >
+      <ModalTitle>
+        <span
+          aria-hidden="true"
+          className="fr-icon-bar-chart-box-line fr-mr-1w"
+        />
+        {getI18nLabel(i18n, "modalTitle", currentLang)}
+      </ModalTitle>
       <ModalContent className="modal-actions">
-        <Title as="h1" look="h6">
-          <span
-            aria-hidden="true"
-            className="fr-icon-bar-chart-box-line fr-mr-1w"
-          />
-          {getI18nLabel(i18n, "modalTitle")}
-        </Title>
-
         <fieldset className="fr-fieldset">
           <legend
             className="fr-fieldset__legend--regular fr-fieldset__legend"
-            id="modal-fieldset-legend"
           >
-            {getI18nLabel(i18n, "displayType")}
+            {getI18nLabel(i18n, "displayType", currentLang)}
           </legend>
           <div className="fr-fieldset__element">
             <Radio
-              defaultChecked={displayType === "chart"}
-              label={getI18nLabel(i18n, "chart")}
+              checked={displayType === "chart"}
+              label={getI18nLabel(i18n, "chart", currentLang)}
               name={`${modalId}_radio-hint`}
-              onClick={() => setDisplayType("chart")}
+              onChange={() => setDisplayType("chart")}
             />
           </div>
           <div className="fr-fieldset__element">
             <Radio
-              defaultChecked={displayType === "data"}
-              label={getI18nLabel(i18n, "data")}
+              checked={displayType === "data"}
+              label={getI18nLabel(i18n, "data", currentLang)}
               name={`${modalId}_radio-hint`}
-              onClick={() => setDisplayType("data")}
+              onChange={() => setDisplayType("data")}
             />
           </div>
         </fieldset>
@@ -193,30 +195,27 @@ function MenuModal({
             <Button
               icon="file-download-line"
               onClick={downloadCSV}
-              title="Télécharger les données du graphique au format CSV"
               variant="text"
             >
-              {getI18nLabel(i18n, "downloadCSV")}
+              {getI18nLabel(i18n, "downloadCSV", currentLang)}
             </Button>
           </li>
           <li>
             <Button
               icon="image-line"
               onClick={downloadPNG}
-              title="Télécharger l'image du graphique au format PNG"
               variant="text"
             >
-              {getI18nLabel(i18n, "downloadPNG")}
+              {getI18nLabel(i18n, "downloadPNG", currentLang)}
             </Button>
           </li>
           <li>
             <Button
               icon="printer-line"
               onClick={printChart}
-              title="Lancement de l'impression"
               variant="text"
             >
-              {getI18nLabel(i18n, "print")}
+              {getI18nLabel(i18n, "print", currentLang)}
             </Button>
           </li>
         </ul>
@@ -226,7 +225,7 @@ function MenuModal({
             <Col md={6} className="fr-mb-2w ">
               <div className="fr-share">
                 <Title as="h2" look="h6" className="fr-share__title">
-                  {getI18nLabel(i18n, "share")}
+                  {getI18nLabel(i18n, "share", currentLang)}
                 </Title>
                 <ul className="fr-btns-group fr-btns-group--inline-md fr-btns-group--equisized">
                   <li>
@@ -280,7 +279,7 @@ function MenuModal({
             <Col md={6}>
               <div>
                 <Title as="h2" look="h6" className="fr-mb-1w">
-                  {getI18nLabel(i18n, "integration")}
+                  {getI18nLabel(i18n, "integration", currentLang)}
                 </Title>
               </div>
               <div className="fr-mt-2w">
@@ -293,10 +292,9 @@ function MenuModal({
                       setIsOpen(false);
                     }
                   }}
-                  title={getI18nLabel(i18n, "integration")}
                   variant="secondary"
                 >
-                  {getI18nLabel(i18n, "integration")}
+                  {getI18nLabel(i18n, "integration", currentLang)}
                 </Button>
               </div>
             </Col>
@@ -305,12 +303,18 @@ function MenuModal({
         <hr />
         <div className="fr-mt-2w fr-grid-row fr-grid-row--right">
           <Button onClick={() => setIsOpen(false)}>
-            {getI18nLabel(i18n, "close")}
+            {getI18nLabel(i18n, "close", currentLang)}
           </Button>
         </div>
       </ModalContent>
     </Modal>
   );
+}
+
+function getTitleText(title: ChartConfig["title"], lang: string): string {
+  if (typeof title === "string") return title;
+  const localizedTitle = title?.[lang] ?? title?.fr;
+  return typeof localizedTitle === "string" ? localizedTitle : "";
 }
 
 // Composant Title exportable séparément
@@ -340,7 +344,7 @@ function ChartTitle({
   // Si title est un objet avec configuration
   return (
     <>
-      <Title as={config.title.size ? config.title.size : "h2"} className={config.title.className ? config.title.className : "fr-my-0"} look={config.title.look ? config.title.look : "h6"}>
+      <Title as={config.title.size ? config.title.size : "h2"} className={config.title.className ? config.title.className : "fr-my-0 fr-ml-1w"} look={config.title.look ? config.title.look : "h6"}>
         {config.title[currentLang]}
       </Title>
       {children}
@@ -353,6 +357,8 @@ interface CurrentChart extends Highcharts.Chart {
   downloadCSV: () => string;
   exportChart: (exportingOptions: Highcharts.ExportingOptions, chartOptions: Highcharts.Options) => string;
   print: () => string;
+  viewData: () => void;
+  hideData: () => void;
 }
 
 export default function ChartWrapper({
@@ -375,7 +381,11 @@ export default function ChartWrapper({
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenIntegration, setIsOpenIntegration] = useState(false);
   const [displayType, setDisplayType] = useState("chart"); // ["chart", "data"]
+  const [displayAnnouncement, setDisplayAnnouncement] = useState("");
   const modalId = useId();
+  const titleText = getTitleText(config.title, currentLang);
+  const optionsLabel = `Options et données du graphique${titleText ? ` : ${titleText}` : ""}`;
+  const figureLabel = titleText ? `Graphique : ${titleText}` : undefined;
 
   const chart = useRef<HighchartsReact.RefObject>(null);
 
@@ -434,45 +444,37 @@ export default function ChartWrapper({
       chartOptions: { title: { text: config?.title } },
       filename: config?.title ?? 'chart',
       showTable: displayType === 'data',
+      tableCaption: options?.exporting?.tableCaption || titleText || getI18nLabel(i18n, "data", currentLang),
     }
   };
   const optionsTmp: HighchartsOptions = deepMerge(options, exportingOptions);
 
-  if (chart && chart.current && chart.current.chart && !renderData) {
+  const changeDisplayType = (type: string) => {
+    setDisplayType(type);
+    setDisplayAnnouncement(getI18nLabel(i18n, type === "data" ? "dataDisplayed" : "chartDisplayed", currentLang));
+    if (renderData || !chart.current?.chart) return;
     const currentChart = chart.current.chart as CurrentChart;
-    currentChart.update({
-      exporting: {
-        showTable: displayType === 'data',
-        tableCaption: getI18nLabel(i18n, "data"),
-      }
-    });
-  };
-
-  // Force delete element DOM of data table of Highchart
-  if (displayType !== 'data') {
-    const elt: HTMLElement = document.getElementsByClassName("highcharts-data-table")?.[0] as HTMLElement;
-    elt?.style?.setProperty("display", "none");
+    if (type === "data") currentChart.viewData();
+    else currentChart.hideData();
   };
 
   return (
     <section className="chart-container">
-      {!hideTitle && <ChartTitle config={config} currentLang={currentLang} />}
-      <div className="actions">
-        <Button
-          aria-label={`Options et données du graphique${config?.title?.[currentLang] ? ": " + config.title[currentLang] : ""}`}
-          color="beige-gris-galet"
-          icon="settings-5-line"
-          onClick={() => setIsOpen(true)}
-          size="sm"
-          style={{ minHeight: "1rem", padding: "0 0.5rem" }}
-          title="Options et données du graphique"
-          variant="text"
-        />
+      <p className="fr-sr-only" role="status">
+        {displayAnnouncement}
+      </p>
+      <div className="chart-header">
+        <div className="chart-header-title">
+          {!hideTitle && <ChartTitle config={config} currentLang={currentLang} />}
+        </div>
+        <div className="actions">
+          <Button aria-label={optionsLabel} icon="settings-5-line" onClick={() => setIsOpen(true)} size="sm" style={{ minHeight: "1rem", padding: "0 0.5rem" }} title={optionsLabel} variant="text" />
+        </div>
       </div>
       {displayType === "data" && renderData && options && <>{renderData(options)}</>}
-      {((displayType === "chart" && renderData) || (!renderData)) && optionsTmp && (
-        <figure className="chart">
-          <figcaption className="fr-sr-only">{`Graphique: ${config?.title?.[currentLang]}`}</figcaption>
+      {((displayType === "chart" && renderData) || !renderData) && optionsTmp && (
+        <figure className="chart" role={figureLabel ? "figure" : undefined} aria-label={figureLabel}>
+          {figureLabel && <figcaption className="fr-sr-only">{figureLabel}</figcaption>}
           <HighchartsReact constructorType={constructorType} highcharts={Highcharts} options={optionsTmp} ref={chart} />
         </figure>
       )}
@@ -490,16 +492,11 @@ export default function ChartWrapper({
         isOpen={isOpen}
         modalId={modalId}
         printChart={printChart}
-        setDisplayType={setDisplayType}
+        setDisplayType={changeDisplayType}
         setIsOpen={setIsOpen}
         setIsOpenIntegration={setIsOpenIntegration}
       />
-      <IntegrationModal
-        graphConfig={config}
-        isOpen={isOpenIntegration && !!config.integrationURL}
-        modalId={modalId}
-        setIsOpen={setIsOpenIntegration}
-      />
+      <IntegrationModal graphConfig={config} isOpen={isOpenIntegration && !!config.integrationURL} modalId={modalId} setIsOpen={setIsOpenIntegration} />
     </section>
   );
 }

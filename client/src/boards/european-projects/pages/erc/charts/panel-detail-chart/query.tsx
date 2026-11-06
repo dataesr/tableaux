@@ -8,12 +8,12 @@ export interface PanelDetailItem {
   domaine_name_scientifique: string;
   evaluated: {
     total_funding_entity: number;
-    total_involved: number;
+    total_projects: number;
     total_pi: number;
   } | null;
   successful: {
     total_funding_entity: number;
-    total_involved: number;
+    total_projects: number;
     total_pi: number;
   } | null;
 }

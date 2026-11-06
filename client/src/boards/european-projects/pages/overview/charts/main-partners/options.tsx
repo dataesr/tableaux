@@ -19,7 +19,7 @@ export default function Options(data, currentLang) {
     yAxis: {
       min: 0,
       title: {
-        text: "Euros (M€)",
+        text: undefined,
       },
       gridLineColor: "var(--background-default-grey-hover)",
       gridLineWidth: 0.5,
@@ -30,7 +30,7 @@ export default function Options(data, currentLang) {
     series: [
       {
         type: "bar",
-        name: "Total subventions (€)",
+        name: "Financements obtenus (M€)",
         color: getCssColor("main-partner"),
         groupPadding: 0,
         data: data.list.map((item) => [item.acronym || item.name, item.total_fund_eur]),

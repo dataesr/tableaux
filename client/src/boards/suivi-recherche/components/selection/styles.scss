@@ -1,0 +1,41 @@
+.sr-selection {
+  // Grille à colonnes fixes : rien ne bouge quand le champ établissement s'active
+  .sr-selection__grid {
+    align-items: end;
+    display: grid;
+    gap: 0.75rem 1rem;
+    grid-template-columns: 1fr;
+
+    @media (min-width: 48em) {
+      grid-template-columns: auto minmax(0, 1fr) 6.5rem 6.5rem;
+
+      > :last-child {
+        grid-column: 1 / -1;
+      }
+
+      // Mention fixe à la place du périmètre et de l'établissement (vue entre pays)
+      > .sr-selection__fixe {
+        grid-column: span 2;
+      }
+    }
+
+    @media (min-width: 78em) {
+      grid-template-columns: auto minmax(14rem, 1.2fr) 6.5rem 6.5rem minmax(14rem, 1fr);
+
+      > :last-child {
+        grid-column: auto;
+      }
+    }
+  }
+
+  // Champs alignés dans la barre : pas de marge d'empilement (dsfr §3.4)
+  .fr-input-group,
+  .fr-select-group,
+  .fr-segmented {
+    margin-block: 0;
+  }
+
+  .fr-input {
+    margin-block-start: 0;
+  }
+}

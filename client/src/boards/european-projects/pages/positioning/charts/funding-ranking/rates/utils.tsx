@@ -1,7 +1,8 @@
 import { useSearchParams } from "react-router-dom";
+
 import { getI18nLabel } from "../../../../../../../utils";
-import { isEjoParam } from "../../../../../utils/params";
 import i18n from "../../../../../i18n-global.json";
+import { isEjoParam } from "../../../../../utils/params";
 
 export function useGetParams() {
   const [searchParams] = useSearchParams();
@@ -38,11 +39,17 @@ export function useGetParams() {
     params.push(`destinations=${destinationIds}`);
   }
 
+  // Récupérer le paramètre range_of_years et le convertir en call_year pour l'API
+  const rangeOfYears = searchParams.get("range_of_years");
+  if (rangeOfYears) {
+    params.push(`range_of_years=${rangeOfYears}`);
+  }
+
   if (searchParams.has("isEjo")) {
     params.push(isEjoParam());
   }
 
-  return params.join("&");
+  return params.filter((item) => !!item).join("&");
 }
 
 export function readingKey(data) {
@@ -60,16 +67,14 @@ export function readingKey(data) {
   return {
     fr: (
       <>
-        Dans ce classement, le pays "<strong>{topEvaluated.name_fr}</strong>" concentre la plus grande part des montants demandés (
-        {topEvaluated.total_evaluated_ratio}%), tandis que le pays "<strong>{topSuccessful.name_fr}</strong>" obtient la plus grande part des montants
-        accordés ({topSuccessful.total_successful_ratio}%).
+        Le pays <strong>{topEvaluated.name_fr}</strong> concentre{" "}
+        {topEvaluated.total_evaluated_ratio} % des financements demandés et {topSuccessful.total_successful_ratio} % des financements alloués.
       </>
     ),
     en: (
       <>
-        In this ranking, <strong>{topSuccessful.name_en}</strong> concentrates the largest share of requested amounts (
-        {topEvaluated.total_evaluated_ratio}%), while <strong>{topSuccessful.name_en}</strong> obtains the largest share of awarded amounts (
-        {topSuccessful.total_successful_ratio}%).
+        <strong>{topEvaluated.name_en}</strong> accounts for{" "}
+        {topEvaluated.total_evaluated_ratio}% of funding requested and {topSuccessful.total_successful_ratio}% of funding awarded.
       </>
     ),
   };

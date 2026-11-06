@@ -1,26 +1,24 @@
-import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
 import { Col, Container, Radio, Row, Title } from "@dataesr/dsfr-plus";
+import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 
-import { getData } from "./query";
-import { readingKey, useGetParams, renderDataTableSubsidies, renderDataTableSuccessRate } from "./utils";
-import optionsSub from "./options";
-import optionSubSuccessRate from "./options-succes-rate";
+import { useSearchParams } from "react-router-dom";
+import Callout from "../../../../../../../components/callout.js";
+import ChartFooter from "../../../../../../../components/chart-footer/index.js";
 import ChartWrapper from "../../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../../components/charts-skeletons/default";
-import { useSearchParams } from "react-router-dom";
-
 import { EPChartsSources } from "../../../../../config.js";
-
 import i18nGlobal from "../../../../../i18n-global.json";
 import i18nLocal from "./i18n.json";
-import ChartFooter from "../../../../../../../components/chart-footer/index.js";
-import Callout from "../../../../../../../components/callout.js";
+import optionsSub from "./options";
+import optionSubSuccessRate from "./options-succes-rate";
+import { getData } from "./query";
+import { readingKey, renderDataTableSubsidies, renderDataTableSuccessRate, useGetParams } from "./utils";
 
 export default function FundingRankingSubsidies() {
   const [searchParams] = useSearchParams();
   const currentLang = searchParams.get("language") || "fr";
-  const [sortBy, setSortBy] = useState("evaluated");
+  const [sortBy, setSortBy] = useState("requested");
   const params = useGetParams();
 
   const configChart1a = {
@@ -42,7 +40,7 @@ export default function FundingRankingSubsidies() {
 
   const prepareData = (data, sortKey) => {
     data.sort((a, b) => b[sortKey] - a[sortKey]);
-    if (sortBy === "evaluated") {
+    if (sortBy === "requested") {
       data.sort((a, b) => b.total_evaluated - a.total_evaluated);
     } else {
       data.sort((a, b) => b.total_successful - a.total_successful);
@@ -86,20 +84,20 @@ export default function FundingRankingSubsidies() {
           <fieldset className="fr-mb-2w">
             <legend>{getI18nLabel("sort-by")}</legend>
             <Radio
-              checked={sortBy === "evaluated"}
+              checked={sortBy === "requested"}
               className="fr-mb-1w"
-              defaultValue="evaluated"
-              label={getI18nLabel("sort-by-evaluated-project")}
+              defaultValue="requested"
+              label={getI18nLabel("sort-by-requested-funding")}
               name="FundingRankingSubsidies-radio"
               onChange={(e) => {
                 setSortBy((e.target as HTMLInputElement).value);
               }}
             />
             <Radio
-              checked={sortBy === "successful"}
+              checked={sortBy === "secured"}
               className="fr-mb-1w"
-              defaultValue="successful"
-              label={getI18nLabel("sort-by-successful-project")}
+              defaultValue="secured"
+              label={getI18nLabel("sort-by-secured-funding")}
               name="FundingRankingSubsidies-radio"
               onChange={(e) => {
                 setSortBy((e.target as HTMLInputElement).value);
@@ -134,14 +132,12 @@ export default function FundingRankingSubsidies() {
             comment={{
               fr: (
                 <>
-                  Ce graphique représente le positionnement du pays sélectionné par rapport aux autres pays en fonction des montants de subventions demandés et obtenus. La barre bleue correspond aux montants demandés pour les projets évalués, la
-                  barre verte aux montants obtenus pour les projets réussis. Le taux de succès compare le pays sélectionné avec la moyenne européenne.
+                  Ce graphique présente le positionnement du pays sélectionné par rapport aux autres pays en fonction des financements demandés et obtenus. Le taux de succès compare le pays sélectionné avec la moyenne européenne.
                 </>
               ),
               en: (
                 <>
-                  This chart shows the positioning of the selected country compared to other countries based on the amounts of subsidies requested and obtained. The blue bar corresponds to the amounts requested for evaluated projects, the green bar
-                  to the amounts obtained for successful projects. The success rate compares the selected country with the European average.
+                  This chart shows the position of the selected country relative to the other countries based on funding requested and secured. The success rate compares the selected country with the European average.
                 </>
               ),
             }}

@@ -3,12 +3,11 @@ import { useSearchParams } from "react-router-dom";
 
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import MapSkeleton from "../../../../../../components/charts-skeletons/map";
-import { CreateChartOptions } from "../../../../components/chart-ep";
-import { useGetParams } from "./utils";
-import { getEuropeanCollaborations, CollaborationData } from "./query";
-import { getMapOptions } from "./options";
-
 import { isAnEuropeanUnionCountry } from "../../../../../../utils/countries";
+import { CreateChartOptions } from "../../../../components/chart-ep";
+import { getMapOptions } from "./options";
+import { CollaborationData, getEuropeanCollaborations } from "./query";
+import { useGetParams } from "./utils";
 
 export default function EuropeanMap() {
   const [searchParams] = useSearchParams();

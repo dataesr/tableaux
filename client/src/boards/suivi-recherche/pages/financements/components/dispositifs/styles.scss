@@ -1,0 +1,7 @@
+// Nom du dispositif et badge de nature sur une ligne, le badge passant dessous sur petit écran
+.sr-bloc-dispositif__titre {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+}

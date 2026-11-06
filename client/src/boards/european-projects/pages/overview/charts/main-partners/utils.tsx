@@ -1,8 +1,9 @@
 import { useSearchParams } from "react-router-dom";
-import { formatToMillions } from "../../../../../../utils/format";
+
 import { getI18nLabel } from "../../../../../../utils";
-import { isEjoParam } from "../../../../utils/params";
+import { formatToMillions } from "../../../../../../utils/format";
 import i18n from "../../../../i18n-global.json";
+import { isEjoParam } from "../../../../utils/params";
 
 export function useGetParams() {
   const [searchParams] = useSearchParams();
@@ -45,20 +46,11 @@ export function useGetParams() {
     params.push(`years=${rangeOfYears}`);
   }
 
-  if (searchParams.has("isEjo")) {
-    params.push(isEjoParam());
-  }
-  // Ajouter le paramètre stage=successful
-  // TODO: voir avec ZOE
-  // params.push("stage=successful");
+  if (searchParams.has("isEjo")) params.push(isEjoParam());
 
-  return params.join("&");
-}
+  params.push("stage=successful");
 
-export function getDefaultParams(searchParams) {
-  const params = [...searchParams].map(([key, value]) => `${key}=${value}`).join("&");
-
-  return params + "&stage=successful";
+  return params.filter((item) => !!item).join("&");
 }
 
 export function readingKey(data) {

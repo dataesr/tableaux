@@ -1,0 +1,5 @@
+### Route
+GET http://localhost:3000/api/european-projects/overview/funding?country_code=FRA&&groupBy=pillar&range_of_years=2021|2022|2023|2024|2025
+
+### Création du covered index
+GET http://localhost:3000/api/european-projects/overview/funding_indexes

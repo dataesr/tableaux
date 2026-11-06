@@ -1,0 +1,29 @@
+{
+  "accueil": {
+    "fr": "Accueil - Suivi de la recherche française"
+  },
+  "bibliometrie": {
+    "fr": "Bibliométrie - Suivi de la recherche française"
+  },
+  "bibliometrie-profil": {
+    "fr": "Profil - Bibliométrie - Suivi de la recherche française"
+  },
+  "bibliometrie-etablissements": {
+    "fr": "Établissements - Bibliométrie - Suivi de la recherche française"
+  },
+  "bibliometrie-international": {
+    "fr": "International - Bibliométrie - Suivi de la recherche française"
+  },
+  "financements-profil": {
+    "fr": "Profil - Financements et distinctions - Suivi de la recherche française"
+  },
+  "financements-etablissements": {
+    "fr": "Établissements - Financements et distinctions - Suivi de la recherche française"
+  },
+  "financements-international": {
+    "fr": "International - Financements et distinctions - Suivi de la recherche française"
+  },
+  "financements-test": {
+    "fr": "Test - Financements et distinctions - Suivi de la recherche française"
+  }
+}

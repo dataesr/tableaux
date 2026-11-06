@@ -246,7 +246,7 @@ export const FM_STATIC_METRICS: Record<string, FmMetricConfig> = {
   },
 };
 
-const SCALE_COLORS = Array.from({ length: 14 }, (_, i) => `scale-${i + 1}`);
+const SCALE_COLORS = Array.from({ length: 14 }, (_, i) => `scale-randomized-${i}-color`);
 
 export function buildDiscMetrics(
   discCodes: string[],

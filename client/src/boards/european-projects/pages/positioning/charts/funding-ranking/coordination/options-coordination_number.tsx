@@ -1,7 +1,8 @@
-import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js";
-import { CreateChartOptions } from "../../../../../components/chart-ep";
-import { getCssColor } from "../../../../../../../utils/colors";
+import type Highcharts from "highcharts/es-modules/masters/highcharts.src.js";
+
 import { getResponsiveChartHeight } from "../../../../../../../utils";
+import { getCssColor } from "../../../../../../../utils/colors";
+import { CreateChartOptions } from "../../../../../components/chart-ep";
 
 interface DataItem {
   name_fr: string;
@@ -15,7 +16,7 @@ interface DataItem {
 export default function OptionsCoordinationNumber(data: DataItem[], currentLang: string): Highcharts.Options | null {
   if (!data) return null;
 
-  const newOptions: HighchartsInstance.Options = {
+  const newOptions: Highcharts.Options = {
     chart: {
       height: getResponsiveChartHeight(data.length),
     },
@@ -25,11 +26,8 @@ export default function OptionsCoordinationNumber(data: DataItem[], currentLang:
     yAxis: {
       min: 0,
       title: {
-        text: "Euros € (millions)",
+        text: "Nombre de projets",
       },
-    },
-    tooltip: {
-      pointFormat: "Nombre de coordinations : <b>{point.y}</b>",
     },
     plotOptions: {
       series: { dataLabels: { enabled: true } },
@@ -44,7 +42,7 @@ export default function OptionsCoordinationNumber(data: DataItem[], currentLang:
     series: [
       {
         type: "bar",
-        name: "Coordination de projets déposés",
+        name: "Coordinations de projets évalués",
         color: getCssColor("evaluated-project"),
         data: data.map((item) => ({
           name: item[`name_${currentLang}` as keyof DataItem],
@@ -57,10 +55,13 @@ export default function OptionsCoordinationNumber(data: DataItem[], currentLang:
             format: "{point.rank_coordination_number_evaluated}e",
           },
         ],
+        tooltip: {
+          pointFormat: "Nombre de projets évalués coordonnés : <b>{point.y}</b>",
+        },
       } as Highcharts.SeriesBarOptions,
       {
         type: "bar",
-        name: "Coordination de projets lauréats",
+        name: "Coordinations de projets lauréats",
         color: getCssColor("successful-project"),
         data: data.map((item) => ({
           name: item[`name_${currentLang}` as keyof DataItem],
@@ -73,6 +74,9 @@ export default function OptionsCoordinationNumber(data: DataItem[], currentLang:
             format: "{point.rank_coordination_number_successful}e",
           },
         ],
+        tooltip: {
+          pointFormat: "Nombre de projets lauréats coordonnés : <b>{point.y}</b>",
+        },
       } as Highcharts.SeriesBarOptions,
     ],
   };
