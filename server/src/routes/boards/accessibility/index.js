@@ -23,9 +23,9 @@ router.get("/get-last-audit/:siteId", async (req, res) => {
     if (audits.length === 0) {
       return res.status(404).json({ message: "No audit data found for this site ID." });
     }
-    //Trie des audits sur la version du rgaa et retourne le plus récent
-    const lastRgaaId = audits.map((a) => a.rgaaId).sort((a, b) => b.localeCompare(a) - a.localeCompare(b))[0];
-    res.json(audits.find((a) => a.rgaaId === lastRgaaId));
+    //Trie des audits sur la version du rgaa et retourne le plus récent (un rgaaId absent est traité comme une version vide)
+    const lastRgaaId = audits.map((a) => a.rgaaId ?? "").sort((a, b) => b.localeCompare(a))[0];
+    res.json(audits.find((a) => (a.rgaaId ?? "") === lastRgaaId));
   } catch (error) {
     console.error("Error fetching audit data:", error);
     res.status(500).json({ message: "Internal server error." });
