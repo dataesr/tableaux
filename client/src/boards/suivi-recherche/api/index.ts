@@ -11,6 +11,9 @@ export type Perimetre = "toutes_revues_openalex" | "revues_sjr";
 
 export type Indicateur = "poids" | "influence" | "prestige";
 
+// Source d'un graphique, construite par le serveur (sources.js) : lien null pour un jeu non public
+export type SourceDonnees = { date: string | null; libelle: string; url: string | null };
+
 export type BiblioMeta = {
   annees: number[];
   annees_influence_provisoire: number[];
@@ -22,7 +25,7 @@ export type BiblioMeta = {
   perimetres: Perimetre[];
   revues_multidisciplinaires: string[];
   snapshot_openalex: { source: string; date: string };
-  sources: string;
+  sources: SourceDonnees[];
 };
 
 export type BiblioDiscipline = {

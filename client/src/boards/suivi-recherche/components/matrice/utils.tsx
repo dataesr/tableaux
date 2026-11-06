@@ -1,4 +1,5 @@
-import type { Ratio } from "../../api";
+import type { Matrice, MatricePoint, Ratio } from "../../api";
+import { formatDynamique, formatPart, formatPeriode } from "../../utils";
 
 // Diamètres des bulles en px ; la taille suit l'aire (sizeBy « area », le défaut de Highcharts)
 export const TAILLE_MIN = 8;
@@ -44,3 +45,13 @@ export function getNomCourt(nom: string, max = 26): string {
   return `${words.join(" ")}…`;
 }
 
+
+// Exemple de lecture (clé `readingKey` de ChartWrapper) : un point en toutes lettres, niveaux d'arrivée et de départ
+// avec leur calcul, évolution relative et quadrant. Le point lu : l'entité mise en avant, sinon la plus grosse bulle.
+export function getLectureMatrice<P>(data: Matrice<P, string>, textes: MatriceTextes, point: P & MatricePoint, nom: string): string {
+  const { arrivee, depart } = data.periodes;
+  const quadrant = QUADRANTS.find(({ key }) => key === point.quadrant)?.titre ?? "";
+  return `${nom} : ${textes.niveau.toLowerCase()} de ${formatPart(point.niveau.valeur)} sur ${formatPeriode(arrivee)} (${textes.calcul(point.niveau)}), `
+    + `contre ${formatPart(point.niveau_depart.valeur)} sur ${formatPeriode(depart)} (${textes.calcul(point.niveau_depart)}), `
+    + `soit une évolution relative de ${formatDynamique(point.dynamique)} : quadrant « ${quadrant} ».`;
+}

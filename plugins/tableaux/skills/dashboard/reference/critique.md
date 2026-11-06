@@ -8,7 +8,7 @@ Cible : un identifiant ou un chemin de tableau, par exemple `client/src/boards/<
 
 - La page répond à la question énoncée dans le cahier des charges, et le premier écran affiche le résultat principal.
 - Les filtres ont des libellés clairs, des valeurs par défaut et une réinitialisation visible. Modifier un filtre met à jour chaque graphique concerné.
-- Chaque graphique a un titre, une unité et une courte description ou ligne de source (`ChartConfig`).
+- Chaque graphique a un titre et une unité, et ses textes passent par les clés de `ChartConfig` : `comment`, `readingKey` (exemple de lecture calculé à partir des données affichées, avec numérateur et dénominateur) et `sources` (libellé, lien sauf jeu non public, date de mise à jour). Signalez toute source écrite en texte libre (« Source : … » dans `comment`, le titre ou un paragraphe sous le graphique, chaîne de sources de l'API affichée telle quelle), toute clé de lecture qui ne fait que décrire les axes, et toute information placée dans `description` ou `subtitle`, que `ChartWrapper` n'affiche pas.
 - Les états vide, de chargement et d'erreur sont gérés sur chaque page. Un filtre qui ne renvoie aucune donnée l'indique.
 - Les libellés sont dans les langues prises en charge par le tableau (français, et anglais si multilingue), sans chaînes mêlant plusieurs langues.
 

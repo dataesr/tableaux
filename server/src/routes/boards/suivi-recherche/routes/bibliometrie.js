@@ -12,6 +12,7 @@ import {
   shapeMatrice,
 } from "../matrice.js";
 import { computeAbscisses, computeRubans, DEMI_COLONNE, HAUTEUR } from "../rubans.js";
+import { getSourcesBibliometrie } from "../sources.js";
 
 const router = new express.Router();
 
@@ -115,7 +116,7 @@ async function parseMatrice(query, debut, fin) {
 router.route("/suivi-recherche/bibliometrie/meta").get(async (req, res) => {
   const collection = await getCollection("biblio_meta");
   const meta = await collection.findOne({}, { projection: { _id: 0, parametres: 0 } });
-  res.json(meta);
+  res.json({ ...meta, sources: getSourcesBibliometrie(meta) });
 });
 
 router.route("/suivi-recherche/bibliometrie/disciplines").get(async (req, res) => {

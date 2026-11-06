@@ -5,11 +5,12 @@ import ChartWrapper from "../../../../../../components/chart-wrapper/index.tsx";
 import ChartBusy from "../../../../components/chart-busy/index.tsx";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useBiblioComparaison } from "../../../../api";
-import type { BiblioDiscipline, BiblioMeta, BiblioOptions, Indicateur, Selection } from "../../../../api";
+import type { BiblioDiscipline, BiblioMeta, BiblioOptions, Indicateur, Ratio, Selection } from "../../../../api";
 import { useRenderTransition } from "../../../../hooks/use-render-transition";
 import { ENTITE_NATIONALE } from "../../../../hooks/use-selection";
 import getRubansOptions from "../../../../components/rubans/options.tsx";
-import { getContinent, LegendeRubans, TableRubans } from "../../../../components/rubans/utils.tsx";
+import { getContinent, getLectureRubans, LegendeRubans, TableRubans } from "../../../../components/rubans/utils.tsx";
+import { getChartSources } from "../../../../components/sources.tsx";
 import { formatPart, formatPeriode, formatRatio, getDisciplineLabel, INDICATEUR_LABELS } from "../../../../utils";
 
 import "../../../../components/rubans/styles.scss";
@@ -47,6 +48,11 @@ export default function ComparaisonInternationale({ disciplines, meta, options, 
   const provisoires = applied.data?.annees_provisoires ?? [];
 
   const legend = <LegendeRubans continents={continents} focus="France" />;
+  // Valeur et calcul, dans le tableau comme dans l'exemple de lecture
+  const formatCellule = (ratio: Ratio) => `${formatPart(ratio.valeur)} (${formatRatio(ratio, affiche)})`;
+  const lecture = applied.data
+    ? getLectureRubans(applied.data.annees, applied.data.indicateurs[affiche].series, ENTITE_NATIONALE, formatCellule)
+    : null;
 
   const config = {
     id: "suivi-recherche-bibliometrie-comparaison-internationale",
@@ -61,10 +67,11 @@ export default function ComparaisonInternationale({ disciplines, meta, options, 
           {affiche === "influence" && provisoires.length > 0 && (
             <> * Influence provisoire pour {provisoires.join(", ")} : la fenêtre de citation n'est pas close.</>
           )}
-          {" "}{meta.sources}
         </>
       ),
     },
+    ...(lecture && { readingKey: { fr: <>{lecture}</> } }),
+    sources: getChartSources(meta.sources),
   };
 
   return (
@@ -96,7 +103,7 @@ export default function ComparaisonInternationale({ disciplines, meta, options, 
                 <TableRubans
                   annees={applied.data!.annees}
                   caption={`${INDICATEUR_LABELS[affiche]} : part mondiale et rang des pays chaque année`}
-                  formatCellule={(ratio) => formatPart(ratio.valeur)}
+                  formatCellule={formatCellule}
                   series={applied.data!.indicateurs[affiche].series}
                 />
               )}

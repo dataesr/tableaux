@@ -1,7 +1,7 @@
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 
 import { ENTITE_NATIONALE, fetchJson } from "./index.ts";
-import type { Comparaison, GroupeEtablissements, Matrice, Ratio, Rubans, Selection } from "./index.ts";
+import type { Comparaison, GroupeEtablissements, Matrice, Ratio, Rubans, Selection, SourceDonnees } from "./index.ts";
 
 const { VITE_APP_SERVER_URL } = import.meta.env;
 
@@ -32,7 +32,9 @@ export type ErcMeta = {
   // Champs d'erc_effectifs [candidatures, lauréats] de chaque mode, lus par le serveur
   modes_comptage: Record<Comptage, [string, string]>;
   pays_compares: string[];
-  sources: string;
+  sources: SourceDonnees[];
+  // Vivier de l'indice de candidature : OpenAlex et SJR
+  sources_indice: SourceDonnees[];
   types_bourse: TypeBourse[];
   types_bourse_defaut: string[];
 };

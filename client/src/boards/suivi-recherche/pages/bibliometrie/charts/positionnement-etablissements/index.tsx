@@ -4,13 +4,15 @@ import { useMemo, useState } from "react";
 import ChartWrapper from "../../../../../../components/chart-wrapper/index.tsx";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useBiblioPositionnementEtablissements } from "../../../../api";
-import type { BiblioDiscipline, BiblioOptions, Indicateur, Selection } from "../../../../api";
+import type { BiblioDiscipline, BiblioMeta, BiblioOptions, Indicateur, Selection } from "../../../../api";
 import ChartBusy from "../../../../components/chart-busy/index.tsx";
 import { useRenderTransition } from "../../../../hooks/use-render-transition";
 import { ENTITE_NATIONALE } from "../../../../hooks/use-selection";
 import { formatPart, formatPeriode, getDisciplineLabel, INDICATEUR_LABELS } from "../../../../utils";
 import LegendeTailles from "../../../../components/matrice/legende-tailles.tsx";
 import Quadrants from "../../../../components/matrice/quadrants.tsx";
+import { getLectureMatrice } from "../../../../components/matrice/utils.tsx";
+import { getChartSources } from "../../../../components/sources.tsx";
 import { getBiblioMatriceTextes } from "../../matrice-textes.ts";
 import getOptions from "./options.tsx";
 import { cle, getEtablissementColor } from "./utils.tsx";
@@ -31,11 +33,12 @@ const libelle = (p: EtablissementMatricePoint) => (
 type PositionnementEtablissementsProps = {
   disciplines: BiblioDiscipline[];
   entiteNom: string;
+  meta: BiblioMeta;
   options: BiblioOptions;
   selection: Selection;
 };
 
-export default function PositionnementEtablissements({ disciplines, entiteNom, options, selection }: PositionnementEtablissementsProps) {
+export default function PositionnementEtablissements({ disciplines, entiteNom, meta, options, selection }: PositionnementEtablissementsProps) {
   const [indicateur, setIndicateur] = useState<Indicateur>("influence");
   // Groupe choisi par l'utilisateur, pour l'établissement sélectionné à ce moment-là ;
   // sans choix (ou après un changement d'établissement), le serveur prend le groupe de l'établissement
@@ -60,6 +63,8 @@ export default function PositionnementEtablissements({ disciplines, entiteNom, o
   const groupeLibelle = data?.groupes.find((g) => g.code === data.groupe)?.libelle ?? "";
   const selectionAilleurs = data && selection.entiteId !== ENTITE_NATIONALE && data.groupe_selection !== data.groupe;
   const disciplineLabel = getDisciplineLabel(selection, disciplines);
+  // Exemple de lecture : l'établissement sélectionné, sinon la plus grosse bulle
+  const pointLu = data?.points.find((p) => p.focus) ?? data?.points[0];
 
   const legend = data && (
     <div className="sr-matrice-legende">
@@ -147,6 +152,8 @@ export default function PositionnementEtablissements({ disciplines, entiteNom, o
                       </>
                     ),
                   },
+                  ...(pointLu && { readingKey: { fr: <>{getLectureMatrice(data, getBiblioMatriceTextes(data), pointLu, pointLu.nom)}</> } }),
+                  sources: getChartSources(meta.sources),
                 }}
                 legend={legend}
                 options={chartOptions}

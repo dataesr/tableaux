@@ -50,7 +50,8 @@ interface LocalizedUrl {
 interface Source {
   label: LocalizedContent;
   update?: Date;
-  url: LocalizedUrl;
+  // Absent pour un jeu de données non public : le libellé est alors affiché sans lien
+  url?: LocalizedUrl;
 }
 
 export type ChartConfig = {

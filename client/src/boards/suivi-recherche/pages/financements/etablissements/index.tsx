@@ -124,7 +124,7 @@ export default function EtablissementsSection() {
       {!erc.isError && ercMatrice && (
         // Grisé pendant l'appel API (réponse précédente affichée) et pendant le redessin
         <ChartBusy busy={erc.isPlaceholderData || ercBusy}>
-          <ErcEtablissements data={ercMatrice} disciplineLabel={disciplineLabel} entiteNom={entiteNom} />
+          <ErcEtablissements data={ercMatrice} disciplineLabel={disciplineLabel} entiteNom={entiteNom} sources={ercMeta.sources} />
         </ChartBusy>
       )}
       <MethodeErc meta={ercMeta} />
@@ -154,7 +154,7 @@ export default function EtablissementsSection() {
       )}
       {!prix.isError && prixMatrice && (
         <ChartBusy busy={prix.isPlaceholderData || prixBusy}>
-          <PrixEtablissements data={prixMatrice} disciplineLabel={disciplineLabel} entiteNom={entiteNom} libelle={libelleIuf} />
+          <PrixEtablissements data={prixMatrice} disciplineLabel={disciplineLabel} entiteNom={entiteNom} libelle={libelleIuf} sources={prixMeta?.sources ?? []} />
         </ChartBusy>
       )}
       {prixMeta && <MethodePrix meta={prixMeta} />}

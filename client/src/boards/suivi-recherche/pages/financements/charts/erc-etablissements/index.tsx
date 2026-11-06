@@ -1,6 +1,7 @@
 import { SegmentedControl, SegmentedElement } from "@dataesr/dsfr-plus";
 import { useMemo } from "react";
 
+import type { SourceDonnees } from "../../../../api";
 import type { ErcPositionnementMatrice, IndicateurMatrice } from "../../../../api/erc.ts";
 import type { MatriceTextes } from "../../../../components/matrice/utils.tsx";
 import { formatNombre, formatPart, formatPeriode } from "../../../../utils";
@@ -51,10 +52,11 @@ type ErcEtablissementsProps = {
   data: ErcPositionnementMatrice;
   disciplineLabel: string;
   entiteNom: string;
+  sources: SourceDonnees[];
 };
 
 // Matrice ERC des établissements d'un groupe : part des lauréats français ou taux de succès
-export default function ErcEtablissements({ data, disciplineLabel, entiteNom }: ErcEtablissementsProps) {
+export default function ErcEtablissements({ data, disciplineLabel, entiteNom, sources }: ErcEtablissementsProps) {
   const textes = useMemo(() => getTextes(data), [data]);
   const label = INDICATEURS_MATRICE.find(({ key }) => key === data.indicateur)?.label ?? "";
   const groupeLibelle = data.groupes.find(({ code }) => code === data.groupe)?.libelle ?? "";
@@ -79,6 +81,7 @@ export default function ErcEtablissements({ data, disciplineLabel, entiteNom }: 
       data={data}
       entiteNom={entiteNom}
       id="suivi-recherche-financements-erc-etablissements"
+      sources={sources}
       textes={textes}
       titre={`${label} ERC des établissements · ${groupeLibelle} · ${disciplineLabel} · appels ${formatPeriode(data.periodes.depart)} → ${formatPeriode(data.periodes.arrivee)}`}
     />

@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 
+import type { SourceDonnees } from "../../../../api";
 import type { PrixPositionnementMatrice } from "../../../../api/prix.ts";
 import type { MatriceTextes } from "../../../../components/matrice/utils.tsx";
 import { formatNombre, formatPart, formatPeriode } from "../../../../utils";
@@ -22,10 +23,11 @@ type PrixEtablissementsProps = {
   disciplineLabel: string;
   entiteNom: string;
   libelle: string;
+  sources: SourceDonnees[];
 };
 
 // Matrice des établissements d'un groupe pour un groupe de prix : part des nominations françaises et son évolution
-export default function PrixEtablissements({ data, disciplineLabel, entiteNom, libelle }: PrixEtablissementsProps) {
+export default function PrixEtablissements({ data, disciplineLabel, entiteNom, libelle, sources }: PrixEtablissementsProps) {
   const textes = useMemo(() => getTextes(data), [data]);
   const groupeLibelle = data.groupes.find(({ code }) => code === data.groupe)?.libelle ?? "";
   const { arrivee, depart } = data.periodes;
@@ -48,6 +50,7 @@ export default function PrixEtablissements({ data, disciplineLabel, entiteNom, l
       data={data}
       entiteNom={entiteNom}
       id="suivi-recherche-financements-prix-etablissements"
+      sources={sources}
       textes={textes}
       titre={`Part des nominations · ${libelle} · ${groupeLibelle} · ${disciplineLabel} · ${formatPeriode(depart)} → ${formatPeriode(arrivee)}`}
     />

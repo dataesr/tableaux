@@ -4,12 +4,13 @@ import type { JSX } from "react";
 
 import ChartWrapper from "../../../../../../components/chart-wrapper/index.tsx";
 import { getCssColor } from "../../../../../../utils/colors";
-import type { EtablissementPoint, GroupeEtablissements, Matrice } from "../../../../api";
+import type { EtablissementPoint, GroupeEtablissements, Matrice, SourceDonnees } from "../../../../api";
 import LegendeTailles from "../../../../components/matrice/legende-tailles.tsx";
 import getMatriceOptions from "../../../../components/matrice/options.tsx";
 import Quadrants from "../../../../components/matrice/quadrants.tsx";
-import { getNomCourt } from "../../../../components/matrice/utils.tsx";
+import { getLectureMatrice, getNomCourt } from "../../../../components/matrice/utils.tsx";
 import type { MatriceTextes } from "../../../../components/matrice/utils.tsx";
+import { getChartSources } from "../../../../components/sources.tsx";
 
 import "../../../../components/matrice/styles.scss";
 
@@ -52,12 +53,13 @@ type MatriceEtablissementsProps = {
   data: Donnees;
   entiteNom: string;
   id: string;
+  sources: SourceDonnees[];
   textes: MatriceTextes;
   titre: string;
 };
 
 // Matrice niveau × dynamique des établissements d'un groupe (ERC, IUF) : même lecture que la matrice de la bibliométrie
-export default function MatriceEtablissements({ commentaire, data, entiteNom, id, textes, titre }: MatriceEtablissementsProps) {
+export default function MatriceEtablissements({ commentaire, data, entiteNom, id, sources, textes, titre }: MatriceEtablissementsProps) {
   const chartOptions = useMemo(() => (data.points.length > 0
     ? getMatriceOptions(data, {
       serie: "Établissements",
@@ -69,6 +71,8 @@ export default function MatriceEtablissements({ commentaire, data, entiteNom, id
     })
     : null), [data, textes]);
   const groupeLibelle = data.groupes.find(({ code }) => code === data.groupe)?.libelle ?? "";
+  // Exemple de lecture : l'établissement sélectionné, sinon la plus grosse bulle
+  const pointLu = data.points.find((p) => p.focus) ?? data.points[0];
 
   if (!chartOptions) {
     return (
@@ -102,7 +106,17 @@ export default function MatriceEtablissements({ commentaire, data, entiteNom, id
 
   return (
     <>
-      <ChartWrapper config={{ id, title: { fr: titre, look: "h5" as const }, comment: { fr: commentaire } }} legend={legend} options={chartOptions} />
+      <ChartWrapper
+        config={{
+          id,
+          title: { fr: titre, look: "h5" as const },
+          comment: { fr: commentaire },
+          readingKey: { fr: <>{getLectureMatrice(data, textes, pointLu, pointLu.nom)}</> },
+          sources: getChartSources(sources),
+        }}
+        legend={legend}
+        options={chartOptions}
+      />
       <Quadrants cle={cle} colonne="Établissement" data={data} libelle={libelle} textes={textes} vide="Aucun établissement." />
     </>
   );

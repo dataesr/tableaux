@@ -6,18 +6,20 @@ import ChartBusy from "../../../../components/chart-busy/index.tsx";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useBiblioEvolution } from "../../../../api";
 import type { BiblioMeta, BiblioOptions, Selection } from "../../../../api";
+import { getChartSources } from "../../../../components/sources.tsx";
 import { useRenderTransition } from "../../../../hooks/use-render-transition";
 import getOptions from "./options.tsx";
-import { renderDataTable } from "./utils.tsx";
+import { getLecture, renderDataTable } from "./utils.tsx";
 
 type EvolutionProps = {
+  entiteNom: string;
   meta: BiblioMeta;
   options: BiblioOptions;
   selection: Selection;
   selectionLabel: string;
 };
 
-export default function Evolution({ meta, options, selection, selectionLabel }: EvolutionProps) {
+export default function Evolution({ entiteNom, meta, options, selection, selectionLabel }: EvolutionProps) {
   const { data, isLoading, isError, isPlaceholderData } = useBiblioEvolution(selection, options);
   const provisoires = meta.annees_influence_provisoire;
   // Nouvelles données appliquées une fois le grisé peint : le redessin n'est jamais muet
@@ -29,19 +31,20 @@ export default function Evolution({ meta, options, selection, selectionLabel }: 
   }
   if (isLoading || !applied || !chartOptions) return <DefaultSkeleton />;
 
+  const lecture = getLecture(applied, entiteNom);
   const config = {
     id: "suivi-recherche-bibliometrie-evolution",
     title: { fr: `Évolution annuelle des parts mondiales · ${selectionLabel}`, look: "h5" as const },
     comment: {
       fr: (
         <>
-          {meta.annees_influence_provisoire.length > 0 && (
-            <>L'influence des années {meta.annees_influence_provisoire.join(", ")} est provisoire (pointillés) : leur fenêtre de citation n'est pas close. </>
-          )}
-          {meta.sources}
+          {"Part de l'entité dans les articles mondiaux (poids), dans le top 10 % des plus cités (influence) et dans les revues de tête (prestige). "}
+          {provisoires.length > 0 && `L'influence des années ${provisoires.join(", ")} est provisoire (pointillés) : leur fenêtre de citation n'est pas close.`}
         </>
       ),
     },
+    ...(lecture && { readingKey: { fr: <>{lecture}</> } }),
+    sources: getChartSources(meta.sources),
   };
 
   return (

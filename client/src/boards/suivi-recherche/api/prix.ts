@@ -1,7 +1,7 @@
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 
 import { ENTITE_NATIONALE, fetchJson } from "./index.ts";
-import type { GroupeEtablissements, Matrice, Ratio, Selection } from "./index.ts";
+import type { GroupeEtablissements, Matrice, Ratio, Selection, SourceDonnees } from "./index.ts";
 import type { EtablissementPoint } from "./index.ts";
 
 const { VITE_APP_SERVER_URL } = import.meta.env;
@@ -18,7 +18,7 @@ export type PrixMeta = {
   groupe_defaut: string;
   groupes: { code: string; libelle: string; prix: Prix[] }[];
   methode: string[];
-  sources: string;
+  sources: SourceDonnees[];
 };
 
 // Discipline choisie : nominations françaises sans discipline, comptées seulement pour « Toutes disciplines »

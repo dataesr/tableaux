@@ -6,7 +6,8 @@ import DefaultSkeleton from "../../../../../../components/charts-skeletons/defau
 import type { ErcComparaison, ErcMeta, IndicateurPays, RatioFiable } from "../../../../api/erc.ts";
 import ChartBusy from "../../../../components/chart-busy/index.tsx";
 import getRubansOptions from "../../../../components/rubans/options.tsx";
-import { getContinent, LegendeRubans, TableRubans } from "../../../../components/rubans/utils.tsx";
+import { getContinent, getLectureRubans, LegendeRubans, TableRubans } from "../../../../components/rubans/utils.tsx";
+import { getChartSources } from "../../../../components/sources.tsx";
 import { useRenderTransition } from "../../../../hooks/use-render-transition";
 import { ENTITE_NATIONALE } from "../../../../hooks/use-selection";
 import { formatIndice, formatNombre, formatPart, formatPeriode } from "../../../../utils";
@@ -105,6 +106,10 @@ export default function ErcRubans({ data, disciplineLabel, isError, isLoading, i
   const titre = `${label} ERC : rang des pays chaque année d'appel · ${formatPeriode(comparaison.periode)} · ${disciplineLabel}`;
   const series = comparaison.indicateurs[affiche.indicateur]!.series;
   const peuFiable = getPeuFiable(affiche.indicateur, comparaison.seuil_fiabilite, unites);
+  // Valeur, calcul et fiabilité, dans le tableau comme dans l'exemple de lecture
+  const formatCellule = (ratio: RatioFiable) => `${formatValeur(affiche.indicateur, ratio.valeur)} (${formatCalcul(affiche.indicateur, ratio, unites)})`
+    + `${ratio.fiable === false ? ` · ${PEU_FIABLE} (${peuFiable})` : ""}`;
+  const lecture = getLectureRubans(comparaison.annees, series, ENTITE_NATIONALE, formatCellule);
   const config = {
     id: "suivi-recherche-financements-erc-rubans",
     title: { fr: titre, look: "h5" as const },
@@ -116,10 +121,12 @@ export default function ErcRubans({ data, disciplineLabel, isError, isLoading, i
           {comparaison.annees_provisoires.length > 0 && ` * Appels ${comparaison.annees_provisoires.join(", ")} provisoires : tous les résultats ne sont pas publiés.`}
           {affiche.indicateur === "indice_candidature" && comparaison.vivier_provisoire
             && " Indice provisoire pour les appels récents : le top 10 % des plus cités des articles récents n'est pas définitif."}
-          {` ${meta.sources}`}
         </>
       ),
     },
+    ...(lecture && { readingKey: { fr: <>{lecture}</> } }),
+    // Indice de candidature : le vivier d'articles vient d'OpenAlex et de SJR
+    sources: getChartSources(affiche.indicateur === "indice_candidature" ? [...meta.sources, ...meta.sources_indice] : meta.sources),
   };
 
   return (
@@ -139,7 +146,7 @@ export default function ErcRubans({ data, disciplineLabel, isError, isLoading, i
             <TableRubans
               annees={comparaison.annees}
               caption={titre}
-              formatCellule={(ratio) => `${formatValeur(affiche.indicateur, ratio.valeur)} (${formatCalcul(affiche.indicateur, ratio, unites)})${ratio.fiable === false ? ` · ${PEU_FIABLE} (${peuFiable})` : ""}`}
+              formatCellule={formatCellule}
               series={series}
             />
           )}

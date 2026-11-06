@@ -76,3 +76,20 @@ export function TableRubans({ annees, caption, formatCellule, series }: TableRub
     </div>
   );
 }
+
+// Exemple de lecture (clé `readingKey` de ChartWrapper) : rang et valeur de l'entité mise en avant
+// pour la dernière année où elle a une valeur, avec son calcul
+export function getLectureRubans(
+  annees: number[],
+  series: Ruban[],
+  entiteId: string,
+  formatCellule: TableRubansProps["formatCellule"],
+): string | null {
+  const ruban = series.find(({ entite_id: id }) => id === entiteId);
+  if (!ruban) return null;
+  const index = ruban.annees.map(({ ratio }) => ratio !== null).lastIndexOf(true);
+  if (index < 0) return null;
+  const { rang, ratio } = ruban.annees[index];
+  const nb = series.filter((s) => s.annees[index]?.ratio).length;
+  return `En ${annees[index]}, ${ruban.nom} est au ${rang === 1 ? "1er" : `${rang}e`} rang sur ${nb} pays : ${formatCellule(ratio!)}.`;
+}

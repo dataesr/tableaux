@@ -5,11 +5,13 @@ import ChartWrapper from "../../../../../../components/chart-wrapper/index.tsx";
 import ChartBusy from "../../../../components/chart-busy/index.tsx";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useBiblioPositionnement } from "../../../../api";
-import type { BiblioOptions, Indicateur, Positionnement, Selection } from "../../../../api";
+import type { BiblioMeta, BiblioOptions, Indicateur, Positionnement, Selection } from "../../../../api";
 import { useRenderTransition } from "../../../../hooks/use-render-transition";
-import { formatPart, formatPeriode, INDICATEUR_LABELS } from "../../../../utils";
+import { formatPart, formatPeriode, formatRatio, INDICATEUR_LABELS } from "../../../../utils";
 import LegendeTailles from "../../../../components/matrice/legende-tailles.tsx";
 import Quadrants from "../../../../components/matrice/quadrants.tsx";
+import { getLectureMatrice } from "../../../../components/matrice/utils.tsx";
+import { getChartSources } from "../../../../components/sources.tsx";
 import { getBiblioMatriceTextes } from "../../matrice-textes.ts";
 import getOptions from "./options.tsx";
 import { getDomaineColor } from "./utils.tsx";
@@ -30,11 +32,12 @@ const libelle = (p: Point) => (
 
 type PositionnementProps = {
   entiteNom: string;
+  meta: BiblioMeta;
   options: BiblioOptions;
   selection: Selection;
 };
 
-export default function PositionnementDisciplines({ entiteNom, options, selection }: PositionnementProps) {
+export default function PositionnementDisciplines({ entiteNom, meta, options, selection }: PositionnementProps) {
   const [indicateur, setIndicateur] = useState<Indicateur>("influence");
   const { data: fetched, isLoading, isError, error, isPlaceholderData } = useBiblioPositionnement(selection, options, indicateur);
   // `data` est la réponse affichée : une nouvelle réponse n'est appliquée qu'une fois le grisé peint,
@@ -109,7 +112,7 @@ export default function PositionnementDisciplines({ entiteNom, options, selectio
                 fr: (
                   <>
                     {`Horizontal : part mondiale de ${entiteNom} dans la discipline sur ${formatPeriode(data.periodes.arrivee)}. `}
-                    {`Ligne pointillée : part de ${entiteNom} toutes disciplines confondues (${formatPart(reference)}) ; à droite, les disciplines où elle fait mieux que sa moyenne. `}
+                    {`Ligne pointillée : part de ${entiteNom} toutes disciplines confondues (${formatPart(reference)} = ${formatRatio(data.reference, data.indicateur)}) ; à droite, les disciplines où elle fait mieux que sa moyenne. `}
                     {`Vertical : part d'arrivée ÷ part de départ − 1 ; au-dessus de 0, la part progresse. `}
                     {"Chaque bulle est reliée à son code et à son nom abrégé ; nom complet au survol et dans le tableau ci-dessous. "}
                     {data.indicateur === "influence" && " Influence : années consolidées seulement (fenêtre de citation close)."}
@@ -118,6 +121,9 @@ export default function PositionnementDisciplines({ entiteNom, options, selectio
                   </>
                 ),
               },
+              // Plus grosse bulle : la discipline qui compte le plus d'articles
+              readingKey: { fr: <>{getLectureMatrice(data, getBiblioMatriceTextes(data), data.points[0], data.points[0].discipline_nom)}</> },
+              sources: getChartSources(meta.sources),
             }}
             legend={legend}
             options={chartOptions}

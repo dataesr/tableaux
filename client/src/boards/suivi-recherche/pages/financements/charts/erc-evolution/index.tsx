@@ -7,11 +7,12 @@ import { useErcEvolution } from "../../../../api/erc.ts";
 import type { ErcMeta, ErcOptions } from "../../../../api/erc.ts";
 import type { Selection } from "../../../../api";
 import ChartBusy from "../../../../components/chart-busy/index.tsx";
+import { getChartSources } from "../../../../components/sources.tsx";
 import { useRenderTransition } from "../../../../hooks/use-render-transition";
 import { UNITES } from "../../comptage.ts";
 import { VIVIER_LABELS } from "../../indice.ts";
 import getOptions from "./options.tsx";
-import { getSeries, INDICATEURS, renderDataTable } from "./utils.tsx";
+import { getLecture, getSeries, INDICATEURS, renderDataTable } from "./utils.tsx";
 import type { IndicateurEvolution } from "./utils.tsx";
 
 type Unites = (typeof UNITES)[keyof typeof UNITES];
@@ -78,6 +79,7 @@ export default function ErcEvolutionChart({ entiteNom, meta, options, selection,
     ? applied.annees.filter((d) => d.indices?.vivier_provisoire).map((d) => d.annee_appel)
     : [];
   const vivier = applied.contexte ? VIVIER_LABELS[applied.contexte.vivier] : "";
+  const lecture = getLecture(applied.annees.map((d) => d.annee_appel), provisoires, series, applied.indicateur, entiteNom);
   const config = {
     id: "suivi-recherche-financements-erc-evolution",
     title: { fr: `${label} par année d'appel · ${selectionLabel}`, look: "h5" as const },
@@ -88,10 +90,12 @@ export default function ErcEvolutionChart({ entiteNom, meta, options, selection,
           {series.some(({ points }) => points.some(({ fiable }) => !fiable)) && ` Marqueurs évidés : ${peuFiable}, valeur peu fiable.`}
           {provisoires.length > 0 && ` Appels ${provisoires.join(", ")} provisoires (tirets) : tous les résultats ne sont pas publiés.`}
           {vivierProvisoire.length > 0 && ` Indices ${vivierProvisoire.join(", ")} provisoires : le top 10 % des plus cités des articles récents n'est pas définitif.`}
-          {` ${meta.sources}`}
         </>
       ),
     },
+    ...(lecture && { readingKey: { fr: <>{lecture}</> } }),
+    // Indice de candidature : le vivier d'articles vient d'OpenAlex et de SJR
+    sources: getChartSources(applied.indicateur === "indices" ? [...meta.sources, ...meta.sources_indice] : meta.sources),
   };
 
   return (

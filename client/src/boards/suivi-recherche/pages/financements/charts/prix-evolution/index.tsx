@@ -10,6 +10,7 @@ import type { Selection } from "../../../../api";
 import { usePrixEvolution } from "../../../../api/prix.ts";
 import type { PrixEvolution, PrixMeta } from "../../../../api/prix.ts";
 import ChartBusy from "../../../../components/chart-busy/index.tsx";
+import { getChartSources } from "../../../../components/sources.tsx";
 import { useRenderTransition } from "../../../../hooks/use-render-transition";
 import { ENTITE_NATIONALE } from "../../../../hooks/use-selection";
 import { formatNombre, formatPart } from "../../../../utils";
@@ -70,6 +71,17 @@ function getOptions(annees: Annee[], vue: Vue, entiteNom: string) {
       }],
     };
   return createChartOptions(vue === "nombre" ? "column" : "line", options);
+}
+
+// Exemple de lecture : dernière année complète (sinon la dernière), nominations par prix et, en vue part, part du total
+function getLecture(annees: Annee[], vue: Vue, entiteNom: string): string | null {
+  const completes = annees.filter((d) => !d.provisoire);
+  const retenues = completes.length > 0 ? completes : annees;
+  const d = retenues[retenues.length - 1];
+  if (!d) return null;
+  const detail = d.par_prix.map(({ libelle, nb_laureats: nb }) => `${libelle} : ${formatNombre(nb)}`).join(" · ");
+  const part = vue === "part" && d.part ? `, soit ${formatPartTotal(d.part)}` : "";
+  return `En ${d.annee}, ${entiteNom} compte ${formatNombre(d.nb_laureats)} nomination${d.nb_laureats > 1 ? "s" : ""}${part} (${detail}).`;
 }
 
 function renderTable(annees: Annee[], vue: Vue, caption: string) {
@@ -160,6 +172,7 @@ export default function PrixEvolutionChart({ entiteNom, meta, selection, selecti
   const titre = `${applied.vue === "part" ? "Part du total des nominations" : "Nominations"} par année · ${groupe} · ${selectionLabel}`;
   const provisoires = applied.data.annees.filter((d) => d.provisoire).map((d) => d.annee);
   const nonClasses = formatNonClasses(applied.data.non_classes);
+  const lecture = getLecture(applied.data.annees, applied.vue, entiteNom);
 
   return (
     <>
@@ -177,11 +190,12 @@ export default function PrixEvolutionChart({ entiteNom, meta, selection, selecti
                     ? "Part du total : nominations de l'établissement / nominations françaises. Un lauréat compte pour toutes ses tutelles : les parts ne s'additionnent pas. "
                     : "Le nombre de nominations est fixé chaque année par l'organisme qui décerne le prix. "}
                   {nonClasses && `${nonClasses} `}
-                  {provisoires.length > 0 && `${provisoires.join(", ")} : année en cours, prix pas tous recensés. `}
-                  {meta.sources}
+                  {provisoires.length > 0 && `${provisoires.join(", ")} : année en cours, prix pas tous recensés.`}
                 </>
               ),
             },
+            ...(lecture && { readingKey: { fr: <>{lecture}</> } }),
+            sources: getChartSources(meta.sources),
           }}
           options={chartOptions}
           renderData={() => renderTable(applied.data.annees, applied.vue, titre)}

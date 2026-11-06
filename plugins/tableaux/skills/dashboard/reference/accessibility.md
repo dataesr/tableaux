@@ -27,7 +27,7 @@ Cible : un identifiant ou un chemin de tableau, par exemple `client/src/boards/<
 
 ## Graphiques et données
 
-- Chaque graphique `ChartWrapper` dispose d'une alternative textuelle : un titre et une description (`ChartConfig.description`) qui énoncent l'essentiel, **et** un tableau de données : celui que `ChartWrapper` génère nativement via Highcharts (`viewData`) par défaut, ou un `renderData` sur mesure lorsque le tableau natif n'est pas lisible tel quel (clés qui ne sont pas des libellés, valeurs sans unité ni format, plusieurs axes mélangés). Vérifiez le tableau réellement affiché, pas seulement la présence du bouton « Données ».
+- Chaque graphique `ChartWrapper` dispose d'une alternative textuelle : un titre et un texte affiché sous le graphique qui énoncent l'essentiel — `comment` et `readingKey` de `ChartConfig`, rendus par `ChartFooter` (`description` et `subtitle` ne sont pas rendus par `ChartWrapper` et ne comptent pas), **et** un tableau de données : celui que `ChartWrapper` génère nativement via Highcharts (`viewData`) par défaut, ou un `renderData` sur mesure lorsque le tableau natif n'est pas lisible tel quel (clés qui ne sont pas des libellés, valeurs sans unité ni format, plusieurs axes mélangés). Vérifiez le tableau réellement affiché, pas seulement la présence du bouton « Données ».
 - Les réglages d'accessibilité de Highcharts (navigation au clavier, description pour lecteur d'écran) ne sont pas désactivés sans raison.
 - Le contenu des info-bulles est accessible au focus comme au survol.
 - Les états de chargement, vide et d'erreur sont annoncés aux technologies d'assistance (`role="status"` ou `role="alert"`, ou le composant DSFR équivalent).

@@ -15,6 +15,7 @@ import {
 } from "../erc-indice.js";
 import { CODES_GROUPES, computePeriodes, loadGroupeEtablissements, median, shapeMatrice } from "../matrice.js";
 import { computeAbscisses, computeRubans, DEMI_COLONNE, HAUTEUR } from "../rubans.js";
+import { getSourcesBibliometrie, getSourcesErc } from "../sources.js";
 
 const router = new express.Router();
 
@@ -197,8 +198,17 @@ async function loadIndices(filters, meta, entiteIds) {
 }
 
 router.route("/suivi-recherche/financements/erc/meta").get(async (req, res) => {
-  const meta = await getMeta();
-  res.json({ ...meta, methode_indice: getMethodeIndice(meta) });
+  const [meta, biblioMeta] = await Promise.all([
+    getMeta(),
+    (await getCollection("biblio_meta")).findOne({}, { projection: { _id: 0, snapshot_openalex: 1 } }),
+  ]);
+  res.json({
+    ...meta,
+    methode_indice: getMethodeIndice(meta),
+    sources: getSourcesErc(meta),
+    // Indice de candidature : vivier d'articles OpenAlex en revues SJR
+    sources_indice: getSourcesBibliometrie(biblioMeta),
+  });
 });
 
 // Chiffres clés de l'entité sur la période

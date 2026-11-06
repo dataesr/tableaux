@@ -17,7 +17,8 @@ interface LocalizedUrl {
 interface Source {
   label: LocalizedContent;
   update?: Date;
-  url: LocalizedUrl;
+  // Absent pour un jeu de données non public : le libellé est alors affiché sans lien
+  url?: LocalizedUrl;
 }
 
 interface ChartFooterProps {
@@ -81,9 +82,13 @@ export default function ChartFooter({
             <strong>{getI18nLabel(i18n, "sources", currentLang)} </strong>
             {sources.map((source, index) => (
               <span key={`graph-footer-source-${index}`}>
-                <Link href={source.url[currentLang] || source.url.fr} target="_blank" title={`${source.label[currentLang] || source.label.fr} - Nouvelle fenêtre`} rel="noopener noreferrer">
-                  {source.label[currentLang] || source.label.fr}
-                </Link>
+                {source.url ? (
+                  <Link href={source.url[currentLang] || source.url.fr} target="_blank" title={`${source.label[currentLang] || source.label.fr} - Nouvelle fenêtre`} rel="noopener noreferrer">
+                    {source.label[currentLang] || source.label.fr}
+                  </Link>
+                ) : (
+                  source.label[currentLang] || source.label.fr
+                )}
                 {(source?.update) && (
                   <>
                     {' '}

@@ -3,6 +3,7 @@ import express from "express";
 import { BadRequestError } from "../../../../commons/errors/index.js";
 import { getCollection } from "../collections.js";
 import { CODES_GROUPES, computePeriodes, loadGroupeEtablissements, median, shapeMatrice } from "../matrice.js";
+import { getSourcesPrix } from "../sources.js";
 
 // Prix et distinctions (athena : prix_meta, prix_catalogue, prix_effectifs, prix_effectifs_disciplines).
 // Prix français seulement, sans candidatures : la France compte chaque lauréat une fois, un établissement compte
@@ -131,7 +132,7 @@ router.route("/suivi-recherche/financements/prix/meta").get(async (req, res) => 
     groupes: meta.groupes.map(({ code, libelle }) => ({ code, libelle, prix: prix[code] })),
     groupe_defaut: meta.groupe_defaut,
     methode: meta.methode,
-    sources: meta.sources,
+    sources: getSourcesPrix(meta),
   });
 });
 

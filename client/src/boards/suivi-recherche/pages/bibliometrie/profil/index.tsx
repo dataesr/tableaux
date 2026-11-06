@@ -32,13 +32,13 @@ export default function ProfilPage() {
           <ChartBusy busy={indicateurs.isPlaceholderData}>
             <Indicateurs data={indicateurs.data} optionsLabel={optionsLabel} selectionLabel={selectionLabel} />
           </ChartBusy>
-          <Evolution meta={meta} options={options} selection={selection} selectionLabel={selectionLabel} />
+          <Evolution entiteNom={entiteNom} meta={meta} options={options} selection={selection} selectionLabel={selectionLabel} />
         </>
       )}
 
       <section className="fr-mt-6w">
         <Title as="h2" look="h4">Positionnement des disciplines : niveau × dynamique</Title>
-        <PositionnementDisciplines entiteNom={entiteNom} options={options} selection={selection} />
+        <PositionnementDisciplines entiteNom={entiteNom} meta={meta} options={options} selection={selection} />
       </section>
     </>
   );

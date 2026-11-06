@@ -136,6 +136,17 @@ export function getSeries(data: ErcEvolution["annees"], indicateur: IndicateurEv
   ];
 }
 
+// Exemple de lecture : dernier appel consolidé (sinon le dernier appel) où l'entité a une valeur, série par série avec son calcul
+export function getLecture(annees: number[], provisoires: number[], series: Serie[], indicateur: IndicateurEvolution, entiteNom: string): string | null {
+  const indices = annees.map((_, i) => i).filter((i) => series[0]?.points[i]?.valeur !== null);
+  const consolides = indices.filter((i) => !provisoires.includes(annees[i]));
+  const i = (consolides.length > 0 ? consolides : indices).pop();
+  if (i === undefined) return null;
+  // Taux : la série de l'entité porte son nom, les références (France, ensemble de l'ERC) le leur
+  const nom = (serie: Serie) => (indicateur === "taux" && !serie.reference ? "taux de succès" : serie.name);
+  return `Appel ${annees[i]}, ${entiteNom} : ${series.map((serie) => `${nom(serie)} = ${serie.points[i].texte}`).join(" ; ")}.`;
+}
+
 export function getCategorie(annee: number, provisoire: boolean): string {
   return provisoire ? `${annee} (provisoire)` : String(annee);
 }
