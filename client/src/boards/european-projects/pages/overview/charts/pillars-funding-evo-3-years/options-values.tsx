@@ -1,7 +1,7 @@
 import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js";
 
 import { CreateChartOptions } from "../../../../components/chart-ep";
-import { formatNumber, formatToRates, formatToMillions } from "../../../../../../utils/format";
+import { formatNumber, formatToRates } from "../../../../../../utils/format";
 import type { HighchartsOptions } from "../../../../../../components/chart-wrapper";
 import { getCssColor } from "../../../../../../utils/colors";
 import { getI18nLabel } from "../../../../../../utils";
@@ -23,6 +23,7 @@ export default function Options(data, displayType, currentLang): HighchartsOptio
     | "total_number_involved"
     | "total_projects";
   const isFunding = valueKey === "total_fund_eur";
+  const formatter = Intl.NumberFormat(currentLang, { notation: 'compact' })
 
   // Créer les catégories combinées : Année - Pilier
   const categories: string[] = [];
@@ -87,7 +88,7 @@ export default function Options(data, displayType, currentLang): HighchartsOptio
         let html = `<strong>${this.category}</strong><br/>`;
         (this.points || []).forEach((point) => {
           const value = point.y || 0;
-          const formatted = point.series.type === "scatter" ? formatToRates(value / 100) : isFunding ? formatToMillions(value * 1000000) : formatNumber(value);
+          const formatted = point.series.type === "scatter" ? formatToRates(value / 100) : isFunding ? formatter.format(value * 1000000) : formatNumber(value);
           html += `<span style="color:${point.color}">●</span> ${point.series.name}: <strong>${formatted}</strong><br/>`;
         });
         return html;
@@ -134,7 +135,7 @@ export default function Options(data, displayType, currentLang): HighchartsOptio
       // Série pour les taux de succès
       {
         type: "scatter",
-        name: `${getI18nLabel(i18n, "successRate", currentLang)} (%)`,
+        name: `${getI18nLabel(i18n, "successRate", currentLang)}`,
         color: successRateColor,
         yAxis: 1,
         data: (() => {

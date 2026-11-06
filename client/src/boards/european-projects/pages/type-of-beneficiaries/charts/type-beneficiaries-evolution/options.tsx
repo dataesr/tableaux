@@ -1,11 +1,10 @@
 import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js";
 
-import { CreateChartOptions } from "../../../../components/chart-ep";
 import { getCssColor } from "../../../../../../utils/colors";
-
+import { CreateChartOptions } from "../../../../components/chart-ep";
 import i18n from "./i18n.json";
 
-export default function Options(data, currentLang, selectedCountry?: string) {
+export default function getOptions(data, currentLang, selectedCountry?: string) {
   if (!data || !data.countries || !data.years) return null;
 
   function getI18nLabel(key) {
@@ -23,9 +22,6 @@ export default function Options(data, currentLang, selectedCountry?: string) {
     },
     xAxis: {
       categories: data.years,
-      // title: {
-      //   text: getI18nLabel("years"),
-      // },
       crosshair: true,
       accessibility: {
         description: "Years",
@@ -46,7 +42,7 @@ export default function Options(data, currentLang, selectedCountry?: string) {
     tooltip: {
       shared: true,
       formatter: function () {
-        let tooltip = `<b>Année: ${this.x}</b><br/>`;
+        let tooltip = `<b>${this.key}</b><br/>`;
         if (this.points) {
           this.points.forEach((point) => {
             const value = point.y || 0;

@@ -8,7 +8,7 @@ import { useChartColor } from "../../../../../../hooks/useChartColor";
 import { getI18nLabel } from "../../../../../../utils";
 import { EPChartsSources } from "../../../../config";
 import i18n from "../../../../i18n-global.json";
-import options from "./options";
+import getOptions from "./options";
 import { getData } from "./query";
 import { RenderData } from "./render-data";
 import { useGetParams } from "./utils";
@@ -79,7 +79,7 @@ export default function TypeOfBeneficiariesEvolution() {
         </div>
       </ChartWrapper.Title>
 
-      <ChartWrapper config={{ ...config, sources: EPChartsSources }} hideTitle={true} options={options(data, currentLang, selectedCountry)} renderData={() => RenderData(data, currentLang)} />
+      <ChartWrapper config={{ ...config, sources: EPChartsSources }} hideTitle={true} options={getOptions(data, currentLang, selectedCountry)} renderData={() => RenderData(data, currentLang)} />
     </div>
   );
 }

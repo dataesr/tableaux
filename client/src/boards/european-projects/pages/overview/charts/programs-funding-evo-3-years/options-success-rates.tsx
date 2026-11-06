@@ -1,12 +1,12 @@
 import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js";
 import type { HighchartsOptions } from "../../../../../../components/chart-wrapper";
 
-import { CreateChartOptions } from "../../../../components/chart-ep";
-import { getCssColor } from "../../../../../../utils/colors";
 import { getI18nLabel } from "../../../../../../utils";
+import { getCssColor } from "../../../../../../utils/colors";
+import { CreateChartOptions } from "../../../../components/chart-ep";
 import i18n from "../../i18n-charts.json";
 
-export default function Options(data, displayType, currentLang): HighchartsOptions {
+export default function getOptionsSuccessRates(data, displayType, currentLang): HighchartsOptions {
   if (!data) return null;
 
   const years = new Set();
@@ -53,7 +53,7 @@ export default function Options(data, displayType, currentLang): HighchartsOptio
     tooltip: {
       shared: true,
       formatter: function () {
-        let s = `<b>${this.x}</b>`; // annee
+        let s = `<b>${this.key}</b>`;
         this.points?.forEach((point) => {
           s += `<br/><span style="color:${point.color}">\u25CF</span> ${point.series.name}: <b>${Number(point.y).toFixed(1)}%</b>`;
         });

@@ -9,8 +9,8 @@ import { getI18nLabel } from "../../../../../../utils";
 import { EPChartsSources } from "../../../../config.js";
 import i18nGlobal from "../../../../i18n-global.json";
 import i18nLocal from "./i18n.json";
-import optionsSuccessRates from "./options-success-rates";
-import optionsValues from "./options-values";
+import getOptionsSuccessRates from "./options-success-rates";
+import getOptionsValues from "./options-values";
 import { getData } from "./query";
 import { renderDataTable, renderDataTableRates, successRatesReadingKey, useGetParams, valuesSuccessReadingKey } from "./utils";
 
@@ -120,12 +120,12 @@ export default function ProgramsFundingEvo3Years() {
       </Row>
       <Row>
         <Col md={12}>
-          <ChartWrapper config={configChart1} options={optionsValues(data, displayType, currentLang)} renderData={() => renderDataTable(data, currentLang, displayType)} />
+          <ChartWrapper config={configChart1} options={getOptionsValues(data, displayType, currentLang)} renderData={() => renderDataTable(data, currentLang, displayType)} />
         </Col>
       </Row>
       <Row className="fr-my-1w">
         <Col>
-          <ChartWrapper config={configChart3} options={optionsSuccessRates(data, displayType, currentLang)} renderData={() => renderDataTableRates(data, currentLang, displayType)} />
+          <ChartWrapper config={configChart3} options={getOptionsSuccessRates(data, displayType, currentLang)} renderData={() => renderDataTableRates(data, currentLang, displayType)} />
         </Col>
       </Row>
     </Container>
