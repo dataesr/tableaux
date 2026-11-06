@@ -1,18 +1,16 @@
-import { useState } from "react";
+import { Col, Row, SegmentedControl, SegmentedElement, Select, SelectOption, Title } from "@dataesr/dsfr-plus";
 import { useQuery } from "@tanstack/react-query";
-import { Col, Row, SegmentedControl, SegmentedElement, Select, SelectOption } from "@dataesr/dsfr-plus";
-
-import { formatNumberLang, formatCurrency, formatCurrencyEn } from "../../../../../../utils/format";
-import { getCountryNameWithDe, getCountryNameWithArticle } from "../../../../utils/country-mapping";
-import { getData } from "./query";
-import { getI18nLabel } from "../../../../../../utils";
-import { useGetParams, processData, renderDataTable, SCIENTIFIC_DOMAINS, type ScientificDomainCode } from "./utils";
-import Options from "./options";
-
-import i18n from "./i18n.json";
+import { useState } from "react";
 
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
+import { getI18nLabel } from "../../../../../../utils";
+import { formatCurrency, formatCurrencyEn, formatNumberLang } from "../../../../../../utils/format";
+import { getCountryNameWithArticle, getCountryNameWithDe } from "../../../../utils/country-mapping";
+import i18n from "./i18n.json";
+import Options from "./options";
+import { getData } from "./query";
+import { processData, renderDataTable, SCIENTIFIC_DOMAINS, useGetParams, type ScientificDomainCode } from "./utils";
 
 type MetricType = "projects" | "funding";
 
@@ -72,12 +70,12 @@ const getConfig = (metric: MetricType, values: Record<string, string>, lang: str
   const commentKey = isProjects ? "comment-projects" : "comment-funding";
   const readingKeyKey = isProjects ? "reading-key-projects" : "reading-key-funding";
   const text = (key: string, l: string) => withPlaceholders(getI18nLabel(i18n, key, l), values);
-  const title = text("main-title-with-country", lang);
+  const title = text(isProjects ? "chart-title-projects" : "chart-title-funding", lang);
 
   return {
     id: isProjects ? "mscaPositioningScientificDomainProjects" : "mscaPositioningScientificDomainFunding",
     idQuery: "mscaPositioningScientificDomain",
-    title: { fr: title, en: title, className: "fr-mt-2w fr-ml-1w" },
+    title: { fr: title, en: title },
     comment: { fr: <>{text(commentKey, "fr")}</>, en: <>{text(commentKey, "en")}</> },
     readingKey: { fr: <>{text(readingKeyKey, "fr")}</>, en: <>{text(readingKeyKey, "en")}</> },
     integrationURL: isProjects ? "/european-projects/components/pages/msca/charts/positioning-scientific-domain" : "/european-projects/components/pages/msca/charts/positioning-scientific-domain-funding",
@@ -116,6 +114,13 @@ export default function PositioningScientificDomainChart({ countryCode: propCoun
 
   return (
     <>
+      <Row>
+        <Col>
+          <Title as="h2" look="h5">
+            {getI18nLabel(i18n, "main-title-with-country", currentLang)}
+          </Title>
+        </Col>
+      </Row>
       <Row className="fr-pb-1w">
         <Col xs={12} md={4}>
           <Select label={getI18nLabel(i18n, "scientific-domain", currentLang)} selectedKey={domain} onSelectionChange={(key) => setDomain(key as ScientificDomainCode)}>

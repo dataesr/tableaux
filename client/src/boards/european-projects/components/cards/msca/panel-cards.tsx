@@ -49,7 +49,7 @@ export default function MscaPanelCards({ countryCode, callYear }: MscaPanelCards
         </Title>
         <SegmentedControl className="fr-segmented--sm" name="msca-panel-view-mode">
           <SegmentedElement checked={viewMode === "projects"} label="Projets" onClick={() => setViewMode("projects")} value="projects" />
-          <SegmentedElement checked={viewMode === "funding"} label="Financements obtenus" onClick={() => setViewMode("funding")} value="funding" />
+          <SegmentedElement checked={viewMode === "funding"} label="Financements" onClick={() => setViewMode("funding")} value="funding" />
         </SegmentedControl>
       </div>
       <div className="msca-stat-cards">
@@ -109,7 +109,7 @@ function MscaPanelCard({ data, viewMode }: { data: MscaPanelData; viewMode: View
             <div className="stat-value">{formatNumber(data.successful?.total_involved || 0)}</div>
           </div>
           <div className="stat-group">
-            <div className="stat-label">Financement</div>
+            <div className="stat-label">Financements obtenus</div>
             <div className="stat-value funding">{formatCurrency(data.successful?.total_funding_project || 0)}</div>
           </div>
         </div>

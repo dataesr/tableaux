@@ -1,7 +1,8 @@
 import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js";
+
+import { formatNumber, formatToRates } from "../../../../../../utils/format";
 import { CreateChartOptions } from "../../../../components/chart-ep";
 import type { MscaPanelChartItem } from "./query";
-import { formatNumber, formatToRates } from "../../../../../../utils/format";
 
 interface OptionsParams {
   data: MscaPanelChartItem[];
@@ -11,11 +12,11 @@ interface OptionsParams {
 export default function Options({ data, currentLang = "fr" }: OptionsParams) {
   if (!data || data.length === 0) return null;
 
-  const sortedData = [...data].filter((d) => d.panel_id).sort((a, b) => a.panel_id.localeCompare(b.panel_id));
+  const sortedData = [...data].filter((d) => d.panel_id).sort((a, b) => (b?.successful?.total_projects ?? 0) - (a?.successful?.total_projects ?? 0));
 
   const categories = sortedData.map((d) => d.panel_id);
-  const evaluatedData = sortedData.map((d) => d.evaluated?.total_projects || 0);
-  const successfulData = sortedData.map((d) => d.successful?.total_projects || 0);
+  const evaluatedData = sortedData.map((d) => d?.evaluated?.total_projects ?? 0);
+  const successfulData = sortedData.map((d) => d?.successful?.total_projects ?? 0);
   const successRates = sortedData.map((d) => {
     const evaluated = d.evaluated?.total_projects || 0;
     const successful = d.successful?.total_projects || 0;
@@ -26,8 +27,6 @@ export default function Options({ data, currentLang = "fr" }: OptionsParams) {
   const evaluatedColor = rootStyles.getPropertyValue("--evaluated-project-color").trim() || "#009099";
   const successfulColor = rootStyles.getPropertyValue("--successful-project-color").trim() || "#233e41";
   const successRateColor = rootStyles.getPropertyValue("--average-success-rate-color").trim() || "#d75521";
-
-  const titleText = currentLang === "fr" ? "Nombre de projets par panel scientifique" : "Number of projects by scientific panel";
 
   const newOptions: HighchartsInstance.Options = {
     chart: {
@@ -50,10 +49,6 @@ export default function Options({ data, currentLang = "fr" }: OptionsParams) {
           });
         },
       },
-    },
-    title: {
-      text: titleText,
-      style: { fontSize: "14px", fontWeight: "600" },
     },
     xAxis: {
       categories,

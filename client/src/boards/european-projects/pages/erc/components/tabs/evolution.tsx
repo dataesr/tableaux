@@ -1,8 +1,9 @@
 import { useSearchParams } from "react-router-dom";
+
 import { getCountryAdjectives } from "../../../../../../components/country-selector/utils";
 import EvolutionFundingsCharts from "../../charts/evolution-fundings";
-import EvolutionPanelsCharts from "../../charts/evolution-panels";
 import EvolutionPanelDetail from "../../charts/evolution-panel-detail";
+import EvolutionPanelsCharts from "../../charts/evolution-panels";
 
 export default function EvolutionContent() {
   const [searchParams] = useSearchParams();

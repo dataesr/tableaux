@@ -160,7 +160,7 @@ export default function OptionsProjects({ data, currentLang = "fr" }: OptionsPar
         const points = this.points;
         if (!points) return "";
 
-        const domainCode = String(this.x);
+        const domainCode = String(this.key);
         const domainName = getI18nLabel(i18n, `domains.${domainCode}`, currentLang);
 
         let html = `<strong>${domainName}</strong><br/>`;

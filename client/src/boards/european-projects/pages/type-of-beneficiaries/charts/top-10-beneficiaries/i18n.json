@@ -18,5 +18,9 @@
   "OTH": {
     "fr": "Autre",
     "en": "Other"
+  },
+  "xAxis-label": {
+    "fr": "Total subventions en millions d'euros",
+    "en": "Total grants in million euros"
   }
 }

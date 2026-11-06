@@ -1,12 +1,12 @@
 import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js";
 
-import { CreateChartOptions } from "../../../../components/chart-ep";
-import { formatToMillions } from "../../../../../../utils/format";
-import { getCssColor } from "../../../../../../utils/colors";
 import { getI18nLabel } from "../../../../../../utils";
+import { getCssColor } from "../../../../../../utils/colors";
+import { formatToMillions } from "../../../../../../utils/format";
+import { CreateChartOptions } from "../../../../components/chart-ep";
 import i18n from "../../i18n-charts.json";
 
-export default function Options(data, currentLang) {
+export default function getOptions(data, currentLang) {
   if (!data) return null;
 
   const newOptions: HighchartsInstance.Options = {
@@ -25,7 +25,7 @@ export default function Options(data, currentLang) {
       gridLineWidth: 0.5,
     },
     tooltip: {
-      pointFormat: getI18nLabel(i18n, "totalFunding", currentLang) + "<b>{point.y:,.0f}</b> €",
+      pointFormat: getI18nLabel(i18n, "totalFunding", currentLang) + ": <b>{point.label}</b>",
     },
     series: [
       {
@@ -33,7 +33,11 @@ export default function Options(data, currentLang) {
         name: "Financements obtenus (M€)",
         color: getCssColor("main-partner"),
         groupPadding: 0,
-        data: data.list.map((item) => [item.acronym || item.name, item.total_fund_eur]),
+        data: data.list.map((item) => ({
+          label: formatToMillions(item.total_fund_eur),
+          name: item.acronym || item.name,
+          y: item.total_fund_eur,
+        })),
       },
     ],
     plotOptions: {

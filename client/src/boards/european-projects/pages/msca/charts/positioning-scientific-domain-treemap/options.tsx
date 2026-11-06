@@ -26,13 +26,9 @@ export default function Options({ data }: OptionsParams): Highcharts.Options | n
         ...legendOpts,
         showInLegend: true,
         layoutAlgorithm: "squarified",
-        data: data.map((item) => ({
-          name: item.name,
-          value: item.value,
-          color: item.color,
-        })),
+        data,
         tooltip: {
-          pointFormat: "{point.name}: {point.value}",
+          pointFormat: "<b>{point.name}</b>: {point.label}",
         },
         dataLabels: {
           enabled: true,

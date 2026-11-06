@@ -1,7 +1,7 @@
 {
   "total-funding-eur-axis": {
-    "fr": "Financements en euros €",
-    "en": "Funding in euros €"
+    "fr": "Financements (M€)",
+    "en": "Funding (M€)"
   },
   "cumulative-weight-axis": {
     "fr": "Poids du cumul des financements (%)",

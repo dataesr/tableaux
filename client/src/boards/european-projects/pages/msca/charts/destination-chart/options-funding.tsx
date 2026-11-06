@@ -48,8 +48,6 @@ export default function OptionsFunding({ data, currentLang = "fr" }: OptionsPara
   const successfulColor = rootStyles.getPropertyValue("--successful-project-color").trim() || "#233e41";
   const successRateColor = rootStyles.getPropertyValue("--average-success-rate-color").trim() || "#d75521";
 
-  const titleText = currentLang === "fr" ? "Répartition des financements et des taux de succès par type de financement" : "Breakdown of funding and success rates by action type";
-
   const newOptions: HighchartsInstance.Options = {
     chart: {
       height: 400,
@@ -71,10 +69,6 @@ export default function OptionsFunding({ data, currentLang = "fr" }: OptionsPara
           });
         },
       },
-    },
-    title: {
-      text: titleText,
-      style: { fontSize: "14px", fontWeight: "600" },
     },
     xAxis: {
       categories,

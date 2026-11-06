@@ -19,7 +19,7 @@ import { readingKey } from "./utils.js";
 export default function FundingRankingRates() {
   const [searchParams] = useSearchParams();
   const currentLang = searchParams.get("language") || "fr";
-  const [sortBy, setSortBy] = useState("requested");
+  const [sortBy, setSortBy] = useState("secured");
   const params = useGetParams();
 
   const chartId = "fundingRankingRates";

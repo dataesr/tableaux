@@ -78,7 +78,7 @@ export default function OptionsNumberInvolved(data: DataItem[], currentLang: str
         ],
         tooltip: {
           pointFormat:
-            "Nombre de participants : {point.y}",
+            "Nombre de participants : <b>{point.y}</b>",
           },
       } as Highcharts.SeriesBarOptions,
     ],

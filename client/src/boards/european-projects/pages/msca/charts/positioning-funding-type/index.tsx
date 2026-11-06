@@ -1,17 +1,16 @@
-import { useState } from "react";
+import { Col, Row, SegmentedControl, SegmentedElement, Select, SelectOption, Title } from "@dataesr/dsfr-plus";
 import { useQuery } from "@tanstack/react-query";
-import { Col, Row, SegmentedControl, SegmentedElement, Select, SelectOption } from "@dataesr/dsfr-plus";
-
-import { getData } from "./query";
-import Options from "./options";
-import { useGetParams, processData, renderDataTable, FUNDING_TYPES, type FundingTypeCode } from "./utils";
-import i18n from "./i18n.json";
-import { getI18nLabel } from "../../../../../../utils";
-import { getCountryNameWithDe, getCountryNameWithArticle } from "../../../../utils/country-mapping";
-import { formatNumberLang, formatCurrency, formatCurrencyEn } from "../../../../../../utils/format";
+import { useState } from "react";
 
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
+import { getI18nLabel } from "../../../../../../utils";
+import { formatCurrency, formatCurrencyEn, formatNumberLang } from "../../../../../../utils/format";
+import { getCountryNameWithArticle, getCountryNameWithDe } from "../../../../utils/country-mapping";
+import i18n from "./i18n.json";
+import Options from "./options";
+import { getData } from "./query";
+import { FUNDING_TYPES, processData, renderDataTable, useGetParams, type FundingTypeCode } from "./utils";
 
 type MetricType = "projects" | "funding";
 
@@ -70,15 +69,15 @@ const getConfig = (metric: MetricType, values: Record<string, string>, lang: str
   const commentKey = isProjects ? "comment-projects" : "comment-funding";
   const readingKeyKey = isProjects ? "reading-key-projects" : "reading-key-funding";
   const text = (key: string, l: string) => withPlaceholders(getI18nLabel(i18n, key, l), values);
-  const title = text("main-title-with-country", lang);
+  const title = text(isProjects ? "chart-title-projects" : "chart-title-funding", lang);
 
   return {
     id: isProjects ? "mscaPositioningFundingTypeProjects" : "mscaPositioningFundingTypeFunding",
     idQuery: "mscaPositioningFundingType",
-    title: { fr: title, en: title, className: "fr-mt-2w fr-ml-1w" },
+    title: { fr: title, en: title },
     comment: { fr: <>{text(commentKey, "fr")}</>, en: <>{text(commentKey, "en")}</> },
     readingKey: { fr: <>{text(readingKeyKey, "fr")}</>, en: <>{text(readingKeyKey, "en")}</> },
-    integrationURL: isProjects ? "/european-projects/components/pages/msca/charts/positioning-funding-type" : "/european-projects/components/pages/msca/charts/positioning-funding-type-funding",
+    integrationURL: `/european-projects/components/pages/msca/charts/${isProjects ? "positioning-funding-type" : "positioning-funding-type-funding"}`,
   };
 };
 
@@ -114,6 +113,13 @@ export default function PositioningFundingTypeChart({ countryCode: propCountryCo
 
   return (
     <>
+      <Row>
+        <Col>
+          <Title as="h2" look="h5">
+            {getI18nLabel(i18n, "main-title-with-country", currentLang)}
+          </Title>
+        </Col>
+      </Row>
       <Row className="fr-pb-1w">
         <Col xs={12} md={4}>
           <Select label={getI18nLabel(i18n, "funding-type", currentLang)} selectedKey={fundingType} onChange={(key) => setFundingType(key as FundingTypeCode)}>
@@ -129,7 +135,6 @@ export default function PositioningFundingTypeChart({ countryCode: propCountryCo
           </SegmentedControl>
         </Col>
       </Row>
-
       <Row className="chart-container chart-container--default">
         <ChartWrapper config={config} options={options} renderData={() => renderDataTable(processedData, currentLang)} />
       </Row>

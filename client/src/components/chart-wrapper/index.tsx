@@ -333,7 +333,7 @@ function ChartTitle({
   if (typeof config.title === "string") {
     return (
       <>
-        <Title as="h2" look="h6" className="fr-m-0">
+        <Title as="h2" look="h6" className="fr-m-0 fr-ml-1w">
           {config.title}
         </Title>
         {children}

@@ -42,13 +42,10 @@ router
         filters.call_year = { $in: years };
       }
       if (req.query.isEjo) {
-        filters["is_ejo"] = { $eq: req.query.isEjo === "true" ? true : false };
+        filters.is_ejo = { $eq: req.query.isEjo === "true" ? true : false };
       }
-      if (req.query.stage) {
-        filters.stage = req.query.stage;
-      }
-
       filters.framework = "Horizon Europe";
+      filters.stage = "successful";
 
       const data = await db
         .collection(collection_projects_entities)

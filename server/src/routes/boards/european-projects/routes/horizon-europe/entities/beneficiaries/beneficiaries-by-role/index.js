@@ -39,12 +39,12 @@ router
       }
 
       if (req.query.isEjo) {
-        filters["is_ejo"] = { $eq: req.query.isEjo === "true" ? true : false };
+        filters.is_ejo = { $eq: req.query.isEjo === "true" ? true : false };
       }
 
       filters.country_code = req.query.country_code;
+      filters.stage = "successful";
 
-      if (req.query.stage) filters.stage = req.query.stage;
       const data = await db
         .collection(collection_projects_entities)
         .aggregate([

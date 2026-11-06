@@ -1,18 +1,17 @@
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 
-import { getData } from "./query";
-import { useGetParams } from "./utils";
-import { RenderData } from "./render-data";
-import options from "./options";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 import { useChartColor } from "../../../../../../hooks/useChartColor";
+import { getI18nLabel } from "../../../../../../utils";
 import { EPChartsSources } from "../../../../config";
 import { COUNTRY_MAPPING } from "../../../../utils/country-mapping";
-
 import i18n from "./i18n.json";
-import { getI18nLabel } from "../../../../../../utils";
+import options from "./options";
+import { getData } from "./query";
+import { RenderData } from "./render-data";
+import { useGetParams } from "./utils";
 
 interface CountryAdjectives {
   m: string;

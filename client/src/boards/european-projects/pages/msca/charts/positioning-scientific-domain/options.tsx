@@ -1,9 +1,10 @@
 import Highcharts from "highcharts/es-modules/masters/highcharts.src.js";
-import { CreateChartOptions } from "../../../../components/chart-ep";
-import type { ProcessedPositioningByScientificDomainData } from "./utils";
-import { getChartColors, SCIENTIFIC_DOMAINS } from "./utils";
+
 import { getI18nLabel } from "../../../../../../utils";
+import { CreateChartOptions } from "../../../../components/chart-ep";
 import i18n from "./i18n.json";
+import type { ProcessedPositioningByScientificDomainData } from "./utils";
+import { getChartColors } from "./utils";
 
 interface OptionsParams {
   processedData: ProcessedPositioningByScientificDomainData;
@@ -12,15 +13,6 @@ interface OptionsParams {
 
 export default function Options({ processedData, currentLang = "fr" }: OptionsParams): Highcharts.Options | null {
   if (!processedData || processedData.countries.length === 0) return null;
-  
-  /*retrieving the name of the scientific domain for title chart*/  
-  const scientificLabel = SCIENTIFIC_DOMAINS.find((t) => t.code === processedData.domain)?.label[currentLang] ?? processedData.domain
-  
-  /*replacement of domain code with scientific label*/
-  const titleText =
-    processedData.metric === "projects"
-      ? getI18nLabel(i18n, "chart-title-projects", currentLang).replace("{domain}", scientificLabel)
-      : getI18nLabel(i18n, "chart-title-funding", currentLang).replace("{domain}", scientificLabel)
 
   const yAxisLabel =
     processedData.metric === "projects" ? getI18nLabel(i18n, "y-axis-projects", currentLang) : getI18nLabel(i18n, "y-axis-funding", currentLang);
@@ -44,13 +36,6 @@ export default function Options({ processedData, currentLang = "fr" }: OptionsPa
   const newOptions: Highcharts.Options = {
     chart: {
       height: 450,
-    },
-    title: {
-      text: titleText,
-      style: {
-        fontSize: "14px",
-        fontWeight: "600",
-      },
     },
     xAxis: {
       categories,
@@ -81,10 +66,10 @@ export default function Options({ processedData, currentLang = "fr" }: OptionsPa
       useHTML: true,
       shared: false,
       formatter: function () {
-        const ctx = this as unknown as { x: string; y: number };
+        const ctx = this as unknown as { key: string; y: number; };
         const fmt = (v: number) => (processedData.metric === "funding" ? `${v.toFixed(1)} M€` : `${Math.round(v)}`);
         return [
-          `<b>Position : ${ctx.x}</b>`,
+          `<b>${ctx.key}</b>`,
           `${yAxisLabel}\u00a0: <b>${fmt(ctx.y)}</b>`,
           `<span style="color:${colors.avgTop10}">&#9135;</span> ${labelAvgTop10}\u00a0: <b>${fmt(avgTop10Display)}</b>`,
           `<span style="color:${colors.avgAll}">&#8943;</span> ${labelAvgAll}\u00a0: <b>${fmt(avgAllDisplay)}</b>`,
