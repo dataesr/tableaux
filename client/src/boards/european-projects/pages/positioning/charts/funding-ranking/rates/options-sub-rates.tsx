@@ -68,7 +68,7 @@ export default function Options(data, currentLang) {
           },
         ],
         tooltip: {
-          pointFormat: "Part des financements obtenus : <b>{point.y:.2f} %</b>",
+          pointFormat: "Part des financements obtenus : <b>{point.y:.1f} %</b>",
         },
       },
     ],
