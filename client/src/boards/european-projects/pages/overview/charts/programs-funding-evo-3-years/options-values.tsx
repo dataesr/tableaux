@@ -3,7 +3,7 @@ import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.sr
 import type { HighchartsOptions } from "../../../../../../components/chart-wrapper";
 import { getI18nLabel } from "../../../../../../utils";
 import { getCssColor } from "../../../../../../utils/colors";
-import { formatNumber, formatToMillions, formatToRates } from "../../../../../../utils/format";
+import { formatNumber, formatToRates } from "../../../../../../utils/format";
 import { CreateChartOptions } from "../../../../components/chart-ep";
 import i18n from "../../i18n-charts.json";
 
