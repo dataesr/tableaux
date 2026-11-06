@@ -162,12 +162,12 @@ export default function AccessibilityPage() {
                 <div>
                   {audit?.tests?.filter((test) => test.value === "ok").length} tests réussis
                   {' '}
-                  ({Math.floor(audit?.tests?.filter((test) => test.value === "ok").length / audit?.tests?.filter((test) => test.value !== "na").length * 100)} %)
+                  ({Math.floor(audit?.tests?.filter((test) => test.value === "ok").length / audit?.tests?.filter((test) => test.value === "ok" || test.value === "fail").length * 100)} %)
                 </div>
                 <div>
                   {audit?.tests?.filter((test) => test.value === "fail").length} tests échoués
                   {' '}
-                  ({Math.floor(audit?.tests?.filter((test) => test.value === "fail").length / audit?.tests?.filter((test) => test.value !== "na").length * 100)} %)
+                  ({Math.floor(audit?.tests?.filter((test) => test.value === "fail").length / audit?.tests?.filter((test) => test.value === "ok" || test.value === "fail").length * 100)} %)
                 </div>
                 <div>
                   {audit?.tests?.filter((test) => test.value === "na").length} tests non applicables
