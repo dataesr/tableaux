@@ -42,7 +42,7 @@ export default function GlobalLayout() {
     { key: "msca", label: "Focus MSCA", to: `${BASE}/msca?${filtersParams}`, current: is(`${BASE}/msca`) },
     { key: "erc", label: "Focus ERC", to: `${BASE}/erc?${filtersParams}`, current: is(`${BASE}/erc`) },
     { key: "evolutionPcri", label: label("evolutionPcri"), to: `${BASE}/evolution-pcri`, current: is(`${BASE}/evolution-pcri`) },
-    { key: "entities", label: label("entities"), to: `${BASE}/entities?${filtersParams}`, current: is(`${BASE}/entities`) },
+    // { key: "entities", label: label("entities"), to: `${BASE}/entities?${filtersParams}`, current: is(`${BASE}/entities`) }, // TODO
     { key: "methodology", label: label("methodology"), to: `${BASE}/methodology?${filtersParams}`, current: is(`${BASE}/methodology`) },
   ];
 
