@@ -1,6 +1,6 @@
 import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js";
 import { CreateChartOptions } from "../../../../components/chart-ep";
-import { formatCurrency } from "../../../../../../utils/format";
+import { formatCurrency, formatToMillions } from "../../../../../../utils/format";
 import { getCssColor } from "../../../../../../utils/colors";
 import type { ErcDomainPanelEntitiesData } from "./query";
 
@@ -29,7 +29,7 @@ export default function Options(data: ErcDomainPanelEntitiesData, currentLang: s
     tooltip: {
       formatter: function () {
         const ctx = this as unknown as { point: { name: string }; y: number };
-        return `<b>${ctx.point.name}</b><br/>Financement obtenu : <b>${formatCurrency(this.y ?? 0)}</b>`;
+        return `<b>${ctx.point.name}</b><br/>Financements obtenus : <b>${formatCurrency(this.y ?? 0)}</b>`;
       },
     },
     series: [
@@ -48,7 +48,7 @@ export default function Options(data: ErcDomainPanelEntitiesData, currentLang: s
         dataLabels: {
           enabled: true,
           formatter: function () {
-            return formatCurrency(this.y ?? 0);
+            return formatToMillions(this.y ?? 0);
           },
         },
       },

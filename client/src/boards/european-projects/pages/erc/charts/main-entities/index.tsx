@@ -97,7 +97,7 @@ export default function ErcMainEntities({
   const isShowingAll = displayLimit >= totalCount;
   const titleConfig = {
     fr: isShowingAll ? `Financements ERC ${titleSuffixFr} obtenus par les établissements d'accueil ${adjMascPlural}` : `Financements ERC ${titleSuffixFr} obtenus par les ${displayLimit} principaux établissements d'accueil`,
-    en: isShowingAll ? `Funding secured by all host institutions of an ERC grant${titleSuffixEn}` : `Funding secured by the top ${displayLimit} host institutions of an ERC grant${titleSuffixEn}`,
+    en: isShowingAll ? `Funding secured by all ${adjMascPlural} host institutions of an ERC grant ${titleSuffixEn}` : `Funding secured by the top ${displayLimit} ${adjMascPlural} host institutions of an ERC grant ${titleSuffixEn}`,
     className: "fr-mt-2w fr-ml-1w",
   };
 

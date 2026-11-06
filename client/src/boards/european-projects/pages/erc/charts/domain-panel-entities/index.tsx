@@ -16,7 +16,19 @@ const SCIENTIFIC_DOMAINS = [
   { code: "SH", labelFr: "Sciences sociales et humaines (SH)", labelEn: "Social Sciences & Humanities (SH)" },
 ];
 
-export default function ErcDomainPanelEntities() {
+interface CountryAdjectives {
+  m: string;
+  f: string;
+}
+
+interface ErcDomainPanelEntitiesProps {
+  countryAdj?: CountryAdjectives;
+}
+
+export default function ErcDomainPanelEntities({ 
+  countryAdj = { m: "français", f: "française" } }: 
+  ErcDomainPanelEntitiesProps
+) {
   const { params: urlParams, currentLang } = useGetParams();
   const [selectedDomain, setSelectedDomain] = useState("ALL");
   const [selectedPanel, setSelectedPanel] = useState("ALL");
@@ -28,6 +40,8 @@ export default function ErcDomainPanelEntities() {
     queryKey: ["ercFilters"],
     queryFn: () => fetch(`${import.meta.env.VITE_APP_SERVER_URL}/european-projects/erc/filters`).then((r) => r.json()),
   });
+
+  const adjMascPlural = countryAdj.m.endsWith("s") ? countryAdj.m : `${countryAdj.m}s`; 
 
   const allPanels: { id: string; name: string; domaine: string }[] = filtersData?.panels ?? [];
   const panelsForDomain = selectedDomain === "ALL" ? allPanels : allPanels.filter((p) => p.id?.toUpperCase().startsWith(selectedDomain));
@@ -59,21 +73,21 @@ export default function ErcDomainPanelEntities() {
   const panelLabel = allPanels.find((p) => p.id === selectedPanel);
   const titleSuffixFr =
     selectedPanel !== "ALL" && panelLabel
-      ? ` — ${panelLabel.id} (${panelLabel.name})`
+      ? `en ${panelLabel.id} (${panelLabel.name})`
       : selectedDomain !== "ALL" && domainLabel
-        ? ` — ${domainLabel.labelFr}`
+        ? `en ${domainLabel.labelFr}`
         : "";
   const titleSuffixEn =
     selectedPanel !== "ALL" && panelLabel
-      ? ` — ${panelLabel.id} (${panelLabel.name})`
+      ? `in ${panelLabel.id} (${panelLabel.name})`
       : selectedDomain !== "ALL" && domainLabel
-        ? ` — ${domainLabel.labelEn}`
+        ? `in ${domainLabel.labelEn}`
         : "";
 
   const isShowingAll = displayLimit >= totalCount;
   const titleConfig = {
-    fr: isShowingAll ? `Toutes les entités ERC par domaine scientifique${titleSuffixFr}` : `Top ${displayLimit} des entités ERC par domaine scientifique${titleSuffixFr}`,
-    en: isShowingAll ? `All ERC entities by funding${titleSuffixEn}` : `Top ${displayLimit} ERC entities by funding${titleSuffixEn}`,
+    fr: isShowingAll ? `Financements ERC obtenus par les établissements d'accueil ${adjMascPlural} ${titleSuffixFr}` : `Financements ERC obtenus par les ${displayLimit} principaux établissements d'accueil ${titleSuffixFr}`,
+    en: isShowingAll ? `Funding secured by all ${adjMascPlural} host institutions of an ERC grant ${titleSuffixEn}` : `Funding secured by the top ${displayLimit} ${adjMascPlural} host institutions of an ERC grant ${titleSuffixEn}`,
     className: "fr-mt-2w fr-ml-1w",
   };
 

@@ -26,7 +26,7 @@ export default function Options(data: ErcMainEntitiesData, currentLang: string):
     tooltip: {
       formatter: function () {
         const ctx = this as unknown as { point: { name: string }; y: number };
-        return `<b>${ctx.point.name}</b><br/>Financement obtenu : <b>${formatCurrency(this.y ?? 0)}</b>`;
+        return `<b>${ctx.point.name}</b><br/>Financements obtenus : <b>${formatCurrency(this.y ?? 0)}</b>`;
       },
     },
     series: [
