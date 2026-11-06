@@ -1,13 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 
-import { getData } from "./query";
-import { readingKey, useGetParams, renderDataTable } from "./utils";
-import options from "./options";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
-
 import { EPChartsSources } from "../../../../config.js";
+import getOptions from "./options";
+import { getData } from "./query";
+import { readingKey, renderDataTable, useGetParams } from "./utils";
 
 export default function Top10Beneficiaries() {
   const [searchParams] = useSearchParams();
@@ -67,7 +66,7 @@ export default function Top10Beneficiaries() {
 
   return (
     <div className="chart-container chart-container--default">
-      <ChartWrapper config={config} options={options(prepareData(data), searchParams.get("country_code") ?? null, currentLang)} renderData={() => renderDataTable(prepareData(data), currentLang, searchParams.get("country_code") ?? null)} />
+      <ChartWrapper config={config} options={getOptions(prepareData(data), searchParams.get("country_code") ?? null, currentLang)} renderData={() => renderDataTable(prepareData(data), currentLang, searchParams.get("country_code") ?? null)} />
     </div>
   );
 }

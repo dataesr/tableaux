@@ -1,12 +1,12 @@
 import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js";
 
-import { CreateChartOptions } from "../../../../components/chart-ep";
-import { formatToMillionsLang } from "../../../../../../utils/format";
-import { getCssColor } from "../../../../../../utils/colors";
 import { getI18nLabel } from "../../../../../../utils";
+import { getCssColor } from "../../../../../../utils/colors";
+import { formatToMillionsLang } from "../../../../../../utils/format";
+import { CreateChartOptions } from "../../../../components/chart-ep";
 import i18n from "./i18n.json";
 
-export default function Options(data, country_code, currentLang) {
+export default function getOptions(data, country_code, currentLang) {
   if (!data) return null;
 
   const label = (key: string) => getI18nLabel(i18n, key, currentLang);

@@ -88,7 +88,7 @@ export default function Options(data, displayType, currentLang): HighchartsOptio
     tooltip: {
       shared: true,
       formatter: function () {
-        let s = `<b>${this.x}</b>`; // annee
+        let s = `<b>${this.key}</b>`;
         this.points?.forEach((point) => {
           s += `<br/><span style="color:${point.color}">\u25CF</span> ${point.series.name}: <b>${Number(point.y).toFixed(1)}%</b>`;
         });

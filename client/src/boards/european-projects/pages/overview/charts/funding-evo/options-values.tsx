@@ -1,13 +1,13 @@
 import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js";
 
-import { CreateChartOptions } from "../../../../components/chart-ep";
-import { formatNumber, formatToRates, formatToMillions } from "../../../../../../utils/format";
 import type { HighchartsOptions } from "../../../../../../components/chart-wrapper";
-import { getCssColor } from "../../../../../../utils/colors";
 import { getI18nLabel } from "../../../../../../utils";
+import { getCssColor } from "../../../../../../utils/colors";
+import { formatNumber, formatToRates } from "../../../../../../utils/format";
+import { CreateChartOptions } from "../../../../components/chart-ep";
 import i18n from "../../i18n-charts.json";
 
-export default function Options(data, displayType, currentLang): HighchartsOptions {
+export default function getOptionsValues(data, displayType, currentLang): HighchartsOptions {
   if (!data || !Array.isArray(data)) return null;
 
   const countryData = data.filter((item) => item.country !== "all")[0];
@@ -21,6 +21,8 @@ export default function Options(data, displayType, currentLang): HighchartsOptio
     | "total_number_involved"
     | "total_projects";
   const isFunding = valueKey === "total_fund_eur";
+  const formatter = Intl.NumberFormat(currentLang, { notation: 'compact' })
+
   // liste de toutes les années/code disponibles en parcourant tous les items
   const years = new Set();
   const itemsLabels = new Set();
@@ -100,7 +102,7 @@ export default function Options(data, displayType, currentLang): HighchartsOptio
         let html = `<strong>${this.category}</strong><br/>`;
         (this.points || []).forEach((point) => {
           const value = point.y || 0;
-          const formatted = point.series.type === "scatter" ? formatToRates(value / 100) : isFunding ? formatToMillions(value * 1000000) : formatNumber(value);
+          const formatted = point.series.type === "scatter" ? formatToRates(value / 100) : isFunding ? formatter.format(value * 1000000) : formatNumber(value);
           html += `<span style="color:${point.color}">●</span> ${point.series.name}: <strong>${formatted}</strong><br/>`;
         });
         return html;
@@ -129,7 +131,7 @@ export default function Options(data, displayType, currentLang): HighchartsOptio
       // Série pour les taux de succès
       {
         type: "scatter",
-        name: `${getI18nLabel(i18n, "successRate", currentLang)} (%)`,
+        name: `${getI18nLabel(i18n, "successRate", currentLang)}`,
         color: successRateColor,
         data: successRates,
         yAxis: 1,
