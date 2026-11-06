@@ -37,7 +37,7 @@ function renderDataTable(data: { list: { acronym: string | null; name: string; t
   const lang = currentLang as "fr" | "en";
   return (
     <table className="fr-table fr-table--sm">
-      <caption>{lang === "fr" ? "Principales entités ERC" : "Main ERC entities"}</caption>
+      <caption>{lang === "fr" ? "Principaux établissements d'accueil" : "Main host institutions"}</caption>
       <thead>
         <tr>
           <th scope="col">{lang === "fr" ? "Acronyme" : "Acronym"}</th>
@@ -82,8 +82,8 @@ export default function ErcMainEntities() {
 
   const isShowingAll = displayLimit >= totalCount;
   const titleConfig = {
-    fr: isShowingAll ? `Toutes les entités ERC par financement${titleSuffixFr}` : `Top ${displayLimit} des entités ERC par financement${titleSuffixFr}`,
-    en: isShowingAll ? `All ERC entities by funding${titleSuffixEn}` : `Top ${displayLimit} ERC entities by funding${titleSuffixEn}`,
+    fr: isShowingAll ? `Financement obtenu par tous les établissements d'accueil d'une ERC${titleSuffixFr}` : `Financement obtenu par les ${displayLimit} principaux établissements d'accueil d'une ERC${titleSuffixFr}`,
+    en: isShowingAll ? `Funding secured by all host institutions of an ERC grant${titleSuffixEn}` : `Funding secured by the top ${displayLimit} host institutions of an ERC grant${titleSuffixEn}`,
     className: "fr-mt-2w fr-ml-1w",
   };
 
