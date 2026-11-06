@@ -1,17 +1,23 @@
 import { lazy, Suspense } from "react";
 import { Navigate, Route, Routes, useParams } from "react-router-dom";
 
+import { useTitle } from "../../hooks/usePageTitle.tsx";
+import { getI18nLabel } from "../../utils";
+import i18n from "./title-i18n.json";
+
+import "./styles.scss";
+
 const Beneficiaries = lazy(() => import("./pages/beneficiaries/index.tsx"));
 const Collaborations = lazy(() => import("./pages/collaborations/index.tsx"));
 const CollaborationsEntity = lazy(() => import("./pages/collaborations/index-entity.tsx"));
 const Entities = lazy(() => import("./pages/entities/index.tsx"));
 const ERC = lazy(() => import("./pages/erc/index.tsx"));
-const MSCA = lazy(() => import("./pages/msca/index.tsx"));
 const EvolutionPcri = lazy(() => import("./pages/evolution-pcri/index.tsx"));
 const GlobalLayout = lazy(() => import("./components/layouts/global-layout.tsx"));
 const Home = lazy(() => import("./pages/home/index.tsx"));
 const HorizonEurope = lazy(() => import("./pages/horizon-europe/index.tsx"));
 const Methodology = lazy(() => import("./pages/metodology/index.tsx"));
+const MSCA = lazy(() => import("./pages/msca/index.tsx"));
 const NotFoundPage = lazy(() => import("../../pages/not-found/index.tsx"));
 const Overview = lazy(() => import("./pages/overview/index.tsx"));
 const Positioning = lazy(() => import("./pages/positioning/index.tsx"));
@@ -19,13 +25,6 @@ const ProjectsTypes = lazy(() => import("./pages/projects-types/index.tsx"));
 const Search = lazy(() => import("./pages/search/index.tsx"));
 const SidemenuLayout = lazy(() => import("./components/layouts/sidemenu-layout.tsx"));
 const TypeOfBeneficiaries = lazy(() => import("./pages/type-of-beneficiaries/index.tsx"));
-
-import { useTitle } from "../../hooks/usePageTitle.tsx";
-import { getI18nLabel } from "../../utils";
-
-import i18n from "./title-i18n.json";
-
-import "./styles.scss";
 
 const RouteWithTitle = ({ titleKey, element }) => {
   useTitle(getI18nLabel(i18n, titleKey));

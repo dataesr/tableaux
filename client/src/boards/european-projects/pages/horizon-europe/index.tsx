@@ -1,15 +1,15 @@
+import { Badge, Button, Container, Title } from "@dataesr/dsfr-plus";
 import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { Container, Button, Badge, Title } from "@dataesr/dsfr-plus";
 
+import Breadcrumb from "../../../../components/breadcrumb";
 import { getCountryInfo } from "../../../../components/country-selector/utils";
 import { getFlagEmoji, getI18nLabel } from "../../../../utils";
-import Breadcrumb from "../../../../components/breadcrumb";
 import EpNavigator from "../../components/ep-navigator/index";
+import i18nGlobal from "../../i18n-global.json";
+import navigationConfig from "../../navigation-config.json";
 import TabsContent from "./components/tabs-content";
 
-import navigationConfig from "../../navigation-config.json";
-import i18nGlobal from "../../i18n-global.json";
 import "./styles.scss";
 
 function FloatingFilters() {

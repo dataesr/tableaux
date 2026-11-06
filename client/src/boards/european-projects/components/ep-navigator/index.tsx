@@ -20,13 +20,15 @@ const i18nFilters = {
     fr: "Inclure les organisations internationales, organisations intergouvernementales, agences européennes liées à la CE, structures communes comme le CERN, l'ESA, réseaux EIT, GEANT ou COST",
     en: "Include international organizations, intergovernmental organizations, European agencies affiliated with the European Commission, joint structures such as CERN and ESA, and networks such as EIT, GEANT, and COST",
   },
-};
+}
 
 interface FilterItem {
   id: string;
   label_fr?: string;
   label_en?: string;
 }
+
+const disabledProgams = ["HORIZON.1.1", "HORIZON.1.2"]
 
 export default function EpNavigator() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -243,7 +245,7 @@ export default function EpNavigator() {
               <option value="">{getI18nLabel(i18n, "program_no_selection", currentLang)}</option>
               {programsData &&
                 programsData.map((program: FilterItem) => (
-                  <option key={program.id} value={program.id}>
+                  <option key={program.id} value={program.id} disabled={disabledProgams.includes(program.id)}>
                     {program[`label_${currentLang}`]}
                   </option>
                 ))}

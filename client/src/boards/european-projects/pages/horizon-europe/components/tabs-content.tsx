@@ -1,20 +1,21 @@
+import { Alert } from "@dataesr/dsfr-plus";
 import { useSearchParams } from "react-router-dom";
 
+import CheckEICAccelerator from "../../../components/check-eic-accelerator";
 import i18n from "../../../i18n-global.json";
+import StructureIdentity from "./structure-identity";
 import AxesContent from "./tabs/axes";
 import CallsContent from "./tabs/calls";
-import CheckEICAccelerator from "../../../components/check-eic-accelerator";
 import CollaborationsContent from "./tabs/collaborations";
 import EntitiesContent from "./tabs/entities";
 import PositionnementContent from "./tabs/positioning";
-import StructureIdentity from "./structure-identity";
 import SyntheseContent from "./tabs/synthesis";
 
 export default function TabsContent() {
   const [searchParams, setSearchParams] = useSearchParams();
   const activeTab = searchParams.get("section") || "synthesis";
-
   const currentLang = searchParams.get("language") || "en";
+  const selectedPillar = searchParams.get("pillarId")
 
   function getIntlLabel(key: string): string {
     return i18n[key][currentLang as "fr" | "en"] || i18n[key]["en"];
@@ -29,6 +30,7 @@ export default function TabsContent() {
 
   return (
     <div>
+      {(selectedPillar === "HORIZON.1") && <Alert variant="warning" description="Les programmes ERC et MSCA sont ici indisponibles car ils font l'objet d'un focus dédié. Voir les onglets de navigation." />}
       <CheckEICAccelerator />
       <StructureIdentity />
       <nav className="fr-nav" role="navigation" aria-label="Menu principal">
