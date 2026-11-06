@@ -36,7 +36,7 @@ export default function Options(data: GenderByDestinationData, currentLang: stri
       min: 0,
       max: 100,
       reversedStacks: false,
-      title: { text: "%" },
+      title: { text: undefined },
       gridLineColor: "var(--background-default-grey-hover)",
       gridLineWidth: 0.5,
     },

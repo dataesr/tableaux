@@ -7,6 +7,15 @@ import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 import { rangeOfYearsToApiFormat } from "../../url-utils";
 
+interface CountryAdjectives {
+  m: string;
+  f: string;
+}
+
+interface ErcGenderByDestinationProps {
+  countryAdj?: CountryAdjectives;
+}
+
 function useGetParams() {
   const [searchParams] = useSearchParams();
   const params: string[] = [];
@@ -19,7 +28,10 @@ function useGetParams() {
   return { params: params.join("&"), currentLang };
 }
 
-export default function ErcGenderByDestination() {
+export default function ErcGenderByDestination({ 
+  countryAdj = { m: "français", f: "française" } }: 
+  ErcGenderByDestinationProps
+) {
   const { params: queryParams, currentLang } = useGetParams();
 
   const { data, isLoading } = useQuery({
@@ -27,6 +39,8 @@ export default function ErcGenderByDestination() {
     queryFn: () => getData(queryParams),
     enabled: !!queryParams,
   });
+
+  const adjMascPlural = countryAdj.m.endsWith("s") ? countryAdj.m : `${countryAdj.m}s`; 
 
   const config = {
     id: "ercGenderByDestination",
@@ -49,8 +63,8 @@ export default function ErcGenderByDestination() {
   };
 
   const titleConfig = {
-    fr: "Répartition par genre selon le type de financement ERC",
-    en: "Gender distribution by ERC funding type",
+    fr: `Nombre de porteurs de projets ${adjMascPlural} par genre selon le type de financement ERC`,
+    en: `Number of ${adjMascPlural} principal investigators by gender and ERC funding type`,
     className: "fr-mt-2w fr-ml-1w",
   };
 
