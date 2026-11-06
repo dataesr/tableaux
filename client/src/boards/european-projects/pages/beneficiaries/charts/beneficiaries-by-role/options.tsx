@@ -3,10 +3,9 @@ import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.sr
 import { getCssColor } from "../../../../../../utils/colors";
 import { formatToMillions } from "../../../../../../utils/format";
 import { CreateChartOptions } from "../../../../components/chart-ep";
-
 import i18n from "./i18n.json";
 
-export default function Options(data, currentLang) {
+export default function getOptions(data, currentLang) {
   if (!data) return null;
 
   function getI18nLabel(key) {
@@ -23,7 +22,7 @@ export default function Options(data, currentLang) {
   interface ChartSeriesData {
     type: "bar";
     name: string;
-    data: number[];
+    data: object[];
     color: string;
   }
 
@@ -52,18 +51,18 @@ export default function Options(data, currentLang) {
       {
         type: "bar",
         name: getI18nLabel("partner"),
-        data: sortedData.map((item) => item.total_fund_eur_partner || 0),
+        data: sortedData.map((item) => ({ label: formatToMillions(item.total_fund_eur_partner || 0), y: item.total_fund_eur_partner || 0 })),
         color: getCssColor("partner-color"),
       },
       {
         type: "bar",
         name: getI18nLabel("coordinator"),
-        data: sortedData.map((item) => item.total_fund_eur_coordination || 0),
+        data: sortedData.map((item) => ({ label: formatToMillions(item.total_fund_eur_coordination || 0), y: item.total_fund_eur_coordination || 0 })),
         color: getCssColor("coordination-color"),
       },
     ] as ChartSeriesData[],
     tooltip: {
-      pointFormat: getI18nLabel("total-subsidies") + " en tant que {series.name} : " + "<b>{point.y:,.0f}</b> €",
+      pointFormat: getI18nLabel("total-subsidies") + " en tant que {series.name} : " + "<b>{point.label}</b>",
     },
     plotOptions: {
       series: {

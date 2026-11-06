@@ -6,6 +6,7 @@ import { useSearchParams } from "react-router-dom";
 import ChartFooter from "../../../../../../../components/chart-footer/index.js";
 import ChartWrapper from "../../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../../components/charts-skeletons/default";
+import { getI18nLabel } from "../../../../../../../utils.js";
 import { EPChartsSources } from "../../../../../config.js";
 import i18nGlobal from "../../../../../i18n-global.json";
 import i18nLocal from "./i18n.json";
@@ -19,15 +20,18 @@ export default function FundingRankingParticipations() {
   const currentLang = searchParams.get("language") || "fr";
   const [sortBy, setSortBy] = useState("participants");
   const params = useGetParams();
+  const i18n = { ...i18nGlobal, ...i18nLocal }
 
   const configChart3a = {
     id: "fundingRankingInvolved",
     integrationURL: `/integration/chart_id=FundingRankingParticipations&${params}`,
+    title: getI18nLabel(i18n, "configChart3a-title", currentLang),
   };
 
   const configChart3b = {
     id: "fundingRankingInvolvedSuccessRate",
     integrationURL: `/integration/chart_id=FundingRankingParticipations&${params}`,
+    title: getI18nLabel(i18n, "configChart3b-title", currentLang),
   };
 
   const { data, isLoading } = useQuery({
@@ -58,17 +62,12 @@ export default function FundingRankingParticipations() {
     return dataToReturn;
   };
 
-  const i18n = { ...i18nGlobal, ...i18nLocal };
-  function getI18nLabel(key) {
-    return i18n[key][currentLang];
-  }
-
   return (
     <Container fluid className="fr-mt-5w">
       <Row>
         <Col>
           <Title as="h2" look="h4">
-            {getI18nLabel("title")}
+            {getI18nLabel(i18n, "title", currentLang)}
           </Title>
           {/* <Callout className="callout-style">
             Ce graphique illustre le positionnement du pays sélectionné par rapport aux autres pays en fonction du nombre de participants impliqués dans les projets évalués et réussis (lauréats). La barre bleue représente le nombre de participants
@@ -82,12 +81,12 @@ export default function FundingRankingParticipations() {
       <Row>
         <Col>
           <fieldset className="fr-mb-2w">
-            <legend>{getI18nLabel("sort-by")}</legend>
+            <legend>{getI18nLabel(i18n, "sort-by", currentLang)}</legend>
             <Radio
               checked={sortBy === "candidates"}
               className="fr-mb-1w"
               defaultValue="candidates"
-              label={getI18nLabel("sort-by-candidates")}
+              label={getI18nLabel(i18n, "sort-by-candidates", currentLang)}
               name="FundingRankingParticipations-radio"
               onChange={(e) => {
                 setSortBy((e.target as HTMLInputElement).value);
@@ -97,7 +96,7 @@ export default function FundingRankingParticipations() {
               checked={sortBy === "participants"}
               className="fr-mb-1w"
               defaultValue="participants"
-              label={getI18nLabel("sort-by-participants")}
+              label={getI18nLabel(i18n, "sort-by-participants", currentLang)}
               name="FundingRankingParticipations-radio"
               onChange={(e) => {
                 setSortBy((e.target as HTMLInputElement).value);
@@ -108,9 +107,6 @@ export default function FundingRankingParticipations() {
       </Row>
       <Row className="chart-container chart-container--default">
         <Col xs={12}>
-          <Title as="h3" look="h5" className="fr-mb-0">
-            {getI18nLabel("configChart3a-title")}
-          </Title>
           <ChartWrapper
             config={configChart3a}
             options={optionsNumberInvolved(prepareData(data, "total_number_involved_successful"), currentLang)}
@@ -118,9 +114,6 @@ export default function FundingRankingParticipations() {
           />
         </Col>
         <Col xs={12}>
-          <Title as="h3" look="h5" className="fr-mb-0">
-            {getI18nLabel("configChart3b-title")}
-          </Title>
           <ChartWrapper
             config={configChart3b}
             options={optionNumberInvolvedSuccessRate(prepareData(data, "total_number_involved_successful"), currentLang)}

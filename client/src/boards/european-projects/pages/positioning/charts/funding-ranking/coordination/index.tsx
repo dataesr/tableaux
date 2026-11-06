@@ -7,6 +7,7 @@ import { useSearchParams } from "react-router-dom";
 import ChartFooter from "../../../../../../../components/chart-footer/index.js";
 import ChartWrapper from "../../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../../components/charts-skeletons/default";
+import { getI18nLabel } from "../../../../../../../utils.js";
 import { EPChartsSources } from "../../../../../config.js";
 import i18nGlobal from "../../../../../i18n-global.json";
 import i18nLocal from "./i18n.json";
@@ -19,7 +20,8 @@ export default function FundingRankingCoordination() {
   const [searchParams] = useSearchParams();
   const currentLang = searchParams.get("language") || "fr";
   const [sortBy, setSortBy] = useState("winning");
-  const params = useGetParams();
+  const params = useGetParams()
+  const i18n = { ...i18nGlobal, ...i18nLocal }
 
   const { data, isLoading } = useQuery({
     queryKey: ["fundingRankingCoordination", params],
@@ -31,11 +33,13 @@ export default function FundingRankingCoordination() {
   const configChart2a = {
     id: "fundingRankingCoordination",
     integrationURL: `/integration?chart_id=FundingRankingCoordination&${params}`,
+    title: getI18nLabel(i18n, "configChart2a-title", currentLang),
   };
 
   const configChart2b = {
     id: "fundingRankingCoordinationSuccessRate",
     integrationURL: `/integration?chart_id=FundingRankingCoordination&${params}`,
+    title: getI18nLabel(i18n, "configChart2b-title", currentLang),
   };
 
   const prepareData = (data, sortKey) => {
@@ -59,17 +63,12 @@ export default function FundingRankingCoordination() {
     return dataToReturn;
   };
 
-  const i18n = { ...i18nGlobal, ...i18nLocal };
-  function getI18nLabel(key) {
-    return i18n[key][currentLang];
-  }
-
   return (
     <Container fluid className="fr-mt-5w">
       <Row>
         <Col>
           <Title as="h2" look="h4">
-            {getI18nLabel("title")}
+            {getI18nLabel(i18n, "title", currentLang)}
           </Title>
           {/* <Callout className="callout-style">
             Ce graphique présente le classement des pays en fonction du nombre de coordinations de projets européens déposés et lauréats. Les coordinations représentent le rôle principal dans un projet européen. La barre bleue indique le nombre de
@@ -82,12 +81,12 @@ export default function FundingRankingCoordination() {
       <Row>
         <Col>
           <fieldset className="fr-mb-2w">
-            <legend>{getI18nLabel("sort-by")}</legend>
+            <legend>{getI18nLabel(i18n, "sort-by", currentLang)}</legend>
             <Radio
               checked={sortBy === "submitted"}
               className="fr-mb-1w"
               defaultValue="submitted"
-              label={getI18nLabel("sort-by-submitted-projects")}
+              label={getI18nLabel(i18n, "sort-by-submitted-projects", currentLang)}
               name="FundingRankingCoordination-radio"
               onChange={(e) => {
                 setSortBy((e.target as HTMLInputElement).value);
@@ -97,7 +96,7 @@ export default function FundingRankingCoordination() {
               checked={sortBy === "winning"}
               className="fr-mb-1w"
               defaultValue="winning"
-              label={getI18nLabel("sort-by-winning-projects")}
+              label={getI18nLabel(i18n, "sort-by-winning-projects", currentLang)}
               name="FundingRankingCoordination-radio"
               onChange={(e) => {
                 setSortBy((e.target as HTMLInputElement).value);
@@ -108,9 +107,6 @@ export default function FundingRankingCoordination() {
       </Row>
       <Row className="chart-container chart-container--default">
         <Col xs={12}>
-          <Title as="h3" look="h5" className="fr-mb-0">
-            {getI18nLabel("configChart2a-title")}
-          </Title>
           <ChartWrapper
             config={configChart2a}
             options={optionsCoordinationNumber(prepareData(data, "total_coordination_number_successful"), currentLang)}
@@ -118,9 +114,6 @@ export default function FundingRankingCoordination() {
           />
         </Col>
         <Col xs={12}>
-          <Title as="h3" look="h5" className="fr-mb-0">
-            {getI18nLabel("configChart2b-title")}
-          </Title>
           <ChartWrapper
             config={configChart2b}
             options={optionCoordinationNumberSuccessRate(prepareData(data, "total_coordination_number_successful"), currentLang)}

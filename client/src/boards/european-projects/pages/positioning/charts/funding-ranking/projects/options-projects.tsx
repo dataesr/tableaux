@@ -37,7 +37,7 @@ export default function OptionsProjects(data: DataItem[], currentLang: string): 
       },
     },
     tooltip: {
-      pointFormat: `${t.tooltip} : <b>{point.y}</b>`,
+      pointFormat: "{series.name} : <b>{point.y}</b>",
     },
     plotOptions: {
       series: { dataLabels: { enabled: true } },
