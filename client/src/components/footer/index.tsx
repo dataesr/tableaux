@@ -34,7 +34,8 @@ export default function Footer({ href = "/", sitemapHref, title = "Accueil - Tab
       <div className="fr-container">
         <div className="fr-footer__body">
           <div className="fr-footer__brand fr-enlarge-link">
-            <a href={href} title={title}>
+            <a href={href}>
+              <span className="fr-sr-only">{title}</span>
               <Logo text={VITE_MINISTER_NAME} />
             </a>
           </div>
