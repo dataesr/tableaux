@@ -1,6 +1,6 @@
 import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js";
 import { CreateChartOptions } from "../../../../components/chart-ep";
-import { formatToMillions } from "../../../../../../utils/format";
+import { formatCurrency } from "../../../../../../utils/format";
 import { getCssColor } from "../../../../../../utils/colors";
 import type { ErcMainEntitiesData } from "./query";
 
@@ -18,18 +18,21 @@ export default function Options(data: ErcMainEntitiesData, currentLang: string):
     yAxis: {
       min: 0,
       title: {
-        text: "Euros (M€)",
+        text: undefined,
       },
       gridLineColor: "var(--background-default-grey-hover)",
       gridLineWidth: 0.5,
     },
     tooltip: {
-      pointFormat: (currentLang === "fr" ? "Financement total : " : "Total funding: ") + "<b>{point.y:,.0f}</b> €",
+      formatter: function () {
+        const ctx = this as unknown as { point: { name: string }; y: number };
+        return `<b>${ctx.point.name}</b><br/>Financement obtenu : <b>${formatCurrency(this.y ?? 0)}</b>`;
+      },
     },
     series: [
       {
         type: "bar",
-        name: currentLang === "fr" ? "Total subventions (€)" : "Total grants (€)",
+        name: currentLang === "fr" ? "Financements obtenus (M€)" : "Secured funding (€M)",
         color: getCssColor("main-partner"),
         groupPadding: 0,
         data: data.list.map((item) => [item.acronym || item.name, item.total_fund_eur]),
@@ -42,7 +45,7 @@ export default function Options(data: ErcMainEntitiesData, currentLang: string):
         dataLabels: {
           enabled: true,
           formatter: function () {
-            return formatToMillions(this.y ?? 0);
+            return formatCurrency(this.y ?? 0);
           },
         },
       },
