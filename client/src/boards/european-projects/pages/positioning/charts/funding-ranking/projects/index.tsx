@@ -19,7 +19,7 @@ import { getI18nLabel } from "../../../../../../../utils.js";
 export default function FundingRankingProjects() {
   const [searchParams] = useSearchParams();
   const currentLang = searchParams.get("language") || "fr";
-  const [sortBy, setSortBy] = useState("evaluated");
+  const [sortBy, setSortBy] = useState("successful");
   const params = useGetParams();
   const selectedCountry = searchParams.get("country_code");
   const i18n = { ...i18nGlobal, ...i18nLocal }
