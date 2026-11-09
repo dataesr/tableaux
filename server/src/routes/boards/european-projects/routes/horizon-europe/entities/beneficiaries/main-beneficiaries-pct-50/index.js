@@ -56,8 +56,8 @@ router
           {
             $group: {
               _id: {
-                name: "$entities_name",
-                acronym: "$entities_acronym",
+                name: "$entities_name_group",
+                acronym: "$entities_acronym_group",
               },
               total_fund_eur: { $sum: "$calculated_fund" },
             },
@@ -112,8 +112,8 @@ router
           thema_code: 1,
           destination_code: 1,
           // Champs utilisés dans le groupement et la projection
-          entities_name: 1,
-          entities_acronym: 1,
+          entities_name_group: 1,
+          entities_acronym_group: 1,
           fund_eur: 1,
           stage: 1,
         },

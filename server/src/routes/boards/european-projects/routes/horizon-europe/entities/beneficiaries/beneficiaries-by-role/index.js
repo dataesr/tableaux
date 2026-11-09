@@ -54,9 +54,9 @@ router
           {
             $group: {
               _id: {
-                entity_id: "$entities_id",
-                entity_name: "$entities_name",
-                acronym: "$entities_acronym",
+                entity_id: "$entities_id_group",
+                entity_name: "$entities_name_group",
+                acronym: "$entities_acronym_group",
                 country_code: "$country_code",
                 country_name_fr: "$country_name_fr",
                 country_name_en: "$country_name_en",
@@ -146,9 +146,9 @@ router
           thema_code: 1,
           destination_code: 1,
           // Champs de groupement et calculs
-          entities_name: 1,
-          entities_id: 1,
-          entities_acronym: 1,
+          entities_name_group: 1,
+          entities_id_group: 1,
+          entities_acronym_group: 1,
           country_code: 1,
           country_name_fr: 1,
           country_name_en: 1,
