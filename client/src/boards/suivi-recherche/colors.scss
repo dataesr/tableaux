@@ -1,3 +1,6 @@
+// Hérite de la palette globale (client/src/boards/colors.scss) : domaines ERC (--erc-domain-*-color), échelles…
+@use "../colors.scss";
+
 :root {
   // Couleurs des indicateurs : tokens DSFR sun/moon, lus par getCssColor (thème sombre géré)
   --sr-poids: var(--blue-france-main-525);
@@ -23,9 +26,5 @@
   --sr-continent-oceanie: var(--blue-ecume-main-400);
   --sr-continent-autre: var(--grey-625-425);
 
-  // Domaines ERC (matrice de positionnement) : contraste ≥ 3:1 en clair et en sombre,
-  // et distincts en deutéranopie, protanopie et tritanopie (ΔE ≥ 31)
-  --sr-domaine-ls: var(--green-emeraude-sun-425-moon-753);
-  --sr-domaine-pe: var(--blue-france-sun-113-625);
-  --sr-domaine-sh: var(--purple-glycine-main-494);
+  // Domaines ERC : couleurs globales --erc-domain-*-color, ne pas les redéfinir ici
 }

@@ -60,7 +60,7 @@ Créez `client/src/boards/<board>/pages/<page>/charts/<chart-name>/` (kebab-case
 
 ## Couleurs et textes
 
-- Couleurs : `getCssColor("<token>")` / `client/src/utils/colors.ts`, `useChartColor`, ou le `colors.scss` du tableau. Ne codez jamais de valeurs hexadécimales en dur dans un nouveau graphique (thème sombre).
+- Couleurs : `getCssColor("<token>")` / `client/src/utils/colors.ts`, `useChartColor`, ou le `colors.scss` du tableau. Ne codez jamais de valeurs hexadécimales en dur dans un nouveau graphique (thème sombre). Le `colors.scss` du tableau commence par `@use "../colors.scss";` (palette globale) ; avant de créer une couleur, cherchez dans `client/src/boards/colors.scss` si la notion en a déjà une (domaines ERC `--erc-domain-*-color`, types de bourse ERC `--erc-destination-*-color`, genres…) et réutilisez-la, au lieu d'en définir une autre dans le tableau.
 - Textes : passez par le `i18n.json` du tableau, et par `getI18nLabel` si le tableau est multilingue (`fr` et `en`).
 
 ## Intégration
