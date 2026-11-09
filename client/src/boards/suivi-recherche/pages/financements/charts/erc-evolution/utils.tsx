@@ -88,16 +88,14 @@ export function getSeries(data: ErcEvolution["annees"], indicateur: IndicateurEv
   });
 
   if (indicateur === "taux") {
-    // Établissement sélectionné : la France (bleu Marianne) s'ajoute à l'ensemble de l'ERC comme référence
-    const etablissement = data.some((d) => d.taux_succes_france);
+    // Établissement sélectionné : la France (bleu Marianne) s'ajoute à l'ensemble de l'ERC comme référence.
+    // France sélectionnée : taux_succes_france est null, pas de série France.
+    const tauxFrance = data.map((d) => d.taux_succes_france);
+    const etablissement = tauxFrance.every((ratio): ratio is Ratio => ratio !== null);
     const reference = (ratios: Ratio[]) => ratios.map((ratio) => point(ratio, true, laureats, candidatures));
-    const france: Serie = {
-      name: "France",
-      color: "sr-france",
-      reference: true,
-      trait: "LongDash",
-      points: reference(data.map((d) => d.taux_succes_france as Ratio)),
-    };
+    const france: Serie[] = etablissement
+      ? [{ name: "France", color: "sr-france", reference: true, trait: "LongDash", points: reference(tauxFrance) }]
+      : [];
     return [
       {
         name: entiteNom,
@@ -106,7 +104,7 @@ export function getSeries(data: ErcEvolution["annees"], indicateur: IndicateurEv
         trait: "Solid",
         points: data.map((d) => point(d.taux_succes, d.fiable, laureats, candidatures)),
       },
-      ...(etablissement ? [france] : []),
+      ...france,
       {
         name: `Ensemble des ${candidatures} ERC`,
         color: "sr-etablissement",
