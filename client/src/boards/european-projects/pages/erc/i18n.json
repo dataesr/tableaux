@@ -122,9 +122,21 @@
       "fr": "Projets par panel - {domain}",
       "en": "Projects by panel - {domain}"
     },
+    "piTitle": {
+      "fr": "Porteurs de projets par panel - {domain}",
+      "en": "Project PIs by panel - {domain}"
+    },
     "fundingTitle": {
       "fr": "Financements par panel - {domain}",
       "en": "Funding by panel - {domain}"
+    },
+    "evaluatedPIs": {
+      "fr": "Porteurs évalués",
+      "en": "Evaluated PIs"
+    },
+    "successfulPIs": {
+      "fr": "Porteurs lauréats",
+      "en": "Successful PIs"
     },
     "panel": {
       "fr": "Panel",

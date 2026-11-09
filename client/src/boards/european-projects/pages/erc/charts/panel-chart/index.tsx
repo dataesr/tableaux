@@ -49,6 +49,19 @@ const configFunding = {
   integrationURL: "/european-projects/components/pages/erc/charts/panel-chart-funding",
 };
 
+const configPIs = {
+  id: "ercPanelChartPIs",
+  idQuery: "ercPanelChart",
+  comment: {
+    fr: <>Ce graphique présente le nombre de porteurs de projets évalués et lauréats par domaine scientifique ERC.</>,
+    en: <>This chart shows the number of evaluated and successful project PIs by ERC scientific domain.</>,
+  },
+  readingKey: {
+    fr: <>Les barres distinguent les porteurs de projets évalués et lauréats pour chaque domaine scientifique.</>,
+    en: <>The bars distinguish evaluated and successful project PIs for each scientific domain.</>,
+  },
+};
+
 // Ordre de tri des domaines
 const DOMAIN_ORDER = ["LS", "PE", "SH"];
 
@@ -90,6 +103,8 @@ function aggregateByDomain(data: PanelChartItem[]) {
       successfulCount: number;
       evaluatedFunding: number;
       successfulFunding: number;
+      evaluatedPIs: number;
+      successfulPIs: number;
     }
   >();
 
@@ -103,6 +118,8 @@ function aggregateByDomain(data: PanelChartItem[]) {
         successfulCount: 0,
         evaluatedFunding: 0,
         successfulFunding: 0,
+        evaluatedPIs: 0,
+        successfulPIs: 0,
       });
     }
 
@@ -111,6 +128,8 @@ function aggregateByDomain(data: PanelChartItem[]) {
     agg.successfulCount += item.successful?.total_projects || 0;
     agg.evaluatedFunding += item.evaluated?.total_funding_entity || 0;
     agg.successfulFunding += item.successful?.total_funding_entity || 0;
+    agg.evaluatedPIs += item.evaluated?.total_pi || 0;
+    agg.successfulPIs += item.successful?.total_pi || 0;
   });
 
   return Array.from(domainAggregates.values()).sort((a, b) => {
@@ -186,7 +205,38 @@ function renderDataTableFunding(data: PanelChartItem[], currentLang: string) {
   );
 }
 
-export function PanelChartProjects({ countryCode: propCountryCode, callYear: propCallYear, currentLang: propLang }: PanelChartProps) {
+function renderDataTablePIs(data: PanelChartItem[], currentLang: string) {
+  const sortedDomains = aggregateByDomain(data);
+
+  return (
+    <table className="fr-table">
+      <caption>{currentLang === "fr" ? "Porteurs de projets par domaine scientifique ERC" : "Project PIs by ERC scientific domain"}</caption>
+      <thead>
+        <tr>
+          <th>{getI18nLabel(i18n, "panelFunding.tableScientificDomain", currentLang)}</th>
+          <th>{getI18nLabel(i18n, "panelDetail.evaluatedPIs", currentLang)}</th>
+          <th>{getI18nLabel(i18n, "panelDetail.successfulPIs", currentLang)}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {sortedDomains.map((item) => {
+          const name = getI18nLabel(i18n, `domains.${item.domain}`, currentLang) || item.domainName;
+          return (
+            <tr key={item.domain}>
+              <td>{name}</td>
+              <td>{formatNumber(item.evaluatedPIs)}</td>
+              <td>{formatNumber(item.successfulPIs)}</td>
+            </tr>
+          );
+        })}
+      </tbody>
+    </table>
+  );
+}
+
+type PanelProjectsView = "projects" | "pi";
+
+export function PanelChartProjects({ countryCode: propCountryCode, callYear: propCallYear, currentLang: propLang, viewMode = "projects" }: PanelChartProps & { viewMode?: PanelProjectsView }) {
   const { params: urlParams, currentLang: urlLang } = useGetParams();
   const currentLang = propLang || urlLang;
 
@@ -206,13 +256,14 @@ export function PanelChartProjects({ countryCode: propCountryCode, callYear: pro
 
   if (isLoading || !data) return <DefaultSkeleton />;
 
-  const options = OptionsProjects({ data, currentLang });
+  const config = viewMode === "pi" ? configPIs : configProjects;
+  const options = OptionsProjects({ data, currentLang, viewMode });
 
   if (!options) return null;
 
   return (
     <div className="fr-my-3w chart-container chart-container--default">
-      <ChartWrapper config={configProjects} options={options} renderData={() => renderDataTableProjects(data, currentLang)} />
+      <ChartWrapper key={config.id} config={config} options={options} renderData={() => (viewMode === "pi" ? renderDataTablePIs(data, currentLang) : renderDataTableProjects(data, currentLang))} />
     </div>
   );
 }
@@ -248,7 +299,7 @@ export function PanelChartFunding({ countryCode: propCountryCode, callYear: prop
   );
 }
 
-type ViewMode = "projects" | "funding";
+type ViewMode = "projects" | "funding" | "pi";
 
 interface PanelChartWithSelectorProps {
   countryCode?: string;
@@ -257,7 +308,7 @@ interface PanelChartWithSelectorProps {
 }
 
 export default function PanelChart({ countryCode, callYear, currentLang: propLang }: PanelChartWithSelectorProps) {
-  const [viewMode, setViewMode] = useState<ViewMode>("projects");
+  const [viewMode, setViewMode] = useState<ViewMode>("pi");
   const [searchParams] = useSearchParams();
   const currentLang = propLang || searchParams.get("language") || "fr";
 
@@ -265,11 +316,12 @@ export default function PanelChart({ countryCode, callYear, currentLang: propLan
     <div className="fr-my-3w">
       <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "1rem" }}>
         <SegmentedControl className="fr-segmented--sm" name="panel-chart-view-mode">
-          <SegmentedElement checked={viewMode === "projects"} label={getI18nLabel(i18nGlobal, "projects", currentLang)} onClick={() => setViewMode("projects")} value="projects" />
+          <SegmentedElement checked={viewMode === "pi"} label={getI18nLabel(i18nGlobal, "pi", currentLang)} onClick={() => setViewMode("pi")} value="pi" />
           <SegmentedElement checked={viewMode === "funding"} label={getI18nLabel(i18nGlobal, "total-fund-eur", currentLang)} onClick={() => setViewMode("funding")} value="funding" />
+          <SegmentedElement checked={viewMode === "projects"} label={getI18nLabel(i18nGlobal, "projects", currentLang)} onClick={() => setViewMode("projects")} value="projects" />
         </SegmentedControl>
       </div>
-      {viewMode === "projects" ? <PanelChartProjects countryCode={countryCode} callYear={callYear} currentLang={currentLang} /> : <PanelChartFunding countryCode={countryCode} callYear={callYear} currentLang={currentLang} />}
+      {viewMode === "funding" ? <PanelChartFunding countryCode={countryCode} callYear={callYear} currentLang={currentLang} /> : <PanelChartProjects countryCode={countryCode} callYear={callYear} currentLang={currentLang} viewMode={viewMode} />}
     </div>
   );
 }

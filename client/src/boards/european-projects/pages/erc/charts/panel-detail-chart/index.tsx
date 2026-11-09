@@ -113,6 +113,19 @@ const configFunding = {
   integrationURL: "/european-projects/components/pages/erc/charts/panel-detail-chart-funding",
 };
 
+const configPIs = {
+  id: "ercPanelDetailChartPIs",
+  idQuery: "ercPanelDetailChart",
+  comment: {
+    fr: <>Ce graphique présente le nombre de porteurs de projets évalués et lauréats par panel ERC au sein du domaine scientifique sélectionné.</>,
+    en: <>This chart shows the number of evaluated and successful project PIs by ERC panel within the selected scientific domain.</>,
+  },
+  readingKey: {
+    fr: <>Les barres distinguent les porteurs de projets évalués et lauréats pour chaque panel.</>,
+    en: <>The bars distinguish evaluated and successful project PIs for each panel.</>,
+  },
+};
+
 function useGetParams() {
   const [searchParams] = useSearchParams();
 
@@ -214,11 +227,40 @@ function renderDataTableFunding(data: PanelDetailItem[], domain: string, current
   );
 }
 
-type ViewMode = "projects" | "funding";
+function renderDataTablePIs(data: PanelDetailItem[], domain: string, currentLang: string) {
+  const filteredData = data.filter((item) => item.domaine_scientifique === domain).sort((a, b) => naturalSortPanelId(a.panel_id, b.panel_id));
+  const domainLabel = getI18nLabel(i18n, `domains.${domain}`, currentLang);
+
+  return (
+    <table className="fr-table">
+      <caption>{getI18nLabel(i18n, "panelDetail.piTitle", currentLang).replace("{domain}", domainLabel)}</caption>
+      <thead>
+        <tr>
+          <th>{getI18nLabel(i18n, "panelDetail.panel", currentLang)}</th>
+          <th>{getI18nLabel(i18n, "panelDetail.name", currentLang)}</th>
+          <th>{getI18nLabel(i18n, "panelDetail.evaluatedPIs", currentLang)}</th>
+          <th>{getI18nLabel(i18n, "panelDetail.successfulPIs", currentLang)}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {filteredData.map((item) => (
+          <tr key={item.panel_id}>
+            <td>{item.panel_id}</td>
+            <td>{item.panel_name}</td>
+            <td>{formatNumber(item.evaluated?.total_pi || 0)}</td>
+            <td>{formatNumber(item.successful?.total_pi || 0)}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+}
+
+type ViewMode = "projects" | "funding" | "pi";
 
 export default function PanelDetailChart({ countryCode: propCountryCode, callYear: propCallYear, currentLang: propLang }: PanelDetailChartProps) {
   const [selectedDomain, setSelectedDomain] = useState<string>("LS");
-  const [viewMode, setViewMode] = useState<ViewMode>("projects");
+  const [viewMode, setViewMode] = useState<ViewMode>("pi");
   const { params: urlParams, currentLang: urlLang } = useGetParams();
   const currentLang = propLang || urlLang;
 
@@ -246,11 +288,8 @@ export default function PanelDetailChart({ countryCode: propCountryCode, callYea
   // S'assurer que le domaine sélectionné est disponible
   const effectiveDomain = availableDomains.includes(selectedDomain) ? selectedDomain : availableDomains[0];
 
-  const config = viewMode === "projects" ? configProjects : configFunding;
-  const options =
-    viewMode === "projects"
-      ? OptionsProjects({ data, domain: effectiveDomain, currentLang })
-      : OptionsFunding({ data, domain: effectiveDomain, currentLang });
+  const config = viewMode === "projects" ? configProjects : viewMode === "funding" ? configFunding : configPIs;
+  const options = viewMode === "funding" ? OptionsFunding({ data, domain: effectiveDomain, currentLang }) : OptionsProjects({ data, domain: effectiveDomain, currentLang, viewMode });
 
   if (!options) return null;
 
@@ -277,13 +316,21 @@ export default function PanelDetailChart({ countryCode: propCountryCode, callYea
 
         {/* Sélecteur projets/financements */}
         <SegmentedControl className="fr-segmented--sm" name="panel-detail-view-mode">
-          <SegmentedElement checked={viewMode === "projects"} label={getI18nLabel(i18nGlobal, "projects", currentLang)} onClick={() => setViewMode("projects")} value="projects" />
+          <SegmentedElement checked={viewMode === "pi"} label={getI18nLabel(i18nGlobal, "pi", currentLang)} onClick={() => setViewMode("pi")} value="pi" />
           <SegmentedElement checked={viewMode === "funding"} label={getI18nLabel(i18n, "panelDetail.funding", currentLang)} onClick={() => setViewMode("funding")} value="funding" />
+          <SegmentedElement checked={viewMode === "projects"} label={getI18nLabel(i18nGlobal, "projects", currentLang)} onClick={() => setViewMode("projects")} value="projects" />
         </SegmentedControl>
       </div>
 
       <div className="chart-container chart-container--default">
-        <ChartWrapper config={config} options={options} renderData={() => (viewMode === "projects" ? renderDataTableProjects(data, effectiveDomain, currentLang) : renderDataTableFunding(data, effectiveDomain, currentLang))} />
+        <ChartWrapper
+          key={config.id}
+          config={config}
+          options={options}
+          renderData={() =>
+            viewMode === "projects" ? renderDataTableProjects(data, effectiveDomain, currentLang) : viewMode === "funding" ? renderDataTableFunding(data, effectiveDomain, currentLang) : renderDataTablePIs(data, effectiveDomain, currentLang)
+          }
+        />
       </div>
     </div>
   );

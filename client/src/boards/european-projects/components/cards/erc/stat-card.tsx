@@ -1,7 +1,7 @@
 import { formatNumber, formatToRates, formatCurrency } from "../../../../../utils/format";
 import "./styles.scss";
 
-export type ViewMode = "projects" | "funding";
+export type ViewMode = "pi" | "projects" | "funding";
 
 export interface ErcStatCardData {
   title: string;
@@ -10,7 +10,8 @@ export interface ErcStatCardData {
   evaluatedCount: number;
   successfulCount: number;
   fundingAmount: number;
-  piCount: number;
+  piCountSuccessful: number;
+  piCountEvaluated: number;
 }
 
 interface ErcStatCardProps {
@@ -25,6 +26,61 @@ export function ErcStatCard({ data, viewMode, accentColor, badgeColor }: ErcStat
 
   const badgeStyle = badgeColor ? { backgroundColor: `${badgeColor}20`, color: badgeColor } : undefined;
 
+  function Content() {
+    switch (viewMode) {
+      case "projects":
+        return (
+          <>
+            <div className="stat-card-stats">
+              <div className="stat-group evaluated">
+                <div className="stat-label">Projets évalués</div>
+                <div className="stat-value">{formatNumber(data.evaluatedCount)}</div>
+              </div>
+
+              <div className="stat-group successful">
+                <div className="stat-label">Projets lauréats</div>
+                <div className="stat-value">{formatNumber(data.successfulCount)}</div>
+              </div>
+            </div>
+
+            <div className="success-rate">
+              <span className="rate-label">Taux de succès</span>
+              <span className="rate-value">{formatToRates(successRate)}</span>
+            </div>
+          </>
+        );
+
+      case "pi":
+        return (
+          <div className="stat-card-stats">
+            <div className="stat-group">
+              <div className="stat-label">Chercheurs PI évalués</div>
+              <div className="stat-value">{formatNumber(data.piCountEvaluated)}</div>
+            </div>
+
+            <div className="stat-group">
+              <div className="stat-label">Chercheurs PI lauréats</div>
+              <div className="stat-value funding">{formatNumber(data.piCountSuccessful)}</div>
+            </div>
+          </div>
+        );
+
+      default:
+        return (
+          <div className="stat-card-stats">
+            <div className="stat-group">
+              <div className="stat-label">Chercheurs PI</div>
+              <div className="stat-value">{formatNumber(data.piCountSuccessful)}</div>
+            </div>
+
+            <div className="stat-group">
+              <div className="stat-label">Financement</div>
+              <div className="stat-value funding">{formatCurrency(data.fundingAmount)}</div>
+            </div>
+          </div>
+        );
+    }
+  }
   return (
     <div className="erc-stat-card" style={accentColor ? { borderTopColor: accentColor } : undefined}>
       <div className="stat-card-header">
@@ -33,41 +89,8 @@ export function ErcStatCard({ data, viewMode, accentColor, badgeColor }: ErcStat
           {data.code}
         </span>
       </div>
-
       {data.subtitle && <p className="stat-card-subtitle">{data.subtitle}</p>}
-
-      {viewMode === "projects" ? (
-        <>
-          <div className="stat-card-stats">
-            <div className="stat-group evaluated">
-              <div className="stat-label">Projets évalués</div>
-              <div className="stat-value">{formatNumber(data.evaluatedCount)}</div>
-            </div>
-
-            <div className="stat-group successful">
-              <div className="stat-label">Projets lauréats</div>
-              <div className="stat-value">{formatNumber(data.successfulCount)}</div>
-            </div>
-          </div>
-
-          <div className="success-rate">
-            <span className="rate-label">Taux de succès</span>
-            <span className="rate-value">{formatToRates(successRate)}</span>
-          </div>
-        </>
-      ) : (
-        <div className="stat-card-stats">
-          <div className="stat-group">
-            <div className="stat-label">Chercheurs PI</div>
-            <div className="stat-value">{formatNumber(data.piCount)}</div>
-          </div>
-
-          <div className="stat-group">
-            <div className="stat-label">Financement</div>
-            <div className="stat-value funding">{formatCurrency(data.fundingAmount)}</div>
-          </div>
-        </div>
-      )}
+      <Content />
     </div>
   );
 }

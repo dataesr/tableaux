@@ -19,10 +19,12 @@ const DOMAIN_ORDER = ["LS", "PE", "SH"];
 interface OptionsParams {
   data: PanelChartItem[];
   currentLang?: string;
+  viewMode?: "projects" | "pi";
 }
 
-export default function OptionsProjects({ data, currentLang = "fr" }: OptionsParams) {
+export default function OptionsProjects({ data, currentLang = "fr", viewMode = "projects" }: OptionsParams) {
   if (!data || data.length === 0) return null;
+  const isPIs = viewMode === "pi";
 
   // Filtrer les données avec domaine_scientifique valide (LS, PE, SH)
   const validDomains = ["LS", "PE", "SH"];
@@ -38,6 +40,8 @@ export default function OptionsProjects({ data, currentLang = "fr" }: OptionsPar
       domainName: string;
       evaluatedCount: number;
       successfulCount: number;
+      evaluatedPIs: number;
+      successfulPIs: number;
     }
   >();
 
@@ -49,12 +53,16 @@ export default function OptionsProjects({ data, currentLang = "fr" }: OptionsPar
         domainName: item.domaine_name_scientifique,
         evaluatedCount: 0,
         successfulCount: 0,
+        evaluatedPIs: 0,
+        successfulPIs: 0,
       });
     }
 
     const agg = domainAggregates.get(domain)!;
     agg.evaluatedCount += item.evaluated?.total_projects || 0;
     agg.successfulCount += item.successful?.total_projects || 0;
+    agg.evaluatedPIs += item.evaluated?.total_pi || 0;
+    agg.successfulPIs += item.successful?.total_pi || 0;
   });
 
   // Trier selon l'ordre défini
@@ -70,43 +78,51 @@ export default function OptionsProjects({ data, currentLang = "fr" }: OptionsPar
   const getDomainColor = (domain: string) => getCssColor(DOMAIN_CSS_VARS[domain] || DOMAIN_CSS_VARS.LS);
 
   // Préparer les données pour les barres
-  const evaluatedData = sortedDomains.map((d) => d.evaluatedCount);
+  const evaluatedData = sortedDomains.map((d) => (isPIs ? d.evaluatedPIs : d.evaluatedCount));
   const successfulData = sortedDomains.map((d) => ({
-    y: d.successfulCount,
+    y: isPIs ? d.successfulPIs : d.successfulCount,
     color: getDomainColor(d.domain),
   }));
 
   // Calculer les taux de succès
-  const successRates = sortedDomains.map((d) => {
-    return d.evaluatedCount > 0 ? (d.successfulCount / d.evaluatedCount) * 100 : 0;
-  });
+  const successRates = isPIs
+    ? []
+    : sortedDomains.map((d) => {
+        return d.evaluatedCount > 0 ? (d.successfulCount / d.evaluatedCount) * 100 : 0;
+      });
 
   const evaluatedColor = getCssColor("evaluated-project-color");
   const successRateColor = getCssColor("average-success-rate-color");
 
-  const titleText = getI18nLabel(i18n, "panelChart.projects.title", currentLang);
+  const titleText = isPIs
+    ? currentLang === "fr"
+      ? "Porteurs de projets par domaine scientifique ERC"
+      : "Project PIs by ERC scientific domain"
+    : getI18nLabel(i18n, "panelChart.projects.title", currentLang);
 
   const newOptions: HighchartsInstance.Options = {
     chart: {
       height: 400,
-      events: {
-        render(this: any) {
-          (this._stems || []).forEach((el: any) => el.destroy());
-          this._stems = [];
-          const scatter = this.series.find((s: any) => s.type === "scatter");
-          if (!scatter) return;
-          const y0 = (this.yAxis[1] as any).toPixels(0);
-          scatter.points.forEach((point: any) => {
-            if (point.plotX == null || point.plotY == null) return;
-            this._stems.push(
-              this.renderer
-                .path(["M", this.plotLeft + point.plotX, y0, "L", this.plotLeft + point.plotX, this.plotTop + point.plotY])
-                .attr({ stroke: successRateColor, "stroke-width": 1.5, dashstyle: "Dot", zIndex: 3 })
-                .add(),
-            );
-          });
+      ...(!isPIs && {
+        events: {
+          render(this: any) {
+            (this._stems || []).forEach((el: any) => el.destroy());
+            this._stems = [];
+            const scatter = this.series.find((s: any) => s.type === "scatter");
+            if (!scatter) return;
+            const y0 = (this.yAxis[1] as any).toPixels(0);
+            scatter.points.forEach((point: any) => {
+              if (point.plotX == null || point.plotY == null) return;
+              this._stems.push(
+                this.renderer
+                  .path(["M", this.plotLeft + point.plotX, y0, "L", this.plotLeft + point.plotX, this.plotTop + point.plotY])
+                  .attr({ stroke: successRateColor, "stroke-width": 1.5, dashstyle: "Dot", zIndex: 3 })
+                  .add(),
+              );
+            });
+          },
         },
-      },
+      }),
     },
     title: {
       text: titleText,
@@ -126,28 +142,38 @@ export default function OptionsProjects({ data, currentLang = "fr" }: OptionsPar
         style: { fontSize: "12px" },
       },
     },
-    yAxis: [
-      {
-        title: {
-          text: getI18nLabel(i18nGlobal, "total-projects", currentLang),
-          style: { fontSize: "13px" },
-        },
-        min: 0,
-      },
-      {
-        title: {
-          text: getI18nLabel(i18nGlobal, "success-rate-percent", currentLang),
-          style: { fontSize: "13px", color: successRateColor },
-        },
-        opposite: true,
-        min: 0,
-        max: 100,
-        labels: {
-          format: "{value}%",
-          style: { color: successRateColor },
-        },
-      },
-    ],
+    yAxis: isPIs
+      ? [
+          {
+            title: {
+              text: getI18nLabel(i18nGlobal, "pi", currentLang),
+              style: { fontSize: "13px" },
+            },
+            min: 0,
+          },
+        ]
+      : [
+          {
+            title: {
+              text: getI18nLabel(i18nGlobal, "total-projects", currentLang),
+              style: { fontSize: "13px" },
+            },
+            min: 0,
+          },
+          {
+            title: {
+              text: getI18nLabel(i18nGlobal, "success-rate-percent", currentLang),
+              style: { fontSize: "13px", color: successRateColor },
+            },
+            opposite: true,
+            min: 0,
+            max: 100,
+            labels: {
+              format: "{value}%",
+              style: { color: successRateColor },
+            },
+          },
+        ],
     legend: {
       align: "center",
       verticalAlign: "bottom",
@@ -189,40 +215,48 @@ export default function OptionsProjects({ data, currentLang = "fr" }: OptionsPar
     series: [
       {
         type: "column",
-        name: getI18nLabel(i18nGlobal, "evaluated-projects", currentLang),
+        name: isPIs
+          ? getI18nLabel(i18n, "panelDetail.evaluatedPIs", currentLang)
+          : getI18nLabel(i18nGlobal, "evaluated-projects", currentLang),
         color: evaluatedColor,
         data: evaluatedData,
         yAxis: 0,
       },
       {
         type: "column",
-        name: getI18nLabel(i18nGlobal, "successful-projects", currentLang),
+        name: isPIs
+          ? getI18nLabel(i18n, "panelDetail.successfulPIs", currentLang)
+          : getI18nLabel(i18nGlobal, "successful-projects", currentLang),
         data: successfulData,
         yAxis: 0,
       },
-      {
-        type: "scatter",
-        name: getI18nLabel(i18nGlobal, "success-rate", currentLang),
-        color: successRateColor,
-        data: successRates,
-        yAxis: 1,
-        pointPlacement: 0,
-        marker: { symbol: "circle", radius: 6 },
-        dataLabels: {
-          enabled: true,
-          formatter: function () {
-            return formatToRates(((this as any).y || 0) / 100);
-          },
-          y: -10,
-          style: {
-            fontSize: "11px",
-            fontWeight: "600",
-            color: successRateColor,
-            textOutline: "none",
-          },
-        },
-        zIndex: 5,
-      } as any,
+      ...(!isPIs
+        ? [
+            {
+              type: "scatter",
+              name: getI18nLabel(i18nGlobal, "success-rate", currentLang),
+              color: successRateColor,
+              data: successRates,
+              yAxis: 1,
+              pointPlacement: 0,
+              marker: { symbol: "circle", radius: 6 },
+              dataLabels: {
+                enabled: true,
+                formatter: function () {
+                  return formatToRates(((this as any).y || 0) / 100);
+                },
+                y: -10,
+                style: {
+                  fontSize: "11px",
+                  fontWeight: "600",
+                  color: successRateColor,
+                  textOutline: "none",
+                },
+              },
+              zIndex: 5,
+            } as any,
+          ]
+        : []),
     ],
   };
 

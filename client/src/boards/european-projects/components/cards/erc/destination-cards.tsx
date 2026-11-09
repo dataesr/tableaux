@@ -1,8 +1,12 @@
 import { useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { SegmentedControl, SegmentedElement } from "@dataesr/dsfr-plus";
+import { SegmentedControl, SegmentedElement, Title } from "@dataesr/dsfr-plus";
 import { getErcSynthesisByDestination, ErcDestinationData } from "../../../api/erc";
 import { ErcStatCard, ErcStatCardSkeleton, ViewMode } from "./stat-card";
+import i18nGlobal from "../../../i18n-global.json";
+import { getI18nLabel } from "../../../../../utils";
+
 import "./styles.scss";
 
 // Mapping des codes de destination vers des noms lisibles
@@ -20,7 +24,9 @@ interface ErcDestinationCardsProps {
 }
 
 export default function ErcDestinationCards({ countryCode, callYear }: ErcDestinationCardsProps) {
-  const [viewMode, setViewMode] = useState<ViewMode>("projects");
+  const [viewMode, setViewMode] = useState<ViewMode>("pi");
+  const [searchParams] = useSearchParams();
+  const currentLang = searchParams.get("language") || "fr";
 
   const { data, isLoading } = useQuery<ErcDestinationData[]>({
     queryKey: ["erc-synthesis-by-destination", countryCode, callYear],
@@ -34,7 +40,7 @@ export default function ErcDestinationCards({ countryCode, callYear }: ErcDestin
   if (isLoading) {
     return (
       <div className="erc-destination-section">
-        <h3>Par type de financement</h3>
+        <Title as="h3">Par type de financement</Title>
         <div className="erc-stat-cards">
           {[1, 2, 3, 4, 5].map((i) => (
             <ErcStatCardSkeleton key={i} />
@@ -51,10 +57,11 @@ export default function ErcDestinationCards({ countryCode, callYear }: ErcDestin
   return (
     <div className="erc-destination-section">
       <div className="section-header">
-        <h3>Par type de financement</h3>
+        <Title as="h3">Par type de financement</Title>
         <SegmentedControl className="fr-segmented--sm" name="destination-view-mode">
-          <SegmentedElement checked={viewMode === "projects"} label="Projets" onClick={() => setViewMode("projects")} value="projects" />
-          <SegmentedElement checked={viewMode === "funding"} label="Financements" onClick={() => setViewMode("funding")} value="funding" />
+          <SegmentedElement checked={viewMode === "pi"} label={getI18nLabel(i18nGlobal, "pi", currentLang)} onClick={() => setViewMode("pi")} value="pi" />
+          <SegmentedElement checked={viewMode === "funding"} label={getI18nLabel(i18nGlobal, "total-fund-eur", currentLang)} onClick={() => setViewMode("funding")} value="funding" />
+          <SegmentedElement checked={viewMode === "projects"} label={getI18nLabel(i18nGlobal, "projects", currentLang)} onClick={() => setViewMode("projects")} value="projects" />
         </SegmentedControl>
       </div>
       <div className="erc-stat-cards">
@@ -69,7 +76,8 @@ export default function ErcDestinationCards({ countryCode, callYear }: ErcDestin
                 evaluatedCount: destination.evaluated?.total_projects || 0,
                 successfulCount: destination.successful?.total_projects || 0,
                 fundingAmount: destination.successful?.total_funding_entity || 0,
-                piCount: destination.successful?.total_pi || 0,
+                piCountSuccessful: destination.successful?.total_pi || 0,
+                piCountEvaluated: destination.evaluated?.total_pi || 0,
               }}
               viewMode={viewMode}
             />

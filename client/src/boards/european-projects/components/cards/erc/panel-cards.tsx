@@ -4,7 +4,11 @@ import { SegmentedControl, SegmentedElement, Title } from "@dataesr/dsfr-plus";
 import { getErcSynthesisByPanel, ErcPanelData } from "../../../api/erc";
 import { formatNumber, formatCurrency, formatToRates } from "../../../../../utils/format";
 import { ErcStatCard, ViewMode } from "./stat-card";
+import { getI18nLabel } from "../../../../../utils";
+import i18nGlobal from "../../../i18n-global.json";
+
 import "./styles.scss";
+import { useSearchParams } from "react-router-dom";
 
 // Variables CSS pour les couleurs de domaine
 const DOMAIN_CSS_VARS: Record<string, { color: string; bg: string }> = {
@@ -48,7 +52,8 @@ interface AggregatedPanelData {
   evaluated_projects: number;
   successful_projects: number;
   total_funding_entity: number;
-  total_pi: number;
+  evaluated_pi: number;
+  successful_pi: number;
 }
 
 // Type pour les données de domaine agrégées
@@ -58,7 +63,8 @@ interface AggregatedDomainData {
   evaluated_projects: number;
   successful_projects: number;
   total_funding_entity: number;
-  total_pi: number;
+  evaluated_pi: number;
+  successful_pi: number;
   panels: AggregatedPanelData[];
 }
 
@@ -70,8 +76,10 @@ interface ErcPanelCardsProps {
 
 export default function ErcPanelCards({ countryCode, callYear, destinationCode }: ErcPanelCardsProps) {
   const [expandedDomains, setExpandedDomains] = useState<Record<string, boolean>>({});
-  const [viewMode, setViewMode] = useState<ViewMode>("funding");
-
+  const [viewMode, setViewMode] = useState<ViewMode>("pi");
+  const [searchParams] = useSearchParams();
+  const currentLang = searchParams.get("language") || "fr";
+  
   const { data, isLoading } = useQuery<ErcPanelData[]>({
     queryKey: ["erc-synthesis-by-panel", countryCode, callYear, destinationCode],
     queryFn: () =>
@@ -116,7 +124,8 @@ export default function ErcPanelCards({ countryCode, callYear, destinationCode }
     evaluated_projects: panel.evaluated?.total_projects || 0,
     successful_projects: panel.successful?.total_projects || 0,
     total_funding_entity: panel.successful?.total_funding_entity || 0,
-    total_pi: panel.successful?.total_pi || 0,
+    evaluated_pi: panel.evaluated?.total_pi || 0,
+    successful_pi: panel.successful?.total_pi || 0,
   }));
 
   // Grouper par domaine scientifique et calculer les totaux
@@ -131,14 +140,16 @@ export default function ErcPanelCards({ countryCode, callYear, destinationCode }
             evaluated_projects: 0,
             successful_projects: 0,
             total_funding_entity: 0,
-            total_pi: 0,
+            evaluated_pi: 0,
+            successful_pi: 0,
             panels: [],
           };
         }
         acc[domain].evaluated_projects += panel.evaluated_projects;
         acc[domain].successful_projects += panel.successful_projects;
         acc[domain].total_funding_entity += panel.total_funding_entity;
-        acc[domain].total_pi += panel.total_pi;
+        acc[domain].evaluated_pi += panel.evaluated_pi;
+        acc[domain].successful_pi += panel.successful_pi;
         acc[domain].panels.push(panel);
         return acc;
       },
@@ -157,19 +168,14 @@ export default function ErcPanelCards({ countryCode, callYear, destinationCode }
       <div className="section-header">
         <Title as="h4">Chiffres clés</Title>
         <SegmentedControl className="fr-segmented--sm" name="panel-view-mode">
-          <SegmentedElement checked={viewMode === "projects"} label="Projets" onClick={() => setViewMode("projects")} value="projects" />
-          <SegmentedElement checked={viewMode === "funding"} label="Financements" onClick={() => setViewMode("funding")} value="funding" />
+          <SegmentedElement checked={viewMode === "pi"} label={getI18nLabel(i18nGlobal, "pi", currentLang)} onClick={() => setViewMode("pi")} value="pi" />
+          <SegmentedElement checked={viewMode === "funding"} label={getI18nLabel(i18nGlobal, "total-fund-eur", currentLang)} onClick={() => setViewMode("funding")} value="funding" />
+          <SegmentedElement checked={viewMode === "projects"} label={getI18nLabel(i18nGlobal, "projects", currentLang)} onClick={() => setViewMode("projects")} value="projects" />
         </SegmentedControl>
       </div>
       <div className="erc-domain-cards">
         {domainData.map((domain) => (
-          <DomainCard
-            key={domain.domain_code}
-            data={domain}
-            isExpanded={expandedDomains[domain.domain_code] || false}
-            onToggle={() => toggleDomain(domain.domain_code)}
-            viewMode={viewMode}
-          />
+          <DomainCard key={domain.domain_code} data={domain} isExpanded={expandedDomains[domain.domain_code] || false} onToggle={() => toggleDomain(domain.domain_code)} viewMode={viewMode} />
         ))}
       </div>
     </div>
@@ -207,10 +213,21 @@ function DomainCard({ data, isExpanded, onToggle, viewMode }: DomainCardProps) {
                 <span className="stat-value success-rate">{formatToRates(successRate)}</span>
               </div>
             </>
+          ) : viewMode === "pi" ? (
+            <>
+              <div className="stat">
+                <span className="stat-value">{formatNumber(data.evaluated_pi)}</span>
+                <span className="stat-label">Porteurs évalués</span>
+              </div>
+              <div className="stat">
+                <span className="stat-value">{formatNumber(data.successful_pi)}</span>
+                <span className="stat-label">Porteurs lauréats</span>
+              </div>
+            </>
           ) : (
             <>
               <div className="stat">
-                <span className="stat-value">{formatNumber(data.total_pi)}</span>
+                <span className="stat-value">{formatNumber(data.successful_pi)}</span>
                 <span className="stat-label">PI lauréats</span>
               </div>
               <div className="stat">
@@ -239,7 +256,8 @@ function DomainCard({ data, isExpanded, onToggle, viewMode }: DomainCardProps) {
                     evaluatedCount: panel.evaluated_projects,
                     successfulCount: panel.successful_projects,
                     fundingAmount: panel.total_funding_entity,
-                    piCount: panel.total_pi,
+                    piCountEvaluated: panel.evaluated_pi,
+                    piCountSuccessful: panel.successful_pi,
                   }}
                   viewMode={viewMode}
                   accentColor={domainVars.color}

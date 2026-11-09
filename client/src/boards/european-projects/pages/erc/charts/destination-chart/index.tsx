@@ -1,16 +1,15 @@
-import { useState } from "react";
-import { useSearchParams } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
-import { SegmentedControl, SegmentedElement } from "@dataesr/dsfr-plus";
-
+import { formatNumber, formatToRates, formatCurrency } from "../../../../../../utils/format";
 import { getData, DestinationChartItem } from "./query";
-import OptionsProjects from "./options";
-import OptionsFunding from "./options-funding";
-
+import { getI18nLabel } from "../../../../../../utils";
+import { SegmentedControl, SegmentedElement } from "@dataesr/dsfr-plus";
+import { useQuery } from "@tanstack/react-query";
+import { useSearchParams } from "react-router-dom";
+import { useState } from "react";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
-
-import { formatNumber, formatToRates, formatCurrency } from "../../../../../../utils/format";
+import i18nGlobal from "../../../../i18n-global.json";
+import OptionsFunding from "./options-funding";
+import OptionsProjects from "./options";
 
 interface DestinationChartProps {
   countryCode?: string;
@@ -22,32 +21,12 @@ const configProjects = {
   id: "ercDestinationChartProjects",
   idQuery: "ercDestinationChart",
   comment: {
-    fr: (
-      <>
-        Ce graphique présente le nombre de projets évalués et lauréats par type de financement ERC (Starting, Consolidator, Advanced, Synergy, Proof
-        of Concept). La ligne orange représente le taux de succès pour chaque type.
-      </>
-    ),
-    en: (
-      <>
-        This chart shows the number of evaluated and successful projects by ERC funding type (Starting, Consolidator, Advanced, Synergy, Proof of
-        Concept). The orange line represents the success rate for each type.
-      </>
-    ),
+    fr: <>Ce graphique présente le nombre de projets évalués et lauréats par type de financement ERC (Starting, Consolidator, Advanced, Synergy, Proof of Concept). La ligne orange représente le taux de succès pour chaque type.</>,
+    en: <>This chart shows the number of evaluated and successful projects by ERC funding type (Starting, Consolidator, Advanced, Synergy, Proof of Concept). The orange line represents the success rate for each type.</>,
   },
   readingKey: {
-    fr: (
-      <>
-        Les barres bleues représentent les projets évalués, les barres vertes les projets lauréats. Un taux de succès élevé indique une meilleure
-        performance pour ce type de financement.
-      </>
-    ),
-    en: (
-      <>
-        Blue bars represent evaluated projects, green bars represent successful projects. A high success rate indicates better performance for that
-        funding type.
-      </>
-    ),
+    fr: <>Les barres bleues représentent les projets évalués, les barres vertes les projets lauréats. Un taux de succès élevé indique une meilleure performance pour ce type de financement.</>,
+    en: <>Blue bars represent evaluated projects, green bars represent successful projects. A high success rate indicates better performance for that funding type.</>,
   },
   // title: {
   // fr: "Nombre de projets lauréats par type de financement ERC",
@@ -60,34 +39,27 @@ const configFunding = {
   id: "ercDestinationChartFunding",
   idQuery: "ercDestinationChart",
   comment: {
-    fr: (
-      <>
-        Ce graphique présente les financements demandés et obtenus par type de financement ERC (Starting, Consolidator, Advanced, Synergy, Proof of
-        Concept). La ligne orange représente le taux de succès en termes de financement.
-      </>
-    ),
-    en: (
-      <>
-        This chart shows the requested and obtained funding by ERC funding type (Starting, Consolidator, Advanced, Synergy, Proof of Concept). The
-        orange line represents the success rate in terms of funding.
-      </>
-    ),
+    fr: <>Ce graphique présente les financements demandés et obtenus par type de financement ERC (Starting, Consolidator, Advanced, Synergy, Proof of Concept). La ligne orange représente le taux de succès en termes de financement.</>,
+    en: <>This chart shows the requested and obtained funding by ERC funding type (Starting, Consolidator, Advanced, Synergy, Proof of Concept). The orange line represents the success rate in terms of funding.</>,
   },
   readingKey: {
-    fr: (
-      <>
-        Les barres bleues représentent les financements demandés, les barres vertes les financements obtenus. Un taux de succès élevé indique une
-        meilleure performance pour ce type de financement.
-      </>
-    ),
-    en: (
-      <>
-        Blue bars represent requested funding, green bars represent obtained funding. A high success rate indicates better performance for that
-        funding type.
-      </>
-    ),
+    fr: <>Les barres bleues représentent les financements demandés, les barres vertes les financements obtenus. Un taux de succès élevé indique une meilleure performance pour ce type de financement.</>,
+    en: <>Blue bars represent requested funding, green bars represent obtained funding. A high success rate indicates better performance for that funding type.</>,
   },
   integrationURL: "/european-projects/components/pages/erc/charts/destination-chart-funding",
+};
+
+const configPIs = {
+  id: "ercDestinationChartPIs",
+  idQuery: "ercDestinationChart",
+  comment: {
+    fr: <>Ce graphique présente le nombre de porteurs de projets évalués et lauréats par type de financement ERC.</>,
+    en: <>This chart shows the number of evaluated and successful project PIs by ERC funding type.</>,
+  },
+  readingKey: {
+    fr: <>Les barres distinguent les porteurs de projets évalués et lauréats pour chaque type de financement.</>,
+    en: <>The bars distinguish evaluated and successful project PIs for each funding type.</>,
+  },
 };
 
 // Mapping des codes de destination vers des noms lisibles
@@ -205,7 +177,39 @@ function renderDataTableFunding(data: DestinationChartItem[], currentLang: strin
   );
 }
 
-export function DestinationChartProjects({ countryCode: propCountryCode, callYear: propCallYear, currentLang: propLang }: DestinationChartProps) {
+function renderDataTablePIs(data: DestinationChartItem[], currentLang: string) {
+  const sortedData = [...data].sort((a, b) => {
+    const indexA = DESTINATION_ORDER.indexOf(a.destination_code);
+    const indexB = DESTINATION_ORDER.indexOf(b.destination_code);
+    return (indexA === -1 ? 999 : indexA) - (indexB === -1 ? 999 : indexB);
+  });
+
+  return (
+    <table className="fr-table">
+      <caption>{currentLang === "fr" ? "Porteurs de projets par type de financement ERC" : "Project PIs by ERC funding type"}</caption>
+      <thead>
+        <tr>
+          <th>{currentLang === "fr" ? "Type de financement" : "Funding type"}</th>
+          <th>{currentLang === "fr" ? "Porteurs évalués" : "Evaluated PIs"}</th>
+          <th>{currentLang === "fr" ? "Porteurs lauréats" : "Successful PIs"}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {sortedData.map((item) => (
+          <tr key={item.destination_code}>
+            <td>{DESTINATION_NAMES[item.destination_code]?.[currentLang] || item.destination_name_en}</td>
+            <td>{formatNumber(item.evaluated?.total_pi || 0)}</td>
+            <td>{formatNumber(item.successful?.total_pi || 0)}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+}
+
+type DestinationViewMode = "projects" | "pi";
+
+export function DestinationChartProjects({ countryCode: propCountryCode, callYear: propCallYear, currentLang: propLang, viewMode = "projects" }: DestinationChartProps & { viewMode?: DestinationViewMode }) {
   const { params: urlParams, currentLang: urlLang } = useGetParams();
   const currentLang = propLang || urlLang;
 
@@ -226,13 +230,14 @@ export function DestinationChartProjects({ countryCode: propCountryCode, callYea
 
   if (isLoading || !data) return <DefaultSkeleton />;
 
-  const options = OptionsProjects({ data, currentLang });
+  const config = viewMode === "pi" ? configPIs : configProjects;
+  const options = OptionsProjects({ data, currentLang, viewMode });
 
   if (!options) return null;
 
   return (
     <div className="fr-my-3w chart-container chart-container--default">
-      <ChartWrapper config={configProjects} options={options} renderData={() => renderDataTableProjects(data, currentLang)} />
+      <ChartWrapper key={config.id} config={config} options={options} renderData={() => (viewMode === "pi" ? renderDataTablePIs(data, currentLang) : renderDataTableProjects(data, currentLang))} />
     </div>
   );
 }
@@ -269,7 +274,7 @@ export function DestinationChartFunding({ countryCode: propCountryCode, callYear
   );
 }
 
-type ViewMode = "projects" | "funding";
+type ViewMode = "projects" | "funding" | "pi";
 
 interface DestinationChartWithSelectorProps {
   countryCode?: string;
@@ -278,7 +283,7 @@ interface DestinationChartWithSelectorProps {
 }
 
 export default function DestinationChart({ countryCode, callYear, currentLang: propLang }: DestinationChartWithSelectorProps) {
-  const [viewMode, setViewMode] = useState<ViewMode>("projects");
+  const [viewMode, setViewMode] = useState<ViewMode>("pi");
   const [searchParams] = useSearchParams();
   const currentLang = propLang || searchParams.get("language") || "fr";
 
@@ -286,22 +291,13 @@ export default function DestinationChart({ countryCode, callYear, currentLang: p
     <div className="fr-my-3w">
       <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "1rem" }}>
         <SegmentedControl className="fr-segmented--sm" name="destination-chart-view-mode">
-          <SegmentedElement
-            checked={viewMode === "projects"}
-            label={currentLang === "fr" ? "Projets" : "Projects"}
-            onClick={() => setViewMode("projects")}
-            value="projects"
-          />
-          <SegmentedElement
-            checked={viewMode === "funding"}
-            label={currentLang === "fr" ? "Financements" : "Funding"}
-            onClick={() => setViewMode("funding")}
-            value="funding"
-          />
+          <SegmentedElement checked={viewMode === "pi"} label={getI18nLabel(i18nGlobal, "pi", currentLang)} onClick={() => setViewMode("pi")} value="pi" />
+          <SegmentedElement checked={viewMode === "funding"} label={getI18nLabel(i18nGlobal, "total-fund-eur", currentLang)} onClick={() => setViewMode("funding")} value="funding" />
+          <SegmentedElement checked={viewMode === "projects"} label={getI18nLabel(i18nGlobal, "projects", currentLang)} onClick={() => setViewMode("projects")} value="projects" />
         </SegmentedControl>
       </div>
-      {viewMode === "projects" ? (
-        <DestinationChartProjects countryCode={countryCode} callYear={callYear} currentLang={currentLang} />
+      {viewMode !== "funding" ? (
+        <DestinationChartProjects countryCode={countryCode} callYear={callYear} currentLang={currentLang} viewMode={viewMode} />
       ) : (
         <DestinationChartFunding countryCode={countryCode} callYear={callYear} currentLang={currentLang} />
       )}
