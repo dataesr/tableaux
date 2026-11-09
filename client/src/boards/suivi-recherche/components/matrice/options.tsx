@@ -4,7 +4,7 @@ import type { Matrice, MatricePoint } from "../../api";
 import { createChartOptions } from "../../../../components/chart-wrapper/default-options.ts";
 import { getCssColor } from "../../../../utils/colors";
 import { formatDynamique, formatPart, formatPeriode } from "../../utils";
-import { QUADRANTS, TAILLE_MAX, TAILLE_MIN } from "./utils.tsx";
+import { getTexteInternational, getTitreQuadrant, TAILLE_MAX, TAILLE_MIN } from "./utils.tsx";
 import type { MatriceTextes } from "./utils.tsx";
 
 // Ce qui distingue une matrice d'une autre (disciplines, établissements) : nom, couleur, étiquette et infobulle des points
@@ -26,9 +26,9 @@ const intersects = (a: Box, b: Box) => a.x < b.x + b.width && b.x < a.x + a.widt
 // Quadrants, tri des bulles et bornes des axes viennent du serveur. Seul le placement des étiquettes,
 // qui dépend des positions en pixels, est calculé ici, à chaque rendu du graphique.
 export default function getMatriceOptions<P, I extends string>(data: Matrice<P, I>, rendu: MatriceRendu<P>) {
-  const { bornes, periodes, points, reference } = data;
+  const { bornes, periodes, points, references } = data;
   const { textes } = rendu;
-  const referenceX = (reference.valeur ?? 0) * 100;
+  const { dynamique, international, niveau } = references;
   const mentionColor = getCssColor("text-mention-grey");
   const titleColor = getCssColor("text-title-grey");
   const halo = `3px ${getCssColor("background-default-grey")}`;
@@ -54,12 +54,15 @@ export default function getMatriceOptions<P, I extends string>(data: Matrice<P, 
               .attr({ align: droite ? "right" : "left", zIndex: 2 })
               .css({ color: mentionColor, fontSize: "11px", fontStyle: "italic" })
               .add());
+            // Écran étroit : un titre plus large que la moitié du graphique chevaucherait son voisin ;
+            // on garde son premier mot (« Atouts »), le titre complet reste dans les tableaux des quadrants
+            if (text.getBBox().width > width / 2 - 12) text.attr({ text: titre.split(",")[0] });
             occupied.push(text.getBBox());
           };
-          corner(QUADRANTS[0].titre, true, true);
-          corner(QUADRANTS[1].titre, false, true);
-          corner(QUADRANTS[2].titre, true, false);
-          corner(QUADRANTS[3].titre, false, false);
+          corner(getTitreQuadrant("hd", references), true, true);
+          corner(getTitreQuadrant("hg", references), false, true);
+          corner(getTitreQuadrant("bd", references), true, false);
+          corner(getTitreQuadrant("bg", references), false, false);
 
           // Une étiquette par bulle, posée hors des bulles avec un trait de rappel.
           // Recherche autour de la bulle, de plus en plus loin, en privilégiant la direction opposée au centre du nuage.
@@ -83,7 +86,9 @@ export default function getMatriceOptions<P, I extends string>(data: Matrice<P, 
             const cx = left + p.plotX;
             const cy = top + p.plotY;
             const label = add(renderer
-              .text(rendu.etiquette(p.options.custom), 0, 0)
+              .text(p.options.custom.hors_cadre
+                ? `${rendu.etiquette(p.options.custom)} (${formatDynamique(p.options.custom.dynamique)})`
+                : rendu.etiquette(p.options.custom), 0, 0)
               .css({ color: titleColor, fontSize: "11px", textOutline: halo })
               .attr({ zIndex: 6 })
               .add());
@@ -142,13 +147,21 @@ export default function getMatriceOptions<P, I extends string>(data: Matrice<P, 
       endOnTick: false,
       title: { text: textes.axeX },
       labels: { formatter: function () { return formatPart(Number(this.value) / 100); } },
+      // Ligne nommée et chiffrée : « Médiane du groupe : 0,42 % » ; le commentaire dit d'où vient la valeur
       plotLines: [{
-        value: referenceX,
+        value: (niveau.valeur ?? 0) * 100,
         color: mentionColor,
         dashStyle: "Dash",
         width: 1.5,
         zIndex: 3,
-        label: { text: formatPart(reference.valeur), rotation: 0, y: -4, x: 4, verticalAlign: "bottom", style: { color: mentionColor, fontSize: "11px" } },
+        label: {
+          text: `${niveau.libelle} : ${formatPart(niveau.valeur)}`,
+          rotation: 0,
+          y: -4,
+          x: 4,
+          verticalAlign: "bottom",
+          style: { color: mentionColor, fontSize: "11px", textOutline: halo },
+        },
       }],
     },
     yAxis: {
@@ -158,7 +171,24 @@ export default function getMatriceOptions<P, I extends string>(data: Matrice<P, 
       endOnTick: false,
       title: { text: textes.axeY },
       labels: { formatter: function () { return formatDynamique(Number(this.value)); } },
-      plotLines: [{ value: 0, color: mentionColor, width: 1.5, zIndex: 3 }],
+      // Trait plein : coupe les quadrants (étiquette à droite) ; pointillés : repère international (étiquette à gauche)
+      plotLines: [
+        {
+          value: dynamique.valeur ?? 0,
+          color: mentionColor,
+          width: 1.5,
+          zIndex: 3,
+          label: { text: `${dynamique.libelle} : ${formatDynamique(dynamique.valeur)}`, align: "right", x: -4, y: -4, style: { color: mentionColor, fontSize: "11px", textOutline: halo } },
+        },
+        ...(international ? [{
+          value: international.valeur,
+          color: mentionColor,
+          dashStyle: "Dot" as const,
+          width: 1.5,
+          zIndex: 3,
+          label: { text: `${international.libelle} : ${formatDynamique(international.valeur)}`, align: "left" as const, x: 4, y: 12, style: { color: mentionColor, fontSize: "11px", textOutline: halo } },
+        }] : []),
+      ],
     },
     plotOptions: {
       bubble: {
@@ -173,26 +203,31 @@ export default function getMatriceOptions<P, I extends string>(data: Matrice<P, 
       useHTML: true,
       formatter: function (this: any) {
         const p = this.point.options.custom as P & MatricePoint;
-        const quadrant = QUADRANTS.find(({ key }) => key === p.quadrant);
+        const quadrant = getTitreQuadrant(p.quadrant, references);
         return [
           ...rendu.entete(p),
-          `<i>${quadrant?.titre}</i>`,
+          `<i>${quadrant}</i>`,
           `${textes.niveau} ${formatPeriode(periodes.arrivee)} : <b>${formatPart(p.niveau.valeur)}</b> = ${textes.calcul(p.niveau)}`,
           `${textes.niveau} ${formatPeriode(periodes.depart)} : ${formatPart(p.niveau_depart.valeur)} = ${textes.calcul(p.niveau_depart)}`,
-          `Évolution relative : <b>${formatDynamique(p.dynamique)}</b>`,
+          `Évolution relative : <b>${formatDynamique(p.dynamique)}</b>${p.hors_cadre ? ` (hors du cadre, posée sur le bord ${p.hors_cadre})` : ""}`,
+          ...(international ? [`International : ${getTexteInternational(data, p)}`] : []),
           `Taille : ${textes.taille.format(p.taille)} ${textes.taille.unite} sur ${formatPeriode(periodes.arrivee)}${p.fiable ? "" : ` (peu fiable : ${textes.peuFiable})`}`,
         ].join("<br/>");
       },
     },
     series: [{
       type: "bubble",
+      // Les points posés sur le bord du cadre restent entiers
+      clip: false,
       name: rendu.serie,
       data: points.map((p) => {
         const color = rendu.couleur(p);
         const focus = rendu.focus?.(p) ?? false;
+        // Hors du cadre : posé sur le bord, en triangle pointant vers sa vraie position, évolution dans l'étiquette
+        const bord = p.hors_cadre === "haut" ? bornes.y[1] : p.hors_cadre === "bas" ? bornes.y[0] : null;
         return {
           x: p.niveau.valeur! * 100,
-          y: p.dynamique,
+          y: bord ?? p.dynamique,
           z: p.taille,
           color,
           custom: p,
@@ -202,6 +237,7 @@ export default function getMatriceOptions<P, I extends string>(data: Matrice<P, 
             ...(!p.fiable && { fillColor: "transparent" }),
             lineColor: color,
             ...(focus && { lineWidth: 3 }),
+            ...(p.hors_cadre && { symbol: p.hors_cadre === "haut" ? "triangle" : "triangle-down" }),
           },
         };
       }),

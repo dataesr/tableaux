@@ -10,7 +10,7 @@ import { useRenderTransition } from "../../../../hooks/use-render-transition";
 import { formatPart, formatPeriode, formatRatio, INDICATEUR_LABELS } from "../../../../utils";
 import LegendeTailles from "../../../../components/matrice/legende-tailles.tsx";
 import Quadrants from "../../../../components/matrice/quadrants.tsx";
-import { getLectureMatrice } from "../../../../components/matrice/utils.tsx";
+import { getLectureMatrice, getTexteHorsCadre } from "../../../../components/matrice/utils.tsx";
 import { getChartSources } from "../../../../components/sources.tsx";
 import { getBiblioMatriceTextes } from "../../matrice-textes.ts";
 import getOptions from "./options.tsx";
@@ -55,7 +55,6 @@ export default function PositionnementDisciplines({ entiteNom, meta, options, se
     );
   }
 
-  const reference = data?.reference.valeur ?? 0;
   const exclus = data?.exclus ?? [];
   const domaines = [...new Map((data?.points ?? []).map((p) => [p.domaine_code, p.domaine_nom])).entries()];
 
@@ -112,8 +111,11 @@ export default function PositionnementDisciplines({ entiteNom, meta, options, se
                 fr: (
                   <>
                     {`Horizontal : part mondiale de ${entiteNom} dans la discipline sur ${formatPeriode(data.periodes.arrivee)}. `}
-                    {`Ligne pointillée : part de ${entiteNom} toutes disciplines confondues (${formatPart(reference)} = ${formatRatio(data.reference, data.indicateur)}) ; à droite, les disciplines où elle fait mieux que sa moyenne. `}
-                    {`Vertical : part d'arrivée ÷ part de départ − 1 ; au-dessus de 0, la part progresse. `}
+                    {`Vertical : part d'arrivée ÷ part de ${formatPeriode(data.periodes.depart)} − 1. `}
+                    {getTexteHorsCadre(data, (p) => p.discipline_code)}
+                    {`Ligne verticale en tirets (« ${data.references.niveau.libelle} ») : part de ${entiteNom} toutes disciplines confondues sur ${formatPeriode(data.periodes.arrivee)}, `}
+                    {`${formatPart(data.references.niveau.valeur)}${data.references.niveau.ratio ? ` = ${formatRatio(data.references.niveau.ratio, data.indicateur)}` : ""} ; à droite, les disciplines où elle fait mieux que sa moyenne. `}
+                    {`Ligne horizontale en trait plein (« ${data.references.dynamique.libelle} ») : 0 % ; au-dessus, la part mondiale de ${entiteNom} dans la discipline progresse, en dessous elle recule. `}
                     {"Chaque bulle est reliée à son code et à son nom abrégé ; nom complet au survol et dans le tableau ci-dessous. "}
                     {data.indicateur === "influence" && " Influence : années consolidées seulement (fenêtre de citation close)."}
                     {data.provisoire && " Attention : la période d'arrivée contient des années provisoires."}

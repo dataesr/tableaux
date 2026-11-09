@@ -13,7 +13,7 @@ import {
   VIVIER_DEFAUT,
   VIVIERS,
 } from "../erc-indice.js";
-import { CODES_GROUPES, computePeriodes, loadGroupeEtablissements, median, shapeMatrice } from "../matrice.js";
+import { CODES_GROUPES, computePeriodes, getReferencesMedianes, loadGroupeEtablissements, shapeMatrice } from "../matrice.js";
 import { computeAbscisses, computeRubans, DEMI_COLONNE, HAUTEUR } from "../rubans.js";
 import { getSourcesBibliometrie, getSourcesErc } from "../sources.js";
 
@@ -323,10 +323,41 @@ router.route("/suivi-recherche/financements/erc/comparaison-internationale").get
 
 const INDICATEURS_MATRICE = ["part_laureats", "taux_succes"];
 
+// Repère international de la matrice ERC des établissements (null si l'ensemble de l'ERC n'a pas de lauréat sur une période).
+// Part : part de l'établissement dans l'ensemble de l'ERC = part des lauréats français × part de la France dans l'ensemble,
+// donc elle reste stable quand l'évolution de la part française compense celle de la France : (départ France ÷ arrivée France) − 1.
+// Taux : évolution du taux de succès de l'ensemble de l'ERC.
+function getRepereErc(indicateur, effectifs, depart, arrivee) {
+  const partFrance = (ans) => ratio(effectifs(ENTITE_NATIONALE, ans).laureats, effectifs(MONDE, ans).laureats);
+  const tauxMonde = (ans) => ratio(effectifs(MONDE, ans).laureats, effectifs(MONDE, ans).candidatures);
+  if (indicateur === "taux_succes") {
+    const base = { libelle: "Ensemble de l'ERC", depart: tauxMonde(depart), arrivee: tauxMonde(arrivee) };
+    if (!base.depart.valeur || base.arrivee.valeur === null) return null;
+    return {
+      libelle: "Évolution du taux de l'ensemble de l'ERC",
+      valeur: (base.arrivee.valeur / base.depart.valeur - 1) * 100,
+      au_dessus: "évolue mieux que l'ensemble de l'ERC",
+      en_dessous: "évolue moins bien que l'ensemble de l'ERC",
+      base,
+    };
+  }
+  const base = { libelle: "France", depart: partFrance(depart), arrivee: partFrance(arrivee) };
+  if (!base.depart.valeur || !base.arrivee.valeur) return null;
+  return {
+    libelle: "Part dans l'ensemble de l'ERC stable",
+    valeur: (base.depart.valeur / base.arrivee.valeur - 1) * 100,
+    au_dessus: "gagne de la part dans l'ensemble de l'ERC",
+    en_dessous: "perd de la part dans l'ensemble de l'ERC",
+    base,
+  };
+}
+
 // Établissements d'un groupe comparable : matrice niveau × dynamique (même grammaire que la bibliométrie) et rangs
 // de l'établissement choisi sur la période.
-// Niveau : part des lauréats ERC français (référence : médiane du groupe) ou taux de succès (référence : France).
-// Dynamique : évolution relative du niveau entre deux périodes d'appels consolidés. Taille : lauréats de la période d'arrivée.
+// Niveau : part des lauréats ERC français ou taux de succès. Dynamique : évolution relative du niveau entre deux périodes
+// d'appels consolidés. Références : médianes du groupe sur les deux axes. Repère international : pour la part, l'évolution
+// où la part de l'établissement dans l'ensemble de l'ERC reste stable ; pour le taux, l'évolution du taux de l'ensemble
+// de l'ERC. Taille : lauréats de la période d'arrivée.
 router.route("/suivi-recherche/financements/erc/positionnement-etablissements").get(async (req, res) => {
   const meta = await getMeta();
   const { indicateur = INDICATEURS_MATRICE[0], groupe: groupeDemande } = req.query;
@@ -381,11 +412,7 @@ router.route("/suivi-recherche/financements/erc/positionnement-etablissements").
     };
   });
 
-  // Référence : médiane des parts des établissements représentés (pas de moyenne de parts) ; France pour le taux
-  const representables = points.filter((p) => (p.niveau.valeur ?? 0) > 0 && p.dynamique !== null);
-  const reference = indicateur === "taux_succes"
-    ? niveau(ENTITE_NATIONALE, arrivee)
-    : { valeur: median(representables.map((p) => p.niveau.valeur)) };
+  const references = { ...getReferencesMedianes(points, (p) => p.entite_id), international: getRepereErc(indicateur, effectifs, depart, arrivee) };
   const seuil = indicateur === "taux_succes"
     ? { valeur: SEUIL_FIABILITE, unite: "candidatures" }
     : { valeur: SEUIL_LAUREATS, unite: "lauréats" };
@@ -416,12 +443,13 @@ router.route("/suivi-recherche/financements/erc/positionnement-etablissements").
     annees_provisoires: meta.annees_provisoires.filter((annee) => annees.includes(annee)),
     // Période d'arrivée avec une année provisoire : seulement si la période choisie n'a pas deux années consolidées
     provisoire: arrivee.some((annee) => meta.annees_provisoires.includes(annee)),
-    reference,
+    // Taux de succès de la France sur la période d'arrivée, cité dans le commentaire
+    taux_france: indicateur === "taux_succes" ? niveau(ENTITE_NATIONALE, arrivee) : null,
     seuil_fiabilite: seuil.valeur,
     seuil_unite: seuil.unite,
     seuil_taux: SEUIL_FIABILITE,
     classement: classement ?? null,
-    ...shapeMatrice(points, reference.valeur ?? 0, (p) => p.entite_id, estFiable),
+    ...shapeMatrice(points, references, (p) => p.entite_id, estFiable),
   });
 });
 

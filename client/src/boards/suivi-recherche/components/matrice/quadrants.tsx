@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 
 import type { Matrice, MatricePoint } from "../../api";
 import { formatDynamique, formatPart, formatPeriode } from "../../utils";
-import { QUADRANTS } from "./utils.tsx";
+import { getDefinitionQuadrant, getTexteInternational, getTitreQuadrant, QUADRANTS } from "./utils.tsx";
 import type { MatriceTextes } from "./utils.tsx";
 
 type QuadrantsProps<P, I extends string> = {
@@ -23,6 +23,8 @@ type QuadrantsProps<P, I extends string> = {
 // Tableaux « Qui est dans chaque quadrant ? » : membres et ordre fournis par le serveur
 export default function Quadrants<P, I extends string>({ cle, colonne, data, libelle, textes, vide }: QuadrantsProps<P, I>) {
   const pointsByCle = useMemo(() => new Map(data.points.map((p) => [cle(p), p])), [cle, data]);
+  // Repère international : une colonne dit, en texte, de quel côté de la ligne en pointillés est chaque point
+  const { international } = data.references;
 
   return (
     <>
@@ -30,23 +32,25 @@ export default function Quadrants<P, I extends string>({ cle, colonne, data, lib
       <Row gutters>
         {QUADRANTS.map((quadrant) => {
           const membres = data.quadrants[quadrant.key].flatMap((key) => pointsByCle.get(key) ?? []);
+          const titre = getTitreQuadrant(quadrant.key, data.references);
           return (
             <Col xs="12" md="6" key={quadrant.key}>
               <div className="sr-quadrant fr-background-alt--grey fr-p-3w">
-                <h4 className="fr-text--md fr-text--bold fr-mb-0">{`${quadrant.titre} (${membres.length})`}</h4>
-                <p className="fr-text--sm fr-text-mention--grey fr-mb-1w">{quadrant.definition}</p>
+                <h4 className="fr-text--md fr-text--bold fr-mb-0">{`${titre} (${membres.length})`}</h4>
+                <p className="fr-text--sm fr-text-mention--grey fr-mb-1w">{getDefinitionQuadrant(quadrant.key, data.references)}</p>
                 {membres.length === 0 ? (
                   <p className="fr-text--sm fr-mb-0">{vide}</p>
                 ) : (
                   <div className="fr-table fr-table--no-caption fr-mb-0">
                     <table>
-                      <caption>{quadrant.titre}</caption>
+                      <caption>{titre}</caption>
                       <thead>
                         <tr>
                           <th scope="col">{colonne}</th>
                           <th scope="col">{`${textes.niveau} ${formatPeriode(data.periodes.arrivee)}`}</th>
                           <th scope="col">Évolution</th>
                           <th scope="col">{textes.taille.colonne}</th>
+                          {international && <th scope="col">À l'international</th>}
                         </tr>
                       </thead>
                       <tbody>
@@ -56,6 +60,7 @@ export default function Quadrants<P, I extends string>({ cle, colonne, data, lib
                             <td>{formatPart(p.niveau.valeur)}</td>
                             <td>{formatDynamique(p.dynamique)}</td>
                             <td>{textes.taille.format(p.taille)}</td>
+                            {international && <td>{getTexteInternational(data, p)}</td>}
                           </tr>
                         ))}
                       </tbody>

@@ -34,6 +34,7 @@ GET http://localhost:3000/api/suivi-recherche/bibliometrie/positionnement?perime
 
 ###
 # Matrice des établissements : sans groupe, celui de l'établissement sélectionné (ici le CNRS → organismes)
+# references : médianes du groupe (niveau, évolution) et repère international (part mondiale stable, base France)
 GET http://localhost:3000/api/suivi-recherche/bibliometrie/positionnement-etablissements?ror_id=02feahw73&perimetre=revues_sjr&year_min=2015&year_max=2022&indicateur=influence
 
 ###

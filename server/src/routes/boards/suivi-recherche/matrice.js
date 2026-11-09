@@ -12,18 +12,54 @@ export function computePeriodes(debut, fin, annees, provisoires, consolidees) {
   return { depart: [ans[0], ans[k - 1]], arrivee: [ans[ans.length - k], ans[ans.length - 1]] };
 }
 
+// Représentable : niveau d'arrivée > 0 (échelle logarithmique) et dynamique calculable
+const estRepresentable = (p) => (p.niveau.valeur ?? 0) > 0 && p.dynamique !== null;
+
+// Point du milieu une fois les points triés sur `valeur` : autant de points en dessous que de points au-dessus ou dessus.
+// C'est la valeur d'un point réel (pas une moyenne de deux parts), que la page affiche avec son calcul.
+function getPointMedian(points, valeur) {
+  if (points.length === 0) return null;
+  return [...points].sort((a, b) => valeur(a) - valeur(b))[Math.floor(points.length / 2)];
+}
+
+// Références d'une matrice d'établissements : médianes du groupe sur les deux axes, pour que les établissements se
+// répartissent à parts égales de chaque côté de chaque ligne. `point` : clé du point qui porte la médiane.
+export function getReferencesMedianes(points, cle) {
+  const representables = points.filter(estRepresentable);
+  const niveau = getPointMedian(representables, (p) => p.niveau.valeur);
+  const dynamique = getPointMedian(representables, (p) => p.dynamique);
+  return {
+    niveau: { libelle: "Médiane du groupe", valeur: niveau?.niveau.valeur ?? null, point: niveau ? cle(niveau) : null },
+    dynamique: { libelle: "Évolution médiane du groupe", valeur: dynamique?.dynamique ?? null, point: dynamique ? cle(dynamique) : null },
+  };
+}
+
+// Bornes au-delà desquelles une valeur est très éloignée des autres : quartiles ∓ 3 écarts interquartiles
+function getBornesTukey(valeurs) {
+  if (valeurs.length < 4) return [-Infinity, Infinity];
+  const tries = [...valeurs].sort((a, b) => a - b);
+  const quartile = (q) => tries[Math.floor(q * (tries.length - 1))];
+  const ecart = quartile(0.75) - quartile(0.25);
+  return [quartile(0.25) - 3 * ecart, quartile(0.75) + 3 * ecart];
+}
+
 // Mise en forme commune aux matrices niveau × dynamique (disciplines, établissements) :
-// points représentables, quadrant, fiabilité, ordre de tracé, membres de chaque quadrant, bornes des axes, tailles de légende
-// Chaque point porte `taille` (aire de la bulle : articles, lauréats…) ; `estFiable(p)` dit si sa position est fiable.
-export function shapeMatrice(points, ref, cle, estFiable) {
-  // Représentable : niveau d'arrivée > 0 (échelle logarithmique) et dynamique calculable
-  const estRepresentable = (p) => (p.niveau.valeur ?? 0) > 0 && p.dynamique !== null;
+// points représentables, quadrant, position par rapport au repère international, fiabilité, ordre de tracé,
+// membres de chaque quadrant, bornes des axes, tailles de légende.
+// `references` : `niveau` et `dynamique` coupent les quadrants ({ libelle, valeur, point? | ratio? }) ; `international`,
+// facultatif, est une seconde ligne horizontale qui ne les coupe pas : { libelle, valeur, au_dessus, en_dessous, base },
+// où `base` donne les ratios de départ et d'arrivée de ce à quoi le point se compare (France dans le monde, tous pays). Chaque point porte `taille` (aire de la bulle : articles, lauréats…) ;
+// `estFiable(p)` dit si sa position est fiable.
+export function shapeMatrice(points, { niveau, dynamique, international = null }, cle, estFiable) {
+  const refX = niveau.valeur ?? 0;
+  const refY = dynamique.valeur ?? 0;
   const exclus = points.filter((p) => !estRepresentable(p) && p.taille > 0).map(cle);
   const enrichis = points
     .filter(estRepresentable)
     .map((p) => ({
       ...p,
-      quadrant: `${p.dynamique >= 0 ? "h" : "b"}${p.niveau.valeur >= ref ? "d" : "g"}`,
+      quadrant: `${p.dynamique >= refY ? "h" : "b"}${p.niveau.valeur >= refX ? "d" : "g"}`,
+      international: international ? p.dynamique >= international.valeur : null,
       fiable: estFiable(p),
     }))
     // Grosses bulles d'abord : les petites, dessinées ensuite, restent visibles par-dessus
@@ -35,10 +71,19 @@ export function shapeMatrice(points, ref, cle, estFiable) {
     enrichis.filter((p) => p.quadrant === key).sort((a, b) => b.niveau.valeur - a.niveau.valeur).map(cle),
   ]));
 
-  // Cadre ajusté aux données (plus la référence), avec une petite marge
-  const xs = [ref, ...enrichis.map((p) => p.niveau.valeur)].filter((x) => x > 0);
-  const ys = [0, ...enrichis.map((p) => p.dynamique)];
+  // Cadre ajusté aux données et aux lignes de référence, avec une petite marge. En hauteur, une évolution peu fiable
+  // et très éloignée des autres (au-delà de 3 écarts interquartiles, règle de Tukey : +700 % sur quelques articles)
+  // n'entre pas dans le cadre, sinon elle écraserait tous les autres points ; elle est posée sur le bord (`hors_cadre`),
+  // sa valeur exacte restant dans l'infobulle et les tableaux. Une évolution fiable entre toujours dans le cadre.
+  const xs = [refX, ...enrichis.map((p) => p.niveau.valeur)].filter((x) => x > 0);
+  const [bas, haut] = getBornesTukey(enrichis.map((p) => p.dynamique));
+  const dansLeCadre = enrichis.filter((p) => p.fiable || (p.dynamique >= bas && p.dynamique <= haut));
+  const ys = [refY, ...(international ? [international.valeur] : []), ...dansLeCadre.map((p) => p.dynamique)];
   const margeY = (Math.max(...ys) - Math.min(...ys)) * 0.08 || 1;
+  const bornesY = [Math.min(...ys) - margeY, Math.max(...ys) + margeY];
+  enrichis.forEach((p) => {
+    p.hors_cadre = p.dynamique > bornesY[1] ? "haut" : p.dynamique < bornesY[0] ? "bas" : null;
+  });
   const tailles = enrichis.map((p) => p.taille);
   const tailleMin = tailles.length ? Math.min(...tailles) : 0;
   const tailleMax = tailles.length ? Math.max(...tailles) : 0;
@@ -47,20 +92,24 @@ export function shapeMatrice(points, ref, cle, estFiable) {
     points: enrichis,
     exclus,
     quadrants,
+    references: {
+      niveau,
+      dynamique,
+      international: international && {
+        ...international,
+        // Évolution relative de la base (France dans le monde, taux de l'ensemble de l'ERC), citée par la page
+        base: { ...international.base, dynamique: (international.base.arrivee.valeur / international.base.depart.valeur - 1) * 100 },
+        nb_au_dessus: enrichis.filter((p) => p.international).length,
+        nb_en_dessous: enrichis.filter((p) => !p.international).length,
+      },
+    },
     bornes: {
       x: xs.length ? [Math.min(...xs) / 1.3, Math.max(...xs) * 1.3] : [null, null],
-      y: [Math.min(...ys) - margeY, Math.max(...ys) + margeY],
+      y: bornesY,
     },
     // Trois tailles de référence pour la légende : la plus petite, une intermédiaire, la plus grande
     tailles: tailles.length ? [tailleMin, Math.round(tailleMin + (tailleMax - tailleMin) / 4), tailleMax] : [],
   };
-}
-
-export function median(values) {
-  if (values.length === 0) return null;
-  const sorted = [...values].sort((a, b) => a - b);
-  const mid = Math.floor(sorted.length / 2);
-  return sorted.length % 2 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
 }
 
 // Regroupement des catégories d'établissements pour la matrice : on compare des établissements comparables

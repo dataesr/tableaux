@@ -8,10 +8,10 @@ import type { BiblioDiscipline, BiblioMeta, BiblioOptions, Indicateur, Selection
 import ChartBusy from "../../../../components/chart-busy/index.tsx";
 import { useRenderTransition } from "../../../../hooks/use-render-transition";
 import { ENTITE_NATIONALE } from "../../../../hooks/use-selection";
-import { formatPart, formatPeriode, getDisciplineLabel, INDICATEUR_LABELS } from "../../../../utils";
+import { formatPeriode, getDisciplineLabel, INDICATEUR_LABELS } from "../../../../utils";
 import LegendeTailles from "../../../../components/matrice/legende-tailles.tsx";
 import Quadrants from "../../../../components/matrice/quadrants.tsx";
-import { getLectureMatrice } from "../../../../components/matrice/utils.tsx";
+import { getLectureMatrice, getTexteHorsCadre, getTexteReferences } from "../../../../components/matrice/utils.tsx";
 import { getChartSources } from "../../../../components/sources.tsx";
 import { getBiblioMatriceTextes } from "../../matrice-textes.ts";
 import getOptions from "./options.tsx";
@@ -143,8 +143,9 @@ export default function PositionnementEtablissements({ disciplines, entiteNom, m
                     fr: (
                       <>
                         {`Horizontal : part mondiale de chaque établissement (${disciplineLabel}) sur ${formatPeriode(data.periodes.arrivee)}, en échelle logarithmique. `}
-                        {`Ligne pointillée : médiane des établissements représentés (${formatPart(data.reference.valeur)}) ; à droite, ceux qui font mieux que la médiane du groupe. `}
-                        {"Vertical : part d'arrivée ÷ part de départ − 1 ; au-dessus de 0, la part progresse. "}
+                        {`Vertical : part d'arrivée ÷ part de ${formatPeriode(data.periodes.depart)} − 1. `}
+                        {getTexteHorsCadre(data, (p) => p.sigle ?? p.nom)}
+                        {`${getTexteReferences(data, getBiblioMatriceTextes(data), { cle, nom: (p) => p.sigle ?? p.nom, pluriel: "établissements" }).join(" ")} `}
                         {"Étiquette : sigle de l'établissement ; nom complet au survol et dans le tableau ci-dessous. "}
                         {data.indicateur === "influence" && " Influence : années consolidées seulement (fenêtre de citation close)."}
                         {data.provisoire && " Attention : la période d'arrivée contient des années provisoires."}

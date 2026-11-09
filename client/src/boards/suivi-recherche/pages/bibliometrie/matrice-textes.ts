@@ -9,7 +9,7 @@ export function getBiblioMatriceTextes<P>(data: Matrice<P>): MatriceTextes {
     axeY: `Dynamique : évolution relative de la part depuis ${formatPeriode(data.periodes.depart)}`,
     calcul: (ratio) => formatRatio(ratio, data.indicateur),
     niveau: "Part",
-    peuFiable: `moins de ${data.seuil_fiabilite} articles`,
+    peuFiable: `moins de ${data.seuil_fiabilite} articles sur l'une des deux périodes`,
     taille: { colonne: "Articles", format: formatArticles, unite: "articles" },
   };
 }

@@ -156,8 +156,8 @@ export type ErcPositionnementMatrice = ErcPositionnementContexte & Matrice<ErcEt
   annees_provisoires: number[];
   classement: ClassementErc | null;
   periode: [number, number];
-  // Référence du niveau : médiane du groupe (part) ou France (taux, avec son calcul)
-  reference: { valeur: number | null; numerateur?: number; denominateur?: number };
+  // Taux de succès de la France sur la période d'arrivée (indicateur taux_succes seulement)
+  taux_france: Ratio | null;
   seuil_taux: number;
   seuil_unite: string;
 };

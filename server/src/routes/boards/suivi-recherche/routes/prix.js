@@ -2,7 +2,7 @@ import express from "express";
 
 import { BadRequestError } from "../../../../commons/errors/index.js";
 import { getCollection } from "../collections.js";
-import { CODES_GROUPES, computePeriodes, loadGroupeEtablissements, median, shapeMatrice } from "../matrice.js";
+import { CODES_GROUPES, computePeriodes, getReferencesMedianes, loadGroupeEtablissements, shapeMatrice } from "../matrice.js";
 import { getSourcesPrix } from "../sources.js";
 
 // Prix et distinctions (athena : prix_meta, prix_catalogue, prix_effectifs, prix_effectifs_disciplines).
@@ -184,8 +184,9 @@ router.route("/suivi-recherche/financements/prix/evolution").get(async (req, res
 });
 
 // Établissements d'un groupe comparable : matrice niveau × dynamique, même grammaire que l'ERC et la bibliométrie.
-// Niveau : part des nominations du groupe de prix (référence : médiane du groupe) ; dynamique : évolution relative
-// entre deux périodes ; taille : nominations de la période d'arrivée. Rang de l'établissement choisi sur la période.
+// Niveau : part des nominations du groupe de prix ; dynamique : évolution relative entre deux périodes ; références :
+// médianes du groupe sur les deux axes ; pas de repère international (prix français) ; taille : nominations de la période
+// d'arrivée. Rang de l'établissement choisi sur la période.
 router.route("/suivi-recherche/financements/prix/positionnement-etablissements").get(async (req, res) => {
   const meta = await getMeta();
   const { groupe: groupeDemande } = req.query;
@@ -231,9 +232,6 @@ router.route("/suivi-recherche/financements/prix/positionnement-etablissements")
     };
   });
 
-  // Référence : médiane des parts des établissements représentés (pas de moyenne de parts)
-  const representables = points.filter((p) => (p.niveau.valeur ?? 0) > 0 && p.dynamique !== null);
-  const reference = { valeur: median(representables.map((p) => p.niveau.valeur)) };
 
   const parts = membres.map(({ entite_id: id }) => ({ entite_id: id, ratio: part(id, annees) }));
   const choisi = parts.find(({ entite_id: id }) => id === selectionId);
@@ -246,10 +244,9 @@ router.route("/suivi-recherche/financements/prix/positionnement-etablissements")
     non_classes: nonClasses,
     annees_provisoires: meta.annees_provisoires.filter((annee) => annees.includes(annee)),
     provisoire: arrivee.some((annee) => meta.annees_provisoires.includes(annee)),
-    reference,
     seuil_fiabilite: SEUIL_NOMINATIONS,
     classement: choisi ? { nb_laureats: choisi.ratio.numerateur, part: { ratio: choisi.ratio, ...classer(parts, selectionId) } } : null,
-    ...shapeMatrice(points, reference.valeur ?? 0, (p) => p.entite_id, (p) => p.min_laureats >= SEUIL_NOMINATIONS),
+    ...shapeMatrice(points, getReferencesMedianes(points, (p) => p.entite_id), (p) => p.entite_id, (p) => p.min_laureats >= SEUIL_NOMINATIONS),
   });
 });
 

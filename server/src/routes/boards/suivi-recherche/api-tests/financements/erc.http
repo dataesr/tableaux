@@ -46,6 +46,7 @@ GET http://localhost:3000/api/suivi-recherche/financements/erc/comparaison-inter
 
 ###
 # Établissements : matrice part des lauréats × évolution, groupe de Sorbonne Université, et son rang
+# references : médianes du groupe et repère international (part dans l'ensemble de l'ERC stable, base France)
 GET http://localhost:3000/api/suivi-recherche/financements/erc/positionnement-etablissements?ror_id=02en5vm52
 
 ###

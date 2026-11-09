@@ -106,8 +106,28 @@ export type MatricePoint = {
   niveau: Ratio;
   niveau_depart: Ratio;
   quadrant: QuadrantKey;
+  // Point peu fiable hors du cadre (calculé sur les points fiables), posé sur le bord haut ou bas ; null dans le cadre
+  hors_cadre: "haut" | "bas" | null;
+  // Au-dessus (true) ou en dessous (false) du repère international ; null sans repère
+  international: boolean | null;
   // Aire de la bulle : articles (bibliométrie), lauréats (financements)
   taille: number;
+};
+
+// Ligne qui coupe les quadrants : valeur, libellé affiché sur la ligne et origine de la valeur,
+// soit le point qui porte une médiane (`point`, sa clé), soit un ratio (`ratio`, part de l'entité toutes disciplines)
+export type MatriceReference = { libelle: string; point?: string | null; ratio?: Ratio; valeur: number | null };
+
+// Seconde ligne horizontale, qui ne coupe pas les quadrants : repère international. `base` : ce à quoi les points se
+// comparent (France dans le monde, ensemble de l'ERC), avec ses ratios de départ et d'arrivée
+export type MatriceRepere = {
+  au_dessus: string;
+  base: { arrivee: Ratio; depart: Ratio; dynamique: number; libelle: string };
+  en_dessous: string;
+  libelle: string;
+  nb_au_dessus: number;
+  nb_en_dessous: number;
+  valeur: number;
 };
 
 // Matrice niveau × dynamique : points représentables seulement, triés par nombre d'articles décroissant (ordre de tracé)
@@ -121,13 +141,13 @@ export type Matrice<P, I extends string = Indicateur> = {
   provisoire: boolean;
   // Clés des points de chaque quadrant, de la plus forte à la plus faible part
   quadrants: Record<QuadrantKey, string[]>;
-  reference: { valeur: number | null };
+  references: { dynamique: MatriceReference; international: MatriceRepere | null; niveau: MatriceReference };
   seuil_fiabilite: number;
   tailles: number[];
 };
 
-// Un point par discipline de l'entité ; référence : part de l'entité toutes disciplines
-export type Positionnement = Matrice<PositionnementPoint> & { reference: Ratio };
+// Un point par discipline de l'entité ; références : part de l'entité toutes disciplines, part mondiale stable
+export type Positionnement = Matrice<PositionnementPoint>;
 
 export type EtablissementPoint = {
   categorie: string;
@@ -140,7 +160,7 @@ export type EtablissementPoint = {
 
 export type GroupeEtablissements = { code: string; libelle: string; nb: number };
 
-// Un point par établissement du groupe ; référence : médiane des parts des établissements représentés
+// Un point par établissement du groupe ; références : médianes du groupe ; repère : part mondiale stable
 export type PositionnementEtablissements = Matrice<EtablissementPoint> & {
   groupe: string;
   // Groupe de l'établissement sélectionné (null pour la France)

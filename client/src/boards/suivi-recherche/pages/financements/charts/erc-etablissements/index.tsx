@@ -3,6 +3,7 @@ import { useMemo } from "react";
 
 import type { SourceDonnees } from "../../../../api";
 import type { ErcPositionnementMatrice, IndicateurMatrice } from "../../../../api/erc.ts";
+import { getTexteHorsCadre, getTexteReferences } from "../../../../components/matrice/utils.tsx";
 import type { MatriceTextes } from "../../../../components/matrice/utils.tsx";
 import { formatNombre, formatPart, formatPeriode } from "../../../../utils";
 import { UNITES } from "../../comptage.ts";
@@ -60,18 +61,25 @@ export default function ErcEtablissements({ data, disciplineLabel, entiteNom, so
   const textes = useMemo(() => getTextes(data), [data]);
   const label = INDICATEURS_MATRICE.find(({ key }) => key === data.indicateur)?.label ?? "";
   const groupeLibelle = data.groupes.find(({ code }) => code === data.groupe)?.libelle ?? "";
-  const { reference } = data;
-  const referenceTexte = data.indicateur === "taux_succes"
-    ? `taux de succès de la France (${formatPart(reference.valeur)} = ${textes.calcul({ valeur: reference.valeur, numerateur: reference.numerateur ?? 0, denominateur: reference.denominateur ?? 0 })})`
-    : `médiane des établissements représentés (${formatPart(reference.valeur)})`;
+  const taux = data.indicateur === "taux_succes";
+  const unites = UNITES[data.comptage];
+  const references = getTexteReferences(data, textes, {
+    cle: (p) => p.entite_id,
+    nom: (p) => p.sigle ?? p.nom,
+    pluriel: "établissements",
+    // Part : la base est la part de la France dans les lauréats de l'ensemble de l'ERC
+    ...(!taux && { calculBase: ({ numerateur, denominateur }) => `${formatNombre(numerateur)} / ${formatNombre(denominateur)} ${unites.laureats} de l'ensemble de l'ERC` }),
+  });
 
   return (
     <MatriceEtablissements
       commentaire={(
         <>
           {`Horizontal : ${label.toLowerCase()} de chaque établissement sur les appels ${formatPeriode(data.periodes.arrivee)}, en échelle logarithmique. `}
-          {`Ligne pointillée : ${referenceTexte} ; à droite, ceux qui font mieux. `}
-          {`Vertical : valeur d'arrivée ÷ valeur des appels ${formatPeriode(data.periodes.depart)} − 1 ; au-dessus de 0, l'établissement progresse. `}
+          {`Vertical : valeur d'arrivée ÷ valeur des appels ${formatPeriode(data.periodes.depart)} − 1. `}
+          {getTexteHorsCadre(data, (p) => p.sigle ?? p.nom)}
+          {`${references.join(" ")} `}
+          {data.taux_france && `Taux de succès de la France sur les appels ${formatPeriode(data.periodes.arrivee)} : ${formatPart(data.taux_france.valeur)} (${textes.calcul(data.taux_france)}). `}
           {`Taille : ${textes.taille.unite} des appels ${formatPeriode(data.periodes.arrivee)}. Appels consolidés seulement (résultats tous publiés). `}
           {"Un même ERC compte pour plusieurs établissements (tutelles) : les parts ne s'additionnent pas. "}
           {data.provisoire && " Attention : la période d'arrivée contient des appels provisoires."}

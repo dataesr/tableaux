@@ -7,8 +7,8 @@ import {
   GROUPE_AUTRES,
   GROUPE_PAR_DEFAUT,
   GROUPES_ETABLISSEMENTS,
+  getReferencesMedianes,
   groupeOf,
-  median,
   shapeMatrice,
 } from "../matrice.js";
 import { computeAbscisses, computeRubans, DEMI_COLONNE, HAUTEUR } from "../rubans.js";
@@ -260,21 +260,28 @@ router.route("/suivi-recherche/bibliometrie/positionnement").get(async (req, res
     const niveauDepart = computeIndicators(sum(entiteId, "depart", code), sum(MONDE, "depart", code), multi)[indicateur];
     const dynamique = niveauDepart.valeur && niveau.valeur !== null ? (niveau.valeur / niveauDepart.valeur - 1) * 100 : null;
     const nbArticles = entiteArrivee.nb_articles ?? 0;
-    return { ...discipline, niveau, niveau_depart: niveauDepart, dynamique, nb_articles: nbArticles, taille: nbArticles };
+    // Articles les plus faibles des deux périodes, pour la fiabilité de l'évolution (comme l'ERC et les prix)
+    const minArticles = Math.min(sum(entiteId, "depart", code).nb_articles ?? 0, nbArticles);
+    return { ...discipline, niveau, niveau_depart: niveauDepart, dynamique, nb_articles: nbArticles, min_articles: minArticles, taille: nbArticles };
   });
 
+  // Niveau : part de l'entité toutes disciplines ; dynamique : 0, la part mondiale de la discipline est stable
+  const references = {
+    niveau: { libelle: "Part toutes disciplines", valeur: reference.valeur, ratio: reference },
+    dynamique: { libelle: "Part mondiale stable", valeur: 0 },
+  };
   res.json({
     indicateur,
     periodes,
     provisoire,
-    reference,
     seuil_fiabilite: SEUIL_FIABILITE,
-    ...shapeMatrice(points, reference.valeur ?? 0, (p) => p.discipline_code, (p) => p.nb_articles >= SEUIL_FIABILITE),
+    ...shapeMatrice(points, references, (p) => p.discipline_code, (p) => p.min_articles >= SEUIL_FIABILITE),
   });
 });
 
 // Matrice niveau × dynamique des établissements d'un groupe de catégories, dans la discipline sélectionnée.
-// Niveau : part mondiale de l'établissement ; référence : médiane des établissements représentés.
+// Niveau : part mondiale de l'établissement ; références : médianes du groupe (niveau et évolution) ;
+// repère international : part mondiale stable (évolution 0), comparée à l'évolution de la France.
 router.route("/suivi-recherche/bibliometrie/positionnement-etablissements").get(async (req, res) => {
   const { debut, fin, match, multi } = parseFilters(req.query, { withEntite: false });
   const { indicateur, periodes, provisoire } = await parseMatrice(req.query, debut, fin);
@@ -302,7 +309,7 @@ router.route("/suivi-recherche/bibliometrie/positionnement-etablissements").get(
       {
         $match: {
           ...match,
-          entite_id: { $in: [...membres.map((etablissement) => etablissement.entite_id), MONDE] },
+          entite_id: { $in: [...membres.map((etablissement) => etablissement.entite_id), ENTITE_NATIONALE, MONDE] },
           annee_publication: { $in: [...range(depart), ...range(arrivee)] },
         },
       },
@@ -335,13 +342,25 @@ router.route("/suivi-recherche/bibliometrie/positionnement-etablissements").get(
         niveau_depart: niveauDepart,
         dynamique,
         nb_articles: sum(id, "arrivee").nb_articles ?? 0,
+        // Articles les plus faibles des deux périodes, pour la fiabilité de l'évolution (comme l'ERC et les prix)
+        min_articles: Math.min(sum(id, "depart").nb_articles ?? 0, sum(id, "arrivee").nb_articles ?? 0),
         taille: sum(id, "arrivee").nb_articles ?? 0,
         focus: id === selectionId,
       };
     });
 
-  // Référence : médiane des parts des établissements représentés (pas de moyenne de parts)
-  const reference = median(points.filter((p) => (p.niveau.valeur ?? 0) > 0 && p.dynamique !== null).map((p) => p.niveau.valeur));
+  const france = {
+    libelle: "France",
+    depart: computeIndicators(sum(ENTITE_NATIONALE, "depart"), sum(MONDE, "depart"), multi)[indicateur],
+    arrivee: computeIndicators(sum(ENTITE_NATIONALE, "arrivee"), sum(MONDE, "arrivee"), multi)[indicateur],
+  };
+  const references = {
+    ...getReferencesMedianes(points, (p) => p.entite_id),
+    // Sans part française sur l'une des périodes, pas de repère
+    international: france.depart.valeur && france.arrivee.valeur !== null
+      ? { libelle: "Part mondiale stable", valeur: 0, au_dessus: "gagne de la part mondiale", en_dessous: "perd de la part mondiale", base: france }
+      : null,
+  };
 
   res.json({
     indicateur,
@@ -351,9 +370,8 @@ router.route("/suivi-recherche/bibliometrie/positionnement-etablissements").get(
     groupes,
     // Groupe de l'établissement sélectionné (null pour la France) : il n'apparaît que dans ce groupe
     groupe_selection: groupeSelection,
-    reference: { valeur: reference },
     seuil_fiabilite: SEUIL_FIABILITE,
-    ...shapeMatrice(points, reference ?? 0, (p) => p.entite_id, (p) => p.nb_articles >= SEUIL_FIABILITE),
+    ...shapeMatrice(points, references, (p) => p.entite_id, (p) => p.min_articles >= SEUIL_FIABILITE),
   });
 });
 
