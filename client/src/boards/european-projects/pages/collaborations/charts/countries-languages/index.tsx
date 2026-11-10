@@ -109,7 +109,7 @@ export default function CountryLanguages() {
                   <strong>{selectedCountryLanguages.length > 0 ? selectedCountryLanguages.join(", ") : getI18nLabel("no-languages")}</strong>
                   <br />
                   <br />
-                  {getI18nLabel("shared-language-collaborations-text")} <strong>{sharedLanguageSum.toLocaleString()}</strong>{" "}
+                  {getI18nLabel("shared-language-collaborations-text")} <strong>{sharedLanguageSum.toLocaleString("fr-FR")}</strong>{" "}
                   {getI18nLabel("projects")}, {getI18nLabel("which-is")}{" "}
                   <strong>{total_collaborations > 0 ? Math.floor((sharedLanguageSum / total_collaborations) * 100) : 0} %</strong>{" "}
                   {getI18nLabel("of-total-collaborations")}.
@@ -120,7 +120,7 @@ export default function CountryLanguages() {
                       {getI18nLabel("top-languages")} :{" "}
                       {topLanguages.map(([lang, stats], i) => (
                         <span key={lang}>
-                          <strong>{lang}</strong> ({stats.collaborations.toLocaleString()} {getI18nLabel("projects")},{" "}
+                          <strong>{lang}</strong> ({stats.collaborations.toLocaleString("fr-FR")} {getI18nLabel("projects")},{" "}
                           <abbr title={stats.countryNames.join(", ")} style={{ cursor: "help", textDecorationStyle: "dotted" }}>
                             {stats.count} {getI18nLabel("countries")}
                           </abbr>

@@ -45,11 +45,11 @@ export default function RateCard({ nb, label, loading, tooltipText, numerator, d
               <div className="calculation-details">
                 <div className="calculation-item">
                   <span className="calculation-label">{numeratorLabel}</span>
-                  <span className="calculation-value">{numerator.toLocaleString()}</span>
+                  <span className="calculation-value">{numerator.toLocaleString("fr-FR")}</span>
                 </div>
                 <div className="calculation-item">
                   <span className="calculation-label">{denominatorLabel}</span>
-                  <span className="calculation-value">{denominator.toLocaleString()}</span>
+                  <span className="calculation-value">{denominator.toLocaleString("fr-FR")}</span>
                 </div>
               </div>
             )}

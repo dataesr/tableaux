@@ -307,7 +307,7 @@ export default function CountriesCollaborationsTable() {
                       <tr>
                         <td colSpan={4} className="fr-text--sm">
                           {getI18nLabel("total-collaborations")}
-                          {total_collaborations.toLocaleString()}
+                          {total_collaborations.toLocaleString("fr-FR")}
                         </td>
                       </tr>
                     </tbody>

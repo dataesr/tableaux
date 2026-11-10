@@ -77,7 +77,7 @@ export default function SubList() {
               <Row key={item.geo_nom} style={{ width: "100%" }}>
                 <div style={{ flexGrow: "1" }}>{item.geo_nom}</div>
                 <div>
-                  <strong>{item.data.find((el) => el.annee_universitaire === currentYear)?.effectif.toLocaleString()}</strong>
+                  <strong>{item.data.find((el) => el.annee_universitaire === currentYear)?.effectif.toLocaleString("fr-FR")}</strong>
                   {["R", "D", "A", "U", "P"].includes(geoId?.charAt(0)) && (
                     <Button className="fr-ml-1w" onClick={() => navigate(`/atlas/general?geo_id=${item.geo_id}&annee_universitaire=${currentYear}`)} size="sm" variant="text">
                       Voir
@@ -88,11 +88,11 @@ export default function SubList() {
               <div
                 className="fr-mb-1w"
                 style={{
-                  width: `${size}%`,
-                  height: "16px",
                   backgroundColor: getCssColor("atlas-primary-color"),
-                  borderTopRightRadius: "3px",
                   borderBottomRightRadius: "3px",
+                  borderTopRightRadius: "3px",
+                  height: "16px",
+                  width: `${size}%`,
                 }}
               />
             </li>

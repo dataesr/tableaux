@@ -47,7 +47,7 @@ export default function Gauge({ values }: GaugeProps) {
             />
             <span className="gauge-legend-label">{entry.label}</span>
             <span className="gauge-legend-value">
-              {entry.value.toLocaleString()} ({percentages[index].toFixed(1)}%)
+              {entry.value.toLocaleString("fr-FR")} ({percentages[index].toFixed(1)}%)
             </span>
           </div>
         ))}

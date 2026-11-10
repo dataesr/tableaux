@@ -42,7 +42,7 @@ export default function TrendGraph({ data = [] }: TrendGraphProps) {
       formatter: function () {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
-        return `Année universitaire <b>${this.x}-${parseInt(this.x.toString().substring(2)) + 1}</b><br/>=> <b>${this.y.toLocaleString()}</b> étudiants`;
+        return `Année universitaire <b>${this.x}-${parseInt(this.x.toString().substring(2)) + 1}</b><br/>=> <b>${this.y.toLocaleString("fr-FR")}</b> étudiants`;
       },
     },
     colors: [getCssColor("atlas-primary-color")],

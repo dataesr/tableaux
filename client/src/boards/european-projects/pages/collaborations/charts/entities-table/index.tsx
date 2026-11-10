@@ -207,12 +207,12 @@ export default function EntitiesTable({ entityId }) {
                         </td>
                         <td className="text-center">
                           <strong>
-                            <i>{sortedData.reduce((acc, item) => acc + item.projects.length, 0).toLocaleString()}</i>
+                            <i>{sortedData.reduce((acc, item) => acc + item.projects.length, 0).toLocaleString("fr-FR")}</i>
                           </strong>
                         </td>
                         <td className="text-center">
                           <strong>
-                            <i>{sortedData.reduce((acc, item) => acc + item.total_projects, 0).toLocaleString()}</i>
+                            <i>{sortedData.reduce((acc, item) => acc + item.total_projects, 0).toLocaleString("fr-FR")}</i>
                           </strong>
                         </td>
                         <td />

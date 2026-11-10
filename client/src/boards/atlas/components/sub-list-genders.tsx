@@ -68,7 +68,7 @@ export default function SubListGenders() {
               <Row key={item.id} style={{ width: "100%" }}>
                 <div style={{ flexGrow: "1" }}>{item.nom}</div>
                 <div>
-                  <strong>{item.effectif_total.toLocaleString()}</strong>
+                  <strong>{item.effectif_total.toLocaleString("fr-FR")}</strong>
                   {["R", "D", "A", "U", "P"].includes(geoId?.charAt(0)) && (
                     <Button
                       className="fr-ml-1w"
@@ -118,9 +118,9 @@ export default function SubListGenders() {
                 Effectifs <strong>{item.nom}</strong> par genre pour l'année
                 universitaire {currentYear}
                 <br />
-                Féminin : {item.effectif_feminin.toLocaleString()} étudiantes
+                Féminin : {item.effectif_feminin.toLocaleString("fr-FR")} étudiantes
                 <br />
-                Masculin : {item.effectif_masculin.toLocaleString()} étudiants
+                Masculin : {item.effectif_masculin.toLocaleString("fr-FR")} étudiants
               </span>
             </li>
           );

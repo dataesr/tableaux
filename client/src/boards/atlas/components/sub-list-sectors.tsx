@@ -63,7 +63,7 @@ export default function SubListSectors() {
               <Row key={item.id} style={{ width: "100%" }}>
                 <div style={{ flexGrow: "1" }}>{item.nom}</div>
                 <div>
-                  <strong>{item.effectif_total.toLocaleString()}</strong>
+                  <strong>{item.effectif_total.toLocaleString("fr-FR")}</strong>
                   {["R", "D", "A", "U", "P"].includes(geoId?.charAt(0)) && (
                     <Button
                       className="fr-ml-1w"
@@ -113,10 +113,10 @@ export default function SubListSectors() {
                 Effectifs <strong>{item.nom}</strong> par secteur pour l'année
                 universitaire {currentYear}
                 <br />
-                Secteur public : {item.effectif_secteur_public.toLocaleString()}{" "}
+                Secteur public : {item.effectif_secteur_public.toLocaleString("fr-FR")}{" "}
                 étudiants
                 <br />
-                Secteur privé : {item.effectif_secteur_prive.toLocaleString()}{" "}
+                Secteur privé : {item.effectif_secteur_prive.toLocaleString("fr-FR")}{" "}
                 étudiants
               </span>
             </li>

@@ -402,7 +402,7 @@ export default function General() {
               <>Il n'y a pas d'étudiant inscrit dans le secteur public</>
             ) : (
               <>
-                <strong>{effectifPU.toLocaleString()}</strong> étudiants sont inscrits dans le secteur public
+                <strong>{effectifPU.toLocaleString("fr-FR")}</strong> étudiants sont inscrits dans le secteur public
               </>
             )}{" "}
             et{" "}
@@ -410,7 +410,7 @@ export default function General() {
               <>il n'y a pas d'étudiant inscrit dans le secteur privé</>
             ) : (
               <>
-                <strong>{effectifPR.toLocaleString()}</strong> étudiants sont inscrits dans le secteur privé
+                <strong>{effectifPR.toLocaleString("fr-FR")}</strong> étudiants sont inscrits dans le secteur privé
               </>
             )}
             , soit une répartition de <strong>{pctPU}&nbsp;%</strong> dans le secteur public et <strong>{pctPR}&nbsp;%</strong> dans le secteur privé pour l'année universitaire <Badge color="yellow-tournesol">{currentYear}</Badge>.
@@ -434,7 +434,7 @@ export default function General() {
               <>Il n'y a pas d'étudiant de genre masculin</>
             ) : (
               <>
-                <strong>{effectifM.toLocaleString()}</strong> étudiants sont de genre masculin
+                <strong>{effectifM.toLocaleString("fr-FR")}</strong> étudiants sont de genre masculin
               </>
             )}{" "}
             et{" "}
@@ -442,7 +442,7 @@ export default function General() {
               <>il n'y a pas d'étudiant de genre féminin</>
             ) : (
               <>
-                <strong>{effectifF.toLocaleString()}</strong> étudiants sont de genre féminin
+                <strong>{effectifF.toLocaleString("fr-FR")}</strong> étudiants sont de genre féminin
               </>
             )}
             , soit une répartition de <strong>{pctM}&nbsp;%</strong> dans le genre masculin et <strong>{pctF}&nbsp;%</strong> dans le genre féminin pour l'année universitaire <Badge color="yellow-tournesol">{currentYear}</Badge>.

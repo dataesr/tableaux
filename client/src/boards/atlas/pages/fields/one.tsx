@@ -188,9 +188,9 @@ export default function OneField() {
               le secteur privé.
               <br />
               <br />
-              <strong>{effectifPU.toLocaleString()}</strong> étudiant
+              <strong>{effectifPU.toLocaleString("fr-FR")}</strong> étudiant
               {effectifPU > 1 ? "s sont inscrits" : " inscrit"} dans le secteur
-              public et <strong>{effectifPR.toLocaleString()}</strong> étudiant
+              public et <strong>{effectifPR.toLocaleString("fr-FR")}</strong> étudiant
               {effectifPR > 1 ? "s inscrits" : "inscrit"} dans le secteur privé,
               soit une répartition de <strong>{pctPU}&nbsp;%</strong> dans le
               secteur public et <strong>{pctPR}&nbsp;%</strong> dans le secteur
@@ -218,9 +218,9 @@ export default function OneField() {
               féminin.
               <br />
               <br />
-              {effectifM.toLocaleString()} étudiant
+              {effectifM.toLocaleString("fr-FR")} étudiant
               {effectifM > 1 ? "s sont" : " est"} de genre masculin et{" "}
-              <strong>{effectifF.toLocaleString()}</strong> étudiant
+              <strong>{effectifF.toLocaleString("fr-FR")}</strong> étudiant
               {effectifF > 1 ? "s sont" : " est"} de genre féminin, soit une
               répartition de <strong>{pctM}&nbsp;%</strong> dans le genre
               masculin et <strong>{pctF}&nbsp;%</strong> dans le genre féminin
