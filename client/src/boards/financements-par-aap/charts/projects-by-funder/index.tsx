@@ -200,7 +200,9 @@ export default function ProjectsByFunder({ name, participantSuperOrganizationChi
   }
   let title = `Nombre de projets financés auxquels ${structure ? "l'établissement" : "la région"} ${name} participe, réparti par financeur ${getYearRangeLabel({ yearMax, yearMin })}`
   let tooltip = function (this: any) {
-    return `<b>${this.y}</b> projets <b>${this.series.name}</b> auxquels participe <b>${name}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}, soit ${formatPercent(this.y_perc)} (${this.y} / ${this.total} )`
+    let tooltip = `<b>${this.y}</b> projets <b>${this.series.name}</b> auxquels participe <b>${name}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`
+    tooltip += structure ? `, soit ${formatPercent(this.y_perc)} (${this.y} / ${this.total} )` : ''
+    return tooltip
   }
   switch (selectedControl) {
     // If view by global amount
@@ -215,7 +217,9 @@ export default function ProjectsByFunder({ name, participantSuperOrganizationChi
       }
       title = `Montant total des projets auxquels ${structure ? "l'établissement" : "la région"} ${name} participe, réparti par financeur ${getYearRangeLabel({ yearMax, yearMin })}`
       tooltip = function (this: any) {
-        return `<b>${formatCompactNumber(this.y)} €</b> financés ${getYearRangeLabel({ isBold: true, yearMax, yearMin })} pour les projets <b>${this.series.name}</b> auxquels participe <b>${name}</b>, soit ${formatPercent(this.y_perc)} (${formatCompactNumber(this.y)} € / ${formatCompactNumber(this.total)}  €)`
+        let tooltip = `<b>${formatCompactNumber(this.y)} €</b> financés ${getYearRangeLabel({ isBold: true, yearMax, yearMin })} pour les projets <b>${this.series.name}</b> auxquels participe <b>${name}</b>`
+        tooltip += structure ? `, soit ${formatPercent(this.y_perc)} (${formatCompactNumber(this.y)} € / ${formatCompactNumber(this.total)} €)` : ''
+        return tooltip
       }
       break
     // If view by amount by structure
@@ -230,7 +234,9 @@ export default function ProjectsByFunder({ name, participantSuperOrganizationChi
       }
       title = `Financement perçu pour des projets auxquels ${structure ? "l'établissement" : "la région"} ${name} participe, réparti par financeur ${getYearRangeLabel({ yearMax, yearMin })}`
       tooltip = function (this: any) {
-        return `<b>${formatCompactNumber(this.y)} €</b> perçus ${getYearRangeLabel({ isBold: true, yearMax, yearMin })} pour les projets <b>${this.series.name}</b> auxquels participe <b>${name}</b>, soit ${formatPercent(this.y_perc)} (${formatCompactNumber(this.y)} € / ${formatCompactNumber(this.total)}  €)`
+        let tooltip = `<b>${formatCompactNumber(this.y)} €</b> perçus ${getYearRangeLabel({ isBold: true, yearMax, yearMin })} pour les projets <b>${this.series.name}</b> auxquels participe <b>${name}</b>`
+        tooltip += structure ? `, soit ${formatPercent(this.y_perc)} (${formatCompactNumber(this.y)} € / ${formatCompactNumber(this.total)} €)` : ''
+        return tooltip
       }
       break
   }
