@@ -47,7 +47,7 @@ export default function Home() {
                     id="bloc1"
                     values={{
                       b: (chunks) => <b>{chunks}</b>,
-                      glossary: (chunks) => <Glossary id={chunks?.[0]?.toLocaleString("fr-FR") ?? ""} />,
+                      glossary: (chunks) => <Glossary id={chunks?.[0]?.toLocaleString() ?? ""} />,
                     }}
                   />
                 </p>
