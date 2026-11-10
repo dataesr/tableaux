@@ -8,7 +8,7 @@ import { getFiltersValues } from "../../api/atlas.ts";
 import { getGeoLabel, setfavoriteIdsInCookie } from "../../utils.tsx";
 import { Search } from "./pages/search/index.tsx";
 import YearsModalButton from "./components/header/years-modal-button.tsx";
-import { AtlasSideMenu } from "./components/side-menu-layout/index.tsx";
+import { AtlasTabs } from "./components/tabs-layout/index.tsx";
 import { GetLevelBadgeFromId } from "./utils/badges.tsx";
 import { getLevelFromGeoId } from "./utils/index.tsx";
 import Breadcrumb from "../../components/breadcrumb/index.tsx";
@@ -61,7 +61,7 @@ export default function AtlasHeader() {
           <YearsModalButton />
         </Col>
       </Row>
-      {!geoId ? <Search /> : <AtlasSideMenu geoLabel={geoLabel} level={getLevelFromGeoId({ geoId })} title={geoLabelFull} />}
+      {!geoId ? <Search /> : <AtlasTabs geoLabel={geoLabel} level={getLevelFromGeoId({ geoId })} title={geoLabelFull} />}
     </Container>
   );
 }
