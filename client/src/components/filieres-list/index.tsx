@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { Link, useSearchParams } from "react-router-dom";
-import { Badge, Container, Row, Col, Text, Title } from "@dataesr/dsfr-plus";
+import { Badge, Container, Text, Title } from "@dataesr/dsfr-plus";
 
 import ListSkeleton from "../../boards/atlas/charts/skeletons/list.tsx";
 import { getNumberOfStudents } from "../../api/atlas.ts";
@@ -20,7 +20,7 @@ export default function FilieresList() {
     return <ListSkeleton />;
   }
 
-  const maxValue: number = Math.max(...data.filieres.map((el) => (el.effectif_PU || 0) + (el.effectif_PR || 0)));
+  const sortedFilieres = [...data.filieres].sort((a, b) => (b.effectif_PR || 0) + (b.effectif_PU || 0) - ((a.effectif_PR || 0) + (a.effectif_PU || 0)));
 
   return (
     <Container fluid className="fr-my-1w">
@@ -32,44 +32,45 @@ export default function FilieresList() {
         </Badge>
       </Title>
 
-      <Row gutters>
-        <Col>
-          <ul>
-            {data?.filieres.map((filiere) => {
-              if ((filiere.effectif_PR || 0) + (filiere.effectif_PU || 0) !== 0) {
-                const size = (((filiere.effectif_PR || 0) + (filiere.effectif_PU || 0)) * 100) / maxValue;
+      <ul className="fr-grid-row fr-grid-row--gutters" style={{ listStyle: "none" }}>
+        {sortedFilieres
+          .filter((filiere) => (filiere.effectif_PR || 0) + (filiere.effectif_PU || 0) !== 0)
+          .map((filiere) => {
+            const effectifPublic = filiere.effectif_PU || 0;
+            const effectifPrive = filiere.effectif_PR || 0;
+            const effectifTotal = effectifPublic + effectifPrive;
 
-                return (
-                  <li style={{ listStyle: "none" }} key={filiere.id}>
-                    <Title as="h3" look="h6" className="fr-mb-0">
-                      {filiere.label}
-                      <Link to={`/atlas/effectifs-par-filiere/${filiere.id}?${params}`} className="fr-link fr-ml-1w">
-                        Détails
-                      </Link>
-                    </Title>
-                    <Text as="p" className="fr-mb-1w">
-                      Effectifs étudiants{" "}
-                      <Badge color="yellow-tournesol" size="sm">
-                        {currentYear}
-                      </Badge>{" "}
-                      : <strong>{((filiere.effectif_PR || 0) + (filiere.effectif_PU || 0)).toLocaleString("fr-FR")}</strong>
-                    </Text>
-                    <div
-                      className="fr-mb-1w"
-                      style={{
-                        width: `${size}%`,
-                        height: "7px",
-                        backgroundColor: "#000091",
-                      }}
-                    />
-                  </li>
-                );
-              }
-              return null;
-            })}
-          </ul>
-        </Col>
-      </Row>
+            return (
+              <li key={filiere.id} className="fr-col-12 fr-col-md-6 fr-col-lg-4">
+                <div className="fr-card fr-card--grey fr-enlarge-link">
+                  <div className="fr-card__body">
+                    <div className="fr-card__content">
+                      <div className="fr-card__start">
+                        <Badge color="yellow-tournesol" size="sm">
+                          {currentYear}
+                        </Badge>
+                      </div>
+                      <Title as="h3" look="h6" className="fr-card__title">
+                        <Link to={`/atlas/effectifs-par-filiere/${filiere.id}?${params}`} className="fr-card__link">
+                          {filiere.label}
+                        </Link>
+                      </Title>
+                      <Text as="p" className="fr-card__desc">
+                        Effectif total : <strong>{effectifTotal.toLocaleString("fr-FR")}</strong>
+                      </Text>
+                      <Text as="p" className="fr-card__desc">
+                        Secteur public : <strong>{effectifPublic.toLocaleString("fr-FR")}</strong>
+                      </Text>
+                      <Text as="p" className="fr-card__desc">
+                        Secteur privé : <strong>{effectifPrive.toLocaleString("fr-FR")}</strong>
+                      </Text>
+                    </div>
+                  </div>
+                </div>
+              </li>
+            );
+          })}
+      </ul>
     </Container>
   );
 }

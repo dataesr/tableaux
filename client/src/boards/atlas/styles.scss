@@ -12,3 +12,44 @@
 .text-center {
   text-align: center;
 }
+
+.chart-container {
+    position: relative; // Pour permettre le positionnement absolu du badge
+
+    .chart-footer {
+      font-size: 0.8rem;
+      color: #6a6a6a;
+    }
+
+    .legend {
+      font-size: 0.8rem;
+    color: var(--label-color);
+    background-color: transparent;
+    } 
+  }
+
+  // Badge réutilisable pour les graphiques
+  .chart-badge {
+    position: absolute;
+    top: -25px;
+    left: -12px;
+    background-color: var(--blue-france-main-525);
+    color: var(--text-default-grey);
+    padding: 4px 12px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    z-index: 10;
+    white-space: nowrap;
+  }
+
+  .chart-container--default {
+    background-color: var(--background-contrast-blue-france);
+    border: 1px solid var(--background-contrast-blue-france) !important;
+    .chart-footer{
+      background-color: var(--background-contrast-blue-france);
+      padding: 8px;
+    }
+  }

@@ -2,15 +2,21 @@ import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.sr
 
 import { deepMerge } from "../../../utils";
 
-export function CreateChartOptions(type: NonNullable<HighchartsInstance.Options["chart"]>["type"], options: NonNullable<HighchartsInstance.Options>) {
-  const rootStyles = getComputedStyle(document.documentElement);
+const TEXT_COLOR = "var(--text-default-grey)";
+const GRID_COLOR = "var(--border-default-grey)";
 
+export function CreateChartOptions(type: NonNullable<HighchartsInstance.Options["chart"]>["type"], options: NonNullable<HighchartsInstance.Options>) {
   const defaultOptions: HighchartsInstance.Options = {
     chart: {
       backgroundColor: "var(--background-default-grey)",
     },
     title: { text: "" },
-    legend: { enabled: false },
+    legend: {
+      enabled: true,
+      itemStyle: { color: TEXT_COLOR },
+      itemHoverStyle: { color: TEXT_COLOR },
+    },
+    plotOptions: { column: { borderWidth: 0 } },
     exporting: { enabled: false },
     credits: { enabled: false },
     accessibility: { enabled: true },
@@ -25,7 +31,7 @@ export function CreateChartOptions(type: NonNullable<HighchartsInstance.Options[
           style: {
             fontSize: "13px",
             fontFamily: "Marianne, sans-serif",
-            color: rootStyles.getPropertyValue("--label-color"),
+            color: TEXT_COLOR,
           },
         },
       };
@@ -37,7 +43,7 @@ export function CreateChartOptions(type: NonNullable<HighchartsInstance.Options[
         style: {
           fontSize: "13px",
           fontFamily: "Marianne, sans-serif",
-          color: rootStyles.getPropertyValue("--label-color"),
+          color: TEXT_COLOR,
         },
       },
     };
@@ -47,6 +53,24 @@ export function CreateChartOptions(type: NonNullable<HighchartsInstance.Options[
     if (defaultOptions.chart) {
       defaultOptions.chart.type = type;
     }
+  }
+
+  const axisDefaults = {
+    gridLineColor: GRID_COLOR,
+    labels: { style: { color: TEXT_COLOR } },
+  };
+  const styleYAxis = (axis) => {
+    const merged = deepMerge(deepMerge({}, axisDefaults), axis);
+    merged.title = deepMerge({ style: { color: TEXT_COLOR } }, axis.title ?? {});
+    return merged;
+  };
+  if (options.yAxis) {
+    options = {
+      ...options,
+      yAxis: Array.isArray(options.yAxis) ? options.yAxis.map(styleYAxis) : styleYAxis(options.yAxis),
+    };
+  } else {
+    defaultOptions.yAxis = deepMerge({}, axisDefaults);
   }
 
   const chartOptions = deepMerge(defaultOptions, options);

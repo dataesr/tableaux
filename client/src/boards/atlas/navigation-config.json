@@ -27,6 +27,76 @@
     },
     "link": "/atlas/effectifs-par-filiere"
   },
+  "UNIV": {
+    "label": {
+      "fr": "Universités"
+    }
+  },
+  "STS": {
+    "label": {
+      "fr": "Sections de techniciens supérieurs (STS) et assimilés"
+    }
+  },
+  "EC_COM": {
+    "label": {
+      "fr": "Écoles de commerce, gestion et comptabilité"
+    }
+  },
+  "GE": {
+    "label": {
+      "fr": "Grands établissements MESRE"
+    }
+  },
+  "EC_PARAM": {
+    "label": {
+      "fr": "Écoles paramédicales et sociales"
+    }
+  },
+  "EC_ART": {
+    "label": {
+      "fr": "Écoles supérieures art et culture"
+    }
+  },
+  "ING_autres": {
+    "label": {
+      "fr": "Autres formations d'ingénieurs"
+    }
+  },
+  "CPGE": {
+    "label": {
+      "fr": "Classes préparatoires aux grandes écoles"
+    }
+  },
+  "EC_autres": {
+    "label": {
+      "fr": "Autres écoles de spécialités diverses"
+    }
+  },
+  "EPEU": {
+    "label": {
+      "fr": "Établissements d'enseignement universitaire privés"
+    }
+  },
+  "UT": {
+    "label": {
+      "fr": "Universités de technologie"
+    }
+  },
+  "EC_JUR": {
+    "label": {
+      "fr": "Écoles juridiques et administratives"
+    }
+  },
+  "INP": {
+    "label": {
+      "fr": "Instituts nationaux polytechniques"
+    }
+  },
+  "ENS": {
+    "label": {
+      "fr": "Écoles normales supérieures"
+    }
+  },
   "effectifs-par-secteur": {
     "label": {
       "fr": "Effectifs par secteur",

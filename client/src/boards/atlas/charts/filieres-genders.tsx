@@ -1,7 +1,10 @@
 import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js";
+import { useSearchParams } from "react-router-dom";
 import { CreateChartOptions } from "../components/chart-atlas";
 import ChartWrapper from "../../../components/chart-wrapper";
 import Template from "../../../components/template";
+import { getCssColor } from "../../../utils/colors";
+import { useAtlas } from "../useAtlas.tsx";
 
 type DataProps = {
   label: string;
@@ -10,25 +13,29 @@ type DataProps = {
 };
 
 export default function FilieresGendersChart({ data, isLoading }: { data: DataProps[]; isLoading: boolean }) {
+  const { DEFAULT_CURRENT_YEAR } = useAtlas();
+  const [searchParams] = useSearchParams();
+  const currentYear = searchParams.get("annee_universitaire") || DEFAULT_CURRENT_YEAR;
   if (isLoading || !data || data.length === 0) {
     return <Template />;
   }
 
-  const rootStyles = getComputedStyle(document.documentElement);
-
   const filieresOptions: HighchartsInstance.Options = {
+    chart: {
+      height: data.length * 60,
+    },
     xAxis: {
       categories: data.map((filiere) => filiere.label),
       labels: {
         style: {
-          color: rootStyles.getPropertyValue("--label-color"),
+          color: getCssColor("text-default-grey"),
           fontFamily: "Marianne, sans-serif",
         },
       },
       title: {
         text: "",
       },
-      gridLineWidth: 0.5,
+      gridLineWidth: 0.1,
       lineWidth: 0,
     },
     yAxis: {
@@ -37,14 +44,14 @@ export default function FilieresGendersChart({ data, isLoading }: { data: DataPr
         text: "Nombre d'étudiants",
         align: "high",
         style: {
-          color: rootStyles.getPropertyValue("--label-color"),
+          color: getCssColor("text-default-grey"),
           fontFamily: "Marianne, sans-serif",
         },
       },
       labels: {
         overflow: "justify",
         style: {
-          color: rootStyles.getPropertyValue("--label-color"),
+          color: getCssColor("text-default-grey"),
           fontFamily: "Marianne, sans-serif",
         },
       },
@@ -55,7 +62,6 @@ export default function FilieresGendersChart({ data, isLoading }: { data: DataPr
     },
     plotOptions: {
       bar: {
-        borderRadius: "20%",
         dataLabels: {
           enabled: true,
         },
@@ -67,13 +73,13 @@ export default function FilieresGendersChart({ data, isLoading }: { data: DataPr
         type: "bar",
         name: "Masculin",
         data: data.map((filiere) => (filiere.effectif_masculin ? filiere.effectif_masculin : 0)),
-        color: "#efcb3a",
+        color: getCssColor("men-color"),
       },
       {
         type: "bar",
         name: "Féminin",
         data: data.map((filiere) => (filiere.effectif_feminin ? filiere.effectif_feminin : 0)),
-        color: "#e18b76",
+        color: getCssColor("women-color"),
       },
     ],
   };
@@ -81,10 +87,14 @@ export default function FilieresGendersChart({ data, isLoading }: { data: DataPr
   const options = CreateChartOptions("bar", filieresOptions);
 
   return (
-    <section>
+    <section className="chart-container--default">
       <ChartWrapper
         config={{
           id: "filieres-genders-chart",
+          title: {
+            fr: `Nombre d'étudiants inscrits par fillière répartis par genre (${currentYear})`,
+            look: "h6",
+          },
           comment: {
             fr: (
               <>
