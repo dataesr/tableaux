@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { Breadcrumb, Container, Row, Col, Link } from "@dataesr/dsfr-plus";
+import { Container, Row, Col, Spinner } from "@dataesr/dsfr-plus";
 
 import { useTitle } from "../../hooks/usePageTitle.tsx";
 import { getFiltersValues } from "../../api/atlas.ts";
@@ -11,13 +11,16 @@ import YearsModalButton from "./components/header/years-modal-button.tsx";
 import { AtlasSideMenu } from "./components/side-menu-layout/index.tsx";
 import { GetLevelBadgeFromId } from "./utils/badges.tsx";
 import { getLevelFromGeoId } from "./utils/index.tsx";
+import Breadcrumb from "../../components/breadcrumb/index.tsx";
+
+import navigationConfig from "./navigation-config.json";
+
 
 import "./styles.scss";
 
 export default function AtlasHeader() {
   const [searchParams] = useSearchParams();
   const geoId = searchParams.get("geo_id") || "";
-  const shared: boolean = searchParams.has("shared");
 
   useTitle("Tableaux - Atlas des effectifs étudiant-e-s");
 
@@ -32,17 +35,10 @@ export default function AtlasHeader() {
     queryFn: () => getFiltersValues(geoId),
   });
 
-
-
-
   if (isLoadingFiltersValues) {
     return (
       <Container as="main">
-        <Breadcrumb>
-          {shared && <Link href="/">Accueil</Link>}
-          <Link href="/atlas">Atlas des effectifs étudiant-e-s</Link>
-          <Link>Chargement des filtres en cours ...</Link>
-        </Breadcrumb>
+        <Spinner />
       </Container>
     );
   }
@@ -58,17 +54,13 @@ export default function AtlasHeader() {
   return (
     <Container as="main">
       <Row>
-        <Col style={{ textAlign: "right" }}>
+        <Col>
+          <Breadcrumb config={navigationConfig} />
+        </Col>
+        <Col className="text-right">
           <YearsModalButton />
         </Col>
       </Row>
-
-      <Breadcrumb>
-        {shared && <Link href={`/${shared ? "?shared" : ""}`}>Accueil</Link>}
-        <Link href={`/atlas${shared ? "?shared" : ""}`}>{shared ? "Atlas des effectifs étudiant-e-s" : "Accueil"}</Link>
-        {geoId && <Link>{geoLabel}</Link>}
-      </Breadcrumb>
-
       {!geoId ? <Search /> : <AtlasSideMenu geoLabel={geoLabel} level={getLevelFromGeoId({ geoId })} title={geoLabelFull} />}
     </Container>
   );

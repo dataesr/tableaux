@@ -1,0 +1,48 @@
+{
+  "atlas": {
+    "label": {
+      "fr": "Atlas des effectifs étudiant-e-s",
+      "en": "Atlas"
+    },
+    "link": "/atlas"
+  },
+  "accueil": {
+    "label": {
+      "fr": "Accueil",
+      "en": "Home"
+    },
+    "link": "/atlas/"
+  },
+  "general": {
+    "label": {
+      "fr": "En un coup d'œil",
+      "en": "Overview"
+    },
+    "link": "/atlas/general"
+  },
+  "effectifs-par-filiere": {
+    "label": {
+      "fr": "Effectifs par filière",
+      "en": "By field"
+    },
+    "link": "/atlas/effectifs-par-filiere"
+  },
+  "effectifs-par-secteur": {
+    "label": {
+      "fr": "Effectifs par secteur",
+      "en": "By sector"
+    },
+    "link": "/atlas/effectifs-par-secteur"
+  },
+  "effectifs-par-genre": {
+    "label": {
+      "fr": "Effectifs par genre",
+      "en": "By gender"
+    },
+    "link": "/atlas/effectifs-par-genre"
+  },
+  "methodology": {
+    "label": { "fr": "Méthodologie", "en": "Methodology" },
+    "link": "/atlas/methodology"
+  }
+}

@@ -1,10 +1,8 @@
-:root {
-  --bg-light: #e5e5e5;
-  --bg-dark: #242424;
-}
-
 .source, .callout {
   padding: 1rem;
-  border-radius: 8px;
   margin-top: 1rem;
+}
+
+.text-right {
+  text-align: right;
 }
