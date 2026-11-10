@@ -166,7 +166,7 @@ export default function Genders() {
                 descriptionNode={<Badge color="yellow-tournesol">{currentYear}</Badge>}
                 number={effectifF}
                 label={`Etudiante${effectifF > 1 ? "s" : ""} inscrite${effectifF > 1 ? "s" : ""}`}
-                trendGraph={<TrendCard color="#e18b76" data={dataByYear.map((item: DataByYear) => item.effectif_feminin)} />}
+                trendGraph={<TrendCard data={dataByYear.map((item: DataByYear) => item.effectif_feminin)} />}
               />
             </Col>
           </Row>
@@ -176,7 +176,7 @@ export default function Genders() {
                 descriptionNode={<Badge color="yellow-tournesol">{currentYear}</Badge>}
                 number={effectifM}
                 label={`Etudiant${effectifM > 1 ? "s" : ""} inscrit${effectifM > 1 ? "s" : ""}`}
-                trendGraph={<TrendCard color="#efcb3a" data={dataByYear.map((item: DataByYear) => item.effectif_masculin)} />}
+                trendGraph={<TrendCard data={dataByYear.map((item: DataByYear) => item.effectif_masculin)} />}
               />
             </Col>
           </Row>

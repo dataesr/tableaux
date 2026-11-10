@@ -230,7 +230,7 @@ export function Search() {
               descriptionNode={<Badge color="yellow-tournesol">{currentYear}</Badge>}
               number={nbStudents}
               label={`Étudiant${nbStudents > 1 ? "s" : ""} inscrit${nbStudents > 1 ? "s" : ""} en France`}
-              trendGraph={<TrendCard color="#e18b76" data={dataByYear?.map((item) => item.effectif_total)} />}
+              trendGraph={<TrendCard data={dataByYear?.map((item) => item.effectif_total)} />}
             />
           </Container>
           <FavoritesList territoiresList={territoiresList} />

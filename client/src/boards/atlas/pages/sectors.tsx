@@ -159,7 +159,7 @@ export default function Sectors() {
                 descriptionNode={<Badge color="yellow-tournesol">{currentYear}</Badge>}
                 number={effectifPU}
                 label={`Etudiant${effectifPU > 1 ? "s" : ""} inscrit${effectifPU > 1 ? "s" : ""} dans le secteur public`}
-                trendGraph={<TrendCard color="#748CC0" data={dataByYear?.map((item: DataByYear) => item.effectif_pu)} />}
+                trendGraph={<TrendCard data={dataByYear?.map((item: DataByYear) => item.effectif_pu)} />}
               />
             </Col>
           </Row>
@@ -169,7 +169,7 @@ export default function Sectors() {
                 descriptionNode={<Badge color="yellow-tournesol">{currentYear}</Badge>}
                 number={effectifPR}
                 label={`Etudiant${effectifPR > 1 ? "s" : ""} inscrit${effectifPR > 1 ? "s" : ""} dans le secteur privé`}
-                trendGraph={<TrendCard color="#755F4D" data={dataByYear.map((item: DataByYear) => item.effectif_pr)} />}
+                trendGraph={<TrendCard data={dataByYear.map((item: DataByYear) => item.effectif_pr)} />}
               />
             </Col>
           </Row>
