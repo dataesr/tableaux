@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 import { EPChartsSources } from "../../../../config.js";
-import options from "./options";
+import getOptions from "./options";
 import { getData } from "./query";
 import { useGetParams } from "./utils";
 
@@ -67,5 +67,5 @@ export default function TopicsFundingProportion({ displayType = "total_fund_eur"
 
   if (isLoading || !data) return <DefaultSkeleton />;
 
-  return <ChartWrapper config={config} options={options(data, displayType)} />;
+  return <ChartWrapper config={config} options={getOptions(data, displayType)} />;
 }

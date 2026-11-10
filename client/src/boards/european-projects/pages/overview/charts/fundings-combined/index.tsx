@@ -5,7 +5,7 @@ import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 import { formatCurrency, formatCurrencyEn, formatNumber, formatToRates } from "../../../../../../utils/format";
 import { EPChartsSources } from "../../../../config";
-import options from "./options";
+import getOptions from "./options";
 import { getData } from "./query";
 import { useGetParams } from "./utils";
 
@@ -141,5 +141,5 @@ export default function FundingCombined({ displayType = "total_fund_eur", groupB
       break;
   }
 
-  return <ChartWrapper config={config} options={options(data, displayType)} />;
+  return <ChartWrapper config={config} options={getOptions(data, displayType)} />;
 }

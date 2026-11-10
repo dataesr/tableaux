@@ -1,14 +1,14 @@
 import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js";
 
-import { CreateChartOptions } from "../../../../components/chart-ep";
-import { formatNumber, formatToRates, formatToMillions } from "../../../../../../utils/format";
-import { getCssColor } from "../../../../../../utils/colors";
 import { getI18nLabel } from "../../../../../../utils";
+import { getCssColor } from "../../../../../../utils/colors";
+import { formatNumber, formatToMillions, formatToRates } from "../../../../../../utils/format";
+import { CreateChartOptions } from "../../../../components/chart-ep";
 import i18n from "../../i18n-charts.json";
 
 type FundingItem = { code?: string; name_fr?: string; pilier_name_fr?: string; stage: string; total_fund_eur: number; total_coordination_number?: number; total_number_involved?: number; total_projects?: number };
 
-export default function Options(data: { data?: FundingItem[] } | null, displayType: string = "total_fund_eur", title?: string) {
+export default function getOptions(data: { data?: FundingItem[] } | null, displayType: string = "total_fund_eur", title?: string) {
   const items = data?.data;
   if (!items || items.length === 0) return null;
 
@@ -29,8 +29,6 @@ export default function Options(data: { data?: FundingItem[] } | null, displayTy
   const successfulData = categories.map((name) => getValue(name, "successful") / divider);
   const successRates = evaluatedData.map((evaluated, i) => (evaluated > 0 ? (successfulData[i] / evaluated) * 100 : 0));
 
-  const evaluatedColor = getCssColor("evaluated-project");
-  const successfulColor = getCssColor("successful-project");
   const successRateColor = getCssColor("average-success-rate") || "#d75521";
 
   const newOptions: HighchartsInstance.Options = {
@@ -92,14 +90,14 @@ export default function Options(data: { data?: FundingItem[] } | null, displayTy
       {
         type: "column",
         name: getI18nLabel(i18n, "evaluatedProjects"),
-        color: evaluatedColor,
+        color: getCssColor("evaluated-project"),
         data: evaluatedData,
         yAxis: 0,
       },
       {
         type: "column",
         name: getI18nLabel(i18n, "successfulProjects"),
-        color: successfulColor,
+        color: getCssColor("successful-project"),
         data: successfulData,
         yAxis: 0,
       },

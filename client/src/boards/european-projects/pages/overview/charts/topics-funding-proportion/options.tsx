@@ -6,7 +6,7 @@ import { formatToPercent } from "../../../../../../utils/format";
 import { CreateChartOptions } from "../../../../components/chart-ep";
 import i18n from "../../i18n-charts.json";
 
-export default function options(data, displayType: string = "total_fund_eur") {
+export default function getOptions(data, displayType: string = "total_fund_eur") {
   if (!data) return null;
 
   const valueKey = displayType === "total_coordination_number" ? "proportion_coordination_number" : displayType === "total_number_involved" ? "proportion_number_involved" : displayType === "total_fund_eur" ? "proportion" : "proportion_projects";

@@ -1,4 +1,5 @@
 import express from "express";
+
 import { db } from "../../../../../../../services/mongo.js";
 import { checkQuery, recreateIndex } from "../../../../../../utils.js";
 
@@ -54,6 +55,9 @@ router.route("/european-projects/overview/funding-proportion").get(async (req, r
   }
   if (req.query.isEjo) {
     filters.is_ejo = { $eq: req.query.isEjo === "true" };
+  }
+  if (req.query.range_of_years) {
+    filters.call_year = { $in: req.query.range_of_years.split(/[|,]/) };
   }
 
   const group = {
