@@ -76,25 +76,12 @@ export function AtlasTabs({
       </Title>
       <div className="fr-mb-3w">
         {geoId && (
-          <Button
-            icon="home-4-line"
-            onClick={() => navigate(`/atlas${shared ? "?shared" : ""}`)}
-            size="sm"
-          >
+          <Button icon="home-4-line" onClick={() => navigate(`/atlas${shared ? "?shared" : ""}`)} size="sm" variant="secondary">
             Revenir à la page de sélection des territoires
           </Button>
         )}
         {geoId && dataParents && parent && (
-          <Button
-            className="fr-ml-1w"
-            icon="arrow-up-line"
-            onClick={() =>
-              navigate(
-                `/atlas/general?geo_id=${parent.geo_id}&annee_universitaire=${currentYear}${shared ? "&shared" : ""}`
-              )
-            }
-            size="sm"
-          >
+          <Button className="fr-ml-1w" icon="arrow-up-line" onClick={() => navigate(`/atlas/general?geo_id=${parent.geo_id}&annee_universitaire=${currentYear}${shared ? "&shared" : ""}`)} size="sm" variant="secondary">
             Revenir au territoire parent ({parent.geo_nom})
           </Button>
         )}
@@ -103,25 +90,14 @@ export function AtlasTabs({
         <ul className="fr-nav__list">
           {tabs.map((tab) => (
             <li className="fr-nav__item" key={tab.id}>
-              <button
-                className="fr-nav__link"
-                onClick={() => handleTabChange(tab)}
-                aria-current={activeTab === tab.id ? "page" : undefined}
-              >
+              <button className="fr-nav__link" onClick={() => handleTabChange(tab)} aria-current={activeTab === tab.id ? "page" : undefined}>
                 {tab.label}
               </button>
             </li>
           ))}
         </ul>
       </nav>
-      {showAlertMessage && (
-        <Alert
-          className="fr-mb-3w"
-          description="Aucune donnée n'est disponible pour l'année universitaire sélectionnée. Veuillez sélectionner une autre année."
-          title="Alerte"
-          variant="error"
-        />
-      )}
+      {showAlertMessage && <Alert className="fr-mb-3w" description="Aucune donnée n'est disponible pour l'année universitaire sélectionnée. Veuillez sélectionner une autre année." title="Alerte" variant="error" />}
       <div className="fr-mt-3w">
         <Outlet />
         <Source />

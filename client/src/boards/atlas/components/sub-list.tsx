@@ -7,6 +7,7 @@ import Template from "../../../components/template/index.tsx";
 import { getNumberOfStudentsHistoricByLevel } from "../../../api/index.ts";
 import { getSubLevel } from "../utils/index.tsx";
 import { useAtlas } from "../useAtlas.tsx";
+import { getCssColor } from "../../../utils/colors.ts";
 
 const MAX_ELEMENTS = 6;
 
@@ -88,8 +89,8 @@ export default function SubList() {
                 className="fr-mb-1w"
                 style={{
                   width: `${size}%`,
-                  height: "8px",
-                  backgroundColor: "#000091",
+                  height: "16px",
+                  backgroundColor: getCssColor("atlas-primary-color"),
                   borderTopRightRadius: "3px",
                   borderBottomRightRadius: "3px",
                 }}

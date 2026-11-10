@@ -1,39 +1,25 @@
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
-import {
-  Badge,
-  Container,
-  Row,
-  Col,
-  Title,
-  Text,
-  Link,
-} from "@dataesr/dsfr-plus";
-import * as turf from "@turf/turf";
-
+import { Badge, Container, Row, Col, Title, Text, Link } from "@dataesr/dsfr-plus";
+import { getNumberOfStudents, getNumberOfStudentsHistoricByLevel, getGeoPolygon } from "../../../api/atlas.ts";
 import { DataByYear } from "../../../types/atlas.ts";
-import {
-  getNumberOfStudents,
-  getNumberOfStudentsHistoricByLevel,
-  getGeoPolygon,
-} from "../../../api/atlas.ts";
+import { getCssColor } from "../../../utils/colors.ts";
 import { getNumberOfStudentsByYear } from "../../../api/atlas.ts";
 import { MapBubbleDataProps } from "../../../types/atlas.ts";
-import FieldsMainCard from "../../../components/cards/fields-main-card/index.tsx";
-import GendersCard from "../../../components/cards/genders-card/index.tsx";
-import SectorsCard from "../../../components/cards/sectors-card/index.tsx";
-import StudentsCardWithTrend from "../../../components/cards/students-card-with-trend/index.tsx";
-import TrendCard from "../charts/trend.tsx";
-import SubList from "../components/sub-list.tsx";
-import MapWithPolygonAndBubbles from "../charts/map-with-polygon-and-bubbles.tsx";
-import MapSkeleton from "../charts/skeletons/map.tsx";
-import ArrondissementsMap from "../charts/arrondissements-map/index.tsx";
-
 import { useAtlas } from "../useAtlas.tsx";
+import * as turf from "@turf/turf";
+import ArrondissementsMap from "../charts/arrondissements-map/index.tsx";
+import BoardsSuggestComponent from "../../../components/boards-suggest-component/index.tsx";
+import Callout from "../components/callout.tsx";
+import FieldsMainCard from "../../../components/cards/fields-main-card/index.tsx";
+import Gauge from "../components/gauge/index.tsx";
+import MapSkeleton from "../charts/skeletons/map.tsx";
+import MapWithPolygonAndBubbles from "../charts/map-with-polygon-and-bubbles.tsx";
+import StudentsCardWithTrend from "../../../components/cards/students-card-with-trend/index.tsx";
+import SubList from "../components/sub-list.tsx";
+import TrendCard from "../charts/trend.tsx";
 
 import "./styles.scss";
-import Callout from "../components/callout.tsx";
-import BoardsSuggestComponent from "../../../components/boards-suggest-component/index.tsx";
 
 export default function General() {
   const [searchParams] = useSearchParams();
@@ -168,7 +154,7 @@ export default function General() {
     if (geoId === "PAYS_100") {
       return (
         <div className="atlas-map">
-          <Row className="fr-my-5w">
+          <Row className="fr-mt-5w">
             <Col>
               <Title as="h3" look="h5">
                 <span className="fr-icon-pie-chart-2-fill fr-mr-1w" aria-hidden="true" />
@@ -388,7 +374,7 @@ export default function General() {
             descriptionNode={<Badge color="yellow-tournesol">{currentYear}</Badge>}
             number={nbStudents}
             label={`Étudiant${nbStudents > 1 ? "s" : ""} inscrit${nbStudents > 1 ? "s" : ""}`}
-            trendGraph={<TrendCard color="#000091" data={dataByYear?.map((item) => item.effectif_total)} />}
+            trendGraph={<TrendCard data={dataByYear?.map((item) => item.effectif_total)} />}
           />
         </Col>
         <Col md={6}>
@@ -404,7 +390,7 @@ export default function General() {
       <MapSelector />
 
       <Row className="fr-mt-5w atlas-bloc">
-        <Col md={6}>
+        <Col md={12}>
           <Title as="h2" look="h5">
             Répartition des effectifs étudiants par secteur
           </Title>
@@ -429,20 +415,14 @@ export default function General() {
             )}
             , soit une répartition de <strong>{pctPU}&nbsp;%</strong> dans le secteur public et <strong>{pctPR}&nbsp;%</strong> dans le secteur privé pour l'année universitaire <Badge color="yellow-tournesol">{currentYear}</Badge>.
           </Text>
-          <Link href={`/atlas/effectifs-par-secteur?${params}`}>Voir le détail des effectifs par secteur</Link>
-        </Col>
-        <Col md={6}>
-          <SectorsCard
-            currentYear={currentYear}
-            values={{
-              labels: data?.secteurs?.filter((item) => item.label !== undefined).map((item) => item.label) || [],
-              values: data?.secteurs?.filter((item) => item.value !== 0).map((item) => item.value) || [],
-            }}
-          />
+          <Gauge values={{ effectifPU: { label: "Secteur public", value: effectifPU, color: getCssColor("public-sector") }, effectifPR: { label: "Secteur privé", value: effectifPR, color: getCssColor("private-sector") } }} />
+          <div className="text-center">
+            <Link href={`/atlas/effectifs-par-secteur?${params}`}>Voir le détail des effectifs par secteur</Link>
+          </div>
         </Col>
       </Row>
       <Row className="fr-mt-5w fr-mb-5w  atlas-bloc">
-        <Col md={6}>
+        <Col md={12}>
           <Title as="h2" look="h5">
             Répartition des effectifs étudiants par genre
           </Title>
@@ -467,16 +447,10 @@ export default function General() {
             )}
             , soit une répartition de <strong>{pctM}&nbsp;%</strong> dans le genre masculin et <strong>{pctF}&nbsp;%</strong> dans le genre féminin pour l'année universitaire <Badge color="yellow-tournesol">{currentYear}</Badge>.
           </Text>
-          <Link href={`/atlas/effectifs-par-genre?${params}`}>Voir le détail des effectifs par genre</Link>
-        </Col>
-        <Col md={6}>
-          <GendersCard
-            currentYear={currentYear}
-            values={{
-              labels: data?.gender?.filter((item) => item.label !== undefined).map((item) => item.label) || [],
-              values: data?.gender?.filter((item) => item.value !== 0).map((item) => item.value) || [],
-            }}
-          />
+          <Gauge values={{ effectifM: { label: "Masculin", value: effectifM, color: getCssColor("men-color") }, effectifF: { label: "Féminin", value: effectifF, color: getCssColor("women-color") } }} />
+          <div className="text-center">
+            <Link href={`/atlas/effectifs-par-genre?${params}`}>Voir le détail des effectifs par genre</Link>
+          </div>
         </Col>
       </Row>
       <Row>

@@ -1,0 +1,77 @@
+.gauge {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+
+  .gauge-bar {
+    display: flex;
+    height: 32px;
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+
+    .gauge-segment {
+      flex: 0 0 auto;
+      transition: opacity 0.2s ease;
+      min-width: 4px;
+
+      &:hover {
+        opacity: 0.8;
+      }
+    }
+  }
+
+  .gauge-legend {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+
+    .gauge-legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.9375rem;
+      line-height: 1.5;
+
+      .gauge-legend-color {
+        flex-shrink: 0;
+        width: 16px;
+        height: 16px;
+        border-radius: 2px;
+        display: block;
+      }
+
+      .gauge-legend-label {
+        flex-grow: 1;
+        font-weight: 500;
+        color: var(--text-label);
+      }
+
+      .gauge-legend-value {
+        flex-shrink: 0;
+        text-align: right;
+        color: var(--text-mention-grey);
+        white-space: nowrap;
+      }
+    }
+  }
+}
+
+@media (max-width: 576px) {
+  .gauge {
+    .gauge-bar {
+      height: 28px;
+    }
+
+    .gauge-legend {
+      .gauge-legend-item {
+        flex-wrap: wrap;
+
+        .gauge-legend-value {
+          flex-basis: 100%;
+          margin-left: 24px;
+        }
+      }
+    }
+  }
+}

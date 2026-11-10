@@ -5,6 +5,7 @@ import "highcharts/es-modules/masters/modules/map.src.js";
 
 import { MapBubbleDataProps, PolygonsDataProps } from "../../../types/atlas";
 import MapSkeleton from "./skeletons/map";
+import { getCssColor } from "../../../utils/colors";
 
 export default function MapWithPolygonAndBubbles({
   currentYear,
@@ -36,6 +37,7 @@ export default function MapWithPolygonAndBubbles({
     credits: {
       enabled: false,
     },
+    exporting: { enabled: false },
     mapNavigation: {
       enabled: false,
     },
@@ -64,7 +66,7 @@ export default function MapWithPolygonAndBubbles({
       {
         type: "mapbubble",
         name: `Effectifs étudiants ${currentYear}`,
-        color: "#000091",
+        color: getCssColor("atlas-primary-color"),
         data: mapbubbleData,
         cursor: "pointer",
         showInLegend: false,

@@ -1,3 +1,5 @@
+@use "./colors.scss";
+
 .source, .callout {
   padding: 1rem;
   margin-top: 1rem;
@@ -5,4 +7,8 @@
 
 .text-right {
   text-align: right;
+}
+
+.text-center {
+  text-align: center;
 }

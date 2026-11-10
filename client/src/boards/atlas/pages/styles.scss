@@ -16,6 +16,7 @@
     }
   }
 .atlas-bloc {
+  background: var(--background-contrast-blue-france);
   border: 1px solid var(--border-default-grey);
   padding: 1rem;
 }
@@ -54,6 +55,8 @@
       "Map1 Map1 Map1 Map1 col3"
       "Map1 Map1 Map1 Map1 col4"
       "drom1 drom2 drom3 drom4 drom5";
+    border: 1px solid var(--border-default-grey);
+    padding: 1rem;
   }
 
   .Map1 {
