@@ -12,12 +12,13 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@dataesr/dsfr-plus": "^0.6.8",
+    "@dataesr/dsfr-plus": "^1.15.0",
     "@highcharts/map-collection": "^2.3.2",
     "@tanstack/react-query": "^5.90.12",
     "@tanstack/react-table": "^8.21.3",
     "@turf/turf": "^7.3.1",
     "axios": "^1.13.2",
+    "classnames": "^2.5.1",
     "highcharts": "^12.4.0",
     "highcharts-react-official": "^3.2.3",
     "js-cookie": "^3.0.5",
