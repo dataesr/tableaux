@@ -112,7 +112,7 @@ export default function Sectors() {
   ];
 
   if (isLoading || isLoadingByYear || isLoadingSimilar || isLoadingDataSectorsMap || isLoadingPolygons) {
-    return <div>Loading...</div>;
+    return <div>Chargement ...</div>;
   }
 
   const toggleView = () => {

@@ -63,7 +63,7 @@ export default function OneField() {
   });
 
   if (isLoading || isLoadingByYear) {
-    return <div>Loading...</div>;
+    return <div>Chargement ...</div>
   }
 
   function Map() {

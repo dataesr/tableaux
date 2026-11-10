@@ -119,7 +119,7 @@ export default function Genders() {
     .sort((a: SimilarData, b: SimilarData) => a.distance - b.distance);
 
   if (isLoading || isLoadingByYear || isLoadingSimilar || isLoadingDataGenders || isLoadingPolygons) {
-    return <div>Loading...</div>;
+    return <div>Chargement ...</div>;
   }
 
   const toggleView = () => {

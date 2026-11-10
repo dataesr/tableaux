@@ -50,7 +50,7 @@ export default function YearsModalButton() {
               key={value}
               value={value}
             >
-              {`Années universitaire ${value}`}
+              {`Année universitaire ${value}`}
               {!filtersValues?.annees_universitaires?.onlyWithData.includes(
                 value
               ) && <> - non disponibles</>}

@@ -22,7 +22,7 @@ export default function MapWithPolygon({
   });
 
   if (isLoading || !data || !data.length) {
-    return <div>Loading...</div>;
+    return <div>Chargement ...</div>;
   }
 
   return (
