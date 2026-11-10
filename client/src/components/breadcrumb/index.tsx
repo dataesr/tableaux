@@ -32,11 +32,11 @@ export default function Breadcrumb({ config, homeHref }: { config; homeHref?: st
               </Link>
             </li>
           )}
-          <li>
+          {config?.[parent] && (<li>
             <Link className="fr-breadcrumb__link" to={`${config[parent].link}?${searchParams.toString()}`}>
               {config[parent].label[currentLang]}
             </Link>
-          </li>
+          </li>)}
           {currentSection ? (
             <>
               <li>
