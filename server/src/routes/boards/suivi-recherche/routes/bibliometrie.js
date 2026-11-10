@@ -12,6 +12,7 @@ import {
   shapeMatrice,
 } from "../matrice.js";
 import { computeAbscisses, computeRubans, DEMI_COLONNE, HAUTEUR } from "../rubans.js";
+import { grouperProfils } from "../similarite.js";
 import { getSourcesBibliometrie } from "../sources.js";
 
 const router = new express.Router();
@@ -27,6 +28,9 @@ const ROR_PATTERN = /^0[a-z0-9]{6}[0-9]{2}$/;
 const ENTITE_NATIONALE = "FR";
 // En dessous, la position d'une discipline dans la matrice est peu fiable
 const SEUIL_FIABILITE = 30;
+// Spécialisation : nombre de groupes de pays au profil proche, disciplines citées par groupe
+const NB_GROUPES_PAYS = 5;
+const NB_DISCIPLINES_GROUPE = 3;
 
 function parseYear(value, name) {
   const year = Number.parseInt(value, 10);
@@ -208,6 +212,153 @@ router.route("/suivi-recherche/bibliometrie/comparaison-internationale").get(asy
       indicateur,
       computeRubans(annees, pays, (id, j) => cellules.get(id)[j][indicateur]),
     ])),
+  });
+});
+
+// Spécialisation disciplinaire des pays retenus (biblio_meta.pays_compares).
+// Indice de spécialisation d'un pays dans une discipline = part de la discipline dans les articles du pays
+// ÷ part de la discipline dans les articles mondiaux. Un article n'a qu'une discipline : les articles d'un pays,
+// toutes disciplines, sont la somme de ses disciplines. Toutes les disciplines sont renvoyées, quels que soient
+// la discipline ou le domaine sélectionnés : ce sont les colonnes de la carte.
+// Deux vues dans la même réponse, pour que le sélecteur bascule sans requête :
+//   - niveau : indice sur toute la période ;
+//   - évolution : variation de l'indice entre la période de départ et la période d'arrivée (computePeriodes, comme
+//     les matrices), null quand la période compte moins de deux ans.
+router.route("/suivi-recherche/bibliometrie/specialisation").get(async (req, res) => {
+  const { debut, fin, match } = parseFilters(req.query, { withEntite: false, withDiscipline: false });
+  const meta = await (await getCollection("biblio_meta")).findOne({}, { projection: { pays_compares: 1, annees: 1 } });
+  const ids = meta?.pays_compares ?? [];
+  // Poids (nombre d'articles) : pas d'année provisoire à écarter
+  const periodes = computePeriodes(debut, fin, meta?.annees ?? [], [], false);
+
+  const [rows, noms, disciplines] = await Promise.all([
+    (await getCollection("biblio_effectifs"))
+      .aggregate([
+        { $match: { ...match, entite_id: { $in: [...ids, MONDE] } } },
+        {
+          $group: {
+            _id: { entite_id: "$entite_id", discipline_code: "$discipline_code", annee_publication: "$annee_publication" },
+            nb_articles: { $sum: "$nb_articles" },
+          },
+        },
+      ])
+      .toArray(),
+    (await getCollection("entites"))
+      .find({ entite_id: { $in: ids } }, { projection: { _id: 0, entite_id: 1, nom: 1 } })
+      .toArray(),
+    (await getCollection("biblio_disciplines")).find({ classement: CLASSEMENT }, { projection: { _id: 0 } }).toArray(),
+  ]);
+
+  // Articles par entité × discipline et par entité (toutes disciplines), sommés sur les années [premiere, derniere]
+  const compter = ([premiere, derniere]) => {
+    const articles = new Map();
+    const totaux = new Map();
+    rows
+      .filter((row) => row._id.annee_publication >= premiere && row._id.annee_publication <= derniere)
+      .forEach(({ _id: { entite_id: id, discipline_code: code }, nb_articles: nb }) => {
+        articles.set(`${id}|${code}`, (articles.get(`${id}|${code}`) ?? 0) + nb);
+        totaux.set(id, (totaux.get(id) ?? 0) + nb);
+      });
+    return { nb: (id, code) => articles.get(`${id}|${code}`) ?? 0, total: (id) => totaux.get(id) ?? 0 };
+  };
+  const plage = compter([debut, fin]);
+  const depart = periodes && compter(periodes.depart);
+  const arrivee = periodes && compter(periodes.arrivee);
+
+  // Part de la discipline chez l'entité et dans le monde, et leur quotient
+  const specialisation = (comptes, id, code) => {
+    const part = ratio(comptes.nb(id, code), comptes.total(id));
+    const partMonde = ratio(comptes.nb(MONDE, code), comptes.total(MONDE));
+    return { part, indice: part.valeur !== null && partMonde.valeur ? part.valeur / partMonde.valeur : null };
+  };
+
+  // Colonnes : domaines LS, PE, SH, puis numéro du panel (PE2 avant PE10)
+  const colonnes = disciplines
+    .sort((a, b) => DOMAINES.indexOf(a.domaine_code) - DOMAINES.indexOf(b.domaine_code)
+      || Number(a.discipline_code.slice(2)) - Number(b.discipline_code.slice(2)))
+    .map((discipline) => {
+      const code = discipline.discipline_code;
+      return {
+        ...discipline,
+        part_monde: ratio(plage.nb(MONDE, code), plage.total(MONDE)),
+        part_monde_evolution: periodes
+          ? { depart: ratio(depart.nb(MONDE, code), depart.total(MONDE)), arrivee: ratio(arrivee.nb(MONDE, code), arrivee.total(MONDE)) }
+          : null,
+      };
+    });
+
+  // Discipline où `valeur` est la plus forte, parmi les cellules fiables (exemple de lecture)
+  const plusForte = (cellules, valeur, fiable) => cellules
+    .filter((cellule) => fiable(cellule) && valeur(cellule) !== null && valeur(cellule) !== undefined)
+    .reduce((best, cellule) => (!best || valeur(cellule) > valeur(best) ? cellule : best), null)?.discipline_code ?? null;
+
+  const nomById = new Map(noms.map((item) => [item.entite_id, item.nom]));
+  const pays = ids
+    .filter((id) => plage.total(id))
+    .map((id) => {
+      const cellules = colonnes.map(({ discipline_code: code }) => {
+        const niveau = specialisation(plage, id, code);
+        let evolution = null;
+        if (periodes) {
+          const avant = specialisation(depart, id, code);
+          const apres = specialisation(arrivee, id, code);
+          evolution = {
+            depart: avant,
+            arrivee: apres,
+            // Variation de l'indice, en % ; null sans indice de départ
+            valeur: avant.indice && apres.indice !== null ? (apres.indice / avant.indice - 1) * 100 : null,
+            // Articles les plus faibles des deux périodes, comme les matrices
+            fiable: Math.min(avant.part.numerateur, apres.part.numerateur) >= SEUIL_FIABILITE,
+          };
+        }
+        return { discipline_code: code, ...niveau, fiable: niveau.part.numerateur >= SEUIL_FIABILITE, evolution };
+      });
+      return {
+        entite_id: id,
+        nom: nomById.get(id) ?? id,
+        nb_articles: plage.total(id),
+        cellules,
+        discipline_max: plusForte(cellules, (cellule) => cellule.indice, (cellule) => cellule.fiable),
+        discipline_max_evolution: periodes
+          ? plusForte(cellules, (cellule) => cellule.evolution.valeur, (cellule) => cellule.evolution.fiable)
+          : null,
+      };
+    });
+
+  // Pays groupés par similarité de profil (niveau), France en tête (similarite.js) : les mêmes lignes dans les deux vues
+  const { ordre, groupes } = grouperProfils(
+    pays.map(({ entite_id: id, nb_articles: nb, cellules }) => ({ id, nb_articles: nb, indices: cellules.map((cellule) => cellule.indice) })),
+    { focusId: ENTITE_NATIONALE, nbGroupes: NB_GROUPES_PAYS },
+  );
+  const groupeDe = new Map(groupes.flatMap((membres, k) => membres.map((id) => [id, k + 1])));
+  const paysById = new Map(pays.map((ligne) => [ligne.entite_id, ligne]));
+
+  // Disciplines caractéristiques d'un groupe : articles des pays du groupe additionnés, puis divisés
+  // (indice du groupe, jamais une moyenne d'indices) ; les plus fortes au-dessus de 1, parmi les fiables
+  const disciplinesDuGroupe = (membres) => {
+    const total = membres.reduce((somme, id) => somme + plage.total(id), 0);
+    return colonnes
+      .map(({ discipline_code: code, part_monde: partMonde }) => {
+        const nb = membres.reduce((somme, id) => somme + plage.nb(id, code), 0);
+        return { code, nb, indice: total && partMonde.valeur ? nb / total / partMonde.valeur : 0 };
+      })
+      .filter(({ nb, indice }) => nb >= SEUIL_FIABILITE && indice > 1)
+      .sort((a, b) => b.indice - a.indice)
+      .slice(0, NB_DISCIPLINES_GROUPE)
+      .map(({ code }) => code);
+  };
+
+  res.json({
+    disciplines: colonnes,
+    pays: ordre.map((id) => ({ ...paysById.get(id), groupe: groupeDe.get(id) })),
+    groupes: groupes.map((membres, k) => ({ numero: k + 1, pays: membres, disciplines: disciplinesDuGroupe(membres) })),
+    nb_articles_monde: plage.total(MONDE),
+    periode: [debut, fin],
+    periodes,
+    seuil_fiabilite: SEUIL_FIABILITE,
+    // Bornes des échelles de couleurs, symétriques autour de 1 en logarithme ; au-delà, la couleur sature.
+    // Évolution : rapport indice d'arrivée / indice de départ, de 1 / 1,5 (−33 %) à 1,5 (+50 %)
+    echelles: { niveau: { min: 0.25, max: 4 }, evolution: { min: 1 / 1.5, max: 1.5 } },
   });
 });
 

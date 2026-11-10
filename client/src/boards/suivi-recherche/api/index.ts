@@ -90,6 +90,52 @@ export type Comparaison<I extends string = Indicateur> = {
   pays: { entite_id: string; nom: string }[];
 };
 
+// Spécialisation disciplinaire des pays : indice = part de la discipline chez le pays ÷ part dans le monde
+export type SpecialisationIndice = {
+  // null quand la part mondiale est nulle
+  indice: number | null;
+  // Articles du pays dans la discipline / articles du pays, toutes disciplines
+  part: Ratio;
+};
+
+export type SpecialisationCellule = SpecialisationIndice & {
+  discipline_code: string;
+  // Faux sous le seuil d'articles du pays dans la discipline
+  fiable: boolean;
+  // Indices de départ et d'arrivée, et leur variation en % (null sans indice de départ) ; null si la période fait un an
+  evolution: { arrivee: SpecialisationIndice; depart: SpecialisationIndice; fiable: boolean; valeur: number | null } | null;
+};
+
+export type SpecialisationVue = "niveau" | "evolution";
+
+export type Specialisation = {
+  // Colonnes, dans l'ordre d'affichage ; part_monde : articles mondiaux de la discipline / articles mondiaux
+  disciplines: (BiblioDiscipline & { part_monde: Ratio; part_monde_evolution: { arrivee: Ratio; depart: Ratio } | null })[];
+  // Bornes des échelles de couleurs ; évolution : rapport indice d'arrivée / indice de départ
+  echelles: Record<SpecialisationVue, { max: number; min: number }>;
+  // Groupes de pays au profil proche, dans l'ordre d'affichage (numéro 1 : celui de la France) ;
+  // disciplines : les plus sur-représentées dans les articles du groupe
+  groupes: { disciplines: string[]; numero: number; pays: string[] }[];
+  nb_articles_monde: number;
+  // Années de publication [début, fin] de la réponse
+  periode: [number, number];
+  // Périodes de départ et d'arrivée de l'évolution ; null si la période fait un an
+  periodes: { arrivee: [number, number]; depart: [number, number] } | null;
+  // Lignes : regroupées par similarité de profil, France en tête puis les pays les plus proches ;
+  // cellules dans l'ordre des disciplines
+  pays: {
+    cellules: SpecialisationCellule[];
+    // Disciplines de plus forte spécialisation et de plus forte progression, parmi les cellules fiables
+    discipline_max: string | null;
+    discipline_max_evolution: string | null;
+    entite_id: string;
+    groupe: number;
+    nb_articles: number;
+    nom: string;
+  }[];
+  seuil_fiabilite: number;
+};
+
 export type PositionnementPoint = BiblioDiscipline & {
   dynamique: number | null;
   nb_articles: number;
@@ -259,6 +305,16 @@ export const useBiblioComparaison = (selection: Selection, options: BiblioOption
     queryFn: () => fetchJson<Comparaison>(`${BASE_URL}/comparaison-internationale?${toSearchParams(selection, options)}`),
     placeholderData: keepPreviousData,
   });
+
+// Pays × disciplines, en nombre d'articles : ni l'entité, ni la discipline, ni l'option du prestige n'entrent dans la clé
+export const useBiblioSpecialisation = (selection: Selection, options: BiblioOptions) => {
+  const parametres = { ...selection, entiteId: ENTITE_NATIONALE, disciplineCode: undefined, domaineCode: undefined };
+  return useQuery({
+    queryKey: ["suivi-recherche", "bibliometrie", "specialisation", selection.anneeDebut, selection.anneeFin, options.perimetre],
+    queryFn: () => fetchJson<Specialisation>(`${BASE_URL}/specialisation?${toSearchParams(parametres, options)}`),
+    placeholderData: keepPreviousData,
+  });
+};
 
 // Les points sont les disciplines : la discipline sélectionnée n'entre pas dans la clé
 export const useBiblioPositionnement = (selection: Selection, options: BiblioOptions, indicateur: Indicateur) =>

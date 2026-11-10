@@ -52,3 +52,17 @@ GET http://localhost:3000/api/suivi-recherche/bibliometrie/indicateurs?ror_id=02
 ###
 # 400 attendu : ror_id invalide
 GET http://localhost:3000/api/suivi-recherche/bibliometrie/indicateurs?ror_id=inconnu&perimetre=revues_sjr&year_min=2015&year_max=2022
+
+###
+# Spécialisation disciplinaire des pays : indice = part de la discipline chez le pays / part dans le monde,
+# avec les deux parts (numérateur, dénominateur) ; pays groupés par similarité de profil, France en tête.
+# Évolution (cellules[].evolution) : indices de départ et d'arrivée et leur variation, périodes dans `periodes`
+GET http://localhost:3000/api/suivi-recherche/bibliometrie/specialisation?perimetre=revues_sjr&year_min=2015&year_max=2022
+
+###
+# Une seule année : pas d'évolution (periodes et cellules[].evolution à null)
+GET http://localhost:3000/api/suivi-recherche/bibliometrie/specialisation?perimetre=revues_sjr&year_min=2020&year_max=2020
+
+###
+# 400 attendu
+GET http://localhost:3000/api/suivi-recherche/bibliometrie/specialisation?perimetre=revues_sjr&year_min=2022&year_max=2015

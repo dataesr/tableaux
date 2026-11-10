@@ -26,5 +26,15 @@
   --sr-continent-oceanie: var(--blue-ecume-main-400);
   --sr-continent-autre: var(--grey-625-425);
 
+  // Indice de spécialisation (carte pays × disciplines) : échelle divergente autour de 1, bleu / orange
+  // (distincts pour les daltoniens) ; le centre est le fond de page, pour que « comme le monde » s'efface
+  --sr-specialisation-sous: var(--orange-terre-battue-main-645);
+  --sr-specialisation-neutre: var(--background-default-grey);
+  --sr-specialisation-sur: var(--blue-france-main-525);
+  // Évolution de l'indice : une autre paire (violet / vert, distincts pour les daltoniens), pour ne pas confondre
+  // « spécialisé » et « en progression »
+  --sr-specialisation-recul: var(--purple-glycine-main-494);
+  --sr-specialisation-progression: var(--green-emeraude-main-632);
+
   // Domaines ERC : couleurs globales --erc-domain-*-color, ne pas les redéfinir ici
 }
