@@ -170,7 +170,7 @@ router.route("/atlas/get-geo-ids-from-search").get(async (req, res) => {
 router.route("/atlas/get-geo-polygons").get(async (req, res) => {
   const geoId = req.query.originalId;
   if (!geoId) {
-    res.status(400).send("geo_id is required");
+    return res.status(400).send("geo_id is required");
   }
 
   const filters = {};
@@ -198,11 +198,10 @@ router.route("/atlas/get-geo-polygons").get(async (req, res) => {
     // Get all regions of France
     filters.niveau_geo = "REGION";
   }
+
   if (geoId.startsWith("R") || geoId.startsWith("A") || geoId.startsWith("P")) {
     const currentCollectionName = await getCurrentCollectionName("atlas");
-    const ids = await db
-      .collection(currentCollectionName)
-      .distinct("geo_id", filters);
+    const ids = await db.collection(currentCollectionName).distinct("geo_id", filters);
     if (geoId.startsWith("P") || geoId === "R00") {
       ids.push("D988"); // Nouvelle-Caledonie
       ids.push("D987"); // Polynesie-Francaise
@@ -211,15 +210,18 @@ router.route("/atlas/get-geo-polygons").get(async (req, res) => {
       ids.push("D984"); // Saint-Barthelemy
       ids.push("D978"); // Saint-Martin
     }
+
+    const headers = { "X-API-KEY": process.env.PAYSAGE_API_KEY };
     const polygons = [];
-    for (let i = 0; i < ids.length; i++) {
-      const response = await fetch(
-        `${process.env.PAYSAGE_API_URL}/geographical-categories/${ids[i]}`,
-        { headers: { "X-API-KEY": process.env.PAYSAGE_API_KEY } },
-      );
+    for (const originalId of ids) {
+      const searchResponse = await fetch(`${process.env.PAYSAGE_API_URL}/geographical-categories?filters[originalId]=${originalId}`, { headers });
+      const paysageId = (await searchResponse.json()).data?.[0]?.id;
+      if (!paysageId) continue;
+
+      const response = await fetch(`${process.env.PAYSAGE_API_URL}/geographical-categories/${paysageId}`, { headers });
       const geographicalCategory = await response.json();
       if (geographicalCategory?.geometry) {
-        polygons.push(geographicalCategory?.geometry);
+        polygons.push({ originalId, geometry: geographicalCategory.geometry });
       }
     }
     res.json(polygons);

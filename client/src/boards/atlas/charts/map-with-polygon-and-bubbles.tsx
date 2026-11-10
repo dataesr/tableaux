@@ -28,7 +28,6 @@ export default function MapWithPolygonAndBubbles({
   
   const mapOptions = {
     chart: {
-      map: "countries/ie/ie-all",
       backgroundColor: "transparent",
     },
     title: {
