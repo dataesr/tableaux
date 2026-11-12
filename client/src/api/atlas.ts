@@ -170,22 +170,19 @@ export async function getNumberOfStudentsByFieldAndSublevel(
   field: string = "TOTAL"
 ) {
   // ex: http://localhost:3000/api/atlas/number-of-students-by-field-and-sublevel?aca_id=A11&niveau_geo=DEPARTEMENT
-  let params = `niveau_geo=COMMUNE&geo_id=${geoId}&annee_universitaire=${currentYear}&regroupement=${field}`;
-  if (geoId.startsWith("R")) {
-    params = `niveau_geo=ACADEMIE&reg_id=${geoId}`;
-  }
-  if (geoId.startsWith("D")) {
-    params = `niveau_geo=COMMUNE&dep_id=${geoId}`;
-  }
-  if (geoId.startsWith("A")) {
-    params = `niveau_geo=DEPARTEMENT&aca_id=${geoId}&regroupement=${field}`;
-  }
-  if (geoId.startsWith("U")) {
-    params = `niveau_geo=COMMUNE&uucr_id=${geoId}`;
-  }
+  let params = `niveau_geo=COMMUNE&geo_id=${geoId}`;
   if (geoId === "PAYS_100") {
     params = `niveau_geo=REGION`;
+  } else if (geoId.startsWith("R")) {
+    params = `niveau_geo=ACADEMIE&reg_id=${geoId}`;
+  } else if (geoId.startsWith("D")) {
+    params = `niveau_geo=COMMUNE&dep_id=${geoId}`;
+  } else if (geoId.startsWith("A")) {
+    params = `niveau_geo=DEPARTEMENT&aca_id=${geoId}`;
+  } else if (geoId.startsWith("U")) {
+    params = `niveau_geo=COMMUNE&uucr_id=${geoId}`;
   }
+  params += `&annee_universitaire=${currentYear}&regroupement=${field}`;
   const url = `${VITE_APP_SERVER_URL}/atlas/number-of-students-by-field-and-sublevel?${params}`;
   return fetch(url).then((response) => response.json());
 }

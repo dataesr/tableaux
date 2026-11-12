@@ -421,7 +421,7 @@ export default function General() {
           </div>
         </Col>
       </Row>
-      <Row className="fr-mt-5w fr-mb-5w  atlas-bloc">
+      <Row className="fr-my-5w atlas-bloc">
         <Col md={12}>
           <Title as="h2" look="h5">
             Répartition des effectifs étudiants par genre

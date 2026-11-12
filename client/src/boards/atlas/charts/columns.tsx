@@ -1,56 +1,34 @@
-import Highcharts from "highcharts/es-modules/masters/highcharts.src.js";
-import HighchartsReact from "highcharts-react-official";
+import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js";
+import ChartWrapper from "../../../components/chart-wrapper";
+import { createChartOptions } from "../../../components/chart-wrapper/default-options";
 import type { DataByYear } from "../../../types/atlas";
+import { getCssColor } from "../../../utils/colors";
+import "../styles.scss";
 
 export default function ColumnsChart({ data, label, currentYear }: { data: DataByYear[]; label: string; currentYear: string }) {
-  const rootStyles = getComputedStyle(document.documentElement);
-  const filieresOptions = {
+  const selectedYearColor = getCssColor("selected-year-color");
+  const otherYearsColor = getCssColor("other-years-color");
+
+  const columnsOptions: HighchartsInstance.Options = {
     chart: {
-      backgroundColor: "transparent",
-      height: "250",
-      type: "column",
-    },
-    title: {
-      text: "",
-    },
-    subtitle: {
-      align: "left",
-      style: {
-        color: rootStyles.getPropertyValue("--label-color"),
-        fontFamily: "Marianne, sans-serif",
-      },
-      text: "Nombre d'étudiants inscrits par année universitaire",
+      height: 250,
     },
     xAxis: {
-      categories: data.map((year) => year.annee_universitaire),
+      categories: data.map((year) => year.annee_universitaire as string),
       gridLineWidth: 1,
-      labels: {
-        style: {
-          color: rootStyles.getPropertyValue("--label-color"),
-          fontFamily: "Marianne, sans-serif",
-        },
-      },
       lineWidth: 0,
       title: {
-        text: null,
+        text: "",
       },
     },
     yAxis: {
       min: 0,
       title: {
-        align: "high",
-        style: {
-          color: rootStyles.getPropertyValue("--label-color"),
-          fontFamily: "Marianne, sans-serif",
-        },
         text: "Nombre d'étudiants",
+        align: "high",
       },
       labels: {
         overflow: "justify",
-        style: {
-          color: rootStyles.getPropertyValue("--label-color"),
-          fontFamily: "Marianne, sans-serif",
-        },
       },
       gridLineWidth: 0,
     },
@@ -58,33 +36,40 @@ export default function ColumnsChart({ data, label, currentYear }: { data: DataB
       valueSuffix: " étudiants",
     },
     plotOptions: {
-      bar: {
-        borderRadius: "50%",
-        dataLabels: {
-          enabled: true,
-        },
+      column: {
         groupPadding: 0.1,
       },
     },
-    legend: {
-      enabled: false,
-    },
-    credits: {
-      enabled: false,
-    },
     series: [
       {
+        type: "column",
         name: "Nombre d'étudiants inscrits",
         data: data.map((year) => ({
-          y: year[label] ? year[label] : 0,
-          color: year.annee_universitaire === currentYear ? "#ce614a" : "#999",
+          y: year[label] ? Number(year[label]) : 0,
+          color: year.annee_universitaire === currentYear ? selectedYearColor : otherYearsColor,
         })),
       },
     ],
   };
+
+  const options = createChartOptions("column", columnsOptions);
+
   return (
-    <section>
-      <HighchartsReact highcharts={Highcharts} options={filieresOptions} />
+    <section className="chart-container--default">
+      <ChartWrapper
+        config={{
+          id: `columns-chart-${label}`,
+          title: {
+            fr: "Nombre d'étudiants inscrits par année universitaire",
+            look: "h6",
+          },
+          comment: {
+            fr: <>Ce graphique présente le nombre d'étudiants inscrits pour chaque année universitaire. L'année universitaire sélectionnée ({currentYear}) est mise en évidence.</>,
+            en: <>This chart shows the number of enrolled students for each academic year. The selected academic year ({currentYear}) is highlighted.</>,
+          },
+        }}
+        options={options}
+      />
     </section>
   );
 }
