@@ -5,7 +5,9 @@ import { useTitle } from "../../../../hooks/usePageTitle.tsx";
 import { getI18nLabel } from "../../../../utils";
 import { useBiblioDisciplines, useBiblioEntites, useBiblioMeta } from "../../api";
 import { useBiblioOptions, useSelection } from "../../hooks/use-selection";
+import { getDisciplineLabel } from "../../utils";
 import i18n from "../../title-i18n.json";
+import RevuesTete from "./components/revues-tete/index.tsx";
 import { BibliometrieProvider, getOptionsLabel, PERIMETRE_LABELS } from "./context.ts";
 import EtablissementsSection from "./etablissements/index.tsx";
 import InternationalSection from "./international/index.tsx";
@@ -112,8 +114,18 @@ export default function BibliometriePage() {
             ))}
           </Tabs>
 
+          {selection && (
+            <Accordion
+              className="fr-mt-6w"
+              title={`Revues de tête prises en compte (prestige) · ${getDisciplineLabel(selection, disciplines.data)}`}
+              titleAs="h2"
+            >
+              <RevuesTete disciplines={disciplines.data} meta={meta.data} options={options} selection={selection} />
+            </Accordion>
+          )}
+
           {meta.data.methode.length > 0 && (
-            <Accordion className="fr-mt-6w" title="Méthode · périmètre, comptage, indicateurs, années provisoires" titleAs="h2">
+            <Accordion className="fr-mt-2w" title="Méthode · périmètre, comptage, indicateurs, années provisoires" titleAs="h2">
               <ul>
                 {meta.data.methode.map((texte) => <li key={texte}>{texte}</li>)}
               </ul>

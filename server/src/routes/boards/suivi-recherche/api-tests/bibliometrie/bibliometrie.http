@@ -7,6 +7,22 @@ GET http://localhost:3000/api/suivi-recherche/bibliometrie/disciplines
 GET http://localhost:3000/api/suivi-recherche/bibliometrie/entites
 
 ###
+# Revues de tête comptées dans le prestige : une discipline, avec les revues multidisciplinaires (10 + 5 revues)
+GET http://localhost:3000/api/suivi-recherche/bibliometrie/revues-tete?discipline=PE10
+
+###
+# Un domaine, sans les revues multidisciplinaires ; une revue de tête de plusieurs disciplines n'apparaît qu'une fois
+GET http://localhost:3000/api/suivi-recherche/bibliometrie/revues-tete?domaine=LS&inclure_multidisciplinaires=false
+
+###
+# Toutes disciplines
+GET http://localhost:3000/api/suivi-recherche/bibliometrie/revues-tete
+
+###
+# 400 attendu
+GET http://localhost:3000/api/suivi-recherche/bibliometrie/revues-tete?domaine=XX
+
+###
 # Influence de la France, 2015–2022, toutes disciplines, périmètre SJR (exemple du contrat de données)
 GET http://localhost:3000/api/suivi-recherche/bibliometrie/indicateurs?perimetre=revues_sjr&year_min=2015&year_max=2022
 

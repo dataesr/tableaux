@@ -283,6 +283,30 @@ export const useBiblioEntites = () =>
     queryFn: () => fetchJson<Entite[]>(`${BASE_URL}/entites`),
   });
 
+// Revue de tête comptée dans le prestige de la sélection, avec les disciplines où elle compte comme revue disciplinaire
+export type RevueTete = {
+  disciplines: { code: string; nom: string }[];
+  multidisciplinaire: boolean;
+  sjr: number | null;
+  sjr_id: string | number;
+  titre: string;
+};
+
+// La liste ne dépend que des disciplines sélectionnées et de l'option multidisciplinaire (ni entité, ni période, ni périmètre)
+export const useBiblioRevuesTete = (selection: Selection, options: BiblioOptions) => {
+  const params = new URLSearchParams({ inclure_multidisciplinaires: String(options.inclureMultidisciplinaires) });
+  if (selection.disciplineCode) params.set("discipline", selection.disciplineCode);
+  if (selection.domaineCode) params.set("domaine", selection.domaineCode);
+  return useQuery({
+    queryKey: [
+      "suivi-recherche", "bibliometrie", "revues-tete",
+      selection.disciplineCode ?? null, selection.domaineCode ?? null, options.inclureMultidisciplinaires,
+    ],
+    queryFn: () => fetchJson<RevueTete[]>(`${BASE_URL}/revues-tete?${params}`),
+    placeholderData: keepPreviousData,
+  });
+};
+
 export const useBiblioIndicateurs = (selection: Selection, options: BiblioOptions) =>
   useQuery({
     queryKey: ["suivi-recherche", "bibliometrie", "indicateurs", ...filtersKey(selection, options)],

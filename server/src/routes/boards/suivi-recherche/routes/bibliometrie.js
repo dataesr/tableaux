@@ -131,6 +131,53 @@ router.route("/suivi-recherche/bibliometrie/disciplines").get(async (req, res) =
   res.json(disciplines);
 });
 
+// Revues de tête réellement comptées dans le prestige de la sélection : celles de chaque discipline sélectionnée
+// (une liste par discipline, la même pour les deux périmètres), plus les multidisciplinaires si l'option est cochée.
+// Une ligne par revue, avec les disciplines où elle compte, triées par SJR décroissant.
+router.route("/suivi-recherche/bibliometrie/revues-tete").get(async (req, res) => {
+  const { discipline, domaine, inclure_multidisciplinaires } = req.query;
+  if (discipline && !CODE_PATTERN.test(discipline)) throw new BadRequestError("invalid discipline");
+  if (domaine && !DOMAINES.includes(domaine)) throw new BadRequestError(`domaine must be one of ${DOMAINES.join(", ")}`);
+  if (inclure_multidisciplinaires !== undefined && !["true", "false"].includes(inclure_multidisciplinaires)) {
+    throw new BadRequestError("inclure_multidisciplinaires must be true or false");
+  }
+
+  const match = { classement: CLASSEMENT };
+  if (discipline) match.discipline_code = discipline;
+  else if (domaine) match.discipline_code = { $regex: `^${domaine}` };
+  if (inclure_multidisciplinaires === "false") match.categorie = "disciplinaire";
+
+  const [rows, disciplines] = await Promise.all([
+    (await getCollection("biblio_revues_tete"))
+      .find(match, { projection: { _id: 0, discipline_code: 1, categorie: 1, sjr_id: 1, titre: 1, sjr: 1 } })
+      .toArray(),
+    (await getCollection("biblio_disciplines"))
+      .find({ classement: CLASSEMENT }, { projection: { _id: 0, discipline_code: 1, discipline_nom: 1 } })
+      .toArray(),
+  ]);
+  const noms = new Map(disciplines.map((d) => [d.discipline_code, d.discipline_nom]));
+
+  const revues = new Map();
+  rows.forEach((row) => {
+    if (!revues.has(row.sjr_id)) {
+      revues.set(row.sjr_id, {
+        sjr_id: row.sjr_id,
+        titre: row.titre,
+        sjr: row.sjr ?? null,
+        multidisciplinaire: false,
+        disciplines: [],
+      });
+    }
+    const revue = revues.get(row.sjr_id);
+    if (row.categorie === "multidisciplinaire") revue.multidisciplinaire = true;
+    else revue.disciplines.push({ code: row.discipline_code, nom: noms.get(row.discipline_code) ?? row.discipline_code });
+  });
+
+  res.json([...revues.values()]
+    .map((revue) => ({ ...revue, disciplines: revue.disciplines.sort((a, b) => a.code.localeCompare(b.code, "fr", { numeric: true })) }))
+    .sort((a, b) => (b.sjr ?? -1) - (a.sjr ?? -1) || a.titre.localeCompare(b.titre, "fr")));
+});
+
 router.route("/suivi-recherche/bibliometrie/entites").get(async (req, res) => {
   const collection = await getCollection("entites");
   const entites = await collection
