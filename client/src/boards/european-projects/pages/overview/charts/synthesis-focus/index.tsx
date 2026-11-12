@@ -8,23 +8,35 @@ import i18n from "./i18n.json";
 import { getData } from "./query";
 import Template from "./template";
 import { useGetParams } from "./utils";
+import { getCountryAdjectives } from "../../../../../../components/country-selector/utils";
+import { getCountryNameWithArticle } from "../../../../utils/country-mapping";
 
 import "./styles.scss";
 
 export default function SynthesisFocus() {
   const [searchParams] = useSearchParams();
   const params = useGetParams();
-  const currentLang = searchParams.get("language") || "fr";
+  const countryCode = searchParams.get("country_code") || "FRA";
+  const currentLang = (searchParams.get("language") === "en" ? "en" : "fr") as "fr" | "en";
   const structureId = searchParams.get("structureid") || "";
 
-  function getI18nLabel(key: string) {
-    const keys = key.split(".");
-    let value: Record<string, unknown> = i18n;
-    for (const k of keys) {
-      value = value?.[k] as Record<string, unknown>;
-    }
-    return (value as Record<string, string>)?.[currentLang] || key;
+  const country = getCountryNameWithArticle(countryCode, currentLang).replace(/^(Le |La |Les |L')/, (m) => m.toLowerCase());
+  const countryAdj = getCountryAdjectives(countryCode, currentLang);
+
+  // Pluriel seulement en français
+  const adjMascPlural =
+  currentLang === "fr" && !countryAdj.m.endsWith("s") ? `${countryAdj.m}s` : countryAdj.m;
+
+function getI18nLabel(key: string, values: Record<string, string> = {}) {
+  const keys = key.split(".");
+  let value: Record<string, unknown> = i18n;
+  for (const k of keys) {
+    value = value?.[k] as Record<string, unknown>;
   }
+  const text = (value as Record<string, string>)?.[currentLang] || key;
+  // Remplace chaque {placeholder} par sa valeur (laisse le texte tel quel si absent)
+  return text.replace(/\{(\w+)\}/g, (match, k) => values[k] ?? match);
+}
 
   const { data, isLoading } = useQuery({
     queryKey: ["SynthesisFocus", params],
@@ -47,7 +59,7 @@ export default function SynthesisFocus() {
             {/*cards successful funding country share*/}
             <RateCard
               nb={dataCurrentCountry_successful.total_fund_eur / dataSuccessful.total_fund_eur}
-              label={getI18nLabel("fundsShare.label")}
+              label={getI18nLabel("fundsShare.label", { adj: adjMascPlural })}
               loading={false}
               tooltipText={getI18nLabel("fundsShare.tooltip")}
               numerator={currentLang === "fr" ? formatCurrency(dataCurrentCountry_successful.total_fund_eur) : formatCurrencyEn(dataCurrentCountry_successful.total_fund_eur)}
@@ -60,7 +72,7 @@ export default function SynthesisFocus() {
             {/*cards evaluated involved country share*/}
             <RateCard
               nb={dataCurrentCountry_evaluated.total_involved / dataEvaluated.total_involved}
-              label={getI18nLabel("applicantsShare.label")}
+              label={getI18nLabel("applicantsShare.label", { adj: adjMascPlural })}
               loading={false}
               tooltipText={getI18nLabel("applicantsShare.tooltip")}
               numerator={Math.trunc(dataCurrentCountry_evaluated.total_involved)}
@@ -73,7 +85,7 @@ export default function SynthesisFocus() {
             {/*cards successful coord country share*/}
             <RateCard
               nb={dataCurrentCountry_successful.total_coordination_number / dataSuccessful.total_coordination_number}
-              label={getI18nLabel("coordinationsShare.label")}
+              label={getI18nLabel("coordinationsShare.label", { country: country })}
               loading={false}
               tooltipText={getI18nLabel("coordinationsShare.tooltip")}
               numerator={Math.trunc(dataCurrentCountry_successful.total_coordination_number)}

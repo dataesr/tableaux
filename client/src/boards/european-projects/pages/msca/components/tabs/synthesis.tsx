@@ -16,7 +16,7 @@ export default function SyntheseContent() {
   const callYear = rangeOfYearsToApiFormat(rangeOfYears);
   const currentLang = searchParams.get("language") || "fr";
 
-  const countryAdj = getCountryAdjectives(countryCode);
+  const countryAdj = getCountryAdjectives(countryCode, currentLang);
 
   return (
     <div>

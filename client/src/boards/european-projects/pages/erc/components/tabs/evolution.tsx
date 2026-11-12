@@ -13,7 +13,7 @@ export default function EvolutionContent() {
   const currentLang = searchParams.get("language") || "fr";
 
   // Adjectifs de nationalité (masculin et féminin)
-  const countryAdj = getCountryAdjectives(countryCode);
+  const countryAdj = getCountryAdjectives(countryCode, currentLang);
 
   return (
     <div>

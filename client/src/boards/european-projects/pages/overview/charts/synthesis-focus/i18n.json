@@ -5,28 +5,28 @@
   },
   "fundsShare": {
     "label": {
-      "fr": "Part des financements obtenus par les participants du pays",
-      "en": "Share of funding secured by participants from the country"
+      "fr": "Part des financements obtenus par les participants {adj}",
+      "en": "Share of funding secured by {adj} participants"
     },
     "tooltip": {
-      "fr": "Montant des financements obtenus par les participants du pays sur le montant des financements obtenus par l'ensemble des participants",
+      "fr": "Montant des financements obtenus par les participants du pays sélectionné sur le montant des financements obtenus par l'ensemble des participants",
       "en": "Amount of funding secured by participants from the country as a proportion of the total funding secured by all participants"
     }
   },
   "participantsShare": {
     "label": {
-      "fr": "Part du nombre de participants du pays sélectionné",
-      "en": "Share of participant number from the country"
+      "fr": "Part du nombre de participants {adj}",
+      "en": "Share of {adj} participant number"
     },
     "tooltip": {
-      "fr": "Nombre de participants du pays dans les projets lauréats sur le nombre total de participants dans les projest lauréats",
+      "fr": "Nombre de participants du pays sélectionné dans les projets lauréats sur le nombre total de participants dans les projest lauréats",
       "en": "Number of participants from the country in successful projects as a proportion of the total number of participants in successful projects"
     }
   },
   "applicantsShare": {
     "label": {
-      "fr": "Part des candidats du pays sélectionné",
-      "en": "Share of applicants from the country"
+      "fr": "Part des candidats {adj}",
+      "en": "Share of {adj} applicants"
     },
     "tooltip": {
       "fr": "Nombre de candidats du pays sélectionné rapporté au nombre total de candidats dans les projets évalués",
@@ -35,11 +35,11 @@
   },
   "coordinationsShare": {
     "label": {
-      "fr": "Part des coordinations de projets du pays",
-      "en": "share of projects coordinated by the country's participants"
+      "fr": "Part des projets coordonnés par {country}",
+      "en": "share of projects coordinated by {country}"
     },
     "tooltip": {
-      "fr": "Nombre de projets lauréats coordonnés par un participant du pays sur le nombre total de coordinations de projets lauréats",
+      "fr": "Nombre de projets lauréats coordonnés par un participant du pays sélectionné sur le nombre total de coordinations de projets lauréats",
       "en": "Number of successful projects coordinated by a participant from the country as a proportion of the total number of successful projects coordinated"
     }
   },
