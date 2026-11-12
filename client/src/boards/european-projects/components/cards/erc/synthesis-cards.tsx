@@ -69,8 +69,9 @@ export default function ErcSynthesisCards({
   const countrySuccessRatePi = countryPiEvaluated > 0 ? countryPiSuccessful / countryPiEvaluated : 0;
 
   // Adjectifs avec pluriel (ajout du "s" pour le pluriel si nécessaire)
-  // const adjFemPlural = countryAdj.f.endsWith("s") ? countryAdj.f : `${countryAdj.f}s`;
+  const adjFemPlural = countryAdj.f.endsWith("s") ? countryAdj.f : `${countryAdj.f}s`;
   const adjMascPlural = countryAdj.m.endsWith("s") ? countryAdj.m : `${countryAdj.m}s`;
+  
 
   const [searchParams] = useSearchParams();
   const lang = (searchParams.get("language") === "en" ? "en" : "fr") as "fr" | "en";
@@ -94,7 +95,7 @@ export default function ErcSynthesisCards({
       <Col xs={12} md={4}>
         {/* Part des projets lauréats */}
         <ErcCard
-          label={`Part des candidats ${adjMascPlural}`}
+          label={`Part des candidaturess ${adjFemPlural}`}
           value={formatToRates(piShareEvaluated)}
           secondaryValue={formatNumber(countryPiEvaluated)}
           secondaryLabel="candidats"
@@ -124,7 +125,7 @@ export default function ErcSynthesisCards({
           value={formatToRates(successRateFunding)}
           progressValue={successRateFunding}
           loading={isLoading}
-          variant="funding-rate-card"
+          variant="rate-card"
           tooltipText={`Financements obtenus sur financements demandés (${formatCurrency(countryBudgetEvaluated)})`}
         />
       </Col>
@@ -135,7 +136,7 @@ export default function ErcSynthesisCards({
           value={formatToRates(successRateProjects)}
           progressValue={successRateProjects}
           loading={isLoading}
-          variant="funding-rate-card"
+          variant="rate-card"
           tooltipText={`Nombre de projets lauréats sur le nombre de projets évalués (${formatNumber(countryProjectsEvaluated)})`}
         />
       </Col>
@@ -148,7 +149,7 @@ export default function ErcSynthesisCards({
           // secondaryLabel="lauréats / candidats"
           progressValue={countrySuccessRatePi}
           loading={isLoading}
-          variant="funding-rate-card"
+          variant="rate-card"
           tooltipText={`Nombre de porteurs lauréats sur le nombre de candidats ${adjMascPlural} (${formatNumber(countryPiEvaluated)})`}
         />
       </Col>

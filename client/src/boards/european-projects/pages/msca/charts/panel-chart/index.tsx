@@ -9,6 +9,7 @@ import { formatCurrency, formatNumber, formatToRates } from "../../../../../../u
 import OptionsProjects from "./options";
 import OptionsFunding from "./options-funding";
 import { getData, MscaPanelChartItem } from "./query";
+import { getCountryAdjectives } from "../../../../../../components/country-selector/utils";
 
 interface PanelChartProps {
   countryCode?: string;
@@ -98,6 +99,10 @@ function PanelChartProjects({ countryCode, callYear, currentLang = "fr" }: Panel
     enabled: params !== "",
   });
 
+  const countryAdj = getCountryAdjectives(countryCode, currentLang)
+  const adjFemPlural =
+    currentLang === "fr" && !countryAdj.f.endsWith("s") ? `${countryAdj.f}s` : countryAdj.f;
+
   if (isLoading || !data) return <DefaultSkeleton />;
 
   const options = OptionsProjects({ data, currentLang });
@@ -114,26 +119,24 @@ function PanelChartProjects({ countryCode, callYear, currentLang = "fr" }: Panel
     comment: {
       fr: (
         <>
-          Ce graphique présente le nombre de projets évalués et lauréats pour chaque panel scientifique. 
-          La ligne orange indique le taux de succès dans chaque panel, soit le nombre de projets lauréats sur le nombre projets évalués.
+          Ce graphique présente le nombre de projets évalués et lauréats pour chaque panel scientifique, ainsi que le taux de succès i.e le nombre de projets lauréats sur le nombre projets évalués.
         </>
       ),
       en: (
         <>
-          This chart shows the number of evaluated and successful projects for each scientific panel.
-          The orange line shows the success rate in each panel, i.e. the ratio of successful projects to projects evaluated.
+          This chart shows the number of evaluated and successful projects for each scientific panel and the success rate i.e. the ratio of successful projects to projects evaluated.
         </>
       ),
     },
     readingKey: {
       fr: (
         <>
-          En {readingChoice.panel_name}, sur {formatNumber(countryEval)} propositions évaluées {formatNumber(countrySucc)} sont lauréates, soit un taux de succès de {formatToRates(successRate)}.
+          En {readingChoice.panel_name}, sur {formatNumber(countryEval)} propositions {adjFemPlural} évaluées {formatNumber(countrySucc)} sont lauréates, soit un taux de succès de {formatToRates(successRate)}.
         </>
       ),
       en: (
         <>
-          In {readingChoice.panel_name}, of the {formatNumber(countryEval)} proposals evaluated,{" "} {formatNumber(countrySucc)} were successful, a success rate of {formatToRates(successRate)}.
+          In {readingChoice.panel_name}, of the {formatNumber(countryEval)} {adjFemPlural} proposals evaluated,{" "} {formatNumber(countrySucc)} were successful, a success rate of {formatToRates(successRate)}.
         </>
       ),
     },
@@ -165,6 +168,11 @@ function PanelChartFunding({ countryCode, callYear, currentLang = "fr" }: PanelC
   const options = OptionsFunding({ data, currentLang });
   if (!options) return null;
 
+  const countryAdj = getCountryAdjectives(countryCode, currentLang)
+  const adjMascPlural =
+    currentLang === "fr" && !countryAdj.m.endsWith("s") ? `${countryAdj.m}s` : countryAdj.m;
+
+
   const readingChoice = data[0];
   const countryEval = readingChoice?.evaluated?.total_funding_project ?? 0;
   const countrySucc = readingChoice?.successful?.total_funding_project ?? 0;
@@ -176,27 +184,25 @@ function PanelChartFunding({ countryCode, callYear, currentLang = "fr" }: PanelC
     comment: {
       fr: (
         <>
-          Ce graphique présente les financements demandés et obtenus pour chaque panel scientifique. 
-          La ligne orange indique le taux de succès de chaque panel, soit le montant des financements obtenus sur le montant des financements demandés.
+          Ce graphique présente les financements demandés et obtenus pour chaque panel scientifique, ainsi que le taux de succès i.e le montant des financements obtenus sur le montant des financements demandés.
         </>
       ),
       en: (
         <>
-          This chart shows the funding requested and secured for each scientific panel.
-          The orange line shows the funding success rate for each panel, i.e. the ratio of funding secured to funding requested.
+          This chart shows the funding requested and secured for each scientific panel and the funding success rate i.e. the ratio of funding secured to funding requested.
         </>
       ),
     },
     readingKey: {
       fr: (
         <>
-          En "{readingChoice.panel_name}", les participants du pays sélectionné ont demandé {formatCurrency(countryEval)} et{" "}
+          En "{readingChoice.panel_name}", les participants {adjMascPlural} ont demandé {formatCurrency(countryEval)} et{" "}
           obtenu {formatCurrency(countrySucc)} soit un taux de succès de {formatToRates(successRate)}.
         </>
       ),
       en: (
         <>
-          In "{readingChoice.panel_name}", participants from the selected country requested {formatCurrency(countryEval)} and{" "}
+          In "{readingChoice.panel_name}", {adjMascPlural} participants from the selected country requested {formatCurrency(countryEval)} and{" "}
           secured {formatCurrency(countrySucc)}, a success rate of {formatToRates(successRate)}.
         </>
       ),

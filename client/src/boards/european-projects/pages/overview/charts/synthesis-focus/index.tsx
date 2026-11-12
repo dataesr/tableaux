@@ -26,6 +26,9 @@ export default function SynthesisFocus() {
   // Pluriel seulement en français
   const adjMascPlural =
   currentLang === "fr" && !countryAdj.m.endsWith("s") ? `${countryAdj.m}s` : countryAdj.m;
+  const adjFemPlural =
+  currentLang === "fr" && !countryAdj.f.endsWith("s") ? `${countryAdj.f}s` : countryAdj.f;
+  
 
 function getI18nLabel(key: string, values: Record<string, string> = {}) {
   const keys = key.split(".");
@@ -72,7 +75,7 @@ function getI18nLabel(key: string, values: Record<string, string> = {}) {
             {/*cards evaluated involved country share*/}
             <RateCard
               nb={dataCurrentCountry_evaluated.total_involved / dataEvaluated.total_involved}
-              label={getI18nLabel("applicantsShare.label", { adj: adjMascPlural })}
+              label={getI18nLabel("applicantsShare.label", { adj: adjFemPlural })}
               loading={false}
               tooltipText={getI18nLabel("applicantsShare.tooltip")}
               numerator={Math.trunc(dataCurrentCountry_evaluated.total_involved)}
@@ -94,7 +97,7 @@ function getI18nLabel(key: string, values: Record<string, string> = {}) {
               denominatorLabel={getI18nLabel("labels.coordinationsShare.denominator")}
             />
           </Col>
-          <Col xs={12} md={4}>
+          <Col xs={12} md={4} className="success-card">
             {/*cards funding country success*/}
             <RateCard
               nb={dataCurrentCountry_successful.total_fund_eur / dataCurrentCountry_evaluated.total_fund_eur}
@@ -107,7 +110,7 @@ function getI18nLabel(key: string, values: Record<string, string> = {}) {
               denominatorLabel={getI18nLabel("labels.fundsSuccessRate.denominator")}
             />
           </Col>
-          <Col xs={12} md={4}>
+          <Col xs={12} md={4} className="success-card">
             {/*cards involved country success*/}
             <RateCard
               nb={dataCurrentCountry_successful.total_involved / dataCurrentCountry_evaluated.total_involved}
@@ -120,7 +123,7 @@ function getI18nLabel(key: string, values: Record<string, string> = {}) {
               denominatorLabel={getI18nLabel("labels.participantsSuccessRate.denominator")}
             />
           </Col>
-          <Col xs={12} md={4}>
+          <Col xs={12} md={4} className="success-card">
             {/*cards coord country success*/}
             <RateCard
               nb={dataCurrentCountry_successful.total_coordination_number / dataCurrentCountry_evaluated.total_coordination_number}
@@ -174,7 +177,7 @@ function getI18nLabel(key: string, values: Record<string, string> = {}) {
             loading={false}
             tooltipText={getI18nLabel("entityCoordinationsShare.tooltip")}
             numerator={Math.trunc(dataSuccessful.entity.total_coordination_number)}
-            denominator={Math.trunc(dataCurrentCountry_successful.total_coordination_numberMath.trunc)}
+            denominator={Math.trunc(dataCurrentCountry_successful.total_coordination_numberMath)}
             numeratorLabel={getI18nLabel("labels.entityCoordinationsShare.numerator")}
             denominatorLabel={getI18nLabel("labels.coordinationsShare.numerator")}
           />

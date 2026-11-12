@@ -10,6 +10,8 @@ import OptionsFunding from "./options-funding";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 import { formatNumber, formatCurrency, formatToRates } from "../../../../../../utils/format";
+import { getCountryAdjectives } from "../../../../../../components/country-selector/utils";
+
 
 const DESTINATION_NAMES: Record<string, { fr: string; en: string }> = {
   PF: { fr: "Postdoctoral Fellowships", en: "Postdoctoral Fellowships" },
@@ -108,6 +110,9 @@ function DestinationChartProjects({ countryCode, callYear, currentLang = "fr" }:
     enabled: params !== "",
   });
 
+  const countryAdj = getCountryAdjectives(countryCode, currentLang)
+  const adjFemPlural =
+    currentLang === "fr" && !countryAdj.f.endsWith("s") ? `${countryAdj.f}s` : countryAdj.f;
 
   if (isLoading || !data) return <DefaultSkeleton />;
 
@@ -127,26 +132,26 @@ function DestinationChartProjects({ countryCode, callYear, currentLang = "fr" }:
       fr: (
         <>
           Ce graphique présente le nombre de projets évalués et lauréats pour chaque type de financement (Postdoctoral Fellowships, Doctoral Networks, Staff Exchanges, etc.).
-          La ligne orange indique le taux de succès dans chaque type, soit le rapport entre les projets lauréats et les projets évalués.
+          La ligne verte indique le taux de succès dans chaque type, soit le rapport entre les projets lauréats et les projets évalués.
         </>
       ),
       en: (
         <>
           This chart shows the number of projects evaluated and successful projects for each action type (Postdoctoral Fellowships, Doctoral Networks, Staff Exchanges, etc.).
-          The orange line shows the success rate in each type, i.e. the ratio of successful projects to projects evaluated.
+          The green line shows the success rate in each type, i.e. the ratio of successful projects to projects evaluated.
         </>
       ),
     },
     readingKey: {
       fr: (
         <>
-          Dans le cadre des appels à projets "{destinationName}", sur {formatNumber(countryEval)} propositions évaluées{" "}
+          Dans le cadre des appels à projets "{destinationName}", sur {formatNumber(countryEval)} propositions {adjFemPlural} évaluées{" "}
           {formatNumber(countrySucc)} d'entre elles sont lauréates, soit un taux de succès de {formatToRates(successRate)}.
         </>
       ),
       en: (
         <>
-          Under "{destinationName}" calls for proposals, of the {formatNumber(countryEval)} proposals evaluated,{" "}
+          Under "{destinationName}" calls for proposals, of the {formatNumber(countryEval)} {adjFemPlural} proposals evaluated,{" "}
           {formatNumber(countrySucc)} were successful, a success rate of {formatToRates(successRate)}.
         </>
       ),
@@ -174,6 +179,10 @@ function DestinationChartFunding({ countryCode, callYear, currentLang = "fr" }: 
     enabled: params !== "",
   });
 
+  const countryAdj = getCountryAdjectives(countryCode, currentLang)
+  const adjMascPlural =
+    currentLang === "fr" && !countryAdj.m.endsWith("s") ? `${countryAdj.m}s` : countryAdj.m;
+
   if (isLoading || !data) return <DefaultSkeleton />;
 
   const options = OptionsFunding({ data, currentLang });
@@ -192,26 +201,26 @@ function DestinationChartFunding({ countryCode, callYear, currentLang = "fr" }: 
       fr: (
         <>
           Ce graphique présente les financements demandés et obtenus pour chaque type de financement (Postdoctoral Fellowships, Doctoral Networks, Staff Exchanges, etc.).
-          La ligne orange indique le taux de succès des financements, soit le rapport entre les financements obtenus et les financements demandés.
+          La ligne verte indique le taux de succès des financements, soit le rapport entre les financements obtenus et les financements demandés.
         </>
       ),
       en: (
         <>
           This chart shows the funding requested and secured for each action type (Postdoctoral Fellowships, Doctoral Networks, Staff Exchanges, etc.).
-          The orange line shows the funding success rate, i.e. the ratio of funding secured to funding requested.
+          The green line shows the funding success rate, i.e. the ratio of funding secured to funding requested.
         </>
       ),
     },
     readingKey: {
       fr: (
         <>
-          Dans le cadre des appels à projets "{destinationName}", les participants du pays sélectionné ont demandé {formatCurrency(countryEval)} et{" "}
+          Dans le cadre des appels à projets "{destinationName}", les participants {adjMascPlural} ont demandé {formatCurrency(countryEval)} et{" "}
           obtenu {formatCurrency(countrySucc)} soit un taux de succès de {formatToRates(successRate)}.
         </>
       ),
       en: (
         <>
-          Under calls for proposals "{destinationName}", participants from the selected country requested {formatCurrency(countryEval)} and{" "}
+          Under calls for proposals "{destinationName}", {adjMascPlural}  participants from the selected country requested {formatCurrency(countryEval)} and{" "}
           secured {formatCurrency(countrySucc)}, a success rate of {formatToRates(successRate)}.
         </>
       ),

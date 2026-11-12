@@ -25,7 +25,7 @@
   },
   "applicantsShare": {
     "label": {
-      "fr": "Part des candidats {adj}",
+      "fr": "Part des candidaturess {adj}",
       "en": "Share of {adj} applicants"
     },
     "tooltip": {
