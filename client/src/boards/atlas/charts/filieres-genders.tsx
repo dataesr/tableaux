@@ -62,6 +62,7 @@ export default function FilieresGendersChart({ data, isLoading }: { data: DataPr
     },
     plotOptions: {
       bar: {
+        borderWidth: 0,
         dataLabels: {
           enabled: true,
         },

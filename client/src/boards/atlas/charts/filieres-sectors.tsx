@@ -63,6 +63,7 @@ export default function FilieresSectorsChart({ data, isLoading }: { data: DataPr
     },
     plotOptions: {
       bar: {
+        borderWidth: 0,
         dataLabels: {
           enabled: true,
         },
