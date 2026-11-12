@@ -29,7 +29,7 @@ export default function getOptions(data: { data?: FundingItem[] } | null, displa
   const successfulData = categories.map((name) => getValue(name, "successful") / divider);
   const successRates = evaluatedData.map((evaluated, i) => (evaluated > 0 ? (successfulData[i] / evaluated) * 100 : 0));
 
-  const successRateColor = getCssColor("average-success-rate") || "#d75521";
+  const successRateColor = getCssColor("success-rate") || "#00A95F";
 
   const newOptions: HighchartsInstance.Options = {
     chart: {

@@ -37,7 +37,7 @@ export default function Options(data, displayType, currentLang): HighchartsOptio
 
   const evaluatedColor = getCssColor("evaluated-project");
   const successfulColor = getCssColor("successful-project");
-  const successRateColor = getCssColor("average-success-rate") || "#d75521";
+  const successRateColor = getCssColor("success-rate") || "#00A95F";
 
   const newOptions: HighchartsInstance.Options = {
     chart: {

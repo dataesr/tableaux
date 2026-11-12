@@ -24,9 +24,9 @@ export default function Options({ data, currentLang = "fr" }: OptionsParams) {
   });
 
   const rootStyles = getComputedStyle(document.documentElement);
-  const evaluatedColor = rootStyles.getPropertyValue("--evaluated-project-color").trim() || "#009099";
-  const successfulColor = rootStyles.getPropertyValue("--successful-project-color").trim() || "#233e41";
-  const successRateColor = rootStyles.getPropertyValue("--average-success-rate-color").trim() || "#d75521";
+  const evaluatedColor = rootStyles.getPropertyValue("--evaluated-project").trim() || "#a6f2fa";
+  const successfulColor = rootStyles.getPropertyValue("--successful-project").trim() || "#000091";
+  const successRateColor = rootStyles.getPropertyValue("--success-rate").trim() || "#00A95F";
 
   const newOptions: HighchartsInstance.Options = {
     chart: {
