@@ -4,6 +4,7 @@ import { useId } from "react";
 
 import { formatCurrency, formatNumber, formatToRates } from "../../../../../utils/format";
 import { getMscaSynthesis, MscaSynthesisResponse } from "../../../api/msca";
+import { getCountryNameWithDe } from "../../../utils/country-mapping";
 
 import "./styles.scss";
 
@@ -30,6 +31,8 @@ export default function MscaSynthesisCards({
 
   const adjFemPlural = countryAdj.f.endsWith("s") ? countryAdj.f : `${countryAdj.f}s`;
   const adjMascPlural = countryAdj.m.endsWith("s") ? countryAdj.m : `${countryAdj.m}s`;
+
+  const countryN = getCountryNameWithDe(countryCode)
 
   // Totaux globaux
   const totalFundingSuccessful = data?.successful?.total_funding_project || 0;
@@ -71,7 +74,7 @@ export default function MscaSynthesisCards({
           progressValue={fundingShare}
           loading={isLoading}
           variant="funding-card"
-          tooltipText={`Montant des financements obtenus par {} sur le montant des financements obtenus par l'ensemble des participants`}
+          tooltipText={`Montant des financements obtenus par le pays sélectionné sur le montant des financements obtenus par l'ensemble des participants`}
         />
       </Col>
       <Col xs={12} md={4}>
@@ -82,18 +85,20 @@ export default function MscaSynthesisCards({
           secondaryLabel="candidats"
           progressValue={candidatShare}
           loading={isLoading}
-          tooltipText={`Nombre de candidats ${adjMascPlural} sur le nombre total des candidats`}
+          variant="candidats-card"
+          tooltipText={`Nombre de candidats du pays sélectionné sur le nombre total des candidats`}
         />
       </Col>
       <Col xs={12} md={4}>
         <MscaCard
-          label="Part des projets lauréats"
+          label={`Part des projets lauréats ${countryN}`}
           value={formatToRates(projectsShare)}
           secondaryValue={formatNumber(countryProjects)}
           secondaryLabel="projets"
           progressValue={projectsShare}
           loading={isLoading}
-          tooltipText={`Nombre de projets lauréats impliquant au moins un participant ${countryAdj.m} sur le total des projets lauréats`}
+          variant="projects-card"
+          tooltipText={`Nombre de projets lauréats impliquant au moins un participant du pays sélectionné sur le nombre total des projets lauréats`}
         />
       </Col>
       <Col xs={12} md={4}>
@@ -103,7 +108,7 @@ export default function MscaSynthesisCards({
           progressValue={succesRateFunding}
           loading={isLoading}
           variant="rate-card"
-          tooltipText={`Montant des financements obtenus sur le montant des financements demandés par {}`}
+          tooltipText={`Montant des financements obtenus sur le montant des financements demandés par le pays sélectionné`}
         />
       </Col>
       <Col xs={12} md={4}>
@@ -114,7 +119,7 @@ export default function MscaSynthesisCards({
           progressValue={countrySuccessRate}
           loading={isLoading}
           variant="rate-card"
-          tooltipText={`Nombre de participants ${adjMascPlural} sur le nombre de candidats ${adjMascPlural}`}
+          tooltipText={`Nombre de participants sur le nombre de candidats du pays sélectionné`}
         />
       </Col>
       <Col xs={12} md={4}>
@@ -124,7 +129,7 @@ export default function MscaSynthesisCards({
           progressValue={successRateProjects}
           loading={isLoading}
           variant="rate-card"
-          tooltipText={`Nombre de projets lauréats sur le nombre de projets évalués impliquant au moins une entité ${countryAdj.f}`}
+          tooltipText={`Nombre de projets lauréats sur le nombre de projets évalués impliquant au moins une entité du pays sélectionné`}
         />
       </Col>
 
