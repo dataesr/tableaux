@@ -15,13 +15,7 @@ import MapPieSectors from "../charts/map-pie-sectors/index.jsx";
 import SectortsChart from "../charts/sectors-pie/index.tsx";
 import SectorHistoChart from "../charts/sectors-histo.tsx";
 import TrendCard from "../charts/trend.tsx";
-import {
-  getGeoPolygon,
-  getNumberOfStudents,
-  getNumberOfStudentsBySectorAndSublevel,
-  getNumberOfStudentsByYear,
-  getSimilarElements,
-} from "../../../api/atlas.ts";
+import { getGeoPolygon, getNumberOfStudentsBySectorAndSublevel, getNumberOfStudentsByYear, getSimilarElements } from "../../../api/atlas.ts";
 import { DataByYear, SimilarData } from "../../../types/atlas.ts";
 import StudentsCardWithTrend from "../../../components/cards/students-card-with-trend/index.tsx";
 import SubListSectors from "../components/sub-list-sectors.tsx";
@@ -37,18 +31,13 @@ export default function Sectors() {
   const params = [...searchParams].map(([key, value]) => `${key}=${value}`).join("&");
   const navigate = useNavigate();
 
-  const { data, isLoading } = useQuery({
-    queryKey: ["atlas/number-of-students", params],
-    queryFn: () => getNumberOfStudents(params),
-  });
-
   const { data: dataByYear, isLoading: isLoadingByYear } = useQuery({
     queryKey: ["atlas/number-of-students-by-year", params],
     queryFn: () => getNumberOfStudentsByYear(params),
   });
 
-  const effectifPU = dataByYear?.find((el: DataByYear) => el.annee_universitaire === data?.annee_universitaire)?.effectif_pu || 0;
-  const effectifPR = dataByYear?.find((el: DataByYear) => el.annee_universitaire === data?.annee_universitaire)?.effectif_pr || 0;
+  const effectifPU = dataByYear?.find((el: DataByYear) => el.annee_universitaire === currentYear)?.effectif_pu || 0;
+  const effectifPR = dataByYear?.find((el: DataByYear) => el.annee_universitaire === currentYear)?.effectif_pr || 0;
   const pctPU = effectifPU / (effectifPU + effectifPR);
 
   function getLevel() {
@@ -81,7 +70,7 @@ export default function Sectors() {
     annee_universitaire: currentYear,
   };
 
-  const { data: dataSimilar, isLoading: isLoadingSimilar } = useQuery({
+  const { data: dataSimilar } = useQuery({
     queryKey: ["atlas/similar-elements", similarParams],
     queryFn: () => getSimilarElements(similarParams),
   });
@@ -111,7 +100,7 @@ export default function Sectors() {
     { name: "Secteur privé", y: effectifPR },
   ];
 
-  if (isLoading || isLoadingByYear || isLoadingSimilar || isLoadingDataSectorsMap || isLoadingPolygons) {
+  if (isLoadingByYear || !dataByYear) {
     return <div>Chargement ...</div>;
   }
 
@@ -159,7 +148,7 @@ export default function Sectors() {
                 descriptionNode={<Badge color="yellow-tournesol">{currentYear}</Badge>}
                 number={effectifPU}
                 label={`Etudiant${effectifPU > 1 ? "s" : ""} inscrit${effectifPU > 1 ? "s" : ""} dans le secteur public`}
-                trendGraph={<TrendCard data={dataByYear?.map((item: DataByYear) => item.effectif_pu)} />}
+                trendGraph={<TrendCard data={dataByYear?.map((item: DataByYear) => item.effectif_pu)} color="public-sector" />}
               />
             </Col>
           </Row>
@@ -169,22 +158,16 @@ export default function Sectors() {
                 descriptionNode={<Badge color="yellow-tournesol">{currentYear}</Badge>}
                 number={effectifPR}
                 label={`Etudiant${effectifPR > 1 ? "s" : ""} inscrit${effectifPR > 1 ? "s" : ""} dans le secteur privé`}
-                trendGraph={<TrendCard data={dataByYear.map((item: DataByYear) => item.effectif_pr)} />}
+                trendGraph={<TrendCard data={dataByYear?.map((item: DataByYear) => item.effectif_pr)} color="private-sector" />}
               />
             </Col>
           </Row>
         </Col>
         <Col md={5}>
-          <Title as="h3" look="h6" className="fr-mx-5w">
-            Pourcentage d'étudiants inscrits regroupés par secteur
-            <Badge color="yellow-tournesol" className="fr-ml-1w">
-              {currentYear}
-            </Badge>
-          </Title>
-          <SectortsChart data={dataSectors || []} isLoading={isLoading} />
+          <SectortsChart currentYear={currentYear} data={dataSectors} isLoading={isLoadingByYear} />
         </Col>
       </Row>
-      {polygonsData.length > 1 && geoId !== "PAYS_100" && geoId !== "D075" && geoId !== "R00" && (
+      {polygonsData?.length > 1 && geoId !== "PAYS_100" && geoId !== "D075" && geoId !== "R00" && (
         <>
           <Row className="fr-my-5w">
             <Col>
@@ -196,7 +179,7 @@ export default function Sectors() {
           </Row>
           <Row gutters>
             <Col md={7}>
-              <MapPieSectors currentYear={currentYear} isLoading={isLoadingDataSectorsMap} mapPieData={dataSectorsMap} polygonsData={polygonsData} />
+              <MapPieSectors currentYear={currentYear} isLoading={isLoadingDataSectorsMap || isLoadingPolygons} mapPieData={dataSectorsMap || []} polygonsData={polygonsData} />
             </Col>
             <Col md={5}>
               <SubListSectors />
@@ -247,7 +230,7 @@ export default function Sectors() {
                   .map((el: SimilarData) => (
                     <li key={el.geo_id}>
                       {el.geo_nom} (Secteur public: <strong>{el.pctPU.toFixed(1)}&nbsp;%</strong> - Secteur privé: <strong>{el.pctPR.toFixed(1)}&nbsp;%</strong>)
-                      <Button size="sm" variant="text" className="fr-ml-1w" color="pink-tuile" onClick={() => navigate(`/atlas/general?geo_id=${el.geo_id}&annee_universitaire=${currentYear}`)}>
+                      <Button size="sm" variant="text" className="fr-ml-1w" color="pink-tuile" onClick={() => navigate(`/atlas/effectifs-par-secteur?geo_id=${el.geo_id}&annee_universitaire=${currentYear}`)}>
                         Voir
                       </Button>
                     </li>

@@ -1148,42 +1148,76 @@ router.route("/atlas/get-references").get(async (req, res) => {
   res.json(obj);
 });
 
+const pct = (part, other) => ({
+  $let: {
+    vars: { total: { $add: [part, other] } },
+    in: {
+      $cond: [
+        { $eq: ["$$total", 0] },
+        null,
+        { $multiply: [{ $divide: [part, "$$total"] }, 100] },
+      ],
+    },
+  },
+});
+
 router.route("/atlas/get-similar-elements").get(async (req, res) => {
-  const filters = {};
+  const { niveau_geo, needle, gt, lt, annee_universitaire } = req.query;
 
-  if (!req.query.niveau_geo) {
-    res.status(400).send("niveau_geo is required");
+  if (!niveau_geo || !needle || !gt || !lt || !annee_universitaire) {
+    return res
+      .status(400)
+      .send("niveau_geo, needle, gt, lt and annee_universitaire are required");
   }
-  if (!req.query.needle) {
-    res.status(400).send("needle is required");
+  if (
+    typeof niveau_geo !== "string" ||
+    typeof annee_universitaire !== "string"
+  ) {
+    return res.status(400).send("invalid parameters");
   }
-  if (!req.query.gt) {
-    res.status(400).send("gt is required");
-  }
-  if (!req.query.lt) {
-    res.status(400).send("lt is required");
-  }
-  if (!req.query.annee_universitaire) {
-    res.status(400).send("annee_universitaire is required");
+  if (!["pctPU", "pctPR", "pctM", "pctF"].includes(needle)) {
+    return res.status(400).send("needle is invalid");
   }
 
-  filters.niveau_geo = req.query.niveau_geo;
-  filters.annee_universitaire = req.query.annee_universitaire;
+  const currentCollectionName = await getCurrentCollectionName("atlas");
+  const sum = (field, value) => ({
+    $sum: { $cond: [{ $eq: [field, value] }, "$effectif", 0] },
+  });
 
-  filters[req.query.needle] = {
-    $gt: parseInt(req.query.gt),
-    $lt: parseInt(req.query.lt),
-  };
-
-  const currentCollectionName =
-    await getCurrentCollectionName("similar-elements");
-
-  db.collection(currentCollectionName)
-    .find(filters)
-    .toArray()
-    .then((data) => {
-      res.json(data);
-    });
+  const data = await db
+    .collection(currentCollectionName)
+    .aggregate([
+      { $match: { niveau_geo, annee_universitaire, regroupement: "TOTAL" } },
+      {
+        $group: {
+          _id: { geo_id: "$geo_id", geo_nom: "$geo_nom" },
+          effectifPR: sum("$secteur", "PR"),
+          effectifPU: sum("$secteur", "PU"),
+          effectifF: sum("$sexe", "2"),
+          effectifM: sum("$sexe", "1"),
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          geo_id: "$_id.geo_id",
+          geo_nom: "$_id.geo_nom",
+          annee_universitaire: { $literal: annee_universitaire },
+          niveau_geo: { $literal: niveau_geo },
+          effectifPR: 1,
+          effectifPU: 1,
+          effectifF: 1,
+          effectifM: 1,
+          pctPR: pct("$effectifPR", "$effectifPU"),
+          pctPU: pct("$effectifPU", "$effectifPR"),
+          pctF: pct("$effectifF", "$effectifM"),
+          pctM: pct("$effectifM", "$effectifF"),
+        },
+      },
+      { $match: { [needle]: { $gt: parseFloat(gt), $lt: parseFloat(lt) } } },
+    ])
+    .toArray();
+  res.json(data);
 });
 
 router.route("/atlas/get-indexes").get(async (req, res) => {

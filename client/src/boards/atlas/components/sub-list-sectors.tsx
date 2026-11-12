@@ -7,6 +7,7 @@ import Template from "../../../components/template/index.tsx";
 import { getNumberOfStudentsBySectorAndSublevel } from "../../../api/index.ts";
 import { getSubLevel } from "../utils/index.tsx";
 import { useAtlas } from "../useAtlas.tsx";
+import { getCssColor } from "../../../utils/colors.ts";
 
 const MAX_ELEMENTS = 6;
 
@@ -65,17 +66,7 @@ export default function SubListSectors() {
                 <div>
                   <strong>{item.effectif_total.toLocaleString("fr-FR")}</strong>
                   {["R", "D", "A", "U", "P"].includes(geoId?.charAt(0)) && (
-                    <Button
-                      className="fr-ml-1w"
-                      color="pink-tuile"
-                      onClick={() =>
-                        navigate(
-                          `/atlas/general?geo_id=${item.id}&annee_universitaire=${currentYear}`
-                        )
-                      }
-                      size="sm"
-                      variant="text"
-                    >
+                    <Button className="fr-ml-1w" color="pink-tuile" onClick={() => navigate(`/atlas/general?geo_id=${item.id}&annee_universitaire=${currentYear}`)} size="sm" variant="text">
                       Voir
                     </Button>
                   )}
@@ -87,7 +78,7 @@ export default function SubListSectors() {
                 style={{
                   width: `${size_public}%`,
                   height: "6px",
-                  backgroundColor: "#748CC0",
+                  backgroundColor: getCssColor("public-sector"),
                   borderTopRightRadius: "3px",
                   borderBottomRightRadius: "3px",
                 }}
@@ -99,25 +90,17 @@ export default function SubListSectors() {
                 style={{
                   width: `${size_prive}%`,
                   height: "6px",
-                  backgroundColor: "#755F4D",
+                  backgroundColor: getCssColor("private-sector"),
                   borderTopRightRadius: "3px",
                   borderBottomRightRadius: "3px",
                 }}
               />
-              <span
-                aria-hidden="true"
-                className="fr-tooltip fr-placement"
-                id={`tooltip_${item.id}`}
-                role="tooltip"
-              >
-                Effectifs <strong>{item.nom}</strong> par secteur pour l'année
-                universitaire {currentYear}
+              <span aria-hidden="true" className="fr-tooltip fr-placement" id={`tooltip_${item.id}`} role="tooltip">
+                Effectifs <strong>{item.nom}</strong> par secteur pour l'année universitaire {currentYear}
                 <br />
-                Secteur public : {item.effectif_secteur_public.toLocaleString("fr-FR")}{" "}
-                étudiants
+                Secteur public : {item.effectif_secteur_public.toLocaleString("fr-FR")} étudiants
                 <br />
-                Secteur privé : {item.effectif_secteur_prive.toLocaleString("fr-FR")}{" "}
-                étudiants
+                Secteur privé : {item.effectif_secteur_prive.toLocaleString("fr-FR")} étudiants
               </span>
             </li>
           );

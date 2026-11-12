@@ -4,9 +4,10 @@ import { getCssColor } from "../../../utils/colors";
 
 type TrendGraphProps = {
   data: number[];
+  color?: string;
 };
 
-export default function TrendGraph({ data = [] }: TrendGraphProps) {
+export default function TrendGraph({ data = [], color = "atlas-primary-color" }: TrendGraphProps) {
   const options = {
     chart: {
       backgroundColor: "transparent",
@@ -45,7 +46,7 @@ export default function TrendGraph({ data = [] }: TrendGraphProps) {
         return `Année universitaire <b>${this.x}-${parseInt(this.x.toString().substring(2)) + 1}</b><br/>=> <b>${this.y.toLocaleString("fr-FR")}</b> étudiants`;
       },
     },
-    colors: [getCssColor("atlas-primary-color")],
+    colors: [getCssColor(color)],
     series: [
       {
         name: "Effectif étudiants",

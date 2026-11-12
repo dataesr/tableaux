@@ -1,8 +1,7 @@
-import React from "react";
 import HighchartsReact from "highcharts-react-official";
 import Highcharts from "highcharts/es-modules/masters/highcharts.src.js";
 import "highcharts/es-modules/masters/modules/map.src.js";
-
+import { getCssColor } from "../../../../utils/colors";
 /* eslint-disable @typescript-eslint/no-this-alias */
 import * as turf from "@turf/turf";
 
@@ -82,13 +81,12 @@ export default function MapPieSectors({ currentYear, isLoading, mapPieData, poly
   const b = -a * minStaff;
 
   // Build the chart
-  const rootStyles = getComputedStyle(document.documentElement);
   const options = {
     title: { text: "" },
     credits: { enabled: false },
     legend: {
       itemStyle: {
-        color: rootStyles.getPropertyValue("--label-color"),
+        color: getCssColor("text-default-grey"),
         fontFamily: "Marianne, sans-serif",
       },
     },
@@ -150,13 +148,13 @@ export default function MapPieSectors({ currentYear, isLoading, mapPieData, poly
                   {
                     name: "Secteur public",
                     y: state.publicSector,
-                    color: "rgba(116,140,192,0.8)",
+                    color: getCssColor("public-sector"),
                     territory: state.territory,
                   },
                   {
                     name: "Secteur privé",
                     y: state.privateSector,
-                    color: "rgba(117,95,77,0.8)",
+                    color: getCssColor("private-sector"),
                     territory: state.territory,
                   },
                 ],
@@ -177,13 +175,13 @@ export default function MapPieSectors({ currentYear, isLoading, mapPieData, poly
         {
           from: -1,
           to: 0,
-          color: "rgba(116,140,192,0.5)",
+          color: getCssColor("public-sector"),
           name: "Secteur public",
         },
         {
           from: 0,
           to: 1,
-          color: "rgba(117,95,77,0.5)",
+          color: getCssColor("private-sector"),
           name: "Secteur privé",
         },
       ],
@@ -197,7 +195,7 @@ export default function MapPieSectors({ currentYear, isLoading, mapPieData, poly
     tooltip: { useHTML: true },
     plotOptions: {
       mappie: {
-        borderColor: "rgba(255,255,255,0.4)",
+        borderColor: getCssColor("text-default-grey"),
         borderWidth: 1,
         tooltip: {
           headerFormat: "",
@@ -225,8 +223,8 @@ export default function MapPieSectors({ currentYear, isLoading, mapPieData, poly
               "</b><br/>" +
               Highcharts.map(
                 [
-                  ["Secteur public", this.publicSector, "#748CCO"],
-                  ["Secteur privé", this.privateSector, "#755F4D"],
+                  ["Secteur public", this.publicSector, getCssColor("public-sector")],
+                  ["Secteur privé", this.privateSector, getCssColor("private-sector")],
                 ].sort(function (a, b) {
                   return b[1] - a[1]; // Sort tooltip by most votes
                 }),
