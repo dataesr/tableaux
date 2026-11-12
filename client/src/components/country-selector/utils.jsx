@@ -53,30 +53,35 @@ export function getCountryAdjective(iso3) {
 }
 
 /**
- * Récupère les adjectifs de nationalité français (masculin et féminin, en minuscule)
- * pour utilisation dans les textes
+ * Récupère les adjectifs de nationalité (masculin et féminin) pour utilisation dans les textes
+ * - français : en minuscule (« français », « allemande »)
+ * - anglais : avec majuscule (« French », « German »)
  * @param iso3 Code ISO 3 du pays (ex: FRA, DEU, ITA)
- * @returns { m: string, f: string } Les adjectifs masculin et féminin en minuscule
+ * @param lang Langue : "fr" (par défaut) ou "en"
+ * @returns { m: string, f: string } Les adjectifs masculin et féminin
  */
-export function getCountryAdjectives(iso3) {
+export function getCountryAdjectives(iso3, lang = "fr") {
   const demonym = getCountryDemonym(iso3);
-  const fallback = iso3.toLowerCase();
-  
-  if (demonym?.fr) {
+  const isFr = lang !== "en";
+  const format = (s) => (isFr ? s.toLowerCase() : s);
+
+  const forms = demonym?.[isFr ? "fr" : "en"];
+  if (forms) {
+    const fallbackValue = format(iso3);
     return {
-      m: demonym.fr.m ? demonym.fr.m.toLowerCase() : fallback,
-      f: demonym.fr.f ? demonym.fr.f.toLowerCase() : fallback,
+      m: forms.m ? format(forms.m) : fallbackValue,
+      f: forms.f ? format(forms.f) : fallbackValue,
     };
   }
-  
-  // Fallback: retourner le nom du pays
+
+  // Fallback : nom du pays dans la langue demandée
   const info = getCountryInfo(iso3);
-  if (info?.name_fr) {
-    const name = info.name_fr.toLowerCase();
-    return { m: name, f: name };
+  const name = isFr ? info?.name_fr : info?.name_en;
+  if (name) {
+    return { m: format(name), f: format(name) };
   }
-  
-  return { m: fallback, f: fallback };
+
+  return { m: format(iso3), f: format(iso3) };
 }
 
 export async function getCountriesWithData() {
