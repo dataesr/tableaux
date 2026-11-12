@@ -36,6 +36,16 @@
   animation-fill-mode: forwards;
 }
 
+
+.success-card {
+
+  // Le chiffre principal en vert foncé
+  p,
+  .nb {
+    color: var(--green-emeraude-main-632);
+  }
+}
+
 @keyframes fadeInAnimation {
   0% {
     opacity: 0;

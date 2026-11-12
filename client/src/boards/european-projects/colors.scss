@@ -1,13 +1,13 @@
 @use "../colors.scss";
 
 :root {
-  --evaluated-project: #009099; // projets évalués
-  --successful-project: #233e41; // projets lauréats
-  --success-rate: #1f8d49; // taux de succès
+  --evaluated-project: #a6f2fa; // projets évalués
+  --successful-project: #000091; // projets lauréats
+  --success-rate: #00A95F; // taux de succès
 
   --label-color: var(--text-action-high-grey);
   --evaluated-project-color: #009099; // projets évalués
-  --average-success-rate-color: #d75521; // taux de succès moyen
+  --average-success-rate-color: #00A95F; // taux de succès moyen
   --cumulative-success-rate-color: #d75521; // taux de succès cumulé
   --selected-country-color: #6dd897; // pays sélectionné
   --associated-countries-color: #09622a; // pays associés

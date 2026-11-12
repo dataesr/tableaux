@@ -96,7 +96,7 @@
 
   // Variantes de couleur
   &.budget-card {
-    --card-primary-color: var(--successful-project-color);
+    --card-primary-color: var(--blue-france-main-525);
   }
 
   &.projects-card {
@@ -109,7 +109,7 @@
 
   &.rate-card {
     --card-primary-color: var(--average-success-rate-color);
-    background-color: var(--background-default-grey);
+    // background-color: var(--background-default-grey);
   }
 
   &.funding-rate-card {

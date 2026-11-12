@@ -6,7 +6,7 @@
   padding: 1rem;
   padding-top: 20px;
   padding-bottom: 0;
-  background-color: var(--background-alt-grey);
+  // background-color: var(--background-alt-grey);
   border: 1px solid var(--border-default-grey);
   position: relative;
   overflow: hidden;
@@ -95,16 +95,16 @@
   }
 
   // Variantes de couleur
-  &.candidats-card {
-    --card-primary-color: var(--average-success-rate-color);
-    background-color: var(--background-default-grey);
-  }
-  &.funding-card {
-    --card-primary-color: var(--successful-project-color);
-  }
-  &.projects-card {
-    --card-primary-color: var(--blue-france-main-525);
-  }
+  // &.candidats-card {
+  //   --card-primary-color: var(--blue-france-main-525);
+  //   background-color: var(--background-default-grey);
+  // }
+  // &.funding-card {
+  //   --card-primary-color: var(--blue-france-main-525);
+  // }
+  // &.projects-card {
+  //   --card-primary-color: var(--blue-france-main-525);
+  // }
   &.rate-card {
     --card-primary-color: var(--average-success-rate-color);
     background-color: var(--background-default-grey);
@@ -236,7 +236,7 @@
       color: var(--text-title-grey);
 
       &.funding {
-        color: var(--successful-project-color, #18753c);
+        color: var(--successful-project, #000091);
       }
     }
   }
