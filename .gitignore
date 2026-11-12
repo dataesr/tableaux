@@ -10,7 +10,7 @@ lerna-debug.log*
 node_modules
 client-old
 client/node_modules
-client/.env
+**/.env
 dist
 dist-ssr
 *.local
@@ -32,7 +32,6 @@ client/src/assets/geo-*
 *.sw?
 
 server/src/routes/admin/api-tests/contact.http
-client/.env
 
 files/*
 todo.txt
