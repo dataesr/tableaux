@@ -39,8 +39,16 @@ export default function getMatriceOptions<P, I extends string>(data: Matrice<P, 
       // Marge haute : le menu d'export ne recouvre pas le coin « Atouts en progression »
       marginTop: 48,
       marginRight: 24,
+      // Zoom à la souris : glisser pour sélectionner une zone, dans les deux directions
+      zooming: {
+        type: "xy",
+        // En haut à gauche, au-dessus du cadre : ne recouvre ni le menu d'export ni le nom d'un quadrant
+        resetButton: { relativeTo: "spacingBox", position: { align: "left", verticalAlign: "top", x: 0, y: 8 } },
+      },
       events: {
         render: function (this: any) {
+          // Le libellé du bouton vient des options globales (en anglais) : on le traduit ici
+          this.resetZoomButton?.attr({ text: "Réinitialiser le zoom", title: "Revenir à la vue d'ensemble" });
           (this.srElements ?? []).forEach((element) => element.destroy());
           this.srElements = [];
           const { plotLeft: left, plotTop: top, plotWidth: width, plotHeight: height, renderer } = this;
@@ -66,7 +74,8 @@ export default function getMatriceOptions<P, I extends string>(data: Matrice<P, 
 
           // Une étiquette par bulle, posée hors des bulles avec un trait de rappel.
           // Recherche autour de la bulle, de plus en plus loin, en privilégiant la direction opposée au centre du nuage.
-          const allPoints = [...(this.series[0]?.points ?? [])];
+          // Après un zoom, seules les bulles restées dans le cadre sont dessinées et étiquetées
+          const allPoints = (this.series[0]?.points ?? []).filter((p) => p.isInside !== false);
           const circles = allPoints.map((p) => ({ cx: left + p.plotX, cy: top + p.plotY, r: p.marker?.radius ?? 0 }));
           const hitsCircle = (b: Box) => circles.some(({ cx, cy, r }) => {
             const nx = Math.max(b.x, Math.min(cx, b.x + b.width));
@@ -195,6 +204,9 @@ export default function getMatriceOptions<P, I extends string>(data: Matrice<P, 
         minSize: TAILLE_MIN,
         maxSize: TAILLE_MAX,
         marker: { fillOpacity: 0.5, lineWidth: 1.5 },
+        // Infobulle seulement au survol d'une bulle, pas du point le plus proche n'importe où dans le cadre :
+        // les zones vides restent libres pour sélectionner une zone à zoomer
+        stickyTracking: false,
         // Pas d'étiquette au centre des bulles : elles sont posées à l'extérieur (événement render)
         dataLabels: { enabled: false },
       },
@@ -202,6 +214,8 @@ export default function getMatriceOptions<P, I extends string>(data: Matrice<P, 
     tooltip: {
       useHTML: true,
       formatter: function (this: any) {
+        // Pendant la sélection d'une zone à zoomer, l'infobulle masquerait la zone visée
+        if (this.series.chart.mouseIsDown) return false;
         const p = this.point.options.custom as P & MatricePoint;
         const quadrant = getTitreQuadrant(p.quadrant, references);
         return [
