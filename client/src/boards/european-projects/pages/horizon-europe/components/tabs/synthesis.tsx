@@ -2,11 +2,11 @@ import { useSearchParams } from "react-router-dom";
 import { Container, Row, Col } from "@dataesr/dsfr-plus";
 
 import BoardsSuggestComponent from "../../../../../../components/boards-suggest-component";
-import DestinationsOverview from "../../../overview/components/destinations-overview";
-import PillarsOverview from "../../../overview/components/pillars-overview";
-import ProgramsOverview from "../../../overview/components/programs-overview";
+// import DestinationsOverview from "../../../overview/components/destinations-overview";
+// import PillarsOverview from "../../../overview/components/pillars-overview";
+// import ProgramsOverview from "../../../overview/components/programs-overview";
 import SynthesisFocus from "../../../overview/charts/synthesis-focus";
-import ThematicsOverview from "../../../overview/components/destinations-overview";
+// import ThematicsOverview from "../../../overview/components/destinations-overview";
 
 
 import { getI18nLabel } from "../../../../../../utils";
@@ -45,11 +45,11 @@ export default function SyntheseContent() {
               <SynthesisFocus />
             </Col>
           </Row>
-          <Row className="fr-mb-3w">
+          {/* <Row className="fr-mb-3w">
             <Col>
               <PillarsOverview />
             </Col>
-          </Row>
+          </Row> */}
           <BoardsSuggestComponent />
         </Container>
       );
@@ -62,11 +62,11 @@ export default function SyntheseContent() {
               <SynthesisFocus />
             </Col>
           </Row>
-          <Row className="fr-mb-3w">
+          {/* <Row className="fr-mb-3w">
             <Col>
               <ProgramsOverview />
             </Col>
-          </Row>
+          </Row> */}
           <BoardsSuggestComponent />
         </Container>
       );
@@ -79,11 +79,11 @@ export default function SyntheseContent() {
               <SynthesisFocus />
             </Col>
           </Row>
-          <Row className="fr-mb-3w">
+          {/* <Row className="fr-mb-3w">
             <Col>
               <ThematicsOverview />
             </Col>
-          </Row>
+          </Row> */}
           <BoardsSuggestComponent />
         </Container>
       );
@@ -96,7 +96,7 @@ export default function SyntheseContent() {
               <SynthesisFocus />
             </Col>
           </Row>
-          <DestinationsOverview />
+          {/* <DestinationsOverview /> */}
           <BoardsSuggestComponent />
         </Container>
       );
