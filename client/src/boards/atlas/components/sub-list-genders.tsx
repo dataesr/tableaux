@@ -7,6 +7,7 @@ import Template from "../../../components/template/index.tsx";
 import { getNumberOfStudentsByGenderAndSublevel } from "../../../api/index.ts";
 import { getSubLevel } from "../utils/index.tsx";
 // import { DEFAULT_CURRENT_YEAR } from "../../../../../../constants.tsx";
+import { getCssColor } from "../../../utils/colors.ts";
 import { useAtlas } from "../useAtlas.tsx";
 
 const MAX_ELEMENTS = 6;
@@ -92,7 +93,7 @@ export default function SubListGenders() {
                 style={{
                   width: `${size_f}%`,
                   height: "6px",
-                  backgroundColor: "#E18B76",
+                  backgroundColor: getCssColor("women-color"),
                   borderTopRightRadius: "3px",
                   borderBottomRightRadius: "3px",
                 }}
@@ -104,7 +105,7 @@ export default function SubListGenders() {
                 style={{
                   width: `${size_m}%`,
                   height: "6px",
-                  backgroundColor: "#EFCB3A",
+                  backgroundColor: getCssColor("men-color"),
                   borderTopRightRadius: "3px",
                   borderBottomRightRadius: "3px",
                 }}

@@ -144,7 +144,7 @@ export async function getNumberOfStudentsByGenderAndSublevel(
   currentYear: string
 ) {
   // ex: http://localhost:3000/api/atlas/number-of-students-by-gender-and-sublevel?aca_id=A11&niveau_geo=DEPARTEMENT
-  let params = `niveau_geo=COMMUNE&geo_id=${geoId}&annee_universitaire=${currentYear}`;
+  let params = `niveau_geo=COMMUNE&geo_id=${geoId}`;
   if (geoId.startsWith("R")) {
     params = `niveau_geo=ACADEMIE&reg_id=${geoId}`;
   }
@@ -160,7 +160,7 @@ export async function getNumberOfStudentsByGenderAndSublevel(
   if (geoId === "PAYS_100") {
     params = `niveau_geo=REGION`;
   }
-  const url = `${VITE_APP_SERVER_URL}/atlas/number-of-students-by-gender-and-sublevel?${params}`;
+  const url = `${VITE_APP_SERVER_URL}/atlas/number-of-students-by-gender-and-sublevel?${params}&annee_universitaire=${currentYear}`;
   return fetch(url).then((response) => response.json());
 }
 

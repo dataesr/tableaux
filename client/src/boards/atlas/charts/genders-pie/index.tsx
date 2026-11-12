@@ -1,78 +1,48 @@
-import Highcharts from "highcharts/es-modules/masters/highcharts.src.js";
-import HighchartsReact from "highcharts-react-official";
+import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js";
+import ChartWrapper from "../../../../components/chart-wrapper";
+import { createChartOptions } from "../../../../components/chart-wrapper/default-options";
 import Template from "../../../../components/template";
+import { getCssColor } from "../../../../utils/colors";
 
 type GenderData = {
   name: string;
   y: number;
 }[];
 
-export default function GenderChart({ data = [], isLoading }: { data: GenderData; isLoading: boolean }) {
-  if (isLoading || !data || (data[0].y === 0 && data[1].y === 0)) {
+export default function GenderChart({ data = [], isLoading = false, currentYear }: { data: GenderData; isLoading: boolean; currentYear: string }) {
+  if (isLoading || !data || data.length === 0 || data.every((item) => item.y === 0)) {
     return <Template height="250px" />;
   }
-  const rootStyles = getComputedStyle(document.documentElement);
-  const secteursOptions = {
-    chart: {
-      type: "pie",
-      height: "60%",
-      backgroundColor: "transparent",
-    },
-    legend: {
-      itemStyle: {
-        color: rootStyles.getPropertyValue("--label-color"),
-        fontFamily: "Marianne, sans-serif",
-      },
-    },
-    title: {
-      text: "",
-    },
-    credits: {
-      enabled: false,
+
+  const total = data.reduce((acc, item) => acc + item.y, 0);
+
+  const options = createChartOptions("pie", {
+    chart: { height: "300px" },
+    legend: { enabled: true },
+    tooltip: {
+      pointFormat: `<b>{point.percentage:.1f} %</b> ({point.y:,.0f} étudiants / ${total.toLocaleString("fr-FR")} étudiants inscrits)`,
     },
     plotOptions: {
-      series: {
-        allowPointSelect: true,
-        cursor: "pointer",
-        dataLabels: [
-          {
-            enabled: false,
-            distance: 20,
-          },
-          {
-            enabled: true,
-            distance: -40,
-            format: "{point.percentage:.1f}%",
-            style: {
-              fontSize: "1em",
-              textOutline: "none",
-              opacity: 0.7,
-            },
-            filter: {
-              operator: ">",
-              property: "percentage",
-              value: 10,
-            },
-          },
-        ],
-      },
       pie: {
-        colors: ["#efcb3a", "#e18b76"],
-      },
-    },
-    series: [
-      {
-        name: "Nombre d'étudiants",
-        colorByPoint: true,
-        data,
+        colors: [getCssColor("men-color"), getCssColor("women-color")],
+        dataLabels: { enabled: true, distance: -40, format: "{point.percentage:.1f} %", style: { fontSize: "1em" }, filter: { operator: ">", property: "percentage", value: 10 } },
         showInLegend: true,
       },
-    ],
-  };
+    },
+    series: [{ type: "pie", name: "Nombre d'étudiants", data }],
+  } as HighchartsInstance.Options);
 
   return (
-    <section>
-      <HighchartsReact highcharts={Highcharts} options={secteursOptions} />
-    </section>
+    <ChartWrapper
+      config={{
+        id: "genders-pie-chart",
+        title: { fr: `Pourcentage d'étudiants inscrits regroupés par genre (${currentYear})`, look: "h6" },
+        comment: {
+          fr: <>Ce graphique présente la part des étudiants inscrits de genre masculin et de genre féminin.</>,
+          en: <>This chart shows the share of students enrolled who are male and female.</>,
+        },
+      }}
+      options={options}
+    />
   );
 }

@@ -16,7 +16,6 @@ import MapPieGender from "../charts/map-pie-genders/index.jsx";
 import TrendCard from "../charts/trend.tsx";
 import {
   getGeoPolygon,
-  getNumberOfStudents,
   getNumberOfStudentsByGenderAndSublevel,
   getNumberOfStudentsByYear,
   getSimilarElements,
@@ -38,11 +37,6 @@ export default function Genders() {
   const params = [...searchParams].map(([key, value]) => `${key}=${value}`).join("&");
   const navigate = useNavigate();
 
-  const { data, isLoading } = useQuery({
-    queryKey: ["atlas/number-of-students", params],
-    queryFn: () => getNumberOfStudents(params),
-  });
-
   const { data: dataByYear, isLoading: isLoadingByYear } = useQuery({
     queryKey: ["atlas/number-of-students-by-year", params],
     queryFn: () => getNumberOfStudentsByYear(params),
@@ -51,16 +45,16 @@ export default function Genders() {
   const dataGender = [
     {
       name: "Masculin",
-      y: dataByYear?.find((el: DataByYear) => el.annee_universitaire === data?.annee_universitaire)?.effectif_masculin || 0,
+      y: dataByYear?.find((el: DataByYear) => el.annee_universitaire === currentYear)?.effectif_masculin || 0,
     },
     {
       name: "Féminin",
-      y: dataByYear?.find((el: DataByYear) => el.annee_universitaire === data?.annee_universitaire)?.effectif_feminin || 0,
+      y: dataByYear?.find((el: DataByYear) => el.annee_universitaire === currentYear)?.effectif_feminin || 0,
     },
   ];
 
-  const effectifF = dataByYear?.find((el: DataByYear) => el.annee_universitaire === data?.annee_universitaire)?.effectif_feminin || 0;
-  const effectifM = dataByYear?.find((el: DataByYear) => el.annee_universitaire === data?.annee_universitaire)?.effectif_masculin || 0;
+  const effectifF = dataByYear?.find((el: DataByYear) => el.annee_universitaire === currentYear)?.effectif_feminin || 0;
+  const effectifM = dataByYear?.find((el: DataByYear) => el.annee_universitaire === currentYear)?.effectif_masculin || 0;
   const pctF = effectifF / (effectifF + effectifM);
 
   function getLevel() {
@@ -93,7 +87,7 @@ export default function Genders() {
     annee_universitaire: currentYear,
   };
 
-  const { data: dataSimilar, isLoading: isLoadingSimilar } = useQuery({
+  const { data: dataSimilar } = useQuery({
     queryKey: ["atlas/similar-elements", similarParams],
     queryFn: () => getSimilarElements(similarParams),
   });
@@ -118,7 +112,7 @@ export default function Genders() {
     })
     .sort((a: SimilarData, b: SimilarData) => a.distance - b.distance);
 
-  if (isLoading || isLoadingByYear || isLoadingSimilar || isLoadingDataGenders || isLoadingPolygons) {
+  if (isLoadingByYear || !dataByYear) {
     return <div>Chargement ...</div>;
   }
 
@@ -166,7 +160,7 @@ export default function Genders() {
                 descriptionNode={<Badge color="yellow-tournesol">{currentYear}</Badge>}
                 number={effectifF}
                 label={`Etudiante${effectifF > 1 ? "s" : ""} inscrite${effectifF > 1 ? "s" : ""}`}
-                trendGraph={<TrendCard data={dataByYear.map((item: DataByYear) => item.effectif_feminin)} />}
+                trendGraph={<TrendCard data={dataByYear?.map((item: DataByYear) => item.effectif_feminin)} color="women-color" />}
               />
             </Col>
           </Row>
@@ -176,19 +170,13 @@ export default function Genders() {
                 descriptionNode={<Badge color="yellow-tournesol">{currentYear}</Badge>}
                 number={effectifM}
                 label={`Etudiant${effectifM > 1 ? "s" : ""} inscrit${effectifM > 1 ? "s" : ""}`}
-                trendGraph={<TrendCard data={dataByYear.map((item: DataByYear) => item.effectif_masculin)} />}
+                trendGraph={<TrendCard data={dataByYear?.map((item: DataByYear) => item.effectif_masculin)} color="men-color" />}
               />
             </Col>
           </Row>
         </Col>
         <Col md={5}>
-          <Title as="h3" look="h6" className="fr-mx-5w">
-            Pourcentage d'étudiants inscrits regroupés par genre
-            <Badge color="yellow-tournesol" className="fr-ml-1w">
-              {currentYear}
-            </Badge>
-          </Title>
-          <GenderChart data={dataGender || []} isLoading={isLoading} />
+          <GenderChart currentYear={currentYear} data={dataGender} isLoading={isLoadingByYear} />
         </Col>
       </Row>
       {polygonsData?.length > 1 && geoId !== "PAYS_100" && geoId !== "D075" && geoId !== "R00" && (
@@ -203,7 +191,7 @@ export default function Genders() {
           </Row>
           <Row gutters>
             <Col md={7}>
-              <MapPieGender currentYear={currentYear} isLoading={isLoadingDataGenders} mapPieData={dataGenders} polygonsData={polygonsData} />
+              <MapPieGender currentYear={currentYear} isLoading={isLoadingDataGenders || isLoadingPolygons} mapPieData={dataGenders || []} polygonsData={polygonsData} />
             </Col>
             <Col md={5}>
               <SubListGenders />
@@ -254,7 +242,7 @@ export default function Genders() {
                   .map((el: SimilarData) => (
                     <li key={el.geo_id}>
                       {el.geo_nom} (Féminin: <strong>{el.pctF.toFixed(1)}&nbsp;%</strong> - Masculin: <strong>{el.pctM.toFixed(1)}&nbsp;%</strong>)
-                      <Button size="sm" variant="text" className="fr-ml-1w" color="pink-tuile" onClick={() => navigate(`/atlas/general?geo_id=${el.geo_id}&annee_universitaire=${currentYear}`)}>
+                      <Button size="sm" variant="text" className="fr-ml-1w" color="pink-tuile" onClick={() => navigate(`/atlas/effectifs-par-genre?geo_id=${el.geo_id}&annee_universitaire=${currentYear}`)}>
                         Voir
                       </Button>
                     </li>
