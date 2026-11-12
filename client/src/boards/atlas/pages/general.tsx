@@ -345,7 +345,7 @@ export default function General() {
         );
       } else {
         return (
-          <Row className="fr-my-5w">
+          <Row className="fr-mt-5w">
             <Col>
               <SubList />
             </Col>

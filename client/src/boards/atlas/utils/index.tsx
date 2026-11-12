@@ -33,6 +33,9 @@ export function getSubLevel({ geoId }: { geoId: string }) {
   if (geoId.startsWith("U")) {
     return "Liste des communes";
   }
+  if (geoId.startsWith("P")) {
+    return "Liste des régions";
+  }
 
-  return "Liste des régions";
+  return "";
 }

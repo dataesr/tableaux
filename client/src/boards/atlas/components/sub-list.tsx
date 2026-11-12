@@ -33,7 +33,7 @@ export default function SubList() {
   if (isLoadingHistoric) {
     return <Template height="338" />;
   }
-  if (!dataHistoric?.data) {
+  if (!dataHistoric?.data || getSubLevel({ geoId }) === "") {
     return null;
   }
 
