@@ -2,11 +2,11 @@ import { Alert, Notice } from "@dataesr/dsfr-plus";
 
 import DefaultSkeleton from "../../../../../components/charts-skeletons/default.tsx";
 import { useErcComparaison } from "../../../api/erc.ts";
-import type { ErcComparaison } from "../../../api/erc.ts";
+import type { ErcComparaison, ErcVivierRubans } from "../../../api/erc.ts";
 import ChartBusy from "../../../components/chart-busy/index.tsx";
 import { useErcOptions } from "../../../hooks/use-selection";
-import { formatPeriode, getDisciplineLabel } from "../../../utils";
-import ErcRubans, { formatCalcul, formatValeur, getPeuFiable, INDICATEURS_PAYS, PEU_FIABLE } from "../charts/erc-rubans/index.tsx";
+import { formatPart, formatPeriode, getDisciplineLabel, PEU_FIABLE } from "../../../utils";
+import ErcRubans, { formatCalcul, getPeuFiable, INDICATEURS_PAYS } from "../charts/erc-rubans/index.tsx";
 import Cartes from "../components/cartes/index.tsx";
 import Dispositifs from "../components/dispositifs/index.tsx";
 import type { Carte } from "../components/cartes/index.tsx";
@@ -15,25 +15,40 @@ import ParametresErc, { getTypesLabel } from "../components/parametres-erc/index
 import { UNITES } from "../comptage.ts";
 import { useFinancements } from "../context.ts";
 import { formatRang } from "../rang.ts";
+import { formatCalculVivier, formatValeurVivier, TITRE_TAUX_VIVIER } from "../vivier.ts";
 
 type Comparaison = Extract<ErcComparaison, { periode: [number, number] }>;
 
-// Chiffres clés : valeur et rang de la France sur toute la période, pour chaque indicateur ERC
+// Chiffres clés : valeur et rang de la France sur toute la période, pour chaque indicateur ERC,
+// puis son taux de candidature au vivier (appels de la période du vivier)
 function getCartes(data: Comparaison): Carte[] {
   const unites = UNITES[data.comptage];
   const provisoire = data.annees_provisoires.length > 0;
-  return INDICATEURS_PAYS.flatMap(({ key, label }) => {
+  const cartes = INDICATEURS_PAYS.flatMap(({ key, label }) => {
     const rang = data.france[key];
     if (!rang?.ratio) return [];
-    const peuFiable = rang.ratio.fiable === false ? ` · ${PEU_FIABLE} (${getPeuFiable(key, data.seuil_fiabilite, unites)})` : "";
+    const peuFiable = rang.ratio.fiable === false ? ` · ${PEU_FIABLE} (${getPeuFiable(data.seuil_fiabilite, unites)})` : "";
     return [{
       titre: `${label} ERC`,
-      valeur: formatValeur(key, rang.ratio.valeur),
+      valeur: formatPart(rang.ratio.valeur),
       detail: `${formatRang(rang.rang, rang.nb, "pays")} · ${formatCalcul(key, rang.ratio, unites)}${peuFiable}`,
       fiable: rang.ratio.fiable !== false,
-      provisoire: provisoire || (key === "indice_candidature" && data.vivier_provisoire),
+      provisoire,
     }];
   });
+  if (!data.vivier.indisponible) {
+    const vivier = data.vivier as ErcVivierRubans;
+    const { rang, nb, ratio: taux } = vivier.france;
+    cartes.push({
+      titre: `${TITRE_TAUX_VIVIER} (appels ${formatPeriode(vivier.appels)})`,
+      valeur: formatValeurVivier(taux.valeur),
+      detail: `${formatRang(rang, nb, "pays")} · par an : ${formatCalculVivier(taux, vivier.vivier, unites)} · `
+        + `ensemble des pays : ${formatValeurVivier(vivier.reference.valeur)} (${formatCalculVivier(vivier.reference, vivier.vivier, unites)})`,
+      fiable: taux.fiable,
+      provisoire: vivier.appels_provisoires.length > 0 || vivier.vivier_provisoire,
+    });
+  }
+  return cartes;
 }
 
 // Bloc ERC : chiffres clés et rubans de la France parmi les pays

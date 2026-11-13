@@ -1,7 +1,7 @@
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 
 import { ENTITE_NATIONALE, fetchJson } from "./index.ts";
-import type { Comparaison, GroupeEtablissements, Matrice, Ratio, Rubans, Selection, SourceDonnees } from "./index.ts";
+import type { BiblioDiscipline, Comparaison, GroupeEtablissements, QuadrantKey, Ratio, Rubans, Selection, SourceDonnees } from "./index.ts";
 
 const { VITE_APP_SERVER_URL } = import.meta.env;
 
@@ -18,25 +18,24 @@ export type TypeBourse = {
 export type Comptage = "projets" | "pi";
 export const COMPTAGE_DEFAUT: Comptage = "projets";
 
-// Vivier de candidats de l'indice de candidature : articles du top 10 % des plus cités (défaut) ou tous les articles
-export type Vivier = "top10" | "articles";
-export const VIVIERS: Vivier[] = ["top10", "articles"];
-export const VIVIER_DEFAUT: Vivier = "top10";
+// Dénominateur du taux de candidature au vivier : tous les chercheurs actifs (défaut) ou les chercheurs top 10 %
+export type Vivier = "actifs" | "top10";
+export const VIVIERS: Vivier[] = ["actifs", "top10"];
+export const VIVIER_DEFAUT: Vivier = "actifs";
 
 export type ErcMeta = {
   annees: number[];
   annees_provisoires: number[];
   methode: string[];
-  // Méthode de l'indice de candidature, calculé par le tableau (route meta)
-  methode_indice: string[];
   // Champs d'erc_effectifs [candidatures, lauréats] de chaque mode, lus par le serveur
   modes_comptage: Record<Comptage, [string, string]>;
   pays_compares: string[];
   sources: SourceDonnees[];
-  // Vivier de l'indice de candidature : OpenAlex et SJR
-  sources_indice: SourceDonnees[];
   types_bourse: TypeBourse[];
   types_bourse_defaut: string[];
+  // Viviers de chercheurs (athena) : null tant qu'ils ne sont pas activés dans l'administration du tableau.
+  // `periode` : articles sur lesquels le vivier est mesuré, une seule fois ; seuls les appels de cette période s'y rapportent
+  vivier: { annee_debut_recente: number; methode: string[]; periode: [number, number]; sources: SourceDonnees[] } | null;
 };
 
 // Paramètres de calcul du bloc ERC, dans l'URL (type_bourse, comptage)
@@ -46,27 +45,37 @@ export type ErcOptions = {
   vivier: Vivier;
 };
 
-// Taux / taux attendu : numérateur et dénominateur sont des taux (null sans candidature)
-export type RatioTaux = { valeur: number | null; numerateur: number | null; denominateur: number | null };
+// Candidatures par an pour 1 000 chercheurs du vivier : valeur = numerateur (candidatures) ÷ nb_annees ÷ denominateur
+// (chercheurs) × 1 000. `fiable` : au moins `seuil_fiabilite` candidatures.
+export type TauxVivier = Ratio & { fiable: boolean; nb_annees: number };
 
-// Indices calculés par le serveur (erc-indice.js), sur les types avec panel, par rapport aux pays de référence (UE).
-// candidature : candidatures / candidatures attendues ; laureats : lauréats / lauréats attendus ;
-// reussite : taux de succès / taux attendu ; laureats = candidature × reussite.
-export type ErcIndices = {
-  // Au moins `seuil_fiabilite` candidatures attendues
-  fiable: boolean;
-  candidature: Ratio;
-  laureats: Ratio;
-  reussite: RatioTaux;
-  taux_succes: Ratio;
-};
+// Pourquoi le taux n'est pas calculable : viviers non activés, aucun type avec panel retenu, aucun appel de la période
+// choisie dans la période du vivier
+export type VivierIndisponible = { indisponible: "vivier" | "types" | "periode"; periode_vivier?: [number, number] };
 
-// Contexte de calcul des indices : pays de référence, types avec panel retenus, vivier
-export type ErcIndicesContexte = {
-  pays_reference: string[];
-  types_indice: string[];
+// Contexte du taux : appels retenus (période choisie ∩ période du vivier), types avec panel, dénominateur
+export type VivierContexte = {
+  indisponible: null;
+  appels: [number, number];
+  appels_provisoires: number[];
+  nb_annees: number;
+  periode_vivier: [number, number];
+  types: string[];
   vivier: Vivier;
+  // Chercheurs top 10 % : le top 10 % des articles récents n'est pas définitif
+  vivier_provisoire: boolean;
 };
+
+// Taux de l'entité et ses références, sur des années d'appel (la période ou une année)
+export type ErcVivierTaux = {
+  // Établissement sélectionné : la France, seconde référence ; null quand l'entité est la France
+  france: TauxVivier | null;
+  nb_pays_reference: number;
+  // Ensemble des pays comparés
+  reference: TauxVivier;
+  taux: TauxVivier;
+};
+export type ErcVivierEntite = VivierContexte & ErcVivierTaux;
 
 // Part des lauréats > part des candidatures : l'entité réussit mieux que la moyenne.
 // En mode pi, nb_candidatures et nb_laureats comptent des porteurs.
@@ -90,79 +99,136 @@ export type ErcIndicateursPeriode =
   | (ErcIndicateurs & {
     annees_provisoires: number[];
     comptage: Comptage;
-    // null si aucun type avec panel n'est retenu (Synergy ou Proof of Concept seuls)
-    indices: (ErcIndices & ErcIndicesContexte & { vivier_provisoire: boolean }) | null;
     periode: [number, number];
     seuil_fiabilite: number;
+    vivier: ErcVivierEntite | VivierIndisponible;
   });
 
 export type ErcEvolution = {
   annees: (ErcIndicateurs & {
     annee_appel: number;
-    indices: (ErcIndices & { vivier_provisoire: boolean }) | null;
+    // Part de l'entité dans les effectifs de son ensemble (`ensemble`), sur l'année
+    part_ensemble: { candidatures: Ratio; laureats: Ratio };
     provisoire: boolean;
+    // Candidatures de l'année ÷ vivier fixe ; null hors des appels de la période du vivier
+    vivier: ErcVivierTaux | null;
   })[];
+  // Ensemble des parts `part_ensemble` : la France pour un établissement, l'ensemble de l'ERC pour la France.
+  // Absent quand la période ne contient aucun appel.
+  ensemble?: "erc" | "france";
   comptage: Comptage;
-  indices: ErcIndicesContexte | null;
   periode: [number, number] | null;
   seuil_fiabilite?: number;
+  vivier?: VivierContexte | VivierIndisponible;
 };
 
 // Noms des paramètres : plugins/tableaux/reference/url-parameters.md (ror_id absent = France).
 // La période est celle de la sélection ; le serveur la ramène aux années d'appel disponibles.
-// France et autres pays : rubans par indicateur (l'indice manque sans type avec panel) et rangs de la France
-export type IndicateurPays = "part_laureats" | "part_candidatures" | "taux_succes" | "indice_candidature";
+// France et autres pays : rubans par indicateur et rangs de la France
+export type IndicateurPays = "part_laureats" | "part_candidatures" | "taux_succes";
 export type RatioFiable = Ratio & { fiable?: boolean };
 export type RangErc = { nb: number; rang: number | null; ratio: RatioFiable | null };
 export type ErcComparaison =
   | { comptage: Comptage; periode: null }
-  | (Omit<Comparaison<IndicateurPays>, "indicateurs" | "pays"> & Partial<ErcIndicesContexte> & {
+  | (Omit<Comparaison<IndicateurPays>, "indicateurs" | "pays"> & {
     comptage: Comptage;
     france: Partial<Record<IndicateurPays, RangErc>>;
     indicateurs: Partial<Record<IndicateurPays, Rubans>>;
-    pays: { entite_id: string; nom: string; reference: boolean }[];
+    pays: { entite_id: string; nom: string }[];
     periode: [number, number];
     seuil_fiabilite: number;
-    vivier_provisoire: boolean;
+    vivier: ErcVivierRubans | VivierIndisponible;
   });
 
-// Établissements : matrice niveau × dynamique d'un groupe comparable, et rangs de l'établissement choisi
-export type IndicateurMatrice = "part_laureats" | "taux_succes";
-export type ErcEtablissementPoint = {
+// Rubans du taux de candidature au vivier, sur leurs propres années (appels de la période du vivier) et leurs propres pays
+// (pays comparés présents dans le vivier). Un ruban par an : candidatures de l'année ÷ vivier fixe.
+// `france` et `reference` : sur tous les appels retenus.
+export type ErcVivierRubans = VivierContexte & Pick<Comparaison, "annees" | "geometrie" | "pays"> & {
+  france: { nb: number; rang: number | null; ratio: TauxVivier };
+  reference: TauxVivier;
+  rubans: Rubans;
+};
+
+// Nuage à quadrants taux de candidature au vivier × taux de succès, coupé aux médianes des points
+// (établissements d'un groupe ou disciplines d'une entité)
+export type NuageReference = { libelle: string; point: string | null; valeur: number | null };
+export type NuageVivierPoint = {
+  candidature: TauxVivier;
+  fiable: boolean;
+  // Taux de succès peu fiable hors du cadre, posé sur le bord haut ou bas ; null dans le cadre
+  hors_cadre: "haut" | "bas" | null;
+  nb_chercheurs: number;
+  quadrant: QuadrantKey;
+  succes: Ratio;
+  // Lauréats (aire de la bulle)
+  taille: number;
+};
+export type NuageVivier<P extends NuageVivierPoint> = VivierContexte & {
+  bornes: { x: [number | null, number | null]; y: [number, number] };
+  comptage: Comptage;
+  // Clés des points non représentés : aucune candidature ou aucun chercheur dans le vivier
+  exclus: string[];
+  points: P[];
+  // Clés des points de chaque quadrant
+  quadrants: Record<QuadrantKey, string[]>;
+  references: { candidature: NuageReference; succes: NuageReference };
+  seuil_fiabilite: number;
+  tailles: number[];
+};
+
+export type ErcVivierPoint = NuageVivierPoint & {
   categorie: string;
   entite_id: string;
   focus: boolean;
-  nb_candidatures: number;
-  nb_laureats: number;
   nom: string;
   sigle: string | null;
 };
+export type ErcVivierNuage = NuageVivier<ErcVivierPoint> & {
+  // Rang de l'établissement choisi sur le taux de candidature au vivier
+  classement: { nb: number; point: ErcVivierPoint; rang: number } | null;
+  france: { candidature: TauxVivier; succes: Ratio };
+};
+
+// Disciplines (panels ERC) de l'entité ; `entite` : l'entité toutes disciplines
+export type ErcDisciplinePoint = NuageVivierPoint & BiblioDiscipline;
+export type ErcVivierDisciplines =
+  | { comptage: Comptage; periode: null }
+  | {
+    comptage: Comptage;
+    periode: [number, number];
+    vivier: (NuageVivier<ErcDisciplinePoint> & { entite: { candidature: TauxVivier; succes: Ratio } }) | VivierIndisponible;
+  };
+
+// Rangs de l'établissement choisi dans son groupe sur la période choisie
 export type ClassementErc = {
   nb_candidatures: number;
   nb_laureats: number;
+  part_candidatures: RangErc;
   part_laureats: RangErc;
-  // Classé parmi les établissements d'au moins `seuil_taux` candidatures
+  // Classé parmi les établissements d'au moins `seuil_fiabilite` candidatures
   taux_succes: RangErc & { fiable: boolean };
 };
-type ErcPositionnementContexte = {
+
+// Établissements d'un groupe comparable : rangs de l'établissement choisi (chiffres clés) et nuage à quadrants
+// taux de candidature au vivier × taux de succès. `periode` null : aucune année d'appel dans la période choisie.
+type ErcEtablissementsContexte = {
   comptage: Comptage;
   groupe: string;
   // Groupe de l'établissement sélectionné (null pour la France)
   groupe_selection: string | null;
   groupes: GroupeEtablissements[];
-  indicateur: IndicateurMatrice;
 };
-export type ErcPositionnementMatrice = ErcPositionnementContexte & Matrice<ErcEtablissementPoint, IndicateurMatrice> & {
-  annees_provisoires: number[];
-  classement: ClassementErc | null;
-  periode: [number, number];
-  // Taux de succès de la France sur la période d'arrivée (indicateur taux_succes seulement)
-  taux_france: Ratio | null;
-  seuil_taux: number;
-  seuil_unite: string;
-};
-// `periodes` null : moins de deux années d'appel consolidées dans la période choisie
-export type ErcPositionnement = (ErcPositionnementContexte & { periodes: null }) | ErcPositionnementMatrice;
+export type ErcEtablissements = ErcEtablissementsContexte & (
+  | { periode: null }
+  | {
+    annees_provisoires: number[];
+    // null si l'établissement choisi n'est pas dans le groupe (ou si la France est sélectionnée)
+    classement: ClassementErc | null;
+    periode: [number, number];
+    seuil_fiabilite: number;
+    vivier: ErcVivierNuage | VivierIndisponible;
+  }
+);
 
 function toSearchParams(selection: Selection, { comptage, types, vivier }: ErcOptions) {
   const params = new URLSearchParams({
@@ -222,17 +288,26 @@ export const useErcComparaison = (selection: Selection, options: ErcOptions) =>
     placeholderData: keepPreviousData,
   });
 
+// Le filtre de discipline ne s'applique pas (chaque point est une discipline) : il n'entre ni dans la requête ni dans la clé
+export const useErcDisciplines = (selection: Selection, options: ErcOptions) => {
+  const sansDiscipline = { ...selection, disciplineCode: undefined, domaineCode: undefined };
+  return useQuery({
+    queryKey: ["suivi-recherche", "erc", "disciplines", ...filtersKey(sansDiscipline, options)],
+    queryFn: () => fetchJson<ErcVivierDisciplines>(`${BASE_URL}/disciplines?${toSearchParams(sansDiscipline, options)}`),
+    placeholderData: keepPreviousData,
+  });
+};
+
 // Sans groupe : celui de l'établissement sélectionné, sinon les universités (choix du serveur).
 // `enabled` : faux quand le bloc ERC est masqué (paramètre `dispositif`)
-export const useErcPositionnement = (selection: Selection, options: ErcOptions, indicateur: IndicateurMatrice, groupe?: string, enabled = true) =>
+export const useErcEtablissements = (selection: Selection, options: ErcOptions, groupe?: string, enabled = true) =>
   useQuery({
     enabled,
-    queryKey: ["suivi-recherche", "erc", "positionnement-etablissements", indicateur, groupe ?? null, ...filtersKey(selection, options)],
+    queryKey: ["suivi-recherche", "erc", "etablissements", groupe ?? null, ...filtersKey(selection, options)],
     queryFn: () => {
       const params = toSearchParams(selection, options);
-      params.set("indicateur", indicateur);
       if (groupe) params.set("groupe", groupe);
-      return fetchJson<ErcPositionnement>(`${BASE_URL}/positionnement-etablissements?${params}`);
+      return fetchJson<ErcEtablissements>(`${BASE_URL}/etablissements?${params}`);
     },
     placeholderData: keepPreviousData,
   });

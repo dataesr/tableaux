@@ -1,3 +1,4 @@
+import { getCssColor } from "../../utils/colors";
 import type { BiblioDiscipline, Indicateur, Ratio, Selection } from "./api";
 
 export const INDICATEUR_LABELS: Record<Indicateur, string> = {
@@ -69,4 +70,17 @@ export function formatNombre(nombre: number): string {
 export function formatIndice(valeur: number | null): string {
   if (valeur === null) return "—";
   return valeur.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+// Mention d'une valeur sous le seuil de fiabilité, en texte (jamais par la seule couleur)
+export const PEU_FIABLE = "peu fiable";
+
+// Couleurs globales des domaines ERC (client/src/boards/colors.scss), communes avec european-projects
+export function getDomaineColor(domaineCode: string): string {
+  return getCssColor(`erc-domain-${domaineCode.toLowerCase()}-color`);
+}
+
+// Établissement sélectionné en orange dans toutes les matrices et tous les nuages (le bleu Marianne est réservé à la France)
+export function getEtablissementColor(focus: boolean): string {
+  return getCssColor(focus ? "sr-etablissement-selectionne" : "sr-etablissement");
 }

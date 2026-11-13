@@ -4,6 +4,7 @@ import type { Matrice, MatricePoint } from "../../api";
 import { createChartOptions } from "../../../../components/chart-wrapper/default-options.ts";
 import { getCssColor } from "../../../../utils/colors";
 import { formatDynamique, formatPart, formatPeriode } from "../../utils";
+import { dessinerAnnotations, ZOOM } from "./annotations.ts";
 import { getTexteInternational, getTitreQuadrant, TAILLE_MAX, TAILLE_MIN } from "./utils.tsx";
 import type { MatriceTextes } from "./utils.tsx";
 
@@ -20,9 +21,6 @@ export type MatriceRendu<P> = {
   textes: MatriceTextes;
 };
 
-type Box = { x: number; y: number; width: number; height: number };
-const intersects = (a: Box, b: Box) => a.x < b.x + b.width && b.x < a.x + a.width && a.y < b.y + b.height && b.y < a.y + a.height;
-
 // Quadrants, tri des bulles et bornes des axes viennent du serveur. Seul le placement des étiquettes,
 // qui dépend des positions en pixels, est calculé ici, à chaque rendu du graphique.
 export default function getMatriceOptions<P, I extends string>(data: Matrice<P, I>, rendu: MatriceRendu<P>) {
@@ -30,7 +28,6 @@ export default function getMatriceOptions<P, I extends string>(data: Matrice<P, 
   const { textes } = rendu;
   const { dynamique, international, niveau } = references;
   const mentionColor = getCssColor("text-mention-grey");
-  const titleColor = getCssColor("text-title-grey");
   const halo = `3px ${getCssColor("background-default-grey")}`;
 
   const newOptions: HighchartsInstance.Options = {
@@ -39,109 +36,19 @@ export default function getMatriceOptions<P, I extends string>(data: Matrice<P, 
       // Marge haute : le menu d'export ne recouvre pas le coin « Atouts en progression »
       marginTop: 48,
       marginRight: 24,
-      // Zoom à la souris : glisser pour sélectionner une zone, dans les deux directions
-      zooming: {
-        type: "xy",
-        // En haut à gauche, au-dessus du cadre : ne recouvre ni le menu d'export ni le nom d'un quadrant
-        resetButton: { relativeTo: "spacingBox", position: { align: "left", verticalAlign: "top", x: 0, y: 8 } },
-      },
+      zooming: ZOOM,
       events: {
         render: function (this: any) {
-          // Le libellé du bouton vient des options globales (en anglais) : on le traduit ici
-          this.resetZoomButton?.attr({ text: "Réinitialiser le zoom", title: "Revenir à la vue d'ensemble" });
-          (this.srElements ?? []).forEach((element) => element.destroy());
-          this.srElements = [];
-          const { plotLeft: left, plotTop: top, plotWidth: width, plotHeight: height, renderer } = this;
-          const add = (element) => { this.srElements.push(element); return element; };
-
-          // Noms des quadrants, discrets, dans les coins
-          const occupied: Box[] = [];
-          const corner = (titre: string, droite: boolean, haut: boolean) => {
-            const text = add(renderer
-              .text(titre, droite ? left + width - 6 : left + 6, haut ? top + 14 : top + height - 6)
-              .attr({ align: droite ? "right" : "left", zIndex: 2 })
-              .css({ color: mentionColor, fontSize: "11px", fontStyle: "italic" })
-              .add());
-            // Écran étroit : un titre plus large que la moitié du graphique chevaucherait son voisin ;
-            // on garde son premier mot (« Atouts »), le titre complet reste dans les tableaux des quadrants
-            if (text.getBBox().width > width / 2 - 12) text.attr({ text: titre.split(",")[0] });
-            occupied.push(text.getBBox());
-          };
-          corner(getTitreQuadrant("hd", references), true, true);
-          corner(getTitreQuadrant("hg", references), false, true);
-          corner(getTitreQuadrant("bd", references), true, false);
-          corner(getTitreQuadrant("bg", references), false, false);
-
-          // Une étiquette par bulle, posée hors des bulles avec un trait de rappel.
-          // Recherche autour de la bulle, de plus en plus loin, en privilégiant la direction opposée au centre du nuage.
-          // Après un zoom, seules les bulles restées dans le cadre sont dessinées et étiquetées
-          const allPoints = (this.series[0]?.points ?? []).filter((p) => p.isInside !== false);
-          const circles = allPoints.map((p) => ({ cx: left + p.plotX, cy: top + p.plotY, r: p.marker?.radius ?? 0 }));
-          const hitsCircle = (b: Box) => circles.some(({ cx, cy, r }) => {
-            const nx = Math.max(b.x, Math.min(cx, b.x + b.width));
-            const ny = Math.max(b.y, Math.min(cy, b.y + b.height));
-            return (nx - cx) ** 2 + (ny - cy) ** 2 < (r + 2) ** 2;
-          });
-          const inside = (b: Box) => b.x >= left + 2 && b.y >= top + 2 && b.x + b.width <= left + width - 2 && b.y + b.height <= top + height - 2;
-          const centreX = circles.reduce((total, c) => total + c.cx, 0) / (circles.length || 1);
-          const centreY = circles.reduce((total, c) => total + c.cy, 0) / (circles.length || 1);
-          const DISTANCES = [6, 14, 26, 42, 62, 88, 120, 160];
-          const ANGLES = Array.from({ length: 16 }, (_, i) => (i * Math.PI) / 8);
-
-          // Le point mis en avant, puis les grosses bulles : ils obtiennent les meilleures places
-          const prioritaire = (p) => (rendu.focus?.(p.options.custom) ? 1 : 0);
-          allPoints.sort((a, b) => prioritaire(b) - prioritaire(a) || b.z - a.z).forEach((p) => {
-            const r = p.marker?.radius ?? 0;
-            const cx = left + p.plotX;
-            const cy = top + p.plotY;
-            const label = add(renderer
-              .text(p.options.custom.hors_cadre
-                ? `${rendu.etiquette(p.options.custom)} (${formatDynamique(p.options.custom.dynamique)})`
-                : rendu.etiquette(p.options.custom), 0, 0)
-              .css({ color: titleColor, fontSize: "11px", textOutline: halo })
-              .attr({ zIndex: 6 })
-              .add());
-            const { width: w, height: h } = label.getBBox();
-            const dehors = Math.atan2(cy - centreY, cx - centreX);
-            const angles = [...ANGLES].sort((a, b) => Math.abs(Math.cos(a - dehors) - 1) - Math.abs(Math.cos(b - dehors) - 1));
-
-            let place: Box | null = null;
-            for (const distance of DISTANCES) {
-              for (const angle of angles) {
-                const ax = cx + Math.cos(angle) * (r + distance);
-                const ay = cy + Math.sin(angle) * (r + distance);
-                const cos = Math.cos(angle);
-                const sin = Math.sin(angle);
-                const box = {
-                  x: cos > 0.35 ? ax : cos < -0.35 ? ax - w : ax - w / 2,
-                  y: sin > 0.35 ? ay : sin < -0.35 ? ay - h : ay - h / 2,
-                  width: w,
-                  height: h,
-                };
-                if (inside(box) && !hitsCircle(box) && !occupied.some((o) => intersects(o, box))) {
-                  place = box;
-                  break;
-                }
-              }
-              if (place) break;
-            }
-            if (!place) {
-              label.destroy();
-              this.srElements.pop();
-              return;
-            }
-            label.attr({ x: place.x, y: place.y + h * 0.75 });
-            occupied.push(place);
-            // Trait du bord de la bulle au point le plus proche de l'étiquette
-            const tx = Math.max(place.x, Math.min(cx, place.x + place.width));
-            const ty = Math.max(place.y, Math.min(cy, place.y + place.height));
-            const angle = Math.atan2(ty - cy, tx - cx);
-            if (Math.hypot(tx - cx, ty - cy) - r > 4) {
-              add(renderer
-                .path(["M", cx + r * Math.cos(angle), cy + r * Math.sin(angle), "L", tx, ty])
-                .attr({ stroke: mentionColor, "stroke-width": 1, zIndex: 5 })
-                .add());
-            }
+          dessinerAnnotations(this, {
+            coins: {
+              hd: getTitreQuadrant("hd", references),
+              hg: getTitreQuadrant("hg", references),
+              bd: getTitreQuadrant("bd", references),
+              bg: getTitreQuadrant("bg", references),
+            },
+            // Hors du cadre : évolution exacte dans l'étiquette
+            etiquette: (p: P & MatricePoint) => (p.hors_cadre ? `${rendu.etiquette(p)} (${formatDynamique(p.dynamique)})` : rendu.etiquette(p)),
+            focus: rendu.focus,
           });
         },
       },

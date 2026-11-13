@@ -6,6 +6,7 @@ import ChartBusy from "../../../components/chart-busy/index.tsx";
 import { useErcOptions } from "../../../hooks/use-selection";
 import { formatPeriode, getDisciplineLabel } from "../../../utils";
 import ErcEvolutionChart from "../charts/erc-evolution/index.tsx";
+import ErcVivierDisciplinesChart from "../charts/erc-vivier-disciplines/index.tsx";
 import ChiffresCles from "../components/chiffres-cles/index.tsx";
 import MethodeErc from "../components/methode-erc/index.tsx";
 import ParametresErc, { getTypesLabel } from "../components/parametres-erc/index.tsx";
@@ -59,6 +60,9 @@ export default function ErcProfil() {
           options={options}
           selectionLabel={selectionLabel}
         />
+      )}
+      {data?.periode && ercMeta.vivier && (
+        <ErcVivierDisciplinesChart entiteNom={entiteNom} meta={ercMeta} options={options} selection={selection} />
       )}
       <MethodeErc meta={ercMeta} />
     </>

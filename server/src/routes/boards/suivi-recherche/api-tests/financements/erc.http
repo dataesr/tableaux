@@ -17,6 +17,15 @@ GET http://localhost:3000/api/suivi-recherche/financements/erc/indicateurs?type_
 GET http://localhost:3000/api/suivi-recherche/financements/erc/evolution?year_min=2015&year_max=2025&discipline=LS2
 
 ###
+# Établissement : part_ensemble = part de l'établissement dans les candidatures et les lauréats de la France (ensemble: france)
+GET http://localhost:3000/api/suivi-recherche/financements/erc/evolution?year_min=2019&year_max=2025&ror_id=02en5vm52
+
+###
+# Profil : nuage des disciplines (panels ERC) d'un établissement, taux de candidature au vivier × taux de succès ;
+# le filtre de discipline est ignoré
+GET http://localhost:3000/api/suivi-recherche/financements/erc/disciplines?year_min=2019&year_max=2025&ror_id=02en5vm52&discipline=LS2
+
+###
 # Aucune année d'appel dans la période : periode null
 GET http://localhost:3000/api/suivi-recherche/financements/erc/evolution?year_min=2015&year_max=2018
 
@@ -33,26 +42,42 @@ GET http://localhost:3000/api/suivi-recherche/financements/erc/indicateurs?type_
 GET http://localhost:3000/api/suivi-recherche/financements/erc/indicateurs?comptage=porteurs
 
 ###
-# Indice de candidature sur tous les articles SJR (défaut : top 10 % des plus cités)
-GET http://localhost:3000/api/suivi-recherche/financements/erc/indicateurs?vivier=articles
+# Taux de candidature au vivier (bloc `vivier`) rapporté aux chercheurs top 10 % (défaut : tous les chercheurs actifs)
+GET http://localhost:3000/api/suivi-recherche/financements/erc/indicateurs?vivier=top10
 
 ###
-# France et autres pays : rubans (part des lauréats, part des candidatures, taux de succès, indice) et rangs de la France
+# Hors de la période du vivier : vivier.indisponible = "periode"
+GET http://localhost:3000/api/suivi-recherche/financements/erc/indicateurs?year_min=2014&year_max=2018
+
+###
+# Synergy seul (sans panel) : vivier.indisponible = "types"
+GET http://localhost:3000/api/suivi-recherche/financements/erc/indicateurs?type_bourse=SYG
+
+###
+# France et autres pays : rubans (part des lauréats, part des candidatures, taux de succès) et rangs de la France
 GET http://localhost:3000/api/suivi-recherche/financements/erc/comparaison-internationale?domaine=PE
 
 ###
 # 400 attendu
-GET http://localhost:3000/api/suivi-recherche/financements/erc/comparaison-internationale?vivier=tout
+GET http://localhost:3000/api/suivi-recherche/financements/erc/comparaison-internationale?vivier=articles
 
 ###
-# Établissements : matrice part des lauréats × évolution, groupe de Sorbonne Université, et son rang
-# references : médianes du groupe et repère international (part dans l'ensemble de l'ERC stable, base France)
-GET http://localhost:3000/api/suivi-recherche/financements/erc/positionnement-etablissements?ror_id=02en5vm52
+# Rubans du taux de candidature au vivier (bloc `vivier` : appels 2021-2025, pays du vivier), panels LS, vivier top 10 %
+GET http://localhost:3000/api/suivi-recherche/financements/erc/comparaison-internationale?domaine=LS&vivier=top10
 
 ###
-# Taux de succès des organismes de recherche
-GET http://localhost:3000/api/suivi-recherche/financements/erc/positionnement-etablissements?indicateur=taux_succes&groupe=organismes
+# Établissements du groupe de Sorbonne Université : rangs sur la période (classement) et nuage taux de candidature
+# au vivier × taux de succès (vivier)
+GET http://localhost:3000/api/suivi-recherche/financements/erc/etablissements?ror_id=02en5vm52
+
+###
+# Organismes de recherche, vivier des chercheurs top 10 %
+GET http://localhost:3000/api/suivi-recherche/financements/erc/etablissements?groupe=organismes&vivier=top10
+
+###
+# Hors de la période du vivier : classement calculé, vivier.indisponible = "periode"
+GET http://localhost:3000/api/suivi-recherche/financements/erc/etablissements?ror_id=02en5vm52&year_min=2014&year_max=2018
 
 ###
 # 400 attendu
-GET http://localhost:3000/api/suivi-recherche/financements/erc/positionnement-etablissements?groupe=inconnu
+GET http://localhost:3000/api/suivi-recherche/financements/erc/etablissements?groupe=inconnu

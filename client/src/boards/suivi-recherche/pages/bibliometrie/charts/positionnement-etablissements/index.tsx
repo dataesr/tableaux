@@ -8,26 +8,22 @@ import type { BiblioDiscipline, BiblioMeta, BiblioOptions, Indicateur, Selection
 import ChartBusy from "../../../../components/chart-busy/index.tsx";
 import { useRenderTransition } from "../../../../hooks/use-render-transition";
 import { ENTITE_NATIONALE } from "../../../../hooks/use-selection";
-import { formatPeriode, getDisciplineLabel, INDICATEUR_LABELS } from "../../../../utils";
+import { formatPeriode, getDisciplineLabel, getEtablissementColor, INDICATEUR_LABELS } from "../../../../utils";
 import LegendeTailles from "../../../../components/matrice/legende-tailles.tsx";
+import { LegendeEtablissements } from "../../../../components/matrice/legendes.tsx";
+import { LibelleEtablissement } from "../../../../components/matrice/libelles.tsx";
 import Quadrants from "../../../../components/matrice/quadrants.tsx";
 import { getLectureMatrice, getTexteHorsCadre, getTexteReferences } from "../../../../components/matrice/utils.tsx";
 import { getChartSources } from "../../../../components/sources.tsx";
 import { getBiblioMatriceTextes } from "../../matrice-textes.ts";
 import getOptions from "./options.tsx";
-import { cle, getEtablissementColor } from "./utils.tsx";
+import { cle } from "./utils.tsx";
 import type { EtablissementMatricePoint } from "./utils.tsx";
 
 import "../../../../components/matrice/styles.scss";
 
 const libelle = (p: EtablissementMatricePoint) => (
-  <>
-    <svg aria-hidden="true" className="fr-mr-1w" height="10" width="10">
-      <circle cx="5" cy="5" fill={getEtablissementColor(p)} r="5" />
-    </svg>
-    {p.focus ? <strong>{p.nom}</strong> : p.nom}
-    {p.sigle && <span className="fr-text-mention--grey">{` ${p.sigle}`}</span>}
-  </>
+  <LibelleEtablissement couleur={getEtablissementColor(p.focus)} focus={p.focus} nom={p.nom} sigle={p.sigle} />
 );
 
 type PositionnementEtablissementsProps = {
@@ -68,23 +64,11 @@ export default function PositionnementEtablissements({ disciplines, entiteNom, m
 
   const legend = data && (
     <div className="sr-matrice-legende">
-      <ul aria-label="Couleur" className="fr-text--sm fr-mb-0">
-        {selection.entiteId !== ENTITE_NATIONALE && data.points.some((p) => p.focus) && (
-          <li>
-            <svg aria-hidden="true" height="14" width="14">
-              <circle cx="7" cy="7" fill="var(--sr-focus)" fillOpacity="0.5" r="5.5" stroke="var(--sr-focus)" strokeWidth="3" />
-            </svg>
-            {entiteNom}
-          </li>
-        )}
-        <li>
-          <svg aria-hidden="true" height="14" width="14">
-            <circle cx="7" cy="7" fill="var(--sr-etablissement)" fillOpacity="0.5" r="6" stroke="var(--sr-etablissement)" strokeWidth="1.5" />
-          </svg>
-          {groupeLibelle}
-        </li>
-      </ul>
-      <LegendeTailles data={data} textes={getBiblioMatriceTextes(data)} />
+      <LegendeEtablissements
+        entiteNom={selection.entiteId !== ENTITE_NATIONALE && data.points.some((p) => p.focus) ? entiteNom : null}
+        groupe={groupeLibelle}
+      />
+      <LegendeTailles periode={data.periodes.arrivee} tailles={data.tailles} textes={getBiblioMatriceTextes(data)} />
     </div>
   );
 

@@ -1,4 +1,5 @@
 import type { Ratio, Ruban } from "../../api";
+import TableauDonnees from "../tableau-donnees.tsx";
 import { getContinentFromCountryCode } from "../../../../utils/continents";
 import { getCssColor } from "../../../../utils/colors";
 
@@ -47,33 +48,24 @@ type TableRubansProps = {
 // Vue tableau : valeur, calcul et rang de chaque pays, année par année
 export function TableRubans({ annees, caption, formatCellule, series }: TableRubansProps) {
   return (
-    <div className="fr-table fr-table--bordered fr-table--sm">
-      <div className="fr-table__wrapper">
-        <div className="fr-table__container">
-          <div className="fr-table__content">
-            <table>
-              <caption className="fr-sr-only">{caption}</caption>
-              <thead>
-                <tr>
-                  <th scope="col">Pays</th>
-                  {annees.map((annee) => <th key={annee} scope="col">{annee}</th>)}
-                </tr>
-              </thead>
-              <tbody>
-                {series.map((ruban) => (
-                  <tr key={ruban.entite_id}>
-                    <th scope="row">{ruban.nom}</th>
-                    {ruban.annees.map(({ rang, ratio }, j) => (
-                      <td key={annees[j]}>{ratio ? `${formatCellule(ratio)} · ${rang}ᵉ` : "—"}</td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    </div>
+    <TableauDonnees caption={caption}>
+      <thead>
+        <tr>
+          <th scope="col">Pays</th>
+          {annees.map((annee) => <th key={annee} scope="col">{annee}</th>)}
+        </tr>
+      </thead>
+      <tbody>
+        {series.map((ruban) => (
+          <tr key={ruban.entite_id}>
+            <th scope="row">{ruban.nom}</th>
+            {ruban.annees.map(({ rang, ratio }, j) => (
+              <td key={annees[j]}>{ratio ? `${formatCellule(ratio)} · ${rang}ᵉ` : "—"}</td>
+            ))}
+          </tr>
+        ))}
+      </tbody>
+    </TableauDonnees>
   );
 }
 

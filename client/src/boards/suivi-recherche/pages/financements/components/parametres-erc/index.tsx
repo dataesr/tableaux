@@ -5,7 +5,7 @@ import { COMPTAGE_DEFAUT, VIVIER_DEFAUT, VIVIERS } from "../../../../api/erc.ts"
 import type { Comptage, ErcMeta, ErcOptions } from "../../../../api/erc.ts";
 import { useSetParams } from "../../../../hooks/use-selection";
 import { COMPTAGE_LABELS } from "../../comptage.ts";
-import { VIVIER_LABELS } from "../../indice.ts";
+import { VIVIER_LABELS } from "../../vivier.ts";
 
 // Types proposés : les trois bourses individuelles (par défaut), Synergy et Proof of Concept.
 // PERA, SJI et ERC-OTHER (quelques dizaines de candidatures, presque aucun lauréat) ne sont pas proposés.
@@ -18,12 +18,10 @@ export function getTypesLabel(meta: ErcMeta, types: string[]): string {
 type ParametresErcProps = {
   meta: ErcMeta;
   options: ErcOptions;
-  // Choix du vivier : seulement là où l'indice de candidature est affiché
-  avecVivier?: boolean;
 };
 
 // Paramètres de calcul du bloc ERC, repliés : leur valeur courante reste lisible dans le titre
-export default function ParametresErc({ avecVivier = true, meta, options: { comptage, types, vivier } }: ParametresErcProps) {
+export default function ParametresErc({ meta, options: { comptage, types, vivier } }: ParametresErcProps) {
   const setParams = useSetParams();
   const idPrefix = useId();
   const proposes = meta.types_bourse.filter(({ code }) => TYPES_PROPOSES.includes(code));
@@ -41,7 +39,7 @@ export default function ParametresErc({ avecVivier = true, meta, options: { comp
   const titre = [
     getTypesLabel(meta, types),
     comptage !== COMPTAGE_DEFAUT && `Comptage : ${COMPTAGE_LABELS[comptage]}`,
-    avecVivier && vivier !== VIVIER_DEFAUT && `Vivier : ${VIVIER_LABELS[vivier].toLowerCase()}`,
+    meta.vivier && vivier !== VIVIER_DEFAUT && `Vivier : ${VIVIER_LABELS[vivier].toLowerCase()}`,
   ]
     .filter(Boolean)
     .join(" · ");
@@ -81,10 +79,11 @@ export default function ParametresErc({ avecVivier = true, meta, options: { comp
           />
         ))}
       </Fieldset>
-      {avecVivier && (
+      {meta.vivier && (
         <Fieldset
-          hint="Articles parus dans les revues classées SJR les 3 années précédant l'appel, discipline par discipline."
-          legend="Vivier de l'indice de candidature"
+          hint={"Dénominateur du taux de candidature au vivier. Chercheurs top 10 % : au moins un article parmi les 10 % "
+            + "les plus cités, population plus proche de celle que vise l'ERC."}
+          legend="Vivier de chercheurs"
         >
           {VIVIERS.map((mode) => (
             <Radio

@@ -1,8 +1,8 @@
 import type { Ratio } from "../../../../api";
-import type { Comptage, ErcIndicateursPeriode } from "../../../../api/erc.ts";
-import { formatIndice, formatNombre, formatPart } from "../../../../utils";
+import type { Comptage, ErcIndicateursPeriode, ErcVivierEntite, TauxVivier } from "../../../../api/erc.ts";
+import { formatNombre, formatPart, formatPeriode } from "../../../../utils";
 import { UNITES } from "../../comptage.ts";
-import { formatIndiceCandidature, formatIndiceReussite, VIVIER_LABELS } from "../../indice.ts";
+import { formatCalculVivier, formatValeurVivier, getTexteIndisponible, getTexteVivierFixe, TITRE_TAUX_VIVIER, UNITE_TAUX_VIVIER } from "../../vivier.ts";
 import Cartes from "../cartes/index.tsx";
 import type { Carte } from "../cartes/index.tsx";
 
@@ -23,7 +23,9 @@ type ChiffresClesProps = {
 export default function ChiffresCles({ comptage, erc, selectionLabel, typesLabel }: ChiffresClesProps) {
   const unites = UNITES[comptage];
   const provisoire = erc.annees_provisoires.length > 0;
-  const { indices } = erc;
+  // Taux de candidature au vivier : calculé seulement sur les appels de la période du vivier (types avec panel)
+  const vivier = erc.vivier.indisponible ? null : (erc.vivier as ErcVivierEntite);
+  const formatReferenceVivier = (libelle: string, taux: TauxVivier) => `${libelle} : ${formatValeurVivier(taux.valeur)} (${formatCalculVivier(taux, vivier!.vivier, unites)})`;
 
   const cartes: Carte[] = [
     {
@@ -52,23 +54,25 @@ export default function ChiffresCles({ comptage, erc, selectionLabel, typesLabel
       provisoire,
     },
   ];
-  // Indice de candidature : absent si seuls des types sans panel (Synergy, Proof of Concept) sont retenus
-  if (indices) {
+  if (vivier) {
     cartes.push({
-      titre: "Indice de candidature ERC",
-      valeur: formatIndice(indices.candidature.valeur),
-      detail: `${formatIndiceCandidature(indices.candidature, unites)} d'après le vivier (${VIVIER_LABELS[indices.vivier].toLowerCase()}) ; `
-        + `pays de l'UE = 1 · indice de réussite : ${formatIndiceReussite(indices.reussite)}`,
-      fiable: indices.fiable,
-      provisoire: provisoire || indices.vivier_provisoire,
+      titre: `${TITRE_TAUX_VIVIER} (appels ${formatPeriode(vivier.appels)})`,
+      valeur: formatValeurVivier(vivier.taux.valeur),
+      detail: [
+        `${UNITE_TAUX_VIVIER} : ${formatCalculVivier(vivier.taux, vivier.vivier, unites)}`,
+        vivier.france && formatReferenceVivier("France", vivier.france),
+        formatReferenceVivier(`ensemble des ${vivier.nb_pays_reference} pays comparés`, vivier.reference),
+      ].filter(Boolean).join(" · "),
+      fiable: vivier.taux.fiable,
+      provisoire: vivier.appels_provisoires.length > 0 || vivier.vivier_provisoire,
     });
   }
 
   const notes = [
     cartes.some(({ fiable }) => !fiable)
-      && `Peu fiable : moins de ${erc.seuil_fiabilite} ${unites.candidatures} (taux de succès) ou moins de ${erc.seuil_fiabilite} ${unites.candidatures} ${unites.attendues} (indice de candidature) ; la valeur varie alors fortement d'une candidature à l'autre.`,
-    indices?.vivier_provisoire
-      && "Indice provisoire : pour les articles récents, le top 10 % des plus cités n'est pas définitif (fenêtre de citation pas close).",
+      && `Peu fiable : moins de ${erc.seuil_fiabilite} ${unites.candidatures} ; la valeur varie alors fortement d'une candidature à l'autre.`,
+    vivier && `${TITRE_TAUX_VIVIER} : bourses avec panel seulement (Starting, Consolidator, Advanced). ${getTexteVivierFixe(vivier)}`,
+    erc.vivier.indisponible && getTexteIndisponible(erc.vivier),
   ].filter((note): note is string => Boolean(note));
 
   return <Cartes cartes={cartes} notes={notes} sousTitre={`Bourses ERC : ${typesLabel}`} titre={selectionLabel} titreAs="h3" />;

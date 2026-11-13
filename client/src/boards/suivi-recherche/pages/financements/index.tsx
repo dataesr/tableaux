@@ -14,14 +14,12 @@ import EtablissementsSection from "./etablissements/index.tsx";
 import InternationalSection from "./international/index.tsx";
 import ProfilSection from "./profil/index.tsx";
 import { SECTIONS, useSection } from "./sections.ts";
-import TestSection from "./test/index.tsx";
 
 // Onglets dont le contenu est prêt ; les autres annoncent qu'ils sont en préparation
 const CONTENUS: Partial<Record<(typeof SECTIONS)[number]["id"], ComponentType>> = {
   profil: ProfilSection,
   etablissements: EtablissementsSection,
   international: InternationalSection,
-  test: TestSection,
 };
 
 // Un onglet par question, choisi par le paramètre `section`, sur le modèle de la page Bibliométrie ;

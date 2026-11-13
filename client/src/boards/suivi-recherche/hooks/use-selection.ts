@@ -15,7 +15,7 @@ export { ENTITE_NATIONALE };
 //   section              onglet des pages Bibliométrie et Financements ; absent = profil
 //   type_bourse          types de bourse ERC, séparés par des virgules ; absent = erc_meta.types_bourse_defaut
 //   comptage             effectifs ERC en projets ou en porteurs (`projets` | `pi`) ; absent = projets
-//   vivier               vivier de l'indice de candidature ERC (`top10` | `articles`) ; absent = top10
+//   vivier               dénominateur du taux de candidature ERC au vivier (`top10` : chercheurs top 10 %) ; absent = tous les chercheurs actifs
 //   dispositif           blocs affichés de la page Financements et distinctions (`erc`, `anr`, `prix`), séparés par des virgules ; absent = tous
 // Une valeur par défaut n'est jamais écrite dans l'URL ; une valeur inconnue est ignorée.
 export function useSetParams() {
@@ -78,7 +78,7 @@ export function useBiblioOptions(meta?: BiblioMeta) {
 
 // Paramètres de calcul ERC.
 // Types de bourse : codes connus de erc_meta, dans l'ordre de erc_meta ; aucun ou inconnus = types par défaut.
-// Comptage : un mode de erc_meta.modes_comptage ; inconnu = projets. Vivier : top10 ou articles ; inconnu = top10.
+// Comptage : un mode de erc_meta.modes_comptage ; inconnu = projets. Vivier : actifs ou top10 ; inconnu = actifs.
 export function useErcOptions(meta: ErcMeta): ErcOptions {
   const [searchParams] = useSearchParams();
   const demandes = searchParams.get("type_bourse")?.split(",") ?? [];

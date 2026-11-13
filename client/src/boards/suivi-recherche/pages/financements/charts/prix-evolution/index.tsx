@@ -11,6 +11,7 @@ import { usePrixEvolution } from "../../../../api/prix.ts";
 import type { PrixEvolution, PrixMeta } from "../../../../api/prix.ts";
 import ChartBusy from "../../../../components/chart-busy/index.tsx";
 import { getChartSources } from "../../../../components/sources.tsx";
+import TableauDonnees from "../../../../components/tableau-donnees.tsx";
 import { useRenderTransition } from "../../../../hooks/use-render-transition";
 import { ENTITE_NATIONALE } from "../../../../hooks/use-selection";
 import { formatNombre, formatPart } from "../../../../utils";
@@ -87,35 +88,26 @@ function getLecture(annees: Annee[], vue: Vue, entiteNom: string): string | null
 function renderTable(annees: Annee[], vue: Vue, caption: string) {
   const prix = annees[0]?.par_prix ?? [];
   return (
-    <div className="fr-table fr-table--bordered fr-table--sm">
-      <div className="fr-table__wrapper">
-        <div className="fr-table__container">
-          <div className="fr-table__content">
-            <table>
-              <caption className="fr-sr-only">{caption}</caption>
-              <thead>
-                <tr>
-                  <th scope="col">Année d'attribution</th>
-                  {prix.map(({ prix_id: id, libelle }) => <th key={id} scope="col">{libelle}</th>)}
-                  <th scope="col">Total</th>
-                  {vue === "part" && <th scope="col">Part du total France</th>}
-                </tr>
-              </thead>
-              <tbody>
-                {annees.map((d) => (
-                  <tr key={d.annee}>
-                    <th scope="row">{categorie(d)}</th>
-                    {d.par_prix.map(({ prix_id: id, nb_laureats: nb }) => <td key={id}>{formatNombre(nb)}</td>)}
-                    <td>{formatNombre(d.nb_laureats)}</td>
-                    {vue === "part" && <td>{d.part ? formatPartTotal(d.part) : "—"}</td>}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    </div>
+    <TableauDonnees caption={caption}>
+      <thead>
+        <tr>
+          <th scope="col">Année d'attribution</th>
+          {prix.map(({ prix_id: id, libelle }) => <th key={id} scope="col">{libelle}</th>)}
+          <th scope="col">Total</th>
+          {vue === "part" && <th scope="col">Part du total France</th>}
+        </tr>
+      </thead>
+      <tbody>
+        {annees.map((d) => (
+          <tr key={d.annee}>
+            <th scope="row">{categorie(d)}</th>
+            {d.par_prix.map(({ prix_id: id, nb_laureats: nb }) => <td key={id}>{formatNombre(nb)}</td>)}
+            <td>{formatNombre(d.nb_laureats)}</td>
+            {vue === "part" && <td>{d.part ? formatPartTotal(d.part) : "—"}</td>}
+          </tr>
+        ))}
+      </tbody>
+    </TableauDonnees>
   );
 }
 

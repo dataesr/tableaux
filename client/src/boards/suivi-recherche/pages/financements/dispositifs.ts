@@ -27,7 +27,7 @@ export const DISPOSITIFS = [
     nature: "Distinction",
     couleur: "yellow-tournesol",
     description: "Nominations à l'Institut universitaire de France et médailles du CNRS, par année d'attribution. "
-      + "Sans candidatures connues : ni taux de succès, ni indice de candidature.",
+      + "Sans candidatures connues : ni taux de succès, ni taux de candidature.",
   },
 ] as const satisfies readonly {
   id: string;

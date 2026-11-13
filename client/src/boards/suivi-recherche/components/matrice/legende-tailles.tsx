@@ -1,15 +1,21 @@
-import type { Matrice } from "../../api";
 import { formatPeriode } from "../../utils";
 import { getDiametre, TAILLE_MAX } from "./utils.tsx";
 import type { MatriceTextes } from "./utils.tsx";
 
-// Légende des tailles de bulles : trois tailles de référence fournies par le serveur
-export default function LegendeTailles<P, I extends string>({ data, textes }: { data: Matrice<P, I>; textes: MatriceTextes }) {
-  const { tailles } = data;
+type LegendeTaillesProps = {
+  // Période des effectifs qui font la taille des bulles (période d'arrivée d'une matrice)
+  periode: [number, number];
+  // Trois tailles de référence fournies par le serveur
+  tailles: number[];
+  textes: Pick<MatriceTextes, "peuFiable" | "taille">;
+};
+
+// Légende des tailles de bulles des matrices et des nuages à quadrants
+export default function LegendeTailles({ periode: annees, tailles, textes }: LegendeTaillesProps) {
   if (tailles.length === 0) return null;
   const zMin = tailles[0];
   const zMax = tailles[tailles.length - 1];
-  const periode = formatPeriode(data.periodes.arrivee);
+  const periode = formatPeriode(annees);
 
   return (
     <ul aria-label={`Taille : nombre de ${textes.taille.unite} sur ${periode}`} className="fr-text--sm fr-mb-0">

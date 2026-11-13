@@ -2,15 +2,15 @@ import { Alert, Notice } from "@dataesr/dsfr-plus";
 import { useState } from "react";
 
 import DefaultSkeleton from "../../../../../components/charts-skeletons/default.tsx";
-import { useErcPositionnement } from "../../../api/erc.ts";
-import type { ErcPositionnementMatrice, IndicateurMatrice } from "../../../api/erc.ts";
+import { useErcEtablissements } from "../../../api/erc.ts";
+import type { ErcEtablissements, ErcVivierNuage } from "../../../api/erc.ts";
 import { usePrixPositionnement } from "../../../api/prix.ts";
 import type { PrixPositionnementMatrice } from "../../../api/prix.ts";
 import ChartBusy from "../../../components/chart-busy/index.tsx";
 import { useRenderTransition } from "../../../hooks/use-render-transition";
 import { ENTITE_NATIONALE, useErcOptions } from "../../../hooks/use-selection";
 import { formatNombre, formatPart, formatPeriode, getDisciplineLabel } from "../../../utils";
-import ErcEtablissements, { ChoixIndicateur } from "../charts/erc-etablissements/index.tsx";
+import ErcVivierEtablissements from "../charts/erc-vivier-etablissements/index.tsx";
 import { ChoixGroupe } from "../charts/matrice-etablissements/index.tsx";
 import PrixEtablissements from "../charts/prix-etablissements/index.tsx";
 import Cartes from "../components/cartes/index.tsx";
@@ -25,18 +25,32 @@ import { useFinancements } from "../context.ts";
 import { useDispositifs } from "../dispositifs.ts";
 import { formatPartTotal } from "../prix.ts";
 import { formatRang } from "../rang.ts";
+import { formatCalculVivier, formatValeurVivier, getTexteIndisponible, TITRE_TAUX_VIVIER } from "../vivier.ts";
+
+type ErcPeriode = Extract<ErcEtablissements, { periode: [number, number] }>;
 
 // Seul groupe de prix comparé entre établissements : les médailles du CNRS sont trop peu nombreuses par établissement
 const DISTINCTION = "IUF";
 
-// Chiffres clés ERC de l'établissement choisi sur toute la période : lauréats (rang sur la part) et taux de succès
-function getCartesErc(data: ErcPositionnementMatrice, groupe: string): Carte[] {
+// Chiffres clés ERC de l'établissement choisi sur toute la période, les mêmes que ceux du profil : candidatures et
+// lauréats (rang sur leur part du total français), taux de succès et, si les viviers sont disponibles, candidatures
+// pour 1 000 chercheurs (rang sur les appels de la période du vivier)
+function getCartesErc(data: ErcPeriode, groupe: string, nuage: ErcVivierNuage | null): Carte[] {
   const { classement } = data;
   if (!classement) return [];
+  const vivier = nuage?.classement;
   const unites = UNITES[data.comptage];
   const provisoire = data.annees_provisoires.length > 0;
-  const { part_laureats: part, taux_succes: taux } = classement;
+  const { part_candidatures: partCandidatures, part_laureats: part, taux_succes: taux } = classement;
   return [
+    {
+      titre: `${unites.Candidatures} ERC`,
+      valeur: formatNombre(classement.nb_candidatures),
+      detail: `${formatRang(partCandidatures.rang, partCandidatures.nb, groupe)} · ${formatPart(partCandidatures.ratio?.valeur ?? null)} des ${unites.candidatures} ERC français `
+        + `(${formatNombre(partCandidatures.ratio?.numerateur ?? 0)} / ${formatNombre(partCandidatures.ratio?.denominateur ?? 0)})`,
+      fiable: true,
+      provisoire,
+    },
     {
       titre: `${unites.Laureats} ERC`,
       valeur: formatNombre(classement.nb_laureats),
@@ -48,11 +62,18 @@ function getCartesErc(data: ErcPositionnementMatrice, groupe: string): Carte[] {
     {
       titre: "Taux de succès ERC",
       valeur: formatPart(taux.ratio?.valeur ?? null),
-      detail: `${taux.fiable ? formatRang(taux.rang, taux.nb, `${groupe} d'au moins ${data.seuil_taux} ${unites.candidatures}`) : "non classé"} · `
+      detail: `${taux.fiable ? formatRang(taux.rang, taux.nb, `${groupe} d'au moins ${data.seuil_fiabilite} ${unites.candidatures}`) : "non classé"} · `
         + `${formatNombre(taux.ratio?.numerateur ?? 0)} ${unites.laureats} / ${formatNombre(taux.ratio?.denominateur ?? 0)} ${unites.candidatures}`,
       fiable: taux.fiable,
       provisoire,
     },
+    ...(nuage && vivier ? [{
+      titre: `${TITRE_TAUX_VIVIER} (appels ${formatPeriode(nuage.appels)})`,
+      valeur: formatValeurVivier(vivier.point.candidature.valeur),
+      detail: `${formatRang(vivier.rang, vivier.nb, groupe)} · par an : ${formatCalculVivier(vivier.point.candidature, nuage.vivier, UNITES[nuage.comptage])}`,
+      fiable: vivier.point.candidature.fiable,
+      provisoire: nuage.appels_provisoires.length > 0 || nuage.vivier_provisoire,
+    }] : []),
   ];
 }
 
@@ -76,7 +97,6 @@ function getCartesPrix(data: PrixPositionnementMatrice, groupe: string): Carte[]
 export default function EtablissementsSection() {
   const { disciplines, entiteNom, ercMeta, prixMeta, prixMetaError, selection } = useFinancements();
   const options = useErcOptions(ercMeta);
-  const [indicateur, setIndicateur] = useState<IndicateurMatrice>("part_laureats");
   // Groupe choisi pour l'établissement sélectionné à ce moment-là, commun aux deux matrices ;
   // sinon, le serveur prend le groupe de l'établissement
   const [choix, setChoix] = useState<{ entiteId: string; groupe: string } | null>(null);
@@ -84,47 +104,49 @@ export default function EtablissementsSection() {
 
   // Blocs masqués : pas de requête ; la liste des groupes vient alors du bloc affiché
   const { estAffiche } = useDispositifs();
-  const erc = useErcPositionnement(selection, options, indicateur, groupeChoisi, estAffiche("erc"));
+  const erc = useErcEtablissements(selection, options, groupeChoisi, estAffiche("erc"));
   const prix = usePrixPositionnement(selection, DISTINCTION, groupeChoisi, estAffiche("prix"));
-  // Réponses affichées une fois le grisé peint : chiffres clés, matrice et tableaux décrivent la même réponse
+  // Réponses affichées une fois le grisé peint : chiffres clés, graphiques et tableaux décrivent la même réponse
   const { applied: ercData, busy: ercBusy } = useRenderTransition(erc.data);
   const { applied: prixData, busy: prixBusy } = useRenderTransition(prix.data);
-  const ercMatrice = ercData?.periodes ? ercData : null;
+  const ercPeriode = ercData?.periode ? ercData : null;
+  const nuage = ercPeriode && !ercPeriode.vivier.indisponible ? (ercPeriode.vivier as ErcVivierNuage) : null;
+  const vivierIndisponible = ercPeriode?.vivier.indisponible ? ercPeriode.vivier : null;
   const prixMatrice = prixData?.periodes ? prixData : null;
   const disciplineLabel = getDisciplineLabel(selection, disciplines);
   const groupes = ercData?.groupes ?? prixData?.groupes ?? [];
   const groupe = groupeChoisi ?? ercData?.groupe ?? prixData?.groupe;
   const groupeLibelle = (groupes.find(({ code }) => code === groupe)?.libelle ?? "").toLowerCase();
   const etablissement = selection.entiteId !== ENTITE_NATIONALE;
-  const cartesErc = ercMatrice ? getCartesErc(ercMatrice, groupeLibelle) : [];
+  const cartesErc = ercPeriode ? getCartesErc(ercPeriode, groupeLibelle, nuage) : [];
   const cartesPrix = prixMatrice ? getCartesPrix(prixMatrice, groupeLibelle) : [];
   const libelleIuf = prixMeta?.groupes.find(({ code }) => code === DISTINCTION)?.libelle ?? "Institut universitaire de France";
 
   const blocErc = (
     <>
-      {cartesErc.length > 0 && ercMatrice && (
+      {cartesErc.length > 0 && ercPeriode && (
         <ChartBusy busy={erc.isPlaceholderData || ercBusy}>
           <Cartes
             cartes={cartesErc}
             sousTitre={`Bourses ERC : ${getTypesLabel(ercMeta, options.types)} · rang parmi les ${groupeLibelle}`}
-            titre={`${entiteNom} · appels ${formatPeriode(ercMatrice.periode)} · ${disciplineLabel}`}
+            titre={`${entiteNom} · appels ${formatPeriode(ercPeriode.periode)} · ${disciplineLabel}`}
             titreAs="h3"
           />
         </ChartBusy>
       )}
-      <ParametresErc avecVivier={false} meta={ercMeta} options={options} />
-      <ChoixIndicateur indicateur={indicateur} onIndicateur={setIndicateur} />
+      <ParametresErc meta={ercMeta} options={options} />
       {erc.isError && <Alert description="La comparaison des établissements n'a pas pu être chargée." title="Erreur de chargement" variant="error" />}
       {!erc.isError && (erc.isLoading || !ercData) && <DefaultSkeleton height="560px" />}
-      {!erc.isError && ercData && !ercMatrice && (
+      {!erc.isError && ercData && !ercPeriode && (
         <Notice closeMode="disallow" type="info">
-          La matrice compare deux périodes d'appels dont les résultats sont publiés : choisissez une période contenant au moins deux de ces années d'appel.
+          {`Aucun appel ERC dans la période choisie : les appels disponibles vont de ${formatPeriode([Math.min(...ercMeta.annees), Math.max(...ercMeta.annees)])}.`}
         </Notice>
       )}
-      {!erc.isError && ercMatrice && (
+      {!erc.isError && vivierIndisponible && <Notice closeMode="disallow" type="info">{getTexteIndisponible(vivierIndisponible)}</Notice>}
+      {!erc.isError && nuage && (
         // Grisé pendant l'appel API (réponse précédente affichée) et pendant le redessin
         <ChartBusy busy={erc.isPlaceholderData || ercBusy}>
-          <ErcEtablissements data={ercMatrice} disciplineLabel={disciplineLabel} entiteNom={entiteNom} sources={ercMeta.sources} />
+          <ErcVivierEtablissements data={nuage} disciplineLabel={disciplineLabel} entiteNom={entiteNom} groupeLibelle={groupes.find(({ code }) => code === groupe)?.libelle ?? ""} meta={ercMeta} />
         </ChartBusy>
       )}
       <MethodeErc meta={ercMeta} />
@@ -169,7 +191,7 @@ export default function EtablissementsSection() {
           Choisissez un établissement dans la sélection pour voir son rang parmi les établissements comparables et le mettre en avant.
         </Notice>
       )}
-      {etablissement && ercMatrice && cartesErc.length === 0 && (
+      {etablissement && ercPeriode && cartesErc.length === 0 && (
         <Notice className="fr-mb-4w" closeMode="disallow" type="info">
           {`${entiteNom} ne fait pas partie des établissements comparés : choisissez son groupe pour voir son rang.`}
         </Notice>

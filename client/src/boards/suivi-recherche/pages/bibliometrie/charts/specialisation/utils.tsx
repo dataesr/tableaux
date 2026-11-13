@@ -1,5 +1,6 @@
 import type { Ratio, Specialisation, SpecialisationCellule, SpecialisationIndice, SpecialisationVue } from "../../../../api";
-import { formatArticles, formatIndice, formatPart, formatPeriode } from "../../../../utils";
+import TableauDonnees from "../../../../components/tableau-donnees.tsx";
+import { formatArticles, formatIndice, formatPart, formatPeriode, PEU_FIABLE } from "../../../../utils";
 
 type Discipline = Specialisation["disciplines"][number];
 type Pays = Specialisation["pays"][number];
@@ -205,49 +206,40 @@ export function TableSpecialisation({ caption, data, vue }: TableProps) {
   const contenu = (pays: Pays, j: number) => {
     const cellule = pays.cellules[j];
     const texte = textes.cellule(cellule);
-    return texte !== "—" && !textes.fiable(cellule) ? `${texte} · peu fiable` : texte;
+    return texte !== "—" && !textes.fiable(cellule) ? `${texte} · ${PEU_FIABLE}` : texte;
   };
 
   return (
-    <div className="fr-table fr-table--bordered fr-table--sm">
-      <div className="fr-table__wrapper">
-        <div className="fr-table__container">
-          <div className="fr-table__content">
-            <table>
-              <caption className="fr-sr-only">{caption}</caption>
-              <thead>
-                <tr>
-                  <th scope="col">Pays</th>
-                  <th scope="col">Groupe</th>
-                  <th scope="col">Articles, toutes disciplines</th>
-                  {data.disciplines.map(({ discipline_code: code, discipline_nom: nom }) => (
-                    <th key={code} scope="col">
-                      {code}
-                      <span className="fr-sr-only"> {nom}</span>
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <th scope="row">Monde (référence, indice 1)</th>
-                  <td>—</td>
-                  <td>{formatArticles(data.nb_articles_monde)}</td>
-                  {data.disciplines.map((discipline) => <td key={discipline.discipline_code}>{textes.monde(discipline)}</td>)}
-                </tr>
-                {data.pays.map((pays) => (
-                  <tr key={pays.entite_id}>
-                    <th scope="row">{pays.nom}</th>
-                    <td>{pays.groupe}</td>
-                    <td>{formatArticles(pays.nb_articles)}</td>
-                    {data.disciplines.map(({ discipline_code: code }, j) => <td key={code}>{contenu(pays, j)}</td>)}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    </div>
+    <TableauDonnees caption={caption}>
+      <thead>
+        <tr>
+          <th scope="col">Pays</th>
+          <th scope="col">Groupe</th>
+          <th scope="col">Articles, toutes disciplines</th>
+          {data.disciplines.map(({ discipline_code: code, discipline_nom: nom }) => (
+            <th key={code} scope="col">
+              {code}
+              <span className="fr-sr-only"> {nom}</span>
+            </th>
+          ))}
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row">Monde (référence, indice 1)</th>
+          <td>—</td>
+          <td>{formatArticles(data.nb_articles_monde)}</td>
+          {data.disciplines.map((discipline) => <td key={discipline.discipline_code}>{textes.monde(discipline)}</td>)}
+        </tr>
+        {data.pays.map((pays) => (
+          <tr key={pays.entite_id}>
+            <th scope="row">{pays.nom}</th>
+            <td>{pays.groupe}</td>
+            <td>{formatArticles(pays.nb_articles)}</td>
+            {data.disciplines.map(({ discipline_code: code }, j) => <td key={code}>{contenu(pays, j)}</td>)}
+          </tr>
+        ))}
+      </tbody>
+    </TableauDonnees>
   );
 }

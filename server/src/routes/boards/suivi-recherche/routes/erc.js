@@ -2,20 +2,21 @@ import express from "express";
 
 import { BadRequestError } from "../../../../commons/errors/index.js";
 import { getCollection } from "../collections.js";
-import {
-  computeIndices,
-  computeTauxReference,
-  DECALAGE,
-  getAnneesVivier,
-  getPaysReference,
-  getTypesAvecPanel,
-  loadIndiceEffectifs,
-  VIVIER_DEFAUT,
-  VIVIERS,
-} from "../erc-indice.js";
-import { CODES_GROUPES, computePeriodes, getReferencesMedianes, loadGroupeEtablissements, shapeMatrice } from "../matrice.js";
+import { CODES_GROUPES, loadGroupeEtablissements } from "../matrice.js";
 import { computeAbscisses, computeRubans, DEMI_COLONNE, HAUTEUR } from "../rubans.js";
 import { getSourcesBibliometrie, getSourcesErc } from "../sources.js";
+import {
+  computeTauxVivier,
+  getContexteVivier,
+  getMethodeVivier,
+  getVivierMeta,
+  loadVivierEffectifs,
+  loadVivierEffectifsParDiscipline,
+  shapeNuage,
+  sommerEffectifs,
+  VIVIER_DEFAUT,
+  VIVIERS,
+} from "../vivier.js";
 
 const router = new express.Router();
 
@@ -26,9 +27,6 @@ const CODE_PATTERN = /^[A-Za-z0-9]+$/;
 // En dessous de ce nombre de candidatures (ou de porteurs candidats en mode pi), un taux de succès ou une part
 // est signalé comme peu fiable
 const SEUIL_FIABILITE = 20;
-// Matrice des établissements : en dessous de ce nombre de lauréats sur une des deux périodes, l'évolution de la part
-// des lauréats est peu fiable (2 → 4 lauréats = +100 %)
-const SEUIL_LAUREATS = 10;
 // Comptage en projets ou en porteurs (PI) : champs de chaque mode dans erc_meta.modes_comptage
 const COMPTAGES = ["projets", "pi"];
 const COMPTAGE_DEFAUT = "projets";
@@ -41,35 +39,6 @@ async function getMeta() {
   return (await getCollection("erc_meta")).findOne({}, { projection: { _id: 0, parametres: 0, controles: 0 } });
 }
 
-// Méthode de l'indice de candidature, calculé par ce tableau (erc-indice.js) et non par athena
-function getMethodeIndice(meta) {
-  const reference = getPaysReference(meta);
-  return [
-    "Indice de candidature : candidatures observées / candidatures attendues. Les candidatures attendues sont celles "
-      + "qu'aurait l'entité si elle candidatait comme la référence, discipline par discipline : pour chaque panel et "
-      + "chaque appel, ses articles × (candidatures / articles des pays de référence). Au-dessus de 1, l'entité candidate "
-      + "plus que la référence pour son vivier ; au-dessous, moins (signe possible d'auto-censure).",
-    `Vivier : articles parus dans les revues classées SJR les ${DECALAGE} années précédant l'appel (2020 à 2022 pour `
-      + "l'appel 2023). Par défaut, seuls les articles du top 10 % des plus cités de leur discipline comptent : l'ERC "
-      + "sélectionne l'excellence. Le top 10 % est provisoire pour les années dont la fenêtre de citation n'est pas close.",
-    `Référence : les ${reference.length} pays de l'Union européenne parmi les pays comparés (${reference.join(", ")}). `
-      + "La Suisse et le Royaume-Uni ont été exclus de certains appels, et les pays tiers n'accueillent pas de bourse ERC : "
-      + "ils sont affichés mais ne font pas partie de la référence.",
-    "Décomposition : indice des lauréats (lauréats / lauréats attendus) = indice de candidature × indice de réussite "
-      + "(taux de succès / taux de succès attendu avec le profil disciplinaire de l'entité).",
-    "Seules les bourses avec panel (Starting, Consolidator, Advanced) entrent dans l'indice ; Synergy et Proof of Concept "
-      + `n'ont pas de discipline. Un indice est peu fiable sous ${SEUIL_FIABILITE} candidatures attendues.`,
-    "Limite : l'indice mesure un écart de volume, pas un potentiel. Un taux de succès élevé avec peu de candidatures peut "
-      + "aussi refléter une présélection efficace ; davantage de candidatures ferait alors baisser le taux de succès.",
-  ];
-}
-
-// Années de publication dont le top 10 % des plus cités est provisoire (fenêtre de citation pas close)
-async function getAnneesInfluenceProvisoire() {
-  const meta = await (await getCollection("biblio_meta")).findOne({}, { projection: { _id: 0, annees_influence_provisoire: 1 } });
-  return meta?.annees_influence_provisoire ?? [];
-}
-
 function parseYear(value, name) {
   const year = Number.parseInt(value, 10);
   if (!Number.isInteger(year) || String(year) !== String(value)) {
@@ -80,7 +49,8 @@ function parseYear(value, name) {
 
 // Filtres communs aux routes ERC, mêmes noms que la bibliométrie (plugins/tableaux/reference/url-parameters.md),
 // plus `type_bourse` (codes séparés par des virgules ; absent = erc_meta.types_bourse_defaut)
-// `comptage` (`projets` ou `pi` ; absent = projets) et `vivier` (`top10` ou `articles` ; absent = top10).
+// `comptage` (`projets` ou `pi` ; absent = projets) et `vivier`, dénominateur du taux de candidature au vivier
+// (`actifs` ou `top10` ; absent = actifs).
 // La période demandée est ramenée aux années d'appel disponibles ; `periode` est null si elles ne se recoupent pas.
 function parseFilters(query, meta) {
   const { ror_id, year_min, year_max, discipline, domaine, type_bourse, comptage = COMPTAGE_DEFAUT, vivier = VIVIER_DEFAUT } = query;
@@ -178,36 +148,33 @@ function range([debut, fin]) {
   return Array.from({ length: fin - debut + 1 }, (_, index) => debut + index);
 }
 
-// Indice de candidature (erc-indice.js) : contexte commun aux routes. `null` si aucun type avec panel n'est retenu.
-async function loadIndices(filters, meta, entiteIds) {
-  const typesPanel = getTypesAvecPanel(meta, filters.types);
-  if (!typesPanel.length) return null;
-  const paysReference = getPaysReference(meta);
-  const [effectifs, anneesInfluenceProvisoire] = await Promise.all([
-    loadIndiceEffectifs(filters, typesPanel, [...new Set([...entiteIds, ...paysReference])], filters.vivier),
-    getAnneesInfluenceProvisoire(),
-  ]);
-  return {
-    // Vivier provisoire : top 10 % d'une année de publication dont la fenêtre de citation n'est pas close
-    vivierProvisoire: (annees) => filters.vivier === "top10"
-      && annees.some((appel) => getAnneesVivier(appel).some((annee) => anneesInfluenceProvisoire.includes(annee))),
-    compute: (entiteId, annees) => computeIndices(effectifs, entiteId, annees, paysReference, SEUIL_FIABILITE),
-    tauxReference: (annees) => computeTauxReference(effectifs, paysReference, annees),
-    contexte: { pays_reference: paysReference, types_indice: typesPanel, vivier: filters.vivier },
-  };
+// Pays comparés (pays tiers exclus : ils n'accueillent pas de bourse ERC)
+function getPaysComparaison(meta) {
+  return meta.pays_compares.filter((pays) => !PAYS_TIERS.includes(pays));
+}
+
+// Pays comparés présents dans le vivier : référence du taux de candidature au vivier
+function getPaysVivier(meta, vivierMeta) {
+  return getPaysComparaison(meta).filter((pays) => vivierMeta.pays.includes(pays));
 }
 
 router.route("/suivi-recherche/financements/erc/meta").get(async (req, res) => {
-  const [meta, biblioMeta] = await Promise.all([
+  const [meta, biblioMeta, vivierMeta] = await Promise.all([
     getMeta(),
     (await getCollection("biblio_meta")).findOne({}, { projection: { _id: 0, snapshot_openalex: 1 } }),
+    getVivierMeta(),
   ]);
   res.json({
     ...meta,
-    methode_indice: getMethodeIndice(meta),
     sources: getSourcesErc(meta),
-    // Indice de candidature : vivier d'articles OpenAlex en revues SJR
-    sources_indice: getSourcesBibliometrie(biblioMeta),
+    // Taux de candidature au vivier : null tant que les viviers ne sont pas activés dans l'administration du tableau
+    vivier: vivierMeta && {
+      periode: [vivierMeta.periode.annee_debut, vivierMeta.periode.annee_fin],
+      annee_debut_recente: vivierMeta.periode.annee_debut_recente,
+      methode: getMethodeVivier(vivierMeta, SEUIL_FIABILITE),
+      // Chercheurs : auteurs OpenAlex
+      sources: getSourcesBibliometrie(biblioMeta).filter(({ libelle }) => libelle === "OpenAlex"),
+    },
   });
 });
 
@@ -218,20 +185,44 @@ router.route("/suivi-recherche/financements/erc/indicateurs").get(async (req, re
   if (!filters.periode) return res.json({ comptage: filters.comptage, periode: null });
 
   const annees = range(filters.periode);
-  const [rows, indices] = await Promise.all([loadEffectifs(filters), loadIndices(filters, meta, [filters.entiteId])]);
+  const [rows, vivier] = await Promise.all([loadEffectifs(filters), loadVivierEntite(filters, meta)]);
   return res.json({
     comptage: filters.comptage,
     periode: filters.periode,
     seuil_fiabilite: SEUIL_FIABILITE,
     annees_provisoires: meta.annees_provisoires.filter((annee) => annees.includes(annee)),
     ...computeIndicateurs(rows, filters.entiteId, annees),
-    indices: indices && {
-      ...indices.contexte,
-      ...indices.compute(filters.entiteId, annees),
-      vivier_provisoire: indices.vivierProvisoire(annees),
-    },
+    vivier: vivier.calculer ? { ...vivier.contexte, ...vivier.calculer(range(vivier.contexte.appels)) } : vivier.contexte,
   });
 });
+
+// Taux de candidature au vivier de l'entité, de la France (pour un établissement) et de l'ensemble des pays comparés.
+// `calculer(annees)` : taux sur des années d'appel retenues (null, avec la raison dans `contexte`, si non calculable).
+async function loadVivierEntite(filters, meta) {
+  const vivierMeta = await getVivierMeta();
+  const contexte = getContexteVivier(filters, meta, vivierMeta);
+  if (contexte.indisponible) return { contexte, calculer: null };
+  const pays = getPaysVivier(meta, vivierMeta);
+  const effectifs = await loadVivierEffectifs(filters, contexte, [...new Set([filters.entiteId, ENTITE_NATIONALE, ...pays])]);
+  const calculer = (annees) => {
+    const taux = (e) => computeTauxVivier(e, annees.length, SEUIL_FIABILITE);
+    return {
+      taux: taux(effectifs(filters.entiteId, annees)),
+      france: filters.entiteId === ENTITE_NATIONALE ? null : taux(effectifs(ENTITE_NATIONALE, annees)),
+      reference: taux(sommerEffectifs(effectifs, pays, annees)),
+      nb_pays_reference: pays.length,
+    };
+  };
+  return { contexte, calculer };
+}
+
+// Part de l'entité dans les effectifs de son ensemble, sur une année : la France pour un établissement, l'ensemble de
+// l'ERC pour la France
+function computePartsEnsemble(rows, entiteId, annee) {
+  const ensemble = entiteId === ENTITE_NATIONALE ? MONDE : ENTITE_NATIONALE;
+  const part = (champ) => ratio(somme(rows, entiteId, [annee], champ), somme(rows, ensemble, [annee], champ));
+  return { candidatures: part("nb_candidatures"), laureats: part("nb_laureats") };
+}
 
 // Mêmes indicateurs, année d'appel par année d'appel
 router.route("/suivi-recherche/financements/erc/evolution").get(async (req, res) => {
@@ -239,23 +230,30 @@ router.route("/suivi-recherche/financements/erc/evolution").get(async (req, res)
   const filters = parseFilters(req.query, meta);
   if (!filters.periode) return res.json({ comptage: filters.comptage, periode: null, annees: [] });
 
-  const [rows, indices] = await Promise.all([loadEffectifs(filters), loadIndices(filters, meta, [filters.entiteId])]);
+  const [rows, vivier] = await Promise.all([loadEffectifs(filters), loadVivierEntite(filters, meta)]);
+  const annees = range(filters.periode);
+  const appelsVivier = vivier.calculer ? range(vivier.contexte.appels) : [];
   return res.json({
     comptage: filters.comptage,
     periode: filters.periode,
     seuil_fiabilite: SEUIL_FIABILITE,
-    indices: indices?.contexte ?? null,
-    annees: range(filters.periode).map((annee) => ({
+    // Ensemble des parts `part_ensemble` : la France pour un établissement, l'ensemble de l'ERC pour la France
+    ensemble: filters.entiteId === ENTITE_NATIONALE ? "erc" : "france",
+    // Contexte du taux de candidature au vivier (ou la raison de son absence)
+    vivier: vivier.contexte,
+    annees: annees.map((annee) => ({
       annee_appel: annee,
       provisoire: meta.annees_provisoires.includes(annee),
       ...computeIndicateurs(rows, filters.entiteId, [annee]),
-      indices: indices && { ...indices.compute(filters.entiteId, [annee]), vivier_provisoire: indices.vivierProvisoire([annee]) },
+      part_ensemble: computePartsEnsemble(rows, filters.entiteId, annee),
+      // Taux de l'année (candidatures de l'année ÷ vivier fixe) ; null hors des appels de la période du vivier
+      vivier: appelsVivier.includes(annee) ? vivier.calculer([annee]) : null,
     })),
   });
 });
 
 // Indicateurs des rubans et de la comparaison des pays, dans l'ordre du sélecteur de la page
-const INDICATEURS_PAYS = ["part_laureats", "part_candidatures", "taux_succes", "indice_candidature"];
+const INDICATEURS_PAYS = ["part_laureats", "part_candidatures", "taux_succes"];
 
 // Classement d'une entité parmi d'autres sur un ratio : rang 1 = valeur la plus forte ; entités sans valeur exclues
 function classer(ratios, entiteId) {
@@ -267,46 +265,37 @@ function classer(ratios, entiteId) {
 
 // France et autres pays : rubans (rang de chaque pays, année d'appel par année d'appel) et rangs de la France
 // sur la période. Pays de erc_meta.pays_compares, sauf pays tiers ; l'établissement choisi ne s'applique pas.
+// `vivier` : rubans du taux de candidature au vivier, sur leurs propres années (appels de la période du vivier) et
+// leurs propres pays (pays comparés présents dans le vivier), ou la raison de leur absence.
 router.route("/suivi-recherche/financements/erc/comparaison-internationale").get(async (req, res) => {
   const meta = await getMeta();
   const filters = parseFilters({ ...req.query, ror_id: undefined }, meta);
   if (!filters.periode) return res.json({ comptage: filters.comptage, periode: null });
 
-  const paysCodes = meta.pays_compares.filter((pays) => !PAYS_TIERS.includes(pays));
+  const paysCodes = getPaysComparaison(meta);
   const annees = range(filters.periode);
-  const [rows, indices, noms] = await Promise.all([
-    loadEffectifs(filters, paysCodes),
-    loadIndices(filters, meta, paysCodes),
-    (await getCollection("entites"))
-      .find({ entite_type: "pays", entite_id: { $in: paysCodes } }, { projection: { _id: 0, entite_id: 1, nom: 1 } })
-      .toArray(),
-  ]);
-  const nomById = new Map(noms.map(({ entite_id: id, nom }) => [id, nom]));
-  const pays = paysCodes.map((id) => ({ entite_id: id, nom: nomById.get(id) ?? id, reference: indices?.contexte.pays_reference.includes(id) ?? false }));
+  const [rows, noms, vivier] = await Promise.all([loadEffectifs(filters, paysCodes), loadNomsPays(paysCodes), loadVivierPays(filters, meta)]);
+  const pays = paysCodes.map((id) => ({ entite_id: id, nom: noms.get(id) ?? id }));
 
   // Ratios d'un pays sur des années d'appel ; `fiable` accompagne chaque ratio (petits effectifs)
   const ratiosPays = (id, ans) => {
     const ind = computeIndicateurs(rows, id, ans);
-    const indice = indices?.compute(id, ans);
     return {
       part_laureats: { ...ind.part_laureats, fiable: true },
       part_candidatures: { ...ind.part_candidatures, fiable: true },
       taux_succes: { ...ind.taux_succes, fiable: ind.fiable },
-      indice_candidature: indice ? { ...indice.candidature, fiable: indice.fiable } : null,
     };
   };
   const cellules = new Map(paysCodes.map((id) => [id, annees.map((annee) => ratiosPays(id, [annee]))]));
   const periode = new Map(paysCodes.map((id) => [id, ratiosPays(id, annees)]));
-  const indicateurs = INDICATEURS_PAYS.filter((indicateur) => indicateur !== "indice_candidature" || indices);
+  const indicateurs = INDICATEURS_PAYS;
 
   return res.json({
-    ...(indices?.contexte ?? {}),
     comptage: filters.comptage,
     periode: filters.periode,
     seuil_fiabilite: SEUIL_FIABILITE,
     annees,
     annees_provisoires: meta.annees_provisoires.filter((annee) => annees.includes(annee)),
-    vivier_provisoire: indices?.vivierProvisoire(annees) ?? false,
     pays,
     geometrie: { hauteur: HAUTEUR, demi_colonne: DEMI_COLONNE, abscisses: computeAbscisses(annees) },
     indicateurs: Object.fromEntries(indicateurs.map((indicateur) => [
@@ -318,139 +307,190 @@ router.route("/suivi-recherche/financements/erc/comparaison-internationale").get
       const ratios = paysCodes.map((id) => ({ entite_id: id, ratio: periode.get(id)[indicateur] }));
       return [indicateur, { ratio: periode.get(ENTITE_NATIONALE)?.[indicateur] ?? null, ...classer(ratios, ENTITE_NATIONALE) }];
     })),
+    vivier,
   });
 });
 
-const INDICATEURS_MATRICE = ["part_laureats", "taux_succes"];
+// Taux de candidature au vivier des pays : rubans année d'appel par année d'appel (candidatures de l'année ÷ vivier fixe),
+// rang de la France et référence (ensemble des pays) sur tous les appels retenus
+async function loadVivierPays(filters, meta) {
+  const vivierMeta = await getVivierMeta();
+  const contexte = getContexteVivier(filters, meta, vivierMeta);
+  if (contexte.indisponible) return contexte;
 
-// Repère international de la matrice ERC des établissements (null si l'ensemble de l'ERC n'a pas de lauréat sur une période).
-// Part : part de l'établissement dans l'ensemble de l'ERC = part des lauréats français × part de la France dans l'ensemble,
-// donc elle reste stable quand l'évolution de la part française compense celle de la France : (départ France ÷ arrivée France) − 1.
-// Taux : évolution du taux de succès de l'ensemble de l'ERC.
-function getRepereErc(indicateur, effectifs, depart, arrivee) {
-  const partFrance = (ans) => ratio(effectifs(ENTITE_NATIONALE, ans).laureats, effectifs(MONDE, ans).laureats);
-  const tauxMonde = (ans) => ratio(effectifs(MONDE, ans).laureats, effectifs(MONDE, ans).candidatures);
-  if (indicateur === "taux_succes") {
-    const base = { libelle: "Ensemble de l'ERC", depart: tauxMonde(depart), arrivee: tauxMonde(arrivee) };
-    if (!base.depart.valeur || base.arrivee.valeur === null) return null;
-    return {
-      libelle: "Évolution du taux de l'ensemble de l'ERC",
-      valeur: (base.arrivee.valeur / base.depart.valeur - 1) * 100,
-      au_dessus: "évolue mieux que l'ensemble de l'ERC",
-      en_dessous: "évolue moins bien que l'ensemble de l'ERC",
-      base,
-    };
-  }
-  const base = { libelle: "France", depart: partFrance(depart), arrivee: partFrance(arrivee) };
-  if (!base.depart.valeur || !base.arrivee.valeur) return null;
+  const paysCodes = getPaysVivier(meta, vivierMeta);
+  const annees = range(contexte.appels);
+  const [effectifs, noms] = await Promise.all([loadVivierEffectifs(filters, contexte, paysCodes), loadNomsPays(paysCodes)]);
+  const pays = paysCodes.map((id) => ({ entite_id: id, nom: noms.get(id) ?? id }));
+  // Taux d'une année : nb_annees = 1 ; de la période : nombre d'années d'appel retenues
+  const taux = (e, ans) => computeTauxVivier(e, ans.length, SEUIL_FIABILITE);
+  const periode = paysCodes.map((id) => ({ entite_id: id, ratio: taux(effectifs(id), annees) }));
+
   return {
-    libelle: "Part dans l'ensemble de l'ERC stable",
-    valeur: (base.depart.valeur / base.arrivee.valeur - 1) * 100,
-    au_dessus: "gagne de la part dans l'ensemble de l'ERC",
-    en_dessous: "perd de la part dans l'ensemble de l'ERC",
-    base,
+    ...contexte,
+    annees,
+    pays,
+    geometrie: { hauteur: HAUTEUR, demi_colonne: DEMI_COLONNE, abscisses: computeAbscisses(annees) },
+    rubans: computeRubans(annees, pays, (id, j) => taux(effectifs(id, [annees[j]]), [annees[j]])),
+    france: { ratio: taux(effectifs(ENTITE_NATIONALE), annees), ...classer(periode, ENTITE_NATIONALE) },
+    reference: taux(sommerEffectifs(effectifs, paysCodes), annees),
   };
 }
 
-// Établissements d'un groupe comparable : matrice niveau × dynamique (même grammaire que la bibliométrie) et rangs
-// de l'établissement choisi sur la période.
-// Niveau : part des lauréats ERC français ou taux de succès. Dynamique : évolution relative du niveau entre deux périodes
-// d'appels consolidés. Références : médianes du groupe sur les deux axes. Repère international : pour la part, l'évolution
-// où la part de l'établissement dans l'ensemble de l'ERC reste stable ; pour le taux, l'évolution du taux de l'ensemble
-// de l'ERC. Taille : lauréats de la période d'arrivée.
-router.route("/suivi-recherche/financements/erc/positionnement-etablissements").get(async (req, res) => {
-  const meta = await getMeta();
-  const { indicateur = INDICATEURS_MATRICE[0], groupe: groupeDemande } = req.query;
-  if (!INDICATEURS_MATRICE.includes(indicateur)) throw new BadRequestError(`indicateur must be one of ${INDICATEURS_MATRICE.join(", ")}`);
+async function loadNomsPays(paysCodes) {
+  const noms = await (await getCollection("entites"))
+    .find({ entite_type: "pays", entite_id: { $in: paysCodes } }, { projection: { _id: 0, entite_id: 1, nom: 1 } })
+    .toArray();
+  return new Map(noms.map(({ entite_id: id, nom }) => [id, nom]));
+}
+
+// Rang de l'établissement choisi dans son groupe sur la période choisie : candidatures et lauréats (rang sur leur part
+// du total français) et taux de succès (classé parmi les établissements d'au moins SEUIL_FIABILITE candidatures).
+// null si l'établissement choisi n'est pas dans le groupe.
+function classerEtablissement(rows, ids, selectionId, annees) {
+  if (!ids.includes(selectionId)) return null;
+  const effectifs = (id) => ({ candidatures: somme(rows, id, annees, "nb_candidatures"), laureats: somme(rows, id, annees, "nb_laureats") });
+  const france = effectifs(ENTITE_NATIONALE);
+  const etablissements = ids.map((id) => {
+    const e = effectifs(id);
+    return {
+      entite_id: id,
+      ...e,
+      part_candidatures: ratio(e.candidatures, france.candidatures),
+      part_laureats: ratio(e.laureats, france.laureats),
+      taux_succes: ratio(e.laureats, e.candidatures),
+    };
+  });
+  const rang = (liste, cle) => classer(liste.map((e) => ({ entite_id: e.entite_id, ratio: e[cle] })), selectionId);
+  const choisi = etablissements.find(({ entite_id: id }) => id === selectionId);
+  return {
+    nb_candidatures: choisi.candidatures,
+    nb_laureats: choisi.laureats,
+    part_candidatures: { ratio: choisi.part_candidatures, ...rang(etablissements, "part_candidatures") },
+    part_laureats: { ratio: choisi.part_laureats, ...rang(etablissements, "part_laureats") },
+    taux_succes: {
+      ratio: choisi.taux_succes,
+      fiable: choisi.candidatures >= SEUIL_FIABILITE,
+      ...rang(etablissements.filter(({ candidatures }) => candidatures >= SEUIL_FIABILITE), "taux_succes"),
+    },
+  };
+}
+
+// Nuage à quadrants taux de candidature au vivier × taux de succès des établissements d'un groupe, coupé aux médianes
+// du groupe ; taille : lauréats. Mêmes appels (période du vivier) et mêmes panels pour les deux axes. Le contexte
+// seul (avec la raison) si le taux n'est pas calculable.
+async function loadNuageVivier(filters, meta, membres, selectionId) {
+  const contexte = getContexteVivier(filters, meta, await getVivierMeta());
+  if (contexte.indisponible) return contexte;
+
+  const ids = membres.map(({ entite_id: id }) => id);
+  const effectifs = await loadVivierEffectifs(filters, contexte, [...ids, ENTITE_NATIONALE]);
+  const taux = (e) => computeTauxVivier(e, contexte.nb_annees, SEUIL_FIABILITE);
+  const points = membres.map((etablissement) => {
+    const e = effectifs(etablissement.entite_id);
+    return {
+      entite_id: etablissement.entite_id,
+      nom: etablissement.nom,
+      sigle: etablissement.sigle ?? null,
+      categorie: etablissement.categorie,
+      candidature: taux(e),
+      succes: ratio(e.laureats, e.candidatures),
+      nb_chercheurs: e.chercheurs,
+      taille: e.laureats,
+      fiable: e.candidatures >= SEUIL_FIABILITE,
+      focus: etablissement.entite_id === selectionId,
+    };
+  });
+
+  // Rang de l'établissement choisi sur le taux de candidature, parmi les établissements du groupe qui ont un vivier
+  const classes = points.filter((p) => p.candidature.valeur !== null).sort((a, b) => b.candidature.valeur - a.candidature.valeur);
+  const index = classes.findIndex((p) => p.focus);
+  const france = effectifs(ENTITE_NATIONALE);
+
+  return {
+    ...contexte,
+    comptage: filters.comptage,
+    seuil_fiabilite: SEUIL_FIABILITE,
+    ...shapeNuage(points, (p) => p.entite_id),
+    // Repères cités dans le commentaire : France entière
+    france: { candidature: taux(france), succes: ratio(france.laureats, france.candidatures) },
+    classement: index >= 0 ? { rang: index + 1, nb: classes.length, point: classes[index] } : null,
+  };
+}
+
+// Établissements d'un groupe comparable : rangs de l'établissement choisi sur la période choisie (chiffres clés) et
+// nuage à quadrants taux de candidature au vivier × taux de succès (`vivier`)
+router.route("/suivi-recherche/financements/erc/etablissements").get(async (req, res) => {
+  const { groupe: groupeDemande } = req.query;
   if (groupeDemande && !CODES_GROUPES.includes(groupeDemande)) throw new BadRequestError(`groupe must be one of ${CODES_GROUPES.join(", ")}`);
+  const meta = await getMeta();
   const filters = parseFilters(req.query, meta);
   const selectionId = req.query.ror_id ?? null;
 
   const { groupe, groupeSelection, groupes, membres } = await loadGroupeEtablissements(await getCollection("entites"), selectionId, groupeDemande);
-  const contexte = { comptage: filters.comptage, indicateur, groupe, groupes, groupe_selection: groupeSelection };
-
-  // Années d'appel consolidées de la période choisie, en deux périodes
-  const periodes = filters.periode
-    ? computePeriodes(filters.periode[0], filters.periode[1], meta.annees, meta.annees_provisoires, true)
-    : null;
-  if (!periodes) return res.json({ ...contexte, periodes: null });
+  const contexte = { comptage: filters.comptage, groupe, groupes, groupe_selection: groupeSelection };
+  if (!filters.periode) return res.json({ ...contexte, periode: null });
 
   const annees = range(filters.periode);
-  const rows = await loadEffectifs(filters, membres.map(({ entite_id: id }) => id));
-  const effectifs = (id, ans) => ({
-    candidatures: somme(rows, id, ans, "nb_candidatures"),
-    laureats: somme(rows, id, ans, "nb_laureats"),
-  });
-  const niveau = (id, ans) => {
-    const e = effectifs(id, ans);
-    return indicateur === "taux_succes" ? ratio(e.laureats, e.candidatures) : ratio(e.laureats, effectifs(ENTITE_NATIONALE, ans).laureats);
-  };
-
-  const depart = range(periodes.depart);
-  const arrivee = range(periodes.arrivee);
-  const points = membres.map((etablissement) => {
-    const id = etablissement.entite_id;
-    const auDepart = effectifs(id, depart);
-    const aLArrivee = effectifs(id, arrivee);
-    const niveauArrivee = niveau(id, arrivee);
-    const niveauDepart = niveau(id, depart);
-    return {
-      entite_id: id,
-      nom: etablissement.nom,
-      sigle: etablissement.sigle ?? null,
-      categorie: etablissement.categorie,
-      niveau: niveauArrivee,
-      niveau_depart: niveauDepart,
-      dynamique: niveauDepart.valeur && niveauArrivee.valeur !== null ? (niveauArrivee.valeur / niveauDepart.valeur - 1) * 100 : null,
-      nb_candidatures: aLArrivee.candidatures,
-      nb_laureats: aLArrivee.laureats,
-      taille: aLArrivee.laureats,
-      // Effectifs les plus faibles des deux périodes, pour la fiabilité de l'évolution
-      min_candidatures: Math.min(auDepart.candidatures, aLArrivee.candidatures),
-      min_laureats: Math.min(auDepart.laureats, aLArrivee.laureats),
-      focus: id === selectionId,
-    };
-  });
-
-  const references = { ...getReferencesMedianes(points, (p) => p.entite_id), international: getRepereErc(indicateur, effectifs, depart, arrivee) };
-  const seuil = indicateur === "taux_succes"
-    ? { valeur: SEUIL_FIABILITE, unite: "candidatures" }
-    : { valeur: SEUIL_LAUREATS, unite: "lauréats" };
-  const estFiable = (p) => (indicateur === "taux_succes" ? p.min_candidatures : p.min_laureats) >= seuil.valeur;
-
-  // Chiffres clés de l'établissement choisi, sur toute la période : lauréats, part et taux, avec leur rang dans le groupe
-  const periodeEntiere = membres.map(({ entite_id: id }) => {
-    const e = effectifs(id, annees);
-    return { entite_id: id, ...e, part: ratio(e.laureats, effectifs(ENTITE_NATIONALE, annees).laureats), taux: ratio(e.laureats, e.candidatures) };
-  });
-  const choisi = periodeEntiere.find(({ entite_id: id }) => id === selectionId);
-  const classement = choisi && {
-    nb_laureats: choisi.laureats,
-    nb_candidatures: choisi.candidatures,
-    part_laureats: { ratio: choisi.part, ...classer(periodeEntiere.map(({ entite_id: id, part }) => ({ entite_id: id, ratio: part })), selectionId) },
-    // Taux classé parmi les établissements au-dessus du seuil de candidatures seulement
-    taux_succes: {
-      ratio: choisi.taux,
-      fiable: choisi.candidatures >= SEUIL_FIABILITE,
-      ...classer(periodeEntiere.filter(({ candidatures }) => candidatures >= SEUIL_FIABILITE).map(({ entite_id: id, taux }) => ({ entite_id: id, ratio: taux })), selectionId),
-    },
-  };
+  const ids = membres.map(({ entite_id: id }) => id);
+  const [rows, vivier] = await Promise.all([loadEffectifs(filters, ids), loadNuageVivier(filters, meta, membres, selectionId)]);
 
   return res.json({
     ...contexte,
     periode: filters.periode,
-    periodes,
     annees_provisoires: meta.annees_provisoires.filter((annee) => annees.includes(annee)),
-    // Période d'arrivée avec une année provisoire : seulement si la période choisie n'a pas deux années consolidées
-    provisoire: arrivee.some((annee) => meta.annees_provisoires.includes(annee)),
-    // Taux de succès de la France sur la période d'arrivée, cité dans le commentaire
-    taux_france: indicateur === "taux_succes" ? niveau(ENTITE_NATIONALE, arrivee) : null,
-    seuil_fiabilite: seuil.valeur,
-    seuil_unite: seuil.unite,
-    seuil_taux: SEUIL_FIABILITE,
-    classement: classement ?? null,
-    ...shapeMatrice(points, references, (p) => p.entite_id, estFiable),
+    seuil_fiabilite: SEUIL_FIABILITE,
+    classement: classerEtablissement(rows, ids, selectionId, annees),
+    vivier,
   });
+});
+
+// Nuage à quadrants des disciplines de l'entité : taux de candidature au vivier × taux de succès, discipline (panel ERC)
+// par discipline, coupé aux médianes des disciplines ; taille : lauréats. Mêmes appels (période du vivier) et mêmes
+// panels pour les deux axes. `entite` : l'entité toutes disciplines, repère cité dans le commentaire.
+async function loadNuageDisciplines(filters, meta) {
+  const contexte = getContexteVivier(filters, meta, await getVivierMeta());
+  if (contexte.indisponible) return contexte;
+
+  const [effectifs, disciplines] = await Promise.all([
+    loadVivierEffectifsParDiscipline(filters, contexte, filters.entiteId),
+    (await getCollection("biblio_disciplines")).find({ classement: "erc" }, { projection: { _id: 0, classement: 0 } }).toArray(),
+  ]);
+  const taux = (e) => computeTauxVivier(e, contexte.nb_annees, SEUIL_FIABILITE);
+  const vide = { candidatures: 0, laureats: 0, chercheurs: 0 };
+  const points = disciplines.map((discipline) => {
+    const e = effectifs.get(discipline.discipline_code) ?? vide;
+    return {
+      ...discipline,
+      candidature: taux(e),
+      succes: ratio(e.laureats, e.candidatures),
+      nb_chercheurs: e.chercheurs,
+      taille: e.laureats,
+      fiable: e.candidatures >= SEUIL_FIABILITE,
+    };
+  });
+  const total = [...effectifs.values()].reduce((somme, e) => ({
+    candidatures: somme.candidatures + e.candidatures,
+    laureats: somme.laureats + e.laureats,
+    chercheurs: somme.chercheurs + e.chercheurs,
+  }), vide);
+
+  return {
+    ...contexte,
+    comptage: filters.comptage,
+    seuil_fiabilite: SEUIL_FIABILITE,
+    ...shapeNuage(points, (p) => p.discipline_code, "Médiane des disciplines"),
+    entite: { candidature: taux(total), succes: ratio(total.laureats, total.candidatures) },
+  };
+}
+
+// Disciplines de l'entité (France ou établissement) : nuage à quadrants taux de candidature au vivier × taux de succès.
+// Le filtre de discipline ne s'applique pas : chaque point est une discipline.
+router.route("/suivi-recherche/financements/erc/disciplines").get(async (req, res) => {
+  const meta = await getMeta();
+  const filters = { ...parseFilters(req.query, meta), disciplineMatch: undefined };
+  if (!filters.periode) return res.json({ comptage: filters.comptage, periode: null });
+  return res.json({ comptage: filters.comptage, periode: filters.periode, vivier: await loadNuageDisciplines(filters, meta) });
 });
 
 export default router;

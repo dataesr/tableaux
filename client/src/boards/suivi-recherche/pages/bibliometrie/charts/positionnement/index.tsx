@@ -7,14 +7,15 @@ import DefaultSkeleton from "../../../../../../components/charts-skeletons/defau
 import { useBiblioPositionnement } from "../../../../api";
 import type { BiblioMeta, BiblioOptions, Indicateur, Positionnement, Selection } from "../../../../api";
 import { useRenderTransition } from "../../../../hooks/use-render-transition";
-import { formatPart, formatPeriode, formatRatio, INDICATEUR_LABELS } from "../../../../utils";
+import { formatPart, formatPeriode, formatRatio, getDomaineColor, INDICATEUR_LABELS } from "../../../../utils";
 import LegendeTailles from "../../../../components/matrice/legende-tailles.tsx";
+import { LegendeDomaines } from "../../../../components/matrice/legendes.tsx";
+import { Pastille } from "../../../../components/matrice/libelles.tsx";
 import Quadrants from "../../../../components/matrice/quadrants.tsx";
 import { getLectureMatrice, getTexteHorsCadre } from "../../../../components/matrice/utils.tsx";
 import { getChartSources } from "../../../../components/sources.tsx";
 import { getBiblioMatriceTextes } from "../../matrice-textes.ts";
 import getOptions from "./options.tsx";
-import { getDomaineColor } from "./utils.tsx";
 
 import "../../../../components/matrice/styles.scss";
 
@@ -22,9 +23,7 @@ type Point = Positionnement["points"][number];
 const cle = (p: Point) => p.discipline_code;
 const libelle = (p: Point) => (
   <>
-    <svg aria-hidden="true" className="fr-mr-1w" height="10" width="10">
-      <circle cx="5" cy="5" fill={getDomaineColor(p.domaine_code)} r="5" />
-    </svg>
+    <Pastille couleur={getDomaineColor(p.domaine_code)} />
     <abbr className="fr-text--bold fr-mr-1w" title={p.discipline_nom}>{p.discipline_code}</abbr>
     <span className="fr-text-mention--grey">{p.discipline_nom}</span>
   </>
@@ -60,17 +59,8 @@ export default function PositionnementDisciplines({ entiteNom, meta, options, se
 
   const legend = (
     <div className="sr-matrice-legende">
-      <ul aria-label="Couleur : domaine ERC" className="fr-text--sm fr-mb-0">
-        {domaines.map(([code, nom]) => (
-          <li key={code}>
-            <svg aria-hidden="true" height="14" width="14">
-              <circle cx="7" cy="7" fill={getDomaineColor(code)} fillOpacity="0.5" r="6" stroke={getDomaineColor(code)} strokeWidth="1.5" />
-            </svg>
-            {`${nom} (${code})`}
-          </li>
-        ))}
-      </ul>
-      {data && <LegendeTailles data={data} textes={getBiblioMatriceTextes(data)} />}
+      <LegendeDomaines domaines={domaines} />
+      {data && <LegendeTailles periode={data.periodes.arrivee} tailles={data.tailles} textes={getBiblioMatriceTextes(data)} />}
     </div>
   );
 

@@ -17,7 +17,7 @@ const estRepresentable = (p) => (p.niveau.valeur ?? 0) > 0 && p.dynamique !== nu
 
 // Point du milieu une fois les points triés sur `valeur` : autant de points en dessous que de points au-dessus ou dessus.
 // C'est la valeur d'un point réel (pas une moyenne de deux parts), que la page affiche avec son calcul.
-function getPointMedian(points, valeur) {
+export function getPointMedian(points, valeur) {
   if (points.length === 0) return null;
   return [...points].sort((a, b) => valeur(a) - valeur(b))[Math.floor(points.length / 2)];
 }
@@ -35,7 +35,7 @@ export function getReferencesMedianes(points, cle) {
 }
 
 // Bornes au-delà desquelles une valeur est très éloignée des autres : quartiles ∓ 3 écarts interquartiles
-function getBornesTukey(valeurs) {
+export function getBornesTukey(valeurs) {
   if (valeurs.length < 4) return [-Infinity, Infinity];
   const tries = [...valeurs].sort((a, b) => a - b);
   const quartile = (q) => tries[Math.floor(q * (tries.length - 1))];
