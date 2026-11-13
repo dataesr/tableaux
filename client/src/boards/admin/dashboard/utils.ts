@@ -54,6 +54,10 @@ export const updateConstant = (dashboardId: string | undefined, key: string, val
 };
 
 export const deleteVersion = (dashboardId: string | undefined, collectionId: string, versionId: string) => {
+  if (!window.confirm("Êtes-vous sûr de vouloir supprimer cette version ?")) {
+    return;
+  }
+
   fetch(`${VITE_APP_SERVER_URL}/admin/delete-version`, {
     method: "DELETE",
     headers: { "Content-Type": "application/json" },
@@ -91,4 +95,30 @@ export const showIndexesAside = (
     .then((data) => {
       setIndexes({ collectionId, versionId, data });
     });
+};
+
+export const copyVersionToProduction = async (dashboardId: string | undefined, collectionId: string, versionId: string) => {
+  if (!window.confirm("Êtes-vous sûr de vouloir copier cette version de Staging en production ?")) {
+    return { success: false, message: "Opération annulée" };
+  }
+
+  try {
+    const response = await fetch(`${VITE_APP_SERVER_URL}/admin/copy-version-to-production`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ dashboardId, collectionId, versionId }),
+    });
+
+    if (response.ok) {
+      invalidateDashboardQueries();
+      const data = await response.json();
+      return { success: true, message: `${data.documentsCount} documents copiés avec succès` };
+    } else {
+      const errorData = await response.json();
+      return { success: false, message: errorData.error || "Erreur lors de la copie" };
+    }
+  } catch (error) {
+    console.error("Error copying version to production:", error);
+    return { success: false, message: "Erreur lors de la copie de la version" };
+  }
 };

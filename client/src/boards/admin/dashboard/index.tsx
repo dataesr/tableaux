@@ -5,14 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import Collections from "./components/collections";
 import ConstantsTable from "./components/constants-table";
-import {
-  deleteVersion,
-  invalidateDashboardQueries,
-  setCurrentVersion,
-  showIndexesAside,
-  updateConstant,
-  updateVersionFromDependentCollection,
-} from "./utils";
+import { copyVersionToProduction, deleteVersion, invalidateDashboardQueries, setCurrentVersion, showIndexesAside, updateConstant, updateVersionFromDependentCollection } from "./utils";
 import type { DashboardConstant, DashboardIndexes } from "./utils";
 
 const { VITE_APP_SERVER_URL, VITE_APP_TICKETOFFICE_URL } = import.meta.env;
@@ -68,12 +61,7 @@ export default function Dashboard() {
           </Link>
         </Col>
       </Row>
-      <ConstantsTable
-        constants={constants}
-        savedConstants={board.constants}
-        setConstants={setConstants}
-        updateConstant={(key, value) => updateConstant(dashboardId, key, value)}
-      />
+      <ConstantsTable constants={constants} savedConstants={board.constants} setConstants={setConstants} updateConstant={(key, value) => updateConstant(dashboardId, key, value)} />
       <Collections
         collections={board.data}
         dashboardId={dashboardId}
@@ -83,6 +71,7 @@ export default function Dashboard() {
         updateVersionFromDependentCollection={(collectionId) => updateVersionFromDependentCollection(dashboardId, collectionId)}
         showIndexesAside={(collectionId, versionId) => showIndexesAside(collectionId, versionId, setIndexes)}
         deleteVersion={(collectionId, versionId) => deleteVersion(dashboardId, collectionId, versionId)}
+        copyVersionToProduction={(collectionId, versionId) => copyVersionToProduction(dashboardId, collectionId, versionId)}
       />
     </Container>
   );

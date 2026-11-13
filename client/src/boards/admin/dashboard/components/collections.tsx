@@ -1,4 +1,5 @@
-import { Badge, Button, Col, Modal, ModalContent, ModalTitle, Row, Text, Title } from "@dataesr/dsfr-plus";
+import { useState } from "react";
+import { Alert, Badge, Button, Col, Modal, ModalContent, ModalTitle, Row, Text, Title } from "@dataesr/dsfr-plus";
 import SyntaxHighlighter from "react-syntax-highlighter";
 
 import UploadVersion from "../../upload-version";
@@ -13,9 +14,12 @@ type Props = {
   updateVersionFromDependentCollection: (collectionId: string) => void;
   showIndexesAside: (collectionId: string, versionId: string) => void;
   deleteVersion: (collectionId: string, versionId: string) => void;
+  copyVersionToProduction: (collectionId: string, versionId: string) => Promise<{ success: boolean; message: string }>;
 };
 
-export default function Collections({ collections, dashboardId, indexes, invalidateDashboardQueries, setCurrentVersion, updateVersionFromDependentCollection, showIndexesAside, deleteVersion }: Props) {
+export default function Collections({ collections, dashboardId, indexes, invalidateDashboardQueries, setCurrentVersion, updateVersionFromDependentCollection, showIndexesAside, deleteVersion, copyVersionToProduction }: Props) {
+  const [loadingVersions, setLoadingVersions] = useState<Set<string>>(new Set());
+  const [notification, setNotification] = useState<{ type: "success" | "error"; message: string } | null>(null);
   return (
     <>
       <Row>
@@ -137,10 +141,30 @@ export default function Collections({ collections, dashboardId, indexes, invalid
                                   />
                                 </td>
                                 <td>
-                                  <Button color="beige-gris-galet" disabled icon="star-s-line" title="Définir la version courante de production" variant="text" />
+                                  <Button
+                                    color="success"
+                                    icon="star-s-fill"
+                                    onClick={async () => {
+                                      const versionKey = `${collection.id}-${version.id}`;
+                                      setLoadingVersions((prev) => new Set(prev).add(versionKey));
+                                      try {
+                                        const result = await copyVersionToProduction(collection.id, version.id);
+                                        setNotification({ type: result.success ? "success" : "error", message: result.message });
+                                      } finally {
+                                        setLoadingVersions((prev) => {
+                                          const updated = new Set(prev);
+                                          updated.delete(versionKey);
+                                          return updated;
+                                        });
+                                      }
+                                    }}
+                                    disabled={loadingVersions.has(`${collection.id}-${version.id}`)}
+                                    title="Copier cette version de Staging en production"
+                                    variant="text"
+                                  />
                                 </td>
                                 <td>
-                                  <Button color="beige-gris-galet" disabled icon="todo-line" size="sm" title="Gérer les index en production" variant="text" />
+                                  <Button color="beige-gris-galet" disabled icon="todo-line" size="sm" title="Appliquer l'index de Staging en production" variant="text" />
                                 </td>
                                 <td>
                                   <Button
@@ -177,6 +201,7 @@ export default function Collections({ collections, dashboardId, indexes, invalid
           </li>
         ))}
       </ul>
+      {notification && <Alert description={notification.message} onClose={() => setNotification(null)} title={notification.type === "success" ? "Succès" : "Erreur"} variant={notification.type} />}
     </>
   );
 }

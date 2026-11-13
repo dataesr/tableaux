@@ -5,6 +5,7 @@ import { fileURLToPath } from "url";
 import { dirname } from "path";
 
 import { db } from "../../services/mongo.js";
+import { dbProd } from "../../services/mongo-prod.js";
 import { checkQuery } from "./utils.js";
 import uploadVersionRoute from "./upload/upload-version.js";
 import { getEmbeddings } from "./vectors.js";
@@ -129,7 +130,6 @@ router.route("/admin/list-all-collections").get(async (req, res) => {
   try {
     // Liste de toutes les collections
     const collections = await db.listCollections().toArray();
-
     // Récupérer tous les dashboards pour avoir les createdAt
     const dashboards = await db.collection("dashboards").find({}).toArray();
 
@@ -137,7 +137,7 @@ router.route("/admin/list-all-collections").get(async (req, res) => {
     const boards = collections
       .map((collection) => {
         const parts = collection.name.split("_");
-        if (parts.length < 3) {
+        if (parts.length < 2) {
           return null; // Ignorer les collections qui ne suivent pas la convention de nommage
         }
 
@@ -146,9 +146,7 @@ router.route("/admin/list-all-collections").get(async (req, res) => {
 
         // Chercher la date de création dans la collection dashboards
         const dashboard = dashboards.find((d) => d.boardName === boardName);
-        const collectionInfo = dashboard?.collections
-          ?.filter((c) => c.name === collectionName)
-          .sort((a, b) => b.createdAt - a.createdAt)[0];
+        const collectionInfo = dashboard?.collections?.filter((c) => c.name === collectionName).sort((a, b) => b.createdAt - a.createdAt)[0];
 
         return {
           boardName: parts[0],
@@ -408,6 +406,119 @@ router.route("/admin/delete-version").delete(async (req, res) => {
   const ret = await db.collection("boards").findOne({ id: dashboardId });
 
   res.json(ret);
+});
+
+// copy version from staging to production
+router.route("/admin/copy-version-to-production").post(async (req, res) => {
+  const filters = checkQuery(
+    req.body,
+    ["dashboardId", "collectionId", "versionId"],
+    res,
+  );
+  const { dashboardId, collectionId, versionId } = filters;
+
+  try {
+    // Check if production database is configured
+    if (!dbProd) {
+      return res
+        .status(503)
+        .json({ error: "Production database is not configured" });
+    }
+
+    // Get the board to ensure it exists in staging
+    const board = await db
+      .collection("boards")
+      .findOne(
+        { id: dashboardId, "data.id": collectionId },
+        { projection: { "data.$": 1 } },
+      );
+
+    if (!board) {
+      return res.status(404).json({ error: "Collection not found in staging" });
+    }
+
+    const stagingCollectionName = `${dashboardId}_${collectionId}`;
+    const productionCollectionName = `${dashboardId}_${collectionId}`;
+
+    // test de la collection sur staging
+    const stagingCollectionExists = await db
+      .listCollections({ name: stagingCollectionName })
+      .hasNext();
+
+    if (!stagingCollectionExists) {
+      return res
+        .status(404)
+        .json({ error: `Staging collection ${stagingCollectionName} not found` });
+    }
+
+    // Compte le nombre de docs à copier
+    const count = await db
+      .collection(stagingCollectionName)
+      .countDocuments();
+
+    if (count === 0) {
+      return res
+        .status(400)
+        .json({ error: "No documents to copy from staging collection" });
+    }
+
+    // test de la collection en prod et clear si existe
+    const productionCollectionExists = await dbProd
+      .listCollections({ name: productionCollectionName })
+      .hasNext();
+
+    if (productionCollectionExists) {
+      await dbProd.collection(productionCollectionName).deleteMany({});
+    }
+
+    const batchSize = 10000;
+    let copiedCount = 0;
+
+    const cursor = db
+      .collection(stagingCollectionName)
+      .find({})
+      .batchSize(batchSize);
+
+    let batch = [];
+    for await (const doc of cursor) {
+      batch.push(doc);
+      if (batch.length >= batchSize) {
+        await dbProd
+          .collection(productionCollectionName)
+          .insertMany(batch, { ordered: false });
+        copiedCount += batch.length;
+        batch = [];
+      }
+    }
+
+    // Insert remaining documents
+    if (batch.length > 0) {
+      await dbProd
+        .collection(productionCollectionName)
+        .insertMany(batch, { ordered: false });
+      copiedCount += batch.length;
+    }
+
+    // Mise à jour de boards pour indiquer la version en prod
+    await db.collection("boards").updateOne(
+      { id: dashboardId, "data.id": collectionId },
+      { $set: { "data.$.productionVersion": versionId } },
+    );
+
+    res.json({
+      message: "Version copied to production successfully",
+      documentsCount: copiedCount,
+      dashboardId,
+      collectionId,
+      versionId,
+    });
+  } catch (error) {
+    console.error("Error copying version to production:", error);
+    res.status(500).json({
+      error: "Unable to copy version to production",
+      details: error.message,
+    });
+  }
 });
 
 // delete all files in files folder
