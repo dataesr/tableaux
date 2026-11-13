@@ -41,7 +41,7 @@ export default function Options(data, currentLang) {
         name: "Financements demandés",
         color: getCssColor("evaluated-project"),
         data: data.map((item) => ({
-          label: formatToMillionsLang(item.total_evaluated, 1, currentLang),
+          label: formatToMillionsLang(item.total_evaluated, currentLang, 1),
           name: item[`name_${currentLang}`],
           rank_evaluated: item.rank_evaluated,
           y: item.total_evaluated,
@@ -61,7 +61,7 @@ export default function Options(data, currentLang) {
         name: "Financements obtenus",
         color: getCssColor("successful-project"),
         data: data.map((item) => ({
-          label: formatToMillionsLang(item.total_successful, 1, currentLang),
+          label: formatToMillionsLang(item.total_successful, currentLang, 1),
           name: item[`name_${currentLang}`],
           rank_successful: item.rank_successful,
           y: item.total_successful,

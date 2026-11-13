@@ -45,7 +45,7 @@ function PositioningScientificDomainTreemapInner({ currentLang: propLang }: Posi
   });
 
   if (isLoading || !data) return <DefaultSkeleton />;
-  const allData = data.map((d) => ({ ...d, label: formatToMillionsLang(d.value, 1, currentLang as "en" | "fr") }))
+  const allData = data.map((d) => ({ ...d, label: formatToMillionsLang(d.value, currentLang as "en" | "fr", 1) }))
 
   if (data.length === 0) {
     return (

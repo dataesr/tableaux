@@ -49,7 +49,7 @@ export default function getOptions(data, country_code, currentLang) {
         })),
         tooltip: {
           pointFormatter: function (this: HighchartsInstance.Point) {
-            return `${label("total-funding")} : <b>${formatToMillionsLang(this.y ?? 0, 1, currentLang)}</b>`;
+            return `${label("total-funding")} : <b>${formatToMillionsLang(this.y ?? 0, currentLang, 1)}</b>`;
           },
         },
       },
