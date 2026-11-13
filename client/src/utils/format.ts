@@ -6,8 +6,8 @@ export const formatToMillions = (amount: number, precision = 1): string => {
 // formatToMillions but with langage => can replace formatToMillions
 export const formatToMillionsLang = (
   amount: number,
-  precision = 1,
   lang: "fr" | "en" = "fr",
+  precision = 1,
 ): string => {
   const millions = amount / 1_000_000;
   const formatted = millions.toLocaleString(lang === "fr" ? "fr-FR" : "en-GB", {
@@ -56,6 +56,28 @@ export const formatNumber = (value: number): string => {
 export const formatNumberLang = (value: number, lang: "fr" | "en" = "fr"): string =>
   value.toLocaleString(lang === "fr" ? "fr-FR" : "en-GB");
 
+
+// Currency formatting in French (default) or English
+export const formatCurrencyLang = (amount: number, lang: "fr" | "en" = "fr"): string => {
+  const isFr = lang === "fr";
+
+  if (amount >= 1_000_000_000) {
+    const v = (amount / 1_000_000_000).toFixed(2);
+    return isFr ? `${v} Md€` : `€${v} billion`;
+  }
+  if (amount >= 1_000_000) {
+    const v = (amount / 1_000_000).toFixed(1);
+    return isFr ? `${v} M€` : `€${v} million`;
+  }
+  if (amount >= 1_000) {
+    const v = (amount / 1_000).toFixed(1);
+    return isFr ? `${v} K€` : `€${v} thousand`;
+  }
+  const v = amount.toFixed(0);
+  return isFr ? `${v} €` : `€${v}`;
+};
+
+// formatCurrency for french currency
 export const formatCurrency = (amount: number): string => {
   if (amount >= 1_000_000_000) {
     return `${(amount / 1_000_000_000).toFixed(2)} Md€`;
