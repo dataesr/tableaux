@@ -1,7 +1,11 @@
 import { useSearchParams } from "react-router-dom";
 import { getI18nLabel } from "../../../../../../utils";
 import { isEjoParam } from "../../../../utils/params";
+import { formatToMillionsLang, formatToPercentLang } from "../../../../../../utils/format";
+import { getCountryNameWithArticle } from "../../../../utils/country-mapping";
+import { getCountryAdjectives } from "../../../../../../components/country-selector/utils.jsx";
 import i18n from "../../../../i18n-global.json";
+
 
 export function useGetParams() {
   const [searchParams] = useSearchParams();
@@ -47,7 +51,16 @@ export function useGetParams() {
     params.push(isEjoParam());
   }
 
-  return params.join("&");
+  const currentLang = (searchParams.get("language") === "en" ? "en" : "fr") as "fr" | "en";
+
+  const code = countryCode || "FRA";
+  const countryN = getCountryNameWithArticle(code, currentLang).replace(/^(Le |La |Les |L')/, (m) => m.toLowerCase());
+
+  const countryAdj = getCountryAdjectives(code, currentLang);
+  // Pluriel seulement en français
+  const adjMascPlural = currentLang === "fr" && !countryAdj.m.endsWith("s") ? `${countryAdj.m}s` : countryAdj.m;
+
+  return { params: params.join("&"), currentLang, countryN, adjMascPlural };
 }
 
 /**
@@ -56,7 +69,8 @@ export function useGetParams() {
  * @param currentLang - La langue actuelle ('fr' ou 'en')
  * @returns Un composant JSX de tableau accessible ou un message si aucune donnée n'est disponible
  */
-export function renderDataTable(data: { data: Array<{ pilier_name_fr: string; stage: string; total_fund_eur: number }> }, currentLang: string = "fr") {
+export function renderDataTable(data: { data: Array<{ pilier_name_fr: string; stage: string; total_fund_eur: number }> }, currentLang: "fr" | "en" = "fr") {
+  
   if (!data || !data.data || data.data.length === 0) {
     return <div className="fr-text--center fr-py-3w">{getI18nLabel(i18n, "no-data-table")}</div>;
   }
@@ -97,29 +111,11 @@ export function renderDataTable(data: { data: Array<{ pilier_name_fr: string; st
   // Trier par financement successful (décroissant)
   const sortedPillars = Object.values(dataByPillar).sort((a, b) => b.successful - a.successful);
 
-  const formatToMillions = (value: number) => {
-    const millions = value / 1000000;
-    return new Intl.NumberFormat(currentLang === "fr" ? "fr-FR" : "en-US", {
-      maximumFractionDigits: 2,
-      minimumFractionDigits: 2,
-    }).format(millions);
-  };
-
-  const formatPercentage = (value: number) => {
-    return (
-      new Intl.NumberFormat(currentLang === "fr" ? "fr-FR" : "en-US", {
-        maximumFractionDigits: 1,
-        minimumFractionDigits: 1,
-      }).format(value) + " %"
-    );
-  };
-
   const labels = {
     pillar: getI18nLabel(i18n, "pillar"),
     evaluated: getI18nLabel(i18n, "projects-evaluated"),
     successful: getI18nLabel(i18n, "projects-successful"),
     successRate: getI18nLabel(i18n, "success-rate"),
-    unit: "M€",
     caption: getI18nLabel(i18n, "caption-pillar-funding"),
   };
 
@@ -141,14 +137,14 @@ export function renderDataTable(data: { data: Array<{ pilier_name_fr: string; st
               <tr key={index}>
                 <th scope="row">{pillar.pillar}</th>
                 <td>
-                  {formatToMillions(pillar.evaluated)} {labels.unit}
+                  {formatToMillionsLang(pillar.evaluated, currentLang, 1)}
                 </td>
                 <td>
                   <strong>
-                    {formatToMillions(pillar.successful)} {labels.unit}
+                    {formatToMillionsLang(pillar.successful, currentLang, 1)}
                   </strong>
                 </td>
-                <td>{pillar.successRate > 0 ? formatPercentage(pillar.successRate) : "—"}</td>
+                <td>{pillar.successRate > 0 ? formatToPercentLang(pillar.successRate, currentLang) : "—"}</td>
               </tr>
             ))}
           </tbody>

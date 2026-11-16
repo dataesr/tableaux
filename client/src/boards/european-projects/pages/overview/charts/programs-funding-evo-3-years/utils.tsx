@@ -1,9 +1,11 @@
 import { useSearchParams } from "react-router-dom";
 
 import { getI18nLabel } from "../../../../../../utils";
-import { formatToMillions, formatToRates } from "../../../../../../utils/format";
+import { formatToMillions, formatToRates, formatNumberLang, formatCurrencyLang } from "../../../../../../utils/format";
 import i18n from "../../../../i18n-global.json";
 import { isEjoParam } from "../../../../utils/params";
+import { getCountryNameWithArticle } from "../../../../utils/country-mapping";
+import { getCountryAdjectives } from "../../../../../../components/country-selector/utils.jsx";
 
 export function useGetParams() {
   const [searchParams] = useSearchParams();
@@ -30,13 +32,20 @@ export function useGetParams() {
   if (searchParams.has("isEjo")) {
     params.push(isEjoParam());
   }
+  
+  const currentLang = (searchParams.get("language") === "en" ? "en" : "fr") as "fr" | "en";
+  const code = countryCode || "FRA";
+  const countryN = getCountryNameWithArticle(code, currentLang).replace(/^(Le |La |Les |L')/, (m) => m.toLowerCase());
 
-  const currentLang = searchParams.get("language") || "fr";
+  const countryAdj = getCountryAdjectives(code, currentLang);
+  // Pluriel seulement en français
+  const adjMascPlural =
+  currentLang === "fr" && !countryAdj.m.endsWith("s") ? `${countryAdj.m}s` : countryAdj.m; 
 
-  return { params: params.filter((item) => !!item).join("&"), currentLang };
+  return { params: params.filter((item) => !!item).join("&"), currentLang, countryN, adjMascPlural };
 }
 
-export function successRatesReadingKey(data, displayType) {
+export function successRatesReadingKey(data, displayType, countryN, adjMascPlural) {
   const dataSelectedCountry = data?.filter((item) => item.country !== "all")[0];
   const year = dataSelectedCountry?.data[0]?.programs[0]?.years[0]?.year || "2021";
   const program_name_fr = dataSelectedCountry?.data[0]?.programs[0]?.programme_name_fr || "unknown";
@@ -65,16 +74,16 @@ export function successRatesReadingKey(data, displayType) {
 
       fr = (
         <>
-          En <strong>{year}</strong>, la part de coordinations des projets évalués pour le programme <strong>{program_name_fr}</strong> est de{" "}
-          <strong>{formatToRates(pct1Coordination)}</strong> tandis que la part des coordinations des projets lauréats pour la même année est de{" "}
-          <strong>{formatToRates(pct2Coordination)}</strong>.
+          En {year}, dans le programme {program_name_fr}, les projets évalués coordonnés par {countryN} représentent{" "}
+          <strong>{formatToRates(pct1Coordination)}</strong> de l'ensemble des projets évalués et les projets lauréats coordonnés par {countryN} représentent{" "}
+          <strong>{formatToRates(pct2Coordination)}</strong> de l'ensemble des projets lauréats.
         </>
       );
       en = (
         <>
-          In <strong>{year}</strong>, the share of coordinations for evaluated projects for the <strong>{program_name_en}</strong> program is{" "}
-          <strong>{formatToRates(pct1Coordination)}</strong>, while the share of coordinations for successful projects for the same year is{" "}
-          <strong>{formatToRates(pct2Coordination)}</strong>.
+          In {year}, under the {program_name_en} programme, evaluated projects coordinated by {countryN} account for{" "}
+          <strong>{formatToRates(pct1Coordination)}</strong> of all evaluated projects, and successful projects coordinated by {countryN} account for{" "}
+          <strong>{formatToRates(pct2Coordination)}</strong> of all successful projects.
         </>
       );
       break;
@@ -91,16 +100,46 @@ export function successRatesReadingKey(data, displayType) {
 
       fr = (
         <>
-          En <strong>{year}</strong>, la part de participants sur les projets évalués pour le programme <strong>{program_name_fr}</strong> est de{" "}
-          <strong>{formatToRates(pct1Involved)}</strong> tandis que la part des participants sur les projets lauréats pour la même année est de{" "}
-          <strong>{formatToRates(pct2Involved)}</strong>.
+          En {year}, dans le programme {program_name_fr}, les candidats {adjMascPlural} représentent{" "}
+          <strong>{formatToRates(pct1Involved)}</strong> de l'ensemble des candidats et les participants {adjMascPlural} représentent{" "}
+          <strong>{formatToRates(pct2Involved)}</strong> de l'ensemble des participants.
         </>
       );
       en = (
         <>
-          In <strong>{year}</strong>, the share of participants for evaluated projects for the <strong>{program_name_en}</strong> program is{" "}
-          <strong>{formatToRates(pct1Involved)}</strong>, while the share of participants for successful projects for the same year is{" "}
-          <strong>{formatToRates(pct2Involved)}</strong>.
+          In {year}, under the {program_name_en} programme, {adjMascPlural} applicants account for{" "}
+          <strong>{formatToRates(pct1Involved)}</strong> of all applicants, and {adjMascPlural} participants account for{" "}
+          <strong>{formatToRates(pct2Involved)}</strong> of all participants.
+        </>
+      );
+      break;
+    }
+
+    case "total_projects": {
+      // Participants évalués et lauréats du pays sélectionné
+      const evaluatedCountryProject = dataYearEvaluated?.total_projects || 0;
+      const successfulCountryProject = dataYearSuccessful?.total_projects || 0;
+
+      // Participants évalués et lauréats globaux
+      const evaluatedGlobalProject = dataYearEvaluatedGlobal?.total_projects || 1;
+      const successfulGlobalProject = dataYearSuccessfulGlobal?.total_projects || 1;
+
+      // Calcul des pourcentages
+      const pct1Proj = evaluatedCountryProject / evaluatedGlobalProject;
+      const pct2Proj = successfulCountryProject / successfulGlobalProject;
+
+      fr = (
+        <>
+          En {year}, dans le programme {program_name_fr},{" "}
+          <strong>{formatToRates(pct1Proj)}</strong> des projets évalués et{" "}
+          <strong>{formatToRates(pct2Proj)}</strong> des projets lauréats impliquent {countryN}.
+        </>
+      );
+      en = (
+        <>
+          In {year}, under the {program_name_en} programme,{" "}
+          <strong>{formatToRates(pct1Proj)}</strong> of evaluated projects and{" "}
+          <strong>{formatToRates(pct2Proj)}</strong> of successful projects involve {countryN}.
         </>
       );
       break;
@@ -117,16 +156,16 @@ export function successRatesReadingKey(data, displayType) {
 
       fr = (
         <>
-          En <strong>{year}</strong>, la part de subventions des projets évalués pour le programme <strong>{program_name_fr}</strong> est de{" "}
-          <strong>{formatToRates(pct1)}</strong> tandis que la part des subventions des projets lauréats pour la même année est de{" "}
-          <strong>{formatToRates(pct2)}</strong>.
+          En {year}, dans le programme {program_name_fr}, les financements demandés par {countryN} représentent{" "} 
+          <strong>{formatToRates(pct1)}</strong> de l'ensemble des financements demandés et les financements obtenus par {countryN} représentent{" "}
+          <strong>{formatToRates(pct2)}</strong> de l'ensemble des financements obtenus.
         </>
       );
       en = (
         <>
-          In <strong>{year}</strong>, the share of funding for evaluated projects for the <strong>{program_name_en}</strong> program is{" "}
-          <strong>{formatToRates(pct1)}</strong>, while the share of funding for successful projects for the same year is{" "}
-          <strong>{formatToRates(pct2)}</strong>.
+          In {year}, in the {program_name_en} programme, the funding requested by {countryN} accounts for{" "}
+          <strong>{formatToRates(pct1)}</strong> of all funding requested, and the funding secured by {countryN} accounts for{" "}
+          <strong>{formatToRates(pct2)}</strong> of all funding secured.
         </>
       );
     }
@@ -138,11 +177,15 @@ export function successRatesReadingKey(data, displayType) {
   };
 }
 
-export function valuesSuccessReadingKey(data, displayType) {
+export function valuesSuccessReadingKey(data, displayType, currentLang, countryN, adjMascPlural) {
   const dataSelectedCountry = data?.filter((item) => item.country !== "all")[0];
   const year = dataSelectedCountry?.data[0]?.programs[0]?.years[0]?.year || "2021";
   const dataYearEvaluated = dataSelectedCountry?.data?.find((d) => d.stage === "evaluated")?.programs[0]?.years?.find((y) => y.year === year);
   const dataYearSuccessful = dataSelectedCountry?.data?.find((d) => d.stage === "successful")?.programs[0]?.years?.find((y) => y.year === year);
+
+  const program_name_fr = dataSelectedCountry?.data[0]?.programs[0]?.programme_name_fr || "unknown";
+  const program_name_en = dataSelectedCountry?.data[0]?.programs[0]?.programme_name_en || "unknown";
+
   // funding
   const evaluatedFunding = dataYearEvaluated?.total_fund_eur || 0;
   const successfulFunding = dataYearSuccessful?.total_fund_eur || 0;
@@ -156,6 +199,10 @@ export function valuesSuccessReadingKey(data, displayType) {
   const evaluatedTotalNumberInvolved = dataYearEvaluated?.total_number_involved || 0;
   const successfulTotalNumberInvolved = dataYearSuccessful?.total_number_involved || 0;
   const totalNumberInvolvedSuccessRate = evaluatedTotalNumberInvolved > 0 ? successfulTotalNumberInvolved / evaluatedTotalNumberInvolved : 0;
+  // projects
+  const evaluatedTotalProject = dataYearEvaluated?.total_projects || 0;
+  const successfulTotalProject = dataYearSuccessful?.total_projects || 0;
+  const totalProjectSuccessRate = evaluatedTotalProject > 0 ? successfulTotalProject / evaluatedTotalProject : 0;
 
   let fr;
   let en;
@@ -164,16 +211,16 @@ export function valuesSuccessReadingKey(data, displayType) {
     case "total_coordination_number":
       fr = (
         <>
-          En <strong>{year}</strong>, le nombre de coordinations sur les projets évalués est de <strong>{evaluatedTotalCoordinationNumber}</strong>{" "}
-          alors que sur les projets lauréats, celles-ci sont de <strong>{successfulTotalCoordinationNumber}</strong>. Cela représente un taux de
-          succès de <strong>{formatToRates(totalCoordinationNumberSuccessRate)}</strong>.
+          En {year}, dans le programme {program_name_fr}, {countryN} a coordonné <strong>{formatNumberLang(evaluatedTotalCoordinationNumber, currentLang)}</strong> projets évalués{" "}
+          et de <strong>{formatNumberLang(successfulTotalCoordinationNumber, currentLang)}</strong> projets lauréats,{" "}
+          soit un taux de succès de <strong>{formatToRates(totalCoordinationNumberSuccessRate)}</strong>.
         </>
       );
       en = (
         <>
-          In <strong>{year}</strong>, the number of coordinations for evaluated projects is <strong>{evaluatedTotalCoordinationNumber}</strong>, while
-          for successful projects, it is <strong>{successfulTotalCoordinationNumber}</strong>. This represents a success rate of{" "}
-          <strong>{formatToRates(totalCoordinationNumberSuccessRate)}</strong>.
+          In {year}, under the {program_name_en} programme, {countryN} coordinated <strong>{formatNumberLang(evaluatedTotalCoordinationNumber, currentLang)}</strong> evaluated projects{" "}
+          and <strong>{formatNumberLang(successfulTotalCoordinationNumber, currentLang)}</strong> successful projects,{" "}
+          a success rate of <strong>{formatToRates(totalCoordinationNumberSuccessRate)}</strong>.
         </>
       );
       break;
@@ -181,18 +228,31 @@ export function valuesSuccessReadingKey(data, displayType) {
     case "total_number_involved":
       fr = (
         <>
-          En <strong>{year}</strong>, le nombre total de participants sur les projets évalués s'élèvent à{" "}
-          <strong>{evaluatedTotalNumberInvolved}</strong> alors que sur les projets lauréats, celui-ci est de{" "}
-          <strong>{successfulTotalNumberInvolved}</strong>. Cela représente un taux de succès de{" "}
-          <strong>{formatToRates(totalNumberInvolvedSuccessRate)}</strong>.
+          En {year}, dans le programme {program_name_fr}, sur les <strong>{formatNumberLang(evaluatedTotalNumberInvolved, currentLang)}</strong> candidats {adjMascPlural} évalués{" "}
+          <strong>{formatNumberLang(successfulTotalNumberInvolved, currentLang)}</strong> ont été lauréats,{" "}
+          soit un taux de succès de <strong>{formatToRates(totalNumberInvolvedSuccessRate)}</strong>.
         </>
       );
       en = (
         <>
-          In <strong>{year}</strong>, the total number of participants for evaluated projects amounts to{" "}
-          <strong>{evaluatedTotalNumberInvolved}</strong>, while for successful projects, it amounts to{" "}
-          <strong>{successfulTotalNumberInvolved}</strong>. This represents a success rate of{" "}
-          <strong>{formatToRates(totalNumberInvolvedSuccessRate)}</strong>.
+          In {year}, under the {program_name_en} programme, of the <strong>{formatNumberLang(evaluatedTotalNumberInvolved, currentLang)}</strong> {adjMascPlural} applicants evaluated,{" "}
+          <strong>{formatNumberLang(successfulTotalNumberInvolved, currentLang)}</strong> became participants in successful projects,{" "}
+          a participant-level success rate of <strong>{formatToRates(totalNumberInvolvedSuccessRate)}</strong>.
+        </>
+      );
+      break;
+
+    case "total_projects":
+      fr = (
+        <>
+          En {year}, dans le programme {program_name_fr}, {countryN} est présente dans <strong>{formatNumberLang(evaluatedTotalProject, currentLang)}</strong> projets évalués{" "}
+          et <strong>{formatNumberLang(successfulTotalProject, currentLang)}</strong> projets lauréats, soit un taux de succès de <strong>{formatToRates(totalProjectSuccessRate)}</strong>.
+        </>
+      );
+      en = (
+        <>
+          In {year}, under the {program_name_en} programme, {countryN} is involved in <strong>{formatNumberLang(evaluatedTotalProject, currentLang)}</strong> evaluated projects{" "}
+          and <strong>{formatNumberLang(successfulTotalProject, currentLang)}</strong> successful projects, a success rate of <strong>{formatToRates(totalProjectSuccessRate)}</strong>.
         </>
       );
       break;
@@ -200,15 +260,15 @@ export function valuesSuccessReadingKey(data, displayType) {
     default:
       fr = (
         <>
-          En <strong>{year}</strong>, les subventions sur les projets évalués s'élèvent à <strong>{formatToMillions(evaluatedFunding)}</strong> alors
-          que sur les projets lauréats, celles-ci sont de <strong>{formatToMillions(successfulFunding)}</strong>. Cela représente un taux de succès de{" "}
+          En {year}, dans le programme {program_name_fr}, {countryN} a demandé <strong>{formatCurrencyLang(evaluatedFunding, currentLang)}</strong> dans les projets évalués{" "}
+          et a obtenu <strong>{formatCurrencyLang(successfulFunding, currentLang)}</strong>, soit un taux de succès de{" "}
           <strong>{formatToRates(successRate)}</strong>.
         </>
       );
       en = (
         <>
-          In <strong>{year}</strong>, the funding for evaluated projects amounts to <strong>{formatToMillions(evaluatedFunding)}</strong>, while for
-          successful projects, it amounts to <strong>{formatToMillions(successfulFunding)}</strong>. This represents a success rate of{" "}
+          In {year}, under the {program_name_en} programme, {countryN} requested <strong>{formatCurrencyLang(evaluatedFunding, currentLang)}</strong> in evaluated projects{" "}
+          and secured <strong>{formatCurrencyLang(successfulFunding, currentLang)}</strong>, a funding success rate of{" "}
           <strong>{formatToRates(successRate)}</strong>.
         </>
       );

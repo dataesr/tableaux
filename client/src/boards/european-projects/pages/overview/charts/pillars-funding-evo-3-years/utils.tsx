@@ -35,7 +35,6 @@ export function useGetParams() {
   }
 
   const currentLang = (searchParams.get("language") === "en" ? "en" : "fr") as "fr" | "en";
-
   const code = countryCode || "FRA";
   const countryN = getCountryNameWithArticle(code, currentLang).replace(/^(Le |La |Les |L')/, (m) => m.toLowerCase());
 
@@ -43,7 +42,6 @@ export function useGetParams() {
   // Pluriel seulement en français
   const adjMascPlural =
   currentLang === "fr" && !countryAdj.m.endsWith("s") ? `${countryAdj.m}s` : countryAdj.m; 
-
 
   return { params: params.filter((item) => !!item).join("&"), currentLang, countryN, adjMascPlural };
 }
@@ -62,7 +60,6 @@ export function successRatesReadingKey(data, displayType, countryN, adjMascPlura
   const dataYearEvaluatedGlobal = dataGlobal?.data?.find((d) => d.stage === "evaluated")?.pillars[0]?.years?.find((y) => y.year === year);
   const dataYearSuccessfulGlobal = dataGlobal?.data?.find((d) => d.stage === "successful")?.pillars[0]?.years?.find((y) => y.year === year);
 
-  console.log(data)
 
   let fr;
   let en;
@@ -83,14 +80,14 @@ export function successRatesReadingKey(data, displayType, countryN, adjMascPlura
 
       fr = (
         <>
-          En <strong>{year}</strong>, dans le pilier <strong>{pillar_name_fr}</strong>, les projets évalués coordonnés par {countryN} représentent{" "}
+          En {year}, dans le pilier {pillar_name_fr}, les projets évalués coordonnés par {countryN} représentent{" "}
           <strong>{formatToRates(pct1Coordination)}</strong> de l'ensemble des projets évalués et les projets lauréats coordonnés par {countryN} représentent{" "}
           <strong>{formatToRates(pct2Coordination)}</strong> de l'ensemble des projets lauréats.
         </>
       );
       en = (
         <>
-          In <strong>{year}</strong>, under the <strong>{pillar_name_en}</strong> pillar, evaluated projects coordinated by {countryN} account for{" "}
+          In {year}, under the {pillar_name_en} pillar, evaluated projects coordinated by {countryN} account for{" "}
           <strong>{formatToRates(pct1Coordination)}</strong> of all evaluated projects, and successful projects coordinated by {countryN} account for{" "}
           <strong>{formatToRates(pct2Coordination)}</strong> of all successful projects.
         </>
@@ -113,14 +110,14 @@ export function successRatesReadingKey(data, displayType, countryN, adjMascPlura
 
       fr = (
         <>
-          En <strong>{year}</strong>, dans le pilier <strong>{pillar_name_fr}</strong>, les candidats {adjMascPlural} représentent{" "}
+          En {year}, dans le pilier {pillar_name_fr}, les candidats {adjMascPlural} représentent{" "}
           <strong>{formatToRates(pct1Involved)}</strong> de l'ensemble des candidats et les participants {adjMascPlural} représentent{" "}
           <strong>{formatToRates(pct2Involved)}</strong> de l'ensemble des participants.
         </>
       );
       en = (
         <>
-          In <strong>{year}</strong>, under the <strong>{pillar_name_en}</strong> pillar, {adjMascPlural} applicants account for{" "}
+          In {year}, under the {pillar_name_en} pillar, {adjMascPlural} applicants account for{" "}
           <strong>{formatToRates(pct1Involved)}</strong> of all applicants, and {adjMascPlural} participants account for{" "}
           <strong>{formatToRates(pct2Involved)}</strong> of all participants.
         </>
@@ -143,16 +140,16 @@ export function successRatesReadingKey(data, displayType, countryN, adjMascPlura
 
       fr = (
         <>
-          En <strong>{year}</strong>, dans le pilier <strong>{pillar_name_fr}</strong>, les projets évalués impliquant {countryN} représentent{" "}
-          <strong>{formatToRates(pct1Proj)}</strong> de l'ensemble des projets évalués et les projets lauréats impliquant {countryN} représentent{" "}
-          <strong>{formatToRates(pct2Proj)}</strong> de l'ensemble des projets lauréats.
+          En {year}, dans le pilier {pillar_name_fr},{" "}
+          <strong>{formatToRates(pct1Proj)}</strong> des projets évalués et{" "}
+          <strong>{formatToRates(pct2Proj)}</strong> des projets lauréats impliquent {countryN}.
         </>
       );
       en = (
         <>
-          In <strong>{year}</strong>, under the <strong>{pillar_name_en}</strong> pillar, evaluated projects involving {countryN} account for{" "}
-          <strong>{formatToRates(pct1Proj)}</strong> of all evaluated projects, and successful projects involving {countryN} account for{" "}
-          <strong>{formatToRates(pct2Proj)}</strong> of all successful projects.
+          In {year}, under the {pillar_name_en} pillar,{" "}
+          <strong>{formatToRates(pct1Proj)}</strong> of evaluated projects and{" "}
+          <strong>{formatToRates(pct2Proj)}</strong> of successful projects involve {countryN}.
         </>
       );
       break;
@@ -178,14 +175,14 @@ export function successRatesReadingKey(data, displayType, countryN, adjMascPlura
 
       fr = (
         <>
-          En <strong>{year}</strong>, dans le pilier <strong>{pillar_name_fr}</strong>, les financements demandés par {countryN} représentent{" "} 
+          En {year}, dans le pilier {pillar_name_fr}, les financements demandés par {countryN} représentent{" "} 
           <strong>{formatToRates(pct1)}</strong> de l'ensemble des financements demandés et les financements obtenus par {countryN} représentent{" "}
           <strong>{formatToRates(pct2)}</strong> de l'ensemble des financements obtenus.
         </>
       );
       en = (
         <>
-          In <strong>{year}</strong>, in the <strong>{pillar_name_en}</strong> pillar, the funding requested by {countryN} accounts for{" "}
+          In {year}, in the {pillar_name_en} pillar, the funding requested by {countryN} accounts for{" "}
           <strong>{formatToRates(pct1)}</strong> of all funding requested, and the funding secured by {countryN} accounts for{" "}
           <strong>{formatToRates(pct2)}</strong> of all funding secured.
         </>
@@ -223,7 +220,7 @@ export function valuesSuccessReadingKey(data, displayType, currentLang, countryN
   // project
   const evaluatedTotalNumberProject = dataYearEvaluated?.total_projects || 0;
   const successfulTotalNumberProject = dataYearSuccessful?.total_projects || 0;
-  const totalNumberProjectSuccessRate = evaluatedTotalNumberInvolved > 0 ? successfulTotalNumberInvolved / evaluatedTotalNumberInvolved : 0;  
+  const totalNumberProjectSuccessRate = evaluatedTotalNumberProject > 0 ? successfulTotalNumberProject / evaluatedTotalNumberProject : 0;  
 
 
   let fr;
@@ -233,14 +230,14 @@ export function valuesSuccessReadingKey(data, displayType, currentLang, countryN
     case "total_coordination_number":
       fr = (
         <>
-          En <strong>{year}</strong>, dans le pilier <strong>{pillar_name_fr}</strong>, {countryN} a été coordinatrice de <strong>{formatNumberLang(evaluatedTotalCoordinationNumber, currentLang)}</strong> projets évalués{" "}
+          En {year}, dans le pilier {pillar_name_fr}, {countryN} a coordonné <strong>{formatNumberLang(evaluatedTotalCoordinationNumber, currentLang)}</strong> projets évalués{" "}
           et de <strong>{formatNumberLang(successfulTotalCoordinationNumber, currentLang)}</strong> projets lauréats soit un taux de
           succès de <strong>{formatToRates(totalCoordinationNumberSuccessRate)}</strong>.
         </>
       );
       en = (
         <>
-          In <strong>{year}</strong>, under the <strong>{pillar_name_en}</strong> pillar, {countryN} coordinated <strong>{formatNumberLang(evaluatedTotalCoordinationNumber, currentLang)}</strong> evaluated projects{" "}
+          In {year}, under the {pillar_name_en} pillar, {countryN} coordinated <strong>{formatNumberLang(evaluatedTotalCoordinationNumber, currentLang)}</strong> evaluated projects{" "}
           and <strong>{formatNumberLang(successfulTotalCoordinationNumber, currentLang)}</strong> successful projects, a success rate of{" "}
           <strong>{formatToRates(totalCoordinationNumberSuccessRate)}</strong>.
         </>
@@ -250,14 +247,14 @@ export function valuesSuccessReadingKey(data, displayType, currentLang, countryN
     case "total_number_involved":
       fr = (
         <>
-          En <strong>{year}</strong>, dans le pilier <strong>{pillar_name_fr}</strong>, <strong>{formatNumberLang(evaluatedTotalNumberInvolved, currentLang)}</strong> candidats {adjMascPlural} ont été évalués 
-          et <strong>{formatNumberLang(successfulTotalNumberInvolved, currentLang)}</strong> ont été lauréats, soit un taux de succès de <strong>{formatToRates(totalNumberInvolvedSuccessRate)}</strong>.
+          En {year}, dans le pilier {pillar_name_fr}, sur les <strong>{formatNumberLang(evaluatedTotalNumberInvolved, currentLang)}</strong> candidats {adjMascPlural} évalués 
+          <strong>{formatNumberLang(successfulTotalNumberInvolved, currentLang)}</strong> ont été lauréats, soit un taux de succès de <strong>{formatToRates(totalNumberInvolvedSuccessRate)}</strong>.
         </>
       );
       en = (
         <>
-          In <strong>{year}</strong>, under the <strong>{pillar_name_en}</strong> pillar, <strong>{formatNumberLang(evaluatedTotalNumberInvolved, currentLang)}</strong> {adjMascPlural} applicants were evaluated{" "}
-          and <strong>{formatNumberLang(successfulTotalNumberInvolved, currentLang)}</strong> of them became participants in successful projects, a participant-level success rate of <strong>{formatToRates(totalNumberInvolvedSuccessRate)}</strong>.
+          In {year}, under the {pillar_name_en} pillar, of the <strong>{formatNumberLang(evaluatedTotalNumberInvolved, currentLang)}</strong> {adjMascPlural} applicants evaluated,{" "}
+          <strong>{formatNumberLang(successfulTotalNumberInvolved, currentLang)}</strong> became participants in successful projects, a participant-level success rate of <strong>{formatToRates(totalNumberInvolvedSuccessRate)}</strong>.
         </>
       );
       break;
@@ -265,14 +262,14 @@ export function valuesSuccessReadingKey(data, displayType, currentLang, countryN
     case "total_projects":
       fr = (
         <>
-          En <strong>{year}</strong>, dans le pilier <strong>{pillar_name_fr}</strong>, {countryN} est présente dans <strong>{formatNumberLang(evaluatedTotalNumberProject, currentLang)}</strong> projets évalués{" "}
+          En {year}, dans le pilier {pillar_name_fr}, {countryN} est présente dans <strong>{formatNumberLang(evaluatedTotalNumberProject, currentLang)}</strong> projets évalués{" "}
           et <strong>{formatNumberLang(successfulTotalNumberProject, currentLang)}</strong> projets lauréats, soit un taux de
           succès de <strong>{formatToRates(totalNumberProjectSuccessRate)}</strong>.
         </>
       );
       en = (
         <>
-          In <strong>{year}</strong>, under the <strong>{pillar_name_en}</strong> pillar, {countryN} is involved in <strong>{formatNumberLang(evaluatedTotalNumberProject, currentLang)}</strong> evaluated projects{" "}
+          In {year}, under the {pillar_name_en} pillar, {countryN} is involved in <strong>{formatNumberLang(evaluatedTotalNumberProject, currentLang)}</strong> evaluated projects{" "}
           and <strong>{formatNumberLang(successfulTotalNumberProject, currentLang)}</strong> successful projects, a success rate of{" "}
           <strong>{formatToRates(totalNumberProjectSuccessRate)}</strong>.
         </>
@@ -282,14 +279,14 @@ export function valuesSuccessReadingKey(data, displayType, currentLang, countryN
     default:
       fr = (
         <>
-          En <strong>{year}</strong>, dans le pilier <strong>{pillar_name_fr}</strong>, {countryN} a demandé <strong>{formatCurrencyLang(evaluatedFunding, currentLang)}</strong> dans les projets évalués{" "}
+          En {year}, dans le pilier {pillar_name_fr}, {countryN} a demandé <strong>{formatCurrencyLang(evaluatedFunding, currentLang)}</strong> dans les projets évalués{" "}
           et a obtenu <strong>{formatCurrencyLang(successfulFunding, currentLang)}</strong>, soit un taux de succès de{" "}
           <strong>{formatToRates(successRate)}</strong>.
         </>
       );
       en = (
         <>
-          In <strong>{year}</strong>, under the <strong>{pillar_name_en}</strong> pillar, {countryN} requested <strong>{formatCurrencyLang(evaluatedFunding, currentLang)}</strong> in evaluated projects{" "}
+          In {year}, under the {pillar_name_en} pillar, {countryN} requested <strong>{formatCurrencyLang(evaluatedFunding, currentLang)}</strong> in evaluated projects{" "}
           and secured <strong>{formatCurrencyLang(successfulFunding, currentLang)}</strong>, a funding success rate of{" "}
           <strong>{formatToRates(successRate)}</strong>.
         </>
@@ -493,4 +490,3 @@ export function renderDataTableRates(data, currentLang, displayType) {
     </div>
   );
 }
-

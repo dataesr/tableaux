@@ -1,7 +1,6 @@
 import { Col, Container, Row } from "@dataesr/dsfr-plus";
 import { useQuery } from "@tanstack/react-query";
 import React, { useState } from "react";
-import { useSearchParams } from "react-router-dom";
 
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
@@ -13,27 +12,14 @@ import optionsSuccessRates from "./options-success-rates";
 import optionsValues from "./options-values";
 import { getData } from "./query";
 import { renderDataTable, renderDataTableRates, successRatesReadingKey, useGetParams, valuesSuccessReadingKey } from "./utils";
-import { getCountryNameWithArticle } from "../../../../utils/country-mapping";
-import { getCountryAdjectives } from "../../../../../../components/country-selector/utils.jsx";
 
 
 export default function PillarsFundingEvo3Years() {
-  const [searchParams] = useSearchParams();
-  const currentLang = (searchParams.get("language") === "en" ? "en" : "fr") as "fr" | "en";
+
   const [displayType, setDisplayType] = useState("total_fund_eur");
+  const { params, currentLang, countryN, adjMascPlural } = useGetParams();
 
-  const countryCode = searchParams.get("country_code") || "FRA";
-  const countryN = getCountryNameWithArticle(countryCode, currentLang).replace(/^(Le |La |Les |L')/, (m) => m.toLowerCase());
-
-  const countryAdj = getCountryAdjectives(countryCode, currentLang);
-
-  // Pluriel seulement en français
-  const adjMascPlural =
-  currentLang === "fr" && !countryAdj.m.endsWith("s") ? `${countryAdj.m}s` : countryAdj.m;
-  // const adjFemPlural =
-  // currentLang === "fr" && !countryAdj.f.endsWith("s") ? `${countryAdj.f}s` : countryAdj.f;
-
-  const { params } = useGetParams();
+  // const { params } = useGetParams();
   const { data, isLoading } = useQuery({
     queryKey: ["PillarsFundingEvo3Years", params],
     queryFn: () => getData(params),
@@ -90,7 +76,7 @@ export default function PillarsFundingEvo3Years() {
         en: <>This chart shows, for the selected pillar, the trends in projects evaluated and successful coordinated by the selected country, together with its success rate, i.e. the number of successful project coordinations over evaluated ones.</> };
       configChart3.title = { 
         fr: `Part des projets coordonnés par ${countryN} sur l'ensemble des coordinations`, 
-        en: `Share of projects coordinated by ${countryN} out of the total number of coordination roles` 
+        en: `Share of projects coordinated by ${countryN} out of the total number of coordination roles`
       };
       configChart3.comment = { 
         fr: <>Ce graphique présente, pour le pilier sélectionné, l'évolution du nombre de projets évalués et lauréats coordonnés par le pays sélectionné, en part de l'ensemble des coordinations.</>, 
