@@ -1,7 +1,6 @@
 import { Col, Container, Row } from "@dataesr/dsfr-plus";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { useSearchParams } from "react-router-dom";
 
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
@@ -14,12 +13,21 @@ import getOptionsValues from "./options-values";
 import { getData } from "./query";
 import { renderDataTable, renderDataTableRates, successRatesReadingKey, useGetParams, valuesSuccessReadingKey } from "./utils";
 
+
+type ChartConfig = {
+  id: string;
+  title?: { fr: string; en: string };
+  comment?: { fr: React.JSX.Element; en: React.JSX.Element };
+  readingKey: any;
+  sources: any;
+  integrationURL: string;
+};
+
 export default function ProgramsFundingEvo3Years() {
-  const [searchParams] = useSearchParams();
-  const currentLang = searchParams.get("language") || "fr";
   const [displayType, setDisplayType] = useState("total_fund_eur");
 
-  const { params } = useGetParams();
+  const { params, currentLang, countryN, adjMascPlural } = useGetParams();
+
   const { data, isLoading } = useQuery({
     queryKey: ["ProgramsFundingEvo3Years", params],
     queryFn: () => getData(params),
@@ -33,33 +41,34 @@ export default function ProgramsFundingEvo3Years() {
       </>
     );
 
-  const configChart1: {
-    id: string;
-    title?: { fr: string; en: string };
-    comment?: { fr: React.JSX.Element; en: React.JSX.Element };
-    readingKey: any;
-    sources: any;
-    integrationURL: string;
-  } = {
+
+  const configChart1: ChartConfig = {
     id: "programsEvolutionFundingLines",
-    readingKey: valuesSuccessReadingKey(data, displayType),
+    readingKey: valuesSuccessReadingKey(data, displayType, currentLang, countryN, adjMascPlural),
     sources: EPChartsSources,
     integrationURL: "/european-projects/components/pages/analysis/overview/charts/projects-types-3",
   };
 
-  const configChart3: {
-    id: string;
-    title?: { fr: string; en: string };
-    comment?: { fr: React.JSX.Element; en: React.JSX.Element };
-    readingKey: any;
-    sources: any;
-    integrationURL: string;
-  } = {
+  const configChart3: ChartConfig = {
     id: "programsEvolutionFundingLinesSuccessRate",
-    readingKey: successRatesReadingKey(data, displayType),
+    readingKey: successRatesReadingKey(data, displayType, countryN, adjMascPlural),
     sources: EPChartsSources,
     integrationURL: "/european-projects/components/pages/analysis/overview/charts/projects-types-3",
   };
+
+  // const configChart3: {
+  //   id: string;
+  //   title?: { fr: string; en: string };
+  //   comment?: { fr: React.JSX.Element; en: React.JSX.Element };
+  //   readingKey: any;
+  //   sources: any;
+  //   integrationURL: string;
+  // } = {
+  //   id: "programsEvolutionFundingLinesSuccessRate",
+  //   readingKey: successRatesReadingKey(data, displayType, countryN, adjMascPlural),
+  //   sources: EPChartsSources,
+  //   integrationURL: "/european-projects/components/pages/analysis/overview/charts/projects-types-3",
+  // };
 
   const i18n = {
     ...i18nLocal,
