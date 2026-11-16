@@ -12,7 +12,7 @@ import { formatValeurVivier, getCommentaireVivier } from "../../vivier.ts";
 import getNuageOptions from "../../components/nuage-vivier/options.ts";
 import type { RenduNuage } from "../../components/nuage-vivier/options.ts";
 import QuadrantsVivier from "../../components/nuage-vivier/quadrants.tsx";
-import { getLectureNuage, getTextesNuage } from "../../components/nuage-vivier/utils.ts";
+import { getAxesTaux, getTextesNuage } from "../../components/nuage-vivier/utils.ts";
 
 import "../../../../components/matrice/styles.scss";
 
@@ -40,7 +40,8 @@ type ErcVivierEtablissementsProps = {
 
 // « Qui candidate peu mais réussit bien ? » : taux de candidature au vivier × taux de succès des établissements d'un groupe
 export default function ErcVivierEtablissements({ data, disciplineLabel, entiteNom, groupeLibelle, meta }: ErcVivierEtablissementsProps) {
-  const chartOptions = useMemo(() => (data.points.length > 0 ? getNuageOptions(data, RENDU) : null), [data]);
+  const axes = useMemo(() => getAxesTaux(data), [data]);
+  const chartOptions = useMemo(() => (data.points.length > 0 ? getNuageOptions(data, RENDU, axes) : null), [axes, data]);
   const textes = getTextesNuage(data);
   const titre = `Candidature au vivier et taux de succès ERC des établissements · ${groupeLibelle} · ${disciplineLabel} · appels ${formatPeriode(data.appels)}`;
 
@@ -88,13 +89,13 @@ export default function ErcVivierEtablissements({ data, disciplineLabel, entiteN
               </>
             ),
           },
-          readingKey: { fr: <>{getLectureNuage(data, pointLu, pointLu.nom)}</> },
+          readingKey: { fr: <>{axes.lecture(pointLu, pointLu.nom)}</> },
           sources: getChartSources([...meta.sources, ...(meta.vivier?.sources ?? [])]),
         }}
         legend={legend}
         options={chartOptions}
       />
-      <QuadrantsVivier cle={cle} colonne="Établissement" data={data} libelle={libelle} vide="Aucun établissement." />
+      <QuadrantsVivier axes={axes} cle={cle} colonne="Établissement" data={data} libelle={libelle} vide="Aucun établissement." />
     </>
   );
 }

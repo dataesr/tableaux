@@ -31,22 +31,21 @@ export function getMethodeVivier(vivierMeta, seuil) {
       + "actifs de l'entité, dans les mêmes disciplines (panel principal du chercheur). On additionne les candidatures "
       + "et les chercheurs avant de diviser. Seules les bourses avec panel (Starting, Consolidator, Advanced) comptent : "
       + "Synergy et Proof of Concept n'ont pas de discipline.",
-    `Le vivier est une estimation fixe dans le temps. Il est mesuré une seule fois, sur les articles ${debut}-${fin} : `
+    `Le vivier est une estimation fixe dans le temps. Il est mesuré une seule fois, sur les publications ${debut}-${fin} : `
       + `un chercheur en fait partie s'il est actif sur cette fenêtre, et il est rattaché à un pays ou à un établissement `
       + `d'après ses affiliations ${debutRecent}-${fin}. Ce n'est pas une série annuelle : le même nombre de chercheurs `
       + `sert de dénominateur à toutes les années d'appel. Le taux n'est donc calculé que pour les appels ${debut}-${fin}, `
       + "compris dans la période choisie, en divisant les candidatures par le nombre d'années d'appel retenues.",
     "Conséquences : le taux ne se suit pas année par année (une variation ne viendrait que des candidatures, pas du "
       + "vivier) ; un chercheur arrivé ou parti pendant la période compte là où il publie en fin de période ; un jeune "
-      + "chercheur qui a encore peu d'articles (une partie des candidats Starting) n'est pas dans le vivier ; un "
+      + "chercheur qui a encore peu de publications (une partie des candidats Starting) n'est pas dans le vivier ; un "
       + "changement de période du vivier, décidé explicitement, change tous les taux.",
     "Variante « chercheurs top 10 % » : chercheurs ayant au moins un article parmi les 10 % les plus cités de sa "
       + "discipline et de son année, population plus proche de celle que vise l'ERC"
       + (provisoires.length ? ` ; provisoire, la fenêtre de citation des articles ${provisoires.join(", ")} n'étant pas close.` : "."),
     "Référence : l'ensemble des pays comparés, candidatures et chercheurs additionnés avant de diviser. La Suisse et le "
       + "Royaume-Uni, exclus de certains appels, ont des taux faussés vers le bas. Les chercheurs sont des auteurs "
-      + "OpenAlex (ordres de grandeur, pas des effectifs RH). Un chercheur peut compter pour plusieurs établissements "
-      + "(UMR et tutelles) : les taux des établissements ne s'additionnent pas.",
+      + "OpenAlex (ordres de grandeur, pas des effectifs RH).",
     `Un taux est peu fiable sous ${seuil} candidatures : il varie alors fortement d'une candidature à l'autre.`,
     ...(vivierMeta.methode ?? []),
   ];
@@ -119,14 +118,15 @@ export async function loadVivierEffectifs({ champs, disciplineMatch }, contexte,
     );
 }
 
-// Candidatures, lauréats (types avec panel, appels retenus) et chercheurs du vivier d'une entité, discipline par discipline :
+// Candidatures, lauréats (types avec panel, appels retenus) et chercheurs du vivier d'un ensemble d'entités (une entité,
+// ou les pays de la référence, additionnés avant de diviser), discipline par discipline :
 // Map discipline_code → { candidatures, laureats, chercheurs }
-export async function loadVivierEffectifsParDiscipline({ champs }, contexte, entiteId) {
+export async function loadVivierEffectifsParDiscipline({ champs }, contexte, entiteIds) {
   const [debut, fin] = contexte.appels;
   const [erc, viviers] = await Promise.all([
     (await getCollection("erc_effectifs")).aggregate([{
       $match: {
-        entite_id: entiteId,
+        entite_id: { $in: entiteIds },
         annee_appel: { $gte: debut, $lte: fin },
         type_bourse: { $in: contexte.types },
         discipline_code: { $ne: null },
@@ -135,7 +135,7 @@ export async function loadVivierEffectifsParDiscipline({ champs }, contexte, ent
       $group: { _id: "$discipline_code", candidatures: { $sum: `$${champs.candidatures}` }, laureats: { $sum: `$${champs.laureats}` } },
     }]).toArray(),
     (await getCollection("viviers_effectifs")).aggregate([{
-      $match: { entite_id: entiteId, discipline_code: { $ne: null } },
+      $match: { entite_id: { $in: entiteIds }, discipline_code: { $ne: null } },
     }, {
       $group: { _id: "$discipline_code", chercheurs: { $sum: `$${VIVIERS[contexte.vivier]}` } },
     }]).toArray(),
@@ -171,45 +171,53 @@ export function computeTauxVivier({ candidatures, chercheurs }, nbAnnees, seuil)
   };
 }
 
-// Représentable : taux de candidature > 0 (échelle logarithmique) et taux de succès calculable
-const estRepresentable = (p) => (p.candidature.valeur ?? 0) > 0 && p.succes.valeur !== null;
+// Axes par défaut des nuages : taux de candidature au vivier (horizontal) et taux de succès (vertical)
+const AXES_TAUX = { x: (p) => p.candidature.valeur, y: (p) => p.succes.valeur };
 
-// Nuage à quadrants des établissements d'un groupe : taux de candidature au vivier (horizontal) × taux de succès
-// (vertical), coupés aux médianes du groupe ; même lecture (quadrants, zoom, bulles vides) que les matrices.
-// Chaque point porte `candidature`, `succes`, `taille` (lauréats) et `fiable`.
-// `libelle` : nom des repères (« Médiane du groupe », « Médiane des disciplines »)
-export function shapeNuage(points, cle, libelle = "Médiane du groupe") {
+// Nuage à quadrants : taux de candidature au vivier (horizontal) × taux de succès (vertical) par défaut, ou d'autres
+// grandeurs (`axes.x`, `axes.y` : les indices des disciplines) ; même lecture (quadrants, zoom, bulles vides) que les
+// matrices. Chaque point porte `candidature`, `succes`, `taille` (lauréats) et `fiable`.
+// Repères : médianes des points, nommées `libelle` (« Médiane du groupe »), ou repères fixes `reperes`
+// ({ libelle, x, y } : 1 = la moyenne européenne de la discipline).
+export function shapeNuage(points, cle, { axes = AXES_TAUX, libelle = "Médiane du groupe", reperes = null } = {}) {
+  // Représentable : abscisse > 0 (échelle logarithmique) et ordonnée calculable
+  const estRepresentable = (p) => (axes.x(p) ?? 0) > 0 && axes.y(p) !== null;
   const representables = points.filter(estRepresentable);
-  const medianeX = getPointMedian(representables, (p) => p.candidature.valeur);
-  const medianeY = getPointMedian(representables, (p) => p.succes.valeur);
-  const references = {
-    candidature: { libelle, valeur: medianeX?.candidature.valeur ?? null, point: medianeX ? cle(medianeX) : null },
-    succes: { libelle, valeur: medianeY?.succes.valeur ?? null, point: medianeY ? cle(medianeY) : null },
-  };
+  const medianeX = reperes ? null : getPointMedian(representables, axes.x);
+  const medianeY = reperes ? null : getPointMedian(representables, axes.y);
+  const references = reperes
+    ? {
+      candidature: { libelle: reperes.libelle, valeur: reperes.x, point: null },
+      succes: { libelle: reperes.libelle, valeur: reperes.y, point: null },
+    }
+    : {
+      candidature: { libelle, valeur: medianeX ? axes.x(medianeX) : null, point: medianeX ? cle(medianeX) : null },
+      succes: { libelle, valeur: medianeY ? axes.y(medianeY) : null, point: medianeY ? cle(medianeY) : null },
+    };
   const refX = references.candidature.valeur ?? 0;
   const refY = references.succes.valeur ?? 0;
   const enrichis = representables
-    .map((p) => ({ ...p, quadrant: `${p.succes.valeur >= refY ? "h" : "b"}${p.candidature.valeur >= refX ? "d" : "g"}` }))
+    .map((p) => ({ ...p, quadrant: `${axes.y(p) >= refY ? "h" : "b"}${axes.x(p) >= refX ? "d" : "g"}` }))
     // Grosses bulles d'abord : les petites, dessinées ensuite, restent visibles par-dessus
     .sort((a, b) => b.taille - a.taille);
 
-  // Membres de chaque quadrant, du plus fort au plus faible taux de candidature
+  // Membres de chaque quadrant, de la plus forte à la plus faible abscisse
   const quadrants = Object.fromEntries(["hd", "hg", "bd", "bg"].map((key) => [
     key,
-    enrichis.filter((p) => p.quadrant === key).sort((a, b) => b.candidature.valeur - a.candidature.valeur).map(cle),
+    enrichis.filter((p) => p.quadrant === key).sort((a, b) => axes.x(b) - axes.x(a)).map(cle),
   ]));
 
-  // Cadre ajusté aux données et aux médianes. En hauteur, un taux de succès peu fiable et très éloigné des autres
-  // (un lauréat venu d'ailleurs pour deux candidatures déposées : 50 %, voire plus de 100 %) est posé sur le bord
+  // Cadre ajusté aux données et aux repères. En hauteur, une ordonnée peu fiable et très éloignée des autres
+  // (un lauréat venu d'ailleurs pour deux candidatures déposées : 50 %, voire plus de 100 %) est posée sur le bord
   // (`hors_cadre`) pour ne pas écraser les autres points ; sa valeur exacte reste dans l'infobulle et les tableaux.
-  const xs = [refX, ...enrichis.map((p) => p.candidature.valeur)].filter((x) => x > 0);
-  const [bas, haut] = getBornesTukey(enrichis.map((p) => p.succes.valeur));
-  const dansLeCadre = enrichis.filter((p) => p.fiable || (p.succes.valeur >= bas && p.succes.valeur <= haut));
-  const ys = [refY, ...dansLeCadre.map((p) => p.succes.valeur)];
+  const xs = [refX, ...enrichis.map(axes.x)].filter((x) => x > 0);
+  const [bas, haut] = getBornesTukey(enrichis.map(axes.y));
+  const dansLeCadre = enrichis.filter((p) => p.fiable || (axes.y(p) >= bas && axes.y(p) <= haut));
+  const ys = [refY, ...dansLeCadre.map(axes.y)];
   const margeY = (Math.max(...ys) - Math.min(...ys)) * 0.08 || 0.05;
   const bornesY = [Math.max(0, Math.min(...ys) - margeY), Math.max(...ys) + margeY];
   enrichis.forEach((p) => {
-    p.hors_cadre = p.succes.valeur > bornesY[1] ? "haut" : p.succes.valeur < bornesY[0] ? "bas" : null;
+    p.hors_cadre = axes.y(p) > bornesY[1] ? "haut" : axes.y(p) < bornesY[0] ? "bas" : null;
   });
   const tailles = enrichis.map((p) => p.taille);
   const tailleMin = tailles.length ? Math.min(...tailles) : 0;

@@ -172,6 +172,9 @@ router.route("/suivi-recherche/financements/erc/meta").get(async (req, res) => {
       periode: [vivierMeta.periode.annee_debut, vivierMeta.periode.annee_fin],
       annee_debut_recente: vivierMeta.periode.annee_debut_recente,
       methode: getMethodeVivier(vivierMeta, SEUIL_FIABILITE),
+      // Règles de lecture et limites du vivier, textes d'athena à afficher tels quels
+      lecture: vivierMeta.lecture ?? [],
+      limites: vivierMeta.limites ?? [],
       // Chercheurs : auteurs OpenAlex
       sources: getSourcesBibliometrie(biblioMeta).filter(({ libelle }) => libelle === "OpenAlex"),
     },
@@ -445,25 +448,45 @@ router.route("/suivi-recherche/financements/erc/etablissements").get(async (req,
   });
 });
 
-// Nuage à quadrants des disciplines de l'entité : taux de candidature au vivier × taux de succès, discipline (panel ERC)
-// par discipline, coupé aux médianes des disciplines ; taille : lauréats. Mêmes appels (période du vivier) et mêmes
-// panels pour les deux axes. `entite` : l'entité toutes disciplines, repère cité dans le commentaire.
+// Indice : taux de l'entité ÷ taux de référence (1 = la référence) ; null si l'un des deux n'est pas calculable
+function indice(taux, reference) {
+  return taux.valeur !== null && reference.valeur ? taux.valeur / reference.valeur : null;
+}
+
+// Nuage à quadrants des disciplines de l'entité, discipline (panel ERC) par discipline, chacune comparée à la même
+// discipline en Europe : indice de candidature (taux de candidature au vivier ÷ celui des pays comparés présents dans
+// le vivier) × indice de succès (taux de succès ÷ celui de l'ensemble des candidatures ERC), coupés à 1. Les écarts
+// propres à une discipline (couverture du vivier par OpenAlex, habitude de candidater) s'annulent ainsi en grande
+// partie. Les taux bruts et leurs calculs accompagnent chaque indice. Taille : lauréats. Mêmes appels (période du
+// vivier) et mêmes panels partout. `entite` : l'entité toutes disciplines, repère cité dans le commentaire.
 async function loadNuageDisciplines(filters, meta) {
-  const contexte = getContexteVivier(filters, meta, await getVivierMeta());
+  const vivierMeta = await getVivierMeta();
+  const contexte = getContexteVivier(filters, meta, vivierMeta);
   if (contexte.indisponible) return contexte;
 
-  const [effectifs, disciplines] = await Promise.all([
-    loadVivierEffectifsParDiscipline(filters, contexte, filters.entiteId),
+  const pays = getPaysVivier(meta, vivierMeta);
+  const [effectifs, effectifsPays, effectifsMonde, disciplines] = await Promise.all([
+    loadVivierEffectifsParDiscipline(filters, contexte, [filters.entiteId]),
+    loadVivierEffectifsParDiscipline(filters, contexte, pays),
+    loadVivierEffectifsParDiscipline(filters, contexte, [MONDE]),
     (await getCollection("biblio_disciplines")).find({ classement: "erc" }, { projection: { _id: 0, classement: 0 } }).toArray(),
   ]);
   const taux = (e) => computeTauxVivier(e, contexte.nb_annees, SEUIL_FIABILITE);
   const vide = { candidatures: 0, laureats: 0, chercheurs: 0 };
   const points = disciplines.map((discipline) => {
-    const e = effectifs.get(discipline.discipline_code) ?? vide;
+    const code = discipline.discipline_code;
+    const e = effectifs.get(code) ?? vide;
+    const ePays = effectifsPays.get(code) ?? vide;
+    const eMonde = effectifsMonde.get(code) ?? vide;
+    const candidature = taux(e);
+    const succes = ratio(e.laureats, e.candidatures);
+    const reference = { candidature: taux(ePays), succes: ratio(eMonde.laureats, eMonde.candidatures) };
     return {
       ...discipline,
-      candidature: taux(e),
-      succes: ratio(e.laureats, e.candidatures),
+      candidature,
+      succes,
+      reference,
+      indice: { candidature: indice(candidature, reference.candidature), succes: indice(succes, reference.succes) },
       nb_chercheurs: e.chercheurs,
       taille: e.laureats,
       fiable: e.candidatures >= SEUIL_FIABILITE,
@@ -479,7 +502,11 @@ async function loadNuageDisciplines(filters, meta) {
     ...contexte,
     comptage: filters.comptage,
     seuil_fiabilite: SEUIL_FIABILITE,
-    ...shapeNuage(points, (p) => p.discipline_code, "Médiane des disciplines"),
+    ...shapeNuage(points, (p) => p.discipline_code, {
+      axes: { x: (p) => p.indice.candidature, y: (p) => p.indice.succes },
+      reperes: { libelle: "Moyenne européenne de la discipline", x: 1, y: 1 },
+    }),
+    nb_pays_reference: pays.length,
     entite: { candidature: taux(total), succes: ratio(total.laureats, total.candidatures) },
   };
 }

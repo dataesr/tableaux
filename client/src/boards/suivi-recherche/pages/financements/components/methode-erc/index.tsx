@@ -3,7 +3,7 @@ import { Accordion } from "@dataesr/dsfr-plus";
 import type { ErcMeta } from "../../../../api/erc.ts";
 
 // Méthode du bloc ERC : textes d'athena (erc_meta.methode), puis taux de candidature au vivier (calculé par le tableau,
-// suivi de la méthode des viviers d'athena)
+// suivi de la méthode des viviers d'athena), et règles de lecture et limites du vivier (athena)
 export default function MethodeErc({ meta }: { meta: ErcMeta }) {
   const titre = `Méthode · candidatures, lauréats, taux de succès${meta.vivier ? ", taux de candidature au vivier" : ""}`;
   return (
@@ -11,6 +11,22 @@ export default function MethodeErc({ meta }: { meta: ErcMeta }) {
       <ul>
         {[...meta.methode, ...(meta.vivier?.methode ?? [])].map((texte) => <li key={texte}>{texte}</li>)}
       </ul>
+      {meta.vivier && meta.vivier.lecture.length > 0 && (
+        <>
+          <h4 className="fr-h6">Lire le vivier</h4>
+          <ul>
+            {meta.vivier.lecture.map((texte) => <li key={texte}>{texte}</li>)}
+          </ul>
+        </>
+      )}
+      {meta.vivier && meta.vivier.limites.length > 0 && (
+        <>
+          <h4 className="fr-h6">Limites du vivier</h4>
+          <ul>
+            {meta.vivier.limites.map((texte) => <li key={texte}>{texte}</li>)}
+          </ul>
+        </>
+      )}
     </Accordion>
   );
 }

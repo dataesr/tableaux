@@ -4,7 +4,7 @@ import { useMemo } from "react";
 import ChartWrapper from "../../../../../../components/chart-wrapper/index.tsx";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useErcDisciplines } from "../../../../api/erc.ts";
-import type { ErcDisciplinePoint, ErcMeta, ErcOptions, ErcVivierDisciplines, VivierIndisponible } from "../../../../api/erc.ts";
+import type { ErcDisciplinePoint, ErcMeta, ErcOptions, VivierIndisponible } from "../../../../api/erc.ts";
 import type { Selection } from "../../../../api";
 import ChartBusy from "../../../../components/chart-busy/index.tsx";
 import LegendeTailles from "../../../../components/matrice/legende-tailles.tsx";
@@ -17,14 +17,13 @@ import { formatValeurVivier, getCommentaireVivier, getTexteIndisponible } from "
 import getNuageOptions from "../../components/nuage-vivier/options.ts";
 import type { RenduNuage } from "../../components/nuage-vivier/options.ts";
 import QuadrantsVivier from "../../components/nuage-vivier/quadrants.tsx";
-import { getLectureNuage, getTextesNuage } from "../../components/nuage-vivier/utils.ts";
+import { getTextesNuage } from "../../components/nuage-vivier/utils.ts";
+import { formatIndice, getAxesIndices, getReferences, nom, renderDataTable } from "./utils.tsx";
+import type { NuageDisciplines as Nuage } from "./utils.tsx";
 
 import "../../../../components/matrice/styles.scss";
 
-type Nuage = Extract<Extract<ErcVivierDisciplines, { vivier: unknown }>["vivier"], { entite: unknown }>;
-
 const cle = (p: ErcDisciplinePoint) => p.discipline_code;
-const nom = (p: ErcDisciplinePoint) => `${p.discipline_code} · ${p.discipline_nom}`;
 // Couleur du domaine ERC (couleurs globales, les mêmes que la matrice des disciplines de la bibliométrie)
 const couleur = (p: ErcDisciplinePoint) => getDomaineColor(p.domaine_code);
 const RENDU: RenduNuage<ErcDisciplinePoint> = {
@@ -43,7 +42,8 @@ const libelle = (p: ErcDisciplinePoint) => (
 );
 
 function NuageDisciplines({ data, entiteNom, meta }: { data: Nuage; entiteNom: string; meta: ErcMeta }) {
-  const chartOptions = useMemo(() => (data.points.length > 0 ? getNuageOptions(data, RENDU) : null), [data]);
+  const axes = useMemo(() => getAxesIndices(data, entiteNom), [data, entiteNom]);
+  const chartOptions = useMemo(() => (data.points.length > 0 ? getNuageOptions(data, RENDU, axes) : null), [axes, data]);
   const textes = getTextesNuage(data);
 
   if (!chartOptions) {
@@ -54,15 +54,13 @@ function NuageDisciplines({ data, entiteNom, meta }: { data: Nuage; entiteNom: s
     );
   }
 
-  const { candidature, succes } = data.references;
-  const pointMedian = (code: string | null) => data.points.find((p) => p.discipline_code === code);
-  const medianeX = pointMedian(candidature.point);
-  const medianeY = pointMedian(succes.point);
+  const references = getReferences(data);
   const horsCadre = data.points.filter((p) => p.hors_cadre);
   // Exemple de lecture : la plus grosse bulle (points triés par taille décroissante par le serveur)
   const pointLu = data.points[0];
   const { entite } = data;
   const domaines = [...new Map(data.points.map((p) => [p.domaine_code, p.domaine_nom])).entries()];
+  const titre = `Candidature et succès ERC par discipline, comparés à l'Europe · ${entiteNom} · appels ${formatPeriode(data.appels)}`;
 
   const legend = (
     <div className="sr-matrice-legende">
@@ -76,29 +74,30 @@ function NuageDisciplines({ data, entiteNom, meta }: { data: Nuage; entiteNom: s
       <ChartWrapper
         config={{
           id: "suivi-recherche-financements-erc-vivier-disciplines",
-          title: { fr: `Candidature au vivier et taux de succès ERC par discipline · ${entiteNom} · appels ${formatPeriode(data.appels)}`, look: "h5" as const },
+          title: { fr: titre, look: "h5" as const },
           comment: {
             fr: (
               <>
-                {`Chaque bulle est une discipline (panel ERC) de ${entiteNom}. `}
-                {`Horizontal : ${getCommentaireVivier(data, "chaque discipline de l'entité")} Échelle logarithmique. `}
-                {`Vertical : taux de succès, ${textes.unites.laureats} (structure de signature) / ${textes.unites.candidatures} (structure de dépôt), mêmes appels et mêmes panels. `}
-                {`Ligne verticale en tirets : médiane des disciplines, ${formatValeurVivier(candidature.valeur)}${medianeX ? `, celle de ${medianeX.discipline_code}` : ""}. `}
-                {`Ligne horizontale : médiane des disciplines, ${formatPart(succes.valeur)}${medianeY ? `, celle de ${medianeY.discipline_code} (${textes.calculSucces(medianeY.succes)})` : ""}. `}
+                {`Chaque bulle est une discipline (panel ERC) de ${entiteNom}, comparée à la même discipline en Europe : les écarts propres à une discipline (habitude de candidater, couverture du vivier par OpenAlex, plus faible en sciences humaines et sociales) s'annulent ainsi en grande partie. `}
+                {`Horizontal : indice de candidature, taux de candidature au vivier de la discipline ÷ celui de ${references.candidature} dans la même discipline (candidatures et chercheurs additionnés avant de diviser). ${getCommentaireVivier(data, "chaque discipline")} Échelle logarithmique. `}
+                {`Vertical : indice de succès, taux de succès de la discipline (${textes.unites.laureats} / ${textes.unites.candidatures}) ÷ celui de ${references.succes} de la même discipline, mêmes appels et mêmes panels. `}
+                {"Lignes : 1, la moyenne européenne de la discipline. "}
                 {`${entiteNom}, toutes disciplines : ${formatValeurVivier(entite.candidature.valeur)} candidatures par an pour 1 000 chercheurs, taux de succès ${formatPart(entite.succes.valeur)} (${textes.calculSucces(entite.succes)}). `}
-                {horsCadre.length > 0 && `Posées sur le bord du cadre, avec un triangle : taux de succès peu fiables et très éloignés des autres, ${horsCadre.map((p) => `${p.discipline_code} (${formatPart(p.succes.valeur)})`).join(", ")}. `}
-                {`Taille : ${textes.unites.laureats}. Bulles vides : ${textes.peuFiable}, position peu fiable.`}
+                {horsCadre.length > 0 && `Posées sur le bord du cadre, avec un triangle : indices de succès peu fiables et très éloignés des autres, ${horsCadre.map((p) => `${p.discipline_code} (${formatIndice(p.indice.succes)})`).join(", ")}. `}
+                {`Taille : ${textes.unites.laureats}. Bulles vides : ${textes.peuFiable}, position peu fiable. `}
+                {"Les taux bruts et leurs calculs sont dans l'infobulle et la vue tableau."}
                 {data.exclus.length > 0 && ` Disciplines non représentées (aucune candidature ou aucun chercheur dans le vivier) : ${data.exclus.join(", ")}.`}
               </>
             ),
           },
-          readingKey: { fr: <>{getLectureNuage(data, pointLu, `${entiteNom}, ${nom(pointLu)}`)}</> },
+          readingKey: { fr: <>{axes.lecture(pointLu, `${entiteNom}, ${nom(pointLu)}`)}</> },
           sources: getChartSources([...meta.sources, ...(meta.vivier?.sources ?? [])]),
         }}
         legend={legend}
         options={chartOptions}
+        renderData={() => renderDataTable(data, titre)}
       />
-      <QuadrantsVivier cle={cle} colonne="Discipline" data={data} libelle={libelle} vide="Aucune discipline." />
+      <QuadrantsVivier axes={axes} cle={cle} colonne="Discipline" data={data} libelle={libelle} vide="Aucune discipline." />
     </>
   );
 }
@@ -110,8 +109,8 @@ type ErcVivierDisciplinesProps = {
   selection: Selection;
 };
 
-// « Dans quelles disciplines l'entité candidate-t-elle peu mais réussit-elle bien ? » : taux de candidature au vivier
-// × taux de succès, une bulle par discipline
+// « Dans quelles disciplines l'entité candidate-t-elle et réussit-elle mieux que l'Europe ? » : indice de candidature
+// × indice de succès, une bulle par discipline
 export default function ErcVivierDisciplinesChart({ entiteNom, meta, options, selection }: ErcVivierDisciplinesProps) {
   const { data, isError, isLoading, isPlaceholderData } = useErcDisciplines(selection, options);
   // Réponse appliquée une fois le grisé peint : le redessin du nuage n'est jamais muet

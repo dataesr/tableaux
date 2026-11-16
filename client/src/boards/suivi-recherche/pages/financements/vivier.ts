@@ -45,7 +45,7 @@ export function getTexteIndisponible({ indisponible, periode_vivier: periode }: 
 
 // Rappel, sous chaque taux : le vivier est une estimation fixe, pas une série annuelle
 export function getTexteVivierFixe({ appels, periode_vivier: periode, vivier, vivier_provisoire: provisoire }: VivierContexte): string {
-  return `Vivier fixe dans le temps : ${VIVIER_UNITES[vivier]} mesurés une seule fois, sur les articles ${formatPeriode(periode)} ; `
+  return `Vivier fixe dans le temps : ${VIVIER_UNITES[vivier]} mesurés une seule fois, sur les publications ${formatPeriode(periode)} ; `
     + `le même nombre de chercheurs sert de dénominateur à chaque année d'appel ${formatPeriode(appels)} : `
     + "d'une année à l'autre, le taux ne varie qu'avec les candidatures, pas avec le nombre de chercheurs."
     + (provisoire ? " Chercheurs top 10 % provisoires : le top 10 % des articles récents n'est pas définitif." : "");

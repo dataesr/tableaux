@@ -5,9 +5,8 @@ import { getCssColor } from "../../../../../../utils/colors";
 import type { NuageVivier, NuageVivierPoint } from "../../../../api/erc.ts";
 import { dessinerAnnotations, ZOOM } from "../../../../components/matrice/annotations.ts";
 import { TAILLE_MAX, TAILLE_MIN } from "../../../../components/matrice/utils.tsx";
-import { formatPart } from "../../../../utils";
-import { formatValeurVivier } from "../../vivier.ts";
-import { getTextesNuage, QUADRANTS_VIVIER } from "./utils.ts";
+import { getTextesNuage } from "./utils.ts";
+import type { AxesNuage } from "./utils.ts";
 
 // Ce qui distingue un nuage d'un autre (établissements, disciplines) : nom de la série, couleur, étiquette et
 // en-tête de l'infobulle des points, point mis en avant
@@ -22,7 +21,7 @@ export type RenduNuage<P> = {
 
 // Quadrants, tri des bulles et bornes des axes viennent du serveur ; ici, uniquement le mapping vers Highcharts.
 // Même lecture que les matrices : zoom, noms des quadrants dans les coins, étiquettes hors des bulles, bulles vides peu fiables.
-export default function getNuageOptions<P extends NuageVivierPoint>(data: NuageVivier<P>, rendu: RenduNuage<P>) {
+export default function getNuageOptions<P extends NuageVivierPoint>(data: NuageVivier<P>, rendu: RenduNuage<P>, axes: AxesNuage<P>) {
   const { bornes, points, references } = data;
   const textes = getTextesNuage(data);
   const mentionColor = getCssColor("text-mention-grey");
@@ -39,11 +38,11 @@ export default function getNuageOptions<P extends NuageVivierPoint>(data: NuageV
       events: {
         render: function (this: any) {
           dessinerAnnotations<P>(this, {
-            coins: Object.fromEntries(QUADRANTS_VIVIER.map(({ key, titre }) => [key, titre])) as Record<P["quadrant"], string>,
-            // Hors du cadre : taux de succès exact dans l'étiquette
+            coins: Object.fromEntries(axes.quadrants.map(({ key, titre }) => [key, titre])) as Record<P["quadrant"], string>,
+            // Hors du cadre : ordonnée exacte dans l'étiquette
             etiquette: (p) => {
               const nom = rendu.focus(p) ? `<b>${rendu.etiquette(p)}</b>` : rendu.etiquette(p);
-              return p.hors_cadre ? `${nom} (${formatPart(p.succes.valeur)})` : nom;
+              return p.hors_cadre ? `${nom} (${axes.formatY(axes.y(p))})` : nom;
             },
             focus: rendu.focus,
           });
@@ -57,8 +56,8 @@ export default function getNuageOptions<P extends NuageVivierPoint>(data: NuageV
       max: bornes.x[1] ?? undefined,
       startOnTick: false,
       endOnTick: false,
-      title: { text: textes.axeX },
-      labels: { formatter: function () { return formatValeurVivier(Number(this.value)); } },
+      title: { text: axes.axeX },
+      labels: { formatter: function () { return axes.formatX(Number(this.value)); } },
       plotLines: [{
         value: references.candidature.valeur ?? 0,
         color: mentionColor,
@@ -66,7 +65,7 @@ export default function getNuageOptions<P extends NuageVivierPoint>(data: NuageV
         width: 1.5,
         zIndex: 3,
         label: {
-          text: `${references.candidature.libelle} : ${formatValeurVivier(references.candidature.valeur)}`,
+          text: `${references.candidature.libelle} : ${axes.formatX(references.candidature.valeur)}`,
           rotation: 0,
           y: -4,
           x: 4,
@@ -80,15 +79,15 @@ export default function getNuageOptions<P extends NuageVivierPoint>(data: NuageV
       max: bornes.y[1],
       startOnTick: false,
       endOnTick: false,
-      title: { text: textes.axeY },
-      labels: { formatter: function () { return formatPart(Number(this.value)); } },
+      title: { text: axes.axeY },
+      labels: { formatter: function () { return axes.formatY(Number(this.value)); } },
       plotLines: [{
         value: references.succes.valeur ?? 0,
         color: mentionColor,
         width: 1.5,
         zIndex: 3,
         label: {
-          text: `${references.succes.libelle} : ${formatPart(references.succes.valeur)}`,
+          text: `${references.succes.libelle} : ${axes.formatY(references.succes.valeur)}`,
           align: "right",
           x: -4,
           y: -4,
@@ -112,7 +111,7 @@ export default function getNuageOptions<P extends NuageVivierPoint>(data: NuageV
         // Pendant la sélection d'une zone à zoomer, l'infobulle masquerait la zone visée
         if (this.series.chart.mouseIsDown) return false;
         const p = this.point.options.custom as P;
-        return textes.infobulle(p, rendu.entete(p)).join("<br/>");
+        return textes.infobulle(p, rendu.entete(p), axes).join("<br/>");
       },
     },
     series: [{
@@ -122,11 +121,11 @@ export default function getNuageOptions<P extends NuageVivierPoint>(data: NuageV
       name: rendu.nomSerie,
       data: points.map((p) => {
         const color = rendu.couleur(p);
-        // Hors du cadre : posé sur le bord, en triangle pointant vers sa vraie position, taux dans l'étiquette
+        // Hors du cadre : posé sur le bord, en triangle pointant vers sa vraie position, valeur dans l'étiquette
         const bord = p.hors_cadre === "haut" ? bornes.y[1] : p.hors_cadre === "bas" ? bornes.y[0] : null;
         return {
-          x: p.candidature.valeur!,
-          y: bord ?? p.succes.valeur,
+          x: axes.x(p),
+          y: bord ?? axes.y(p),
           z: p.taille,
           color,
           custom: p,

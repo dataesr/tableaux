@@ -35,7 +35,15 @@ export type ErcMeta = {
   types_bourse_defaut: string[];
   // Viviers de chercheurs (athena) : null tant qu'ils ne sont pas activés dans l'administration du tableau.
   // `periode` : articles sur lesquels le vivier est mesuré, une seule fois ; seuls les appels de cette période s'y rapportent
-  vivier: { annee_debut_recente: number; methode: string[]; periode: [number, number]; sources: SourceDonnees[] } | null;
+  // `lecture` et `limites` : textes d'athena (viviers_meta), à afficher tels quels
+  vivier: {
+    annee_debut_recente: number;
+    lecture: string[];
+    limites: string[];
+    methode: string[];
+    periode: [number, number];
+    sources: SourceDonnees[];
+  } | null;
 };
 
 // Paramètres de calcul du bloc ERC, dans l'URL (type_bourse, comptage)
@@ -189,14 +197,23 @@ export type ErcVivierNuage = NuageVivier<ErcVivierPoint> & {
   france: { candidature: TauxVivier; succes: Ratio };
 };
 
-// Disciplines (panels ERC) de l'entité ; `entite` : l'entité toutes disciplines
-export type ErcDisciplinePoint = NuageVivierPoint & BiblioDiscipline;
+// Disciplines (panels ERC) de l'entité, chacune comparée à la même discipline en Europe. `candidature` et `succes` :
+// taux bruts de l'entité ; `reference` : taux de candidature des pays comparés présents dans le vivier et taux de
+// succès de l'ensemble des candidatures ERC, dans la discipline ; `indice` : taux de l'entité ÷ taux de référence
+// (1 = la référence), position du point
+export type ErcDisciplinePoint = NuageVivierPoint & BiblioDiscipline & {
+  indice: { candidature: number | null; succes: number | null };
+  reference: { candidature: TauxVivier; succes: Ratio };
+};
+// `entite` : l'entité toutes disciplines ; `nb_pays_reference` : pays de la référence du taux de candidature
 export type ErcVivierDisciplines =
   | { comptage: Comptage; periode: null }
   | {
     comptage: Comptage;
     periode: [number, number];
-    vivier: (NuageVivier<ErcDisciplinePoint> & { entite: { candidature: TauxVivier; succes: Ratio } }) | VivierIndisponible;
+    vivier:
+      | (NuageVivier<ErcDisciplinePoint> & { entite: { candidature: TauxVivier; succes: Ratio }; nb_pays_reference: number })
+      | VivierIndisponible;
   };
 
 // Rangs de l'établissement choisi dans son groupe sur la période choisie
