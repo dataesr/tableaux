@@ -3,7 +3,7 @@ import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.sr
 import type { HighchartsOptions } from "../../../../../../components/chart-wrapper";
 import { getI18nLabel } from "../../../../../../utils";
 import { getCssColor } from "../../../../../../utils/colors";
-import { formatNumber, formatToRates } from "../../../../../../utils/format";
+import { formatToMillionsLang, formatNumberLang, formatToRates } from "../../../../../../utils/format";
 import { CreateChartOptions } from "../../../../components/chart-ep";
 import i18n from "../../i18n-charts.json";
 
@@ -29,7 +29,7 @@ export default function getOptionsValues(data, displayType, currentLang): Highch
 
   const evaluatedColor = getCssColor("evaluated-project");
   const successfulColor = getCssColor("successful-project");
-  const successRateColor = getCssColor("average-success-rate") || "#d75521";
+  const successRateColor = getCssColor("success-rate") || "#00A95F";
 
   const newOptions: HighchartsInstance.Options = {
     chart: {
@@ -64,13 +64,13 @@ export default function getOptionsValues(data, displayType, currentLang): Highch
       },
       {
         title: {
-          style: { color: "red" },
           text: `${getI18nLabel(i18n, "successRate", currentLang)} (%)`,
+          style: { color: successRateColor }
         },
         opposite: true,
         min: 0,
         max: 100,
-        labels: { format: "{value}%", style: { color: "red" } },
+        labels: { format: "{value}%", style: { color: successRateColor } },
       },
     ],
     tooltip: {
@@ -80,7 +80,7 @@ export default function getOptionsValues(data, displayType, currentLang): Highch
         let html = `<strong>${this.category}</strong><br/>`;
         (this.points || []).forEach((point) => {
           const value = point.y || 0;
-          const formatted = point.series.type === "scatter" ? formatToRates(value / 100) : isFunding ? formatter.format(value * 1000000) : formatNumber(value);
+          const formatted = point.series.type === "scatter" ? formatToRates(value / 100) : isFunding ? formatToMillionsLang(value, currentLang, 1) : formatNumberLang(value, currentLang);
           html += `<span style="color:${point.color}">●</span> ${point.series.name}: <strong>${formatted}</strong><br/>`;
         });
         return html;
@@ -152,7 +152,7 @@ export default function getOptionsValues(data, displayType, currentLang): Highch
             return `${Number(this.y).toFixed(1)}%`;
           },
           y: -10,
-          style: { fontSize: "11px", fontWeight: "600", textOutline: "none" },
+          style: { fontSize: "11px", fontWeight: "600", textOutline: "none", color: successRateColor },
         },
         zIndex: 5,
       },

@@ -73,7 +73,7 @@ export default function Options(data, displayType, currentLang): HighchartsOptio
       {
         title: {
           text: `${getI18nLabel(i18n, "successRate", currentLang)} (%)`,
-          style: { color: successRateColor }
+          // style: { color: successRateColor }
         },
         opposite: true,
         min: 0,
@@ -136,7 +136,7 @@ export default function Options(data, displayType, currentLang): HighchartsOptio
       {
         type: "scatter",
         name: `${getI18nLabel(i18n, "successRate", currentLang)}`,
-        color: successRateColor,
+        // color: successRateColor,
         yAxis: 1,
         data: (() => {
           const data: number[] = [];
@@ -160,7 +160,7 @@ export default function Options(data, displayType, currentLang): HighchartsOptio
             return `${Number(this.y).toFixed(1)}%`;
           },
           y: -10,
-          style: { fontSize: "11px", fontWeight: "600", textOutline: "none" },
+          style: { fontSize: "11px", fontWeight: "600", textOutline: "none", color: successRateColor },
         },
         zIndex: 5,
       },
