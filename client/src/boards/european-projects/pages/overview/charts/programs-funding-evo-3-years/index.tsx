@@ -56,20 +56,6 @@ export default function ProgramsFundingEvo3Years() {
     integrationURL: "/european-projects/components/pages/analysis/overview/charts/projects-types-3",
   };
 
-  // const configChart3: {
-  //   id: string;
-  //   title?: { fr: string; en: string };
-  //   comment?: { fr: React.JSX.Element; en: React.JSX.Element };
-  //   readingKey: any;
-  //   sources: any;
-  //   integrationURL: string;
-  // } = {
-  //   id: "programsEvolutionFundingLinesSuccessRate",
-  //   readingKey: successRatesReadingKey(data, displayType, countryN, adjMascPlural),
-  //   sources: EPChartsSources,
-  //   integrationURL: "/european-projects/components/pages/analysis/overview/charts/projects-types-3",
-  // };
-
   const i18n = {
     ...i18nLocal,
     ...i18nGlobal,
