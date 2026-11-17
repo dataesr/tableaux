@@ -23,7 +23,6 @@ export default function getOptionsValues(data, displayType, currentLang): Highch
     | "total_number_involved"
     | "total_projects";
   const isFunding = valueKey === "total_fund_eur";
-  const formatter = Intl.NumberFormat(currentLang, { notation: 'compact' })
 
   const sortedYears = Array.from(years).sort();
 

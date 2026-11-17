@@ -23,8 +23,7 @@ export default function Options(data, displayType, currentLang): HighchartsOptio
     | "total_number_involved"
     | "total_projects";
   const isFunding = valueKey === "total_fund_eur";
-  // const formatter = Intl.NumberFormat(currentLang, { notation: 'compact' })
-
+ 
   // Créer les catégories combinées : Année - Pilier
   const categories: string[] = [];
   const sortedYears = Array.from(years).sort();
