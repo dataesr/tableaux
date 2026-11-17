@@ -62,11 +62,11 @@ export default function getOptions(data: { data?: FundingItem[] } | null, displa
         gridLineWidth: 0.5,
       },
       {
-        title: { text: `${getI18nLabel(i18n, "successRate")} (%)`, style: { color: successRateColor } },
+        title: { text: `${getI18nLabel(i18n, "successRate")} (%)`},
         opposite: true,
         min: 0,
         max: 100,
-        labels: { format: "{value}%", style: { color: successRateColor } },
+        labels: { format: "{value}%"},
       },
     ],
     legend: { enabled: true, align: "center", verticalAlign: "bottom", layout: "horizontal" },
@@ -84,7 +84,13 @@ export default function getOptions(data: { data?: FundingItem[] } | null, displa
       },
     },
     plotOptions: {
-      column: { borderRadius: 2, borderWidth: 0, grouping: true },
+      column: { 
+        borderRadius: 2, 
+        borderWidth: 0, 
+        grouping: true, 
+        maxPointWidth: 90,
+        groupPadding: 0.25, // espace entre les catégories (par défaut 0.2)
+        pointPadding: 0.1, },
     },
     series: [
       {
@@ -114,7 +120,7 @@ export default function getOptions(data: { data?: FundingItem[] } | null, displa
             return formatToRates(((this as any).y || 0) / 100);
           },
           y: -10,
-          style: { fontSize: "11px", fontWeight: "600", color: successRateColor, textOutline: "none" },
+          style: { fontSize: "11px", fontWeight: "600", textOutline: "none" },
         },
         zIndex: 5,
       } as any,

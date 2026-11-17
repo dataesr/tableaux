@@ -4,6 +4,7 @@ import { CreateChartOptions } from "../../../../components/chart-ep";
 import { formatToPercent } from "../../../../../../utils/format";
 import { getCssColor } from "../../../../../../utils/colors";
 import { getI18nLabel } from "../../../../../../utils";
+import { sortByPillar } from "./utils";
 import i18n from "../../i18n-charts.json";
 
 export default function Options(data, displayType: string = "total_fund_eur", title?: string) {
@@ -11,6 +12,9 @@ export default function Options(data, displayType: string = "total_fund_eur", ti
 
   const valueKey = displayType === "total_coordination_number" ? "proportion_coordination_number" : displayType === "total_number_involved" ? "proportion_number_involved" : displayType === "total_fund_eur" ? "proportion" : "proportion_projects";
   
+  const evaluated = sortByPillar(data.data.filter((item) => item.stage === "evaluated"));
+  const successful = sortByPillar(data.data.filter((item) => item.stage === "successful"));
+
   const newOptions: HighchartsInstance.Options = {
     title: { text: title },
     xAxis: {
@@ -38,6 +42,9 @@ export default function Options(data, displayType: string = "total_fund_eur", ti
       column: {
         borderWidth: 0,
         borderRadius: 0,
+        maxPointWidth: 60,
+        groupPadding: 0.2, // espace entre les catégories (par défaut 0.2)
+        pointPadding: 0.001,
       },
     },
     series: [
@@ -45,8 +52,8 @@ export default function Options(data, displayType: string = "total_fund_eur", ti
         type: "column",
         name: getI18nLabel(i18n, "evaluatedProjects"),
         color: getCssColor("evaluated-project"),
-        groupPadding: 0,
-        data: data.data.filter((item) => item.stage === "evaluated").map((item) => [item.pilier_name_fr, item[valueKey]]),
+        // groupPadding: 0,
+        data: evaluated.map((item) => [item.pilier_name_fr, item[valueKey]]),
         dataLabels: {
           formatter: function () {
             return formatToPercent(this.y ?? 0);
@@ -57,8 +64,8 @@ export default function Options(data, displayType: string = "total_fund_eur", ti
         type: "column",
         name: getI18nLabel(i18n, "successfulProjects"),
         color: getCssColor("successful-project"),
-        groupPadding: 0,
-        data: data.data.filter((item) => item.stage === "successful").map((item) => [item.pilier_name_fr, item[valueKey]]),
+        // groupPadding: 0,
+        data: successful.map((item) => [item.pilier_name_fr, item[valueKey]]),
         dataLabels: {
           formatter: function () {
             return formatToPercent(this.y ?? 0);
