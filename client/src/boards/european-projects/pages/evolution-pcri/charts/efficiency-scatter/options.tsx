@@ -4,6 +4,7 @@ import { CreateChartOptions } from "../../../../components/chart-ep";
 import type { EvolutionDataItem } from "./types";
 import i18n from "./i18n.json";
 import { getCssColor } from "../../../../../../utils/colors";
+import { getI18nLabel } from "../../../../../../utils";
 
 // Ordre des frameworks pour l'animation
 export const FRAMEWORKS_ORDER = ["FP7", "Horizon 2020", "Horizon Europe"];
@@ -262,10 +263,6 @@ export default function Options(
 ) {
   if (!data || data.length === 0) return null;
 
-  function getI18nLabel(key: string): string {
-    return i18n[key]?.[currentLang] || i18n[key]?.["fr"] || key;
-  }
-
   // Calculer les limites globales des axes (basées sur TOUS les frameworks)
   const { xMin, xMax, yMin, yMax } = computeGlobalAxisLimits(data, currentLang, xVar, yVar);
 
@@ -315,14 +312,6 @@ export default function Options(
     };
   });
 
-  // Couleurs par framework
-  // const frameworkColors: Record<string, string> = {
-  //   FP6: "rgba(0, 145, 179, 0.6)",
-  //   FP7: "rgba(102, 102, 255, 0.6)",
-  //   H2020: "rgba(255, 153, 0, 0.6)",
-  //   "HORIZON EUROPE": "rgba(220, 53, 69, 0.6)",
-  // };
-
   // const seriesColor = frameworkColors[selectedFramework] || "rgba(220, 53, 69, 0.5)";
   const seriesColor = getCssColor(`framework-${selectedFramework.toLowerCase().replace(/\s/g, "-")}`) || "rgba(220, 53, 69, 0.5)";
 
@@ -357,22 +346,25 @@ export default function Options(
       min: xVar === "funding" ? xMin / 1000000 : xMin,
       max: xVar === "funding" ? xMax / 1000000 : xMax,
       title: {
-        text: getI18nLabel(xConfig.i18nKey),
+        text: getI18nLabel(i18n, xConfig.i18nKey, currentLang),
       },
       gridLineWidth: 1,
       labels: {
         format: xConfig.isPercent ? "{value}%" : xVar === "funding" ? "{value} M€" : "{value}",
       },
+      gridLineColor: "var(--background-default-grey-hover)",
     },
     yAxis: {
       min: yVar === "funding" ? yMin / 1000000 : yMin,
       max: yVar === "funding" ? yMax / 1000000 : yMax,
       title: {
-        text: getI18nLabel(yConfig.i18nKey),
+        text: getI18nLabel(i18n, yConfig.i18nKey, currentLang),
       },
       labels: {
         format: yConfig.isPercent ? "{value}%" : yVar === "funding" ? "{value} M€" : "{value}",
       },
+      gridLineColor: "var(--background-default-grey-hover)",
+      gridLineWidth: 0.5,
     },
     legend: {
       enabled: false,
@@ -382,10 +374,10 @@ export default function Options(
       headerFormat: "<table>",
       pointFormat:
         '<tr><th colspan="2"><h3>{point.country}</h3></th></tr>' +
-        `<tr><th>${getI18nLabel("tooltip-framework")}:</th><td><b>{point.framework}</b></td></tr>` +
-        `<tr><th>${getI18nLabel(xConfig.i18nKey)}:</th><td><b>${formatTooltipValue(xVar, xVar)}</b></td></tr>` +
-        `<tr><th>${getI18nLabel(yConfig.i18nKey)}:</th><td><b>${formatTooltipValue(yVar, yVar)}</b></td></tr>` +
-        `<tr><th>${getI18nLabel("tooltip-projects")}:</th><td><b>{point.projects}</b></td></tr>`,
+        `<tr><th>${getI18nLabel(i18n, "tooltip-framework", currentLang)}:</th><td><b>{point.framework}</b></td></tr>` +
+        `<tr><th>${getI18nLabel(i18n, xConfig.i18nKey, currentLang)}:</th><td><b>${formatTooltipValue(xVar, xVar)}</b></td></tr>` +
+        `<tr><th>${getI18nLabel(i18n, yConfig.i18nKey, currentLang)}:</th><td><b>${formatTooltipValue(yVar, yVar)}</b></td></tr>` +
+        `<tr><th>${getI18nLabel(i18n, "tooltip-projects", currentLang)}:</th><td><b>{point.projects}</b></td></tr>`,
       footerFormat: "</table>",
       followPointer: true,
     },
@@ -399,7 +391,7 @@ export default function Options(
           style: {
             fontSize: "9px",
             fontWeight: "normal",
-            textOutline: "1px contrast",
+            // textOutline: "1px contrast",
           },
         },
       },
@@ -407,7 +399,7 @@ export default function Options(
     series: [
       {
         type: "bubble",
-        name: getI18nLabel("tooltip-country"),
+        name: getI18nLabel(i18n, "tooltip-country", currentLang),
         data: scatterData,
         color: seriesColor,
       },
