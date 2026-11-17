@@ -77,41 +77,73 @@ export default function ProgramsFundingEvo3Years() {
 
   switch (displayType) {
     case "total_coordination_number":
-      configChart1.title = { fr: "Evolution du nombre de projets coordonnés par le pays sélectionné sur Horizon Europe", en: "Trends in the number of projects coordinated by the selected country under Horizon Europe" };
-      configChart1.comment = { fr: <></>, en: <></> };
-      configChart3.title = { fr: "Part des projets coordonnés par le pays sélectionné sur l'ensemble des coordinations", en: "Proportion of projects coordinated by the selected country out of the total number of coordination roles" };
-      configChart3.comment = { fr: <></>, en: <></> };
+      configChart1.title = { 
+        fr: `Evolution du nombre de projets coordonnés par ${countryN} sur Horizon Europe`, 
+        en: `Trends in the number of projects coordinated by ${countryN} under Horizon Europe` };
+      configChart1.comment = { 
+        fr: <>Ce graphique présente, pour le programme sélectionné, l'évolution du nombre de projets évalués et lauréats coordonnés par le pays sélectionné ainsi que son taux de succès i.e le nombre de projets coordonnés lauréats sur évalués.</>, 
+        en: <>This chart shows, for the selected programme, the trends in projects evaluated and successful coordinated by the selected country, together with its success rate, i.e. the number of successful project coordinations over evaluated ones.</> };
+      configChart3.title = { 
+        fr: `Part des projets coordonnés par ${countryN} sur l'ensemble des coordinations`, 
+        en: `Share of projects coordinated by ${countryN} out of the total number of coordination roles` 
+      };
+      configChart3.comment = { 
+        fr: <>Ce graphique présente, pour le programme sélectionné, l'évolution du nombre de projets évalués et lauréats coordonnés par le pays sélectionné, en part de l'ensemble des coordinations.</>, 
+        en: <>This chart shows, for the selected programme, the trends in the number of evaluated and successful projects coordinated by the selected country, as a share of all coordinations.</> 
+      };
       break;
     case "total_number_involved":
-      configChart1.title = { fr: "Evolution du nombre de candidats et de participants du pays sélectionné sur Horizon Europe", en: "Trends in the number of applicants and participants from the selected country under Horizon Europe" };
-      configChart1.comment = { fr: <></>, en: <></> };
-      configChart3.title = { fr: "Part du nombre de candidats et de participants du pays sélectionné", en: "Proportion of the total number of candidates and participants from the selected country" };
-      configChart3.comment = { fr: <></>, en: <></> };
+      configChart1.title = { 
+        fr: `Evolution du nombre de candidats et de participants ${adjMascPlural} sur Horizon Europe`, 
+        en: `Trends in the number of ${adjMascPlural} applicants and participants under Horizon Europe` 
+      };
+      configChart1.comment = { 
+        fr: <>Ce graphique présente, pour le programme sélectionné, l'évolution du nombre de candidats et de participants implantés dans le pays sélectionné ainsi que son taux de succès i.e le nombre de participants sur le nombre de candidats.</>, 
+        en: <>This chart shows, for the selected programme, the trends in the number of applicants and participants established in the selected country, together with its success rate, i.e. the number of participants over the number of applicants.</> 
+      };
+      configChart3.title = { 
+        fr: `Part des candidats et de participants ${adjMascPlural} sur l'ensemble des pays`, 
+        en: `Share of the ${adjMascPlural} applicants and participants out of all countries` 
+      };
+      configChart3.comment = { 
+        fr: <>Ce graphique présente, pour le programme sélectionné, l'évolution du nombre de candidats et participants implantés dans le pays sélectionné, en part de l'ensemble des pays.</>, 
+        en: <>This chart shows, for the selected programme, the trends in the number of applicants and participants established in the selected country, as a share of all countries.</> 
+      };
       break;
     case "total_projects":
-      configChart1.title = { fr: "Evolution du nombre de projets impliquant au moins un participant du pays sélectionné sur Horizon Europe", en: "Trends in the number of projects involving at least one participant from the selected country under Horizon Europe" };
-      configChart1.comment = { fr: <></>, en: <></> };
-      configChart3.title = { fr: "Part du nombre de projets impliquant au moins un participant du pays sélectionné", en: "Proportion of projects involving at least one participant from the selected country" };
-      configChart3.comment = { fr: <></>, en: <></> };
+      configChart1.title = { 
+        fr: `Evolution du nombre de projets évalués et lauréats impliquant ${countryN} sur Horizon Europe`, 
+        en: `Trends in the number of evaluated and successful projects involving ${countryN} under Horizon Europe`
+      };
+      configChart1.comment = { 
+        fr: <>Ce graphique présente, pour le programme sélectionné, l'évolution du nombre de projets évalués et lauréats impliquant le pays sélectionné ainsi que son taux de succès i.e le nombre de projets lauréats sur évalués.</>, 
+        en: <>This chart shows, for the selected programme, the trends in the number of evaluated and successful projects involving the selected country, together with its success rate, i.e. the ratio of successful projects to evaluated projects.</> 
+      };
+      configChart3.title = { 
+        fr: `Part du nombre de projets évalués et lauréats impliquant ${countryN} sur l'ensemble des pays`, 
+        en: `Share of evaluated and successful projects involving ${countryN} out of all countries` 
+      };
+      configChart3.comment = { 
+        fr: <>Ce graphique présente, pour le programme sélectionné, l'évolution du nombre de projets évalués et lauréats impliquant le pays sélectionné, en part de l'ensemble des pays.</>, 
+        en: <>This chart shows, for the selected programme, the trends in the number of evaluated and successful projects involving the selected country, as a share of all countries.</> 
+      };
       break;
     default:
       configChart1.title = {
-        fr: "Evolution des financements demandés et obtenus sur Horizon Europe",
-        en: "Trends in funding requested and secured under Horizon Europe",
+        fr: `Evolution des financements demandés et obtenus par ${countryN} sur Horizon Europe`,
+        en: `Trends in funding requested and secured by ${countryN} in Horizon Europe`,
       };
       configChart1.comment = {
-        fr: <>Ce graphique montre l'évolution des financements demandés et obtenus pour les programmes du programme Horizon Europe sur les trois dernières années. Les barres représentent les montants demandés et obtenus. La ligne verte indique le taux de
-          succès correspondant.</>,
-        en: <>This chart shows the evolution of funding applied for and obtained for the programs of the Horizon Europe programme over the last three years. The bars represent the amounts applied for and obtained. The line indicates the corresponding
-          success rate.</>,
+        fr: <>Ce graphique présente, pour le programme sélectionné, l'évolution des financements demandés et obtenus par le pays sélectionné ainsi que son taux de succès i.e le montant des financements obtenus sur demandés.</>,
+        en: <>This chart shows, for the selected programme, the trends in funding requested and secured by the selected country, together with its funding success rate, i.e. the ratio of funding secured to funding requested.</>,
       };
       configChart3.title = {
-        fr: "Part des financements du pays demandés et obtenus par rapport au total des participants sur Horizon Europe",
-        en: "Proportion of funding requested and secured by the country as a proportion of the total number of participants in Horizon Europe",
+        fr: `Part des financements demandés et obtenus par ${countryN} sur l'ensemble des pays`,
+        en: `Share of funding requested and secured by ${countryN} out of all countries`,
       };
       configChart3.comment = {
-        fr: <>Ce graphique montre le pourcentage des financements demandés et obtenus par le pays sélectionné par rapport au total des participants.</>,
-        en: <>This chart shows the percentage of funding applied for and obtained by the selected country as a proportion of total participants.</>,
+        fr: <>Ce graphique présente, pour le programme sélectionné, l'évolution des financements demandés et obtenus par le pays sélectionné, en part de l'ensemble des pays.</>,
+        en: <>This chart shows, for the selected programme, the trends in funding requested and secured by the selected country, as a share of all countries.</>,
       };
   }
 
