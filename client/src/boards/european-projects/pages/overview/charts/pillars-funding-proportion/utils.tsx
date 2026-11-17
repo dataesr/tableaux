@@ -32,6 +32,9 @@ export function useGetParams() {
   return params.join("&");
 }
 
+export const sortByPillar = (items) =>
+  [...items].sort((a, b) => String(a.pillar).localeCompare(String(b.pillar), undefined, { numeric: true }));
+
 /**
  * Génère un composant de tableau accessible avec les données de proportion de financement par pilier
  * @param data - Les données de proportion de financement par pilier
@@ -66,9 +69,9 @@ export function renderDataTable(data: { data: Array<{ pilier_name_fr: string; st
       dataByPillar[item.pilier_name_fr].successfulProportion = item.proportion;
     }
   });
-
-  // Trier par proportion successful (décroissant)
-  const sortedPillars = Object.values(dataByPillar).sort((a, b) => b.successfulProportion - a.successfulProportion);
+  
+  // sort by pillar code
+  const sortedPillars = Object.values(dataByPillar).sort((a, b) => a.pillar.localeCompare(b.pillar, undefined, { numeric: true }));
 
   const formatPercentage = (value: number) => {
     return new Intl.NumberFormat(currentLang === "fr" ? "fr-FR" : "en-US", { 
