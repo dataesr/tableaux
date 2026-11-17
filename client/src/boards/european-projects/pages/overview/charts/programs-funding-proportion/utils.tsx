@@ -39,7 +39,6 @@ export function useGetParams() {
   const adjMascPlural =
   currentLang === "fr" && !countryAdj.m.endsWith("s") ? `${countryAdj.m}s` : countryAdj.m
 
-
   return { params: params.join("&"), currentLang, countryN, adjMascPlural }
 }
 

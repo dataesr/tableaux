@@ -26,10 +26,9 @@ export default function ProgramsFundingProportion({ displayType = "total_fund_eu
     integrationURL: string;
     readingKey?: { fr: React.JSX.Element; en: React.JSX.Element }
     sources: typeof EPChartsSources;
-    title?: { en: string; fr: string; };
+    title?: { en: string; fr: string; }
   } = {
     id: "programsFundingProportion",
-
     readingKey: readingKey(data, isLoading, displayType, currentLang, countryN, adjMascPlural),
     sources: EPChartsSources,
     integrationURL: "/european-projects/components/pages/analysis/overview/charts/programs-funding-proportion",

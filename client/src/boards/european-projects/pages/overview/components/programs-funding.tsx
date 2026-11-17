@@ -30,9 +30,9 @@ export default function ProgramsFunding() {
 
       <Row className="fr-mt-1w">
         <Col>
-          <ProgramsFundingProportion displayType={displayType} />
+          <ProgramsFundingProportion displayType={displayType}/>
         </Col>
       </Row>
     </Container>
-  );
+  )
 }
