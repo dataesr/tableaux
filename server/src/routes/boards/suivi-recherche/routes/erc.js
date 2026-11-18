@@ -469,7 +469,7 @@ async function loadNuageDisciplines(filters, meta) {
     loadVivierEffectifsParDiscipline(filters, contexte, [filters.entiteId]),
     loadVivierEffectifsParDiscipline(filters, contexte, pays),
     loadVivierEffectifsParDiscipline(filters, contexte, [MONDE]),
-    (await getCollection("biblio_disciplines")).find({ classement: "erc" }, { projection: { _id: 0, classement: 0 } }).toArray(),
+    (await getCollection("biblio_disciplines")).find({ nomenclature_disciplinaire: "panel_erc" }, { projection: { _id: 0, nomenclature_disciplinaire: 0 } }).toArray(),
   ]);
   const taux = (e) => computeTauxVivier(e, contexte.nb_annees, SEUIL_FIABILITE);
   const vide = { candidatures: 0, laureats: 0, chercheurs: 0 };

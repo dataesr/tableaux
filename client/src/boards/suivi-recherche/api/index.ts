@@ -17,7 +17,7 @@ export type SourceDonnees = { date: string | null; libelle: string; url: string 
 export type BiblioMeta = {
   annees: number[];
   annees_influence_provisoire: number[];
-  classement: string;
+  nomenclature_disciplinaire: string;
   date_calcul: string;
   methode: string[];
   nb_revues_tete: number;

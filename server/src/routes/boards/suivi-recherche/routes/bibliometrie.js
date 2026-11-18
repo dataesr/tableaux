@@ -17,7 +17,7 @@ import { getSourcesBibliometrie } from "../sources.js";
 
 const router = new express.Router();
 
-const CLASSEMENT = "erc";
+const NOMENCLATURE_DISCIPLINAIRE = "panel_erc";
 const MONDE = "MONDE";
 const PERIMETRES = ["toutes_revues_openalex", "revues_sjr"];
 const DOMAINES = ["LS", "PE", "SH"];
@@ -59,7 +59,7 @@ function parseFilters(query, { withEntite = true, withDiscipline = true } = {}) 
   const entiteId = ror_id ?? ENTITE_NATIONALE;
   const match = {
     perimetre,
-    classement: CLASSEMENT,
+    nomenclature_disciplinaire: NOMENCLATURE_DISCIPLINAIRE,
     annee_publication: { $gte: debut, $lte: fin },
   };
   if (withEntite) match.entite_id = { $in: [entiteId, MONDE] };
@@ -126,7 +126,7 @@ router.route("/suivi-recherche/bibliometrie/meta").get(async (req, res) => {
 router.route("/suivi-recherche/bibliometrie/disciplines").get(async (req, res) => {
   const collection = await getCollection("biblio_disciplines");
   const disciplines = await collection
-    .find({ classement: CLASSEMENT }, { projection: { _id: 0 } })
+    .find({ nomenclature_disciplinaire: NOMENCLATURE_DISCIPLINAIRE }, { projection: { _id: 0 } })
     .toArray();
   res.json(disciplines);
 });
@@ -142,7 +142,7 @@ router.route("/suivi-recherche/bibliometrie/revues-tete").get(async (req, res) =
     throw new BadRequestError("inclure_multidisciplinaires must be true or false");
   }
 
-  const match = { classement: CLASSEMENT };
+  const match = { nomenclature_disciplinaire: NOMENCLATURE_DISCIPLINAIRE };
   if (discipline) match.discipline_code = discipline;
   else if (domaine) match.discipline_code = { $regex: `^${domaine}` };
   if (inclure_multidisciplinaires === "false") match.categorie = "disciplinaire";
@@ -152,7 +152,7 @@ router.route("/suivi-recherche/bibliometrie/revues-tete").get(async (req, res) =
       .find(match, { projection: { _id: 0, discipline_code: 1, categorie: 1, sjr_id: 1, titre: 1, sjr: 1 } })
       .toArray(),
     (await getCollection("biblio_disciplines"))
-      .find({ classement: CLASSEMENT }, { projection: { _id: 0, discipline_code: 1, discipline_nom: 1 } })
+      .find({ nomenclature_disciplinaire: NOMENCLATURE_DISCIPLINAIRE }, { projection: { _id: 0, discipline_code: 1, discipline_nom: 1 } })
       .toArray(),
   ]);
   const noms = new Map(disciplines.map((d) => [d.discipline_code, d.discipline_nom]));
@@ -293,7 +293,7 @@ router.route("/suivi-recherche/bibliometrie/specialisation").get(async (req, res
     (await getCollection("entites"))
       .find({ entite_id: { $in: ids } }, { projection: { _id: 0, entite_id: 1, nom: 1 } })
       .toArray(),
-    (await getCollection("biblio_disciplines")).find({ classement: CLASSEMENT }, { projection: { _id: 0 } }).toArray(),
+    (await getCollection("biblio_disciplines")).find({ nomenclature_disciplinaire: NOMENCLATURE_DISCIPLINAIRE }, { projection: { _id: 0 } }).toArray(),
   ]);
 
   // Articles par entité × discipline et par entité (toutes disciplines), sommés sur les années [premiere, derniere]
@@ -431,7 +431,7 @@ router.route("/suivi-recherche/bibliometrie/positionnement").get(async (req, res
         },
       ])
       .toArray(),
-    (await getCollection("biblio_disciplines")).find({ classement: CLASSEMENT }, { projection: { _id: 0 } }).toArray(),
+    (await getCollection("biblio_disciplines")).find({ nomenclature_disciplinaire: NOMENCLATURE_DISCIPLINAIRE }, { projection: { _id: 0 } }).toArray(),
   ]);
 
   // Totaux par entité × période, toutes disciplines (clé sans code) et par discipline, en un seul passage
