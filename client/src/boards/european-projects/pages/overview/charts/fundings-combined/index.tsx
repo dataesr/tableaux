@@ -3,13 +3,13 @@ import React from "react"
 
 import ChartWrapper from "../../../../../../components/chart-wrapper"
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default"
-import { formatCurrencyLang, formatNumberLang, formatToRates } from "../../../../../../utils/format"
+import { formatCurrencyLang, formatNumberLang, formatToRates, formatToPercentLang } from "../../../../../../utils/format"
 import { EPChartsSources } from "../../../../config"
 import getOptions from "./options"
 import { getData } from "./query"
 import { useGetParams, renderDataTable } from "./utils"
 import i18n from "./i18n.json"
-
+import { getLevelLabels } from "../../../../utils/levelsGet"
 
 type ChartConfig = {
   id: string;
@@ -62,7 +62,7 @@ export default function FundingCombined({ displayType = "total_fund_eur", groupB
 
   // Variables communes à tous les textes (fragments du niveau : pilier, programme, topic, destination)
   const vars = {
-    ...i18n.levels[groupBy][lang],
+    ...getLevelLabels(groupBy, lang),
     country: countryN,
     adjective: adjMascPlural,
     name: (lang === "fr" ? readingDataEvaluated?.name_fr : readingDataEvaluated?.name_en) || "",
@@ -77,7 +77,7 @@ export default function FundingCombined({ displayType = "total_fund_eur", groupB
       const values = {
         evaluated: formatNumberLang(readingDataEvaluated?.total_coordination_number ?? 0, currentLang),
         successful: formatNumberLang(readingDataSuccessful?.total_coordination_number ?? 0, currentLang),
-        rate: formatToRates(total_coordination_number_rates),
+        rate: formatToPercentLang(total_coordination_number_rates*100, currentLang),
       }
       const title = fillTemplate(texts.title[lang], vars)
       const comment = renderTemplate(texts.comment[lang], vars)
@@ -93,7 +93,7 @@ export default function FundingCombined({ displayType = "total_fund_eur", groupB
       const values = {
         evaluated: formatNumberLang(readingDataEvaluated?.total_number_involved ?? 0, currentLang),
         successful: formatNumberLang(readingDataSuccessful?.total_number_involved ?? 0, currentLang),
-        rate: formatToRates(total_number_involved_rates),
+        rate: formatToPercentLang(total_number_involved_rates*100, currentLang),
       }
       const title = fillTemplate(texts.title[lang], vars)
       const comment = renderTemplate(texts.comment[lang], vars)
@@ -109,7 +109,7 @@ export default function FundingCombined({ displayType = "total_fund_eur", groupB
       const values = {
         evaluated: formatNumberLang(readingDataEvaluated?.total_projects ?? 0, currentLang),
         successful: formatNumberLang(readingDataSuccessful?.total_projects ?? 0, currentLang),
-        rate: formatToRates(total_number_projects_rates),
+        rate: formatToPercentLang(total_number_projects_rates*100, currentLang),
       }
       const title = fillTemplate(texts.title[lang], vars)
       const comment = renderTemplate(texts.comment[lang], vars)
@@ -125,7 +125,7 @@ export default function FundingCombined({ displayType = "total_fund_eur", groupB
       const values = {
         requested: formatCurrencyLang(readingDataEvaluated?.total_fund_eur ?? 0, currentLang),
         secured: formatCurrencyLang(readingDataSuccessful?.total_fund_eur ?? 0, currentLang),
-        rate: formatToRates(total_fund_eur_rates),
+        rate: formatToPercentLang(total_fund_eur_rates*100, currentLang),
       }
       const title = fillTemplate(texts.title[lang], vars)
       const comment = renderTemplate(texts.comment[lang], vars)

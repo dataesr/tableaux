@@ -12,10 +12,10 @@ import i18n from "./i18n.json";
 import { getLevelLabels } from "../../../../utils/levelsGet";
 
 type ChartConfig = {
-  comment?: { fr: React.JSX.Element; en: React.JSX.Element };
   id: string;
   idQuery: string;
   integrationURL: string;
+  comment?: { fr: React.JSX.Element; en: React.JSX.Element };
   readingKey?: { fr: React.JSX.Element; en: React.JSX.Element };
   sources: typeof EPChartsSources;
   title?: { en: string; fr: string; };
