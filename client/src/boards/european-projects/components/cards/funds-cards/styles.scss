@@ -172,7 +172,7 @@
       
       .progress-fill {
         height: 100%;
-        background-color: var(--card-primary-color, var(--text-label-blue-ecume));
+        background-color: var(--card-primary-color, var(--average-success-rate-color));
         transition: width 0.3s ease;
         border-radius: 0;
       }
