@@ -1,19 +1,25 @@
 import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js";
 
 import { CreateChartOptions } from "../../../../components/chart-ep";
-import { formatToPercent } from "../../../../../../utils/format";
+import { formatToPercentLang } from "../../../../../../utils/format";
 import { getCssColor } from "../../../../../../utils/colors";
 import { getI18nLabel } from "../../../../../../utils";
-import { sortByPillar } from "./utils";
+import { getName, sortByCode } from "./utils";
 import i18n from "../../i18n-charts.json";
 
-export default function Options(data, displayType: string = "total_fund_eur", title?: string) {
+export default function Options(data, displayType: string = "total_fund_eur", title?: string, currentLang: "fr" | "en" = "fr") {
   if (!data) return null;
 
-  const valueKey = displayType === "total_coordination_number" ? "proportion_coordination_number" : displayType === "total_number_involved" ? "proportion_number_involved" : displayType === "total_fund_eur" ? "proportion" : "proportion_projects";
-  
-  const evaluated = sortByPillar(data.data.filter((item) => item.stage === "evaluated"));
-  const successful = sortByPillar(data.data.filter((item) => item.stage === "successful"));
+  const valueKeys: Record<string, string> = {
+  total_coordination_number: "proportion_coordination_number",
+  total_number_involved: "proportion_number_involved",
+  total_projects: "proportion_projects",
+  total_fund_eur: "proportion",
+  };
+  const valueKey = valueKeys[displayType] ?? "proportion";
+
+  const evaluated = sortByCode(data.data.filter((item) => item.stage === "evaluated"));
+  const successful = sortByCode(data.data.filter((item) => item.stage === "successful"));
 
   const newOptions: HighchartsInstance.Options = {
     title: { text: title },
@@ -31,8 +37,9 @@ export default function Options(data, displayType: string = "total_fund_eur", ti
       gridLineWidth: 0.5,
     },
     tooltip: {
+      enabled: false,
       pointFormatter: function () {
-        return `${getI18nLabel(i18n, valueKey)} : <b>${formatToPercent(this.y ?? 0)}</b>`;
+        return `${getI18nLabel(i18n, valueKey)} : <b>${formatToPercentLang(this.y ?? 0, currentLang)}</b>`;
       },
     },
     plotOptions: {
@@ -53,10 +60,10 @@ export default function Options(data, displayType: string = "total_fund_eur", ti
         name: getI18nLabel(i18n, "evaluatedProjects"),
         color: getCssColor("evaluated-project"),
         // groupPadding: 0,
-        data: evaluated.map((item) => [item.pilier_name_fr, item[valueKey]]),
+        data: evaluated.map((item) => [getName(item, currentLang), item[valueKey]]),
         dataLabels: {
           formatter: function () {
-            return formatToPercent(this.y ?? 0);
+            return formatToPercentLang(this.y ?? 0, currentLang);
           },
         },
       },
@@ -65,10 +72,10 @@ export default function Options(data, displayType: string = "total_fund_eur", ti
         name: getI18nLabel(i18n, "successfulProjects"),
         color: getCssColor("successful-project"),
         // groupPadding: 0,
-        data: successful.map((item) => [item.pilier_name_fr, item[valueKey]]),
+        data: successful.map((item) => [getName(item, currentLang), item[valueKey]]),
         dataLabels: {
           formatter: function () {
-            return formatToPercent(this.y ?? 0);
+            return formatToPercentLang(this.y ?? 0, currentLang);
           },
         },
       },

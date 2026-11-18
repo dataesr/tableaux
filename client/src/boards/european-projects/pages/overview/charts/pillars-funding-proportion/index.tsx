@@ -1,14 +1,17 @@
 import { useQuery } from "@tanstack/react-query";
+import React from "react";
 
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
-import { formatToPercent } from "../../../../../../utils/format";
+import { formatToPercentLang } from "../../../../../../utils/format";
 import { EPChartsSources } from "../../../../config";
 import options from "./options";
 import { getData } from "./query";
-import { useGetParams } from "./utils";
+import { getCode, getName, useGetParams } from "./utils";
+import i18n from "./i18n.json";
+import { getLevelLabels } from "../../../../utils/levelsGet";
 
-const config: {
+type ChartConfig = {
   comment?: { fr: React.JSX.Element; en: React.JSX.Element };
   id: string;
   idQuery: string;
@@ -16,119 +19,117 @@ const config: {
   readingKey?: { fr: React.JSX.Element; en: React.JSX.Element };
   sources: typeof EPChartsSources;
   title?: { en: string; fr: string; };
-} = {
+};
+
+const baseConfig: ChartConfig = {
   id: "pillarsFundingProportion",
   idQuery: "pillarsFundingProportion",
   sources: EPChartsSources,
   integrationURL: "/european-projects/components/pages/analysis/overview/charts/destination-funding-proportion",
 };
 
+// Remplace les {placeholders} par leur valeur (pour les titres : texte brut)
+function fillTemplate(tpl: string, vars: Record<string, string>): string {
+  return tpl.replace(/\{(\w+)\}/g, (_, key) => vars[key] ?? "");
+}
+
+// Idem + transforme les **texte** en <strong>texte</strong> (pour comments et readingKeys)
+function renderTemplate(tpl: string, vars: Record<string, string>): React.JSX.Element {
+  const parts = fillTemplate(tpl, vars).split(/\*\*(.+?)\*\*/g);
+  return <>{parts.map((part, i) => (i % 2 ? <strong key={i}>{part}</strong> : part))}</>;
+}
+
 export default function PillarsFundingProportion({ displayType = "total_fund_eur" }: { displayType: string }) {
-  const params = useGetParams();
+  const { params, currentLang, countryN, adjMascPlural } = useGetParams();
 
   const { data, isLoading } = useQuery({
-    queryKey: [config.idQuery, params],
+    queryKey: [baseConfig.idQuery, params],
     queryFn: () => getData(params),
   });
 
   if (isLoading || !data) return <DefaultSkeleton />;
   const readingDataEvaluated = data.data.filter((d) => d.stage === "evaluated")[0];
-  const readingDataSuccessful = data.data.find((d) => d.stage === "successful" && d.pillar === readingDataEvaluated.pillar);
+  const readingDataSuccessful = readingDataEvaluated
+    ? data.data.find((d) => d.stage === "successful" && getCode(d) === getCode(readingDataEvaluated))
+    : undefined;
+
+  // ChartWrapper / ChartFooter n'affichent que la langue de l'URL :
+  // on ne calcule donc les textes que pour cette langue
+  const lang = (currentLang === "en" ? "en" : "fr") as "fr" | "en";
+
+  // Variables communes à tous les textes
+  // Ce graphique n'affiche que le niveau pilier : les fragments de niveau ({scope}, {byLevel}, {inLevel}) sont fixés à "pillar"
+  const vars = {
+    ...getLevelLabels("pillar", lang),
+    name: getName(readingDataEvaluated, lang),
+    country: countryN,
+    adjective: adjMascPlural,
+  };
+
+  // Config locale au composant (ne pas modifier un objet partagé entre les instances)
+  const config: ChartConfig = { ...baseConfig };
 
   switch (displayType) {
-    case "total_coordination_number":
-      ((config.comment = {
-        fr: <>Ce graphique présente, pour chaque pilier, la part du pays sélectionné dans l’ensemble des coordinations de projets évalués et lauréats, tous pays confondus.</>,
-        en: <>This chart shows, for each pillar, the selected country's share of all evaluated and successful project coordinations, across all countries.</>,
-      }),
-        (config.readingKey = {
-          fr: (
-            <>
-              Dans le cadre des appels à projets concernant « {readingDataEvaluated.pilier_name_fr} », les entités du pays sélectionné coordonnent {formatToPercent(readingDataEvaluated.proportion_coordination_number)} de l'ensemble des projets
-              évalués et {formatToPercent(readingDataSuccessful.proportion_coordination_number)} de l'ensemble des projets lauréats.
-            </>
-          ),
-          en: (
-            <>
-              Under calls for proposals concerning "{readingDataEvaluated.pilier_name_en}", entities from the selected country coordinate {formatToPercent(readingDataEvaluated.proportion_coordination_number)} of all evaluated projects and{" "}
-              {formatToPercent(readingDataSuccessful.proportion_coordination_number)} of all successful projects.
-            </>
-          ),
-        }),
-        (config.title = {
-          fr: "Part des coordinations de projets évalués et lauréats par le pays",
-          en: "Share of evaluated and successful project coordinations by the country",
-        }));
+    case "total_coordination_number": {
+      const texts = i18n.total_coordination_number;
+      const values = {
+        evaluated: formatToPercentLang(readingDataEvaluated?.proportion_coordination_number ?? 0, currentLang),
+        successful: formatToPercentLang(readingDataSuccessful?.proportion_coordination_number ?? 0, currentLang),
+      };
+      const title = fillTemplate(texts.title[lang], vars);
+      const comment = renderTemplate(texts.comment[lang], vars);
+      const readingKey = renderTemplate(texts.readingKey[lang], { ...vars, ...values });
+      config.title = { fr: title, en: title };
+      config.comment = { fr: comment, en: comment };
+      config.readingKey = { fr: readingKey, en: readingKey };
       break;
+    }
 
-    case "total_number_involved":
-      ((config.comment = {
-        fr: (
-          <>
-            Ce graphique présente, pour chaque pilier, la part du pays sélectionné dans l'ensemble des candidats (entités présentes dans les propositions évaluées) et dans l'ensemble des participants (entités présentes dans les projets lauréats),
-            tous pays confondus.
-          </>
-        ),
-        en: <>This chart shows, for each pillar, the selected country's share of all applicants (entities named in evaluated proposals) and of all participants (entities named in successful projects), across all countries.</>,
-      }),
-        (config.readingKey = {
-          fr: (
-            <>
-              Dans le cadre des appels à projets concernant « {readingDataEvaluated.pilier_name_fr} », les entités du pays sélectionné représentent {formatToPercent(readingDataEvaluated.proportion_number_involved)} de l'ensemble des candidats et{" "}
-              {formatToPercent(readingDataSuccessful.proportion_number_involved)} de l'ensemble des participants.
-            </>
-          ),
-          en: (
-            <>
-              Under calls for proposals concerning "{readingDataEvaluated.pilier_name_en}", entities from the selected country account for {formatToPercent(readingDataEvaluated.proportion_number_involved)} of all applicants and{" "}
-              {formatToPercent(readingDataSuccessful.proportion_number_involved)} of all participants.
-            </>
-          ),
-        }),
-        (config.title = {
-          fr: "Part des candidats et des participants du pays",
-          en: "Share of applicants and participants from the country",
-        }));
+    case "total_number_involved": {
+      const texts = i18n.total_number_involved;
+      const values = {
+        evaluated: formatToPercentLang(readingDataEvaluated?.proportion_number_involved ?? 0, currentLang),
+        successful: formatToPercentLang(readingDataSuccessful?.proportion_number_involved ?? 0, currentLang),
+      };
+      const title = fillTemplate(texts.title[lang], vars);
+      const comment = renderTemplate(texts.comment[lang], vars);
+      const readingKey = renderTemplate(texts.readingKey[lang], { ...vars, ...values });
+      config.title = { fr: title, en: title };
+      config.comment = { fr: comment, en: comment };
+      config.readingKey = { fr: readingKey, en: readingKey };
       break;
+    }
 
-    case "total_projects":
-      ((config.comment = {
-        fr: <>Ce graphique présente, pour chaque pilier, la part du pays sélectionné dans l'ensemble des projets évalués et lauréats.</>,
-        en: <>This chart shows, for each pillar, the selected country's share of all evaluated and successful projects.</>,
-      }),
-        (config.title = {
-          fr: "Part des projets du pays",
-          en: "Share of the country's projects",
-        }));
-
+    case "total_projects": {
+      const texts = i18n.total_projects;
+      const values = {
+        evaluated: formatToPercentLang(readingDataEvaluated?.proportion_projects ?? 0, currentLang),
+        successful: formatToPercentLang(readingDataSuccessful?.proportion_projects ?? 0, currentLang),
+      };
+      const title = fillTemplate(texts.title[lang], vars);
+      const readingKey = renderTemplate(texts.readingKey[lang], { ...vars, ...values });
+      const comment = renderTemplate(texts.comment[lang], vars);
+      config.title = { fr: title, en: title };
+      config.comment = { fr: comment, en: comment };
+      config.readingKey = { fr: readingKey, en: readingKey };
       break;
+    }
 
-    default:
-      ((config.comment = {
-        fr: <>Ce graphique présente, pour chaque pilier, la part du pays sélectionné dans l’ensemble des financements demandés et obtenus par les participants de tous les pays.</>,
-        en: <>This chart shows, for each pillar, the selected country’s share of all funding requested and secured by participants from all countries.</>,
-      }),
-        (config.readingKey = {
-          fr: (
-            <>
-              Dans le cadre des appels à projets concernant "{readingDataEvaluated.pilier_name_fr}", le montant des financements demandés par les participants du pays sélectionné représentent {formatToPercent(readingDataEvaluated.proportion)} de
-              l'ensemble des financements demandés et le montant des financements obtenus par les participants du pays sélectionné représentent {formatToPercent(readingDataSuccessful.proportion)} de l'ensemble des financements obtenus.
-            </>
-          ),
-          en: (
-            <>
-              Under "{readingDataEvaluated.pilier_name_en}" calls for proposals, the funding requested by participants from the selected country represents {formatToPercent(readingDataEvaluated.proportion)} of all funding requested and the funding
-              secured by participants from the selected country represents {formatToPercent(readingDataSuccessful.proportion)} of all funding secured.
-            </>
-          ),
-        }),
-        (config.title = {
-          fr: "Part des financements demandés et obtenus par le pays sélectionné",
-          en: "Share of total funding requested and secured by the country's participants",
-        }));
+    default: { //"total_fund_eur"
+      const texts = i18n.total_fund_eur;
+      const values = {
+        evaluated: formatToPercentLang(readingDataEvaluated?.proportion ?? 0, currentLang),
+        successful: formatToPercentLang(readingDataSuccessful?.proportion ?? 0, currentLang),
+      };
+      const title = fillTemplate(texts.title[lang], vars);
+      const comment = renderTemplate(texts.comment[lang], vars);
+      const readingKey = renderTemplate(texts.readingKey[lang], { ...vars, ...values });
+      config.title = { fr: title, en: title };
+      config.comment = { fr: comment, en: comment };
+      config.readingKey = { fr: readingKey, en: readingKey };
       break;
+    }
   }
 
-
-  return <ChartWrapper config={config} options={options(data, displayType)} />;
+  return <ChartWrapper config={config} options={options(data, displayType, undefined, lang)} />;
 }
