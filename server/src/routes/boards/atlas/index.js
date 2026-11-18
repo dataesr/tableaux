@@ -522,8 +522,7 @@ router
             _id: {
               genre: "$sexe",
               regroupement: "$regroupement",
-              rgp_formations_ou_etablissements:
-                "$rgp_formations_ou_etablissements",
+              rgp_formations_ou_etablissements: "$rgp_formations_ou_etablissements",
             },
             effectif: { $sum: "$effectif" },
           },
@@ -542,10 +541,10 @@ router
           $group: {
             _id: { regroupement: "$regroupement" },
             effectif_masculin: {
-              $sum: { $cond: [{ $eq: ["$genre", "1"] }, "$effectif", 0] },
+              $sum: { $cond: [{ $eq: ["$genre", 1] }, "$effectif", 0] },
             },
             effectif_feminin: {
-              $sum: { $cond: [{ $eq: ["$genre", "2"] }, "$effectif", 0] },
+              $sum: { $cond: [{ $eq: ["$genre", 2] }, "$effectif", 0] },
             },
             effectif_total: { $sum: "$effectif" },
             label: { $first: "$label" },
@@ -684,10 +683,10 @@ router
           $group: {
             _id: { geo_id: "$geo_id", geo_nom: "$geo_nom" },
             effectif_feminin: {
-              $sum: { $cond: [{ $eq: ["$sexe", "2"] }, "$effectif", 0] },
+              $sum: { $cond: [{ $eq: ["$sexe", 2] }, "$effectif", 0] },
             },
             effectif_masculin: {
-              $sum: { $cond: [{ $eq: ["$sexe", "1"] }, "$effectif", 0] },
+              $sum: { $cond: [{ $eq: ["$sexe", 1] }, "$effectif", 0] },
             },
             effectif_total: { $sum: "$effectif" },
           },
@@ -869,20 +868,14 @@ router.route("/atlas/number-of-students").get(async (req, res) => {
         // Gender
         data.gender = [];
         data.gender.push({
-          id: "1",
-          label: allData.data.find((item) => item.gender === "1")
-            ?.sexe_de_l_etudiant,
-          value: allData.data
-            .filter((item) => item.gender === "1")
-            ?.reduce((acc, item) => acc + item.effectif, 0),
+          id: 1,
+          label: allData.data.find((item) => item.gender === 1)?.sexe_de_l_etudiant,
+          value: allData.data.filter((item) => item.gender === 1)?.reduce((acc, item) => acc + item.effectif, 0),
         });
         data.gender.push({
-          id: "2",
-          label: allData.data.find((item) => item.gender === "2")
-            ?.sexe_de_l_etudiant,
-          value: allData.data
-            .filter((item) => item.gender === "2")
-            ?.reduce((acc, item) => acc + item.effectif, 0),
+          id: 2,
+          label: allData.data.find((item) => item.gender === 2)?.sexe_de_l_etudiant,
+          value: allData.data.filter((item) => item.gender === 2)?.reduce((acc, item) => acc + item.effectif, 0),
         });
 
         // Effectif ing
@@ -910,97 +903,86 @@ router.route("/atlas/number-of-students").get(async (req, res) => {
 });
 
 router.route("/atlas/number-of-students-by-year").get(async (req, res) => {
-  const filters = {};
-  if (req.query.geo_id) {
-    filters.geo_id = req.query.geo_id;
-  } else {
-    filters.geo_id = "PAYS_100";
-  }
-  if (req.query.regroupement) {
-    filters.regroupement = req.query.regroupement;
-  } else {
-    filters.regroupement = "TOTAL";
-  }
+  try {
+    const geo_id = (req.query.geo_id || "PAYS_100").toUpperCase();
+    const regroupement = req.query.regroupement || "TOTAL";
+    const filters = { geo_id, regroupement };
+    const currentCollectionName = await getCurrentCollectionName("atlas");
+    const constants = await getConstants();
+    const START_YEAR = constants.find((el) => el.key === "START_YEAR")?.value;
+    const END_YEAR = constants.find((el) => el.key === "END_YEAR")?.value;
+    console.log(filters);
+    const dataByYear = await db
+      .collection(currentCollectionName)
+      .aggregate([
+        {
+          $match: filters,
+        },
+        {
+          $group: {
+            _id: "$annee_universitaire",
+            effectif_total: { $sum: "$effectif" },
+            effectif_pr: {
+              $sum: { $cond: [{ $eq: ["$secteur", "PR"] }, "$effectif", 0] },
+            },
+            effectif_pu: {
+              $sum: { $cond: [{ $eq: ["$secteur", "PU"] }, "$effectif", 0] },
+            },
+            effectif_masculin: {
+              $sum: { $cond: [{ $eq: ["$sexe", 1] }, "$effectif", 0] },
+            },
+            effectif_feminin: {
+              $sum: { $cond: [{ $eq: ["$sexe", 2] }, "$effectif", 0] },
+            },
+            effectif_dut: { $sum: "$effectif_dut" },
+            effectif_form_ens: { $sum: "$effectif_form_ens" },
+            effectif_ing: { $sum: "$effectif_ing" },
+          },
+        },
+        {
+          $sort: { _id: 1 },
+        },
+      ])
+      .toArray();
 
-  const currentCollectionName = await getCurrentCollectionName("atlas");
-  const constants = await getConstants();
-  const START_YEAR = constants.find((el) => el.key === "START_YEAR")?.value;
-  const END_YEAR = constants.find((el) => el.key === "END_YEAR")?.value;
+    const dataByYearFull = [];
+    // Si années manquantes, on met 0
+    for (let year = Number(START_YEAR); year <= Number(END_YEAR); year++) {
+      const currentYear = `${year}-${(year + 1).toString().slice(-2)}`;
+      const item = dataByYear.find((el) => el._id === currentYear);
 
-  db.collection(currentCollectionName)
-    .find(filters)
-    .toArray()
-    .then((data) => {
-      const dataByYear = [];
-      data.map((item) => {
-        const index = dataByYear.findIndex(
-          (el) => el.annee_universitaire === item.annee_universitaire,
-        );
-        if (index === -1) {
-          dataByYear.push({
-            annee_universitaire: item.annee_universitaire,
-            effectif_total: item.effectif,
-            effectif_pr: item.secteur === "PR" ? item.effectif : 0,
-            effectif_pu: item.secteur === "PU" ? item.effectif : 0,
-            effectif_masculin: item.sexe === "1" ? item.effectif : 0,
-            effectif_feminin: item.sexe === "2" ? item.effectif : 0,
-            effectif_dut: item.effectif_dut,
-            effectif_form_ens: item.effectif_form_ens,
-            effectif_ing: item.effectif_ing,
-          });
-        } else {
-          dataByYear[index].effectif_total += item.effectif;
-          dataByYear[index].effectif_pr +=
-            item.secteur === "PR" ? item.effectif : 0;
-          dataByYear[index].effectif_pu +=
-            item.secteur === "PU" ? item.effectif : 0;
-          dataByYear[index].effectif_masculin +=
-            item.sexe === "1" ? item.effectif : 0;
-          dataByYear[index].effectif_feminin +=
-            item.sexe === "2" ? item.effectif : 0;
-          dataByYear[index].effectif_dut += item.effectif_dut;
-          dataByYear[index].effectif_form_ens += item.effectif_form_ens;
-          dataByYear[index].effectif_ing += item.effectif_ing;
-        }
-      });
-
-      dataByYear.sort((a, b) => {
-        if (a.annee_universitaire > b.annee_universitaire) return 1;
-        if (a.annee_universitaire < b.annee_universitaire) return -1;
-        return 0;
-      });
-
-      const range = [];
-      for (let year = Number(START_YEAR); year <= Number(END_YEAR); year++) {
-        range.push(year);
+      if (item) {
+        dataByYearFull.push({
+          annee_universitaire: currentYear,
+          effectif_total: item.effectif_total,
+          effectif_pr: item.effectif_pr,
+          effectif_pu: item.effectif_pu,
+          effectif_masculin: item.effectif_masculin,
+          effectif_feminin: item.effectif_feminin,
+          effectif_dut: item.effectif_dut,
+          effectif_form_ens: item.effectif_form_ens,
+          effectif_ing: item.effectif_ing,
+        });
+      } else {
+        dataByYearFull.push({
+          annee_universitaire: currentYear,
+          effectif_total: 0,
+          effectif_pr: 0,
+          effectif_pu: 0,
+          effectif_masculin: 0,
+          effectif_feminin: 0,
+          effectif_dut: 0,
+          effectif_form_ens: 0,
+          effectif_ing: 0,
+        });
       }
+    }
 
-      const dataByYearFull = [];
-      for (let i = 0; i < range.length; i++) {
-        const currentYear = `${range[i]}-${(range[i] + 1)
-          .toString()
-          .slice(-2)}`;
-        if (!dataByYear.find((el) => el.annee_universitaire === currentYear)) {
-          dataByYearFull.push({
-            annee_universitaire: currentYear,
-            effectif_total: 0,
-            effectif_pr: 0,
-            effectif_pu: 0,
-            effectif_masculin: 0,
-            effectif_feminin: 0,
-            effectif_dut: 0,
-            effectif_form_ens: 0,
-            effectif_ing: 0,
-          });
-        } else {
-          dataByYearFull.push(
-            dataByYear.find((el) => el.annee_universitaire === currentYear),
-          );
-        }
-      }
-
-      res.json(dataByYearFull);
-    });
+    res.json(dataByYearFull);
+  } catch (error) {
+    console.error("Error fetching students by year:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
 });
 
 router.route("/atlas/get-years").get(async (req, res) => {
@@ -1193,8 +1175,8 @@ router.route("/atlas/get-similar-elements").get(async (req, res) => {
           _id: { geo_id: "$geo_id", geo_nom: "$geo_nom" },
           effectifPR: sum("$secteur", "PR"),
           effectifPU: sum("$secteur", "PU"),
-          effectifF: sum("$sexe", "2"),
-          effectifM: sum("$sexe", "1"),
+          effectifF: sum("$sexe", 2),
+          effectifM: sum("$sexe", 1),
         },
       },
       {
