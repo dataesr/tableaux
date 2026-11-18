@@ -53,28 +53,38 @@ export const formatNumber = (value: number): string => {
 };
 
 // formatNumber but with langage => can replace formatNumber
-export const formatNumberLang = (value: number, lang: "fr" | "en" = "fr"): string =>
-  value.toLocaleString(lang === "fr" ? "fr-FR" : "en-GB");
+export const formatNumberLang = (
+  value: number,
+  lang: "fr" | "en" = "fr",
+  digits?: number,
+): string =>
+  value.toLocaleString(lang === "fr" ? "fr-FR" : "en-GB", {
+    minimumFractionDigits: digits,
+    maximumFractionDigits: digits,
+  });
 
 
 // Currency formatting in French (default) or English
-export const formatCurrencyLang = (amount: number, lang: "fr" | "en" = "fr"): string => {
+export const formatCurrencyLang = (
+  amount: number,
+  lang: "fr" | "en" = "fr",
+): string => {
   const isFr = lang === "fr";
 
   if (amount >= 1_000_000_000) {
-    const v = (amount / 1_000_000_000).toFixed(2);
-    return isFr ? `${v} Md€` : `€${v} billion`;
+    const v = formatNumberLang(amount / 1_000_000_000, lang, 2);
+    return isFr ? `${v}\u00A0Md€` : `€${v} billion`;
   }
   if (amount >= 1_000_000) {
-    const v = (amount / 1_000_000).toFixed(1);
-    return isFr ? `${v} M€` : `€${v} million`;
+    const v = formatNumberLang(amount / 1_000_000, lang, 2);
+    return isFr ? `${v}\u00A0M€` : `€${v} million`;
   }
   if (amount >= 1_000) {
-    const v = (amount / 1_000).toFixed(1);
-    return isFr ? `${v} K€` : `€${v} thousand`;
+    const v = formatNumberLang(amount / 1_000, lang, 2);
+    return isFr ? `${v}\u00A0K€` : `€${v} thousand`;
   }
-  const v = amount.toFixed(0);
-  return isFr ? `${v} €` : `€${v}`;
+  const v = formatNumberLang(amount, lang, 0);
+  return isFr ? `${v}\u00A0€` : `€${v}`;
 };
 
 // formatCurrency for french currency
