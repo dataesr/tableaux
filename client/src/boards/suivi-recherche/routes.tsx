@@ -7,6 +7,7 @@ import GlobalLayout from "./components/layouts/global-layout.tsx";
 import AccueilPage from "./pages/accueil/index.tsx";
 import BibliometriePage from "./pages/bibliometrie/index.tsx";
 import FinancementsPage from "./pages/financements/index.tsx";
+import InnovationPage from "./pages/innovation/index.tsx";
 import i18n from "./title-i18n.json";
 
 import "./styles.scss";
@@ -25,6 +26,7 @@ export default function SuiviRechercheRoutes() {
         {/* Onglets dans le paramètre `section` (titre de l'onglet fixé par la page) */}
         <Route path="bibliometrie" element={<BibliometriePage />} />
         <Route path="financements" element={<FinancementsPage />} />
+        <Route path="innovation" element={<RouteWithTitle titleKey="innovation" element={<InnovationPage />} />} />
         <Route path="plan-du-site" element={<Navigate to="/plan-du-site?from=suivi-recherche" replace />} />
       </Route>
       <Route path="*" element={<NotFoundPage />} />

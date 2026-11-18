@@ -13,6 +13,7 @@ const NAV_ITEMS = [
   { key: "accueil", icon: "home-4-line", to: `${BASE}/accueil` },
   { key: "bibliometrie", to: `${BASE}/bibliometrie` },
   { key: "fundings", to: `${BASE}/financements` },
+  { key: "innovation", to: `${BASE}/innovation` },
 ];
 
 // Le header DSFR passe sa navigation dans une modale pilotée par le JS du DSFR, qui n'est pas chargé :
@@ -27,17 +28,27 @@ export default function GlobalLayout() {
     || (pathname === `${BASE}/financements` && financementsSection.id === "international");
 
 
-  const items = NAV_ITEMS.map(({ key, icon, to }) => ({
-    current: pathname === to,
-    icon,
-    key,
-    label: getI18nLabel(i18n, key),
-    to: `${to}${search}`,
-  }));
+  const items = NAV_ITEMS.map(({ key, icon, to }) => {
+    const params = new URLSearchParams(search);
+    if (to === `${BASE}/innovation`) {
+      params.delete("discipline");
+      params.delete("domaine");
+      params.delete("section");
+    }
+    const query = params.toString();
+    return {
+      current: pathname === to,
+      icon,
+      key,
+      label: getI18nLabel(i18n, key),
+      to: `${to}${query ? `?${query}` : ""}`,
+    };
+  });
+  const innovation = pathname === `${BASE}/innovation`;
 
   return (
     <Layout
-      before={pathname !== `${BASE}/accueil` && <SelectionBar pays={pays} />}
+      before={pathname !== `${BASE}/accueil` && <SelectionBar innovation={innovation} pays={pays} />}
       footer={{ href: `${BASE}/accueil`, title: "Accueil - Suivi de la recherche française" }}
       items={items}
       exploreLink

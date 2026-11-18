@@ -28,6 +28,14 @@
     }
   }
 
+  &.sr-selection--innovation {
+    .sr-selection__grid {
+      @media (min-width: 78em) {
+        grid-template-columns: auto minmax(14rem, 1.2fr) 6.5rem 6.5rem;
+      }
+    }
+  }
+
   // Champs alignés dans la barre : pas de marge d'empilement (dsfr §3.4)
   .fr-input-group,
   .fr-select-group,

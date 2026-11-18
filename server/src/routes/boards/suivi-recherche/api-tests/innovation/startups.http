@@ -1,0 +1,14 @@
+### Métadonnées du pilote startups
+GET http://localhost:3000/api/suivi-recherche/innovation/startups/meta
+
+### Établissements ayant au moins un SIRET lié résolu vers un ROR unique
+GET http://localhost:3000/api/suivi-recherche/innovation/startups/entites
+
+### Évolution annuelle des créations, France
+GET http://localhost:3000/api/suivi-recherche/innovation/startups/evolution?year_min=2015&year_max=2026
+
+### Évolution annuelle des créations, un établissement
+GET http://localhost:3000/api/suivi-recherche/innovation/startups/evolution?ror_id=035xkbk20&year_min=2015&year_max=2026
+
+### 400 : ROR invalide
+GET http://localhost:3000/api/suivi-recherche/innovation/startups/evolution?ror_id=invalid

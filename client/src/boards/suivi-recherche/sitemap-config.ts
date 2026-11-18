@@ -15,5 +15,7 @@ export const SITEMAP: BoardSitemapConfig = {
     { label: "Bibliométrie : international", href: `${BASE}/bibliometrie?section=international` },
     { label: "Financements et distinctions : profil", href: `${BASE}/financements` },
     { label: "Financements et distinctions : établissements", href: `${BASE}/financements?section=etablissements` },
-    { label: "Financements et distinctions : international", href: `${BASE}/financements?section=international` },  ],
+    { label: "Financements et distinctions : international", href: `${BASE}/financements?section=international` },
+    { label: "Innovation", href: `${BASE}/innovation` },
+  ],
 }

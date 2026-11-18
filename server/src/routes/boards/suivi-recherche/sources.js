@@ -33,3 +33,16 @@ export function getSourcesPrix(meta) {
     { libelle: "OpenAlex", url: "https://openalex.org", date: null },
   ];
 }
+
+// Startups ESR : jeu public et rattachement des SIRET par le référentiel scanR / ROR
+export function getSourcesInnovation(meta) {
+  return [
+    {
+      libelle: "Start-ups liées à l'enseignement supérieur et à la recherche (open data ESR)",
+      url: `${ODS}/${meta.source.dataset}/`,
+      date: meta.source?.date_extraction ?? null,
+    },
+    { libelle: "Organisations scanR (résolution des SIRET)", url: "https://scanr.enseignementsup-recherche.gouv.fr", date: null },
+    { libelle: "ROR", url: "https://ror.org", date: null },
+  ];
+}

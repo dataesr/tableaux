@@ -32,9 +32,9 @@ export function useSetParams() {
 }
 
 // La sélection vit dans l'URL : elle suit la navigation entre pages et se partage par lien.
-// Les années disponibles viennent de biblio_meta, seule source d'années pour l'instant.
+// Les années disponibles viennent des métadonnées de la page active.
 // `pays` : vue entre pays (comparaison internationale), l'établissement choisi ne s'applique pas et reste dans l'URL.
-export function useSelection(meta?: BiblioMeta, entites?: Entite[], { pays = false }: { pays?: boolean } = {}) {
+export function useSelection(meta?: Pick<BiblioMeta, "annees">, entites?: Entite[], { pays = false }: { pays?: boolean } = {}) {
   const [searchParams] = useSearchParams();
   const setParams = useSetParams();
 

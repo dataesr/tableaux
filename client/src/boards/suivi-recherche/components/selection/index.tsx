@@ -3,6 +3,7 @@ import { useEffect, useId, useMemo, useState } from "react";
 
 import { useBiblioDisciplines, useBiblioEntites, useBiblioMeta } from "../../api";
 import type { Entite } from "../../api";
+import { useInnovationEntites, useInnovationMeta } from "../../api/innovation.ts";
 import { useSelection } from "../../hooks/use-selection";
 
 import "./styles.scss";
@@ -13,11 +14,19 @@ function optionLabel(entite: Entite) {
 
 // Sélection commune aux pages : périmètre d'analyse, période, discipline (paramètres d'URL, voir use-selection).
 // `pays` : la vue compare des pays ; le choix d'établissement, sans effet, est remplacé par une mention fixe.
-export default function SelectionBar({ pays = false }: { pays?: boolean }) {
+export default function SelectionBar({ pays = false, innovation = false }: { pays?: boolean; innovation?: boolean }) {
   const meta = useBiblioMeta();
   const disciplines = useBiblioDisciplines();
   const entites = useBiblioEntites();
-  const { etablissement, selection, setParams } = useSelection(meta.data, entites.data, { pays });
+  const innovationMeta = useInnovationMeta(innovation);
+  const innovationEntites = useInnovationEntites(innovation);
+  const annees = innovation ? innovationMeta.data?.annees : meta.data?.annees;
+  const entitesActives = innovation ? innovationEntites.data : entites.data;
+  const { etablissement, selection, setParams } = useSelection(
+    annees ? { annees } : undefined,
+    entitesActives,
+    { pays },
+  );
   // « Un établissement » choisi sans établissement encore saisi : état local, rien dans l'URL (ror_id absent = France)
   const [choixEtablissement, setChoixEtablissement] = useState(false);
   const niveau = etablissement || choixEtablissement ? "etablissement" : "national";
@@ -25,8 +34,8 @@ export default function SelectionBar({ pays = false }: { pays?: boolean }) {
   const inputId = useId();
 
   const etablissements = useMemo(
-    () => (entites.data ?? []).filter((entite) => entite.entite_type === "etablissement"),
-    [entites.data],
+    () => (entitesActives ?? []).filter((entite) => entite.entite_type === "etablissement"),
+    [entitesActives],
   );
   const [saisie, setSaisie] = useState("");
   useEffect(() => setSaisie(etablissement ? optionLabel(etablissement) : ""), [etablissement]);
@@ -36,7 +45,7 @@ export default function SelectionBar({ pays = false }: { pays?: boolean }) {
     [disciplines.data],
   );
 
-  if (!meta.data || !disciplines.data || !entites.data) return null;
+  if (!annees || !entitesActives || (!innovation && !disciplines.data)) return null;
 
   // Le champ natif propose les établissements ; seul un libellé exact de la liste vaut sélection
   const onSaisie = (value: string) => {
@@ -46,15 +55,15 @@ export default function SelectionBar({ pays = false }: { pays?: boolean }) {
   };
 
   // Bornes par défaut de la période : jamais écrites dans l'URL
-  const premiere = Math.min(...meta.data.annees);
-  const derniere = Math.max(...meta.data.annees);
+  const premiere = Math.min(...annees);
+  const derniere = Math.max(...annees);
 
   const disciplineKey = selection?.disciplineCode
     ? `discipline:${selection.disciplineCode}`
     : selection?.domaineCode ? `domaine:${selection.domaineCode}` : "toutes";
 
   return (
-    <div className="sr-selection fr-background-alt--grey fr-py-3v">
+    <div className={`sr-selection fr-background-alt--grey fr-py-3v${innovation ? " sr-selection--innovation" : ""}`}>
       <Container>
         <div className="sr-selection__grid">
           {pays ? (
@@ -109,31 +118,33 @@ export default function SelectionBar({ pays = false }: { pays?: boolean }) {
             onChange={(key) => setParams({ year_min: Number(key) === premiere ? null : String(key) })}
             value={selection ? String(selection.anneeDebut) : undefined}
           >
-            {[...meta.data.annees].sort((a, b) => b - a).map((annee) => <SelectOption key={String(annee)}>{String(annee)}</SelectOption>)}
+            {[...annees].sort((a, b) => b - a).map((annee) => <SelectOption key={String(annee)}>{String(annee)}</SelectOption>)}
           </Select>
           <Select
             label="À"
             onChange={(key) => setParams({ year_max: Number(key) === derniere ? null : String(key) })}
             value={selection ? String(selection.anneeFin) : undefined}
           >
-            {[...meta.data.annees].sort((a, b) => b - a).map((annee) => <SelectOption key={String(annee)}>{String(annee)}</SelectOption>)}
+            {[...annees].sort((a, b) => b - a).map((annee) => <SelectOption key={String(annee)}>{String(annee)}</SelectOption>)}
           </Select>
-          <Select
-            label="Discipline (panels ERC)"
-            onChange={(key) => {
-              const [type, code] = String(key).split(":");
-              setParams({ domaine: type === "domaine" ? code : null, discipline: type === "discipline" ? code : null });
-            }}
-            value={disciplineKey}
-          >
-            {[
-              <SelectOption key="toutes">Toutes disciplines</SelectOption>,
-              ...domaines.map(([code, nom]) => <SelectOption key={`domaine:${code}`}>{`${nom} (${code})`}</SelectOption>),
-              ...disciplines.data.map((d) => (
-                <SelectOption key={`discipline:${d.discipline_code}`}>{`${d.discipline_code} · ${d.discipline_nom}`}</SelectOption>
-              )),
-            ]}
-          </Select>
+          {!innovation && (
+            <Select
+              label="Discipline (panels ERC)"
+              onChange={(key) => {
+                const [type, code] = String(key).split(":");
+                setParams({ domaine: type === "domaine" ? code : null, discipline: type === "discipline" ? code : null });
+              }}
+              value={disciplineKey}
+            >
+              {[
+                <SelectOption key="toutes">Toutes disciplines</SelectOption>,
+                ...domaines.map(([code, nom]) => <SelectOption key={`domaine:${code}`}>{`${nom} (${code})`}</SelectOption>),
+                ...(disciplines.data ?? []).map((d) => (
+                  <SelectOption key={`discipline:${d.discipline_code}`}>{`${d.discipline_code} · ${d.discipline_nom}`}</SelectOption>
+                )),
+              ]}
+            </Select>
+          )}
         </div>
       </Container>
     </div>
