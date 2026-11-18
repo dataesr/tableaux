@@ -45,7 +45,7 @@ export default function getOptions(data: { data?: FundingItem[] } | null, displa
             this._stems.push(
               this.renderer
                 .path(["M", this.plotLeft + pt.plotX, y0, "L", this.plotLeft + pt.plotX, this.plotTop + pt.plotY])
-                .attr({ stroke: successRateColor, "stroke-width": 1.5, dashstyle: "Dot", zIndex: 3 })
+                .attr({ stroke: successRateColor, "stroke-width": 2, dashstyle: "Dot", zIndex: 3 })
                 .add(),
             );
           });
