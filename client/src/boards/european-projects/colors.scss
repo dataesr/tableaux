@@ -1,9 +1,11 @@
 @use "../colors.scss";
 
 :root {
-  --evaluated-project: #CE614A; // projets évalués
+
+  --evaluated-project: #A558A0; // projets évalués
   --successful-project: #000091; // projets lauréats
   --success-rate: #00A95F; // taux de succès
+  --successful-project-dark: #CACAFB;
 
   --label-color: var(--text-action-high-grey);
   --evaluated-project-color: #009099; // projets évalués
