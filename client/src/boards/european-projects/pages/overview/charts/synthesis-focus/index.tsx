@@ -2,7 +2,7 @@ import { Col, Container, Row, Title } from "@dataesr/dsfr-plus";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 
-import { formatCurrency, formatCurrencyEn } from "../../../../../../utils/format";
+import { formatCurrencyLang } from "../../../../../../utils/format";
 import RateCard from "../../../../components/cards/funds-cards/rate";
 import i18n from "./i18n.json";
 import { getData } from "./query";
@@ -65,8 +65,8 @@ function getI18nLabel(key: string, values: Record<string, string> = {}) {
               label={getI18nLabel("fundsShare.label", { adj: adjMascPlural })}
               loading={false}
               tooltipText={getI18nLabel("fundsShare.tooltip")}
-              numerator={currentLang === "fr" ? formatCurrency(dataCurrentCountry_successful.total_fund_eur) : formatCurrencyEn(dataCurrentCountry_successful.total_fund_eur)}
-              denominator={currentLang === "fr" ? formatCurrency(dataSuccessful.total_fund_eur) : formatCurrencyEn(dataSuccessful.total_fund_eur)}
+              numerator={formatCurrencyLang(dataCurrentCountry_successful.total_fund_eur, currentLang)}
+              denominator={formatCurrencyLang(dataSuccessful.total_fund_eur, currentLang)}
               numeratorLabel={getI18nLabel("labels.fundsShare.numerator")}
               denominatorLabel={getI18nLabel("labels.fundsShare.denominator")}
             />
@@ -104,8 +104,8 @@ function getI18nLabel(key: string, values: Record<string, string> = {}) {
               label={getI18nLabel("fundsSuccessRate.label")}
               loading={false}
               tooltipText={getI18nLabel("fundsSuccessRate.tooltip")}
-              numerator={currentLang === "fr" ? formatCurrency(dataCurrentCountry_successful.total_fund_eur) : formatCurrencyEn(dataCurrentCountry_successful.total_fund_eur)}
-              denominator={currentLang === "fr" ? formatCurrency(dataCurrentCountry_evaluated.total_fund_eur) : formatCurrencyEn(dataCurrentCountry_evaluated.total_fund_eur)}
+              numerator={formatCurrencyLang(dataCurrentCountry_successful.total_fund_eur, currentLang)}
+              denominator={formatCurrencyLang(dataCurrentCountry_evaluated.total_fund_eur, currentLang)}
               numeratorLabel={getI18nLabel("labels.fundsSuccessRate.numerator")}
               denominatorLabel={getI18nLabel("labels.fundsSuccessRate.denominator")}
             />
@@ -151,8 +151,8 @@ function getI18nLabel(key: string, values: Record<string, string> = {}) {
             label={getI18nLabel("EntityFundsShare.label")}
             loading={false}
             tooltipText={getI18nLabel("EntityFundsShare.tooltip")}
-            numerator={currentLang === "fr" ? formatCurrency(dataSuccessful.entity.total_fund_eur) : formatCurrencyEn(dataSuccessful.entity.total_fund_eur)}
-            denominator={currentLang === "fr" ? formatCurrency(dataCurrentCountry_successful.total_fund_eur) : formatCurrencyEn(dataCurrentCountry_successful.total_fund_eur)}
+            numerator={formatCurrencyLang(dataSuccessful.entity.total_fund_eur, currentLang)}
+            denominator={formatCurrencyLang(dataCurrentCountry_successful.total_fund_eur, currentLang)}
             numeratorLabel={getI18nLabel("labels.EntityFundsShare.numerator")}
             denominatorLabel={getI18nLabel("labels.fundsShare.numerator")}
           />
@@ -177,7 +177,7 @@ function getI18nLabel(key: string, values: Record<string, string> = {}) {
             loading={false}
             tooltipText={getI18nLabel("entityCoordinationsShare.tooltip")}
             numerator={Math.trunc(dataSuccessful.entity.total_coordination_number)}
-            denominator={Math.trunc(dataCurrentCountry_successful.total_coordination_numberMath)}
+            denominator={Math.trunc(dataCurrentCountry_successful.total_coordination_number)}
             numeratorLabel={getI18nLabel("labels.entityCoordinationsShare.numerator")}
             denominatorLabel={getI18nLabel("labels.coordinationsShare.numerator")}
           />
@@ -188,8 +188,8 @@ function getI18nLabel(key: string, values: Record<string, string> = {}) {
             label={getI18nLabel("fundsSuccessRate.label")}
             loading={false}
             tooltipText={getI18nLabel("fundsSuccessRate.tooltip")}
-            numerator={currentLang === "fr" ? formatCurrency(dataSuccessful.entity.total_fund_eur) : formatCurrencyEn(dataSuccessful.entity.total_fund_eur)}
-            denominator={currentLang === "fr" ? formatCurrency(dataEvaluated.entity.total_fund_eur) : formatCurrencyEn(dataEvaluated.entity.total_fund_eur)}
+            numerator={formatCurrencyLang(dataSuccessful.entity.total_fund_eur, currentLang)}
+            denominator={formatCurrencyLang(dataEvaluated.entity.total_fund_eur, currentLang)}
             numeratorLabel={getI18nLabel("labels.fundsSuccessRate.numerator")}
             denominatorLabel={getI18nLabel("labels.fundsSuccessRate.denominator")}
           />
@@ -222,4 +222,3 @@ function getI18nLabel(key: string, values: Record<string, string> = {}) {
     </Container>
   );
 }
-

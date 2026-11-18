@@ -1,5 +1,6 @@
 import { useId } from "react";
-import { formatToRates } from "../../../../../utils/format";
+import { useSearchParams } from "react-router-dom";
+import { formatToPercentLang } from "../../../../../utils/format";
 import "./styles.scss";
 
 interface RateCardProps {
@@ -15,7 +16,9 @@ interface RateCardProps {
 
 export default function RateCard({ nb, label, loading, tooltipText, numerator, denominator, numeratorLabel, denominatorLabel }: RateCardProps) {
   const tooltipId = useId();
-
+  const [searchParams] = useSearchParams()
+  const currentLang = (searchParams.get("language") === "en" ? "en" : "fr");
+  
   return (
     <div className="ep-funds-card rate-card">
       {loading ? (
@@ -40,7 +43,7 @@ export default function RateCard({ nb, label, loading, tooltipText, numerator, d
                 </div>
               )}
             </div>
-            <p className="nb">{formatToRates(nb)}</p>
+            <p className="nb">{formatToPercentLang(nb*100, currentLang)}</p>
             {numerator !== undefined && denominator !== undefined && (
               <div className="calculation-details">
                 <div className="calculation-item">
