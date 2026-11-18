@@ -3,7 +3,7 @@ import React from "react"
 
 import ChartWrapper from "../../../../../../components/chart-wrapper"
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default"
-import { formatCurrencyLang, formatNumberLang, formatToRates, formatToPercentLang } from "../../../../../../utils/format"
+import { formatCurrencyLang, formatNumberLang, formatToPercentLang } from "../../../../../../utils/format"
 import { EPChartsSources } from "../../../../config"
 import getOptions from "./options"
 import { getData } from "./query"
