@@ -1,0 +1,58 @@
+{
+  "total_coordination_number": {
+    "title": {
+      "fr": "Part des projets évalués et lauréats coordonnés par {country}",
+      "en": "Share of evaluated and successful project coordinated by {country}"
+    },
+    "comment": {
+      "fr": "Ce graphique présente, {scope}, la part du pays sélectionné dans l'ensemble des coordinations de projets évalués et lauréats, tous pays confondus.",
+      "en": "This chart shows, {scope}, the selected country's share of all evaluated and successful project coordinations, across all countries."
+    },
+    "readingKey": {
+      "fr": "{inLevel} {name}, les projets évalués coordonnés par {country} représentent {evaluated} de l'ensemble des projets évalués et les projets lauréats coordonnés par {country} représentent {successful} des projets lauréats.",
+      "en": "{inLevel} {name}, evaluated projects coordinated by {country} account for {evaluated} of all evaluated projects, and successful projects coordinated by {country} account for {successful} of all successful projects."
+    }
+  },
+  "total_number_involved": {
+    "title": {
+      "fr": "Part des candidats et des participants {adjective}",
+      "en": "Share of {adjective} applicants and participants"
+    },
+    "comment": {
+      "fr": "Ce graphique présente, {scope}, la part du pays sélectionné dans l'ensemble des candidats et dans l'ensemble des participants, tous pays confondus.",
+      "en": "This chart shows, {scope}, the selected country's share of all applicants and of all participants, across all countries."
+    },
+    "readingKey": {
+      "fr": "{inLevel} {name}, les candidats {adjective} représentent {evaluated} de l'ensemble des candidatures et les participants {adjective} représentent {successful} de l'ensemble des participants.",
+      "en": "{inLevel} {name}, {adjective} applicants account for {evaluated} of all applicants, and {adjective} participants account for {successful} of all participants."
+    }
+  },
+  "total_projects": {
+    "title": {
+      "fr": "Part du nombre de projets évalués et lauréats impliquant {country}",
+      "en": "Share of the number of evaluated and successful projects involving {country}"
+    },
+    "comment": {
+      "fr": "Ce graphique présente, {scope}, la part du pays sélectionné dans l'ensemble des projets évalués et lauréats.",
+      "en": "This chart shows, {scope}, the selected country's share of all evaluated and successful projects."
+    },
+    "readingKey": {
+      "fr": "{inLevel} {name}, les projets évalués impliquant {country} représentent {evaluated} de l'ensemble des projets évalués et les projets lauréats impliquant {country} représentent {successful} des projets lauréats.",
+      "en": "{inLevel} {name}, evaluated projects involving {country} account for {evaluated} of all evaluated projects, and successful projects involving {country} account for {successful} of all successful projects."
+    }
+  },
+  "total_fund_eur": {
+    "title": {
+      "fr": "Part des financements demandés et obtenus par {country}",
+      "en": "Share of total funding requested and secured by {country}"
+    },
+    "comment": {
+      "fr": "Ce graphique présente, {scope}, la part du pays sélectionné dans l'ensemble des financements demandés et obtenus par l'ensemble des pays.",
+      "en": "This chart shows, {scope}, the selected country's share of all funding requested and secured by all countries."
+    },
+    "readingKey": {
+      "fr": "{inLevel} {name}, le montant des financements demandés par {country} représente {evaluated} de l'ensemble des financements demandés et le montant des financements obtenus par {country} représente {successful} de l'ensemble des financements obtenus.",
+      "en": "{inLevel} {name}, the funding requested by {country} represents {evaluated} of all funding requested and the funding secured by {country} represents {successful} of all funding secured."
+    }
+  }
+}
