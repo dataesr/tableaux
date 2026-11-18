@@ -1,0 +1,109 @@
+{
+  "levels": {
+    "pillar": {
+      "fr": {
+        "byLevel": "par pilier",
+        "scope": "pour chaque pilier",
+        "inLevel": "Dans le pilier"
+      },
+      "en": {
+        "byLevel": "by pillar",
+        "scope": "for each pillar",
+        "inLevel": "In the pillar"
+      }
+    },
+    "program": {
+      "fr": {
+        "byLevel": "par programme",
+        "scope": "pour chaque programme du pilier sélectionné",
+        "inLevel": "Dans le programme"
+      },
+      "en": {
+        "byLevel": "by programme",
+        "scope": "for each programme of the selected pillar",
+        "inLevel": "In the programme"
+      }
+    },
+    "topic": {
+      "fr": {
+        "byLevel": "par thématique",
+        "scope": "pour chaque thématique du programme sélectionné",
+        "inLevel": "Dans la thématique"
+      },
+      "en": {
+        "byLevel": "by theme",
+        "scope": "for each theme of the selected programme",
+        "inLevel": "In the theme"
+      }
+    },
+    "destination": {
+      "fr": {
+        "byLevel": "par destination",
+        "scope": "pour chaque destination du programme sélectionné",
+        "inLevel": "Dans la destination"
+      },
+      "en": {
+        "byLevel": "by destination",
+        "scope": "for each destination of the selected programme",
+        "inLevel": "In the destination"
+      }
+    }
+  },
+  "total_fund_eur": {
+    "title": {
+      "fr": "Répartition {byLevel} des financements demandés et obtenus par {country}",
+      "en": "Breakdown {byLevel} of funding requested and secured by {country}"
+    },
+    "comment": {
+      "fr": "Ce graphique présente, {scope}, la répartition des financements demandés et obtenus par l'ensemble des participants du pays sélectionné et les taux de succès associés.",
+      "en": "This chart shows, {scope}, the breakdown of funding requested and secured by all participants from the selected country, together with the associated success rates."
+    },
+    "readingKey": {
+      "fr": "{inLevel} {name}, {country} a demandé **{requested}** et obtenu **{secured}**, soit un taux de succès de **{rate}**.",
+      "en": "{inLevel} {name}, {country} requested **{requested}** and secured **{secured}**, a funding success rate of **{rate}**."
+    }
+  },
+    "total_coordination_number":{
+    "title": { 
+            "fr": "Répartition {byLevel} du nombre de projets évalués et lauréats coordonnés par {country}", 
+            "en": "Breakdown {byLevel} of the number of evaluated and successful projects coordinated by {country}"
+    },
+    "comment": {
+        "fr": "Ce graphique présente, {scope}, la répartition du nombre de projets évalués et lauréats coordonnés par le pays sélectionné et les taux de succès associés (projets coordonnés lauréats sur projets coordonnés évalués).",
+        "en": "This chart shows, {scope}, the breakdown of the number of evaluated and successful projects coordinated by the selected country, together with the associated success rates (successful coordinated projects over evaluated coordinated projects)."
+    },
+    "readingKey": {
+        "fr": "{inLevel} {name}, {country} a coordonné de **{evaluated}** projets évalués et de **{successful}** projets lauréats, soit un taux de succès de **{rate}**.",
+        "en": "{inLevel} {name}, {country} coordinated **{evaluated}** evaluated projects and **{successful}** successful projects, a success rate of **{rate}**."
+    }
+  },
+    "total_number_involved":{
+    "title": { 
+        "fr": "Répartition {byLevel} du nombre de candidats et participants {adj}", 
+        "en": "Breakdown {byLevel} of the number of {adj} candidates and participants" 
+    },
+    "comment": {
+        "fr": "Ce graphique présente, {scope}, la répartition du nombre de candidats et de participants du pays sélectionné et les taux de succès associés (le nombre de participants sur le nombre de candidats).",
+        "en": "This chart shows, {scope}, the breakdown, of the number of applicants and participants from the selected country, together with the associated success rates (number of participants over number of applicants)."
+    },
+    "readingKey": {
+        "fr": "{inLevel} {name}, sur les **{evaluated}** candidats {adj} évalués **{successful}** ont été lauréats, soit un taux de succès de **{rate}**.",
+        "en": "{inLevel} {name}, of the **{evaluated}** {adj} applicants evaluated, **{successful}** became participants in successful projects, a participant-level success rate of **{rate}**."
+    }
+  },
+    "total_projects":{
+    "title": { 
+        "fr": "Répartition {byLevel} du nombre de projets impliquant {country}", 
+        "en": "Breakdown {byLevel} of the number of projects involving {country}"
+      },
+    "comment": {
+        "fr": "Ce graphique présente, {scope}, la répartition du nombre de projets évalués et lauréats du pays sélectionné et les taux de succès associés (le nombre de projets lauréats sur le nombre de projets évalués).",
+        "en": "This chart shows, {scope}, the breakdown of the number of evaluated and successful projects involving the selected country, together with the associated success rates (the ratio of successful projects to evaluated projects)."
+      },
+    "readingKey": {
+        "fr": "{inLevel} {name}, {country} est présente dans **{evaluated}** projets évalués et **{successful}** projets lauréats, soit un taux de succès de **{rate}**.",
+        "en": "{inLevel} {name}, {country} is involved in **{evaluated}** evaluated projects and **{successful}** successful projects, a success rate of **{rate}**."
+      }
+  }
+}
+
