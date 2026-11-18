@@ -1,13 +1,8 @@
-import { useSearchParams } from "react-router-dom";
+import { Layout } from "../../../../layout/layout";
 
-import { Layout as AppLayout } from "../../../../layout/layout";
-
-export function Layout({ languageSelector = false }) {
-  const [searchParams] = useSearchParams();
-  const isEnglish = searchParams.get("language")?.toLowerCase() === "en";
-
+export default function GlobalLayout() {
   return (
-    <AppLayout
+    <Layout
       extra={
         <a
           className="fr-btn fr-icon-code-s-slash-line fr-btn--icon-left"
@@ -15,12 +10,11 @@ export function Layout({ languageSelector = false }) {
           rel="noreferer noopener"
           target="_blank"
         >
-          {isEnglish ? "Dataset" : "Jeu de données"}
+          Jeu de données
         </a>
       }
-      languageSelector={languageSelector}
       serviceName="Atlas des effectifs étudiants"
       serviceTag=""
     />
-  )
+  );
 }

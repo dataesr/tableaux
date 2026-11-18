@@ -1,7 +1,7 @@
 import { lazy, Suspense } from "react";
 import { Route, Routes } from "react-router-dom";
 
-import { Layout } from "./components/layout/layout.tsx";
+import GlobalLayout from "./components/layouts/global-layout.tsx";
 import { AtlasProvider } from "./context.tsx";
 import AtlasHeader from "./index.tsx";
 
@@ -23,7 +23,7 @@ export default function AtlasRoutes() {
   return (
     <AtlasProvider>
       <Routes>
-        <Route element={<Layout />}>
+        <Route element={<GlobalLayout />}>
           <Route path="/" element={<AtlasHeader />}>
             <Route
               path="general"
