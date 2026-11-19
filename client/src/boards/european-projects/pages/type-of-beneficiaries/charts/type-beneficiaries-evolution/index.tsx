@@ -1,3 +1,4 @@
+import { Col, Row } from "@dataesr/dsfr-plus";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
@@ -13,34 +14,6 @@ import { getData } from "./query";
 import { RenderData } from "./render-data";
 import { useGetParams } from "./utils";
 
-const config = {
-  id: "typeBeneficiariesEvolution",
-  title: {
-    fr: "Évolution des financements obtenus par pays et par type d'entités",
-    en: "Evolution of secured funding by country",
-  },
-  description: {
-    fr: "Évolution des financements obtenus par type d'entités selon les pays du top 10.",
-    en: "Temporal evolution of funding obtained by entity types across top 10 countries.",
-  },
-  comment: {
-    fr: (
-      <>
-        Ce graphique montre l'évolution des financements obtenus par type de bénéficiaires (Recherche, Organisme public, Organisme privé, Etablissements d'enseignement supérieur, Auttres) selon les pays du top 10. Il permet d'analyser les tendances
-        de financement pour chaque type de bénéficiares au fil du temps et de comparer les performances des différents pays dans le contexte des projets européens.
-      </>
-    ),
-    en: (
-      <>
-        This chart illustrates the evolution of funding obtained by beneficiary types (Research, Public bodies, Private bodies, Higher education establishments, Others) across the top 10 countries. It allows for analyzing funding trends for each
-        beneficiary type over time and comparing the performance of different countries in the context of European projects.
-      </>
-    ),
-  },
-  sources: EPChartsSources,
-  integrationURL: "/european-projects/components/pages/analysis/positioning/charts/type-beneficiaries-evolution",
-};
-
 export default function TypeOfBeneficiariesEvolution() {
   const [searchParams] = useSearchParams();
   const currentLang = searchParams.get("language") || "fr";
@@ -52,6 +25,34 @@ export default function TypeOfBeneficiariesEvolution() {
   const entityTypes = ["REC", "HES", "PUB", "PRC", "OTH"]
     .map((value) => ({ label: getI18nLabel(i18n, value), value }))
 
+  const config = {
+    id: "typeBeneficiariesEvolution",
+    title: {
+      fr: `Évolution des financements obtenus par pays pour les entités de type ${getI18nLabel(i18n, selectedEntityType)}`,
+      en: `Evolution in funding received by country for entities of type ${getI18nLabel(i18n, selectedEntityType)}`,
+    },
+    description: {
+      fr: "Évolution des financements obtenus par type d'entités selon les pays du top 10.",
+      en: "Temporal evolution of funding obtained by entity types across top 10 countries.",
+    },
+    comment: {
+      fr: (
+        <>
+          Ce graphique montre l'évolution des financements obtenus par type de bénéficiaires (Recherche, Organisme public, Organisme privé, Etablissements d'enseignement supérieur, Auttres) selon les pays du top 10. Il permet d'analyser les tendances
+          de financement pour chaque type de bénéficiares au fil du temps et de comparer les performances des différents pays dans le contexte des projets européens.
+        </>
+      ),
+      en: (
+        <>
+          This chart illustrates the evolution of funding obtained by beneficiary types (Research, Public bodies, Private bodies, Higher education establishments, Others) across the top 10 countries. It allows for analyzing funding trends for each
+          beneficiary type over time and comparing the performance of different countries in the context of European projects.
+        </>
+      ),
+    },
+    sources: EPChartsSources,
+    integrationURL: "/european-projects/components/pages/analysis/positioning/charts/type-beneficiaries-evolution",
+  };
+
   const { data, isLoading } = useQuery({
     queryKey: [config.id, params, selectedEntityType],
     queryFn: () => getData(params, selectedEntityType),
@@ -62,24 +63,18 @@ export default function TypeOfBeneficiariesEvolution() {
 
   return (
     <div className={`fr-mt-5w chart-container chart-container--${color}`}>
-      <ChartWrapper.Title config={config}>
-        <div className="fr-my-3w fr-px-1w">
-          <div className="fr-select-group">
-            <label className="fr-label" htmlFor="entity-type-select-evolution">
-              {getI18nLabel(i18n, "type-of-entity-evolution")}
-            </label>
-            <select className="fr-select" id="entity-type-select-evolution" name="entity-type-select-evolution" value={selectedEntityType} onChange={(e) => setSelectedEntityType(e.target.value)}>
-              {entityTypes.map((type) => (
-                <option key={type.value} value={type.value}>
-                  {type.label}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-      </ChartWrapper.Title>
-
-      <ChartWrapper config={{ ...config, sources: EPChartsSources }} hideTitle={true} options={getOptions(data, currentLang, selectedCountry)} renderData={() => RenderData(data, currentLang)} />
+      <Row className="fr-my-1w">
+        <Col className="fr-px-1w">
+          <select className="fr-select" id="entity-type-select-evolution" name="entity-type-select-evolution" value={selectedEntityType} onChange={(e) => setSelectedEntityType(e.target.value)}>
+            {entityTypes.map((type) => (
+              <option key={type.value} value={type.value}>
+                {type.label}
+              </option>
+            ))}
+          </select>
+        </Col>
+      </Row>
+      <ChartWrapper config={{ ...config, sources: EPChartsSources }} options={getOptions(data, currentLang, selectedCountry)} renderData={() => RenderData(data, currentLang)} />
     </div>
   );
 }
