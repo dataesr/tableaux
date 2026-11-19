@@ -8,7 +8,7 @@ import { useAtlas } from "../../useAtlas.tsx";
 
 export default function YearsModalButton() {
   const [isOpen, setIsOpen] = useState(false);
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const { DEFAULT_CURRENT_YEAR } = useAtlas();
 
   const currentYear =
@@ -24,43 +24,6 @@ export default function YearsModalButton() {
     return <div>Chargement des filtres ...</div>;
   }
 
-  function YearsList() {
-    return (
-      <div className="fr-select-group">
-        <label className="fr-label fr-sr-only" htmlFor="select">
-          Sélectionnez l'année universitaire souhaitée
-        </label>
-        <select
-          className="fr-select"
-          defaultValue={currentYear}
-          id="select"
-          name="select"
-          onChange={(e) => {
-            searchParams.set("annee_universitaire", e.target.value);
-            window.location.search = searchParams.toString();
-          }}
-        >
-          {filtersValues.annees_universitaires.all.map((value: string) => (
-            <option
-              disabled={
-                !filtersValues?.annees_universitaires?.onlyWithData.includes(
-                  value
-                )
-              }
-              key={value}
-              value={value}
-            >
-              {`Année universitaire ${value}`}
-              {!filtersValues?.annees_universitaires?.onlyWithData.includes(
-                value
-              ) && <> - non disponibles</>}
-            </option>
-          ))}
-        </select>
-      </div>
-    );
-  }
-
   return (
     <>
       <Button icon="calendar-2-line" onClick={() => setIsOpen(true)} size="sm">
@@ -69,7 +32,40 @@ export default function YearsModalButton() {
       <Modal isOpen={isOpen} hide={() => setIsOpen(false)} size="lg">
         <ModalTitle>Sélection d'une année universitaire</ModalTitle>
         <ModalContent>
-          <YearsList />
+          <div className="fr-select-group">
+            <label className="fr-label fr-sr-only" htmlFor="select">
+              Sélectionnez l'année universitaire souhaitée
+            </label>
+            <select
+              className="fr-select"
+              value={currentYear}
+              id="select"
+              name="select"
+              onChange={(e) => {
+                const nextSearchParams = new URLSearchParams(searchParams);
+                nextSearchParams.set("annee_universitaire", e.target.value);
+                setSearchParams(nextSearchParams);
+                setIsOpen(false);
+              }}
+            >
+              {filtersValues.annees_universitaires.all.map((value: string) => (
+                <option
+                  disabled={
+                    !filtersValues?.annees_universitaires?.onlyWithData.includes(
+                      value
+                    )
+                  }
+                  key={value}
+                  value={value}
+                >
+                  {`Année universitaire ${value}`}
+                  {!filtersValues?.annees_universitaires?.onlyWithData.includes(
+                    value
+                  ) && <> - non disponibles</>}
+                </option>
+              ))}
+            </select>
+          </div>
         </ModalContent>
       </Modal>
     </>
