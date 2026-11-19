@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
-import options from "./options";
+import getOptions from "./options";
 import { getData } from "./query";
 import { useGetParams } from "./utils";
 
@@ -17,7 +17,7 @@ const config = {
 };
 
 export default function DestinationFundingProportion({ displayType = "total_fund_eur" }: { displayType?: string }) {
-  const { params } = useGetParams();
+  const { currentLang, params } = useGetParams();
   const { data, isLoading } = useQuery({
     queryKey: [config.id, params],
     queryFn: () => getData(params),
@@ -25,5 +25,5 @@ export default function DestinationFundingProportion({ displayType = "total_fund
 
   if (isLoading || !data) return <DefaultSkeleton />;
 
-  return <ChartWrapper config={config} options={options(data, displayType)} />;
+  return <ChartWrapper config={config} options={getOptions(data, displayType, currentLang)} />;
 }

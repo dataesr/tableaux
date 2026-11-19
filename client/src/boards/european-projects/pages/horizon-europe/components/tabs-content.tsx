@@ -30,7 +30,7 @@ export default function TabsContent() {
 
   return (
     <div>
-      {(selectedPillar === "HORIZON.1") && <Alert variant="warning" description="Cette page présente l'ensemble du Pilier 1, mais les actions ERC et MSCA ne sont pas détaillées dans cette rubrique Elles bénéficient d'un focus dédié. Voir les onglets de navigation." />}
+      {(selectedPillar === "HORIZON.1") && <Alert variant="warning" description="Cette page présente l'ensemble du Pilier 1, mais les actions ERC et MSCA ne sont pas détaillées dans cette rubrique. Elles bénéficient d'un focus dédié. Voir les onglets de navigation." />}
       <CheckEICAccelerator />
       <StructureIdentity />
       <nav className="fr-nav" role="navigation" aria-label="Menu principal">

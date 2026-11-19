@@ -911,7 +911,6 @@ router.route("/atlas/number-of-students-by-year").get(async (req, res) => {
     const constants = await getConstants();
     const START_YEAR = constants.find((el) => el.key === "START_YEAR")?.value;
     const END_YEAR = constants.find((el) => el.key === "END_YEAR")?.value;
-    console.log(filters);
     const dataByYear = await db
       .collection(currentCollectionName)
       .aggregate([

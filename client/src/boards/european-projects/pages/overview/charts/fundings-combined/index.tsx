@@ -139,7 +139,7 @@ export default function FundingCombined({ displayType = "total_fund_eur", groupB
 
   return (
     <>
-      <ChartWrapper config={config} options={getOptions(data, displayType)} renderData={() => renderDataTable(data, currentLang)} />
+      <ChartWrapper config={config} options={getOptions(data, displayType, currentLang)} renderData={() => renderDataTable(data, currentLang)} />
     </>
   )
 }

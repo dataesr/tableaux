@@ -3,7 +3,7 @@ import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.sr
 import type { HighchartsOptions } from "../../../../../../components/chart-wrapper";
 import { getI18nLabel } from "../../../../../../utils";
 import { getCssColor } from "../../../../../../utils/colors";
-import { formatToMillionsLang, formatNumberLang, formatToRates } from "../../../../../../utils/format";
+import { formatNumberLang, formatToMillionsLang, formatToRates } from "../../../../../../utils/format";
 import { CreateChartOptions } from "../../../../components/chart-ep";
 import i18n from "../../i18n-charts.json";
 
@@ -29,6 +29,28 @@ export default function getOptionsValues(data, displayType, currentLang): Highch
   const evaluatedColor = getCssColor("evaluated-project");
   const successfulColor = getCssColor("successful-project");
   const successRateColor = getCssColor("success-rate") || "#00A95F";
+
+  const legend: any = {}
+  switch (displayType) {
+    case "total_fund_eur":
+      legend.serie_01 = getI18nLabel(i18n, "requestedFunding", currentLang)
+      legend.serie_02 = getI18nLabel(i18n, "securedFunding", currentLang)
+      break
+    case "total_coordination_number":
+      legend.serie_01 = getI18nLabel(i18n, "evaluatedCoordinations", currentLang)
+      legend.serie_02 = getI18nLabel(i18n, "successfulCoordinations", currentLang)
+      break
+    case "total_number_involved":
+      legend.serie_01 = getI18nLabel(i18n, "applicantsNumber", currentLang)
+      legend.serie_02 = getI18nLabel(i18n, "participantsNumber", currentLang)
+      break
+    case "total_projects":
+      legend.serie_01 = getI18nLabel(i18n, "evaluatedProjects", currentLang)
+      legend.serie_02 = getI18nLabel(i18n, "successfulProjects", currentLang)
+      break
+    default:
+      break
+  }
 
   const newOptions: HighchartsInstance.Options = {
     chart: {
@@ -89,10 +111,9 @@ export default function getOptionsValues(data, displayType, currentLang): Highch
       column: { borderRadius: 2, borderWidth: 0, grouping: true },
     },
     series: [
-      // Série pour les projets évalués
       {
         type: "column",
-        name: getI18nLabel(i18n, "evaluatedProjects", currentLang),
+        name: legend.serie_01,
         color: evaluatedColor,
         data: (() => {
           const data: number[] = [];
@@ -106,10 +127,9 @@ export default function getOptionsValues(data, displayType, currentLang): Highch
         })(),
         yAxis: 0,
       },
-      // Série pour les projets lauréats
       {
         type: "column",
-        name: getI18nLabel(i18n, "successfulProjects", currentLang),
+        name: legend.serie_02,
         color: successfulColor,
         data: (() => {
           const data: number[] = [];

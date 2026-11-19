@@ -6,10 +6,36 @@ import { formatToPercent } from "../../../../../../utils/format";
 import { CreateChartOptions } from "../../../../components/chart-ep";
 import i18n from "../../i18n-charts.json";
 
-export default function options(data, displayType: string = "total_fund_eur", title?: string) {
+export default function options(data, displayType: string = "total_fund_eur", currentLang: string, title?: string) {
   if (!data) return null;
   const sorted = data.data.sort((a, b) => a.program.localeCompare(b.program));
-  const valueKey = displayType === "total_coordination_number" ? "proportion_coordination_number" : displayType === "total_number_involved" ? "proportion_number_involved" : displayType === "total_fund_eur" ? "proportion" : "proportion_projects";
+
+  const legend: any = {}
+  let valueKey
+  switch (displayType) {
+    case "total_fund_eur":
+      legend.serie_01 = getI18nLabel(i18n, "requestedFunding", currentLang)
+      legend.serie_02 = getI18nLabel(i18n, "securedFunding", currentLang)
+      valueKey = "proportion"
+      break
+    case "total_coordination_number":
+      legend.serie_01 = getI18nLabel(i18n, "evaluatedCoordinations", currentLang)
+      legend.serie_02 = getI18nLabel(i18n, "successfulCoordinations", currentLang)
+      valueKey = "proportion_coordination_number"
+      break
+    case "total_number_involved":
+      legend.serie_01 = getI18nLabel(i18n, "applicantsNumber", currentLang)
+      legend.serie_02 = getI18nLabel(i18n, "participantsNumber", currentLang)
+      valueKey = "proportion_number_involved"
+      break
+    case "total_projects":
+      legend.serie_01 = getI18nLabel(i18n, "evaluatedProjects", currentLang)
+      legend.serie_02 = getI18nLabel(i18n, "successfulProjects", currentLang)
+      valueKey = "proportion_projects"
+      break
+    default:
+      break
+  }
 
   const newOptions: HighchartsInstance.Options = {
     title: { text: title },
@@ -28,7 +54,7 @@ export default function options(data, displayType: string = "total_fund_eur", ti
     },
     tooltip: {
       pointFormatter: function () {
-        return `${getI18nLabel(i18n, valueKey)} : <b>${formatToPercent(this.y ?? 0)}</b>`;
+        return `${this.series.name} : <b>${formatToPercent(this.y ?? 0)}</b>`;
       },
     },
     plotOptions: {
@@ -43,7 +69,7 @@ export default function options(data, displayType: string = "total_fund_eur", ti
     series: [
       {
         type: "column",
-        name: getI18nLabel(i18n, "evaluatedProjects"),
+        name: legend.serie_01,
         color: getCssColor("evaluated-project"),
         groupPadding: 0,
         data: sorted.filter((item) => item.stage === "evaluated").map((item) => [item.programme_name_fr, item[valueKey]]),
@@ -55,7 +81,7 @@ export default function options(data, displayType: string = "total_fund_eur", ti
       },
       {
         type: "column",
-        name: getI18nLabel(i18n, "successfulProjects"),
+        name: legend.serie_02,
         color: getCssColor("successful-project"),
         groupPadding: 0,
         data: sorted.filter((item) => item.stage === "successful").map((item) => [item.programme_name_fr, item[valueKey]]),

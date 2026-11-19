@@ -59,6 +59,28 @@ export default function getOptionsSuccessRates(data, displayType, currentLang): 
     gridLineWidth: 0,
   };
 
+  const legend: any = {}
+  switch (displayType) {
+    case "total_fund_eur":
+      legend.serie_01 = getI18nLabel(i18n, "requestedFunding", currentLang)
+      legend.serie_02 = getI18nLabel(i18n, "securedFunding", currentLang)
+      break
+    case "total_coordination_number":
+      legend.serie_01 = getI18nLabel(i18n, "evaluatedCoordinations", currentLang)
+      legend.serie_02 = getI18nLabel(i18n, "successfulCoordinations", currentLang)
+      break
+    case "total_number_involved":
+      legend.serie_01 = getI18nLabel(i18n, "applicantsNumber", currentLang)
+      legend.serie_02 = getI18nLabel(i18n, "participantsNumber", currentLang)
+      break
+    case "total_projects":
+      legend.serie_01 = getI18nLabel(i18n, "evaluatedProjects", currentLang)
+      legend.serie_02 = getI18nLabel(i18n, "successfulProjects", currentLang)
+      break
+    default:
+      break
+  }
+
   const newOptions: HighchartsInstance.Options = {
     yAxis: {
       gridLineColor: "var(--background-default-grey-hover)",
@@ -101,7 +123,7 @@ export default function getOptionsSuccessRates(data, displayType, currentLang): 
         const allItemData = evaluatedAllItems.find((t) => t.code === item.code);
         const itemName = currentLang === "fr" ? item.name_fr : item.name_en;
         return {
-          name: `${itemName} - ${getI18nLabel(i18n, "evaluatedProjects", currentLang)}`,
+          name: `${itemName} - ${legend.serie_01}`,
           data: item.years.map((year, index) => {
             const totalForYear = allItemData?.years[index]?.[displayType] ?? 0;
             const itemValue = year[displayType] ?? 0;
@@ -117,7 +139,7 @@ export default function getOptionsSuccessRates(data, displayType, currentLang): 
 
           return {
             xAxis: 1,
-            name: `${itemName} - ${getI18nLabel(i18n, "successfulProjects", currentLang)}`,
+            name: `${itemName} - ${legend.serie_02}`,
             data: item.years.map((year, index) => {
               const totalForYear = allItemData?.years[index]?.[displayType] ?? 0;
               const itemValue = year[displayType] ?? 0;

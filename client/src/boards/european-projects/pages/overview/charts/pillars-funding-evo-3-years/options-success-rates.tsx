@@ -23,6 +23,28 @@ export default function Options(data, displayType, currentLang): HighchartsOptio
     width: "48%",
   };
 
+  const legend: any = {}
+  switch (displayType) {
+    case "total_fund_eur":
+      legend.serie_01 = getI18nLabel(i18n, "requestedFunding", currentLang)
+      legend.serie_02 = getI18nLabel(i18n, "securedFunding", currentLang)
+      break
+    case "total_coordination_number":
+      legend.serie_01 = getI18nLabel(i18n, "evaluatedCoordinations", currentLang)
+      legend.serie_02 = getI18nLabel(i18n, "successfulCoordinations", currentLang)
+      break
+    case "total_number_involved":
+      legend.serie_01 = getI18nLabel(i18n, "applicantsNumber", currentLang)
+      legend.serie_02 = getI18nLabel(i18n, "participantsNumber", currentLang)
+      break
+    case "total_projects":
+      legend.serie_01 = getI18nLabel(i18n, "evaluatedProjects", currentLang)
+      legend.serie_02 = getI18nLabel(i18n, "successfulProjects", currentLang)
+      break
+    default:
+      break
+  }
+
   const newOptions: HighchartsInstance.Options = {
     yAxis: {
       gridLineColor: "var(--background-default-grey-hover)",
@@ -66,7 +88,7 @@ export default function Options(data, displayType, currentLang): HighchartsOptio
         const allPillarData = allData.find((item) => item.stage === "evaluated").pillars.find((p) => p.pilier_code === pillar.pilier_code);
         return {
           color: getCssColor("evaluated-project"),
-          name: getI18nLabel(i18n, "evaluatedProjects", currentLang),
+          name: legend.serie_01,
           data: pillar.years.map((year, index) => {
             const totalForYear = allPillarData.years[index][displayType];
             return totalForYear > 0 ? (year[displayType] / totalForYear) * 100 : 0;
@@ -80,7 +102,7 @@ export default function Options(data, displayType, currentLang): HighchartsOptio
             const allPillarData = allData.find((item) => item.stage === "successful").pillars.find((p) => p.pilier_code === pillar.pilier_code);
             return {
               xAxis: 1,
-              name: getI18nLabel(i18n, "successfulProjects", currentLang),
+              name: legend.serie_02,
               data: pillar.years.map((year, index) => {
                 const totalForYear = allPillarData.years[index][displayType];
                 return totalForYear > 0 ? (year[displayType] / totalForYear) * 100 : 0;

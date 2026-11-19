@@ -8,7 +8,7 @@ import i18n from "../../i18n-charts.json";
 
 type FundingItem = { code?: string; name_fr?: string; pilier_name_fr?: string; stage: string; total_fund_eur: number; total_coordination_number?: number; total_number_involved?: number; total_projects?: number };
 
-export default function getOptions(data: { data?: FundingItem[] } | null, displayType: string = "total_fund_eur", title?: string) {
+export default function getOptions(data: { data?: FundingItem[] } | null, displayType: string = "total_fund_eur", currentLang: string, title?: string) {
   const items = data?.data;
   if (!items || items.length === 0) return null;
 
@@ -30,6 +30,28 @@ export default function getOptions(data: { data?: FundingItem[] } | null, displa
   const successRates = evaluatedData.map((evaluated, i) => (evaluated > 0 ? (successfulData[i] / evaluated) * 100 : 0));
 
   const successRateColor = getCssColor("success-rate") || "#00A95F";
+
+  const legend: any = {}
+  switch (displayType) {
+    case "total_fund_eur":
+      legend.serie_01 = getI18nLabel(i18n, "requestedFunding", currentLang)
+      legend.serie_02 = getI18nLabel(i18n, "securedFunding", currentLang)
+      break
+    case "total_coordination_number":
+      legend.serie_01 = getI18nLabel(i18n, "evaluatedCoordinations", currentLang)
+      legend.serie_02 = getI18nLabel(i18n, "successfulCoordinations", currentLang)
+      break
+    case "total_number_involved":
+      legend.serie_01 = getI18nLabel(i18n, "applicantsNumber", currentLang)
+      legend.serie_02 = getI18nLabel(i18n, "participantsNumber", currentLang)
+      break
+    case "total_projects":
+      legend.serie_01 = getI18nLabel(i18n, "evaluatedProjects", currentLang)
+      legend.serie_02 = getI18nLabel(i18n, "successfulProjects", currentLang)
+      break
+    default:
+      break
+  }
 
   const newOptions: HighchartsInstance.Options = {
     chart: {
@@ -95,14 +117,14 @@ export default function getOptions(data: { data?: FundingItem[] } | null, displa
     series: [
       {
         type: "column",
-        name: getI18nLabel(i18n, "evaluatedProjects"),
+        name: legend.serie_01,
         color: getCssColor("evaluated-project"),
         data: evaluatedData,
         yAxis: 0,
       },
       {
         type: "column",
-        name: getI18nLabel(i18n, "successfulProjects"),
+        name: legend.serie_02,
         color: getCssColor("successful-project"),
         data: successfulData,
         yAxis: 0,

@@ -9,8 +9,6 @@ import { readingKey, useGetParams } from "./utils"
 
 
 export default function ProgramsFundingProportion({ displayType = "total_fund_eur" }: { displayType: string }) {
-  // const { params } = useGetParams();
-  
   const { params, currentLang, countryN, adjMascPlural } = useGetParams()
   const { data, isLoading } = useQuery({
     queryKey: ["programsFundingProportion", params],
@@ -76,5 +74,5 @@ export default function ProgramsFundingProportion({ displayType = "total_fund_eu
       }      
   }
 
-  return <ChartWrapper config={config} options={options(data, displayType)} />
+  return <ChartWrapper config={config} options={options(data, displayType, currentLang)} />
 }

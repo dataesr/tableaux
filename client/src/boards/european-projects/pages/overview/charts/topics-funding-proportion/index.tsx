@@ -29,7 +29,7 @@ const config: {
 };
 
 export default function TopicsFundingProportion({ displayType = "total_fund_eur" }: { displayType: string }) {
-  const { params } = useGetParams();
+  const { currentLang, params } = useGetParams();
 
   switch (displayType) {
     case "total_fund_eur":
@@ -67,5 +67,5 @@ export default function TopicsFundingProportion({ displayType = "total_fund_eur"
 
   if (isLoading || !data) return <DefaultSkeleton />;
 
-  return <ChartWrapper config={config} options={getOptions(data, displayType)} />;
+  return <ChartWrapper config={config} options={getOptions(data, displayType, currentLang)} />;
 }

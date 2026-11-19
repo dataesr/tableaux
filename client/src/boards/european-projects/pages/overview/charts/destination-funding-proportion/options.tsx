@@ -1,15 +1,37 @@
 import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js";
 
-import { CreateChartOptions } from "../../../../components/chart-ep";
-import { formatToPercent } from "../../../../../../utils/format";
-import { getCssColor } from "../../../../../../utils/colors";
 import { getI18nLabel } from "../../../../../../utils";
+import { getCssColor } from "../../../../../../utils/colors";
+import { formatToPercent } from "../../../../../../utils/format";
+import { CreateChartOptions } from "../../../../components/chart-ep";
 import i18n from "../../i18n-charts.json";
 
-export default function Options(data, displayType: string = "total_fund_eur") {
+export default function getOptions(data, displayType: string = "total_fund_eur", currentLang: string) {
   if (!data) return null;
 
   const valueKey = displayType === "total_coordination_number" ? "proportion_coordination_number" : displayType === "total_number_involved" ? "proportion_number_involved" : displayType === "total_fund_eur" ? "proportion" : "proportion_projects";
+
+  const legend: any = {}
+  switch (displayType) {
+    case "total_fund_eur":
+      legend.serie_01 = getI18nLabel(i18n, "requestedFunding", currentLang)
+      legend.serie_02 = getI18nLabel(i18n, "securedFunding", currentLang)
+      break
+    case "total_coordination_number":
+      legend.serie_01 = getI18nLabel(i18n, "evaluatedCoordinations", currentLang)
+      legend.serie_02 = getI18nLabel(i18n, "successfulCoordinations", currentLang)
+      break
+    case "total_number_involved":
+      legend.serie_01 = getI18nLabel(i18n, "applicantsNumber", currentLang)
+      legend.serie_02 = getI18nLabel(i18n, "participantsNumber", currentLang)
+      break
+    case "total_projects":
+      legend.serie_01 = getI18nLabel(i18n, "evaluatedProjects", currentLang)
+      legend.serie_02 = getI18nLabel(i18n, "successfulProjects", currentLang)
+      break
+    default:
+      break
+  }
 
   const newOptions: HighchartsInstance.Options = {
     xAxis: {
@@ -42,7 +64,7 @@ export default function Options(data, displayType: string = "total_fund_eur") {
     series: [
       {
         type: "column",
-        name: getI18nLabel(i18n, "evaluatedProjects"),
+        name: legend.serie_01,
         color: getCssColor("evaluated-project"),
         groupPadding: 0,
         data: data.data.filter((item) => item.stage === "evaluated").map((item) => [item.destination, item[valueKey]]),
@@ -54,7 +76,7 @@ export default function Options(data, displayType: string = "total_fund_eur") {
       },
       {
         type: "column",
-        name: getI18nLabel(i18n, "successfulProjects"),
+        name: legend.serie_02,
         color: getCssColor("successful-project"),
         groupPadding: 0,
         data: data.data.filter((item) => item.stage === "successful").map((item) => [item.destination, item[valueKey]]),

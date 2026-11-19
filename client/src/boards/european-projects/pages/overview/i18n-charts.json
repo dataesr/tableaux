@@ -46,5 +46,29 @@
   "proportion_count": {
     "fr": "Part des projets",
     "en": "Share of projects"
+  },
+  "applicantsNumber": {
+    "fr": "Nombre de candidats",
+    "en": "Number of applicants"
+  },
+  "participantsNumber": {
+    "fr": "Nombre de participants",
+    "en": "Number of participants"
+  },
+  "evaluatedCoordinations": {
+    "fr": "Nombre de projets coordonnés évalués",
+    "en": "Number of coordinated projects evaluated"
+  },
+  "successfulCoordinations": {
+    "fr": "Nombre de projets coordonnés lauréats",
+    "en": "Number of winning coordinated projects"
+  },
+  "requestedFunding": {
+    "fr": "Financements demandés",
+    "en": "Funding requested"
+  },
+  "securedFunding": {
+    "fr": "Financements obtenus",
+    "en": "Funding secured"
   }
 }

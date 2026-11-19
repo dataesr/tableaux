@@ -58,6 +58,28 @@ export default function getOptionsValues(data, displayType, currentLang): Highch
   const successRates = successful.map((valSuccessful, i) => (evaluated[i] ? (valSuccessful / evaluated[i]) * 100 : 0));
   const successRateColor = getCssColor("average-success-rate") || "#d75521";
 
+  const legend: any = {}
+  switch (displayType) {
+    case "total_fund_eur":
+      legend.serie_01 = getI18nLabel(i18n, "requestedFunding", currentLang)
+      legend.serie_02 = getI18nLabel(i18n, "securedFunding", currentLang)
+      break
+    case "total_coordination_number":
+      legend.serie_01 = getI18nLabel(i18n, "evaluatedCoordinations", currentLang)
+      legend.serie_02 = getI18nLabel(i18n, "successfulCoordinations", currentLang)
+      break
+    case "total_number_involved":
+      legend.serie_01 = getI18nLabel(i18n, "applicantsNumber", currentLang)
+      legend.serie_02 = getI18nLabel(i18n, "participantsNumber", currentLang)
+      break
+    case "total_projects":
+      legend.serie_01 = getI18nLabel(i18n, "evaluatedProjects", currentLang)
+      legend.serie_02 = getI18nLabel(i18n, "successfulProjects", currentLang)
+      break
+    default:
+      break
+  }
+
   const newOptions: HighchartsInstance.Options = {
     chart: {
       events: {
@@ -112,23 +134,20 @@ export default function getOptionsValues(data, displayType, currentLang): Highch
       column: { borderRadius: 2, borderWidth: 0, grouping: true },
     },
     series: [
-      // Série pour les projets évalués
       {
         type: "column",
-        name: getI18nLabel(i18n, "evaluatedProjects", currentLang),
+        name: legend.serie_01,
         color: evaluatedColor,
         data: evaluated,
         yAxis: 0,
       },
-      // Série pour les projets lauréats
       {
         type: "column",
-        name: getI18nLabel(i18n, "successfulProjects", currentLang),
+        name: legend.serie_02,
         color: successfulColor,
         data: successful,
         yAxis: 0,
       },
-      // Série pour les taux de succès
       {
         type: "scatter",
         name: `${getI18nLabel(i18n, "successRate", currentLang)}`,

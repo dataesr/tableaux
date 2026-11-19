@@ -38,6 +38,28 @@ export default function Options(data, displayType, currentLang): HighchartsOptio
   const successfulColor = getCssColor("successful-project");
   const successRateColor = getCssColor("success-rate") || "#00A95F";
 
+  const legend: any = {}
+  switch (displayType) {
+    case "total_fund_eur":
+      legend.serie_01 = getI18nLabel(i18n, "requestedFunding", currentLang)
+      legend.serie_02 = getI18nLabel(i18n, "securedFunding", currentLang)
+      break
+    case "total_coordination_number":
+      legend.serie_01 = getI18nLabel(i18n, "evaluatedCoordinations", currentLang)
+      legend.serie_02 = getI18nLabel(i18n, "successfulCoordinations", currentLang)
+      break
+    case "total_number_involved":
+      legend.serie_01 = getI18nLabel(i18n, "applicantsNumber", currentLang)
+      legend.serie_02 = getI18nLabel(i18n, "participantsNumber", currentLang)
+      break
+    case "total_projects":
+      legend.serie_01 = getI18nLabel(i18n, "evaluatedProjects", currentLang)
+      legend.serie_02 = getI18nLabel(i18n, "successfulProjects", currentLang)
+      break
+    default:
+      break
+  }
+
   const newOptions: HighchartsInstance.Options = {
     chart: {
       events: {
@@ -72,7 +94,6 @@ export default function Options(data, displayType, currentLang): HighchartsOptio
       {
         title: {
           text: `${getI18nLabel(i18n, "successRate", currentLang)} (%)`,
-          // style: { color: successRateColor }
         },
         opposite: true,
         min: 0,
@@ -97,10 +118,9 @@ export default function Options(data, displayType, currentLang): HighchartsOptio
       column: { borderRadius: 2, borderWidth: 0, grouping: true },
     },
     series: [
-      // Série pour les projets évalués
       {
         type: "column",
-        name: getI18nLabel(i18n, "evaluatedProjects", currentLang),
+        name: legend.serie_01,
         color: evaluatedColor,
         data: (() => {
           const data: number[] = [];
@@ -114,10 +134,9 @@ export default function Options(data, displayType, currentLang): HighchartsOptio
         })(),
         yAxis: 0,
       },
-      // Série pour les projets lauréats
       {
         type: "column",
-        name: getI18nLabel(i18n, "successfulProjects", currentLang),
+        name: legend.serie_02,
         color: successfulColor,
         data: (() => {
           const data: number[] = [];
