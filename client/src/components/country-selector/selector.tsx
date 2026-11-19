@@ -64,7 +64,6 @@ export default function CountrySelector() {
   return (
     <>
       <Button
-        className="fr-m-1w"
         icon="global-line"
         onClick={() => {
           setIsModalOpen(true);

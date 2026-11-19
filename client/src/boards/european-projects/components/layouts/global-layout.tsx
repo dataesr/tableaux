@@ -5,9 +5,9 @@ import CountrySelector from "../../../../components/country-selector/selector";
 import { Layout } from "../../../../layout/layout";
 import i18n from "./i18n.json";
 
-import "../styles.scss";
-import "../../colors.scss";
 import { getI18nLabel } from "../../../../utils";
+import "../../colors.scss";
+import "../styles.scss";
 
 const BASE = "/european-projects";
 

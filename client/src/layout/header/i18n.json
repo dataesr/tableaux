@@ -11,9 +11,9 @@
     "fr": "Explorer d'autres tableaux de bord",
     "en": "Explore dashboards"
   },
-  "languagesSelector": {
-    "fr": "Sélectionner une langue",
-    "en": "Select a language"
+  "home": {
+    "fr": "Accueil",
+    "en": "Home"
   },
   "mainNavigation": {
     "fr": "Menu principal",
@@ -46,10 +46,6 @@
   "skipMenu": {
     "fr": "Menu principal",
     "en": "Main menu"
-  },
-  "tagline": {
-    "fr": "Si c'était pas super ça s'appellerait juste data",
-    "en": "If it wasn't great it would just be data"
   },
   "theme": {
     "fr": "Paramètres d'affichage",
