@@ -54,56 +54,31 @@ export default function SiteHeader({
   }, [languageSelector, urlLang, setSearchParams])
 
   return (
-    <>
-      <div className="fr-skiplinks">
-        <nav aria-label={t("skipLinks")} className="fr-container" role="navigation">
-          <ul className="fr-skiplinks__list">
-            <li>
-              <Link href="#main-content" isSimple>
-                {t("skipContent")}
-              </Link>
-            </li>
-            {hasNav && (
-              <li>
-                <Link href="#main-menu" isSimple>
-                  {t("skipMenu")}
-                </Link>
-              </li>
-            )}
-            <li>
-              <Link href="#footer" isSimple>
-                {t("skipFooter")}
-              </Link>
-            </li>
-          </ul>
-        </nav>
-      </div>
-      <Header className={stickyNav && hasNav ? "header--sticky-nav" : undefined} closeLabel={t("close")} menuLabel={t("menu")}>
-        <Logo text={t("ministry")} />
-        <Service href={serviceHref} name={name} tagline={serviceTag ?? t("serviceTag")} title={`${t("home")} - ${name}`} />
-        <FastAccess>
-          {exploreLink && (
-            <Button as="a" icon="layout-grid-line" iconPosition="left" href="/">
-              {t("explore")}
-            </Button>
-          )}
-          {extra}
-          <Button aria-controls="fr-theme-modal" data-fr-opened="false" icon="theme-fill" iconPosition="left" type="button">
-            {t("theme")}
+    <Header className={stickyNav && hasNav ? "header--sticky-nav" : undefined} closeLabel={t("close")} menuLabel={t("menu")}>
+      <Logo text={t("ministry")} />
+      <Service href={serviceHref} name={name} tagline={serviceTag ?? t("serviceTag")} title={`${t("home")} - ${name}`} />
+      <FastAccess>
+        {exploreLink && (
+          <Button as="a" icon="layout-grid-line" iconPosition="left" href="/">
+            {t("explore")}
           </Button>
-          {languageSelector && <TranslateButton />}
-        </FastAccess>
-        {hasNav && (
-          <Nav aria-label={t("mainNavigation")} extra={navExtra} id="main-menu">
-            {items.map(({ current, icon, key, label, to }) => (
-              <Link aria-current={current ? "page" : undefined} href={to} key={key} target="_self">
-                {icon && <span aria-hidden="true" className={`fr-icon-${icon} fr-mr-1w`} />}
-                {label}
-              </Link>
-            ))}
-          </Nav>
         )}
-      </Header>
-    </>
+        {extra}
+        <Button aria-controls="fr-theme-modal" data-fr-opened="false" icon="theme-fill" iconPosition="left" type="button">
+          {t("theme")}
+        </Button>
+        {languageSelector && <TranslateButton />}
+      </FastAccess>
+      {hasNav && (
+        <Nav aria-label={t("mainNavigation")} extra={navExtra} id="main-menu">
+          {items.map(({ current, icon, key, label, to }) => (
+            <Link aria-current={current ? "page" : undefined} href={to} key={key} target="_self">
+              {icon && <span aria-hidden="true" className={`fr-icon-${icon} fr-mr-1w`} />}
+              {label}
+            </Link>
+          ))}
+        </Nav>
+      )}
+    </Header>
   )
 }

@@ -1,0 +1,18 @@
+{
+  "skipContent": {
+    "fr": "Contenu principal",
+    "en": "Main content"
+  },
+  "skipFooter": {
+    "fr": "Pied de page",
+    "en": "Footer"
+  },
+  "skipLinks": {
+    "fr": "Accès rapide",
+    "en": "Quick access"
+  },
+  "skipMenu": {
+    "fr": "Menu principal",
+    "en": "Main menu"
+  }
+}
