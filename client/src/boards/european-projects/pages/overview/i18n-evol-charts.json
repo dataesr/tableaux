@@ -1,0 +1,192 @@
+{
+  "labels": {
+    "total-number-involved": {
+      "fr": "Nombre total de participants",
+      "en": "Total number of participants"
+    },
+    "total-coordination-number": {
+      "fr": "Nombre de coordinations",
+      "en": "Total number of coordination"
+    },
+    "total-fund-eur": {
+      "fr": "Total des subventions (EUR)",
+      "en": "Total grants (EUR)"
+    }
+  },
+  "levels": {
+    "pillar": {
+      "selected": {
+        "fr": "le pilier sélectionné",
+        "en": "the selected pillar"
+      },
+      "in": {
+        "fr": "dans le pilier {name}",
+        "en": "under the {name} pillar"
+      }
+    },
+    "program": {
+      "selected": {
+        "fr": "le programme sélectionné",
+        "en": "the selected programme"
+      },
+      "in": {
+        "fr": "dans le programme {name}",
+        "en": "under the {name} programme"
+      }
+    },
+    "topic": {
+      "selected": {
+        "fr": "la thématique sélectionnée",
+        "en": "the selected topic"
+      },
+      "in": {
+        "fr": "dans la thématique {name}",
+        "en": "under the {name} topic"
+      }
+    }
+  },
+  "yAxis": {
+    "total_fund_eur": {
+      "fr": "Euros (M€)",
+      "en": "Euros (€M)"
+    },
+    "total_coordination_number": {
+      "fr": "Nombre de projets coordonnés",
+      "en": "Number of coordinated projects"
+    },
+    "total_number_involved": {
+      "fr": "Nombre de candidats et de participants",
+      "en": "Number of applicants and participants"
+    },
+    "total_projects": {
+      "fr": "Nombre de projets",
+      "en": "Number of projects"
+    },
+    "share": {
+      "fr": "Part (%)",
+      "en": "Share (%)"
+    }
+  },
+  "charts": {
+    "total_fund_eur": {
+      "values": {
+        "title": {
+          "fr": "Evolution des financements demandés et obtenus par {country} sur Horizon Europe",
+          "en": "Trends in funding requested and secured by {country} in Horizon Europe"
+        },
+        "comment": {
+          "fr": "Ce graphique présente, pour {selected}, l'évolution des financements demandés et obtenus par le pays sélectionné ainsi que son taux de succès i.e le montant des financements obtenus sur demandés.",
+          "en": "This chart shows, for {selected}, the trends in funding requested and secured by the selected country, together with its funding success rate, i.e. the ratio of funding secured to funding requested."
+        },
+        "readingKey": {
+          "fr": "En {year}, {inLevel}, {country} a demandé **{evaluated}** dans les projets évalués et a obtenu **{successful}**, soit un taux de succès de **{rate}**.",
+          "en": "In {year}, {inLevel}, {country} requested **{evaluated}** in evaluated projects and secured **{successful}**, a funding success rate of **{rate}**."
+        }
+      },
+      "rates": {
+        "title": {
+          "fr": "Part des financements demandés et obtenus par {country} sur l'ensemble des pays",
+          "en": "Share of funding requested and secured by {country} out of all countries"
+        },
+        "comment": {
+          "fr": "Ce graphique présente, pour {selected}, l'évolution des financements demandés et obtenus par le pays sélectionné, en part de l'ensemble des pays.",
+          "en": "This chart shows, for {selected}, the trends in funding requested and secured by the selected country, as a share of all countries."
+        },
+        "readingKey": {
+          "fr": "En {year}, {inLevel}, les financements demandés par {country} représentent **{evaluated}** de l'ensemble des financements demandés et les financements obtenus par {country} représentent **{successful}** de l'ensemble des financements obtenus.",
+          "en": "In {year}, {inLevel}, the funding requested by {country} accounts for **{evaluated}** of all funding requested, and the funding secured by {country} accounts for **{successful}** of all funding secured."
+        }
+      }
+    },
+    "total_coordination_number": {
+      "values": {
+        "title": {
+          "fr": "Evolution du nombre de projets coordonnés par {country} sur Horizon Europe",
+          "en": "Trends in the number of projects coordinated by {country} under Horizon Europe"
+        },
+        "comment": {
+          "fr": "Ce graphique présente, pour {selected}, l'évolution du nombre de projets évalués et lauréats coordonnés par le pays sélectionné ainsi que son taux de succès i.e le nombre de projets coordonnés lauréats sur évalués.",
+          "en": "This chart shows, for {selected}, the trends in projects evaluated and successful coordinated by the selected country, together with its success rate, i.e. the number of successful project coordinations over evaluated ones."
+        },
+        "readingKey": {
+          "fr": "En {year}, {inLevel}, {country} a coordonné **{evaluated}** projets évalués et **{successful}** projets lauréats, soit un taux de succès de **{rate}**.",
+          "en": "In {year}, {inLevel}, {country} coordinated **{evaluated}** evaluated projects and **{successful}** successful projects, a success rate of **{rate}**."
+        }
+      },
+      "rates": {
+        "title": {
+          "fr": "Part des projets coordonnés par {country} sur l'ensemble des coordinations",
+          "en": "Share of projects coordinated by {country} out of the total number of coordination roles"
+        },
+        "comment": {
+          "fr": "Ce graphique présente, pour {selected}, l'évolution du nombre de projets évalués et lauréats coordonnés par le pays sélectionné, en part de l'ensemble des coordinations.",
+          "en": "This chart shows, for {selected}, the trends in the number of evaluated and successful projects coordinated by the selected country, as a share of all coordinations."
+        },
+        "readingKey": {
+          "fr": "En {year}, {inLevel}, les projets évalués coordonnés par {country} représentent **{evaluated}** de l'ensemble des projets évalués et les projets lauréats coordonnés par {country} représentent **{successful}** de l'ensemble des projets lauréats.",
+          "en": "In {year}, {inLevel}, evaluated projects coordinated by {country} account for **{evaluated}** of all evaluated projects, and successful projects coordinated by {country} account for **{successful}** of all successful projects."
+        }
+      }
+    },
+    "total_number_involved": {
+      "values": {
+        "title": {
+          "fr": "Evolution du nombre de candidats et de participants {adjective} sur Horizon Europe",
+          "en": "Trends in the number of {adjective} applicants and participants under Horizon Europe"
+        },
+        "comment": {
+          "fr": "Ce graphique présente, pour {selected}, l'évolution du nombre de candidats et de participants implantés dans le pays sélectionné ainsi que son taux de succès i.e le nombre de participants sur le nombre de candidats.",
+          "en": "This chart shows, for {selected}, the trends in the number of applicants and participants established in the selected country, together with its success rate, i.e. the number of participants over the number of applicants."
+        },
+        "readingKey": {
+          "fr": "En {year}, {inLevel}, sur les **{evaluated}** candidats {adjective} évalués, **{successful}** ont été lauréats, soit un taux de succès de **{rate}**.",
+          "en": "In {year}, {inLevel}, of the **{evaluated}** {adjective} applicants evaluated, **{successful}** became participants in successful projects, a participant-level success rate of **{rate}**."
+        }
+      },
+      "rates": {
+        "title": {
+          "fr": "Part des candidats et de participants {adjective} sur l'ensemble des pays",
+          "en": "Share of the {adjective} applicants and participants out of all countries"
+        },
+        "comment": {
+          "fr": "Ce graphique présente, pour {selected}, l'évolution du nombre de candidats et participants implantés dans le pays sélectionné, en part de l'ensemble des pays.",
+          "en": "This chart shows, for {selected}, the trends in the number of applicants and participants established in the selected country, as a share of all countries."
+        },
+        "readingKey": {
+          "fr": "En {year}, {inLevel}, les candidats {adjective} représentent **{evaluated}** de l'ensemble des candidats et les participants {adjective} représentent **{successful}** de l'ensemble des participants.",
+          "en": "In {year}, {inLevel}, {adjective} applicants account for **{evaluated}** of all applicants, and {adjective} participants account for **{successful}** of all participants."
+        }
+      }
+    },
+    "total_projects": {
+      "values": {
+        "title": {
+          "fr": "Evolution du nombre de projets évalués et lauréats impliquant {country} sur Horizon Europe",
+          "en": "Trends in the number of evaluated and successful projects involving {country} under Horizon Europe"
+        },
+        "comment": {
+          "fr": "Ce graphique présente, pour {selected}, l'évolution du nombre de projets évalués et lauréats impliquant le pays sélectionné ainsi que son taux de succès i.e le nombre de projets lauréats sur évalués.",
+          "en": "This chart shows, for {selected}, the trends in the number of evaluated and successful projects involving the selected country, together with its success rate, i.e. the ratio of successful projects to evaluated projects."
+        },
+        "readingKey": {
+          "fr": "En {year}, {inLevel}, {country} participe à **{evaluated}** projets évalués et à **{successful}** projets lauréats, soit un taux de succès de **{rate}**.",
+          "en": "In {year}, {inLevel}, {country} is involved in **{evaluated}** evaluated projects and **{successful}** successful projects, a success rate of **{rate}**."
+        }
+      },
+      "rates": {
+        "title": {
+          "fr": "Part du nombre de projets évalués et lauréats impliquant {country} sur l'ensemble des pays",
+          "en": "Share of evaluated and successful projects involving {country} out of all countries"
+        },
+        "comment": {
+          "fr": "Ce graphique présente, pour {selected}, l'évolution du nombre de projets évalués et lauréats impliquant le pays sélectionné, en part de l'ensemble des pays.",
+          "en": "This chart shows, for {selected}, the trends in the number of evaluated and successful projects involving the selected country, as a share of all countries."
+        },
+        "readingKey": {
+          "fr": "En {year}, {inLevel}, **{evaluated}** des projets évalués et **{successful}** des projets lauréats impliquent {country}.",
+          "en": "In {year}, {inLevel}, **{evaluated}** of evaluated projects and **{successful}** of successful projects involve {country}."
+        }
+      }
+    }
+  }
+}
