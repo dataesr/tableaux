@@ -91,8 +91,8 @@
           "en": "This chart shows, for {selected}, the trends in funding requested and secured by the selected country, together with its funding success rate, i.e. the ratio of funding secured to funding requested."
         },
         "readingKey": {
-          "fr": "En {year}, {inLevel}, {country} a demandé **{evaluated}** dans les projets évalués et a obtenu **{successful}**, soit un taux de succès de **{rate}**.",
-          "en": "In {year}, {inLevel}, {country} requested **{evaluated}** in evaluated projects and secured **{successful}**, a funding success rate of **{rate}**."
+          "fr": "En {year}, {inLevel}, {country} a demandé **{evaluated}** et a obtenu **{successful}**, soit un taux de succès de **{rate}**.",
+          "en": "In {year}, {inLevel}, {country} requested **{evaluated}** and secured **{successful}**, a funding success rate of **{rate}**."
         }
       },
       "rates": {
