@@ -1,6 +1,7 @@
 import type { HighchartsOptions } from "../../../../../../components/chart-wrapper";
+import { formatToPercentLang } from "../../../../../../utils/format";
 
-export default function Options(data, displayType): HighchartsOptions {
+export default function Options(data, displayType, currentLang: "fr" | "en" = "fr"): HighchartsOptions {
   if (!data) return null;
   const rootStyles = getComputedStyle(document.documentElement);
   const years = new Set();
@@ -29,6 +30,7 @@ export default function Options(data, displayType): HighchartsOptions {
         categories: Array.from(years).map(String),
         width: "100%",
         title: {
+          enabled: false,
           text: "Projets évalués",
         },
       },
@@ -45,7 +47,7 @@ export default function Options(data, displayType): HighchartsOptions {
         dataLabels: {
           enabled: true,
           formatter: function (this: any) {
-            return `${Number(this.y).toFixed(1)}%`;
+            return formatToPercentLang(this.y ?? 0, currentLang);
           },
         },
       },

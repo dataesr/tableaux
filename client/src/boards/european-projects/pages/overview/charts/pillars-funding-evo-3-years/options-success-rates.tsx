@@ -4,6 +4,7 @@ import type { HighchartsOptions } from "../../../../../../components/chart-wrapp
 import { getI18nLabel } from "../../../../../../utils";
 import { getCssColor } from "../../../../../../utils/colors";
 import { CreateChartOptions } from "../../../../components/chart-ep";
+import { formatToPercentLang } from "../../../../../../utils/format";
 import i18n from "../../i18n-charts.json";
 
 export default function Options(data, displayType, currentLang): HighchartsOptions {
@@ -67,7 +68,7 @@ export default function Options(data, displayType, currentLang): HighchartsOptio
         dataLabels: {
           enabled: true,
           formatter: function () {
-            return `${Number(this.y).toFixed(1)}%`;
+            return formatToPercentLang(this.y ?? 0, currentLang);
           },
         },
       },
@@ -77,7 +78,7 @@ export default function Options(data, displayType, currentLang): HighchartsOptio
       formatter: function () {
         let s = `<b>${this.key}</b>`;
         this.points?.forEach((point) => {
-          s += `<br/><span style="color:${point.color}">\u25CF</span> ${point.series.name}: <b>${Number(point.y).toFixed(1)}%</b>`;
+          s += `<br/><span style="color:${point.color}">\u25CF</span> ${point.series.name}: <b>${formatToPercentLang(point.y ?? 0, currentLang)}</b>`;
         });
         return s;
       },
