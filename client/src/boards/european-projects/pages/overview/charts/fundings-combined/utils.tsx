@@ -1,11 +1,11 @@
 import { useSearchParams } from "react-router-dom";
-import { getI18nLabel } from "../../../../../../utils";
-import { isEjoParam } from "../../../../utils/params";
-import { formatToMillionsLang, formatToPercentLang } from "../../../../../../utils/format";
-import { getCountryNameWithArticle } from "../../../../utils/country-mapping";
-import { getCountryAdjectives } from "../../../../../../components/country-selector/utils.jsx";
-import i18n from "../../../../i18n-global.json";
 
+import { getCountryAdjectives } from "../../../../../../components/country-selector/utils.jsx";
+import { getI18nLabel } from "../../../../../../utils";
+import { formatToMillionsLang, formatToPercentLang } from "../../../../../../utils/format";
+import i18n from "../../../../i18n-global.json";
+import { getCountryNameWithArticle } from "../../../../utils/country-mapping";
+import { isEjoParam } from "../../../../utils/params";
 
 export function useGetParams() {
   const [searchParams] = useSearchParams();
@@ -60,7 +60,7 @@ export function useGetParams() {
   // Pluriel seulement en français
   const adjMascPlural = currentLang === "fr" && !countryAdj.m.endsWith("s") ? `${countryAdj.m}s` : countryAdj.m;
 
-  return { params: params.join("&"), currentLang, countryN, adjMascPlural };
+  return { adjMascPlural, countryN, currentLang, params: params.join("&") };
 }
 
 /**

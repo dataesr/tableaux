@@ -5,11 +5,11 @@ import ChartWrapper from "../../../../../../components/chart-wrapper"
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default"
 import { formatCurrencyLang, formatNumberLang, formatToPercentLang } from "../../../../../../utils/format"
 import { EPChartsSources } from "../../../../config"
+import { getLevelLabels } from "../../../../utils/levelsGet"
+import i18n from "./i18n.json"
 import getOptions from "./options"
 import { getData } from "./query"
-import { useGetParams, renderDataTable } from "./utils"
-import i18n from "./i18n.json"
-import { getLevelLabels } from "../../../../utils/levelsGet"
+import { renderDataTable, useGetParams } from "./utils"
 
 type ChartConfig = {
   id: string;
@@ -40,7 +40,7 @@ function renderTemplate(tpl: string, vars: Record<string, string>): React.JSX.El
 }
 
 export default function FundingCombined({ displayType = "total_fund_eur", groupBy }: { displayType: string; groupBy: "pillar" | "program" | "topic" | "destination" }) {
-  const { params, currentLang, countryN, adjMascPlural } = useGetParams();
+  const { adjMascPlural, countryN, currentLang, params } = useGetParams();
 
   const { data, isLoading } = useQuery({
     queryKey: [baseConfig.idQuery, params, groupBy],

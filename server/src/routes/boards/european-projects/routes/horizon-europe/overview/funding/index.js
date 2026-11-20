@@ -1,4 +1,5 @@
 import express from "express";
+
 import { db } from "../../../../../../../services/mongo.js";
 import { checkQuery, recreateIndex } from "../../../../../../utils.js";
 
@@ -47,7 +48,6 @@ router.route("/european-projects/overview/funding").get(async (req, res) => {
 
   if (req.query.thematics) {
     const thematics = req.query.thematics.split(",");
-    // const filteredThematics = thematics.filter((thematic) => !["ERC", "MSCA"].includes(thematic));
     filters.thema_code = { $in: thematics };
     delete filters.pilier_code;
     delete filters.programme_code;
@@ -86,7 +86,7 @@ router.route("/european-projects/overview/funding").get(async (req, res) => {
   }
 
   if (req.query.isEjo) {
-    filters["is_ejo"] = { $eq: req.query.isEjo === "true" ? true : false };
+    filters.is_ejo = { $eq: req.query.isEjo === "true" ? true : false };
   }
 
   if (req.query.range_of_years) {
