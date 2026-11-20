@@ -56,8 +56,8 @@
     "fr": "Candidats"
   },
   "caption-destination-proportion": {
-    "en": "Proportion of funding by destination",
-    "fr": "Proportion des subventions par destination"
+    "en": "Share of funding by destination",
+    "fr": "Part des financements par destination"
   },
   "caption-destination-success-rate": {
     "en": "Success rate by destination",
