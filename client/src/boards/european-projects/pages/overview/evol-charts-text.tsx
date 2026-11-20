@@ -13,7 +13,7 @@ const DISPLAY_TYPES = ["total_fund_eur", "total_coordination_number", "total_num
 export const LEVELS: Record<EvolLevel, { itemsKey: string; codeKey: string; nameKey: string }> = {
   pillar: { itemsKey: "pillars", codeKey: "pilier_code", nameKey: "pilier_name" },
   program: { itemsKey: "programs", codeKey: "programme_code", nameKey: "programme_name" },
-  topic: { itemsKey: "topics", codeKey: "thema_code", nameKey: "thema_name" },
+  topic: { itemsKey: "items", codeKey: "code", nameKey: "name" },
 };
 
 // Légendes des séries (évalués / lauréats) selon le displayType
@@ -34,6 +34,13 @@ export function getLevelFromData(data): EvolLevel {
   return level || "pillar";
 }
 
+// Nombre d'éléments sélectionnés (plusieurs thématiques possibles)
+export function getItemsCountFromData(data) {
+  const level = getLevelFromData(data);
+  const stageData = data?.find((item) => item.country !== "all")?.data?.find((d) => d.stage === "evaluated");
+  return stageData?.[LEVELS[level].itemsKey]?.length || 1;
+}
+
 // Remplace les {placeholders} d'un libellé par leur valeur (laisse le placeholder si la valeur est absente)
 export function fillPlaceholders(text: string, vars: Record<string, string | number | undefined>) {
   return (text || "").replace(/\{(\w+)\}/g, (match, key) => (vars[key] !== undefined ? String(vars[key]) : match));
@@ -44,10 +51,11 @@ export function renderBold(text: string) {
   return <>{text.split(/\*\*(.+?)\*\*/g).map((part, index) => (index % 2 === 1 ? <strong key={index}>{part}</strong> : part))}</>;
 }
 
-// {selected} : "le pilier sélectionné" / {inLevel} : "dans le pilier XXX"
-export function getLevelVars(level: EvolLevel, levelName: string, lang: Lang) {
+// {selected} : "le pilier sélectionné" (ou "les thématiques sélectionnées" si count > 1) / {inLevel} : "dans le pilier XXX"
+export function getLevelVars(level: EvolLevel, levelName: string, lang: Lang, count = 1) {
+  const selectedKey = count > 1 && i18nEvol.levels?.[level]?.selectedPlural ? "selectedPlural" : "selected";
   return {
-    selected: getI18nLabel(i18nEvol, `levels.${level}.selected`, lang),
+    selected: getI18nLabel(i18nEvol, `levels.${level}.${selectedKey}`, lang),
     inLevel: fillPlaceholders(getI18nLabel(i18nEvol, `levels.${level}.in`, lang), { name: levelName }),
   };
 }
@@ -68,13 +76,13 @@ export function getEvolYAxisTitle(displayType: string, currentLang: string) {
 }
 
 // Titre et commentaire d'un graphique
-export function getEvolChartTexts({ chart, displayType, level, countryN, adjMascPlural }) {
+export function getEvolChartTexts({ chart, displayType, level, countryN, adjMascPlural, count = 1 }) {
   const type = getDisplayType(displayType);
   const title: any = {};
   const comment: any = {};
 
   LANGS.forEach((lang) => {
-    const vars = { country: countryN, adjective: adjMascPlural, ...getLevelVars(level, "", lang) };
+    const vars = { country: countryN, adjective: adjMascPlural, ...getLevelVars(level, "", lang, count) };
     title[lang] = fillPlaceholders(getI18nLabel(i18nEvol, `charts.${type}.${chart}.title`, lang), vars);
     comment[lang] = <>{fillPlaceholders(getI18nLabel(i18nEvol, `charts.${type}.${chart}.comment`, lang), vars)}</>;
   });
