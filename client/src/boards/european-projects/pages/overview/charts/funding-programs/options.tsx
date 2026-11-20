@@ -2,7 +2,7 @@ import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.sr
 
 import { getI18nLabel, getResponsiveChartHeight } from "../../../../../../utils";
 import { getCssColor } from "../../../../../../utils/colors";
-import { formatToMillions } from "../../../../../../utils/format";
+import { formatToMillionsLang } from "../../../../../../utils/format";
 import { CreateChartOptions } from "../../../../components/chart-ep";
 
 export default function options(data, currentLang) {
@@ -25,7 +25,9 @@ export default function options(data, currentLang) {
   // Regrouper les programmes "successful" par pilier
   const groups = pilarConfig.map((pilar) => ({
     ...pilar,
-    items: data.data.filter((program) => program.code.startsWith(pilar.key) && program.stage === "successful"),
+    items: data.data
+      .filter((program) => program.code.startsWith(pilar.key) && program.stage === "successful")
+      .sort((a, b) => (b.total_fund_eur ?? 0) - (a.total_fund_eur ?? 0)),
   }));
 
   // Construire la liste de catégories = tous les name_fr, dans l'ordre des piliers
@@ -78,7 +80,7 @@ export default function options(data, currentLang) {
         dataLabels: {
           enabled: true,
           formatter: function () {
-            return formatToMillions(this.y ?? 0);
+            return formatToMillionsLang(this.y ?? 0, currentLang);
           },
         },
       },
@@ -86,7 +88,7 @@ export default function options(data, currentLang) {
     tooltip: {
       pointFormatter: function () {
         const point = this as Highcharts.Point & { custom?: { valueName: string } };
-        return `<span style="color:${point.color}">●</span> ${point.custom?.valueName ?? point.category}: <b>${formatToMillions(point.y ?? 0)}</b><br/>`;
+        return `<span style="color:${point.color}">●</span> ${point.custom?.valueName ?? point.category}: <b>${formatToMillionsLang(point.y ?? 0, currentLang)}</b><br/>`;
       },
     },
     legend: {
