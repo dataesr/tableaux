@@ -27,7 +27,12 @@ export default function getOptions(data: { data?: FundingItem[] } | null, displa
 
   const evaluatedData = categories.map((name) => getValue(name, "evaluated") / divider);
   const successfulData = categories.map((name) => getValue(name, "successful") / divider);
-  const successRates = evaluatedData.map((evaluated, i) => (evaluated > 0 ? (successfulData[i] / evaluated) * 100 : 0));
+  const successRates = evaluatedData.map((evaluated, i) => {
+    if (evaluated <= 0) return { label: 0, y: 0 }
+    const rate = (successfulData[i] / evaluated) * 100
+    if (rate > 100) return { label: rate, y: 100, marker: { symbol: "triangle" } }
+    return { label: rate, y: rate }
+  });
 
   const successRateColor = getCssColor("success-rate") || "#00A95F";
 
@@ -139,7 +144,7 @@ export default function getOptions(data: { data?: FundingItem[] } | null, displa
         dataLabels: {
           enabled: true,
           formatter: function () {
-            return formatToRates(((this as any).y || 0) / 100);
+            return formatToRates(((this as any).label || 0) / 100);
           },
           y: -10,
           style: { fontSize: "11px", fontWeight: "600", textOutline: "none" },
