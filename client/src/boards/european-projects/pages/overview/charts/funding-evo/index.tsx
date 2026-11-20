@@ -1,7 +1,6 @@
 import { Col, Container, Row } from "@dataesr/dsfr-plus";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { useSearchParams } from "react-router-dom";
 
 import ChartWrapper from "../../../../../../components/chart-wrapper/index.js";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.js";
@@ -9,17 +8,16 @@ import { getI18nLabel } from "../../../../../../utils.js";
 import { EPChartsSources } from "../../../../config.js";
 import i18nGlobal from "../../../../i18n-global.json";
 import i18nLocal from "./i18n.json";
+import { getEvolChartTexts, getItemsCountFromData, getLevelFromData } from "../../evol-charts-text";
 import getOptionsSuccessRates from "./options-success-rates.js";
 import getOptionsValues from "./options-values.js";
 import { getData } from "./query.js";
 import { renderDataTable, renderDataTableRates, successRatesReadingKey, useGetParams, valuesSuccessReadingKey } from "./utils.js";
 
 export default function FundingEvo() {
-  const [searchParams] = useSearchParams();
-  const currentLang = searchParams.get("language") || "fr";
   const [displayType, setDisplayType] = useState("total_fund_eur");
 
-  const { params } = useGetParams();
+  const { params, currentLang, countryN, adjMascPlural } = useGetParams();
   const { data, isLoading } = useQuery({
     queryKey: ["FundingEvo", params],
     queryFn: () => getData(params),
@@ -33,93 +31,27 @@ export default function FundingEvo() {
       </>
     );
 
-  let titleChart1, commentChart1, titleChart2, commentChart2;
-  switch (displayType) {
-    case "total_coordination_number":
-      titleChart1 = { fr: "Evolution du nombre de projets coordonnés par le pays sélectionné sur Horizon Europe", en: "Trends in the number of projects coordinated by the selected country under Horizon Europe" };
-      commentChart1 = {
-        fr: (
-          <>
-            Ce graphique montre l'évolution du nombre de coordinations de projets demandées et obtenues sur le programme Horizon Europe. Les barres représentent les coordinations demandées et obtenues. La ligne indique le taux de succès
-            correspondant.
-          </>
-        ),
-        en: (
-          <>
-            This chart shows the evolution of the number of project coordinations applied for and obtained in the Horizon Europe programme. The bars represent the coordinations applied for and obtained. The line indicates the corresponding success
-            rate.
-          </>
-        ),
-      };
-      titleChart2 = { fr: "Part des projets coordonnés par le pays sélectionné sur l'ensemble des coordinations", en: "Proportion of projects coordinated by the selected country out of the total number of coordination roles" };
-      commentChart2 = {
-        fr: <>Ce graphique montre le pourcentage de coordinations demandées et obtenues par le pays sélectionné par rapport au total des coordinations.</>,
-        en: <>This chart shows the percentage of coordinations applied for and obtained by the selected country as a proportion of total coordinations.</>,
-      };
-      break;
-    case "total_number_involved":
-      titleChart1 = { fr: "Evolution du nombre de candidats et de participants du pays sélectionné sur Horizon Europe", en: "Trends in the number of applicants and participants from the selected country under Horizon Europe" };
-      commentChart1 = {
-        fr: <>Ce graphique montre l'évolution du nombre de participations demandées et obtenues sur le programme Horizon Europe. Les barres représentent les participations demandées et obtenues. La ligne indique le taux de succès correspondant.</>,
-        en: (
-          <>This chart shows the evolution of the number of participations applied for and obtained in the Horizon Europe programme. The bars represent the participations applied for and obtained. The line indicates the corresponding success rate.</>
-        ),
-      };
-      titleChart2 = { fr: "Part du nombre de candidats et de participants du pays sélectionné", en: "Proportion of the total number of candidates and participants from the selected country" };
-      commentChart2 = {
-        fr: <>Ce graphique montre le pourcentage de participations demandées et obtenues par le pays sélectionné par rapport au total des participants.</>,
-        en: <>This chart shows the percentage of participations applied for and obtained by the selected country as a proportion of total participants.</>,
-      };
-      break;
-    case "total_projects":
-      titleChart1 = { fr: "Evolution du nombre de projets impliquant au moins un participant du pays sélectionné sur Horizon Europe", en: "Trends in the number of projects involving at least one participant from the selected country under Horizon Europe" };
-      commentChart1 = {
-        fr: <>Ce graphique montre l'évolution du nombre de projets demandés et obtenus sur le programme Horizon Europe. Les barres représentent les projets demandés et obtenus. La ligne indique le taux de succès correspondant.</>,
-        en: <>This chart shows the evolution of the number of projects applied for and obtained in the Horizon Europe programme. The bars represent the projects applied for and obtained. The line indicates the corresponding success rate.</>,
-      };
-      titleChart2 = { fr: "Part du nombre de projets impliquant au moins un participant du pays sélectionné", en: "Proportion of projects involving at least one participant from the selected country" };
-      commentChart2 = {
-        fr: <>Ce graphique montre le pourcentage de projets demandés et obtenus par le pays sélectionné par rapport au total des projets.</>,
-        en: <>This chart shows the percentage of projects applied for and obtained by the selected country as a proportion of total projects.</>,
-      };
-      break;
-    default:
-      titleChart1 = { fr: "Evolution des financements demandés et obtenus sur Horizon Europe", en: "Trends in funding requested and awarded under Horizon Europe" };
-      commentChart1 = {
-        fr: (
-          <>
-            Ce graphique montre l'évolution des financements demandés et obtenus pour les thématiques du programme Horizon Europe sur les trois dernières années. Les barres représentent les montants demandés et obtenus. La ligne verte indique le taux
-            de succès correspondant.
-          </>
-        ),
-        en: (
-          <>
-            This chart shows the evolution of funding applied for and obtained for the topics of the Horizon Europe programme over the last three years. The bars represent the amounts applied for and obtained. The line indicates the corresponding
-            success rate.
-          </>
-        ),
-      };
-      titleChart2 = { fr: "Part des financements demandés et obtenus par le pays sélectionné", en: "Proportion of funding requested and secured by the selected country" };
-      commentChart2 = {
-        fr: <>Ce graphique montre le pourcentage des financements demandés et obtenus par le pays sélectionné par rapport au total des participants.</>,
-        en: <>This chart shows the percentage of funding applied for and obtained by the selected country as a proportion of total participants.</>,
-      };
-  }
+  // level correspond à pillar | program | topic
+  // count : plusieurs thématiques peuvent être sélectionnées
+  const level = getLevelFromData(data);
+  const count = getItemsCountFromData(data);
+  const textsChart1 = getEvolChartTexts({ chart: "values", displayType, level, countryN, adjMascPlural, count });
+  const textsChart2 = getEvolChartTexts({ chart: "rates", displayType, level, countryN, adjMascPlural, count });
 
   const configChart1 = {
     id: "EvolutionFundingLines",
-    title: titleChart1,
-    comment: commentChart1,
-    readingKey: valuesSuccessReadingKey(data, displayType),
+    title: textsChart1.title,
+    comment: textsChart1.comment,
+    readingKey: valuesSuccessReadingKey(data, displayType, currentLang, countryN, adjMascPlural),
     sources: EPChartsSources,
     integrationURL: "/european-projects/components/pages/analysis/overview/charts/topics-types-3",
   };
 
   const configChart2 = {
     id: "EvolutionFundingLinesSuccessRate",
-    title: titleChart2,
-    comment: commentChart2,
-    readingKey: successRatesReadingKey(data, displayType, currentLang),
+    title: textsChart2.title,
+    comment: textsChart2.comment,
+    readingKey: successRatesReadingKey(data, displayType, currentLang, countryN, adjMascPlural),
     sources: EPChartsSources,
     integrationURL: "/european-projects/components/pages/analysis/overview/charts/topics-types-3",
   };

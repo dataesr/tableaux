@@ -3,32 +3,37 @@ import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.sr
 import type { HighchartsOptions } from "../../../../../../components/chart-wrapper";
 import { getI18nLabel } from "../../../../../../utils";
 import { getCssColor } from "../../../../../../utils/colors";
-import { formatNumber, formatToRates } from "../../../../../../utils/format";
+import { formatNumberLang, formatToPercentLang, formatCurrencyLang } from "../../../../../../utils/format";
 import { CreateChartOptions } from "../../../../components/chart-ep";
 import i18n from "../../i18n-charts.json";
+import { getEvolLegend, getEvolYAxisTitle, getLevelFromData, LEVELS } from "../../evol-charts-text";
 
 export default function getOptionsValues(data, displayType, currentLang): HighchartsOptions {
   if (!data || !Array.isArray(data)) return null;
+
+  // level correspond à pillar | program | topic
+  const level = getLevelFromData(data);
+  const { itemsKey, codeKey } = LEVELS[level];
 
   const countryData = data.filter((item) => item.country !== "all")[0];
   if (!countryData?.data) return null;
 
   const filteredData = countryData.data;
 
-  const valueKey = (["total_fund_eur", "total_coordination_number", "total_number_involved", "count"].includes(displayType) ? displayType : "total_fund_eur") as
+  const valueKey = (["total_fund_eur", "total_coordination_number", "total_number_involved", "count", "total_projects"].includes(displayType) ? displayType : "total_fund_eur") as
     | "total_fund_eur"
     | "total_coordination_number"
     | "total_number_involved"
     | "total_projects";
   const isFunding = valueKey === "total_fund_eur";
-  const formatter = Intl.NumberFormat(currentLang, { notation: 'compact' })
+  // const formatter = Intl.NumberFormat(currentLang, { notation: 'compact' })
 
   // liste de toutes les années/code disponibles en parcourant tous les items
   const years = new Set();
   const itemsLabels = new Set();
   filteredData.forEach((el) => {
-    el.items.forEach((item) => {
-      itemsLabels.add(item.code);
+    el[itemsKey].forEach((item) => {
+      itemsLabels.add(item[codeKey]);
       item.years.forEach((y) => {
         years.add(y.year);
       });
@@ -37,13 +42,15 @@ export default function getOptionsValues(data, displayType, currentLang): Highch
   const sortedYears = Array.from(years).sort(); // ['2021', '2022', '2023', '2024', '2025']
   const labels = Array.from(itemsLabels);
   const categories = sortedYears.flatMap((year) => labels.map((label) => `${label} - ${year}`));
-
+  console.log(data)
   const index = {}; // Index : stage -> code -> year -> valeur
-  filteredData.forEach(({ stage, items }) => {
+  filteredData.forEach((el) => {
+    const stage = el.stage;
     index[stage] = index[stage] || {};
-    items.forEach(({ code, years }) => {
+    el[itemsKey].forEach((item) => {
+      const code = item[codeKey];
       index[stage][code] = index[stage][code] || {};
-      years.forEach((year) => {
+      item.years.forEach((year) => {
         index[stage][code][year.year] = year[displayType];
       });
     });
@@ -56,29 +63,9 @@ export default function getOptionsValues(data, displayType, currentLang): Highch
   const successfulColor = getCssColor("successful-project");
 
   const successRates = successful.map((valSuccessful, i) => (evaluated[i] ? (valSuccessful / evaluated[i]) * 100 : 0));
-  const successRateColor = getCssColor("average-success-rate") || "#d75521";
+  const successRateColor = getCssColor("success-rate");
 
-  const legend: any = {}
-  switch (displayType) {
-    case "total_fund_eur":
-      legend.serie_01 = getI18nLabel(i18n, "requestedFunding", currentLang)
-      legend.serie_02 = getI18nLabel(i18n, "securedFunding", currentLang)
-      break
-    case "total_coordination_number":
-      legend.serie_01 = getI18nLabel(i18n, "evaluatedCoordinations", currentLang)
-      legend.serie_02 = getI18nLabel(i18n, "successfulCoordinations", currentLang)
-      break
-    case "total_number_involved":
-      legend.serie_01 = getI18nLabel(i18n, "applicantsNumber", currentLang)
-      legend.serie_02 = getI18nLabel(i18n, "participantsNumber", currentLang)
-      break
-    case "total_projects":
-      legend.serie_01 = getI18nLabel(i18n, "evaluatedProjects", currentLang)
-      legend.serie_02 = getI18nLabel(i18n, "successfulProjects", currentLang)
-      break
-    default:
-      break
-  }
+  const legend = getEvolLegend(displayType, currentLang);
 
   const newOptions: HighchartsInstance.Options = {
     chart: {
@@ -104,17 +91,17 @@ export default function getOptionsValues(data, displayType, currentLang): Highch
     xAxis: { categories, crosshair: true },
     yAxis: [
       {
-        title: { text: displayType === "total_fund_eur" ? "Euros (M€)" : displayType === "total_coordination_number" ? "Nombre de projets coordonnés" : "Nombre de candidats et de participants" },
+        title: { text: getEvolYAxisTitle(displayType, currentLang) },
         min: 0,
         gridLineColor: "var(--background-default-grey-hover)",
         gridLineWidth: 0.5,
       },
       {
-        title: { style: { color: successRateColor }, text: `${getI18nLabel(i18n, "successRate", currentLang)} (%)` },
+        title: { text: `${getI18nLabel(i18n, "successRate", currentLang)} (%)` },
         opposite: true,
         min: 0,
         max: 100,
-        labels: { format: "{value}%", style: { color: successRateColor } },
+        labels: { format: "{value}%"},
       },
     ],
     tooltip: {
@@ -124,7 +111,7 @@ export default function getOptionsValues(data, displayType, currentLang): Highch
         let html = `<strong>${this.category}</strong><br/>`;
         (this.points || []).forEach((point) => {
           const value = point.y || 0;
-          const formatted = point.series.type === "scatter" ? formatToRates(value / 100) : isFunding ? formatter.format(value * 1000000) : formatNumber(value);
+          const formatted = point.series.type === "scatter" ? formatToPercentLang(value, currentLang) : isFunding ? formatCurrencyLang(value, currentLang) : formatNumberLang(value, currentLang);
           html += `<span style="color:${point.color}">●</span> ${point.series.name}: <strong>${formatted}</strong><br/>`;
         });
         return html;
@@ -158,7 +145,7 @@ export default function getOptionsValues(data, displayType, currentLang): Highch
         dataLabels: {
           enabled: true,
           formatter: function () {
-            return `${Number(this.y).toFixed(1)}%`;
+            return formatToPercentLang(this.y ?? 0, currentLang);
           },
           y: -10,
           style: { fontSize: "11px", fontWeight: "600", textOutline: "none" },

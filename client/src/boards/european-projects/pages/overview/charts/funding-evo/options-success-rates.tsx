@@ -1,14 +1,18 @@
 import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js";
 import type { HighchartsOptions } from "../../../../../../components/chart-wrapper";
 
-import { getI18nLabel } from "../../../../../../utils";
 import { getCssColor } from "../../../../../../utils/colors";
+import { formatToPercentLang } from "../../../../../../utils/format";
 import { CreateChartOptions } from "../../../../components/chart-ep";
 import { normalizeIdForCssColorNames } from "../../../../utils";
-import i18n from "../../i18n-charts.json";
+import { getEvolLegend, getEvolYAxisTitle, getLevelFromData, LEVELS } from "../../evol-charts-text";
 
 export default function getOptionsSuccessRates(data, displayType, currentLang): HighchartsOptions {
   if (!data || !Array.isArray(data)) return null;
+
+  // level correspond à pillar | program | topic
+  const level = getLevelFromData(data);
+  const { itemsKey, codeKey, nameKey } = LEVELS[level];
 
   const countryData = data.filter((item) => item.country !== "all")[0];
   const allCountryData = data.find((item) => item.country === "all");
@@ -23,15 +27,15 @@ export default function getOptionsSuccessRates(data, displayType, currentLang): 
   const evaluatedAll = allData.find((item) => item.stage === "evaluated");
   const successfulAll = allData.find((item) => item.stage === "successful");
 
-  if (!evaluatedFiltered?.items?.length || !successfulFiltered?.items?.length) return null;
-  if (!evaluatedAll?.items?.length || !successfulAll?.items?.length) return null;
+  if (!evaluatedFiltered?.[itemsKey]?.length || !successfulFiltered?.[itemsKey]?.length) return null;
+  if (!evaluatedAll?.[itemsKey]?.length || !successfulAll?.[itemsKey]?.length) return null;
 
   // liste de toutes les années/code disponibles en parcourant tous les items
   const years = new Set();
   const itemsLabels = new Set();
   filteredData.forEach((el) => {
-    el.items.forEach((item) => {
-      itemsLabels.add(item.code);
+    el[itemsKey].forEach((item) => {
+      itemsLabels.add(item[codeKey]);
       item.years.forEach((y) => {
         years.add(y.year);
       });
@@ -46,10 +50,10 @@ export default function getOptionsSuccessRates(data, displayType, currentLang): 
       years: sortedYears.map((year) => item.years.find((item) => item.year === year) ?? { year }),
     }));
 
-  const evaluatedItems = sortedData(evaluatedFiltered.items);
-  const successfulItems = sortedData(successfulFiltered.items);
-  const evaluatedAllItems = sortedData(evaluatedAll.items);
-  const successfulAllItems = sortedData(successfulAll.items);
+  const evaluatedItems = sortedData(evaluatedFiltered[itemsKey]);
+  const successfulItems = sortedData(successfulFiltered[itemsKey]);
+  const evaluatedAllItems = sortedData(evaluatedAll[itemsKey]);
+  const successfulAllItems = sortedData(successfulAll[itemsKey]);
 
   const commonXAxis = {
     type: "category" as const,
@@ -59,33 +63,13 @@ export default function getOptionsSuccessRates(data, displayType, currentLang): 
     gridLineWidth: 0,
   };
 
-  const legend: any = {}
-  switch (displayType) {
-    case "total_fund_eur":
-      legend.serie_01 = getI18nLabel(i18n, "requestedFunding", currentLang)
-      legend.serie_02 = getI18nLabel(i18n, "securedFunding", currentLang)
-      break
-    case "total_coordination_number":
-      legend.serie_01 = getI18nLabel(i18n, "evaluatedCoordinations", currentLang)
-      legend.serie_02 = getI18nLabel(i18n, "successfulCoordinations", currentLang)
-      break
-    case "total_number_involved":
-      legend.serie_01 = getI18nLabel(i18n, "applicantsNumber", currentLang)
-      legend.serie_02 = getI18nLabel(i18n, "participantsNumber", currentLang)
-      break
-    case "total_projects":
-      legend.serie_01 = getI18nLabel(i18n, "evaluatedProjects", currentLang)
-      legend.serie_02 = getI18nLabel(i18n, "successfulProjects", currentLang)
-      break
-    default:
-      break
-  }
+  const legend = getEvolLegend(displayType, currentLang);
 
   const newOptions: HighchartsInstance.Options = {
     yAxis: {
       gridLineColor: "var(--background-default-grey-hover)",
       gridLineWidth: 0.5,
-      title: { text: "Part (%)" },
+      title: { text: getEvolYAxisTitle("share", currentLang) },
     },
     xAxis: [
       { ...commonXAxis, left: "0%" },
@@ -103,7 +87,7 @@ export default function getOptionsSuccessRates(data, displayType, currentLang): 
         dataLabels: {
           enabled: true,
           formatter: function () {
-            return `${Number(this.y).toFixed(1)}%`;
+            return formatToPercentLang(this.y ?? 0, currentLang);
           },
         },
       },
@@ -113,15 +97,15 @@ export default function getOptionsSuccessRates(data, displayType, currentLang): 
       formatter: function () {
         let s = `<b>${this.key}</b>`;
         this.points?.forEach((point) => {
-          s += `<br/><span style="color:${point.color}">\u25CF</span> ${point.series.name}: <b>${Number(point.y).toFixed(1)}%</b>`;
+          s += `<br/><span style="color:${point.color}">\u25CF</span> ${point.series.name}: <b>${formatToPercentLang(point.y ?? 0, currentLang)}</b>`;
         });
         return s;
       },
     },
     series: evaluatedItems
       .map((item) => {
-        const allItemData = evaluatedAllItems.find((t) => t.code === item.code);
-        const itemName = currentLang === "fr" ? item.name_fr : item.name_en;
+        const allItemData = evaluatedAllItems.find((t) => t[codeKey] === item[codeKey]);
+        const itemName = currentLang === "fr" ? item[`${nameKey}_fr`] : item[`${nameKey}_en`];
         return {
           name: `${itemName} - ${legend.serie_01}`,
           data: item.years.map((year, index) => {
@@ -129,13 +113,13 @@ export default function getOptionsSuccessRates(data, displayType, currentLang): 
             const itemValue = year[displayType] ?? 0;
             return totalForYear > 0 ? (itemValue / totalForYear) * 100 : 0;
           }),
-          color: getCssColor(`item-${normalizeIdForCssColorNames(item.code)}-color`),
+          color: getCssColor(`item-${normalizeIdForCssColorNames(item[codeKey])}-color`),
         };
       })
       .concat(
         successfulItems.map((item) => {
-          const allItemData = successfulAllItems.find((t) => t.code === item.code);
-          const itemName = currentLang === "fr" ? item.name_fr : item.name_en;
+          const allItemData = successfulAllItems.find((t) => t[codeKey] === item[codeKey]);
+          const itemName = currentLang === "fr" ? item[`${nameKey}_fr`] : item[`${nameKey}_en`];
 
           return {
             xAxis: 1,
@@ -145,7 +129,7 @@ export default function getOptionsSuccessRates(data, displayType, currentLang): 
               const itemValue = year[displayType] ?? 0;
               return totalForYear > 0 ? (itemValue / totalForYear) * 100 : 0;
             }),
-            color: getCssColor(`item-${normalizeIdForCssColorNames(item.code)}-color`),
+            color: getCssColor(`item-${normalizeIdForCssColorNames(item[codeKey])}-color`),
           };
         }),
       ),

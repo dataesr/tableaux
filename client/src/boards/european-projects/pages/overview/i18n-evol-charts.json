@@ -19,6 +19,10 @@
         "fr": "le pilier sélectionné",
         "en": "the selected pillar"
       },
+      "selectedPlural": {
+        "fr": "les piliers sélectionnés",
+        "en": "the selected pillars"
+      },
       "in": {
         "fr": "dans le pilier {name}",
         "en": "under the {name} pillar"
@@ -29,6 +33,10 @@
         "fr": "le programme sélectionné",
         "en": "the selected programme"
       },
+      "selectedPlural": {
+        "fr": "les programmes sélectionnés",
+        "en": "the selected programmes"
+      },
       "in": {
         "fr": "dans le programme {name}",
         "en": "under the {name} programme"
@@ -38,6 +46,10 @@
       "selected": {
         "fr": "la thématique sélectionnée",
         "en": "the selected topic"
+      },
+      "selectedPlural": {
+        "fr": "les thématiques sélectionnées",
+        "en": "the selected topics"
       },
       "in": {
         "fr": "dans la thématique {name}",
