@@ -41,7 +41,7 @@ export default function ProgramsFundingEvo3Years() {
       </>
     );
 
-
+  console.log(data)
   const configChart1: ChartConfig = {
     id: "programsEvolutionFundingLines",
     readingKey: valuesSuccessReadingKey(data, displayType, currentLang, countryN, adjMascPlural),
