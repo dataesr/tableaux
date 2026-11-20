@@ -5,7 +5,7 @@ import { getCssColor } from "../../../../../../utils/colors";
 import { formatToMillionsLang } from "../../../../../../utils/format";
 import { CreateChartOptions } from "../../../../components/chart-ep";
 
-export default function options(data, currentLang) {
+export default function options(data, currentLang, yAxisTitle) {
   if (!data) return null;
 
   const i18n = {
@@ -30,8 +30,21 @@ export default function options(data, currentLang) {
       .sort((a, b) => (b.total_fund_eur ?? 0) - (a.total_fund_eur ?? 0)),
   }));
 
+  // console.table(
+  //   data.data
+  //     .filter((program) => program.code.includes("2"))
+  //     .map((program) => ({
+  //       code: program.code,
+  //       stage: program.stage,
+  //       name_fr: program.name_fr,
+  //       total_fund_eur: program.total_fund_eur,
+  //     }))
+  // );
+  // console.log("pilier 2 retenus :", groups[1].items.map((item) => item.code));
+
+
   // Construire la liste de catégories = tous les name_fr, dans l'ordre des piliers
-  const categories = groups.flatMap((group) => group.items.map((item) => item.name_fr));
+  const categories = groups.flatMap((group) => group.items.map((item) => item[`name_${currentLang}`]));
 
   // Construire une série par pilier, avec des null ailleurs que sur ses propres catégories
   let cursor = 0;
@@ -63,12 +76,13 @@ export default function options(data, currentLang) {
       categories,
       labels: {
         rotation: -45,
+        step: 1,
       },
     },
     yAxis: {
       min: 0,
       title: {
-        text: "Euros (M€)",
+        text: yAxisTitle,
       },
     },
     plotOptions: {

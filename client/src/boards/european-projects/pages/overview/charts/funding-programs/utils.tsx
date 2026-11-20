@@ -1,5 +1,8 @@
 import { useSearchParams } from "react-router-dom";
 import { isEjoParam } from "../../../../utils/params";
+import { getCountryNameWithArticle } from "../../../../utils/country-mapping";
+import { getCountryAdjectives } from "../../../../../../components/country-selector/utils.jsx";
+
 
 export function useGetParams() {
   const [searchParams] = useSearchParams();
@@ -45,5 +48,15 @@ export function useGetParams() {
     params.push(isEjoParam());
   }
 
-  return params.join("&");
+  const currentLang = (searchParams.get("language") === "en" ? "en" : "fr") as "fr" | "en";
+  const code = countryCode || "FRA";
+  const countryN = getCountryNameWithArticle(code, currentLang).replace(/^(Le |La |Les |L')/, (m) => m.toLowerCase());
+
+  // const countryAdj = getCountryAdjectives(code, currentLang);
+  // // Pluriel seulement en français
+  // const adjMascPlural =
+  // currentLang === "fr" && !countryAdj.m.endsWith("s") ? `${countryAdj.m}s` : countryAdj.m;
+
+
+  return{ params: params.join("&"), currentLang, countryN};
 }

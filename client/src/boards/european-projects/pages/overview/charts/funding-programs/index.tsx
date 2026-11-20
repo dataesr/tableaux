@@ -1,39 +1,55 @@
 import { useQuery } from "@tanstack/react-query";
-import { useSearchParams } from "react-router-dom";
 
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
+import { getI18nLabel } from "../../../../../../utils";
+import { formatToMillionsLang } from "../../../../../../utils/format";
 import { EPChartsSources } from "../../../../config.js";
 import options from "./options";
 import { getData } from "./query";
 import { useGetParams } from "./utils";
+import i18nLocal from "./i18n.json";
 
 export default function FundingValues() {
-  const params = useGetParams();
-  const [searchParams] = useSearchParams();
-  const currentLang = searchParams.get("language") || "fr";
+  const { params, currentLang, countryN } = useGetParams();
+  const i18nChart = i18nLocal.charts.total_fund_eur;
+
+  const { data, isLoading } = useQuery({
+    queryKey: ["FundingValuesPrograms", params],
+    queryFn: () => getData(params),
+  });
+
+  // Programme "successful" ayant le financement le plus élevé
+  const topProgram = data?.data
+    ?.filter((program) => program.stage === "successful")
+    .sort((a, b) => (b.total_fund_eur ?? 0) - (a.total_fund_eur ?? 0))[0];
+
+  const getReadingKey = (lang) =>
+    i18nChart.readingKey[lang]
+      .replace("{country}", countryN)
+      .replace("{name}", topProgram?.[`name_${lang}`] ?? "")
+      .replace("{successful}", formatToMillionsLang(topProgram?.total_fund_eur ?? 0, lang));
 
   const config = {
     id: "FundingValuesPrograms",
     idQuery: "FundingValuesPrograms",
     comment: {
-      fr: <>Comparaison des financements obtenus de chaque programme regroupé par pilier. Cette vision met en évidence les programmes ayant le plus d'impact dans chaque pilier.</>,
-      en: <>A comparison of the funding secured by each programme, grouped by pillar. This overview highlights the programmes with the greatest impact within each pillar.</>,
+      fr: <>{i18nChart.comment.fr}</>,
+      en: <>{i18nChart.comment.en}</>,
+    },
+    readingKey: {
+      fr: <>{getReadingKey("fr")}</>,
+      en: <>{getReadingKey("en")}</>,
     },
     sources: EPChartsSources,
     integrationURL: `/integration?chart_id=FundingValuesPrograms`,
-    title: currentLang === "fr" ? "Financements obtenus" : "Funding",
+    title: getI18nLabel(i18nChart, "title", currentLang).replace("{country}", countryN),
   };
-
-  const { data, isLoading } = useQuery({
-    queryKey: [config.idQuery, params],
-    queryFn: () => getData(params),
-  });
 
   if (isLoading || !data) return <DefaultSkeleton />;
   return (
     <div className="fr-mt-3w chart-container chart-container--default">
-      <ChartWrapper config={config} options={options(data, currentLang)} />
+      <ChartWrapper config={config} options={options(data, currentLang, getI18nLabel(i18nLocal.yAxis, "total_fund_eur", currentLang))} />
     </div>
   );
 }

@@ -1,0 +1,36 @@
+{
+  "yAxis": {
+    "total_fund_eur": {
+      "fr": "Euros (M€)",
+      "en": "Euros (€M)"
+    },
+    "total_coordination_number": {
+      "fr": "Nombre de projets coordonnés",
+      "en": "Number of coordinated projects"
+    },
+    "total_number_involved": {
+      "fr": "Nombre de candidats et de participants",
+      "en": "Number of applicants and participants"
+    },
+    "total_projects": {
+      "fr": "Nombre de projets",
+      "en": "Number of projects"
+    }
+  },
+  "charts": {
+    "total_fund_eur": {
+      "title": {
+        "fr": "Répartition, par programme, des financements obtenus par {country}",
+        "en": "Breakdown by programme of funding secured by {country}"
+      },
+      "comment": {
+        "fr": "Ce graphique présente, pour l'ensemble des programmes, les financements obtenus par le pays sélectionné triés par ordre décroissant.",
+        "en": "This chart shows, for all programmes, the funding secured by the selected country, sorted in descending order."
+      },
+      "readingKey": {
+        "fr": "{country} obtient son financement le plus élevé dans le programme {name} avec **{successful}**.",
+        "en": "In the programme {name}, {country} secured **{successful}**."
+      }
+    }
+  }
+}
