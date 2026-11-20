@@ -1,21 +1,26 @@
 import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js";
 
 import { CreateChartOptions } from "../../../../components/chart-ep";
-import { formatNumberLang, formatToRates, formatToMillionsLang } from "../../../../../../utils/format";
+import { formatNumberLang, formatToPercentLang, formatToMillionsLang } from "../../../../../../utils/format";
 import type { HighchartsOptions } from "../../../../../../components/chart-wrapper";
 import { getCssColor } from "../../../../../../utils/colors";
 import { getI18nLabel } from "../../../../../../utils";
 import i18n from "../../i18n-charts.json";
+import { getEvolLegend, getEvolYAxisTitle, getLevelFromData, LEVELS } from "../../evol-charts-text";
 
 export default function Options(data, displayType, currentLang): HighchartsOptions {
   if (!data) return null;
+
+  // level correspond à pillar | program | topic
+  const level = getLevelFromData(data);
+  const { itemsKey, codeKey, nameKey } = LEVELS[level];
 
   const years = new Set();
   const filteredData = data.filter((item) => item.country !== "all")[0].data;
   const evaluatedData = filteredData.find((item) => item.stage === "evaluated");
   const successfulData = filteredData.find((item) => item.stage === "successful");
 
-  evaluatedData.pillars[0].years.forEach((year) => years.add(year.year));
+  evaluatedData[itemsKey][0].years.forEach((year) => years.add(year.year));
 
   const valueKey = (["total_fund_eur", "total_coordination_number", "total_number_involved", "count", "total_projects"].includes(displayType) ? displayType : "total_fund_eur") as
     | "total_fund_eur"
@@ -29,36 +34,16 @@ export default function Options(data, displayType, currentLang): HighchartsOptio
   const sortedYears = Array.from(years).sort();
 
   sortedYears.forEach((year) => {
-    evaluatedData.pillars.forEach((pillar) => {
-      categories.push(`${year} - ${pillar.pilier_name_fr}`);
+    evaluatedData[itemsKey].forEach((item) => {
+      categories.push(`${year} - ${item[`${nameKey}_fr`]}`);
     });
   });
 
   const evaluatedColor = getCssColor("evaluated-project");
   const successfulColor = getCssColor("successful-project");
-  const successRateColor = getCssColor("success-rate") || "#00A95F";
+  const successRateColor = getCssColor("success-rate");
 
-  const legend: any = {}
-  switch (displayType) {
-    case "total_fund_eur":
-      legend.serie_01 = getI18nLabel(i18n, "requestedFunding", currentLang)
-      legend.serie_02 = getI18nLabel(i18n, "securedFunding", currentLang)
-      break
-    case "total_coordination_number":
-      legend.serie_01 = getI18nLabel(i18n, "evaluatedCoordinations", currentLang)
-      legend.serie_02 = getI18nLabel(i18n, "successfulCoordinations", currentLang)
-      break
-    case "total_number_involved":
-      legend.serie_01 = getI18nLabel(i18n, "applicantsNumber", currentLang)
-      legend.serie_02 = getI18nLabel(i18n, "participantsNumber", currentLang)
-      break
-    case "total_projects":
-      legend.serie_01 = getI18nLabel(i18n, "evaluatedProjects", currentLang)
-      legend.serie_02 = getI18nLabel(i18n, "successfulProjects", currentLang)
-      break
-    default:
-      break
-  }
+  const legend = getEvolLegend(displayType, currentLang);
 
   const newOptions: HighchartsInstance.Options = {
     chart: {
@@ -85,7 +70,7 @@ export default function Options(data, displayType, currentLang): HighchartsOptio
     yAxis: [
       {
         title: {
-          text: displayType === "total_fund_eur" ? "Euros (M€)" : displayType === "total_coordination_number" ? "Nombre de projets coordonnés" : displayType === "total_projects" ? "Nombre de projets" : "Nombre de candidats et de participants",
+          text: getEvolYAxisTitle(displayType, currentLang),
         },
         min: 0,
         gridLineColor: "var(--background-default-grey-hover)",
@@ -98,7 +83,7 @@ export default function Options(data, displayType, currentLang): HighchartsOptio
         opposite: true,
         min: 0,
         max: 100,
-        labels: { format: "{value}%", style: { color: successRateColor } },
+        labels: { format: "{value}%" },
       },
     ],
     tooltip: {
@@ -108,7 +93,7 @@ export default function Options(data, displayType, currentLang): HighchartsOptio
         let html = `<strong>${this.category}</strong><br/>`;
         (this.points || []).forEach((point) => {
           const value = point.y || 0;
-          const formatted = point.series.type === "scatter" ? formatToRates(value / 100) : isFunding ? formatToMillionsLang(value, currentLang, 1) : formatNumberLang(value, currentLang);
+          const formatted = point.series.type === "scatter" ? formatToPercentLang(value, currentLang) : isFunding ? formatToMillionsLang(value, currentLang, 1) : formatNumberLang(value, currentLang);
           html += `<span style="color:${point.color}">●</span> ${point.series.name}: <strong>${formatted}</strong><br/>`;
         });
         return html;
@@ -125,8 +110,8 @@ export default function Options(data, displayType, currentLang): HighchartsOptio
         data: (() => {
           const data: number[] = [];
           sortedYears.forEach((year) => {
-            evaluatedData.pillars.forEach((pillar) => {
-              const yearData = pillar.years.find((y) => y.year === year);
+            evaluatedData[itemsKey].forEach((item) => {
+              const yearData = item.years.find((y) => y.year === year);
               data.push(yearData ? yearData[displayType] : 0);
             });
           });
@@ -141,8 +126,8 @@ export default function Options(data, displayType, currentLang): HighchartsOptio
         data: (() => {
           const data: number[] = [];
           sortedYears.forEach((year) => {
-            successfulData.pillars.forEach((pillar) => {
-              const yearData = pillar.years.find((y) => y.year === year);
+            successfulData[itemsKey].forEach((item) => {
+              const yearData = item.years.find((y) => y.year === year);
               data.push(yearData ? yearData[displayType] : 0);
             });
           });
@@ -153,16 +138,16 @@ export default function Options(data, displayType, currentLang): HighchartsOptio
       // Série pour les taux de succès
       {
         type: "scatter",
+        color: successRateColor,
         name: `${getI18nLabel(i18n, "successRate", currentLang)}`,
-        // color: successRateColor,
         yAxis: 1,
         data: (() => {
           const data: number[] = [];
           sortedYears.forEach((year) => {
-            evaluatedData.pillars.forEach((pillar) => {
-              const evaluatedYearData = pillar.years.find((y) => y.year === year);
-              const successfulPillar = successfulData.pillars.find((p) => p.pilier_code === pillar.pilier_code);
-              const successfulYearData = successfulPillar ? successfulPillar.years.find((y) => y.year === year) : null;
+            evaluatedData[itemsKey].forEach((item) => {
+              const evaluatedYearData = item.years.find((y) => y.year === year);
+              const successfulItem = successfulData[itemsKey].find((s) => s[codeKey] === item[codeKey]);
+              const successfulYearData = successfulItem ? successfulItem.years.find((y) => y.year === year) : null;
               const evaluatedValue = evaluatedYearData ? evaluatedYearData[displayType] : 0;
               const successfulValue = successfulYearData ? successfulYearData[displayType] : 0;
               const successRate = evaluatedValue > 0 ? (successfulValue / evaluatedValue) * 100 : 0;
@@ -175,10 +160,10 @@ export default function Options(data, displayType, currentLang): HighchartsOptio
         dataLabels: {
           enabled: true,
           formatter: function () {
-            return `${Number(this.y).toFixed(1)}%`;
+            return formatToPercentLang(this.y ?? 0, currentLang);
           },
           y: -10,
-          style: { fontSize: "11px", fontWeight: "600", textOutline: "none", color: successRateColor },
+          style: { fontSize: "11px", fontWeight: "600", textOutline: "none"},
         },
         zIndex: 5,
       },
