@@ -1,0 +1,1610 @@
+{
+  "data": [
+    {
+      "total_fund_eur": 3437709549.83,
+      "destination": "OPEN",
+      "stage": "evaluated",
+      "count": 4363
+    },
+    {
+      "total_fund_eur": 2101495421,
+      "destination": "STG",
+      "stage": "evaluated",
+      "count": 1392
+    },
+    {
+      "total_fund_eur": 2071192256.37,
+      "destination": "ADG",
+      "stage": "evaluated",
+      "count": 956
+    },
+    {
+      "total_fund_eur": 1936342271.28,
+      "destination": "DN",
+      "stage": "evaluated",
+      "count": 9753
+    },
+    {
+      "total_fund_eur": 1619558050.5,
+      "destination": "COG",
+      "stage": "evaluated",
+      "count": 853
+    },
+    {
+      "total_fund_eur": 1304080677,
+      "destination": "SyG",
+      "stage": "evaluated",
+      "count": 459
+    },
+    {
+      "total_fund_eur": 1071114587.47,
+      "destination": "CHALLENGES",
+      "stage": "evaluated",
+      "count": 1190
+    },
+    {
+      "total_fund_eur": 956159791.49,
+      "destination": "PF",
+      "stage": "evaluated",
+      "count": 4743
+    },
+    {
+      "total_fund_eur": 931116205,
+      "destination": "Destination 3-D3",
+      "stage": "evaluated",
+      "count": 1819
+    },
+    {
+      "total_fund_eur": 736561757.69,
+      "destination": "Destination 4-DIGITAL",
+      "stage": "evaluated",
+      "count": 1479
+    },
+    {
+      "total_fund_eur": 628280123.89,
+      "destination": "Destination 1-TWIN",
+      "stage": "evaluated",
+      "count": 1335
+    },
+    {
+      "total_fund_eur": 576319323.91,
+      "destination": "Destination 3-DISEASE",
+      "stage": "evaluated",
+      "count": 1185
+    },
+    {
+      "total_fund_eur": 524955038.42,
+      "destination": "CLEAN-AVIATION",
+      "stage": "evaluated",
+      "count": 228
+    },
+    {
+      "total_fund_eur": 518431116.01,
+      "destination": "CHIPS",
+      "stage": "evaluated",
+      "count": 656
+    },
+    {
+      "total_fund_eur": 459372686.74,
+      "destination": "Destination 5-TOOL",
+      "stage": "evaluated",
+      "count": 836
+    },
+    {
+      "total_fund_eur": 427072208.8,
+      "destination": "CHIPS",
+      "stage": "successful",
+      "count": 427
+    },
+    {
+      "total_fund_eur": 415476858.52,
+      "destination": "CLEAN-AVIATION",
+      "stage": "successful",
+      "count": 201
+    },
+    {
+      "total_fund_eur": 402861314.64,
+      "destination": "Destination 2-RESILIENCE",
+      "stage": "evaluated",
+      "count": 1070
+    },
+    {
+      "total_fund_eur": 398435324,
+      "destination": "STG",
+      "stage": "successful",
+      "count": 307
+    },
+    {
+      "total_fund_eur": 389047774.04,
+      "destination": "Destination 2-D2",
+      "stage": "evaluated",
+      "count": 858
+    },
+    {
+      "total_fund_eur": 387363023.44,
+      "destination": "Destination 6-HUMAN",
+      "stage": "evaluated",
+      "count": 894
+    },
+    {
+      "total_fund_eur": 376851840.18,
+      "destination": "CLEANH2",
+      "stage": "evaluated",
+      "count": 724
+    },
+    {
+      "total_fund_eur": 369911820.08,
+      "destination": "Destination 5-D5",
+      "stage": "evaluated",
+      "count": 809
+    },
+    {
+      "total_fund_eur": 369506341.38,
+      "destination": "Destination 3-DATA",
+      "stage": "evaluated",
+      "count": 685
+    },
+    {
+      "total_fund_eur": 367954640,
+      "destination": "COFUND",
+      "stage": "evaluated",
+      "count": 1111
+    },
+    {
+      "total_fund_eur": 356662070.38,
+      "destination": "Destination 4-CS",
+      "stage": "evaluated",
+      "count": 756
+    },
+    {
+      "total_fund_eur": 346172605.2,
+      "destination": "ADG",
+      "stage": "successful",
+      "count": 207
+    },
+    {
+      "total_fund_eur": 344688851.52,
+      "destination": "Destination 6-D6",
+      "stage": "evaluated",
+      "count": 914
+    },
+    {
+      "total_fund_eur": 344034036.66,
+      "destination": "OPEN",
+      "stage": "successful",
+      "count": 376
+    },
+    {
+      "total_fund_eur": 333269065.94,
+      "destination": "COG",
+      "stage": "successful",
+      "count": 221
+    },
+    {
+      "total_fund_eur": 328351529.79,
+      "destination": "Destination 2-FARM2FORK",
+      "stage": "evaluated",
+      "count": 1080
+    },
+    {
+      "total_fund_eur": 299259803.02,
+      "destination": "CBE",
+      "stage": "evaluated",
+      "count": 600
+    },
+    {
+      "total_fund_eur": 289168408.09,
+      "destination": "CANCER",
+      "stage": "evaluated",
+      "count": 414
+    },
+    {
+      "total_fund_eur": 280424306.43,
+      "destination": "UPSTREAM",
+      "stage": "evaluated",
+      "count": 421
+    },
+    {
+      "total_fund_eur": 265586604.32999998,
+      "destination": "DN",
+      "stage": "successful",
+      "count": 1454
+    },
+    {
+      "total_fund_eur": 258321284.16,
+      "destination": "Destination 4-D4",
+      "stage": "evaluated",
+      "count": 685
+    },
+    {
+      "total_fund_eur": 241153029.51,
+      "destination": "SyG",
+      "stage": "successful",
+      "count": 109
+    },
+    {
+      "total_fund_eur": 237605130.65,
+      "destination": "Destination 1-BIODIV",
+      "stage": "evaluated",
+      "count": 661
+    },
+    {
+      "total_fund_eur": 233218387.86,
+      "destination": "Destination 2-HERITAGE",
+      "stage": "evaluated",
+      "count": 767
+    },
+    {
+      "total_fund_eur": 231550014.23,
+      "destination": "Destination 3-DISEASE",
+      "stage": "successful",
+      "count": 243
+    },
+    {
+      "total_fund_eur": 215199527.8,
+      "destination": "Destination 3-CIRCBIO",
+      "stage": "evaluated",
+      "count": 861
+    },
+    {
+      "total_fund_eur": 210948375.85,
+      "destination": "Destination 3-D3",
+      "stage": "successful",
+      "count": 421
+    },
+    {
+      "total_fund_eur": 193966430.13,
+      "destination": "SNS",
+      "stage": "evaluated",
+      "count": 444
+    },
+    {
+      "total_fund_eur": 192026914.85,
+      "destination": "UPSTREAM",
+      "stage": "successful",
+      "count": 235
+    },
+    {
+      "total_fund_eur": 183072935.66,
+      "destination": "INFRATECH",
+      "stage": "evaluated",
+      "count": 359
+    },
+    {
+      "total_fund_eur": 179082101.09,
+      "destination": "ACCESS",
+      "stage": "evaluated",
+      "count": 648
+    },
+    {
+      "total_fund_eur": 170992754.41,
+      "destination": "SESAR",
+      "stage": "evaluated",
+      "count": 357
+    },
+    {
+      "total_fund_eur": 169787110.47,
+      "destination": "SOIL",
+      "stage": "evaluated",
+      "count": 473
+    },
+    {
+      "total_fund_eur": 164400786.52,
+      "destination": "PF",
+      "stage": "successful",
+      "count": 1100
+    },
+    {
+      "total_fund_eur": 163426231.52,
+      "destination": "CHALLENGES",
+      "stage": "successful",
+      "count": 174
+    },
+    {
+      "total_fund_eur": 159547710.21,
+      "destination": "Destination 1-DEMOCRACY",
+      "stage": "evaluated",
+      "count": 564
+    },
+    {
+      "total_fund_eur": 141534513.84,
+      "destination": "Destination 1-STAYHLTH",
+      "stage": "evaluated",
+      "count": 622
+    },
+    {
+      "total_fund_eur": 141259912.65,
+      "destination": "Destination 5-DRS",
+      "stage": "evaluated",
+      "count": 536
+    },
+    {
+      "total_fund_eur": 140756191.68,
+      "destination": "CLEANH2",
+      "stage": "successful",
+      "count": 260
+    },
+    {
+      "total_fund_eur": 135888905.38,
+      "destination": "Destination 4-DIGITAL",
+      "stage": "successful",
+      "count": 385
+    },
+    {
+      "total_fund_eur": 134931487.53,
+      "destination": "Destination 4-CARE",
+      "stage": "evaluated",
+      "count": 208
+    },
+    {
+      "total_fund_eur": 128944325.14,
+      "destination": "Destination 7-GOVERNANCE",
+      "stage": "evaluated",
+      "count": 477
+    },
+    {
+      "total_fund_eur": 125409224.13,
+      "destination": "CIT",
+      "stage": "evaluated",
+      "count": 330
+    },
+    {
+      "total_fund_eur": 123889846.58,
+      "destination": "OCEAN",
+      "stage": "evaluated",
+      "count": 337
+    },
+    {
+      "total_fund_eur": 122659322.13,
+      "destination": "Destination 1-D1",
+      "stage": "evaluated",
+      "count": 308
+    },
+    {
+      "total_fund_eur": 115862589.85,
+      "destination": "SESAR",
+      "stage": "successful",
+      "count": 224
+    },
+    {
+      "total_fund_eur": 114141455.71,
+      "destination": "Destination 4-ZEROPOLLUTION",
+      "stage": "evaluated",
+      "count": 371
+    },
+    {
+      "total_fund_eur": 113983115.96000001,
+      "destination": "Destination 2-ENVHLTH",
+      "stage": "evaluated",
+      "count": 204
+    },
+    {
+      "total_fund_eur": 108022372.73,
+      "destination": "CLIMA",
+      "stage": "evaluated",
+      "count": 332
+    },
+    {
+      "total_fund_eur": 107179022.61,
+      "destination": "Destination 2-RESILIENCE",
+      "stage": "successful",
+      "count": 241
+    },
+    {
+      "total_fund_eur": 105813846.34,
+      "destination": "Destination 5-CLIMATE",
+      "stage": "evaluated",
+      "count": 296
+    },
+    {
+      "total_fund_eur": 104547840.37,
+      "destination": "Destination 2-FARM2FORK",
+      "stage": "successful",
+      "count": 246
+    },
+    {
+      "total_fund_eur": 103796800,
+      "destination": "COFUND",
+      "stage": "successful",
+      "count": 353
+    },
+    {
+      "total_fund_eur": 103346143.41,
+      "destination": "IHI",
+      "stage": "evaluated",
+      "count": 280
+    },
+    {
+      "total_fund_eur": 101965055.09,
+      "destination": "Destination 2-D2",
+      "stage": "successful",
+      "count": 209
+    },
+    {
+      "total_fund_eur": 98983150.95,
+      "destination": "Destination 2-MATERIALS",
+      "stage": "evaluated",
+      "count": 220
+    },
+    {
+      "total_fund_eur": 98918303.01,
+      "destination": "Destination 5-D5",
+      "stage": "successful",
+      "count": 241
+    },
+    {
+      "total_fund_eur": 97147667.85,
+      "destination": "Destination 1-BIODIV",
+      "stage": "successful",
+      "count": 183
+    },
+    {
+      "total_fund_eur": 96911325.65,
+      "destination": "Destination 3-TRANSFORMATIONS",
+      "stage": "evaluated",
+      "count": 350
+    },
+    {
+      "total_fund_eur": 95592587.77,
+      "destination": "DESTINATION-OTHER",
+      "stage": "successful",
+      "count": 153
+    },
+    {
+      "total_fund_eur": 92331326.46,
+      "destination": "Destination 1-FCT",
+      "stage": "evaluated",
+      "count": 330
+    },
+    {
+      "total_fund_eur": 81248228.67,
+      "destination": "Destination 5-TOOL",
+      "stage": "successful",
+      "count": 111
+    },
+    {
+      "total_fund_eur": 77641973.39,
+      "destination": "Destination 1-TWIN",
+      "stage": "successful",
+      "count": 174
+    },
+    {
+      "total_fund_eur": 76272049.57,
+      "destination": "EDCTP3",
+      "stage": "evaluated",
+      "count": 260
+    },
+    {
+      "total_fund_eur": 72597778.25,
+      "destination": "Destination 2-ENVHLTH",
+      "stage": "successful",
+      "count": 63
+    },
+    {
+      "total_fund_eur": 70575732.13,
+      "destination": "Destination 6-IND",
+      "stage": "evaluated",
+      "count": 142
+    },
+    {
+      "total_fund_eur": 69120044.88,
+      "destination": "INFRAEOSC",
+      "stage": "evaluated",
+      "count": 152
+    },
+    {
+      "total_fund_eur": 66387849.9,
+      "destination": "INFRASERV",
+      "stage": "evaluated",
+      "count": 219
+    },
+    {
+      "total_fund_eur": 63440743.3,
+      "destination": "Destination 6-D6",
+      "stage": "successful",
+      "count": 184
+    },
+    {
+      "total_fund_eur": 61682907.75,
+      "destination": "Destination 3-CIRCBIO",
+      "stage": "successful",
+      "count": 164
+    },
+    {
+      "total_fund_eur": 61601562.6,
+      "destination": "INFRATECH",
+      "stage": "successful",
+      "count": 137
+    },
+    {
+      "total_fund_eur": 60853640,
+      "destination": "SE",
+      "stage": "evaluated",
+      "count": 683
+    },
+    {
+      "total_fund_eur": 56657057.01,
+      "destination": "Destination 6-HUMAN",
+      "stage": "successful",
+      "count": 166
+    },
+    {
+      "total_fund_eur": 56587671.07,
+      "destination": "CBE",
+      "stage": "successful",
+      "count": 116
+    },
+    {
+      "total_fund_eur": 55953740.58,
+      "destination": "Destination 2-BM",
+      "stage": "evaluated",
+      "count": 161
+    },
+    {
+      "total_fund_eur": 55314229,
+      "destination": "Emergency-CORONA",
+      "stage": "evaluated",
+      "count": 48
+    },
+    {
+      "total_fund_eur": 53821318.47,
+      "destination": "EUROHPC",
+      "stage": "evaluated",
+      "count": 101
+    },
+    {
+      "total_fund_eur": 53185978.97,
+      "destination": "SNS",
+      "stage": "successful",
+      "count": 130
+    },
+    {
+      "total_fund_eur": 51708912.34,
+      "destination": "Destination 7-GOVERNANCE",
+      "stage": "successful",
+      "count": 190
+    },
+    {
+      "total_fund_eur": 51319101.02,
+      "destination": "INFRADEV",
+      "stage": "evaluated",
+      "count": 267
+    },
+    {
+      "total_fund_eur": 49552794.7,
+      "destination": "Destination 3-INFRA",
+      "stage": "evaluated",
+      "count": 152
+    },
+    {
+      "total_fund_eur": 49416575.010000005,
+      "destination": "INFRAEOSC",
+      "stage": "successful",
+      "count": 105
+    },
+    {
+      "total_fund_eur": 49023615.86,
+      "destination": "INFRASERV",
+      "stage": "successful",
+      "count": 172
+    },
+    {
+      "total_fund_eur": 48953406.6,
+      "destination": "CANCER",
+      "stage": "successful",
+      "count": 101
+    },
+    {
+      "total_fund_eur": 48293804.67,
+      "destination": "Destination 6-COMMUNITIES",
+      "stage": "evaluated",
+      "count": 205
+    },
+    {
+      "total_fund_eur": 47273209.18,
+      "destination": "EU-RAIL",
+      "stage": "evaluated",
+      "count": 141
+    },
+    {
+      "total_fund_eur": 47045283.62,
+      "destination": "SOIL",
+      "stage": "successful",
+      "count": 133
+    },
+    {
+      "total_fund_eur": 45628837.91,
+      "destination": "EUROHPC",
+      "stage": "successful",
+      "count": 71
+    },
+    {
+      "total_fund_eur": 45297590.43,
+      "destination": "Destination 5-CLIMATE",
+      "stage": "successful",
+      "count": 111
+    },
+    {
+      "total_fund_eur": 45072595.2,
+      "destination": "ACCESS",
+      "stage": "successful",
+      "count": 138
+    },
+    {
+      "total_fund_eur": 43000657.62,
+      "destination": "DOWNSTREAM",
+      "stage": "evaluated",
+      "count": 138
+    },
+    {
+      "total_fund_eur": 41369542.42,
+      "destination": "Destination 2-HERITAGE",
+      "stage": "successful",
+      "count": 122
+    },
+    {
+      "total_fund_eur": 40516727.58,
+      "destination": "CLIMA",
+      "stage": "successful",
+      "count": 119
+    },
+    {
+      "total_fund_eur": 39565782.12,
+      "destination": "EU-RAIL",
+      "stage": "successful",
+      "count": 126
+    },
+    {
+      "total_fund_eur": 38971764.37,
+      "destination": "Destination 1-D1",
+      "stage": "successful",
+      "count": 110
+    },
+    {
+      "total_fund_eur": 38578886,
+      "destination": "DIS-OTHER",
+      "stage": "evaluated",
+      "count": 57
+    },
+    {
+      "total_fund_eur": 38359435.82,
+      "destination": "DIS-OTHER",
+      "stage": "successful",
+      "count": 62
+    },
+    {
+      "total_fund_eur": 37813660.03,
+      "destination": "EDCTP3",
+      "stage": "successful",
+      "count": 70
+    },
+    {
+      "total_fund_eur": 37350000,
+      "destination": "POC",
+      "stage": "evaluated",
+      "count": 268
+    },
+    {
+      "total_fund_eur": 36985644.37,
+      "destination": "OCEAN",
+      "stage": "successful",
+      "count": 96
+    },
+    {
+      "total_fund_eur": 36792062.96,
+      "destination": "CONNECT",
+      "stage": "evaluated",
+      "count": 190
+    },
+    {
+      "total_fund_eur": 36761729.05,
+      "destination": "Destination 4-D4",
+      "stage": "successful",
+      "count": 97
+    },
+    {
+      "total_fund_eur": 36727166.88,
+      "destination": "Destination 3-DATA",
+      "stage": "successful",
+      "count": 84
+    },
+    {
+      "total_fund_eur": 36675998.75,
+      "destination": "ERA",
+      "stage": "evaluated",
+      "count": 209
+    },
+    {
+      "total_fund_eur": 35550697.05,
+      "destination": "IHI",
+      "stage": "successful",
+      "count": 135
+    },
+    {
+      "total_fund_eur": 34437477.33,
+      "destination": "Destination 4-CARE",
+      "stage": "successful",
+      "count": 33
+    },
+    {
+      "total_fund_eur": 34044255.64,
+      "destination": "DESTINATION-OTHER",
+      "stage": "evaluated",
+      "count": 221
+    },
+    {
+      "total_fund_eur": 33066008.17,
+      "destination": "Destination 1-STAYHLTH",
+      "stage": "successful",
+      "count": 64
+    },
+    {
+      "total_fund_eur": 32635868.08,
+      "destination": "INNOVSMES",
+      "stage": "successful",
+      "count": 3
+    },
+    {
+      "total_fund_eur": 32282197.7,
+      "destination": "CIT",
+      "stage": "successful",
+      "count": 82
+    },
+    {
+      "total_fund_eur": 30507500,
+      "destination": "SE",
+      "stage": "successful",
+      "count": 306
+    },
+    {
+      "total_fund_eur": 25186966.79,
+      "destination": "Destination 6-SSRI",
+      "stage": "evaluated",
+      "count": 86
+    },
+    {
+      "total_fund_eur": 25123032.79,
+      "destination": "Destination 4-CS",
+      "stage": "successful",
+      "count": 62
+    },
+    {
+      "total_fund_eur": 24491733.26,
+      "destination": "INFRADEV",
+      "stage": "successful",
+      "count": 145
+    },
+    {
+      "total_fund_eur": 21539482.509999998,
+      "destination": "Destination 2-MATERIALS",
+      "stage": "successful",
+      "count": 32
+    },
+    {
+      "total_fund_eur": 20205297.75,
+      "destination": "NEB",
+      "stage": "evaluated",
+      "count": 75
+    },
+    {
+      "total_fund_eur": 20093591.75,
+      "destination": "REGEN",
+      "stage": "evaluated",
+      "count": 53
+    },
+    {
+      "total_fund_eur": 19382489.08,
+      "destination": "INNOVSMES",
+      "stage": "evaluated",
+      "count": 3
+    },
+    {
+      "total_fund_eur": 19079432.98,
+      "destination": "Destination 1-DEMOCRACY",
+      "stage": "successful",
+      "count": 75
+    },
+    {
+      "total_fund_eur": 18366275.96,
+      "destination": "Destination 4-ZEROPOLLUTION",
+      "stage": "successful",
+      "count": 63
+    },
+    {
+      "total_fund_eur": 17742855.58,
+      "destination": "PARTICIPATION",
+      "stage": "evaluated",
+      "count": 80
+    },
+    {
+      "total_fund_eur": 17621254.5,
+      "destination": "SCALEUP",
+      "stage": "evaluated",
+      "count": 149
+    },
+    {
+      "total_fund_eur": 17017181.18,
+      "destination": "Destination 5-DRS",
+      "stage": "successful",
+      "count": 62
+    },
+    {
+      "total_fund_eur": 16703600,
+      "destination": "POC",
+      "stage": "successful",
+      "count": 127
+    },
+    {
+      "total_fund_eur": 14870128.03,
+      "destination": "BUSINESS",
+      "stage": "evaluated",
+      "count": 45
+    },
+    {
+      "total_fund_eur": 14512854.25,
+      "destination": "Destination 6-IND",
+      "stage": "successful",
+      "count": 35
+    },
+    {
+      "total_fund_eur": 14342302.15,
+      "destination": "Destination 3-TRANSFORMATIONS",
+      "stage": "successful",
+      "count": 46
+    },
+    {
+      "total_fund_eur": 12740666.13,
+      "destination": "Destination 1-FCT",
+      "stage": "successful",
+      "count": 47
+    },
+    {
+      "total_fund_eur": 12368233.43,
+      "destination": "Destination 6-SSRI",
+      "stage": "successful",
+      "count": 34
+    },
+    {
+      "total_fund_eur": 12240065.9,
+      "destination": "ERA",
+      "stage": "successful",
+      "count": 90
+    },
+    {
+      "total_fund_eur": 11358040.25,
+      "destination": "Emergency-CORONA",
+      "stage": "successful",
+      "count": 6
+    },
+    {
+      "total_fund_eur": 11061956.2,
+      "destination": "Destination 2-BM",
+      "stage": "successful",
+      "count": 46
+    },
+    {
+      "total_fund_eur": 11001219.969999999,
+      "destination": "TALENTS",
+      "stage": "evaluated",
+      "count": 46
+    },
+    {
+      "total_fund_eur": 10430329.34,
+      "destination": "DOWNSTREAM",
+      "stage": "successful",
+      "count": 42
+    },
+    {
+      "total_fund_eur": 10095172.5,
+      "destination": "Destination 6-COMMUNITIES",
+      "stage": "successful",
+      "count": 38
+    },
+    {
+      "total_fund_eur": 9142098.629999999,
+      "destination": "CONNECT",
+      "stage": "successful",
+      "count": 41
+    },
+    {
+      "total_fund_eur": 7731394.26,
+      "destination": "CITIZENS",
+      "stage": "evaluated",
+      "count": 141
+    },
+    {
+      "total_fund_eur": 5247139.86,
+      "destination": "HEALTH-OTHER",
+      "stage": "successful",
+      "count": 4
+    },
+    {
+      "total_fund_eur": 5046662.279999999,
+      "destination": "TALENTS",
+      "stage": "successful",
+      "count": 22
+    },
+    {
+      "total_fund_eur": 4072509.87,
+      "destination": "Destination 3-INFRA",
+      "stage": "successful",
+      "count": 12
+    },
+    {
+      "total_fund_eur": 3909729.06,
+      "destination": "SCALEUP",
+      "stage": "successful",
+      "count": 43
+    },
+    {
+      "total_fund_eur": 2753439.4,
+      "destination": "HEALTH-OTHER",
+      "stage": "evaluated",
+      "count": 4
+    },
+    {
+      "total_fund_eur": 2082535,
+      "destination": "NEB",
+      "stage": "successful",
+      "count": 9
+    },
+    {
+      "total_fund_eur": 1915406.25,
+      "destination": "REGEN",
+      "stage": "successful",
+      "count": 6
+    },
+    {
+      "total_fund_eur": 1837480,
+      "destination": "CITIZENS",
+      "stage": "successful",
+      "count": 47
+    },
+    {
+      "total_fund_eur": 958526,
+      "destination": "MSCA-OTHER",
+      "stage": "evaluated",
+      "count": 11
+    },
+    {
+      "total_fund_eur": 937350.44,
+      "destination": "PARTICIPATION",
+      "stage": "successful",
+      "count": 8
+    },
+    {
+      "total_fund_eur": 683186.25,
+      "destination": "BUSINESS",
+      "stage": "successful",
+      "count": 5
+    },
+    {
+      "total_fund_eur": 643524,
+      "destination": "GEANT",
+      "stage": "evaluated",
+      "count": 2
+    },
+    {
+      "total_fund_eur": 643524,
+      "destination": "GEANT",
+      "stage": "successful",
+      "count": 2
+    },
+    {
+      "total_fund_eur": 622335.7,
+      "destination": "KIC-HEALTH",
+      "stage": "successful",
+      "count": 2
+    },
+    {
+      "total_fund_eur": 523373.75,
+      "destination": "MISS-OTHER",
+      "stage": "evaluated",
+      "count": 3
+    },
+    {
+      "total_fund_eur": 455610,
+      "destination": "SJI",
+      "stage": "evaluated",
+      "count": 2
+    },
+    {
+      "total_fund_eur": 304468.75,
+      "destination": "MSCA-OTHER",
+      "stage": "successful",
+      "count": 6
+    },
+    {
+      "total_fund_eur": 298813,
+      "destination": "CCIS-OTHER",
+      "stage": "evaluated",
+      "count": 1
+    },
+    {
+      "total_fund_eur": 298813,
+      "destination": "CCIS-OTHER",
+      "stage": "successful",
+      "count": 1
+    },
+    {
+      "total_fund_eur": 280983.64,
+      "destination": "CEM-OTHER",
+      "stage": "evaluated",
+      "count": 5
+    },
+    {
+      "total_fund_eur": 280983.64,
+      "destination": "CEM-OTHER",
+      "stage": "successful",
+      "count": 5
+    },
+    {
+      "total_fund_eur": 250000,
+      "destination": "WIDENING-OTHER",
+      "stage": "successful",
+      "count": 1
+    },
+    {
+      "total_fund_eur": 250000,
+      "destination": "WIDENING-OTHER",
+      "stage": "evaluated",
+      "count": 1
+    },
+    {
+      "total_fund_eur": 190000,
+      "destination": "EIT-OTHER",
+      "stage": "evaluated",
+      "count": 2
+    },
+    {
+      "total_fund_eur": 85250,
+      "destination": "EURATOM-WIDERA",
+      "stage": "evaluated",
+      "count": 1
+    },
+    {
+      "total_fund_eur": 85250,
+      "destination": "EURATOM-WIDERA",
+      "stage": "successful",
+      "count": 1
+    },
+    {
+      "total_fund_eur": 51123.75,
+      "destination": "MISS-OTHER",
+      "stage": "successful",
+      "count": 2
+    },
+    {
+      "total_fund_eur": 44187.5,
+      "destination": "ERC-OTHER",
+      "stage": "successful",
+      "count": 1
+    },
+    {
+      "total_fund_eur": 44187.5,
+      "destination": "ERC-OTHER",
+      "stage": "evaluated",
+      "count": 1
+    },
+    {
+      "total_fund_eur": 25000,
+      "destination": "EIT-OTHER",
+      "stage": "successful",
+      "count": 2
+    },
+    {
+      "total_fund_eur": 0,
+      "destination": "EPWI",
+      "stage": "successful",
+      "count": 4
+    },
+    {
+      "total_fund_eur": 0,
+      "destination": "EUSIC",
+      "stage": "evaluated",
+      "count": 9
+    },
+    {
+      "total_fund_eur": 0,
+      "destination": "KIC-MANUFACTURING",
+      "stage": "evaluated",
+      "count": 1
+    },
+    {
+      "total_fund_eur": 0,
+      "destination": "ICAPITAL",
+      "stage": "evaluated",
+      "count": 1
+    },
+    {
+      "total_fund_eur": 0,
+      "destination": "EPWI",
+      "stage": "evaluated",
+      "count": 28
+    },
+    {
+      "total_fund_eur": 0,
+      "destination": "GENDER",
+      "stage": "successful",
+      "count": 1
+    },
+    {
+      "total_fund_eur": 0,
+      "destination": "GENDER",
+      "stage": "evaluated",
+      "count": 4
+    },
+    {
+      "total_fund_eur": 0,
+      "destination": "PERA",
+      "stage": "evaluated",
+      "count": 19
+    },
+    {
+      "total_fund_eur": 0,
+      "destination": "INFRANET",
+      "stage": "evaluated",
+      "count": 1
+    },
+    {
+      "total_fund_eur": 0,
+      "destination": "EUIPA",
+      "stage": "successful",
+      "count": 1
+    },
+    {
+      "total_fund_eur": 0,
+      "destination": "ICAPITAL",
+      "stage": "successful",
+      "count": 1
+    },
+    {
+      "total_fund_eur": 0,
+      "destination": "EUIPA",
+      "stage": "evaluated",
+      "count": 8
+    },
+    {
+      "total_fund_eur": 0,
+      "destination": "PERA",
+      "stage": "successful",
+      "count": 2
+    },
+    {
+      "total_fund_eur": 0,
+      "destination": "INFRANET",
+      "stage": "successful",
+      "count": 1
+    },
+    {
+      "total_fund_eur": 0,
+      "destination": "EUSIC",
+      "stage": "successful",
+      "count": 1
+    },
+    {
+      "total_fund_eur": 0,
+      "destination": "HUMANITARIAN",
+      "stage": "evaluated",
+      "count": 5
+    },
+    {
+      "total_fund_eur": 0,
+      "destination": "HUMANITARIAN",
+      "stage": "successful",
+      "count": 1
+    },
+    {
+      "total_fund_eur": 0,
+      "destination": "KIC-MANUFACTURING",
+      "stage": "successful",
+      "count": 1
+    }
+  ],
+  "successRateByDestination": [
+    {
+      "destination": "OPEN",
+      "successRate": 0.10007652818633646
+    },
+    {
+      "destination": "STG",
+      "successRate": 0.18959609429479693
+    },
+    {
+      "destination": "ADG",
+      "successRate": 0.16713687690524048
+    },
+    {
+      "destination": "DN",
+      "successRate": 0.13715891465532928
+    },
+    {
+      "destination": "COG",
+      "successRate": 0.20577778353613882
+    },
+    {
+      "destination": "SyG",
+      "successRate": 0.18492186393311616
+    },
+    {
+      "destination": "CHALLENGES",
+      "successRate": 0.15257586203360085
+    },
+    {
+      "destination": "PF",
+      "successRate": 0.17193861108069758
+    },
+    {
+      "destination": "Destination 3-D3",
+      "successRate": 0.22655429549741324
+    },
+    {
+      "destination": "Destination 4-DIGITAL",
+      "successRate": 0.184490850850272
+    },
+    {
+      "destination": "Destination 1-TWIN",
+      "successRate": 0.12357859247445117
+    },
+    {
+      "destination": "Destination 3-DISEASE",
+      "successRate": 0.40177381639585563
+    },
+    {
+      "destination": "CLEAN-AVIATION",
+      "successRate": 0.7914522732660964
+    },
+    {
+      "destination": "CHIPS",
+      "successRate": 0.8237781174997263
+    },
+    {
+      "destination": "Destination 5-TOOL",
+      "successRate": 0.17686778299029698
+    },
+    {
+      "destination": "Destination 2-RESILIENCE",
+      "successRate": 0.26604446422406186
+    },
+    {
+      "destination": "Destination 2-D2",
+      "successRate": 0.2620887764789433
+    },
+    {
+      "destination": "Destination 6-HUMAN",
+      "successRate": 0.14626346238950141
+    },
+    {
+      "destination": "CLEANH2",
+      "successRate": 0.37350538506795944
+    },
+    {
+      "destination": "Destination 5-D5",
+      "successRate": 0.2674104952596734
+    },
+    {
+      "destination": "Destination 3-DATA",
+      "successRate": 0.09939522754287407
+    },
+    {
+      "destination": "COFUND",
+      "successRate": 0.2820912925571478
+    },
+    {
+      "destination": "Destination 4-CS",
+      "successRate": 0.07043931742793132
+    },
+    {
+      "destination": "Destination 6-D6",
+      "successRate": 0.1840522054027586
+    },
+    {
+      "destination": "Destination 2-FARM2FORK",
+      "successRate": 0.31840217232081863
+    },
+    {
+      "destination": "CBE",
+      "successRate": 0.189092121624561
+    },
+    {
+      "destination": "CANCER",
+      "successRate": 0.16929030015188892
+    },
+    {
+      "destination": "UPSTREAM",
+      "successRate": 0.6847727192219484
+    },
+    {
+      "destination": "Destination 4-D4",
+      "successRate": 0.14231010491272714
+    },
+    {
+      "destination": "Destination 1-BIODIV",
+      "successRate": 0.4088618271172841
+    },
+    {
+      "destination": "Destination 2-HERITAGE",
+      "successRate": 0.17738542316326258
+    },
+    {
+      "destination": "Destination 3-CIRCBIO",
+      "successRate": 0.28663124115832744
+    },
+    {
+      "destination": "SNS",
+      "successRate": 0.27420197883908953
+    },
+    {
+      "destination": "INFRATECH",
+      "successRate": 0.33648645212313305
+    },
+    {
+      "destination": "ACCESS",
+      "successRate": 0.25168676783252725
+    },
+    {
+      "destination": "SESAR",
+      "successRate": 0.6775877156302719
+    },
+    {
+      "destination": "SOIL",
+      "successRate": 0.2770839523081024
+    },
+    {
+      "destination": "Destination 1-DEMOCRACY",
+      "successRate": 0.1195844989244111
+    },
+    {
+      "destination": "Destination 1-STAYHLTH",
+      "successRate": 0.2336250521012847
+    },
+    {
+      "destination": "Destination 5-DRS",
+      "successRate": 0.12046716482236193
+    },
+    {
+      "destination": "Destination 4-CARE",
+      "successRate": 0.2552219497494485
+    },
+    {
+      "destination": "Destination 7-GOVERNANCE",
+      "successRate": 0.40101735600894084
+    },
+    {
+      "destination": "CIT",
+      "successRate": 0.2574148586274329
+    },
+    {
+      "destination": "OCEAN",
+      "successRate": 0.29853652572018546
+    },
+    {
+      "destination": "Destination 1-D1",
+      "successRate": 0.31772362420767275
+    },
+    {
+      "destination": "Destination 4-ZEROPOLLUTION",
+      "successRate": 0.16090802281918787
+    },
+    {
+      "destination": "Destination 2-ENVHLTH",
+      "successRate": 0.6369169472036251
+    },
+    {
+      "destination": "CLIMA",
+      "successRate": 0.37507718592028
+    },
+    {
+      "destination": "Destination 5-CLIMATE",
+      "successRate": 0.42808755183560976
+    },
+    {
+      "destination": "IHI",
+      "successRate": 0.34399635900259473
+    },
+    {
+      "destination": "Destination 2-MATERIALS",
+      "successRate": 0.21760756556315705
+    },
+    {
+      "destination": "Destination 3-TRANSFORMATIONS",
+      "successRate": 0.1479940765829365
+    },
+    {
+      "destination": "DESTINATION-OTHER",
+      "successRate": 2.807891844687135
+    },
+    {
+      "destination": "Destination 1-FCT",
+      "successRate": 0.1379885529481648
+    },
+    {
+      "destination": "EDCTP3",
+      "successRate": 0.4957734877085722
+    },
+    {
+      "destination": "Destination 6-IND",
+      "successRate": 0.20563519232457164
+    },
+    {
+      "destination": "INFRAEOSC",
+      "successRate": 0.7149384103524906
+    },
+    {
+      "destination": "INFRASERV",
+      "successRate": 0.738442590531916
+    },
+    {
+      "destination": "SE",
+      "successRate": 0.5013258040110665
+    },
+    {
+      "destination": "Destination 2-BM",
+      "successRate": 0.19769824296526056
+    },
+    {
+      "destination": "Emergency-CORONA",
+      "successRate": 0.2053366819955133
+    },
+    {
+      "destination": "EUROHPC",
+      "successRate": 0.847783725986451
+    },
+    {
+      "destination": "INFRADEV",
+      "successRate": 0.4772440041468209
+    },
+    {
+      "destination": "Destination 3-INFRA",
+      "successRate": 0.08218527117704624
+    },
+    {
+      "destination": "Destination 6-COMMUNITIES",
+      "successRate": 0.209036595252374
+    },
+    {
+      "destination": "EU-RAIL",
+      "successRate": 0.8369599357925376
+    },
+    {
+      "destination": "DOWNSTREAM",
+      "successRate": 0.2425620889841638
+    },
+    {
+      "destination": "DIS-OTHER",
+      "successRate": 0.9943116506785603
+    },
+    {
+      "destination": "POC",
+      "successRate": 0.4472182061579652
+    },
+    {
+      "destination": "CONNECT",
+      "successRate": 0.24848018552096973
+    },
+    {
+      "destination": "ERA",
+      "successRate": 0.33373503973085394
+    },
+    {
+      "destination": "INNOVSMES",
+      "successRate": 1.6837810636857586
+    },
+    {
+      "destination": "Destination 6-SSRI",
+      "successRate": 0.4910568840274395
+    },
+    {
+      "destination": "NEB",
+      "successRate": 0.10306876076597288
+    },
+    {
+      "destination": "REGEN",
+      "successRate": 0.09532423440423488
+    },
+    {
+      "destination": "PARTICIPATION",
+      "successRate": 0.05282973959708012
+    },
+    {
+      "destination": "SCALEUP",
+      "successRate": 0.22187575010621408
+    },
+    {
+      "destination": "BUSINESS",
+      "successRate": 0.04594353516134454
+    },
+    {
+      "destination": "TALENTS",
+      "successRate": 0.45873660319147314
+    },
+    {
+      "destination": "CITIZENS",
+      "successRate": 0.23766476500966852
+    },
+    {
+      "destination": "HEALTH-OTHER",
+      "successRate": 1.9056674572173262
+    },
+    {
+      "destination": "MSCA-OTHER",
+      "successRate": 0.3176426617535675
+    },
+    {
+      "destination": "GEANT",
+      "successRate": 1
+    },
+    {
+      "destination": "KIC-HEALTH",
+      "successRate": 0
+    },
+    {
+      "destination": "MISS-OTHER",
+      "successRate": 0.09768115042070795
+    },
+    {
+      "destination": "SJI",
+      "successRate": 0
+    },
+    {
+      "destination": "CCIS-OTHER",
+      "successRate": 1
+    },
+    {
+      "destination": "CEM-OTHER",
+      "successRate": 1
+    },
+    {
+      "destination": "WIDENING-OTHER",
+      "successRate": 1
+    },
+    {
+      "destination": "EIT-OTHER",
+      "successRate": 0.13157894736842105
+    },
+    {
+      "destination": "EURATOM-WIDERA",
+      "successRate": 1
+    },
+    {
+      "destination": "ERC-OTHER",
+      "successRate": 1
+    },
+    {
+      "destination": "EPWI",
+      "successRate": 0
+    },
+    {
+      "destination": "EUSIC",
+      "successRate": 0
+    },
+    {
+      "destination": "KIC-MANUFACTURING",
+      "successRate": 0
+    },
+    {
+      "destination": "ICAPITAL",
+      "successRate": 0
+    },
+    {
+      "destination": "GENDER",
+      "successRate": 0
+    },
+    {
+      "destination": "PERA",
+      "successRate": 0
+    },
+    {
+      "destination": "INFRANET",
+      "successRate": 0
+    },
+    {
+      "destination": "EUIPA",
+      "successRate": 0
+    },
+    {
+      "destination": "HUMANITARIAN",
+      "successRate": 0
+    }
+  ]
+}

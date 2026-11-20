@@ -1,5 +1,5 @@
 ### Route
-GET http://localhost:3000/api/european-projects/overview/destination-funding?country_code=&destinations=&isEjo=&pillars=&programs=&thematics=
+GET http://localhost:3000/api/european-projects/overview/destination-funding?country_code=FRA&range_of_years=2021%7C2022%7C2023%7C2024%7C2025&isEjo=false&language=fr&pillarId=HORIZON.2&programId=HORIZON.2.6&thematicIds=CLUSTER+6
 
 ### Création du covered index
 GET http://localhost:3000/api/european-projects/overview/destination-funding_indexes
