@@ -16,19 +16,31 @@ export function useGetParams() {
     params.push(`country_code=${countryCode}`);
   }
 
-  const destinationIds = searchParams.get("destinationIds");
-  if (destinationIds) {
-    params.push(`destinationIds=${destinationIds}`);
-  }
-
   const rangeOfYears = searchParams.get("range_of_years");
   if (rangeOfYears) {
     params.push(`range_of_years=${rangeOfYears}`);
   }
 
+  // Récupérer le paramètre pillarId et l'ajouter comme pillars s'il existe
+  const pillarId = searchParams.get("pillarId");
+  if (pillarId) {
+    params.push(`pillars=${pillarId}`);
+  }
+
+  // Récupérer le paramètre programId et l'ajouter comme programs s'il existe
+  const programId = searchParams.get("programId");
+  if (programId) {
+    params.push(`programs=${programId}`);
+  }
+
   const thematicIds = searchParams.get("thematicIds");
   if (thematicIds) {
     params.push(`thematicIds=${thematicIds}`);
+  }
+
+  const destinationIds = searchParams.get("destinationIds");
+  if (destinationIds) {
+    params.push(`destinationIds=${destinationIds}`);
   }
 
   if (searchParams.has("isEjo")) {
