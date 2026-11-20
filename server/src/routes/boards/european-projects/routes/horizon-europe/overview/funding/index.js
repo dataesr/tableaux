@@ -37,7 +37,6 @@ router.route("/european-projects/overview/funding").get(async (req, res) => {
   if (req.query.programs) {
     const programs = req.query.programs.split("|");
     filters.programme_code = { $in: programs };
-    delete filters.pilier_code;
 
     if (!hasExplicitGrouping) {
       groupBy.code = "$thema_code";
@@ -49,8 +48,6 @@ router.route("/european-projects/overview/funding").get(async (req, res) => {
   if (req.query.thematics) {
     const thematics = req.query.thematics.split(",");
     filters.thema_code = { $in: thematics };
-    delete filters.pilier_code;
-    delete filters.programme_code;
 
     if (!hasExplicitGrouping) {
       groupBy.code = "$destination_code";
@@ -62,9 +59,6 @@ router.route("/european-projects/overview/funding").get(async (req, res) => {
   if (req.query.destinations) {
     const destinations = req.query.destinations.split(",");
     filters.destination_code = { $in: destinations };
-    delete filters.pilier_code;
-    delete filters.programme_code;
-    delete filters.thematics;
 
     if (!hasExplicitGrouping) {
       groupBy.code = "$destination_code";
