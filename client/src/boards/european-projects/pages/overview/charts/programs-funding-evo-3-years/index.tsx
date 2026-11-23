@@ -34,7 +34,6 @@ export default function ProgramsFundingEvo3Years() {
     queryFn: () => getData(params),
   });
 
-  console.log(data)
 
   if (isLoading || !data)
     return (
