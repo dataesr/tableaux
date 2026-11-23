@@ -62,8 +62,11 @@ export default function options(data, displayType: string = "total_fund_eur", cu
         dataLabels: { enabled: true },
       },
       column: {
-        borderWidth: 0,
-        borderRadius: 0,
+        borderWidth: 0, 
+        grouping: true, 
+        maxPointWidth: 90,
+        groupPadding: 0.25, // espace entre les catégories (par défaut 0.2)
+        pointPadding: 0.1,
       },
     },
     series: [
@@ -71,7 +74,6 @@ export default function options(data, displayType: string = "total_fund_eur", cu
         type: "column",
         name: legend.serie_01,
         color: getCssColor("evaluated-project"),
-        groupPadding: 0,
         data: sorted.filter((item) => item.stage === "evaluated").map((item) => [item.programme_name_fr, item[valueKey]]),
         dataLabels: {
           formatter: function () {
@@ -83,7 +85,6 @@ export default function options(data, displayType: string = "total_fund_eur", cu
         type: "column",
         name: legend.serie_02,
         color: getCssColor("successful-project"),
-        groupPadding: 0,
         data: sorted.filter((item) => item.stage === "successful").map((item) => [item.programme_name_fr, item[valueKey]]),
         dataLabels: {
           formatter: function () {

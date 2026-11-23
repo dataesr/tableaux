@@ -112,7 +112,6 @@ export default function getOptions(data: { data?: FundingItem[] } | null, displa
     },
     plotOptions: {
       column: { 
-        borderRadius: 2, 
         borderWidth: 0, 
         grouping: true, 
         maxPointWidth: 90,
