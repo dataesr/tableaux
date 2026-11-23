@@ -1,17 +1,48 @@
 import express from "express";
+import { execFile } from "child_process";
 import fs from "fs";
-import path from "path";
+import os from "os";
+import path, { dirname } from "path";
+import { promisify } from "util";
 import { fileURLToPath } from "url";
-import { dirname } from "path";
 
-import { db } from "../../services/mongo.js";
-import { dbProd } from "../../services/mongo-prod.js";
+import { db, mongoUri } from "../../services/mongo.js";
+import { dbProd, mongoProdUri } from "../../services/mongo-prod.js";
+import logger from "../../services/logger.js";
 import { checkQuery } from "./utils.js";
 import uploadVersionRoute from "./upload/upload-version.js";
 import { getEmbeddings } from "./vectors.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
+const execFileAsync = promisify(execFile);
+
+const getMongoToolsUri = (uri) => {
+  const parsedUri = new URL(uri);
+  const uriDatabase = decodeURIComponent(parsedUri.pathname.slice(1));
+  if (uriDatabase && !parsedUri.searchParams.has("authSource")) {
+    parsedUri.searchParams.set("authSource", uriDatabase);
+  }
+  if (!parsedUri.searchParams.has("authMechanism")) {
+    parsedUri.searchParams.set("authMechanism", "SCRAM-SHA-256");
+  }
+  parsedUri.pathname = "/";
+  return parsedUri.toString();
+};
+
+const sanitizeErrorMessage = (message) => message.replace(/(mongodb(?:\+srv)?:\/\/)[^/@\s]+@/gi, "$1[REDACTED]@");
+
+const resolveStagingVersionCollection = async (dashboardId, versionId) => {
+  const prefixedName = versionId.startsWith(`${dashboardId}_`)
+    ? versionId
+    : `${dashboardId}_${versionId}`;
+  const candidates = [...new Set([versionId, prefixedName])];
+  const exists = await Promise.all(
+    candidates.map((name) => db.listCollections({ name }).hasNext()),
+  );
+  const matches = candidates.filter((_, index) => exists[index]);
+  return { candidates, matches };
+};
 
 const router = new express.Router();
 
@@ -410,13 +441,12 @@ router.route("/admin/delete-version").delete(async (req, res) => {
 
 // copy version from staging to production
 router.route("/admin/copy-version-to-production").post(async (req, res) => {
-  const filters = checkQuery(
-    req.body,
-    ["dashboardId", "collectionId", "versionId"],
-    res,
-  );
-  const { dashboardId, collectionId, versionId } = filters;
+  const { dashboardId, collectionId, versionId } = req.body;
+  if (![dashboardId, collectionId, versionId].every((value) => typeof value === "string" && value.length > 0)) {
+    return res.status(400).json({ error: "dashboardId, collectionId and versionId are required" });
+  }
 
+  let restoreStarted = false;
   try {
     // Check if production database is configured
     if (!dbProd) {
@@ -426,30 +456,29 @@ router.route("/admin/copy-version-to-production").post(async (req, res) => {
     }
 
     // Get the board to ensure it exists in staging
-    const board = await db
-      .collection("boards")
-      .findOne(
-        { id: dashboardId, "data.id": collectionId },
-        { projection: { "data.$": 1 } },
-      );
+    const board = await db.collection("boards").findOne({ id: dashboardId });
+    const stagingData = board?.data?.find((item) => item.id === collectionId);
 
-    if (!board) {
+    if (!stagingData) {
       return res.status(404).json({ error: "Collection not found in staging" });
     }
-
-    const stagingCollectionName = `${dashboardId}_${collectionId}`;
-    const productionCollectionName = `${dashboardId}_${collectionId}`;
-
-    // test de la collection sur staging
-    const stagingCollectionExists = await db
-      .listCollections({ name: stagingCollectionName })
-      .hasNext();
-
-    if (!stagingCollectionExists) {
-      return res
-        .status(404)
-        .json({ error: `Staging collection ${stagingCollectionName} not found` });
+    if (!stagingData.versions?.some((version) => version.id === versionId)) {
+      return res.status(404).json({ error: "Version not found in staging" });
     }
+
+    const { candidates, matches } = await resolveStagingVersionCollection(dashboardId, versionId);
+    if (matches.length > 1) {
+      return res.status(409).json({
+        error: `Plusieurs collections staging correspondent à cette version : ${matches.join(", ")}. Copie annulée.`,
+      });
+    }
+    if (matches.length === 0) {
+      return res.status(404).json({
+        error: `Collection staging introuvable. Noms recherchés : ${candidates.join(", ")}`,
+      });
+    }
+    const stagingCollectionName = matches[0];
+    const productionCollectionName = `${dashboardId}_${collectionId}`;
 
     // Compte le nombre de docs à copier
     const count = await db
@@ -462,61 +491,100 @@ router.route("/admin/copy-version-to-production").post(async (req, res) => {
         .json({ error: "No documents to copy from staging collection" });
     }
 
-    // test de la collection en prod et clear si existe
+    const copiedCount = count;
+    const temporaryDirectory = await fs.promises.mkdtemp(path.join(os.tmpdir(), "tableaux-copy-version-"));
+    const stagingConfigPath = path.join(temporaryDirectory, "staging.json");
+    const productionConfigPath = path.join(temporaryDirectory, "production.json");
+    const archivePath = path.join(temporaryDirectory, "collection.archive");
+
+    try {
+      await Promise.all([fs.promises.writeFile(stagingConfigPath, JSON.stringify({ uri: getMongoToolsUri(mongoUri) })), fs.promises.writeFile(productionConfigPath, JSON.stringify({ uri: getMongoToolsUri(mongoProdUri) }))]);
+
+      console.log(`--config=${stagingConfigPath}`);
+      console.log(`--db=${db.databaseName}`);
+      console.log(`--collection=${stagingCollectionName}`);
+      console.log(`--archive=${archivePath}`);
+      await execFileAsync("mongodump", [`--config=${stagingConfigPath}`, `--db=${db.databaseName}`, `--collection=${stagingCollectionName}`, `--archive=${archivePath}`, "--gzip"]);
+      restoreStarted = true;
+      await execFileAsync("mongorestore", [`--config=${productionConfigPath}`, `--archive=${archivePath}`, "--gzip", "--drop", "--stopOnError", `--nsFrom=${db.databaseName}.${stagingCollectionName}`, `--nsTo=${dbProd.databaseName}.${productionCollectionName}`]);
+    } finally {
+      await fs.promises.rm(temporaryDirectory, { recursive: true, force: true }); // suppression de /tmp
+    }
+
     const productionCollectionExists = await dbProd
       .listCollections({ name: productionCollectionName })
       .hasNext();
+    const productionCount = productionCollectionExists
+      ? await dbProd.collection(productionCollectionName).countDocuments()
+      : 0;
 
-    if (productionCollectionExists) {
-      await dbProd.collection(productionCollectionName).deleteMany({});
+    if (productionCount !== copiedCount) {
+      throw new Error(
+        `Restore verification failed for ${dbProd.databaseName}.${productionCollectionName}: expected ${copiedCount} documents, found ${productionCount}`,
+      );
     }
 
-    const batchSize = 10000;
-    let copiedCount = 0;
+    const { _id, data, ...boardMetadata } = board;
+    const { current, versions, productionVersion, ...collectionMetadata } = stagingData;
+    const publishedData = {
+      ...collectionMetadata,
+      current: productionCollectionName,
+      productionVersion: versionId,
+      versions: [{ id: productionCollectionName, createdAt: Date.now() }],
+    };
 
-    const cursor = db
-      .collection(stagingCollectionName)
-      .find({})
-      .batchSize(batchSize);
+    await dbProd.collection("boards").updateOne(
+      { id: dashboardId },
+      [{
+        $replaceWith: {
+          $mergeObjects: [
+            { $literal: boardMetadata },
+            {
+              _id: "$_id",
+              data: {
+                $concatArrays: [
+                  {
+                    $filter: {
+                      input: { $ifNull: ["$data", []] },
+                      as: "collection",
+                      cond: { $ne: ["$$collection.id", { $literal: collectionId }] },
+                    },
+                  },
+                  { $literal: [publishedData] },
+                ],
+              },
+            },
+          ],
+        },
+      }],
+      { upsert: true },
+    );
 
-    let batch = [];
-    for await (const doc of cursor) {
-      batch.push(doc);
-      if (batch.length >= batchSize) {
-        await dbProd
-          .collection(productionCollectionName)
-          .insertMany(batch, { ordered: false });
-        copiedCount += batch.length;
-        batch = [];
-      }
-    }
-
-    // Insert remaining documents
-    if (batch.length > 0) {
-      await dbProd
-        .collection(productionCollectionName)
-        .insertMany(batch, { ordered: false });
-      copiedCount += batch.length;
-    }
-
-    // Mise à jour de boards pour indiquer la version en prod
-    await db.collection("boards").updateOne(
+    const stagingUpdate = await db.collection("boards").updateOne(
       { id: dashboardId, "data.id": collectionId },
       { $set: { "data.$.productionVersion": versionId } },
     );
+    if (stagingUpdate.matchedCount !== 1) {
+      throw new Error("Production was updated, but the staging board could not be updated");
+    }
 
     res.json({
       message: "Version copied to production successfully",
       documentsCount: copiedCount,
+      database: dbProd.databaseName,
+      collection: productionCollectionName,
       dashboardId,
       collectionId,
       versionId,
     });
   } catch (error) {
-    console.error("Error copying version to production:", error);
+    const details = sanitizeErrorMessage(error.message);
+    logger.error(`Error copying version to production: ${details}`);
     res.status(500).json({
       error: "Unable to copy version to production",
-      details: error.message,
+      details: restoreStarted
+        ? `La collection de production a pu être modifiée. Vérifiez la collection et ses métadonnées avant de réessayer. ${details}`
+        : details,
     });
   }
 });
@@ -1058,14 +1126,31 @@ router.route("/admin/refresh-characterization").post(async (req, res) => {
 // Get collection size
 router.route("/admin/collection-size/:name").get(async (req, res) => {
   try {
-    const collectionName = req.params.name;
+    let collectionName = req.params.name;
+    if (req.query.dashboardId !== undefined) {
+      if (typeof req.query.dashboardId !== "string" || !req.query.dashboardId) {
+        return res.status(400).json({ error: "Invalid dashboardId" });
+      }
+      const { matches } = await resolveStagingVersionCollection(req.query.dashboardId, collectionName);
+      if (matches.length > 1) {
+        return res.status(409).json({ error: "Plusieurs collections staging correspondent à cette version" });
+      }
+      if (matches.length === 0) {
+        return res.status(404).json({ error: "Collection not found" });
+      }
+      [collectionName] = matches;
+    }
+    const collectionExists = await db.listCollections({ name: collectionName }).hasNext();
+    if (!collectionExists) {
+      return res.status(404).json({ error: "Collection not found" });
+    }
     const totalDocs = await db.collection(collectionName).countDocuments();
     res.json({ size: totalDocs });
   } catch (error) {
-    console.error("Error getting collection size:", error);
+    logger.error(`Error getting collection size: ${sanitizeErrorMessage(error.message)}`);
     res.status(500).json({
       error: "Unable to get collection size",
-      details: error.message,
+      details: sanitizeErrorMessage(error.message),
     });
   }
 });

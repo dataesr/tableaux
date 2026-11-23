@@ -16,4 +16,4 @@ await client.connect().catch((e) => {
 logger.info(`Connected to mongo database - Tableaux...`);
 const db = client.db(mongoDbName);
 
-export { client, db };
+export { client, db, mongoUri };

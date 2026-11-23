@@ -23,6 +23,7 @@ export type DashboardIndexes = {
 
 export const invalidateDashboardQueries = () => {
   queryClient.invalidateQueries({ queryKey: ["list-dashboards"] });
+  queryClient.invalidateQueries({ queryKey: ["admin-collection-size"] });
 };
 
 export const setCurrentVersion = (dashboardId: string | undefined, collectionId: string, versionId: string) => {
@@ -98,10 +99,6 @@ export const showIndexesAside = (
 };
 
 export const copyVersionToProduction = async (dashboardId: string | undefined, collectionId: string, versionId: string) => {
-  if (!window.confirm("Êtes-vous sûr de vouloir copier cette version de Staging en production ?")) {
-    return { success: false, message: "Opération annulée" };
-  }
-
   try {
     const response = await fetch(`${VITE_APP_SERVER_URL}/admin/copy-version-to-production`, {
       method: "POST",
@@ -115,7 +112,7 @@ export const copyVersionToProduction = async (dashboardId: string | undefined, c
       return { success: true, message: `${data.documentsCount} documents copiés avec succès` };
     } else {
       const errorData = await response.json();
-      return { success: false, message: errorData.error || "Erreur lors de la copie" };
+      return { success: false, message: errorData.details || errorData.error || "Erreur lors de la copie" };
     }
   } catch (error) {
     console.error("Error copying version to production:", error);

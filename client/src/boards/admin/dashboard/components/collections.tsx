@@ -1,9 +1,32 @@
-import { useState } from "react";
-import { Alert, Badge, Button, Col, Modal, ModalContent, ModalTitle, Row, Text, Title } from "@dataesr/dsfr-plus";
+import { useEffect, useRef, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { Alert, Badge, Button, Col, Modal, ModalContent, ModalTitle, Row, Spinner, Text, Title } from "@dataesr/dsfr-plus";
 import SyntaxHighlighter from "react-syntax-highlighter";
 
 import UploadVersion from "../../upload-version";
 import type { DashboardCollection, DashboardIndexes } from "../utils";
+
+const { VITE_APP_SERVER_URL } = import.meta.env;
+
+function CollectionSize({ collectionName, dashboardId }: { collectionName: string; dashboardId: string }) {
+  const { data, isFetching, error } = useQuery({
+    queryKey: ["admin-collection-size", dashboardId, collectionName],
+    queryFn: async () => {
+      const params = new URLSearchParams({ dashboardId });
+      const response = await fetch(`${VITE_APP_SERVER_URL}/admin/collection-size/${encodeURIComponent(collectionName)}?${params}`);
+      if (response.status === 404) throw new Error("Collection staging introuvable");
+      if (response.status === 409) throw new Error("Plusieurs collections staging correspondent à cette version");
+      if (!response.ok) throw new Error("Impossible de charger le nombre de documents");
+      const result: { size: number } = await response.json();
+      return result.size;
+    },
+    retry: false,
+  });
+
+  if (isFetching) return <span role="status">Chargement…</span>;
+  if (error) return <span role="alert">{error.message}</span>;
+  return <>{data?.toLocaleString("fr-FR")}</>;
+}
 
 type Props = {
   collections: DashboardCollection[];
@@ -18,8 +41,17 @@ type Props = {
 };
 
 export default function Collections({ collections, dashboardId, indexes, invalidateDashboardQueries, setCurrentVersion, updateVersionFromDependentCollection, showIndexesAside, deleteVersion, copyVersionToProduction }: Props) {
-  const [loadingVersions, setLoadingVersions] = useState<Set<string>>(new Set());
-  const [notification, setNotification] = useState<{ type: "success" | "error"; message: string } | null>(null);
+  const [loadingVersion, setLoadingVersion] = useState<{ collectionId: string; versionId: string } | null>(null);
+  const copyInProgress = useRef(false);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!successMessage) return;
+    const timer = window.setTimeout(() => setSuccessMessage(null), 5000);
+    return () => window.clearTimeout(timer);
+  }, [successMessage]);
+
   return (
     <>
       <Row>
@@ -91,6 +123,7 @@ export default function Collections({ collections, dashboardId, indexes, invalid
                             <tr>
                               <th>ID de la version</th>
                               <th>Date de création</th>
+                              <th scope="col">Documents de la version staging</th>
                               <th colSpan={2}>Staging</th>
                               <th colSpan={2}>Production</th>
                               <th />
@@ -101,6 +134,7 @@ export default function Collections({ collections, dashboardId, indexes, invalid
                               <tr key={version.id}>
                                 <td>{version.id}</td>
                                 <td>{version.createdAt}</td>
+                                <td>{dashboardId ? <CollectionSize collectionName={version.id} dashboardId={dashboardId} /> : "Nombre de documents indisponible"}</td>
                                 {version.id === collection.current ? (
                                   <td>
                                     <Button
@@ -145,23 +179,26 @@ export default function Collections({ collections, dashboardId, indexes, invalid
                                     color="success"
                                     icon="star-s-fill"
                                     onClick={async () => {
-                                      const versionKey = `${collection.id}-${version.id}`;
-                                      setLoadingVersions((prev) => new Set(prev).add(versionKey));
+                                      if (copyInProgress.current || !window.confirm("Êtes-vous sûr de vouloir copier cette version de Staging en production ?")) return;
+                                      copyInProgress.current = true;
+                                      setLoadingVersion({ collectionId: collection.id, versionId: version.id });
+                                      setSuccessMessage(null);
                                       try {
                                         const result = await copyVersionToProduction(collection.id, version.id);
-                                        setNotification({ type: result.success ? "success" : "error", message: result.message });
+                                        if (result.success) setSuccessMessage(result.message);
+                                        else setErrorMessage(result.message);
                                       } finally {
-                                        setLoadingVersions((prev) => {
-                                          const updated = new Set(prev);
-                                          updated.delete(versionKey);
-                                          return updated;
-                                        });
+                                        copyInProgress.current = false;
+                                        setLoadingVersion(null);
                                       }
                                     }}
-                                    disabled={loadingVersions.has(`${collection.id}-${version.id}`)}
+                                    disabled={loadingVersion !== null}
                                     title="Copier cette version de Staging en production"
                                     variant="text"
                                   />
+                                  {loadingVersion?.collectionId === collection.id && loadingVersion.versionId === version.id && (
+                                    <span role="status"><Spinner size={16} /> Copie en cours…</span>
+                                  )}
                                 </td>
                                 <td>
                                   <Button color="beige-gris-galet" disabled icon="todo-line" size="sm" title="Appliquer l'index de Staging en production" variant="text" />
@@ -201,7 +238,8 @@ export default function Collections({ collections, dashboardId, indexes, invalid
           </li>
         ))}
       </ul>
-      {notification && <Alert description={notification.message} onClose={() => setNotification(null)} title={notification.type === "success" ? "Succès" : "Erreur"} variant={notification.type} />}
+      {successMessage && <Alert description={successMessage} title="Succès" variant="success" />}
+      {errorMessage && <Alert closeMode="controlled" description={errorMessage} onClose={() => setErrorMessage(null)} title="Erreur" variant="error" />}
     </>
   );
 }

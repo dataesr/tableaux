@@ -22,4 +22,4 @@ if (mongoProdUri) {
   logger.warn(`MONGO_URI_PROD not configured. Production operations will not be available.`);
 }
 
-export { clientProd, dbProd };
+export { clientProd, dbProd, mongoProdUri };
