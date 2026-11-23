@@ -42,7 +42,7 @@ export default function getOptionsValues(data, displayType, currentLang): Highch
   const sortedYears = Array.from(years).sort(); // ['2021', '2022', '2023', '2024', '2025']
   const labels = Array.from(itemsLabels);
   const categories = sortedYears.flatMap((year) => labels.map((label) => `${label} - ${year}`));
-  console.log(data)
+
   const index = {}; // Index : stage -> code -> year -> valeur
   filteredData.forEach((el) => {
     const stage = el.stage;
