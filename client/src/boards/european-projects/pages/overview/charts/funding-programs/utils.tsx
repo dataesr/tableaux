@@ -1,7 +1,7 @@
 import { useSearchParams } from "react-router-dom";
 import { isEjoParam } from "../../../../utils/params";
 import { getCountryNameWithArticle } from "../../../../utils/country-mapping";
-import { getCountryAdjectives } from "../../../../../../components/country-selector/utils.jsx";
+
 
 
 export function useGetParams() {
