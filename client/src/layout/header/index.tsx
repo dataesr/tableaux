@@ -20,7 +20,7 @@ type HeaderProps = {
   stickyNav?: boolean
 }
 
-export default function SiteHeader({
+export default function HeaderWrapper({
   exploreLink = false,
   extra,
   items = [],

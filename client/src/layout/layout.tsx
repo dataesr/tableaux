@@ -4,10 +4,10 @@ import { Outlet, useSearchParams } from "react-router-dom"
 
 import Footer from "../components/footer";
 import { getI18nLabel } from "../utils";
-import Header from "./header";
+import HeaderWrapper from "./header";
 import i18n from "./i18n.json";
 
-type LayoutProps = ComponentProps<typeof Header> & {
+type LayoutProps = ComponentProps<typeof HeaderWrapper> & {
   before?: ReactNode;
   children?: ReactNode;
   footer?: ComponentProps<typeof Footer>;
@@ -29,7 +29,7 @@ export function Layout({ before, children, footer, ...headerProps }: LayoutProps
           { href: "#footer", label: t("skipFooter") },
         ]}
       />
-      <Header {...headerProps} />
+      <HeaderWrapper {...headerProps} />
       <main id="main-content" tabIndex={-1}>
         {before}
         {children ?? <Outlet />}

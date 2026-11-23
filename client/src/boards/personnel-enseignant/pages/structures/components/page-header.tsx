@@ -132,7 +132,7 @@ export default function PageHeader({
     }, [evolutionData, selectedYear]);
 
     return (
-        <header className="page-header fr-mb-4w">
+        <div className="page-header fr-mb-4w">
             <Row gutters className="fr-grid-row--middle fr-mb-2w">
                 <Col xs="12" md="8">
                     <Title as="h1" look="h4" className="fr-mb-0">
@@ -336,6 +336,6 @@ export default function PageHeader({
                     </div>
                 </Col>
             </Row>
-        </header>
+        </div>
     );
 }
