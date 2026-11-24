@@ -2,15 +2,18 @@ import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.sr
 
 import { getI18nLabel } from "../../../../../../utils";
 import { getCssColor } from "../../../../../../utils/colors";
-import { formatNumber, formatToMillions, formatToRates } from "../../../../../../utils/format";
+import { formatNumberLang, formatToMillionsLang, formatToPercentLang } from "../../../../../../utils/format";
 import { CreateChartOptions } from "../../../../components/chart-ep";
+import { type Level, sortByLevel } from "../../../../utils/levelsSort";
 import i18n from "../../i18n-charts.json";
 
 type FundingItem = { code?: string; name_fr?: string; pilier_name_fr?: string; stage: string; total_fund_eur: number; total_coordination_number?: number; total_number_involved?: number; total_projects?: number };
 
-export default function getOptions(data: { data?: FundingItem[] } | null, displayType: string = "total_fund_eur", currentLang: string, title?: string) {
-  const items = data?.data;
+export default function getOptions(data: { data?: FundingItem[] } | null, displayType: string = "total_fund_eur", currentLang: string, title?: string, groupBy: Level = "pillar") {
+  const items = data?.data ? sortByLevel(data.data, groupBy) : undefined;
   if (!items || items.length === 0) return null;
+
+  const lang: "fr" | "en" = currentLang === "en" ? "en" : "fr";
 
   const valueKey = (["total_fund_eur", "total_coordination_number", "total_number_involved", "total_projects"].includes(displayType) ? displayType : "total_fund_eur") as
     | "total_fund_eur"
@@ -39,20 +42,20 @@ export default function getOptions(data: { data?: FundingItem[] } | null, displa
   const legend: any = {}
   switch (displayType) {
     case "total_fund_eur":
-      legend.serie_01 = getI18nLabel(i18n, "requestedFunding", currentLang)
-      legend.serie_02 = getI18nLabel(i18n, "securedFunding", currentLang)
+      legend.serie_01 = getI18nLabel(i18n, "requestedFunding", lang)
+      legend.serie_02 = getI18nLabel(i18n, "securedFunding", lang)
       break
     case "total_coordination_number":
-      legend.serie_01 = getI18nLabel(i18n, "evaluatedCoordinations", currentLang)
-      legend.serie_02 = getI18nLabel(i18n, "successfulCoordinations", currentLang)
+      legend.serie_01 = getI18nLabel(i18n, "evaluatedCoordinations", lang)
+      legend.serie_02 = getI18nLabel(i18n, "successfulCoordinations", lang)
       break
     case "total_number_involved":
-      legend.serie_01 = getI18nLabel(i18n, "applicantsNumber", currentLang)
-      legend.serie_02 = getI18nLabel(i18n, "participantsNumber", currentLang)
+      legend.serie_01 = getI18nLabel(i18n, "applicantsNumber", lang)
+      legend.serie_02 = getI18nLabel(i18n, "participantsNumber", lang)
       break
     case "total_projects":
-      legend.serie_01 = getI18nLabel(i18n, "evaluatedProjects", currentLang)
-      legend.serie_02 = getI18nLabel(i18n, "successfulProjects", currentLang)
+      legend.serie_01 = getI18nLabel(i18n, "evaluatedProjects", lang)
+      legend.serie_02 = getI18nLabel(i18n, "successfulProjects", lang)
       break
     default:
       break
@@ -89,11 +92,11 @@ export default function getOptions(data: { data?: FundingItem[] } | null, displa
         gridLineWidth: 0.5,
       },
       {
-        title: { text: `${getI18nLabel(i18n, "successRate")} (%)`},
+        title: { text: `${getI18nLabel(i18n, "successRate", lang)} (%)` },
         opposite: true,
         min: 0,
         max: 100,
-        labels: { format: "{value}%"},
+        labels: { format: "{value}%" },
       },
     ],
     legend: { enabled: true, align: "center", verticalAlign: "bottom", layout: "horizontal" },
@@ -104,19 +107,25 @@ export default function getOptions(data: { data?: FundingItem[] } | null, displa
         let html = `<strong>${this.category}</strong><br/>`;
         (this.points || []).forEach((point) => {
           const value = point.y || 0;
-          const formatted = point.series.type === "scatter" ? formatToRates(value / 100) : isFunding ? formatToMillions(value * 1000000) : formatNumber(value);
+          const formatted =
+            point.series.type === "scatter"
+              ? formatToPercentLang(value, lang)
+              : isFunding
+                ? formatToMillionsLang(value * 1000000, lang)
+                : formatNumberLang(value, lang);
           html += `<span style="color:${point.color}">●</span> ${point.series.name}: <strong>${formatted}</strong><br/>`;
         });
         return html;
       },
     },
     plotOptions: {
-      column: { 
-        borderWidth: 0, 
-        grouping: true, 
+      column: {
+        borderWidth: 0,
+        grouping: true,
         maxPointWidth: 90,
         groupPadding: 0.25, // espace entre les catégories (par défaut 0.2)
-        pointPadding: 0.1, },
+        pointPadding: 0.1,
+      },
     },
     series: [
       {
@@ -135,7 +144,7 @@ export default function getOptions(data: { data?: FundingItem[] } | null, displa
       },
       {
         type: "scatter",
-        name: getI18nLabel(i18n, "successRate"),
+        name: getI18nLabel(i18n, "successRate", lang),
         color: successRateColor,
         data: successRates,
         yAxis: 1,
@@ -143,7 +152,7 @@ export default function getOptions(data: { data?: FundingItem[] } | null, displa
         dataLabels: {
           enabled: true,
           formatter: function () {
-            return formatToRates(((this as any).label || 0) / 100);
+            return formatToPercentLang((this as any).label || 0, lang);
           },
           y: -10,
           style: { fontSize: "11px", fontWeight: "600", textOutline: "none" },

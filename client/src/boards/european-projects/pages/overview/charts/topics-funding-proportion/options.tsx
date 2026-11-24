@@ -2,7 +2,7 @@ import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.sr
 
 import { getI18nLabel } from "../../../../../../utils";
 import { getCssColor } from "../../../../../../utils/colors";
-import { formatToPercent } from "../../../../../../utils/format";
+import { formatToPercentLang } from "../../../../../../utils/format";
 import { CreateChartOptions } from "../../../../components/chart-ep";
 import i18n from "../../i18n-charts.json";
 
@@ -10,24 +10,25 @@ export default function getOptions(data, displayType: string = "total_fund_eur",
   if (!data) return null;
 
   const valueKey = displayType === "total_coordination_number" ? "proportion_coordination_number" : displayType === "total_number_involved" ? "proportion_number_involved" : displayType === "total_fund_eur" ? "proportion" : "proportion_projects";
+  const lang: "fr" | "en" = currentLang === "en" ? "en" : "fr";
 
   const legend: any = {}
   switch (displayType) {
     case "total_fund_eur":
-      legend.serie_01 = getI18nLabel(i18n, "requestedFunding", currentLang)
-      legend.serie_02 = getI18nLabel(i18n, "securedFunding", currentLang)
+      legend.serie_01 = getI18nLabel(i18n, "requestedFunding", lang)
+      legend.serie_02 = getI18nLabel(i18n, "securedFunding", lang)
       break
     case "total_coordination_number":
-      legend.serie_01 = getI18nLabel(i18n, "evaluatedCoordinations", currentLang)
-      legend.serie_02 = getI18nLabel(i18n, "successfulCoordinations", currentLang)
+      legend.serie_01 = getI18nLabel(i18n, "proportionEvaluated", lang)
+      legend.serie_02 = getI18nLabel(i18n, "proportionSuccessful", lang)
       break
     case "total_number_involved":
-      legend.serie_01 = getI18nLabel(i18n, "applicantsNumber", currentLang)
-      legend.serie_02 = getI18nLabel(i18n, "participantsNumber", currentLang)
+      legend.serie_01 = getI18nLabel(i18n, "proportionApplicant", lang)
+      legend.serie_02 = getI18nLabel(i18n, "proportionParticipant", lang)
       break
     case "total_projects":
-      legend.serie_01 = getI18nLabel(i18n, "evaluatedProjects", currentLang)
-      legend.serie_02 = getI18nLabel(i18n, "successfulProjects", currentLang)
+      legend.serie_01 = getI18nLabel(i18n, "proportionEvaluated", lang)
+      legend.serie_02 = getI18nLabel(i18n, "proportionSuccessful", lang)
       break
     default:
       break
@@ -49,7 +50,7 @@ export default function getOptions(data, displayType: string = "total_fund_eur",
     },
     tooltip: {
       pointFormatter: function () {
-        return `${getI18nLabel(i18n, valueKey)} : <b>${formatToPercent(this.y ?? 0)}</b>`;
+        return `${getI18nLabel(i18n, valueKey)} : <b>${formatToPercentLang(this.y ?? 0, lang)}</b>`;
       },
     },
     plotOptions: {
@@ -58,7 +59,9 @@ export default function getOptions(data, displayType: string = "total_fund_eur",
       },
       column: {
         borderWidth: 0,
-        borderRadius: 0,
+        maxPointWidth: 90,
+        groupPadding: 0.25, // espace entre les catégories (par défaut 0.2)
+        pointPadding: 0.1,
       },
     },
     series: [
@@ -66,11 +69,10 @@ export default function getOptions(data, displayType: string = "total_fund_eur",
         type: "column",
         name: legend.serie_01,
         color: getCssColor("evaluated-project"),
-        groupPadding: 0,
         data: data.data.filter((item) => item.stage === "evaluated").map((item) => [item.thema_name_fr, item[valueKey]]),
         dataLabels: {
           formatter: function () {
-            return formatToPercent(this.y ?? 0);
+            return formatToPercentLang(this.y ?? 0, lang);
           },
         },
       },
@@ -78,11 +80,10 @@ export default function getOptions(data, displayType: string = "total_fund_eur",
         type: "column",
         name: legend.serie_02,
         color: getCssColor("successful-project"),
-        groupPadding: 0,
         data: data.data.filter((item) => item.stage === "successful").map((item) => [item.thema_name_fr, item[valueKey]]),
         dataLabels: {
           formatter: function () {
-            return formatToPercent(this.y ?? 0);
+            return formatToPercentLang(this.y ?? 0, lang);
           },
         },
       },
