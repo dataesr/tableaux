@@ -1,9 +1,8 @@
 import express from "express";
-import { execFile } from "child_process";
+import { spawn } from "child_process";
 import fs from "fs";
 import os from "os";
 import path, { dirname } from "path";
-import { promisify } from "util";
 import { fileURLToPath } from "url";
 
 import { db, mongoUri } from "../../services/mongo.js";
@@ -15,7 +14,6 @@ import { getEmbeddings } from "./vectors.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-const execFileAsync = promisify(execFile);
 
 const getMongoToolsUri = (uri) => {
   const parsedUri = new URL(uri);
@@ -43,6 +41,10 @@ const resolveStagingVersionCollection = async (dashboardId, versionId) => {
   const matches = candidates.filter((_, index) => exists[index]);
   return { candidates, matches };
 };
+
+// Base visée par une route admin qui peut lire ou écrire en staging comme en production (`environment`).
+// Sans paramètre, c'est la base staging, comme avant : les appels existants ne changent pas.
+const getAdminDb = (environment) => (environment === "production" ? dbProd : db);
 
 const router = new express.Router();
 
@@ -307,12 +309,25 @@ router.route("/admin/delete-collection").delete(async (req, res) => {
 
 // list all indexes from a collection
 router.route("/admin/list-indexes").get(async (req, res) => {
-  const collectionId = req.query.collectionId;
+  let collectionId = req.query.collectionId;
   if (!collectionId) {
     return res.status(400).json({ error: "Collection ID is required" });
   }
 
   try {
+    // Avec `dashboardId`, `collectionId` est un identifiant de version : on retrouve sa collection staging,
+    // préfixée ou non par le tableau, comme pour la copie vers la prod. Avant, l'identifiant de version était
+    // pris tel quel comme nom de collection, et la route échouait pour les collections préfixées.
+    if (req.query.dashboardId !== undefined) {
+      const { matches } = await resolveStagingVersionCollection(req.query.dashboardId, collectionId);
+      if (matches.length > 1) {
+        return res.status(409).json({ error: "Plusieurs collections staging correspondent à cette version" });
+      }
+      if (matches.length === 0) {
+        return res.status(404).json({ error: "Collection staging introuvable" });
+      }
+      [collectionId] = matches;
+    }
     const indexes = await db.collection(collectionId).indexes();
     res.json(indexes);
   } catch (error) {
@@ -349,13 +364,19 @@ router.route("/admin/set-current-version").post(async (req, res) => {
   res.json(ret);
 });
 
-// update constant
+// update constant, in staging (default) or in production (`environment: "production"`)
 router.route("/admin/update-constant").post(async (req, res) => {
-  const filters = checkQuery(req.body, ["dashboardId", "key", "value"], res);
-  const { dashboardId, key, value } = filters;
+  const { dashboardId, key, value, environment } = req.body;
+  if (![dashboardId, key].every((field) => typeof field === "string" && field.length > 0) || typeof value !== "string") {
+    return res.status(400).json({ error: "dashboardId, key and value are required" });
+  }
+  const targetDb = getAdminDb(environment);
+  if (!targetDb) {
+    return res.status(503).json({ error: "Production database is not configured" });
+  }
 
-  const response = await db.collection("boards").updateOne(
-    { id: dashboardId },
+  const response = await targetDb.collection("boards").updateOne(
+    { id: dashboardId, "constants.key": key },
     { $set: { "constants.$[elem].value": value } },
     {
       arrayFilters: [{ "elem.key": key }],
@@ -363,11 +384,24 @@ router.route("/admin/update-constant").post(async (req, res) => {
   );
 
   if (response.matchedCount === 0) {
-    return res.status(404).json({ error: "No document found" });
+    // Constante ajoutée en staging après la création de la fiche de prod : on l'ajoute à la fiche visée,
+    // avec la description de staging. Avant, la mise à jour ne trouvait pas la clé et ne faisait rien, sans erreur.
+    const stagingBoard = await db.collection("boards").findOne({ id: dashboardId });
+    const stagingConstant = stagingBoard?.constants?.find((constant) => constant.key === key);
+    if (!stagingConstant) {
+      return res.status(404).json({ error: "Constant not found in staging" });
+    }
+    const pushResponse = await targetDb.collection("boards").updateOne(
+      { id: dashboardId },
+      { $push: { constants: { ...stagingConstant, value } } },
+    );
+    if (pushResponse.matchedCount === 0) {
+      return res.status(404).json({ error: "Dashboard not found" });
+    }
   }
 
   // return current data
-  const ret = await db.collection("boards").findOne({ id: dashboardId });
+  const ret = await targetDb.collection("boards").findOne({ id: dashboardId });
   res.json(ret);
 });
 
@@ -439,6 +473,115 @@ router.route("/admin/delete-version").delete(async (req, res) => {
   res.json(ret);
 });
 
+// Copies vers la production, une entrée par collection de production : { status, versionId, documentsCount, error, details }.
+// Avant, la copie se faisait pendant la requête HTTP : sur une grosse collection, un proxy coupait la requête
+// avant la fin, l'admin affichait une erreur alors que la copie continuait, et rien n'empêchait d'en relancer
+// une seconde en parallèle sur la même collection. Désormais la route répond tout de suite, l'admin interroge
+// le statut, et cette Map sert de verrou : une seule copie à la fois par collection de production.
+// Elle est en mémoire : le verrou ne vaut que pour cette instance du serveur.
+const productionCopies = new Map();
+
+// Lance mongodump / mongorestore. Avant, `execFile` gardait toute leur sortie en mémoire et tuait le processus
+// au-delà de 1 Mo ; or ces outils y écrivent leur progression, ce qui peut arriver sur une très longue copie,
+// en pleine restauration. `spawn` lit la sortie au fil de l'eau ; on n'en garde que la fin pour le message d'erreur.
+const runMongoTool = (command, args) => new Promise((resolve, reject) => {
+  const child = spawn(command, args, { stdio: ["ignore", "ignore", "pipe"] });
+  let stderrTail = "";
+  child.stderr.on("data", (chunk) => {
+    stderrTail = `${stderrTail}${chunk}`.slice(-4000);
+  });
+  child.on("error", reject);
+  child.on("close", (code) => {
+    if (code === 0) resolve();
+    else reject(new Error(`${command} exited with code ${code}: ${stderrTail}`));
+  });
+});
+
+const copyVersionToProduction = async ({ board, stagingData, dashboardId, collectionId, versionId, stagingCollectionName, productionCollectionName, copy }) => {
+  // Comptage exact fait ici plutôt que dans la requête HTTP : sur une grosse collection, il prend du temps.
+  const copiedCount = await db.collection(stagingCollectionName).countDocuments();
+
+  // Avant, `mongorestore --drop` supprimait la collection de production puis la remplissait : pendant toute la
+  // restauration le tableau en prod lisait une collection vide ou partielle, et un échec (réseau, redémarrage du
+  // serveur) la laissait incomplète, sans retour possible. On restaure maintenant sous un nom temporaire : la
+  // production reste servie telle quelle jusqu'à la bascule finale, et un échec ne la touche pas.
+  const temporaryCollectionName = `${productionCollectionName}__copy_in_progress`;
+  const temporaryDirectory = await fs.promises.mkdtemp(path.join(os.tmpdir(), "tableaux-copy-version-"));
+  const stagingConfigPath = path.join(temporaryDirectory, "staging.json");
+  const productionConfigPath = path.join(temporaryDirectory, "production.json");
+  const archivePath = path.join(temporaryDirectory, "collection.archive");
+
+  try {
+    await Promise.all([fs.promises.writeFile(stagingConfigPath, JSON.stringify({ uri: getMongoToolsUri(mongoUri) })), fs.promises.writeFile(productionConfigPath, JSON.stringify({ uri: getMongoToolsUri(mongoProdUri) }))]);
+    await runMongoTool("mongodump", [`--config=${stagingConfigPath}`, `--db=${db.databaseName}`, `--collection=${stagingCollectionName}`, `--archive=${archivePath}`, "--gzip"]);
+    // --drop ne vise plus que la collection temporaire, laissée par une copie interrompue.
+    // Plusieurs insertions en parallèle accélèrent la restauration des grosses collections (l'ordre des documents n'importe pas).
+    await runMongoTool("mongorestore", [`--config=${productionConfigPath}`, `--archive=${archivePath}`, "--gzip", "--drop", "--stopOnError", "--numInsertionWorkersPerCollection=4", `--nsFrom=${db.databaseName}.${stagingCollectionName}`, `--nsTo=${dbProd.databaseName}.${temporaryCollectionName}`]);
+  } finally {
+    await fs.promises.rm(temporaryDirectory, { recursive: true, force: true }); // suppression de /tmp
+  }
+
+  // La vérification porte sur la collection temporaire : si la collection staging a changé pendant le dump ou si la
+  // restauration est incomplète, la production n'a pas encore été touchée.
+  const restoredCount = await dbProd.collection(temporaryCollectionName).countDocuments();
+  if (restoredCount !== copiedCount) {
+    throw new Error(`Restore verification failed for ${dbProd.databaseName}.${temporaryCollectionName}: expected ${copiedCount} documents, found ${restoredCount}`);
+  }
+
+  // Bascule atomique : la collection temporaire, index compris, remplace la collection de production en une opération.
+  await dbProd.collection(temporaryCollectionName).rename(productionCollectionName, { dropTarget: true });
+  copy.productionReplaced = true;
+
+  // Les constantes ont maintenant leur propre valeur de prod, modifiée depuis l'admin : la copie ne les écrase plus.
+  // Celles de staging ne servent qu'à initialiser une fiche de prod qui n'en a pas encore.
+  const { _id, data, constants, ...boardMetadata } = board;
+  const { current, versions, productionVersion, ...collectionMetadata } = stagingData;
+  const publishedData = {
+    ...collectionMetadata,
+    current: productionCollectionName,
+    productionVersion: versionId,
+    versions: [{ id: productionCollectionName, createdAt: Date.now() }],
+  };
+
+  await dbProd.collection("boards").updateOne(
+    { id: dashboardId },
+    [{
+      $replaceWith: {
+        $mergeObjects: [
+          { $literal: boardMetadata },
+          {
+            _id: "$_id",
+            constants: { $ifNull: ["$constants", { $literal: constants ?? [] }] },
+            data: {
+              $concatArrays: [
+                {
+                  $filter: {
+                    input: { $ifNull: ["$data", []] },
+                    as: "collection",
+                    cond: { $ne: ["$$collection.id", { $literal: collectionId }] },
+                  },
+                },
+                { $literal: [publishedData] },
+              ],
+            },
+          },
+        ],
+      },
+    }],
+    { upsert: true },
+  );
+
+  const stagingUpdate = await db.collection("boards").updateOne(
+    { id: dashboardId, "data.id": collectionId },
+    { $set: { "data.$.productionVersion": versionId } },
+  );
+  if (stagingUpdate.matchedCount !== 1) {
+    throw new Error("Production was updated, but the staging board could not be updated");
+  }
+
+  return copiedCount;
+};
+
 // copy version from staging to production
 router.route("/admin/copy-version-to-production").post(async (req, res) => {
   const { dashboardId, collectionId, versionId } = req.body;
@@ -446,147 +589,88 @@ router.route("/admin/copy-version-to-production").post(async (req, res) => {
     return res.status(400).json({ error: "dashboardId, collectionId and versionId are required" });
   }
 
-  let restoreStarted = false;
-  try {
-    // Check if production database is configured
-    if (!dbProd) {
-      return res
-        .status(503)
-        .json({ error: "Production database is not configured" });
-    }
+  // Check if production database is configured
+  if (!dbProd) {
+    return res
+      .status(503)
+      .json({ error: "Production database is not configured" });
+  }
 
-    // Get the board to ensure it exists in staging
-    const board = await db.collection("boards").findOne({ id: dashboardId });
-    const stagingData = board?.data?.find((item) => item.id === collectionId);
+  // Get the board to ensure it exists in staging
+  const board = await db.collection("boards").findOne({ id: dashboardId });
+  const stagingData = board?.data?.find((item) => item.id === collectionId);
 
-    if (!stagingData) {
-      return res.status(404).json({ error: "Collection not found in staging" });
-    }
-    if (!stagingData.versions?.some((version) => version.id === versionId)) {
-      return res.status(404).json({ error: "Version not found in staging" });
-    }
+  if (!stagingData) {
+    return res.status(404).json({ error: "Collection not found in staging" });
+  }
+  if (!stagingData.versions?.some((version) => version.id === versionId)) {
+    return res.status(404).json({ error: "Version not found in staging" });
+  }
 
-    const { candidates, matches } = await resolveStagingVersionCollection(dashboardId, versionId);
-    if (matches.length > 1) {
-      return res.status(409).json({
-        error: `Plusieurs collections staging correspondent à cette version : ${matches.join(", ")}. Copie annulée.`,
-      });
-    }
-    if (matches.length === 0) {
-      return res.status(404).json({
-        error: `Collection staging introuvable. Noms recherchés : ${candidates.join(", ")}`,
-      });
-    }
-    const stagingCollectionName = matches[0];
-    const productionCollectionName = `${dashboardId}_${collectionId}`;
-
-    // Compte le nombre de docs à copier
-    const count = await db
-      .collection(stagingCollectionName)
-      .countDocuments();
-
-    if (count === 0) {
-      return res
-        .status(400)
-        .json({ error: "No documents to copy from staging collection" });
-    }
-
-    const copiedCount = count;
-    const temporaryDirectory = await fs.promises.mkdtemp(path.join(os.tmpdir(), "tableaux-copy-version-"));
-    const stagingConfigPath = path.join(temporaryDirectory, "staging.json");
-    const productionConfigPath = path.join(temporaryDirectory, "production.json");
-    const archivePath = path.join(temporaryDirectory, "collection.archive");
-
-    try {
-      await Promise.all([fs.promises.writeFile(stagingConfigPath, JSON.stringify({ uri: getMongoToolsUri(mongoUri) })), fs.promises.writeFile(productionConfigPath, JSON.stringify({ uri: getMongoToolsUri(mongoProdUri) }))]);
-
-      console.log(`--config=${stagingConfigPath}`);
-      console.log(`--db=${db.databaseName}`);
-      console.log(`--collection=${stagingCollectionName}`);
-      console.log(`--archive=${archivePath}`);
-      await execFileAsync("mongodump", [`--config=${stagingConfigPath}`, `--db=${db.databaseName}`, `--collection=${stagingCollectionName}`, `--archive=${archivePath}`, "--gzip"]);
-      restoreStarted = true;
-      await execFileAsync("mongorestore", [`--config=${productionConfigPath}`, `--archive=${archivePath}`, "--gzip", "--drop", "--stopOnError", `--nsFrom=${db.databaseName}.${stagingCollectionName}`, `--nsTo=${dbProd.databaseName}.${productionCollectionName}`]);
-    } finally {
-      await fs.promises.rm(temporaryDirectory, { recursive: true, force: true }); // suppression de /tmp
-    }
-
-    const productionCollectionExists = await dbProd
-      .listCollections({ name: productionCollectionName })
-      .hasNext();
-    const productionCount = productionCollectionExists
-      ? await dbProd.collection(productionCollectionName).countDocuments()
-      : 0;
-
-    if (productionCount !== copiedCount) {
-      throw new Error(
-        `Restore verification failed for ${dbProd.databaseName}.${productionCollectionName}: expected ${copiedCount} documents, found ${productionCount}`,
-      );
-    }
-
-    const { _id, data, ...boardMetadata } = board;
-    const { current, versions, productionVersion, ...collectionMetadata } = stagingData;
-    const publishedData = {
-      ...collectionMetadata,
-      current: productionCollectionName,
-      productionVersion: versionId,
-      versions: [{ id: productionCollectionName, createdAt: Date.now() }],
-    };
-
-    await dbProd.collection("boards").updateOne(
-      { id: dashboardId },
-      [{
-        $replaceWith: {
-          $mergeObjects: [
-            { $literal: boardMetadata },
-            {
-              _id: "$_id",
-              data: {
-                $concatArrays: [
-                  {
-                    $filter: {
-                      input: { $ifNull: ["$data", []] },
-                      as: "collection",
-                      cond: { $ne: ["$$collection.id", { $literal: collectionId }] },
-                    },
-                  },
-                  { $literal: [publishedData] },
-                ],
-              },
-            },
-          ],
-        },
-      }],
-      { upsert: true },
-    );
-
-    const stagingUpdate = await db.collection("boards").updateOne(
-      { id: dashboardId, "data.id": collectionId },
-      { $set: { "data.$.productionVersion": versionId } },
-    );
-    if (stagingUpdate.matchedCount !== 1) {
-      throw new Error("Production was updated, but the staging board could not be updated");
-    }
-
-    res.json({
-      message: "Version copied to production successfully",
-      documentsCount: copiedCount,
-      database: dbProd.databaseName,
-      collection: productionCollectionName,
-      dashboardId,
-      collectionId,
-      versionId,
-    });
-  } catch (error) {
-    const details = sanitizeErrorMessage(error.message);
-    logger.error(`Error copying version to production: ${details}`);
-    res.status(500).json({
-      error: "Unable to copy version to production",
-      details: restoreStarted
-        ? `La collection de production a pu être modifiée. Vérifiez la collection et ses métadonnées avant de réessayer. ${details}`
-        : details,
+  const { candidates, matches } = await resolveStagingVersionCollection(dashboardId, versionId);
+  if (matches.length > 1) {
+    return res.status(409).json({
+      error: `Plusieurs collections staging correspondent à cette version : ${matches.join(", ")}. Copie annulée.`,
     });
   }
+  if (matches.length === 0) {
+    return res.status(404).json({
+      error: `Collection staging introuvable. Noms recherchés : ${candidates.join(", ")}`,
+    });
+  }
+  const stagingCollectionName = matches[0];
+  const productionCollectionName = `${dashboardId}_${collectionId}`;
+
+  if (productionCopies.get(productionCollectionName)?.status === "running") {
+    return res.status(409).json({ error: `Une copie vers ${productionCollectionName} est déjà en cours` });
+  }
+
+  // Lecture d'un seul document plutôt qu'un comptage complet, pour que la requête réponde vite.
+  const firstDocument = await db.collection(stagingCollectionName).findOne({}, { projection: { _id: 1 } });
+  if (!firstDocument) {
+    return res
+      .status(400)
+      .json({ error: "No documents to copy from staging collection" });
+  }
+
+  const copy = { status: "running", versionId };
+  productionCopies.set(productionCollectionName, copy);
+  logger.info(`Copying ${db.databaseName}.${stagingCollectionName} to ${dbProd.databaseName}.${productionCollectionName}`);
+
+  copyVersionToProduction({ board, stagingData, dashboardId, collectionId, versionId, stagingCollectionName, productionCollectionName, copy })
+    .then((documentsCount) => {
+      Object.assign(copy, { status: "done", documentsCount });
+      logger.info(`Copied ${documentsCount} documents to ${dbProd.databaseName}.${productionCollectionName}`);
+    })
+    .catch(async (error) => {
+      const details = sanitizeErrorMessage(error.message);
+      logger.error(`Error copying version to production: ${details}`);
+      if (!copy.productionReplaced) {
+        await dbProd.collection(`${productionCollectionName}__copy_in_progress`).drop().catch(() => {});
+      }
+      Object.assign(copy, {
+        status: "error",
+        error: "Unable to copy version to production",
+        details: copy.productionReplaced
+          ? `La collection de production a été remplacée, mais ses métadonnées n'ont pas pu être mises à jour. Vérifiez-les avant de réessayer. ${details}`
+          : `La production n'a pas été modifiée. ${details}`,
+      });
+    });
+
+  res.status(202).json({ collection: productionCollectionName });
+});
+
+// status of the last copy to production of a collection
+router.route("/admin/copy-version-to-production/status").get((req, res) => {
+  const { dashboardId, collectionId } = req.query;
+  if (![dashboardId, collectionId].every((value) => typeof value === "string" && value.length > 0)) {
+    return res.status(400).json({ error: "dashboardId and collectionId are required" });
+  }
+  const copy = productionCopies.get(`${dashboardId}_${collectionId}`);
+  if (!copy) {
+    return res.status(404).json({ error: "No copy found for this collection" });
+  }
+  res.json(copy);
 });
 
 // delete all files in files folder
@@ -719,19 +803,44 @@ router
     console.log("------------------------- fin ----------------------");
   });
 
-// get constants from a dashboard
+// add a constant to a dashboard in staging; its production value is then set with update-constant
+router.route("/admin/add-constant").post(async (req, res) => {
+  const { dashboardId, description, value } = req.body;
+  const key = typeof req.body.key === "string" ? req.body.key.trim() : "";
+  if (typeof dashboardId !== "string" || !dashboardId || !key || typeof value !== "string" || typeof description !== "string") {
+    return res.status(400).json({ error: "dashboardId, key, value and description are required" });
+  }
+
+  const board = await db.collection("boards").findOne({ id: dashboardId }, { projection: { constants: 1 } });
+  if (!board) {
+    return res.status(404).json({ error: "Dashboard not found" });
+  }
+  if (board.constants?.some((constant) => constant.key === key)) {
+    return res.status(409).json({ error: `La constante ${key} existe déjà` });
+  }
+
+  await db.collection("boards").updateOne({ id: dashboardId }, { $push: { constants: { key, value, description } } });
+  res.status(201).json({ key, value, description });
+});
+
+// get constants from a dashboard, in staging (default) or in production (`environment=production`)
 router.route("/admin/get-constants").get(async (req, res) => {
-  const dashboardId = req.query.dashboardId;
+  const { dashboardId, environment } = req.query;
   if (!dashboardId) {
     return res.status(400).json({ error: "Dashboard ID is required" });
   }
+  const targetDb = getAdminDb(environment);
+  if (!targetDb) {
+    return res.status(503).json({ error: "Production database is not configured" });
+  }
 
-  const board = await db.collection("boards").findOne({ id: dashboardId });
+  const board = await targetDb.collection("boards").findOne({ id: dashboardId });
   if (!board) {
     return res.status(404).json({ error: "No document found" });
   }
 
-  res.json(board.constants);
+  // Une fiche sans constantes renvoie une liste vide ; avant, `undefined` donnait une réponse vide, illisible en JSON.
+  res.json(board.constants ?? []);
 });
 
 // router.route("/admin/get-ticket-office-messages").get(async (req, res) => {
@@ -1144,7 +1253,9 @@ router.route("/admin/collection-size/:name").get(async (req, res) => {
     if (!collectionExists) {
       return res.status(404).json({ error: "Collection not found" });
     }
-    const totalDocs = await db.collection(collectionName).countDocuments();
+    // Estimation lue dans les métadonnées de la collection, instantanée. Avant, `countDocuments` parcourait toute
+    // la collection, pour chaque ligne de version affichée dans l'admin : la page devenait lente sur de grosses collections.
+    const totalDocs = await db.collection(collectionName).estimatedDocumentCount();
     res.json({ size: totalDocs });
   } catch (error) {
     logger.error(`Error getting collection size: ${sanitizeErrorMessage(error.message)}`);

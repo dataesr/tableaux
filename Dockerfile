@@ -1,4 +1,6 @@
 FROM node:24-alpine
+# si on veut mongodump / mongorestore 
+# RUN apk add --no-cache mongodb-tools
 WORKDIR /app
 COPY package*.json ./
 COPY server ./server
