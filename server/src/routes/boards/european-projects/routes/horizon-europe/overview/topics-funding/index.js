@@ -39,6 +39,7 @@ router.route("/european-projects/overview/topics-funding").get(async (req, res) 
             stage: "$stage",
             thema_name_fr: "$thema_name_fr",
             thema_name_en: "$thema_name_en",
+            thema_sort: "thema_sort",
             // pilier_code: "$pilier_code",
             // programme_code: "$programme_code",
           },
