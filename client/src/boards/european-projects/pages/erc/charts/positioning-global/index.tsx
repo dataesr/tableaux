@@ -13,7 +13,7 @@ import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 import "./styles.scss";
 
-type MetricType = "projects" | "funding";
+type MetricType = "pi" | "projects" | "funding";
 
 interface PositioningGlobalChartProps {
   countryCode?: string;
@@ -43,7 +43,7 @@ const getConfig = (metric: MetricType) => {
 };
 
 function PositioningGlobalChartInner({ countryCode: propCountryCode, currentLang: propLang }: PositioningGlobalChartProps) {
-  const [metric, setMetric] = useState<MetricType>("projects");
+  const [metric, setMetric] = useState<MetricType>("pi");
   const { params, currentLang: urlLang, countryCode: urlCountryCode } = useGetParams();
   const currentLang = propLang || urlLang;
   const countryCode = propCountryCode || urlCountryCode;
@@ -86,7 +86,7 @@ function PositioningGlobalChartInner({ countryCode: propCountryCode, currentLang
   const config = getConfig(metric);
 
   // Construire le titre dynamique avec le nom du pays
-  const metricLabel = getI18nLabel(i18n, metric === "projects" ? "projects" : "funding", currentLang).toLowerCase();
+  const metricLabel = getI18nLabel(i18n, metric === "projects" ? "projects" : metric === "pi" ? "pi" : "funding", currentLang).toLowerCase();
   const title = getI18nLabel(i18n, "main-title-with-country", currentLang).replace("{country}", countryName).replace("{metric}", metricLabel);
 
   return (
@@ -94,8 +94,9 @@ function PositioningGlobalChartInner({ countryCode: propCountryCode, currentLang
       <h3>{title}</h3>
       <div className="positioning-global-chart__controls">
         <SegmentedControl className="fr-segmented--sm" name="positioning-global-metric">
-          <SegmentedElement checked={metric === "projects"} label={getI18nLabel(i18n, "projects", currentLang)} onClick={() => setMetric("projects")} value="projects" />
+          <SegmentedElement checked={metric === "pi"} label={getI18nLabel(i18n, "pi", currentLang)} onClick={() => setMetric("pi")} value="pi" />
           <SegmentedElement checked={metric === "funding"} label={getI18nLabel(i18n, "funding", currentLang)} onClick={() => setMetric("funding")} value="funding" />
+          <SegmentedElement checked={metric === "projects"} label={getI18nLabel(i18n, "projects", currentLang)} onClick={() => setMetric("projects")} value="projects" />
         </SegmentedControl>
       </div>
       <div className="chart-container chart-container--default">

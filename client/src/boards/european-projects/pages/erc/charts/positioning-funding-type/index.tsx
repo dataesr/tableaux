@@ -13,7 +13,7 @@ import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 import "./styles.scss";
 
-type MetricType = "projects" | "funding";
+type MetricType = "pi" | "projects" | "funding";
 
 interface PositioningFundingTypeChartProps {
   countryCode?: string;
@@ -43,7 +43,7 @@ const getConfig = (metric: MetricType) => {
 };
 
 function PositioningFundingTypeChartInner({ countryCode: propCountryCode, currentLang: propLang }: PositioningFundingTypeChartProps) {
-  const [metric, setMetric] = useState<MetricType>("projects");
+  const [metric, setMetric] = useState<MetricType>("pi");
   const [fundingType, setFundingType] = useState<FundingTypeCode>(FUNDING_TYPES[0].code);
 
   const { params, currentLang: urlLang, countryCode: urlCountryCode } = useGetParams();
@@ -105,8 +105,9 @@ function PositioningFundingTypeChartInner({ countryCode: propCountryCode, curren
         </div>
         <div className="segmented-wrapper">
           <SegmentedControl className="fr-segmented--sm" name="positioning-funding-type-metric">
-            <SegmentedElement checked={metric === "projects"} label={getI18nLabel(i18n, "projects", currentLang)} onClick={() => setMetric("projects")} value="projects" />
+            <SegmentedElement checked={metric === "pi"} label={getI18nLabel(i18n, "pi", currentLang)} onClick={() => setMetric("pi")} value="pi" />
             <SegmentedElement checked={metric === "funding"} label={getI18nLabel(i18n, "funding", currentLang)} onClick={() => setMetric("funding")} value="funding" />
+            <SegmentedElement checked={metric === "projects"} label={getI18nLabel(i18n, "projects", currentLang)} onClick={() => setMetric("projects")} value="projects" />
           </SegmentedControl>
         </div>
       </div>

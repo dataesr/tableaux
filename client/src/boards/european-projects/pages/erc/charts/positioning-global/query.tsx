@@ -8,6 +8,7 @@ export interface CountryData {
   total_funding_entity: number;
   total_involved: number;
   total_pi: number;
+  total_projects: number;
 }
 
 export interface SynthesisData {

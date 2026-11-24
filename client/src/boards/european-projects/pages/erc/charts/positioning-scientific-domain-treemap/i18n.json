@@ -3,9 +3,17 @@
     "fr": "Positionnement {country} par rapport aux autres pays européens – par domaine scientifique",
     "en": "{country}'s positioning compared to other European countries – ERC projects and funding distribution by scientific domain"
   },
+  "pi": {
+    "fr": "Porteurs de projets",
+    "en": "Project PIs"
+  },
   "projects": {
     "fr": "Projets",
     "en": "Projects"
+  },
+  "tooltip-pi": {
+    "fr": "Porteurs de projets",
+    "en": "Project PIs"
   },
   "funding": {
     "fr": "Financements",
@@ -15,15 +23,23 @@
     "fr": "Domaine scientifique",
     "en": "Scientific domain"
   },
-  "title-projects": {
+  "title-pi": {
     "fr": "Répartition des porteurs de projets ERC par pays pour {domain}",
     "en": "ERC project PIs distribution by country for {domain}"
+  },
+  "title-projects": {
+    "fr": "Répartition des projets ERC par pays pour {domain}",
+    "en": "ERC projects distribution by country for {domain}"
   },
   "title-funding": {
     "fr": "Répartition des financements ERC par pays pour {domain}",
     "en": "ERC funding distribution by country for {domain}"
   },
   "comment-projects": {
+    "fr": "Ce treemap représente le poids de chaque pays en nombre de projets ERC lauréats. Les pays européens sont représentés individuellement ; les autres pays sont regroupés. Le pays sélectionné est mis en évidence.",
+    "en": "This treemap shows each country's share of successful ERC projects. European countries are shown individually; others are grouped. The selected country is highlighted."
+  },
+  "comment-pi": {
     "fr": "Ce treemap représente le poids de chaque pays en nombre de porteurs de projets ERC lauréats. Les pays européens sont représentés individuellement ; les autres pays sont regroupés. Le pays sélectionné est mis en évidence.",
     "en": "This treemap shows each country's share of successful ERC project PIs. European countries are shown individually; others are grouped. The selected country is highlighted."
   },
@@ -32,6 +48,10 @@
     "en": "This treemap shows each country's share of ERC funding obtained. European countries are shown individually; others are grouped. The selected country is highlighted."
   },
   "reading-key-projects": {
+    "fr": "La taille de chaque case est proportionnelle au nombre de projets ERC lauréats dans ce domaine scientifique. Le pays sélectionné est mis en évidence en vert.",
+    "en": "The size of each box is proportional to the number of successful ERC projects in this scientific domain. The selected country is highlighted in green."
+  },
+  "reading-key-pi": {
     "fr": "La taille de chaque case est proportionnelle au nombre de porteurs de projets ERC lauréats dans ce domaine scientifique. Le pays sélectionné est mis en évidence en vert.",
     "en": "The size of each box is proportional to the number of successful ERC project PIs in this scientific domain. The selected country is highlighted in green."
   },
@@ -48,8 +68,8 @@
     "en": "Involved entities (non-eligible ERC project PIs)"
   },
   "tooltip-projects": {
-    "fr": "Porteurs de projets",
-    "en": "Project PIs"
+    "fr": "Projets",
+    "en": "Projects"
   },
   "tooltip-involved": {
     "fr": "Entités impliquées",

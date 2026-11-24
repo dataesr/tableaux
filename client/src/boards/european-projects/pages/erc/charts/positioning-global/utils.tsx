@@ -58,7 +58,7 @@ export interface ProcessedPositioningData {
     isSelected: boolean;
   }[];
   selectedCountry: CountryData | null;
-  metric: "projects" | "funding";
+  metric: "pi" | "projects" | "funding";
   avgTop10: number;
   avgAll: number;
 }
@@ -66,7 +66,7 @@ export interface ProcessedPositioningData {
 /**
  * Traite les données pour créer le classement des pays
  */
-export function processPositioningData(data: PositioningData, countryCode: string, currentLang: string = "fr", metric: "projects" | "funding" = "projects"): ProcessedPositioningData {
+export function processPositioningData(data: PositioningData, countryCode: string, currentLang: string = "fr", metric: "pi" | "projects" | "funding" = "projects"): ProcessedPositioningData {
   if (!data || !data.successful || !data.successful.countries) {
     return { countries: [], selectedCountry: null, metric, avgTop10: 0, avgAll: 0 };
   }
@@ -75,7 +75,7 @@ export function processPositioningData(data: PositioningData, countryCode: strin
 
   const selectedCountry = countries.find((c) => c.country_code === countryCode) || null;
 
-  const getValue = (c: CountryData) => (metric === "projects" ? c.total_pi : c.total_funding_project);
+  const getValue = (c: CountryData) => (metric === "projects" ? c.total_projects : metric === "pi" ? c.total_pi : c.total_funding_project);
 
   const sortedCountries = [...countries].sort((a, b) => getValue(b) - getValue(a));
 

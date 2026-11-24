@@ -14,7 +14,7 @@ export interface ProcessedPositioningMultiPanelData {
     panelName: string;
     values: number[];
   }[];
-  metric: "projects" | "funding";
+  metric: "pi" | "projects" | "funding";
   domainCode: ScientificDomainCode;
 }
 
@@ -64,7 +64,7 @@ export interface ProcessedPositioningByDomainData {
     isSelected: boolean;
   }[];
   selectedCountry: CountryData | null;
-  metric: "projects" | "funding";
+  metric: "pi" | "projects" | "funding";
   domainCode: ScientificDomainCode;
   avgTop10: number;
   avgAll: number;
@@ -98,13 +98,7 @@ export function useGetParams() {
   return { params: params.join("&"), currentLang, countryCode };
 }
 
-export function processData(
-  data: PositioningByDomainData,
-  countryCode: string,
-  currentLang: string = "fr",
-  metric: "projects" | "funding" = "projects",
-  domainCode: ScientificDomainCode = "LS",
-): ProcessedPositioningByDomainData {
+export function processData(data: PositioningByDomainData, countryCode: string, currentLang: string = "fr", metric: "pi" | "projects" | "funding" = "pi", domainCode: ScientificDomainCode = "LS"): ProcessedPositioningByDomainData {
   if (!data || !data.successful || !data.successful.countries) {
     return { countries: [], selectedCountry: null, metric, domainCode, avgTop10: 0, avgAll: 0 };
   }
@@ -112,7 +106,7 @@ export function processData(
   const countries = data.successful.countries;
   const selectedCountry = countries.find((c) => c.country_code === countryCode) || null;
 
-  const getValue = (c: CountryData) => (metric === "projects" ? c.total_pi : c.total_funding_project);
+  const getValue = (c: CountryData) => (metric === "pi" ? c.total_pi : metric === "funding" ? c.total_funding_project : c.total_projects);
 
   const sortedCountries = [...countries].sort((a, b) => getValue(b) - getValue(a));
 
@@ -140,10 +134,7 @@ export function processData(
 }
 
 export function renderDataTable(processedData: ProcessedPositioningByDomainData, currentLang: string = "fr"): React.JSX.Element {
-  const headers =
-    currentLang === "fr"
-      ? ["Rang", "Pays", processedData.metric === "projects" ? "Nombre de projets" : "Financements (M€)"]
-      : ["Rank", "Country", processedData.metric === "projects" ? "Number of projects" : "Funding (M€)"];
+  const headers = currentLang === "fr" ? ["Rang", "Pays", processedData.metric === "pi" ? "Porteurs de projets" : "Financements (M€)"] : ["Rank", "Country", processedData.metric === "pi" ? "Project PIs" : "Funding (M€)"];
 
   const rows = processedData.countries.map((c, i) => [
     String(i + 1),
@@ -178,12 +169,12 @@ export function processDataMultiPanel(
   panelDataArray: Array<{ panelId: string; panelName: string; data: PositioningByDomainData }>,
   countryCode: string,
   currentLang: string = "fr",
-  metric: "projects" | "funding" = "projects",
+  metric: "pi" | "projects" | "funding" = "pi",
   domainCode: ScientificDomainCode = "LS",
 ): ProcessedPositioningMultiPanelData {
   if (!panelDataArray.length) return { countries: [], panels: [], metric, domainCode };
 
-  const getValue = (c: CountryData) => (metric === "projects" ? c.total_pi : c.total_funding_project);
+  const getValue = (c: CountryData) => (metric === "pi" ? c.total_pi : metric === "funding" ? c.total_funding_project : c.total_projects);
 
   // Collect all countries and cumulate values across panels to determine top 10
   const countryNamesMap = new Map<string, { fr: string; en: string }>();

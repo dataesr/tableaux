@@ -16,13 +16,14 @@ export default function Options({ processedData, currentLang = "fr" }: OptionsPa
   const domainLabel =
     SCIENTIFIC_DOMAINS.find((d) => d.code === processedData.domainCode)?.label[currentLang as "fr" | "en"] ?? processedData.domainCode;
 
-  const yAxisLabel =
-    processedData.metric === "projects" ? getI18nLabel(i18n, "y-axis-projects", currentLang) : getI18nLabel(i18n, "y-axis-funding", currentLang);
+  const yAxisLabel = processedData.metric === "projects" ? getI18nLabel(i18n, "y-axis-projects", currentLang) : processedData.metric === "pi" ? getI18nLabel(i18n, "y-axis-pi", currentLang) : getI18nLabel(i18n, "y-axis-funding", currentLang);
 
   const titleText =
     processedData.metric === "projects"
       ? `${getI18nLabel(i18n, "chart-title-projects", currentLang)} – ${domainLabel}`
-      : `${getI18nLabel(i18n, "chart-title-funding", currentLang)} – ${domainLabel}`;
+      : processedData.metric === "pi"
+        ? `${getI18nLabel(i18n, "chart-title-pi", currentLang)} – ${domainLabel}`
+        : `${getI18nLabel(i18n, "chart-title-funding", currentLang)} – ${domainLabel}`;
 
   const colors = getChartColors(processedData.domainCode);
 
@@ -152,8 +153,7 @@ export interface MultiPanelOptionsParams {
 export function OptionsMultiPanel({ multiPanelData, currentLang = "fr" }: MultiPanelOptionsParams): Highcharts.Options | null {
   if (!multiPanelData || multiPanelData.countries.length === 0 || multiPanelData.panels.length === 0) return null;
 
-  const yAxisLabel =
-    multiPanelData.metric === "projects" ? getI18nLabel(i18n, "y-axis-projects", currentLang) : getI18nLabel(i18n, "y-axis-funding", currentLang);
+  const yAxisLabel = multiPanelData.metric === "projects" ? getI18nLabel(i18n, "y-axis-projects", currentLang) : multiPanelData.metric === "pi" ? getI18nLabel(i18n, "y-axis-pi", currentLang) : getI18nLabel(i18n, "y-axis-funding", currentLang);
 
   const domainLabel =
     SCIENTIFIC_DOMAINS.find((d) => d.code === multiPanelData.domainCode)?.label[currentLang as "fr" | "en"] ?? multiPanelData.domainCode;
@@ -161,7 +161,9 @@ export function OptionsMultiPanel({ multiPanelData, currentLang = "fr" }: MultiP
   const titleText =
     multiPanelData.metric === "projects"
       ? `${getI18nLabel(i18n, "chart-title-projects", currentLang)} – ${domainLabel}`
-      : `${getI18nLabel(i18n, "chart-title-funding", currentLang)} – ${domainLabel}`;
+      : multiPanelData.metric === "pi"
+        ? `${getI18nLabel(i18n, "chart-title-pi", currentLang)} – ${domainLabel}`
+        : `${getI18nLabel(i18n, "chart-title-funding", currentLang)} – ${domainLabel}`;
 
   const categories = multiPanelData.countries.map((c) => c.name);
 

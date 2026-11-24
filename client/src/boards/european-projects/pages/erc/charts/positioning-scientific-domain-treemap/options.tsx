@@ -16,7 +16,7 @@ export default function Options({ processedData, currentLang = "fr", showOthersD
   const colors = getTreemapColors(processedData.domainCode);
 
   const valueLabel =
-    processedData.metric === "projects" ? getI18nLabel(i18n, "tooltip-projects", currentLang) : getI18nLabel(i18n, "tooltip-funding", currentLang);
+    processedData.metric === "pi" ? getI18nLabel(i18n, "tooltip-pi", currentLang) : processedData.metric === "projects" ? getI18nLabel(i18n, "tooltip-projects", currentLang) : getI18nLabel(i18n, "tooltip-funding", currentLang);
 
   const othersLabel = getI18nLabel(i18n, "other-countries", currentLang);
 
@@ -141,9 +141,9 @@ export default function Options({ processedData, currentLang = "fr", showOthersD
         const pct = total > 0 ? ((pt.point.value / total) * 100).toFixed(1) : "0";
         const isOthers = pt.point.id === "OTHERS" || (pt.point.id?.startsWith("OTHER_") ?? false);
         const involvedLabel = getI18nLabel(i18n, "tooltip-involved", currentLang);
-        const label = isOthers && processedData.metric === "projects" ? involvedLabel : valueLabel;
+        const label = isOthers && (processedData.metric === "projects" || processedData.metric === "pi") ? involvedLabel : valueLabel;
         const lines = [`<b>${pt.name}</b>`, `${label} : <b>${fmtValue(pt.point.value)}</b>`, `Part : <b>${pct} %</b>`];
-        if (isOthers && processedData.metric === "projects") {
+        if (isOthers && (processedData.metric === "projects" || processedData.metric === "pi")) {
           lines.push(
             `<i style="font-size:10px;color:#666">${currentLang === "fr" ? "(participation hors rôle PI)" : "(participation excl. PI role)"}</i>`,
           );

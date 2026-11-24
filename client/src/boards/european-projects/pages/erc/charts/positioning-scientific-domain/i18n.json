@@ -3,6 +3,10 @@
     "fr": "Positionnement de {country} sur les {metric} ERC – {domain}",
     "en": "{country}'s positioning on ERC {metric} – {domain}"
   },
+  "pi": {
+    "fr": "Porteurs de projets",
+    "en": "Project PIs"
+  },
   "projects": {
     "fr": "Projets",
     "en": "Projects"
@@ -23,21 +27,37 @@
     "fr": "Cumul",
     "en": "Cumulative"
   },
-  "chart-title-projects": {
+  "chart-title-pi": {
     "fr": "Classement des pays par nombre de porteurs de projets ERC lauréats",
     "en": "Country ranking by number of successful ERC project PIs"
+  },
+  "chart-title-projects": {
+    "fr": "Classement des pays par nombre de projets ERC lauréats",
+    "en": "Country ranking by number of successful ERC projects"
   },
   "chart-title-funding": {
     "fr": "Classement des pays par montant de financements ERC obtenus",
     "en": "Country ranking by ERC funding amount obtained"
   },
-  "y-axis-projects": {
+  "y-axis-pi": {
     "fr": "Nombre de porteurs de projets",
     "en": "Number of project PIs"
+  },
+  "y-axis-projects": {
+    "fr": "Nombre de projets",
+    "en": "Number of projects"
   },
   "y-axis-funding": {
     "fr": "Financements (M€)",
     "en": "Funding (M€)"
+  },
+  "title-pi": {
+    "fr": "Positionnement par domaine scientifique – Porteurs de projets",
+    "en": "Positioning by scientific domain – Project PIs"
+  },
+  "title-pi-panel": {
+    "fr": "Positionnement par panel – Porteurs de projets",
+    "en": "Positioning by panel – Project PIs"
   },
   "title-projects": {
     "fr": "Positionnement par domaine scientifique – Projets",
@@ -59,11 +79,19 @@
     "fr": "Ce graphique présente le classement des pays par nombre de porteurs de projets ERC lauréats pour le domaine scientifique sélectionné. Le pays sélectionné est mis en évidence.",
     "en": "This chart shows the country ranking by number of successful ERC project PIs for the selected scientific domain. The selected country is highlighted."
   },
+  "comment-pi": {
+    "fr": "Ce graphique présente le classement des pays par nombre de porteurs de projets ERC lauréats pour le domaine scientifique sélectionné. Le pays sélectionné est mis en évidence.",
+    "en": "This chart shows the country ranking by number of successful ERC project PIs for the selected scientific domain. The selected country is highlighted."
+  },
   "comment-funding": {
     "fr": "Ce graphique présente le classement des pays par montant de financements ERC obtenus pour le domaine scientifique sélectionné. Le pays sélectionné est mis en évidence.",
     "en": "This chart shows the country ranking by ERC funding amount obtained for the selected scientific domain. The selected country is highlighted."
   },
   "reading-key-projects": {
+    "fr": "Un pays bien positionné dans ce classement a un nombre élevé de porteurs de projets ERC lauréats dans ce domaine scientifique.",
+    "en": "A well-positioned country in this ranking has a high number of successful ERC project PIs in this scientific domain."
+  },
+  "reading-key-pi": {
     "fr": "Un pays bien positionné dans ce classement a un nombre élevé de porteurs de projets ERC lauréats dans ce domaine scientifique.",
     "en": "A well-positioned country in this ranking has a high number of successful ERC project PIs in this scientific domain."
   },

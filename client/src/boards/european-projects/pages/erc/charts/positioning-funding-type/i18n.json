@@ -11,6 +11,10 @@
     "fr": "Financements",
     "en": "Funding"
   },
+  "pi": {
+    "fr": "Porteurs de projets",
+    "en": "Project PIs"
+  },
   "select-funding-type": {
     "fr": "Type de financement",
     "en": "Funding type"

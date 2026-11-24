@@ -14,7 +14,7 @@ import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 import "./styles.scss";
 
-type MetricType = "projects" | "funding";
+type MetricType = "pi" | "projects" | "funding";
 
 interface PositioningScientificDomainTreemapProps {
   countryCode?: string;
@@ -22,23 +22,23 @@ interface PositioningScientificDomainTreemapProps {
 }
 
 const getConfig = (metric: MetricType, domainCode: ScientificDomainCode, domainLabel) => {
-  const isProjects = metric === "projects";
+  const idMetricPart = metric === "pi" ? "Pi" : metric === "projects" ? "Projects" : "Funding";
   const domainSuffix = domainCode.toLowerCase();
   return {
-    id: isProjects ? `ercPositioningScientificDomainTreemapProjects-${domainSuffix}` : `ercPositioningScientificDomainTreemapFunding-${domainSuffix}`,
+    id: `ercPositioningScientificDomainTreemap${idMetricPart}-${domainSuffix}`,
     idQuery: "ercPositioningScientificDomainTreemap",
     title: {
-      en: getI18nLabel(i18n, isProjects ? "title-projects" : "title-funding", "en").replace("{domain}", domainLabel),
-      fr: getI18nLabel(i18n, isProjects ? "title-projects" : "title-funding", "fr").replace("{domain}", domainLabel),
+      en: getI18nLabel(i18n, `title-${metric}`, "en").replace("{domain}", domainLabel),
+      fr: getI18nLabel(i18n, `title-${metric}`, "fr").replace("{domain}", domainLabel),
       className: "fr-mt-2w fr-ml-1w",
     },
     comment: {
-      fr: <>{getI18nLabel(i18n, isProjects ? "comment-projects" : "comment-funding", "fr")}</>,
-      en: <>{getI18nLabel(i18n, isProjects ? "comment-projects" : "comment-funding", "en")}</>,
+      fr: <>{getI18nLabel(i18n, `comment-${metric}`, "fr")}</>,
+      en: <>{getI18nLabel(i18n, `comment-${metric}`, "en")}</>,
     },
     readingKey: {
-      fr: <>{getI18nLabel(i18n, isProjects ? "reading-key-projects" : "reading-key-funding", "fr")}</>,
-      en: <>{getI18nLabel(i18n, isProjects ? "reading-key-projects" : "reading-key-funding", "en")}</>,
+      fr: <>{getI18nLabel(i18n, `reading-key-${metric}`, "fr")}</>,
+      en: <>{getI18nLabel(i18n, `reading-key-${metric}`, "en")}</>,
     },
   };
 };
@@ -47,7 +47,7 @@ export default function PositioningScientificDomainTreemapInner({
   countryCode: propCountryCode,
   currentLang: propLang,
 }: PositioningScientificDomainTreemapProps) {
-  const [metric, setMetric] = useState<MetricType>("projects");
+  const [metric, setMetric] = useState<MetricType>("pi");
   const [domainCode, setDomainCode] = useState<ScientificDomainCode>(SCIENTIFIC_DOMAINS[0].code);
   const [showOthersDetail, setShowOthersDetail] = useState(false);
 
@@ -102,8 +102,9 @@ export default function PositioningScientificDomainTreemapInner({
         </div>
         <div className="segmented-wrapper">
           <SegmentedControl className="fr-segmented--sm" name="positioning-treemap-metric">
-            <SegmentedElement checked={metric === "projects"} label={getI18nLabel(i18n, "projects", currentLang)} onClick={() => setMetric("projects")} value="projects" />
+            <SegmentedElement checked={metric === "pi"} label={getI18nLabel(i18n, "pi", currentLang)} onClick={() => setMetric("pi")} value="pi" />
             <SegmentedElement checked={metric === "funding"} label={getI18nLabel(i18n, "funding", currentLang)} onClick={() => setMetric("funding")} value="funding" />
+            <SegmentedElement checked={metric === "projects"} label={getI18nLabel(i18n, "projects", currentLang)} onClick={() => setMetric("projects")} value="projects" />
           </SegmentedControl>
         </div>
         <div className="segmented-wrapper">

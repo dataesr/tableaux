@@ -21,7 +21,7 @@ import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 import "./styles.scss";
 
-type MetricType = "projects" | "funding";
+type MetricType = "pi" | "projects" | "funding";
 
 interface PositioningScientificDomainChartProps {
   countryCode?: string;
@@ -29,11 +29,14 @@ interface PositioningScientificDomainChartProps {
 }
 
 const getConfig = (metric: MetricType, isPanelMode: boolean) => {
-  const isProjects = metric === "projects";
   const suffix = isPanelMode ? "-panel" : "";
-  const titleKey = isProjects ? (isPanelMode ? "title-projects-panel" : "title-projects") : isPanelMode ? "title-funding-panel" : "title-funding";
+  const titleKey = `title-${metric}${suffix}` as const;
+  const commentKey = `comment-${metric}`;
+  const readingKeyKey = `reading-key-${metric}`;
+  const idMetricPart = metric === "pi" ? "Pi" : metric === "projects" ? "Projects" : "Funding";
+  
   return {
-    id: isProjects ? `ercPositioningScientificDomainProjects${suffix}` : `ercPositioningScientificDomainFunding${suffix}`,
+    id: `ercPositioningScientificDomain${idMetricPart}${suffix}`,
     idQuery: "ercPositioningScientificDomain",
     title: {
       en: getI18nLabel(i18n, titleKey, "en"),
@@ -41,19 +44,23 @@ const getConfig = (metric: MetricType, isPanelMode: boolean) => {
       className: "fr-mt-2w fr-ml-1w",
     },
     comment: {
-      fr: <>{getI18nLabel(i18n, isProjects ? "comment-projects" : "comment-funding", "fr")}</>,
-      en: <>{getI18nLabel(i18n, isProjects ? "comment-projects" : "comment-funding", "en")}</>,
+      fr: <>{getI18nLabel(i18n, commentKey, "fr")}</>,
+      en: <>{getI18nLabel(i18n, commentKey, "en")}</>,
     },
     readingKey: {
-      fr: <>{getI18nLabel(i18n, isProjects ? "reading-key-projects" : "reading-key-funding", "fr")}</>,
-      en: <>{getI18nLabel(i18n, isProjects ? "reading-key-projects" : "reading-key-funding", "en")}</>,
+      fr: <>{getI18nLabel(i18n, readingKeyKey, "fr")}</>,
+      en: <>{getI18nLabel(i18n, readingKeyKey, "en")}</>,
     },
-    integrationURL: isProjects ? "/european-projects/components/pages/erc/charts/positioning-scientific-domain" : "/european-projects/components/pages/erc/charts/positioning-scientific-domain-funding",
+    integrationURL: metric === "pi" 
+      ? "/european-projects/components/pages/erc/charts/positioning-scientific-domain" 
+      : metric === "projects" 
+        ? "/european-projects/components/pages/erc/charts/positioning-scientific-domain" 
+        : "/european-projects/components/pages/erc/charts/positioning-scientific-domain-funding",
   };
 };
 
 function PositioningScientificDomainChartInner({ countryCode: propCountryCode, currentLang: propLang }: PositioningScientificDomainChartProps) {
-  const [metric, setMetric] = useState<MetricType>("projects");
+  const [metric, setMetric] = useState<MetricType>("pi");
   const [domainCode, setDomainCode] = useState<ScientificDomainCode>(SCIENTIFIC_DOMAINS[0].code);
   const [selectedPanels, setSelectedPanels] = useState<"all" | string[]>("all");
 
@@ -79,9 +86,7 @@ function PositioningScientificDomainChartInner({ countryCode: propCountryCode, c
     enabled: params !== "",
   });
 
-  const domainPanels = (allPanelsData || [])
-    .filter((p) => p.domaine_scientifique === domainCode)
-    .sort((a, b) => a.panel_id.localeCompare(b.panel_id, undefined, { numeric: true }));
+  const domainPanels = (allPanelsData || []).filter((p) => p.domaine_scientifique === domainCode).sort((a, b) => a.panel_id.localeCompare(b.panel_id, undefined, { numeric: true }));
 
   // Toggle d'un panel : exclusif avec "cumul"
   const togglePanel = (panelId: string) => {
@@ -119,7 +124,7 @@ function PositioningScientificDomainChartInner({ countryCode: propCountryCode, c
 
   // Valeurs d'affichage disponibles sans attendre les données
   const domainLabel = SCIENTIFIC_DOMAINS.find((d) => d.code === domainCode)?.label[currentLang as "fr" | "en"] ?? domainCode;
-  const metricLabel = getI18nLabel(i18n, metric === "projects" ? "projects" : "funding", currentLang).toLowerCase();
+  const metricLabel = getI18nLabel(i18n, metric === "pi" ? "pi" : metric === "projects" ? "projects" : "funding", currentLang).toLowerCase();
 
   // Nom du pays (la préposition ne requiert pas les données API)
   let fallbackName = "";
@@ -133,13 +138,9 @@ function PositioningScientificDomainChartInner({ countryCode: propCountryCode, c
     }
   }
 
-  const countryName =
-    currentLang === "fr" ? getCountryNameWithDe(countryCode, fallbackName) : getCountryNameWithArticle(countryCode, "en", fallbackName);
+  const countryName = currentLang === "fr" ? getCountryNameWithDe(countryCode, fallbackName) : getCountryNameWithArticle(countryCode, "en", fallbackName);
 
-  const title = getI18nLabel(i18n, "main-title-with-country", currentLang)
-    .replace("{country}", countryName)
-    .replace("{metric}", metricLabel)
-    .replace("{domain}", domainLabel);
+  const title = getI18nLabel(i18n, "main-title-with-country", currentLang).replace("{country}", countryName).replace("{metric}", metricLabel).replace("{domain}", domainLabel);
 
   const config = getConfig(metric, isPanelMode);
 
@@ -195,8 +196,9 @@ function PositioningScientificDomainChartInner({ countryCode: propCountryCode, c
         </div>
         <div className="segmented-wrapper">
           <SegmentedControl className="fr-segmented--sm" name="positioning-scientific-domain-metric">
-            <SegmentedElement checked={metric === "projects"} label={getI18nLabel(i18n, "projects", currentLang)} onClick={() => setMetric("projects")} value="projects" />
+            <SegmentedElement checked={metric === "pi"} label={getI18nLabel(i18n, "pi", currentLang)} onClick={() => setMetric("pi")} value="pi" />
             <SegmentedElement checked={metric === "funding"} label={getI18nLabel(i18n, "funding", currentLang)} onClick={() => setMetric("funding")} value="funding" />
+            <SegmentedElement checked={metric === "projects"} label={getI18nLabel(i18n, "projects", currentLang)} onClick={() => setMetric("projects")} value="projects" />
           </SegmentedControl>
         </div>
       </div>

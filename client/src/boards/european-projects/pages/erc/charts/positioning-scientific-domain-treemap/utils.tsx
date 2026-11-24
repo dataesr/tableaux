@@ -68,7 +68,7 @@ export interface ProcessedTreemapData {
   otherTotal: number;
   otherCount: number;
   selectedCountry: CountryData | null;
-  metric: "projects" | "funding";
+  metric: "pi" | "projects" | "funding";
   domainCode: ScientificDomainCode;
 }
 
@@ -100,22 +100,22 @@ export function useGetParams() {
   return { params: params.join("&"), currentLang, countryCode };
 }
 
-function getValue(c: CountryData, metric: "projects" | "funding"): number {
-  return metric === "projects" ? c.total_pi : c.total_funding_project;
+function getValue(c: CountryData, metric: "pi" | "projects" | "funding"): number {
+  return metric === "pi" ? c.total_pi : metric === "projects" ? c.total_projects : c.total_funding_project;
 }
 
 // Pour les pays non-européens, total_pi vaut toujours 0 (les porteurs ERC doivent
 // être hébergés dans une institution européenne éligible). On utilise total_involved
 // pour alimenter la case "Autres pays" afin de montrer leur présence comme partenaires.
-function getValueForOthers(c: CountryData, metric: "projects" | "funding"): number {
-  return metric === "projects" ? c.total_involved : c.total_funding_project;
+function getValueForOthers(c: CountryData, metric: "pi" | "projects" | "funding"): number {
+  return metric === "pi" ? c.total_involved : metric === "projects" ? c.total_involved : c.total_funding_project;
 }
 
 export function processTreemapData(
   data: PositioningByDomainData,
   countryCode: string,
   currentLang: string = "fr",
-  metric: "projects" | "funding" = "projects",
+  metric: "pi" | "projects" | "funding" = "pi",
   domainCode: ScientificDomainCode = "LS",
 ): ProcessedTreemapData {
   if (!data?.successful?.countries) {

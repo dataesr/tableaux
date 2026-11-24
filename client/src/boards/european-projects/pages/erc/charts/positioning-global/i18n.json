@@ -43,6 +43,10 @@
     "fr": "Positionnement global de {country} sur les {metric} ERC",
     "en": "{country}'s global positioning on ERC {metric}"
   },
+  "pi": {
+    "fr": "Porteurs de projets",
+    "en": "Project PIs"
+  },
   "projects": {
     "fr": "Projets",
     "en": "Projects"
