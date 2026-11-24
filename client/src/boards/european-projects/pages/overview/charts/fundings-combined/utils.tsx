@@ -5,6 +5,7 @@ import { getI18nLabel } from "../../../../../../utils";
 import { formatToMillionsLang, formatToPercentLang } from "../../../../../../utils/format";
 import i18n from "../../../../i18n-global.json";
 import { getCountryNameWithArticle } from "../../../../utils/country-mapping";
+import { type Level, sortByLevel } from "../../../../utils/levelsSort";
 import { isEjoParam } from "../../../../utils/params";
 
 export function useGetParams() {
@@ -64,59 +65,63 @@ export function useGetParams() {
 }
 
 /**
- * Génère un composant de tableau accessible avec les données de financement par pilier
- * @param data - Les données de financement par pilier
+ * Génère un composant de tableau accessible avec les données de financement par niveau
+ * @param data - Les données de financement du niveau (pilier, programme, topic ou destination)
  * @param currentLang - La langue actuelle ('fr' ou 'en')
+ * @param groupBy - Le niveau de la nomenclature
  * @returns Un composant JSX de tableau accessible ou un message si aucune donnée n'est disponible
  */
-export function renderDataTable(data: { data: Array<{ pilier_name_fr: string; stage: string; total_fund_eur: number }> }, currentLang: "fr" | "en" = "fr") {
+export function renderDataTable(data: { data: Array<{ code?: string; name_fr?: string; name_en?: string; pilier_name_fr?: string; stage: string; total_fund_eur: number }> }, currentLang: "fr" | "en" = "fr", groupBy: Level = "pillar") {
   
   if (!data || !data.data || data.data.length === 0) {
     return <div className="fr-text--center fr-py-3w">{getI18nLabel(i18n, "no-data-table")}</div>;
   }
 
-  interface PillarData {
-    pillar: string;
+  interface LevelData {
+    name: string;
     evaluated: number;
     successful: number;
     successRate: number;
   }
 
-  // Grouper les données par pilier
-  const dataByPillar: Record<string, PillarData> = {};
+  const getKey = (item: (typeof data.data)[number]) => item.code ?? item.name_fr ?? item.pilier_name_fr ?? "";
+  const getName = (item: (typeof data.data)[number]) => (currentLang === "en" ? item.name_en : item.name_fr) ?? item.name_fr ?? item.pilier_name_fr ?? item.code ?? "";
 
-  data.data.forEach((item) => {
-    if (!dataByPillar[item.pilier_name_fr]) {
-      dataByPillar[item.pilier_name_fr] = {
-        pillar: item.pilier_name_fr,
+  // Grouper les données par niveau (déjà triées selon le niveau)
+  const dataByLevel: Record<string, LevelData> = {};
+
+  sortByLevel(data.data, groupBy).forEach((item) => {
+    if (!dataByLevel[getKey(item)]) {
+      dataByLevel[getKey(item)] = {
+        name: getName(item),
         evaluated: 0,
         successful: 0,
         successRate: 0,
       };
     }
     if (item.stage === "evaluated") {
-      dataByPillar[item.pilier_name_fr].evaluated = item.total_fund_eur;
+      dataByLevel[getKey(item)].evaluated = item.total_fund_eur;
     } else if (item.stage === "successful") {
-      dataByPillar[item.pilier_name_fr].successful = item.total_fund_eur;
+      dataByLevel[getKey(item)].successful = item.total_fund_eur;
     }
   });
 
   // Calculer le taux de succès
-  Object.values(dataByPillar).forEach((pillar) => {
-    if (pillar.evaluated > 0) {
-      pillar.successRate = (pillar.successful / pillar.evaluated) * 100;
+  Object.values(dataByLevel).forEach((level) => {
+    if (level.evaluated > 0) {
+      level.successRate = (level.successful / level.evaluated) * 100;
     }
   });
 
-  // Trier par financement successful (décroissant)
-  const sortedPillars = Object.values(dataByPillar).sort((a, b) => b.successful - a.successful);
+  // Ordre de la nomenclature (conservé depuis sortByLevel)
+  const sortedLevels = Object.values(dataByLevel);
 
   const labels = {
-    pillar: getI18nLabel(i18n, "pillar"),
+    level: getI18nLabel(i18n, groupBy),
     evaluated: getI18nLabel(i18n, "projects-evaluated"),
     successful: getI18nLabel(i18n, "projects-successful"),
     successRate: getI18nLabel(i18n, "success-rate"),
-    caption: getI18nLabel(i18n, "caption-pillar-funding"),
+    caption: getI18nLabel(i18n, `caption-${groupBy}-funding`),
   };
 
   return (
@@ -126,25 +131,25 @@ export function renderDataTable(data: { data: Array<{ pilier_name_fr: string; st
           <caption className="fr-sr-only">{labels.caption}</caption>
           <thead>
             <tr>
-              <th scope="col">{labels.pillar}</th>
+              <th scope="col">{labels.level}</th>
               <th scope="col">{labels.evaluated}</th>
               <th scope="col">{labels.successful}</th>
               <th scope="col">{labels.successRate}</th>
             </tr>
           </thead>
           <tbody>
-            {sortedPillars.map((pillar, index) => (
+            {sortedLevels.map((level, index) => (
               <tr key={index}>
-                <th scope="row">{pillar.pillar}</th>
+                <th scope="row">{level.name}</th>
                 <td>
-                  {formatToMillionsLang(pillar.evaluated, currentLang, 1)}
+                  {formatToMillionsLang(level.evaluated, currentLang, 1)}
                 </td>
                 <td>
                   <strong>
-                    {formatToMillionsLang(pillar.successful, currentLang, 1)}
+                    {formatToMillionsLang(level.successful, currentLang, 1)}
                   </strong>
                 </td>
-                <td>{pillar.successRate > 0 ? formatToPercentLang(pillar.successRate, currentLang) : "—"}</td>
+                <td>{level.successRate > 0 ? formatToPercentLang(level.successRate, currentLang) : "—"}</td>
               </tr>
             ))}
           </tbody>

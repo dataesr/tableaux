@@ -6,6 +6,7 @@ import DefaultSkeleton from "../../../../../../components/charts-skeletons/defau
 import { formatCurrencyLang, formatNumberLang, formatToPercentLang } from "../../../../../../utils/format"
 import { EPChartsSources } from "../../../../config"
 import { getLevelLabels } from "../../../../utils/levelsGet"
+import { Level, sortByLevel } from "../../../../utils/levelsSort"
 import i18n from "./i18n.json"
 import getOptions from "./options"
 import { getData } from "./query"
@@ -39,17 +40,18 @@ function renderTemplate(tpl: string, vars: Record<string, string>): React.JSX.El
   return <>{parts.map((part, i) => (i % 2 ? <strong key={i}>{part}</strong> : part))}</>
 }
 
-export default function FundingCombined({ displayType = "total_fund_eur", groupBy }: { displayType: string; groupBy: "pillar" | "program" | "topic" | "destination" }) {
+export default function FundingCombined({ displayType = "total_fund_eur", groupBy }: { displayType: string; groupBy: Level }) {
   const { adjMascPlural, countryN, currentLang, params } = useGetParams();
 
   const { data, isLoading } = useQuery({
     queryKey: [baseConfig.idQuery, params, groupBy],
     queryFn: () => getData(params, groupBy),
   });
-
   if (isLoading || !data) return <DefaultSkeleton />
-  const readingDataEvaluated = data.data.filter((d) => d.stage === "evaluated")[0]
-  const readingDataSuccessful = data.data.filter((d) => d.stage === "successful" && d.code === readingDataEvaluated?.code)[0]
+
+  const items = sortByLevel(data.data, groupBy)
+  const readingDataEvaluated = items.filter((d) => d.stage === "evaluated")[0]
+  const readingDataSuccessful = items.filter((d) => d.stage === "successful" && d.code === readingDataEvaluated?.code)[0]
 
   const total_coordination_number_rates = readingDataEvaluated?.total_coordination_number > 0 ? (readingDataSuccessful?.total_coordination_number ?? 0) / readingDataEvaluated.total_coordination_number : 0
   const total_number_involved_rates = readingDataEvaluated?.total_number_involved > 0 ? (readingDataSuccessful?.total_number_involved ?? 0) / readingDataEvaluated.total_number_involved : 0
@@ -139,7 +141,7 @@ export default function FundingCombined({ displayType = "total_fund_eur", groupB
 
   return (
     <>
-      <ChartWrapper config={config} options={getOptions(data, displayType, currentLang)} renderData={() => renderDataTable(data, currentLang)} />
+      <ChartWrapper config={config} options={getOptions(data, displayType, currentLang, undefined, groupBy)} renderData={() => renderDataTable(data, currentLang, groupBy)} />
     </>
   )
 }
