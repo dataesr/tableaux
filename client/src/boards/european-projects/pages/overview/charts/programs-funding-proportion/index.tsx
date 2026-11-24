@@ -19,13 +19,13 @@ export default function ProgramsFundingProportion({ displayType = "total_fund_eu
   if (isLoading || !data) return <DefaultSkeleton />
 
   const config: {
-    comment?: { fr: React.JSX.Element; en: React.JSX.Element }
     id: string;
     integrationURL: string;
+    comment?: { fr: React.JSX.Element; en: React.JSX.Element }
     readingKey?: { fr: React.JSX.Element; en: React.JSX.Element }
     sources: typeof EPChartsSources;
     title?: { en: string; fr: string; }
-  } = {
+    } = {
     id: "programsFundingProportion",
     readingKey: readingKey(data, isLoading, displayType, currentLang, countryN, adjMascPlural),
     sources: EPChartsSources,
@@ -35,8 +35,8 @@ export default function ProgramsFundingProportion({ displayType = "total_fund_eu
   switch (displayType) {
     case "total_coordination_number":
       config.title = {
-        fr: `Part des projets coordonnés par ${countryN} sur l'ensemble des coordinations`,
-        en: `Share of projects coordinated by ${countryN} out of the total number of coordination roles`
+        fr: `Part des projets évalués et lauréats coordonnés par ${countryN} sur l'ensemble des coordinations`,
+        en: `Share of evaluated and successful projects coordinated by ${countryN} out of all coordinations`
       }
       config.comment = { 
         fr: <>Ce graphique présente, pour les programmes du pilier sélectionné, le nombre de projets évalués et lauréats coordonnés par le pays sélectionné, en part de l'ensemble des coordinations.</>, 
@@ -55,13 +55,13 @@ export default function ProgramsFundingProportion({ displayType = "total_fund_eu
       break
     case "total_projects":
       config.title = {
-        fr: `Part du nombre de projets évalués et lauréats impliquant ${countryN} sur l'ensemble des pays`,
+        fr: `Part des projets évalués et lauréats impliquant ${countryN} sur l'ensemble des pays`,
         en: `Share of evaluated and successful projects involving ${countryN} out of all countries`
       }
       config.comment = { 
         fr: <>Ce graphique présente, pour les programmes du pilier sélectionné, le nombre de projets évalués et lauréats impliquant le pays sélectionné, en part de l'ensemble des pays.</>, 
         en: <>This chart shows, for the programmes of the selected pillar, the number of evaluated and successful projects involving the selected country, as a share of all countries.</>,
-      }      
+      }
       break
     default:
       config.title = {
@@ -71,7 +71,7 @@ export default function ProgramsFundingProportion({ displayType = "total_fund_eu
       config.comment = {
         fr: <>Ce graphique présente, pour les programmes du pilier sélectionné, les financements demandés et obtenus par le pays sélectionné, en part de l'ensemble des pays.</>,
         en: <>This chart shows, for the programmes of the selected pillar, the funding requested and secured by the selected country, as a share of all countries.</>,
-      }      
+      }
   }
 
   return <ChartWrapper config={config} options={options(data, displayType, currentLang)} />

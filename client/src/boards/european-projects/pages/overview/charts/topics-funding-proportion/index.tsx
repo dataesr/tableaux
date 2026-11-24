@@ -5,67 +5,72 @@ import DefaultSkeleton from "../../../../../../components/charts-skeletons/defau
 import { EPChartsSources } from "../../../../config.js";
 import getOptions from "./options";
 import { getData } from "./query";
-import { useGetParams } from "./utils";
+import { readingKey, useGetParams } from "./utils";
 
-const config: {
-    comment?: { fr: React.JSX.Element; en: React.JSX.Element };
-    id: string;
-    integrationURL: string;
-    readingKey?: { fr: React.JSX.Element; en: React.JSX.Element };
-    sources: typeof EPChartsSources;
-    title?: { en: string; fr: string; };
-  } = {
-  id: "thematicsFundingProportion",
-  comment: {
-    fr: <>Part des financement demandés et obtenus par le pays sur l'ensemble des pays</>,
-    en: <>Funding requested and obtained by the country on all countries</>,
-  },
-  readingKey: {
-    fr: <>Pour le pilier "Excellence Scientifique", les projets ont demandé 5 835 M€ de subventions, et en ont obtenu 1 154.3 M€, soit un taux de succès de 19.80 %.</>,
-    en: <>For the "Scientific Excellence" pillar, projects requested 5,835 M€ in funding and obtained 1,154.3 M€, representing a success rate of 19.8%.</>,
-  },
-  sources: EPChartsSources,
-  integrationURL: "/european-projects/components/pages/analysis/overview/charts/destination-funding-proportion",
-};
 
 export default function TopicsFundingProportion({ displayType = "total_fund_eur" }: { displayType: string }) {
-  const { currentLang, params } = useGetParams();
+  const { adjMascPlural, countryN, currentLang, params } = useGetParams();
+  const { data, isLoading } = useQuery({
+    queryKey: ["TopicsFundingProportion", params],
+    queryFn: () => getData(params),
+  })
+
+  if (isLoading || !data) return <DefaultSkeleton />
+
+  const config: {
+      id: string;
+      integrationURL: string;
+      comment?: { fr: React.JSX.Element; en: React.JSX.Element }
+      readingKey?: { fr: React.JSX.Element; en: React.JSX.Element };
+      sources: typeof EPChartsSources;
+      title?: { en: string; fr: string; };
+    } = {
+    id: "thematicsFundingProportion",
+    readingKey: readingKey(data, isLoading, displayType, currentLang, countryN, adjMascPlural),
+    sources: EPChartsSources,
+    integrationURL: "/european-projects/components/pages/analysis/overview/charts/destination-funding-proportion",
+  }
 
   switch (displayType) {
-    case "total_fund_eur":
-      config.title = {
-        fr: "Part des financements demandés et obtenus par le pays sur l'ensemble des pays",
-        en: "Funding requested and obtained by the country on all countries",
-      }
-      break;
     case "total_coordination_number":
       config.title = {
-        fr: "Part des coordinations demandées et obtenues par le pays sur l'ensemble des pays",
-        en: "Coordinations requested and obtained by the country on all countries",
+        fr: `Part des projets évalués et lauréats coordonnés par ${countryN} sur l'ensemble des coordinations`,
+        en: `Share of evaluated and successful projects coordinated by ${countryN} out of all coordinations`
       }
+      config.comment = { 
+        fr: <>Ce graphique présente, pour les thématiques du programme sélectionné, le nombre de projets évalués et lauréats coordonnés par le pays sélectionné, en part de l'ensemble des coordinations.</>, 
+        en: <>This chart shows, for the themes of the selected programme, the number of evaluated and successful projects coordinated by the selected country, as a share of all coordinations.</>
+       }
       break;
     case "total_number_involved":
       config.title = {
-        fr: "Part des participations demandées et obtenues par le pays sur l'ensemble des pays",
-        en: "Participations requested and obtained by the country on all countries",
+        fr: `Part des candidats et de participants ${adjMascPlural} sur l'ensemble des pays`,
+        en: `Share of the ${adjMascPlural} applicants and participants out of all countries`
+      }
+      config.comment = { 
+        fr: <>Ce graphique présente, pour les thématiques du programme sélectionné, le nombre de candidats et participants implantés dans le pays sélectionné, en part de l'ensemble des pays.</>, 
+        en: <>This chart shows, for the themes of the selected programme, the number of applicants and participants established in the selected country, as a share of all countries.</>,      
       }
       break;
     case "total_projects":
       config.title = {
-        fr: "Part des projets du pays sur l'ensemble des pays",
-        en: "Share of the country's projects on all countries",
+        fr: `Part des projets évalués et lauréats impliquant ${countryN} sur l'ensemble des pays`,
+        en: `Share of evaluated and successful projects involving ${countryN} out of all countries`
+      }
+      config.comment = { 
+        fr: <>Ce graphique présente, pour les thématiques du programme sélectionné, le nombre de projets évalués et lauréats impliquant le pays sélectionné, en part de l'ensemble des pays.</>, 
+        en: <>This chart shows, for the themes of the selected programme, the number of evaluated and successful projects involving the selected country, as a share of all countries.</>,
       }
       break;
     default:
-      break;
+      config.title = {
+        fr: `Part des financements demandés et obtenus par ${countryN} sur l'ensemble des pays`,
+        en: `Share of funding requested and secured by ${countryN} out of all countries`
+      }      
+      config.comment = {
+        fr: <>Ce graphique présente, pour les thématiques du programme sélectionné, les financements demandés et obtenus par le pays sélectionné, en part de l'ensemble des pays.</>,
+        en: <>This chart shows, for the themes of the selected programme, the funding requested and secured by the selected country, as a share of all countries.</>,
+      }
   }
-
-  const { data, isLoading } = useQuery({
-    queryKey: [config.id, params],
-    queryFn: () => getData(params),
-  });
-
-  if (isLoading || !data) return <DefaultSkeleton />;
-
   return <ChartWrapper config={config} options={getOptions(data, displayType, currentLang)} />;
 }
