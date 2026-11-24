@@ -53,6 +53,7 @@ export default function GlobalLayout() {
       items={items}
       exploreLink
       serviceHref={`${BASE}/accueil`}
+      serviceName={getI18nLabel(i18n, "service")}
       serviceTag={getI18nLabel(i18n, "tagline")}
     />
   )

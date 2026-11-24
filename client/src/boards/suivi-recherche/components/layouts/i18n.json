@@ -32,6 +32,9 @@
   "skipMenu": {
     "fr": "Menu"
   },
+  "service": {
+    "fr": "Tableaux - Pilotage par la donnée"
+  },
   "tagline": {
     "fr": "Suivi de la recherche française"
   }
