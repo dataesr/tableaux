@@ -1,8 +1,10 @@
 import { useSearchParams } from "react-router-dom";
-import { formatToPercent } from "../../../../../../utils/format";
+import { formatToPercentLang } from "../../../../../../utils/format";
 import { getI18nLabel } from "../../../../../../utils";
 import { isEjoParam } from "../../../../utils/params";
 import i18n from "../../../../i18n-global.json";
+import { getCountryNameWithArticle } from "../../../../utils/country-mapping";
+import { getCountryAdjectives } from "../../../../../../components/country-selector/utils.jsx";
 
 export function useGetParams() {
   const [searchParams] = useSearchParams();
@@ -27,7 +29,7 @@ export function useGetParams() {
     params.push(`programs=${programId}`);
   }
 
-  const currentLang = searchParams.get("language") || "fr";
+  const currentLang = (searchParams.get("language") === "en" ? "en" : "fr") as "fr" | "en";
 
   const rangeOfYears = searchParams.get("range_of_years");
   if (rangeOfYears) {
@@ -38,7 +40,15 @@ export function useGetParams() {
     params.push(isEjoParam());
   }
 
-  return { params: params.join("&"), currentLang };
+  const code = countryCode || "FRA";
+  const countryN = getCountryNameWithArticle(code, currentLang).replace(/^(Le |La |Les |L')/, (m) => m.toLowerCase());
+
+  const countryAdj = getCountryAdjectives(code, currentLang);
+  // Pluriel seulement en français
+  const adjMascPlural = currentLang === "fr" && !countryAdj.m.endsWith("s") ? `${countryAdj.m}s` : countryAdj.m;
+
+
+  return { adjMascPlural, countryN, currentLang, params: params.join("&") };
 }
 
 export function renderDataTable(data, currentLang) {
@@ -80,8 +90,8 @@ export function renderDataTable(data, currentLang) {
                   return (
                     <tr key={evalItem.topic}>
                       <th scope="row">{topicName}</th>
-                      <td>{formatToPercent(evaluatedProportion)}</td>
-                      <td>{formatToPercent(successfulProportion)}</td>
+                      <td>{formatToPercentLang(evaluatedProportion, currentLang)}</td>
+                      <td>{formatToPercentLang(successfulProportion, currentLang)}</td>
                     </tr>
                   );
                 })}
@@ -92,4 +102,112 @@ export function renderDataTable(data, currentLang) {
       </div>
     </div>
   );
+}
+
+// Clé de proportion renvoyée par l'API selon l'indicateur affiché
+export const getProportionKey = (displayType: string) =>
+  displayType === "total_coordination_number"
+    ? "proportion_coordination_number"
+    : displayType === "total_number_involved"
+      ? "proportion_number_involved"
+      : displayType === "total_fund_eur"
+        ? "proportion"
+        : "proportion_projects"
+
+
+export function readingKey(data, isLoading, displayType, currentLang, countryN, adjMascPlural) {
+  if (isLoading || !data?.data || data.data.length === 0) {
+    return { fr: <></>, en: <></> }
+  }
+
+  const proportionKey = getProportionKey(displayType)
+
+  const successfulProjects = data.data.filter((item) => item.stage === "successful")
+  const topSuccessfulTheme = successfulProjects.reduce(
+    (max, current) => (current[proportionKey] > max[proportionKey] ? current : max),
+    successfulProjects[0],
+  )
+
+  if (!topSuccessfulTheme) return { fr: <></>, en: <></> }
+
+  const evaluatedData = data.data.find((item) => item.topic === topSuccessfulTheme.topic && item.stage === "evaluated")
+  if (!evaluatedData) return { fr: <></>, en: <></> }
+  console.log(data)
+  const themaNameFr = topSuccessfulTheme.thema_name_fr
+  const themaNameEn = topSuccessfulTheme.thema_name_en
+  const successfulProportion = topSuccessfulTheme[proportionKey]
+  const evaluatedProportion = evaluatedData[proportionKey]
+  const difference = successfulProportion - evaluatedProportion
+
+  const diff = `${difference > 0 ? "+" : ""}${difference.toFixed(2)}`
+
+  let fr
+  let en
+
+  switch (displayType) {
+    case "total_coordination_number":
+      fr = (
+        <>
+          Dans la thématique {themaNameFr}, les projets évalués coordonnés par {countryN} représentent {formatToPercentLang(evaluatedProportion, currentLang)}{" "}
+          de l'ensemble des projets évalués et les projets lauréats coordonnés par {countryN} représentent{" "}
+          {formatToPercentLang(successfulProportion, currentLang)} des projets lauréats, soit un écart de{" "}
+          {diff} points.
+        </>
+      )
+      en = (
+        <>
+          In the {themaNameEn} theme, evaluated projects coordinated by {countryN} account for {formatToPercentLang(evaluatedProportion, currentLang)}{" "}
+          of all evaluated projects, and successful projects coordinated by {countryN} account for{" "}
+          {formatToPercentLang(successfulProportion, currentLang)} of successful projects, a difference of{" "}
+          {diff} percentage points.
+        </>
+      )
+      break
+    case "total_number_involved":
+      fr = (
+        <>
+          Dans la thématique {themaNameFr}, les candidats {adjMascPlural} représentent {formatToPercentLang(evaluatedProportion, currentLang)}{" "}
+          de l'ensemble des candidats et les participants {adjMascPlural} représentent {formatToPercentLang(successfulProportion, currentLang)} de{" "}
+          l'ensemble des participants, soit un écart de {diff} points.
+        </>
+      )
+      en = (
+        <>
+          In the {themaNameEn} theme, {adjMascPlural} applicants account for {formatToPercentLang(evaluatedProportion, currentLang)}{" "}
+          of all applicants, and {adjMascPlural} participants account for {formatToPercentLang(successfulProportion, currentLang)} of{" "}
+          all participants, a difference of {diff} percentage points.
+        </>
+      )
+      break
+    case "total_projects":
+      fr = (
+        <>
+          Dans la thématique {themaNameFr}, {formatToPercentLang(evaluatedProportion, currentLang)} des projets évalués et{" "} 
+          {formatToPercentLang(successfulProportion, currentLang)} des projets lauréats impliquent {countryN}, soit un écart de {diff} points.
+        </>
+      )
+      en = (
+        <>
+          In the {themaNameEn} theme, {formatToPercentLang(evaluatedProportion, currentLang)} of evaluated projects and{" "}
+          {formatToPercentLang(successfulProportion, currentLang)} of successful projects involve {countryN}, a difference of {diff} percentage points.
+        </>
+      )
+      break
+    default:
+      fr = (
+        <>
+          Dans la thématique {themaNameFr}, les financements demandés par {countryN} représentent {formatToPercentLang(evaluatedProportion, currentLang)}{" "}
+          de l'ensemble des financements demandés et les financements obtenus par {countryN} représentent {formatToPercentLang(successfulProportion, currentLang)}{" "}
+          des financements obtenus, soit un écart de {diff} points.
+        </>
+      )
+      en = (
+        <>
+          In the {themaNameEn} theme, funding requested by {countryN} accounts for {formatToPercentLang(evaluatedProportion, currentLang)}{" "}
+          of all funding requested, and funding secured by {countryN} accounts for {formatToPercentLang(successfulProportion, currentLang)}{" "}
+          of funding secured, a difference of {diff} percentage points.
+        </>
+      )
+  }
+    return { fr, en }
 }
