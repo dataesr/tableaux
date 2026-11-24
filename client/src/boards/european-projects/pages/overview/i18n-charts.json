@@ -70,5 +70,33 @@
   "securedFunding": {
     "fr": "Financements obtenus",
     "en": "Funding secured"
+  },
+  "proportionApplicant": {
+    "fr": "Candidats",
+    "en": "Applicants"
+  },
+  "proportionParticipant": {
+    "fr": "Participants",
+    "en": "Participants"
+  },
+  "proportionEvaluated": {
+    "fr": "Projets évalués",
+    "en": "Evaluated projects"
+  },
+  "proportionSuccessful": {
+    "fr": "Projets lauréats",
+    "en": "Successful projects"
+  },
+  "proportion_coordination_number": {
+    "fr": "Projets lauréats",
+    "en": "Successful projects"
+  },
+  "proportion_number_involved": {
+    "fr": "Projets lauréats",
+    "en": "Successful projects"
+  },
+  "proportion_projects": {
+    "fr": "Projets lauréats",
+    "en": "Successful projects"
   }
 }

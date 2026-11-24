@@ -55,6 +55,10 @@
     "en": "Applicants",
     "fr": "Candidats"
   },
+  "caption-destination-funding": {
+    "en": "Funding by destination: evaluated and successful projects (in millions of euros)",
+    "fr": "Financement par destination : projets évalués et projets lauréats (en millions d'euros)"
+  },
   "caption-destination-proportion": {
     "en": "Share of funding by destination",
     "fr": "Part des financements par destination"
@@ -95,6 +99,10 @@
     "en": "Success rate by pillar (in percentage)",
     "fr": "Taux de succès par pilier (en pourcentage)"
   },
+  "caption-program-funding": {
+    "en": "Funding by program: evaluated and successful projects (in millions of euros)",
+    "fr": "Financement par programme : projets évalués et projets lauréats (en millions d'euros)"
+  },
   "caption-program-proportion": {
     "en": "Proportion of funding by program",
     "fr": "Proportion des subventions par programme"
@@ -110,6 +118,10 @@
   "caption-top-10-beneficiaries": {
     "en": "Top 10 beneficiaries ranking",
     "fr": "Classement des 10 premiers bénéficiaires"
+  },
+  "caption-topic-funding": {
+    "en": "Funding by themes: evaluated and successful projects (in millions of euros)",
+    "fr": "Financement par thématique : projets évalués et projets lauréats (en millions d'euros)"
   },
   "caption-topic-proportion": {
     "en": "Proportion of funding by topic",
@@ -272,16 +284,16 @@
     "fr": "pour chaque programme du pilier sélectionné"
   },
   "level-topic-by-level": {
-    "en": "by topic",
-    "fr": "par topic"
+    "en": "by theme",
+    "fr": "par thématique"
   },
   "level-topic-in-level": {
-    "en": "In the topic",
-    "fr": "Dans le topic"
+    "en": "In the theme",
+    "fr": "Dans la thématique"
   },
   "level-topic-scope": {
-    "en": "for each topic of the selected programme",
-    "fr": "pour chaque topic du programme sélectionné"
+    "en": "for each theme of the selected programme",
+    "fr": "pour chaque thématique du programme sélectionné"
   },
   "no-data-available": {
     "en": "No data available",
