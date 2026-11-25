@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 
-import { Col, Row, SegmentedControl, SegmentedElement } from "@dataesr/dsfr-plus";
+import { SegmentedControl, SegmentedElement } from "@dataesr/dsfr-plus";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 import { useChartColor } from "../../../../../../hooks/useChartColor";
