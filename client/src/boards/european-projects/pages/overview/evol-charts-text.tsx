@@ -2,7 +2,7 @@ import { getI18nLabel } from "../../../../utils";
 import i18nCharts from "./i18n-charts.json";
 import i18nEvol from "./i18n-evol-charts.json";
 
-export type EvolLevel = "pillar" | "program" | "topic";
+export type EvolLevel = "pillar" | "program" | "topic" | "destination" ;
 export type EvolChart = "values" | "rates";
 type Lang = "fr" | "en";
 
@@ -14,6 +14,7 @@ export const LEVELS: Record<EvolLevel, { itemsKey: string; codeKey: string; name
   pillar: { itemsKey: "pillars", codeKey: "pilier_code", nameKey: "pilier_name" },
   program: { itemsKey: "programs", codeKey: "programme_code", nameKey: "programme_name" },
   topic: { itemsKey: "items", codeKey: "code", nameKey: "name" },
+  destination: { itemsKey: "items", codeKey: "code", nameKey: "name" },
 };
 
 // Légendes des séries (évalués / lauréats) selon le displayType
@@ -29,7 +30,10 @@ const getDisplayType = (displayType: string) => (DISPLAY_TYPES.includes(displayT
 // Déduit le niveau (pilier, programme, thématique) de la structure des données renvoyées par l'API
 // On teste du plus fin au plus large
 export function getLevelFromData(data): EvolLevel {
-  const stageData = data?.find((item) => item.country !== "all")?.data?.[0];
+  const countryData = data?.find((item) => item.country !== "all");
+  if (countryData?.level && LEVELS[countryData.level]) return countryData.level;
+
+  const stageData = countryData?.data?.[0];
   const level = (["topic", "program", "pillar"] as EvolLevel[]).find((l) => Array.isArray(stageData?.[LEVELS[l].itemsKey]));
   return level || "pillar";
 }
@@ -58,6 +62,13 @@ export function getLevelVars(level: EvolLevel, levelName: string, lang: Lang, co
     selected: getI18nLabel(i18nEvol, `levels.${level}.${selectedKey}`, lang),
     inLevel: fillPlaceholders(getI18nLabel(i18nEvol, `levels.${level}.in`, lang), { name: levelName }),
   };
+}
+
+// Nom affiché d'un item : code pour les destinations, nom traduit sinon (code en secours)
+export function getItemName(item, level: EvolLevel, lang: string) {
+  const { codeKey, nameKey } = LEVELS[level];
+  if (level === "destination") return item?.[codeKey] ?? "unknown";
+  return item?.[`${nameKey}_${lang === "en" ? "en" : "fr"}`] ?? item?.[codeKey] ?? "unknown";
 }
 
 // Légendes serie_01 (évalués) / serie_02 (lauréats)
