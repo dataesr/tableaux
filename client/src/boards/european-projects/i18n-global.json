@@ -256,8 +256,8 @@
     "fr": "Dans la destination"
   },
   "level-destination-scope": {
-    "en": "for each destination of the selected programme",
-    "fr": "pour chaque destination du programme sélectionné"
+    "en": "for each destination of the selected themes",
+    "fr": "pour chaque destination des thématiques sélectionnées"
   },
   "level-pillar-by-level": {
     "en": "by pillar",
