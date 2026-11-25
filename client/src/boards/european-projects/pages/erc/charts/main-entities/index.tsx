@@ -9,7 +9,6 @@ import DefaultSkeleton from "../../../../../../components/charts-skeletons/defau
 import { useChartColor } from "../../../../../../hooks/useChartColor";
 import { SegmentedControl, SegmentedElement } from "@dataesr/dsfr-plus";
 import { rangeOfYearsToApiFormat } from "../../url-utils";
-import { formatToMillions } from "../../../../../../utils/format";
 
 const ERC_DESTINATIONS = [
   { code: "ALL", labelFr: "Tous types de financement", labelEn: "All funding types" },
