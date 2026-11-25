@@ -31,7 +31,7 @@ export default function FundingEvo() {
       </>
     );
 
-  // level correspond à pillar | program | topic
+  // level correspond à pillar | program | topic | destination
   // count : plusieurs thématiques peuvent être sélectionnées
   const level = getLevelFromData(data);
   const count = getItemsCountFromData(data);
