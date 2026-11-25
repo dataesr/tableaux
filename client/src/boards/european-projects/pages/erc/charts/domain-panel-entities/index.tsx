@@ -33,6 +33,7 @@ export default function ErcDomainPanelEntities({
   const [selectedDomain, setSelectedDomain] = useState("ALL");
   const [selectedPanel, setSelectedPanel] = useState("ALL");
   const [displayLimit, setDisplayLimit] = useState(10);
+  const [metric, setMetric] = useState<"pi" | "projects" | "funding">("pi");
   const color = useChartColor();
 
   // Récupération de la liste des panels depuis l'endpoint /erc/filters
@@ -103,70 +104,81 @@ export default function ErcDomainPanelEntities({
   return (
     <div className={`fr-mt-5w chart-container chart-container--${color}`}>
       <ChartWrapper.Title config={{ title: titleConfig, id: config.id }} />
-      <Row gutters>
-        <Col className="fr-ml-1w">
-          <label className="fr-label" htmlFor="erc-dp-domain-select">
-            {currentLang === "fr" ? "Domaine scientifique" : "Scientific domain"}
-          </label>
-          <select
-            className="fr-select"
-            id="erc-dp-domain-select"
-            value={selectedDomain}
-            onChange={(e) => {
-              setSelectedDomain(e.target.value);
-              setSelectedPanel("ALL");
-              setDisplayLimit(10);
-            }}
-          >
-            {SCIENTIFIC_DOMAINS.map((d) => (
-              <option key={d.code} value={d.code}>
-                {currentLang === "fr" ? d.labelFr : d.labelEn}
-              </option>
-            ))}
-          </select>
-        </Col>
-        {panelsForDomain.length > 0 && (
-          <Col>
-            <label className="fr-label" htmlFor="erc-dp-panel-select">
-              {currentLang === "fr" ? "Panel" : "Panel"}
+      <div style={{ display: "flex", gap: "1rem", alignItems: "flex-end", flexWrap: "wrap", margin: "1rem" }}>
+        <div>
+          <div className="fr-select-group" style={{ marginBottom: 0 }}>
+            <label className="fr-label" htmlFor="erc-dp-domain-select">
+              {currentLang === "fr" ? "Domaine scientifique" : "Scientific domain"}
             </label>
             <select
               className="fr-select"
-              id="erc-dp-panel-select"
-              key={selectedDomain}
-              value={selectedPanel}
+              id="erc-dp-domain-select"
+              value={selectedDomain}
               onChange={(e) => {
-                setSelectedPanel(e.target.value);
+                setSelectedDomain(e.target.value);
+                setSelectedPanel("ALL");
                 setDisplayLimit(10);
               }}
+              style={{ width: "250px" }}
             >
-              <option value="ALL">{currentLang === "fr" ? "Tous les panels" : "All panels"}</option>
-              {panelsForDomain
-                .slice()
-                .sort((a, b) => a.id.localeCompare(b.id, undefined, { numeric: true }))
-                .map((p) => (
-                  <option key={p.id} value={p.id}>
-                    {p.id} — {p.name}
-                  </option>
-                ))}
+              {SCIENTIFIC_DOMAINS.map((d) => (
+                <option key={d.code} value={d.code}>
+                  {currentLang === "fr" ? d.labelFr : d.labelEn}
+                </option>
+              ))}
             </select>
-          </Col>
+          </div>
+        </div>
+        {panelsForDomain.length > 0 && (
+          <div>
+            <div className="fr-select-group" style={{ marginBottom: 0 }}>
+              <label className="fr-label" htmlFor="erc-dp-panel-select">
+                {currentLang === "fr" ? "Panel" : "Panel"}
+              </label>
+              <select
+                className="fr-select"
+                id="erc-dp-panel-select"
+                key={selectedDomain}
+                value={selectedPanel}
+                onChange={(e) => {
+                  setSelectedPanel(e.target.value);
+                  setDisplayLimit(10);
+                }}
+                style={{ width: "250px" }}
+              >
+                <option value="ALL">{currentLang === "fr" ? "Tous les panels" : "All panels"}</option>
+                {panelsForDomain
+                  .slice()
+                  .sort((a, b) => a.id.localeCompare(b.id, undefined, { numeric: true }))
+                  .map((p) => (
+                    <option key={p.id} value={p.id}>
+                      {p.id} — {p.name}
+                    </option>
+                  ))}
+              </select>
+            </div>
+          </div>
         )}
-        <Col className="fr-pt-6w">
+        <div style={{ marginLeft: "auto", display: "flex", gap: "1rem", alignItems: "flex-end", flexWrap: "wrap" }}>
           <SegmentedControl className="fr-segmented--sm" name="erc-dp-entities-limit">
             <SegmentedElement checked={displayLimit === 10 && !isShowingAll} label="Top 10" onClick={() => setDisplayLimit(10)} value="10" />
             <SegmentedElement checked={displayLimit > 10 && !isShowingAll} label="+ 5" onClick={() => setDisplayLimit((prev) => Math.min(prev + 5, totalCount))} value="add5" />
             <SegmentedElement checked={isShowingAll} label={currentLang === "fr" ? `Tout voir (${totalCount})` : `Show all (${totalCount})`} onClick={() => setDisplayLimit(totalCount)} value="all" />
           </SegmentedControl>
-        </Col>
-      </Row>
+          <SegmentedControl className="fr-segmented--sm" name="erc-dp-entities-metric">
+            <SegmentedElement checked={metric === "pi"} label={currentLang === "fr" ? "Porteurs de projets" : "Project PIs"} onClick={() => setMetric("pi")} value="pi" />
+            <SegmentedElement checked={metric === "funding"} label={currentLang === "fr" ? "Financements" : "Funding"} onClick={() => setMetric("funding")} value="funding" />
+            <SegmentedElement checked={metric === "projects"} label={currentLang === "fr" ? "Projets" : "Projects"} onClick={() => setMetric("projects")} value="projects" />
+          </SegmentedControl>
+        </div>
+      </div>
       {isLoading || !data ? (
         <DefaultSkeleton />
       ) : !data?.list?.length ? (
         <p className="fr-text--sm fr-hint-text">{currentLang === "fr" ? "Aucune donnée disponible." : "No data available."}</p>
       ) : (
         <>
-          <ChartWrapper config={config} options={Options(data, currentLang)} renderData={() => renderDataTable(data, currentLang)} />
+          <ChartWrapper config={config} options={Options(data, currentLang, metric)} renderData={() => renderDataTable(data, currentLang)} />
         </>
       )}
     </div>

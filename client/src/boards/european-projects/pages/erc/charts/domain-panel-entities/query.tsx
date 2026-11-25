@@ -4,10 +4,14 @@ export interface ErcEntityData {
   name: string;
   acronym: string | null;
   total_fund_eur: number;
+  total_pi?: number;
+  total_projects?: number;
 }
 
 export interface ErcDomainPanelEntitiesData {
   total_fund_eur: number;
+  total_pi?: number;
+  total_projects?: number;
   list: ErcEntityData[];
 }
 

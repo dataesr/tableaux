@@ -41,32 +41,6 @@ function useGetParams() {
   return { params: params.join("&"), currentLang };
 }
 
-function renderDataTable(data: { list: { acronym: string | null; name: string; total_fund_eur: number }[] }, currentLang: string) {
-  if (!data?.list?.length) return null;
-  const lang = currentLang as "fr" | "en";
-  return (
-    <table className="fr-table fr-table--sm">
-      <caption>{lang === "fr" ? "Principaux établissements d'accueil" : "Main host institutions"}</caption>
-      <thead>
-        <tr>
-          <th scope="col">{lang === "fr" ? "Acronyme" : "Acronym"}</th>
-          <th scope="col">{lang === "fr" ? "Nom" : "Name"}</th>
-          <th scope="col">{lang === "fr" ? "Financements (€)" : "Funding (€)"}</th>
-        </tr>
-      </thead>
-      <tbody>
-        {data.list.map((item, i) => (
-          <tr key={i}>
-            <td>{item.acronym || "—"}</td>
-            <td>{item.name}</td>
-            <td>{formatToMillions(item.total_fund_eur)}</td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  );
-}
-
 export default function ErcMainEntities({ 
   countryAdj = { m: "français", f: "française" } }: 
   ErcMainEntitiesProps
@@ -74,6 +48,7 @@ export default function ErcMainEntities({
   const { params: urlParams, currentLang } = useGetParams();
   const [selectedDestination, setSelectedDestination] = useState("ALL");
   const [displayLimit, setDisplayLimit] = useState(10);
+  const [metric, setMetric] = useState<"pi" | "projects" | "funding">("pi");
   const color = useChartColor();
 
   const queryParams = selectedDestination === "ALL" ? urlParams : `${urlParams}&destination_code=${selectedDestination}`;
@@ -120,7 +95,7 @@ export default function ErcMainEntities({
         <>
           <ChartWrapper.Title config={{ title: titleConfig, id: config.id }} />
           <div style={{ display: "flex", alignItems: "flex-end", gap: "1rem", flexWrap: "wrap" }} className="fr-m-1w">
-            <div className="fr-select-group" style={{ flex: "0 0 auto", maxWidth: "320px", marginBottom: 0 }}>
+            <div className="fr-select-group" style={{ flex: "1 1 auto", marginBottom: 0 }}>
               <label className="fr-label" htmlFor="erc-destination-select">
                 {currentLang === "fr" ? "Type de financement" : "Funding type"}
               </label>
@@ -140,13 +115,20 @@ export default function ErcMainEntities({
                 ))}
               </select>
             </div>
-            <SegmentedControl className="fr-segmented--sm" name="erc-entities-limit">
-              <SegmentedElement checked={displayLimit === 10 && !isShowingAll} label="Top 10" onClick={() => setDisplayLimit(10)} value="10" />
-              <SegmentedElement checked={displayLimit > 10 && !isShowingAll} label="+ 5" onClick={() => setDisplayLimit((prev) => Math.min(prev + 5, totalCount))} value="add5" />
-              <SegmentedElement checked={isShowingAll} label={currentLang === "fr" ? `Tout voir (${totalCount})` : `Show all (${totalCount})`} onClick={() => setDisplayLimit(totalCount)} value="all" />
-            </SegmentedControl>
+            <div style={{ marginLeft: "auto", display: "flex", gap: "1rem", alignItems: "flex-end", flexWrap: "wrap" }}>
+              <SegmentedControl className="fr-segmented--sm" name="erc-entities-limit">
+                <SegmentedElement checked={displayLimit === 10 && !isShowingAll} label="Top 10" onClick={() => setDisplayLimit(10)} value="10" />
+                <SegmentedElement checked={displayLimit > 10 && !isShowingAll} label="+ 5" onClick={() => setDisplayLimit((prev) => Math.min(prev + 5, totalCount))} value="add5" />
+                <SegmentedElement checked={isShowingAll} label={currentLang === "fr" ? `Tout voir (${totalCount})` : `Show all (${totalCount})`} onClick={() => setDisplayLimit(totalCount)} value="all" />
+              </SegmentedControl>
+              <SegmentedControl className="fr-segmented--sm" name="erc-entities-metric">
+                <SegmentedElement checked={metric === "pi"} label={currentLang === "fr" ? "Porteurs de projets" : "Project PIs"} onClick={() => setMetric("pi")} value="pi" />
+                <SegmentedElement checked={metric === "funding"} label={currentLang === "fr" ? "Financements" : "Funding"} onClick={() => setMetric("funding")} value="funding" />
+                <SegmentedElement checked={metric === "projects"} label={currentLang === "fr" ? "Projets" : "Projects"} onClick={() => setMetric("projects")} value="projects" />
+              </SegmentedControl>
+            </div>
           </div>
-          <ChartWrapper config={config} options={Options(data, currentLang)} renderData={() => renderDataTable(data, currentLang)} />
+          <ChartWrapper config={config} options={Options(data, currentLang, metric)} />
         </>
       )}
     </div>

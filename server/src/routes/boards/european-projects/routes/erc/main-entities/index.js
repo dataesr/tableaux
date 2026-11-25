@@ -42,6 +42,8 @@ router.route("/european-projects/erc/main-entities").get(async (req, res) => {
           $group: {
             _id: { name: "$entities_name", acronym: "$entities_acronym" },
             total_fund_eur: { $sum: "$calculated_fund" },
+            projects: { $addToSet: "$project_id" },
+            total_pi: { $sum: { $cond: [{ $eq: ["$erc_role", "PI"] }, "$number_involved", 0] } },
           },
         },
         {
@@ -50,6 +52,8 @@ router.route("/european-projects/erc/main-entities").get(async (req, res) => {
             name: "$_id.name",
             acronym: "$_id.acronym",
             total_fund_eur: 1,
+            total_projects: { $size: "$projects" },
+            total_pi: 1,
           },
         },
         { $sort: { total_fund_eur: -1 } },
@@ -58,8 +62,10 @@ router.route("/european-projects/erc/main-entities").get(async (req, res) => {
       .toArray();
 
     const total = data.reduce((acc, el) => acc + el.total_fund_eur, 0);
+    const total_projects = data.reduce((acc, el) => acc + el.total_projects, 0);
+    const total_pi = data.reduce((acc, el) => acc + el.total_pi, 0);
 
-    res.status(200).json({ total_fund_eur: total, list: data });
+    res.status(200).json({ total_fund_eur: total, total_projects, total_pi, list: data });
   } catch (error) {
     console.error("Error fetching ERC main entities:", error);
     res.status(500).json({ error: "Erreur interne du serveur" });
