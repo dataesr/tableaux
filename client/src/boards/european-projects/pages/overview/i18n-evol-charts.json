@@ -55,6 +55,20 @@
         "fr": "dans la thématique {name}",
         "en": "under the {name} topic"
       }
+    },
+    "destination": {
+      "selected": {
+        "fr": "la destination sélectionnée",
+        "en": "the selected destination"
+      },
+      "selectedPlural": {
+        "fr": "les destinations sélectionnées",
+        "en": "the selected destinations"
+      },
+      "in": {
+        "fr": "dans la destination {name}",
+        "en": "under the {name} destination"
+      }
     }
   },
   "yAxis": {
