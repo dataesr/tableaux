@@ -1,12 +1,11 @@
 import { useSearchParams } from "react-router-dom"
 
 import { getI18nLabel } from "../../../../../../utils"
-import i18n from "../../../../i18n-global.json"
 import { isEjoParam } from "../../../../utils/params"
 import { getCountryNameWithArticle } from "../../../../utils/country-mapping"
 import { getCountryAdjectives } from "../../../../../../components/country-selector/utils.jsx"
-import { formatToPercentLang } from "../../../../../../utils/format"
-
+import { formatToPercentLang, formatNumberLang } from "../../../../../../utils/format"
+import i18n from "../../../../i18n-global.json"
 
 export function useGetParams() {
   const [searchParams] = useSearchParams()
@@ -39,7 +38,7 @@ export function useGetParams() {
   const adjMascPlural =
   currentLang === "fr" && !countryAdj.m.endsWith("s") ? `${countryAdj.m}s` : countryAdj.m
 
-  return { params: params.join("&"), currentLang, countryN, adjMascPlural }
+  return { currentLang, countryN, adjMascPlural, params: params.join("&") }
 }
 
 
@@ -132,7 +131,8 @@ export function readingKey(data, isLoading, displayType, currentLang, countryN, 
   const evaluatedProportion = evaluatedData[proportionKey]
   const difference = successfulProportion - evaluatedProportion
 
-  const diff = `${difference > 0 ? "+" : ""}${difference.toFixed(2)}`
+  const diff = `${difference > 0 ? "+" : ""}${formatNumberLang(difference, currentLang, 2)}`
+  
 
   let fr
   let en
