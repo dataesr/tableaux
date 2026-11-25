@@ -1,8 +1,12 @@
 import { useSearchParams } from "react-router-dom";
-import { formatToPercent } from "../../../../../../utils/format";
+import { formatToPercentLang, formatNumberLang } from "../../../../../../utils/format";
 import { getI18nLabel } from "../../../../../../utils";
 import { isEjoParam } from "../../../../utils/params";
+import { sortByLevel } from "../../../../utils/levelsSort";
+import { getCountryNameWithArticle } from "../../../../utils/country-mapping";
+import { getCountryAdjectives } from "../../../../../../components/country-selector/utils.jsx"
 import i18n from "../../../../i18n-global.json";
+
 
 export function useGetParams() {
   const [searchParams] = useSearchParams();
@@ -33,19 +37,32 @@ export function useGetParams() {
     params.push(`thematics=${thematicIds}`);
   }
 
+  const rangeOfYears = searchParams.get("range_of_years");
+  if (rangeOfYears) {
+    params.push(`range_of_years=${encodeURIComponent(rangeOfYears)}`);
+  }
+  
   if (searchParams.has("isEjo")) {
     params.push(isEjoParam());
   }
 
-  const currentLang = searchParams.get("language") || "fr";
+  const currentLang = (searchParams.get("language") === "en" ? "en" : "fr") as "fr" | "en"
 
-  return { params: params.join("&"), currentLang };
+  const code = countryCode || "FRA"
+  const countryN = getCountryNameWithArticle(code, currentLang).replace(/^(Le |La |Les |L')/, (m) => m.toLowerCase())
+
+  const countryAdj = getCountryAdjectives(code, currentLang)
+  // Pluriel seulement en français
+  const adjMascPlural =
+  currentLang === "fr" && !countryAdj.m.endsWith("s") ? `${countryAdj.m}s` : countryAdj.m
+
+  return { currentLang, countryN, adjMascPlural, params: params.join("&") };
 }
 
-export function renderDataTable(data) {
+export function renderDataTable(data, currentLang) {
   if (!data) return null;
 
-  const rawData = data.data;
+  const rawData = sortByLevel(data.data ?? [], "destination");
   const evaluatedData = rawData.filter((item) => item.stage === "evaluated");
   const successfulData = rawData.filter((item) => item.stage === "successful");
 
@@ -81,8 +98,8 @@ export function renderDataTable(data) {
                   return (
                     <tr key={evalItem.destination}>
                       <th scope="row">{destinationName}</th>
-                      <td>{formatToPercent(evaluatedProportion)}</td>
-                      <td>{formatToPercent(successfulProportion)}</td>
+                      <td>{formatToPercentLang(evaluatedProportion, currentLang)}</td>
+                      <td>{formatToPercentLang(successfulProportion, currentLang)}</td>
                     </tr>
                   );
                 })}
@@ -93,4 +110,117 @@ export function renderDataTable(data) {
       </div>
     </div>
   );
+}
+
+
+// Clé de proportion renvoyée par l'API selon l'indicateur affiché
+export const getProportionKey = (displayType: string) =>
+  displayType === "total_coordination_number"
+    ? "proportion_coordination_number"
+    : displayType === "total_number_involved"
+      ? "proportion_number_involved"
+      : displayType === "total_fund_eur"
+        ? "proportion"
+        : "proportion_projects"
+
+
+export function readingKey(data, isLoading, displayType, currentLang, countryN, adjMascPlural) {
+  if (isLoading || !data?.data || data.data.length === 0) {
+    return { fr: <></>, en: <></> }
+  }
+  
+  const proportionKey = getProportionKey(displayType)
+
+  const successfulProjects = data.data.filter((item) => item.stage === "successful")
+  const topSuccessfulDestination = successfulProjects.reduce(
+    (max, current) => (current[proportionKey] > max[proportionKey] ? current : max),
+    successfulProjects[0],
+  )
+
+  if (!topSuccessfulDestination) return { fr: <></>, en: <></> }
+
+  const evaluatedData = data.data.find((item) => item.destination === topSuccessfulDestination.destination && item.stage === "evaluated")
+  if (!evaluatedData) return { fr: <></>, en: <></> }
+
+  // pas de trad FR pour les destinations
+  const destinationNameEN = topSuccessfulDestination.destination
+  const successfulProportion = topSuccessfulDestination[proportionKey]
+  const evaluatedProportion = evaluatedData[proportionKey]
+  const difference = successfulProportion - evaluatedProportion
+
+  const diff = `${difference > 0 ? "+" : ""}${formatNumberLang(difference, currentLang, 2)}`
+
+  let fr
+  let en
+
+  switch (displayType) {
+    case "total_coordination_number":
+      fr = (
+        <>
+          Dans la destination {destinationNameEN}, les projets évalués coordonnés par {countryN} représentent {formatToPercentLang(evaluatedProportion, currentLang)}{" "}
+          de l'ensemble des projets évalués et les projets lauréats coordonnés par {countryN} représentent{" "}
+          {formatToPercentLang(successfulProportion, currentLang)} des projets lauréats, soit un écart de{" "}
+          {diff} points.
+        </>
+      )
+      en = (
+        <>
+          In the {destinationNameEN} destination, evaluated projects coordinated by {countryN} account for {formatToPercentLang(evaluatedProportion, currentLang)}{" "}
+          of all evaluated projects, and successful projects coordinated by {countryN} account for{" "}
+          {formatToPercentLang(successfulProportion, currentLang)} of successful projects, a difference of{" "}
+          {diff} percentage points.
+        </>
+      )
+      break
+
+    case "total_number_involved":
+      fr = (
+        <>
+          Dans la destination {destinationNameEN}, les candidats {adjMascPlural} représentent {formatToPercentLang(evaluatedProportion, currentLang)}{" "}
+          de l'ensemble des candidats et les participants {adjMascPlural} représentent {formatToPercentLang(successfulProportion, currentLang)} de{" "}
+          l'ensemble des participants, soit un écart de {diff} points.
+        </>
+      )
+      en = (
+        <>
+          In the {destinationNameEN} destination, {adjMascPlural} applicants account for {formatToPercentLang(evaluatedProportion, currentLang)}{" "}
+          of all applicants, and {adjMascPlural} participants account for {formatToPercentLang(successfulProportion, currentLang)} of{" "}
+          all participants, a difference of {diff} percentage points.
+        </>
+      )
+      break
+
+    case "total_projects":
+      fr = (
+        <>
+          Dans la destination {destinationNameEN}, {formatToPercentLang(evaluatedProportion, currentLang)} des projets évalués et{" "} 
+          {formatToPercentLang(successfulProportion, currentLang)} des projets lauréats impliquent {countryN}, soit un écart de {diff} points.
+        </>
+      )
+      en = (
+        <>
+          In the {destinationNameEN} destination, {formatToPercentLang(evaluatedProportion, currentLang)} of evaluated projects and{" "}
+          {formatToPercentLang(successfulProportion, currentLang)} of successful projects involve {countryN}, a difference of {diff} percentage points.
+        </>
+      )
+      break
+
+    default:
+      fr = (
+        <>
+          Dans la destination {destinationNameEN}, les financements demandés par {countryN} représentent {formatToPercentLang(evaluatedProportion, currentLang)}{" "}
+          de l'ensemble des financements demandés et les financements obtenus par {countryN} représentent {formatToPercentLang(successfulProportion, currentLang)}{" "}
+          des financements obtenus, soit un écart de {diff} points.
+        </>
+      )
+      en = (
+        <>
+          In the {destinationNameEN} destination, funding requested by {countryN} accounts for {formatToPercentLang(evaluatedProportion, currentLang)}{" "}
+          of all funding requested, and funding secured by {countryN} accounts for {formatToPercentLang(successfulProportion, currentLang)}{" "}
+          of funding secured, a difference of {diff} percentage points.
+        </>
+      )
+  }
+
+    return { fr, en }
 }
