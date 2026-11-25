@@ -55,7 +55,7 @@ function FloatingFilters() {
           <>
             <span>{i18n[param[0]][currentLang]}</span>
             {param[1].split("|").map((y) => (
-              <Badge color="green-archipel" className="fr-mx-1w">
+              <Badge color="green-archipel" className="fr-mx-1w" key={y}>
                 {y}
               </Badge>
             ))}
