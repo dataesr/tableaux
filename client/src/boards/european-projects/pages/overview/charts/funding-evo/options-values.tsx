@@ -14,7 +14,7 @@ export default function getOptionsValues(data, displayType, currentLang): Highch
   // level correspond à pillar | program | topic
   const level = getLevelFromData(data);
   const { itemsKey, codeKey } = LEVELS[level];
-
+  
   const countryData = data.filter((item) => item.country !== "all")[0];
   if (!countryData?.data) return null;
 
