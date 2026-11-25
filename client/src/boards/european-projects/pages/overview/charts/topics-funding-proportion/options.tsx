@@ -53,7 +53,7 @@ export default function getOptions(data, displayType: string = "total_fund_eur",
     },
     tooltip: {
       pointFormatter: function () {
-        return `${getI18nLabel(i18n, valueKey)} : <b>${formatToPercentLang(this.y ?? 0, lang)}</b>`;
+        return `${this.series.name} : <b>${formatToPercentLang(this.y ?? 0, lang)}</b>`;
       },
     },
     plotOptions: {
@@ -83,7 +83,7 @@ export default function getOptions(data, displayType: string = "total_fund_eur",
         type: "column",
         name: legend.serie_02,
         color: getCssColor("successful-project"),
-        data: items.filter((item) => item.stage === "successful").map((item) => [item.thema_name_fr, item[valueKey]]),
+        data: data.data.filter((item) => item.stage === "successful").map((item) => [item.thema_name_fr, item[valueKey]]),
         dataLabels: {
           formatter: function () {
             return formatToPercentLang(this.y ?? 0, lang);
