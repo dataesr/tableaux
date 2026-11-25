@@ -41,7 +41,7 @@ router
         $in: req.query.destinationIds.split(/[|,]/),
       };
       field_code = "$destination_code";
-      field_name_fr = "$destination_name_fr";
+      field_name_fr = "$destination_name_en";
       field_name_en = "$destination_name_en";
       delete filters.thema_code;
     }
@@ -129,13 +129,16 @@ router
     const data_country = await query();
     delete filters.country_code;
     const data_all = await query();
+    const level = req.query.destinationIds ? "destination" : "topic";
+
 
     return res.json([
       {
         country: req.query.country_code,
+        level,
         data: data_country,
       },
-      { country: "all", data: data_all },
+      { country: "all", level, data: data_all },
     ]);
   });
 
@@ -153,7 +156,7 @@ router
           country_code: 1,
           destination_code: 1,
           destination_name_en: 1,
-          destination_name_fr: 1,
+          // destination_name_fr: 1,
           is_ejo: 1,
           number_involved: 1,
           pilier_code: 1,
