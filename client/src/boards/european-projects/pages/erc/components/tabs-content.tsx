@@ -1,22 +1,19 @@
 import { useSearchParams } from "react-router-dom";
 
-import i18n from "../../../i18n-global.json";
 import CallsContent from "./tabs/calls";
 import EntitiesContent from "./tabs/entities";
 import EvolutionContent from "./tabs/evolution";
 import PiContent from "./tabs/pi";
 import PositionnementContent from "./tabs/positioning";
 import SyntheseContent from "./tabs/synthesis";
+import { getI18nLabel } from "../../../../../utils";
+
+import i18n from "../../../i18n-global.json";
 
 export default function TabsContent() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const activeTab = searchParams.get("section") || "synthesis";
-
   const currentLang = searchParams.get("language") || "fr";
-
-  function getIntlLabel(key: string): string {
-    return i18n[key][currentLang as "fr" | "en"] || i18n[key]["en"];
-  }
+  const activeTab = searchParams.get("section") || "synthesis";
 
   // Fonction pour changer d'onglet
   const handleTabChange = (newTab: "synthesis" | "positioning" | "evolution" | "entities" | "pi" | "calls") => {
@@ -27,7 +24,7 @@ export default function TabsContent() {
 
   return (
     <div>
-      <nav className="fr-nav" role="navigation" aria-label="Menu principal">
+      <nav className="fr-nav" aria-label="Menu principal de sélection des sous-parties">
         <ul className="fr-nav__list">
           <li className="fr-nav__item">
             <button
@@ -38,7 +35,7 @@ export default function TabsContent() {
               }}
               aria-current={activeTab === "synthesis" ? "page" : undefined}
             >
-              {getIntlLabel("synthesis")}
+              {getI18nLabel(i18n, "synthesis", currentLang)}
             </button>
           </li>
           <li className="fr-nav__item">
@@ -50,7 +47,7 @@ export default function TabsContent() {
               }}
               aria-current={activeTab === "positioning" ? "page" : undefined}
             >
-              {getIntlLabel("positioning")}
+              {getI18nLabel(i18n, "positioning", currentLang)}
             </button>
           </li>
           <li className="fr-nav__item">
@@ -62,7 +59,7 @@ export default function TabsContent() {
               }}
               aria-current={activeTab === "entities" ? "page" : undefined}
             >
-              {getIntlLabel("entities")}
+              {getI18nLabel(i18n, "entities", currentLang)}
             </button>
           </li>
           <li className="fr-nav__item">
@@ -74,7 +71,7 @@ export default function TabsContent() {
               }}
               aria-current={activeTab === "pi" ? "page" : undefined}
             >
-              {getIntlLabel("pi")}
+              {getI18nLabel(i18n, "pi", currentLang)}
             </button>
           </li>
           <li className="fr-nav__item">
@@ -86,7 +83,7 @@ export default function TabsContent() {
               }}
               aria-current={activeTab === "evolution" ? "page" : undefined}
             >
-              {getIntlLabel("evolution")}
+              {getI18nLabel(i18n, "evolution", currentLang)}
             </button>
           </li>
           <li className="fr-nav__item">
@@ -98,7 +95,7 @@ export default function TabsContent() {
               }}
               aria-current={activeTab === "calls" ? "page" : undefined}
             >
-              {getIntlLabel("calls")}
+              {getI18nLabel(i18n, "calls", currentLang)}
             </button>
           </li>
         </ul>
