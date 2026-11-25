@@ -4,10 +4,13 @@ import { getI18nLabel } from "../../../../../../utils";
 import { getCssColor } from "../../../../../../utils/colors";
 import { formatToPercentLang } from "../../../../../../utils/format";
 import { CreateChartOptions } from "../../../../components/chart-ep";
+import { sortByLevel } from "../../../../utils/levelsSort";
 import i18n from "../../i18n-charts.json";
+
 
 export default function getOptions(data, displayType: string = "total_fund_eur", currentLang: string) {
   if (!data) return null;
+  const items = sortByLevel(data.data ?? [], "topic");
 
   const valueKey = displayType === "total_coordination_number" ? "proportion_coordination_number" : displayType === "total_number_involved" ? "proportion_number_involved" : displayType === "total_fund_eur" ? "proportion" : "proportion_projects";
   const lang: "fr" | "en" = currentLang === "en" ? "en" : "fr";
@@ -69,7 +72,7 @@ export default function getOptions(data, displayType: string = "total_fund_eur",
         type: "column",
         name: legend.serie_01,
         color: getCssColor("evaluated-project"),
-        data: data.data.filter((item) => item.stage === "evaluated").map((item) => [item.thema_name_fr, item[valueKey]]),
+        data: items.filter((item) => item.stage === "evaluated").map((item) => [item.thema_name_fr, item[valueKey]]),
         dataLabels: {
           formatter: function () {
             return formatToPercentLang(this.y ?? 0, lang);
@@ -80,7 +83,7 @@ export default function getOptions(data, displayType: string = "total_fund_eur",
         type: "column",
         name: legend.serie_02,
         color: getCssColor("successful-project"),
-        data: data.data.filter((item) => item.stage === "successful").map((item) => [item.thema_name_fr, item[valueKey]]),
+        data: items.filter((item) => item.stage === "successful").map((item) => [item.thema_name_fr, item[valueKey]]),
         dataLabels: {
           formatter: function () {
             return formatToPercentLang(this.y ?? 0, lang);

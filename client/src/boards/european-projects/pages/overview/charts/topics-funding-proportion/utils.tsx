@@ -1,10 +1,11 @@
 import { useSearchParams } from "react-router-dom";
-import { formatToPercentLang } from "../../../../../../utils/format";
+import { formatToPercentLang, formatNumberLang } from "../../../../../../utils/format";
 import { getI18nLabel } from "../../../../../../utils";
 import { isEjoParam } from "../../../../utils/params";
-import i18n from "../../../../i18n-global.json";
+import { sortByLevel } from "../../../../utils/levelsSort";
 import { getCountryNameWithArticle } from "../../../../utils/country-mapping";
 import { getCountryAdjectives } from "../../../../../../components/country-selector/utils.jsx";
+import i18n from "../../../../i18n-global.json";
 
 export function useGetParams() {
   const [searchParams] = useSearchParams();
@@ -54,7 +55,7 @@ export function useGetParams() {
 export function renderDataTable(data, currentLang) {
   if (!data) return null;
 
-  const rawData = data.data;
+  const rawData = sortByLevel(data.data ?? [], "topic");
   const evaluatedData = rawData.filter((item) => item.stage === "evaluated");
   const successfulData = rawData.filter((item) => item.stage === "successful");
 
@@ -132,14 +133,14 @@ export function readingKey(data, isLoading, displayType, currentLang, countryN, 
 
   const evaluatedData = data.data.find((item) => item.topic === topSuccessfulTheme.topic && item.stage === "evaluated")
   if (!evaluatedData) return { fr: <></>, en: <></> }
-  console.log(data)
+  
   const themaNameFr = topSuccessfulTheme.thema_name_fr
   const themaNameEn = topSuccessfulTheme.thema_name_en
   const successfulProportion = topSuccessfulTheme[proportionKey]
   const evaluatedProportion = evaluatedData[proportionKey]
   const difference = successfulProportion - evaluatedProportion
 
-  const diff = `${difference > 0 ? "+" : ""}${difference.toFixed(2)}`
+  const diff = `${difference > 0 ? "+" : ""}${formatNumberLang(difference, currentLang, 2)}`
 
   let fr
   let en
