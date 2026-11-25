@@ -111,7 +111,7 @@ export default function getOptionsSuccessRates(data, displayType, currentLang): 
             const itemValue = year[displayType] ?? 0;
             return totalForYear > 0 ? (itemValue / totalForYear) * 100 : 0;
           }),
-          color: getCssColor(`item-${normalizeIdForCssColorNames(item[codeKey])}-color`),
+          color: getCssColor(`destination-${normalizeIdForCssColorNames(item[codeKey])}-color`),
         };
       })
       .concat(
@@ -128,7 +128,7 @@ export default function getOptionsSuccessRates(data, displayType, currentLang): 
               const itemValue = year[displayType] ?? 0;
               return totalForYear > 0 ? (itemValue / totalForYear) * 100 : 0;
             }),
-            color: getCssColor(`item-${normalizeIdForCssColorNames(item[codeKey])}-color`),
+            color: getCssColor(`destination-${normalizeIdForCssColorNames(item[codeKey])}-color`),
           };
         }),
       ),
