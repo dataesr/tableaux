@@ -1,7 +1,7 @@
 import { useSearchParams } from "react-router-dom";
 
 import { getCountryAdjectives } from "../../../../../../components/country-selector/utils";
-import EvolutionFundingsCharts from "../../charts/evolution-fundings";
+import EvolutionGlobalCharts from "../../charts/evolution-global";
 import EvolutionPanelDetail from "../../charts/evolution-panel-detail";
 import EvolutionPanelsCharts from "../../charts/evolution-panels";
 
@@ -19,7 +19,7 @@ export default function EvolutionContent() {
     <div>
       {/* Graphiques d'évolution par type de financement */}
       <div className="fr-my-4w">
-        <EvolutionFundingsCharts countryAdjective={countryAdj.f} currentLang={currentLang} />
+        <EvolutionGlobalCharts countryAdjective={countryAdj.f} currentLang={currentLang} />
       </div>
 
       {/* Graphiques d'évolution par domaine scientifique */}

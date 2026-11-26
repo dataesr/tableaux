@@ -7,6 +7,7 @@ export interface EvolutionPanelItem {
   total_funding_project: number;
   total_involved: number;
   total_pi: number;
+  total_projects: number;
 }
 
 export interface EvolutionPanelData {

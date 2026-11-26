@@ -1,13 +1,14 @@
+import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Title } from "@dataesr/dsfr-plus";
 
+import { EvolutionIndicator, evolutionConfig, useEvolutionMetric } from "../evolution-indicator";
 import { getData } from "./query";
-import Options from "./options";
-import { useGetParams, processEvolutionPanelData, renderDataTable } from "./utils";
 import { getI18nLabel } from "../../../../../../utils";
-
+import { useGetParams, processEvolutionPanelData } from "./utils";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
+import Options from "./options";
 
 import i18n from "../../i18n.json";
 
@@ -19,60 +20,28 @@ interface EvolutionPanelsChartsProps {
 const configWeight = {
   id: "ercEvolutionPanelWeight",
   idQuery: "ercEvolutionPanel",
-  title: {
-    en: "Share of successful projects by scientific domain",
-    fr: "Poids des projets lauréats par domaine scientifique",
-    className: "fr-my-1w fr-ml-1w",
-  },
-  comment: {
-    fr: (
-      <>Ce graphique présente l'évolution du poids des projets lauréats du pays sélectionné par rapport au total européen, ventilé par domaine scientifique ERC (Sciences de la vie, Sciences physiques et ingénierie, Sciences sociales et humaines).</>
-    ),
-    en: (
-      <>
-        This chart shows the evolution of the share of successful projects from the selected country compared to the European total, broken down by ERC scientific domain (Life Sciences, Physical Sciences & Engineering, Social Sciences & Humanities).
-      </>
-    ),
-  },
-  readingKey: {
-    fr: <>Un poids de 10% signifie que le pays représente 10% des porteurs de projets lauréats au niveau européen pour ce domaine scientifique.</>,
-    en: <>A share of 10% means that the country represents 10% of successful project PIs at the European level for this scientific domain.</>,
-  },
   integrationURL: "/european-projects/components/pages/erc/charts/evolution-panel-weight",
 };
 
 const configSuccessRate = {
   id: "ercEvolutionPanelSuccessRate",
   idQuery: "ercEvolutionPanel",
-  title: {
-    en: "Success rate by scientific domain",
-    fr: "Taux de succès par domaine scientifique",
-    className: "fr-my-1w fr-ml-1w",
-  },
-  comment: {
-    fr: <>Ce graphique présente l'évolution du taux de succès des projets du pays sélectionné, calculé comme le ratio entre projets lauréats et projets évalués, ventilé par domaine scientifique ERC.</>,
-    en: <>This chart shows the evolution of the success rate of projects from the selected country, calculated as the ratio of successful to evaluated projects, broken down by ERC scientific domain.</>,
-  },
-  readingKey: {
-    fr: <>Un taux de succès de 20% signifie que 20% des projets soumis et évalués ont été retenus pour ce domaine scientifique.</>,
-    en: <>A success rate of 20% means that 20% of submitted and evaluated projects were selected for this scientific domain.</>,
-  },
   integrationURL: "/european-projects/components/pages/erc/charts/evolution-panel-success-rate",
 };
 
 export default function EvolutionPanelsCharts({ countryAdjective = "français", currentLang: propLang }: EvolutionPanelsChartsProps) {
   const { params, currentLang: urlLang } = useGetParams();
   const currentLang = propLang || urlLang;
+  const { metric, setMetric } = useEvolutionMetric("erc_domain_evolution_metric");
 
   const { data, isLoading } = useQuery({
     queryKey: ["ercEvolutionPanel", params],
     queryFn: () => getData(params),
     enabled: params !== "",
   });
+  const processedData = useMemo(() => (data ? processEvolutionPanelData(data, currentLang, metric) : null), [data, currentLang, metric]);
 
-  if (isLoading || !data) return <DefaultSkeleton />;
-
-  const processedData = processEvolutionPanelData(data, currentLang);
+  if (isLoading || !processedData) return <DefaultSkeleton />;
 
   if (processedData.years.length === 0) {
     return (
@@ -86,27 +55,31 @@ export default function EvolutionPanelsCharts({ countryAdjective = "français", 
     <div className="evolution-panels-charts">
       <Title as="h3">{currentLang === "fr" ? `Évolution ${countryAdjective} par domaine scientifique` : `${countryAdjective} evolution by scientific domain`}</Title>
 
+      <EvolutionIndicator metric={metric} setMetric={setMetric} currentLang={currentLang} name="erc-domain-evolution-metric" />
+
       {/* Graphique 1: Poids des projets par domaine */}
-      <div className="fr-mb-4w chart-container chart-container--default">
+      <div className="fr-mb-1w chart-container chart-container--default">
         <ChartWrapper
-          config={configWeight}
+          config={evolutionConfig(configWeight, "weight", metric, { fr: "domaine scientifique", en: "scientific domain" }, processedData.years, processedData.weightSeries)}
           options={Options({
             processedData,
             chartType: "weight",
+            metric,
+            currentLang,
           })}
-          renderData={() => renderDataTable(processedData, "weight", currentLang)}
         />
       </div>
 
       {/* Graphique 2: Taux de succès par domaine */}
       <div className="fr-mb-4w chart-container chart-container--default">
         <ChartWrapper
-          config={configSuccessRate}
+          config={evolutionConfig(configSuccessRate, "successRate", metric, { fr: "domaine scientifique", en: "scientific domain" }, processedData.years, processedData.successRateSeries)}
           options={Options({
             processedData,
             chartType: "successRate",
+            metric,
+            currentLang,
           })}
-          renderData={() => renderDataTable(processedData, "successRate", currentLang)}
         />
       </div>
     </div>

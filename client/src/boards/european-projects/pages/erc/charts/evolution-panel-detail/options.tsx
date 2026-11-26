@@ -1,6 +1,9 @@
 import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js";
 import { CreateChartOptions } from "../../../../components/chart-ep";
 import type { EvolutionPanelDetailData, EvolutionPanelDetailItem } from "./query";
+import type { EvolutionMetric, EvolutionRatio } from "../evolution-global/query";
+import { formatRatio } from "../evolution-global/utils";
+import { calculateRatio, metricFields } from "../evolution-indicator";
 
 // Fonction de tri naturel pour les panel_id (ex: PE1, PE2, PE10 au lieu de PE1, PE10, PE2)
 function naturalSortPanelId(a: string, b: string): number {
@@ -16,21 +19,12 @@ function naturalSortPanelId(a: string, b: string): number {
   return a.localeCompare(b);
 }
 
-interface OptionsEvolutionProps {
-  data: EvolutionPanelDetailData;
-  domain: string;
-  chartType: "weight" | "successRate";
-}
-
-export default function OptionsEvolution({ data, domain, chartType }: OptionsEvolutionProps): HighchartsInstance.Options | null {
-  if (!data || !data.country || !data.total) return null;
+export function processPanelDetailData(data: EvolutionPanelDetailData, domain: string, metric: EvolutionMetric) {
 
   // Filtrer par domaine sélectionné
   const countrySuccessful = data.country.successful.filter((item) => item.domaine_scientifique === domain);
   const countryEvaluated = data.country.evaluated.filter((item) => item.domaine_scientifique === domain);
   const totalSuccessful = data.total.successful.filter((item) => item.domaine_scientifique === domain);
-
-  if (countrySuccessful.length === 0 && countryEvaluated.length === 0) return null;
 
   // Récupérer toutes les années uniques triées
   const yearsSet = new Set<string>();
@@ -68,40 +62,30 @@ export default function OptionsEvolution({ data, domain, chartType }: OptionsEvo
   const totalSuccessfulMap = createDataMap(totalSuccessful);
 
   // Créer les séries
-  const series = panels.map((panelId) => {
+  const mapSeries = (chartType: "weight" | "successRate") => panels.map((panelId) => {
     const seriesData = years.map((year) => {
       const key = `${year}-${panelId}`;
-
-      if (chartType === "weight") {
-        // Poids = (PI pays / PI total) * 100
-        const countryItem = countrySuccessfulMap.get(key);
-        const totalItem = totalSuccessfulMap.get(key);
-
-        if (!countryItem || !totalItem || totalItem.total_pi === 0) {
-          return null;
-        }
-
-        const weight = (countryItem.total_pi / totalItem.total_pi) * 100;
-        return Math.round(weight * 10) / 10;
-      } else {
-        // Taux de succès = (PI lauréats / PI évalués) * 100
-        const countrySuccessfulItem = countrySuccessfulMap.get(key);
-        const countryEvaluatedItem = countryEvaluatedMap.get(key);
-
-        if (!countrySuccessfulItem || !countryEvaluatedItem || countryEvaluatedItem.total_pi === 0) {
-          return null;
-        }
-
-        const successRate = (countrySuccessfulItem.total_pi / countryEvaluatedItem.total_pi) * 100;
-        return Math.round(successRate * 10) / 10;
-      }
+      const numerator = countrySuccessfulMap.get(key);
+      const denominator = chartType === "weight" ? totalSuccessfulMap.get(key) : countryEvaluatedMap.get(key);
+      return calculateRatio(numerator?.[metricFields[metric]], denominator?.[metricFields[metric]]);
     });
-
     return {
       name: panelNamesMap.get(panelId) || panelId,
       data: seriesData,
     };
   });
+  return { years, weightSeries: mapSeries("weight"), successRateSeries: mapSeries("successRate") };
+}
+
+interface OptionsEvolutionProps {
+  years: string[];
+  series: { name: string; data: (EvolutionRatio | null)[] }[];
+  metric: EvolutionMetric;
+  currentLang: string;
+}
+
+export default function OptionsEvolution({ years, series, metric, currentLang }: OptionsEvolutionProps): HighchartsInstance.Options | null {
+  if (years.length === 0 || series.length === 0) return null;
 
   const newOptions: HighchartsInstance.Options = {
     xAxis: {
@@ -133,7 +117,7 @@ export default function OptionsEvolution({ data, domain, chartType }: OptionsEvo
       shared: true,
       useHTML: true,
       headerFormat: "<b>{point.key}</b><br/>",
-      pointFormat: '<span style="color:{series.color}">\u25CF</span> {series.name}: <b>{point.y}%</b><br/>',
+      pointFormat: '<span style="color:{series.color}">\u25CF</span> {series.name}: <b>{point.custom.ratio}</b><br/>',
     },
     legend: {
       enabled: true,
@@ -147,6 +131,15 @@ export default function OptionsEvolution({ data, domain, chartType }: OptionsEvo
     plotOptions: {
       line: {
         lineWidth: 2,
+        dataLabels: {
+          enabled: true,
+          format: "{y}%",
+          style: {
+            fontSize: "10px",
+            fontWeight: "normal",
+          },
+          y: -8,
+        },
         marker: {
           enabled: true,
           radius: 3,
@@ -161,7 +154,7 @@ export default function OptionsEvolution({ data, domain, chartType }: OptionsEvo
     series: series.map((s) => ({
       type: "line" as const,
       name: s.name,
-      data: s.data,
+      data: s.data.map((point) => point ? { y: point.value, custom: { ratio: formatRatio(point, metric, currentLang) } } : null),
       connectNulls: false,
     })),
   };

@@ -1,13 +1,17 @@
 import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js";
 import { CreateChartOptions } from "../../../../components/chart-ep";
 import type { ProcessedEvolutionPanelData } from "./utils";
+import type { EvolutionMetric } from "../evolution-global/query";
+import { formatRatio } from "../evolution-global/utils";
 
 interface OptionsParams {
   processedData: ProcessedEvolutionPanelData;
   chartType: "weight" | "successRate";
+  metric: EvolutionMetric;
+  currentLang: string;
 }
 
-export default function Options({ processedData, chartType }: OptionsParams): HighchartsInstance.Options | null {
+export default function Options({ processedData, chartType, metric, currentLang }: OptionsParams): HighchartsInstance.Options | null {
   if (!processedData || processedData.years.length === 0) return null;
 
   const series = chartType === "weight" ? processedData.weightSeries : processedData.successRateSeries;
@@ -18,7 +22,7 @@ export default function Options({ processedData, chartType }: OptionsParams): Hi
     type: "line" as const,
     name: s.name,
     color: s.color,
-    data: s.data,
+    data: s.data.map((point) => point ? { y: point.value, custom: { ratio: formatRatio(point, metric, currentLang) } } : null),
     marker: {
       enabled: true,
       radius: 4,
@@ -65,7 +69,7 @@ export default function Options({ processedData, chartType }: OptionsParams): Hi
       shared: true,
       useHTML: true,
       headerFormat: "<b>{point.key}</b><br/>",
-      pointFormat: '<span style="color:{series.color}">\u25CF</span> {series.name}: <b>{point.y}%</b><br/>',
+      pointFormat: '<span style="color:{series.color}">\u25CF</span> {series.name}: <b>{point.custom.ratio}</b><br/>',
     },
     legend: {
       enabled: true,

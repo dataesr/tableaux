@@ -1,9 +1,9 @@
 /**
  * Utilitaires pour la gestion des paramètres d'URL de la page ERC
- * Les paramètres autorisés sont : country_code, range_of_years, language
+ * Les paramètres autorisés incluent les filtres et la sélection de l'indicateur d'évolution.
  */
 
-const ALLOWED_PARAMS = ["country_code", "range_of_years", "language", "section", "isEjo"];
+const ALLOWED_PARAMS = ["country_code", "range_of_years", "language", "section", "isEjo", "erc_evolution_metric", "erc_domain_evolution_metric", "erc_panel_evolution_metric"];
 
 /**
  * Nettoie les paramètres d'URL pour ne garder que ceux autorisés

@@ -1,6 +1,8 @@
 import { useSearchParams } from "react-router-dom";
 import { isEjoParam } from "../../../../utils/params";
 import type { EvolutionPanelData, EvolutionPanelItem } from "./query";
+import type { EvolutionMetric, EvolutionRatio } from "../evolution-global/query";
+import { calculateRatio, metricFields } from "../evolution-indicator";
 
 export function useGetParams() {
   const [searchParams] = useSearchParams();
@@ -50,14 +52,14 @@ export function getDomainColor(domainCode: string): string {
 
 export interface ProcessedEvolutionPanelData {
   years: string[];
-  weightSeries: { name: string; color: string; data: (number | null)[] }[];
-  successRateSeries: { name: string; color: string; data: (number | null)[] }[];
+  weightSeries: { name: string; color: string; data: (EvolutionRatio | null)[] }[];
+  successRateSeries: { name: string; color: string; data: (EvolutionRatio | null)[] }[];
 }
 
 /**
  * Calcule le poids des projets et le taux de succès par domaine scientifique
  */
-export function processEvolutionPanelData(data: EvolutionPanelData, currentLang: string = "fr"): ProcessedEvolutionPanelData {
+export function processEvolutionPanelData(data: EvolutionPanelData, currentLang: string, metric: EvolutionMetric): ProcessedEvolutionPanelData {
   if (!data || !data.country || !data.total) {
     return { years: [], weightSeries: [], successRateSeries: [] };
   }
@@ -101,13 +103,7 @@ export function processEvolutionPanelData(data: EvolutionPanelData, currentLang:
       const countryItem = countrySuccessfulMap.get(`${year}-${domainCode}`);
       const totalItem = totalSuccessfulMap.get(`${year}-${domainCode}`);
 
-      if (!countryItem || !totalItem || totalItem.total_pi === 0) {
-        return null;
-      }
-
-      // Poids = (PI pays / PI total) * 100
-      const weight = (countryItem.total_pi / totalItem.total_pi) * 100;
-      return Math.round(weight * 10) / 10; // Arrondi à 1 décimale
+      return calculateRatio(countryItem?.[metricFields[metric]], totalItem?.[metricFields[metric]]);
     });
 
     return {
@@ -123,13 +119,7 @@ export function processEvolutionPanelData(data: EvolutionPanelData, currentLang:
       const countrySuccessful = countrySuccessfulMap.get(`${year}-${domainCode}`);
       const countryEvaluated = countryEvaluatedMap.get(`${year}-${domainCode}`);
 
-      if (!countrySuccessful || !countryEvaluated || countryEvaluated.total_pi === 0) {
-        return null;
-      }
-
-      // Taux de succès = (PI lauréats / PI évalués) * 100
-      const successRate = (countrySuccessful.total_pi / countryEvaluated.total_pi) * 100;
-      return Math.round(successRate * 10) / 10; // Arrondi à 1 décimale
+      return calculateRatio(countrySuccessful?.[metricFields[metric]], countryEvaluated?.[metricFields[metric]]);
     });
 
     return {
@@ -140,53 +130,4 @@ export function processEvolutionPanelData(data: EvolutionPanelData, currentLang:
   });
 
   return { years, weightSeries, successRateSeries };
-}
-
-/**
- * Render le tableau de données pour l'export
- */
-export function renderDataTable(processedData: ProcessedEvolutionPanelData, chartType: "weight" | "successRate", currentLang: string) {
-  if (!processedData || processedData.years.length === 0) return null;
-
-  const series = chartType === "weight" ? processedData.weightSeries : processedData.successRateSeries;
-
-  const labels = {
-    caption:
-      chartType === "weight"
-        ? currentLang === "fr"
-          ? "Poids des projets lauréats par domaine"
-          : "Share of successful projects by domain"
-        : currentLang === "fr"
-          ? "Taux de succès par domaine"
-          : "Success rate by domain",
-    year: currentLang === "fr" ? "Année" : "Year",
-    domain: currentLang === "fr" ? "Domaine scientifique" : "Scientific domain",
-    value: chartType === "weight" ? (currentLang === "fr" ? "Poids (%)" : "Share (%)") : currentLang === "fr" ? "Taux (%)" : "Rate (%)",
-  };
-
-  return (
-    <table className="fr-table">
-      <caption>{labels.caption}</caption>
-      <thead>
-        <tr>
-          <th scope="col">{labels.year}</th>
-          {series.map((s) => (
-            <th key={s.name} scope="col">
-              {s.name}
-            </th>
-          ))}
-        </tr>
-      </thead>
-      <tbody>
-        {processedData.years.map((year, yearIndex) => (
-          <tr key={year}>
-            <td>{year}</td>
-            {series.map((s) => (
-              <td key={`${year}-${s.name}`}>{s.data[yearIndex] !== null ? `${s.data[yearIndex]}%` : "-"}</td>
-            ))}
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  );
 }
