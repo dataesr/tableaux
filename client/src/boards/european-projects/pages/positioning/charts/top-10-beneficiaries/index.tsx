@@ -10,9 +10,8 @@ import { readingKey, renderDataTable, useGetParams } from "./utils";
 
 export default function Top10Beneficiaries() {
   const [searchParams] = useSearchParams();
-  const currentLang = searchParams.get("language") || "fr";
-  const params = useGetParams();
-
+  const { params, currentLang } = useGetParams();
+  
   const { data, isLoading } = useQuery({
     queryKey: ["top10beneficiaries", params],
     queryFn: () => getData(params),
@@ -28,19 +27,19 @@ export default function Top10Beneficiaries() {
       fr: (
         <>
           Ce graphique représente le positionnement du pays sélectionné par rapport aux autres pays en fonction des financements obtenus.{" "}
-          La courbe correspond au cumul des financements alloués. Seuls les 10 premiers bénéficiaires sont affichés, le pays sélectionné étant ajouté en 10ème
-          position s'il n'en fait pas partie.
+          Les points correspondent au cumul des financements alloués. Seuls les 10 premiers bénéficiaires sont affichés, le pays sélectionné{" "}
+          étant ajouté en 10ème position s'il n'en fait pas partie.
         </>
       ),
       en: (
         <>
           This chart shows the position of the selected country relative to the other countries based on funding secured.{" "}
-          The line shows the cumulative funding secured. Only the top 10 beneficiaries are displayed, with the selected country
+          The points show the cumulative funding secured. Only the top 10 beneficiaries are displayed, with the selected country{" "}
           added in 10th position if it is not among them.
         </>
       ),
     },
-    readingKey: readingKey(data),
+    readingKey: readingKey(data, currentLang),
     sources: EPChartsSources,
     title: {
       fr: "Principaux pays bénéficiaires",
