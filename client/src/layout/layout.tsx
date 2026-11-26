@@ -2,15 +2,15 @@ import { Skiplinks } from "@dataesr/dsfr-plus";
 import { ComponentProps, ReactNode } from "react";
 import { Outlet, useSearchParams } from "react-router-dom"
 
-import Footer from "../components/footer";
 import { getI18nLabel } from "../utils";
+import FooterWrapper from "./footer";
 import HeaderWrapper from "./header";
 import i18n from "./i18n.json";
 
 type LayoutProps = ComponentProps<typeof HeaderWrapper> & {
   before?: ReactNode;
   children?: ReactNode;
-  footer?: ComponentProps<typeof Footer>;
+  footer?: ComponentProps<typeof FooterWrapper>;
 };
 
 export function Layout({ before, children, footer, ...headerProps }: LayoutProps) {
@@ -34,7 +34,7 @@ export function Layout({ before, children, footer, ...headerProps }: LayoutProps
         {before}
         {children ?? <Outlet />}
       </main>
-      <Footer {...footer} />
+      <FooterWrapper {...footer} />
     </>
   )
 }
