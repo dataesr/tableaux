@@ -40,7 +40,7 @@ export default function getOptions(data, country_code, currentLang) {
       {
         name: label("total-funding-eur"),
         type: "column",
-        color: getCssColor("countries"),
+        color: getCssColor("successful-project"),
         data: data.map((item) => ({
           name: item[`name_${currentLang}`],
           y: item.total_fund_eur,
