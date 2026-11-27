@@ -170,6 +170,7 @@ export function readingKey(data, currentLang: Lang) {
         {fillTemplate(tpl.first[lang], {
           country: getCountryNameWithArticle(topCountry.id, lang),
           amount: formatCurrencyLang(topCountry.total_fund_eur, currentLang),
+          levelText: levelText[lang],
         })}
         {secondCountry &&
           fillTemplate(tpl.second[lang], {
@@ -179,7 +180,6 @@ export function readingKey(data, currentLang: Lang) {
         {fillTemplate(tpl.total[lang], {
           count,
           percent: formatToPercentLang(tenthCountry.influence, currentLang),
-          levelText: levelText[lang],
         })}
       </>
     );

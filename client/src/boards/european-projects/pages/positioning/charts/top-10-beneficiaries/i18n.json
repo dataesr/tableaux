@@ -27,16 +27,16 @@
   },
   "readingKey": {
     "first": {
-      "fr": "{country} est le 1er pays bénéficiaire avec {amount} de financements obtenus",
-      "en": "{country} ranks 1st with {amount} in secured funding"
+      "fr": "{country} est le 1er pays bénéficiaire des financements alloués {levelText}, avec {amount}",
+      "en": "{country} is the top beneficiary country of the funding awarded {levelText}, with {amount}"
     },
     "second": {
       "fr": ", suivi par {country} avec {amount}",
       "en": ", followed by {country} with {amount}"
     },
     "total": {
-      "fr": ". Les {count} premiers pays bénéficiaires représentent {percent} du cumul total des financements alloués {levelText}.",
-      "en": ". The top {count} beneficiary countries represent {percent} of the cumulative total funding awarded {levelText}."
+      "fr": ". Les {count} premiers pays bénéficiaires cumulent {percent} de ces financements.",
+      "en": ". The top {count} beneficiary countries together account for {percent} of the funding."
     }
   }
 }
