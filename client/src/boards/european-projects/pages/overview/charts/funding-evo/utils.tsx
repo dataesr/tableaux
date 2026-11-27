@@ -3,7 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import { getI18nLabel } from "../../../../../../utils";
 import { formatToMillions, formatToPercentLang, formatNumberLang, formatCurrencyLang } from "../../../../../../utils/format";
 import i18n from "../../../../i18n-global.json";
-import { getEvolReadingKey, getLevelFromData, LEVELS } from "../../evol-charts-text";
+import { getEvolReadingKey, getItemName, getLevelFromData, LEVELS } from "../../evol-charts-text";
 import { isEjoParam } from "../../../../utils/params";
 import { getCountryNameWithArticle } from "../../../../utils/country-mapping";
 import { getCountryAdjectives } from "../../../../../../components/country-selector/utils.jsx";
@@ -71,7 +71,7 @@ function getSortedYears(stageData, itemsKey) {
 
 export function successRatesReadingKey(data, displayType, currentLang, countryN, adjMascPlural) {
   const level = getLevelFromData(data);
-  const { itemsKey, codeKey, nameKey } = LEVELS[level];
+  const { itemsKey, codeKey } = LEVELS[level];
   const dataSelectedCountry = data?.filter((item) => item.country !== "all")[0];
 
   // Récupération des données pour le calcul des pourcentages
@@ -81,8 +81,8 @@ export function successRatesReadingKey(data, displayType, currentLang, countryN,
   // et on retrouve le même item (par son code) dans les autres jeux de données
   const firstItem = dataSelectedCountry?.data?.find((d) => d.stage === "evaluated")?.[itemsKey]?.[0];
   const year = firstItem?.years[0]?.year || "2021";
-  const level_name_fr = firstItem?.[`${nameKey}_fr`] || "unknown";
-  const level_name_en = firstItem?.[`${nameKey}_en`] || "unknown";
+  const level_name_fr = firstItem ? getItemName(firstItem, level, "fr") : "";
+  const level_name_en = firstItem ? getItemName(firstItem, level, "en") : "";
 
   const findYearData = (scopeData, stage) =>
     scopeData?.data?.find((d) => d.stage === stage)?.[itemsKey]?.find((i) => i[codeKey] === firstItem?.[codeKey])?.years?.find((y) => y.year === year);
@@ -111,14 +111,14 @@ export function successRatesReadingKey(data, displayType, currentLang, countryN,
 
 export function valuesSuccessReadingKey(data, displayType, currentLang, countryN, adjMascPlural) {
   const level = getLevelFromData(data);
-  const { itemsKey, codeKey, nameKey } = LEVELS[level];
+  const { itemsKey, codeKey } = LEVELS[level];
   const dataSelectedCountry = data?.filter((item) => item.country !== "all")[0];
 
   // Plusieurs thématiques possibles : on prend le premier item pour le readingKey
   const firstItem = dataSelectedCountry?.data?.find((d) => d.stage === "evaluated")?.[itemsKey]?.[0];
   const year = firstItem?.years[0]?.year || "2021";
-  const level_name_fr = firstItem?.[`${nameKey}_fr`] || "unknown";
-  const level_name_en = firstItem?.[`${nameKey}_en`] || "unknown";
+  const level_name_fr = firstItem ? getItemName(firstItem, level, "fr") : "";
+  const level_name_en = firstItem ? getItemName(firstItem, level, "en") : "";
 
   const findYearData = (stage) =>
     dataSelectedCountry?.data?.find((d) => d.stage === stage)?.[itemsKey]?.find((i) => i[codeKey] === firstItem?.[codeKey])?.years?.find((y) => y.year === year);
@@ -152,7 +152,7 @@ export function renderDataTable(data, currentLang, displayType) {
   if (!data || !Array.isArray(data)) return null;
 
   const level = getLevelFromData(data);
-  const { itemsKey, codeKey, nameKey } = LEVELS[level];
+  const { itemsKey, codeKey } = LEVELS[level];
 
   const countryData = data.filter((item) => item.country !== "all")[0];
   if (!countryData?.data) return null;
@@ -216,7 +216,7 @@ export function renderDataTable(data, currentLang, displayType) {
               </thead>
               <tbody>
                 {evaluatedData[itemsKey].map((item) => {
-                  const itemName = currentLang === "fr" ? item[`${nameKey}_fr`] : item[`${nameKey}_en`];
+                  const itemName = getItemName(item, level, currentLang);
                   const successfulItem = successfulData[itemsKey].find((s) => s[codeKey] === item[codeKey]);
 
                   return (
@@ -254,7 +254,7 @@ export function renderDataTableRates(data, currentLang, displayType) {
   if (!data || !Array.isArray(data)) return null;
 
   const level = getLevelFromData(data);
-  const { itemsKey, codeKey, nameKey } = LEVELS[level];
+  const { itemsKey, codeKey } = LEVELS[level];
 
   const countryData = data.filter((item) => item.country !== "all")[0];
   const allCountryData = data.find((item) => item.country === "all");
@@ -314,7 +314,7 @@ export function renderDataTableRates(data, currentLang, displayType) {
               </thead>
               <tbody>
                 {evaluatedData[itemsKey].map((item) => {
-                  const itemName = currentLang === "fr" ? item[`${nameKey}_fr`] : item[`${nameKey}_en`];
+                  const itemName = getItemName(item, level, currentLang);
                   const successfulItem = successfulData[itemsKey].find((s) => s[codeKey] === item[codeKey]);
                   const evaluatedAllItem = evaluatedAllData[itemsKey].find((a) => a[codeKey] === item[codeKey]);
                   const successfulAllItem = successfulAllData[itemsKey].find((a) => a[codeKey] === item[codeKey]);

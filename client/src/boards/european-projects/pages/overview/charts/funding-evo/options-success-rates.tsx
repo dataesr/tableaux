@@ -5,14 +5,14 @@ import { getCssColor } from "../../../../../../utils/colors";
 import { formatToPercentLang } from "../../../../../../utils/format";
 import { CreateChartOptions } from "../../../../components/chart-ep";
 import { normalizeIdForCssColorNames } from "../../../../utils";
-import { getEvolLegend, getEvolYAxisTitle, getLevelFromData, LEVELS } from "../../evol-charts-text";
+import { getEvolLegend, getEvolYAxisTitle, getItemName, getLevelFromData, LEVELS } from "../../evol-charts-text";
 
 export default function getOptionsSuccessRates(data, displayType, currentLang): HighchartsOptions {
   if (!data || !Array.isArray(data)) return null;
 
   // level correspond à pillar | program | topic
   const level = getLevelFromData(data);
-  const { itemsKey, codeKey, nameKey } = LEVELS[level];
+  const { itemsKey, codeKey } = LEVELS[level];
 
   const countryData = data.filter((item) => item.country !== "all")[0];
   const allCountryData = data.find((item) => item.country === "all");
@@ -105,7 +105,7 @@ export default function getOptionsSuccessRates(data, displayType, currentLang): 
     series: evaluatedItems
       .map((item) => {
         const allItemData = evaluatedAllItems.find((t) => t[codeKey] === item[codeKey]);
-        const itemName = currentLang === "fr" ? item[`${nameKey}_fr`] : item[`${nameKey}_en`];
+        const itemName = getItemName(item, level, currentLang);
         return {
           name: `${itemName} - ${legend.serie_01}`,
           data: item.years.map((year, index) => {
@@ -113,13 +113,13 @@ export default function getOptionsSuccessRates(data, displayType, currentLang): 
             const itemValue = year[displayType] ?? 0;
             return totalForYear > 0 ? (itemValue / totalForYear) * 100 : 0;
           }),
-          color: getCssColor(`item-${normalizeIdForCssColorNames(item[codeKey])}-color`),
+          color: getCssColor(`destination-${normalizeIdForCssColorNames(item[codeKey])}-color`),
         };
       })
       .concat(
         successfulItems.map((item) => {
           const allItemData = successfulAllItems.find((t) => t[codeKey] === item[codeKey]);
-          const itemName = currentLang === "fr" ? item[`${nameKey}_fr`] : item[`${nameKey}_en`];
+          const itemName = getItemName(item, level, currentLang);
 
           return {
             xAxis: 1,
@@ -129,7 +129,7 @@ export default function getOptionsSuccessRates(data, displayType, currentLang): 
               const itemValue = year[displayType] ?? 0;
               return totalForYear > 0 ? (itemValue / totalForYear) * 100 : 0;
             }),
-            color: getCssColor(`item-${normalizeIdForCssColorNames(item[codeKey])}-color`),
+            color: getCssColor(`destination-${normalizeIdForCssColorNames(item[codeKey])}-color`),
           };
         }),
       ),

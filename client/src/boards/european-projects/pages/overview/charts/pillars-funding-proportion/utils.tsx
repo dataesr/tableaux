@@ -1,37 +1,45 @@
 import { useSearchParams } from "react-router-dom";
-import { getI18nLabel } from "../../../../../../utils";
-import { isEjoParam } from "../../../../utils/params";
-import { getCountryNameWithArticle } from "../../../../utils/country-mapping";
+
 import { getCountryAdjectives } from "../../../../../../components/country-selector/utils.jsx";
+import { getI18nLabel } from "../../../../../../utils";
+import { formatToPercentLang } from "../../../../../../utils/format";
 import i18n from "../../../../i18n-global.json";
+import { getCountryNameWithArticle } from "../../../../utils/country-mapping";
+import { isEjoParam } from "../../../../utils/params";
+
+type Lang = "fr" | "en";
+
+export type ProportionItem = {
+  code: string;
+  name_fr?: string;
+  name_en?: string;
+  stage: string;
+  proportion: number;
+  proportion_coordination_number: number;
+  proportion_number_involved: number;
+  proportion_count: number;
+  proportion_projects: number;
+};
+
+export type ProportionData = { data: ProportionItem[] };
 
 export function useGetParams() {
   const [searchParams] = useSearchParams();
 
   const params: string[] = [];
 
-  // Récupérer le paramètre country_code s'il existe
   const countryCode = searchParams.get("country_code");
-  if (countryCode) {
-    params.push(`country_code=${countryCode}`);
-  }
+  if (countryCode) params.push(`country_code=${countryCode}`);
 
-  // Récupérer le paramètre pillarId et l'ajouter comme pillars s'il existe
   const pillarId = searchParams.get("pillarId");
-  if (pillarId) {
-    params.push(`pillars=${pillarId}`);
-  }
+  if (pillarId) params.push(`pillars=${pillarId}`);
 
-  // Récupérer le paramètre structureid s'il existe
-  const structureId = searchParams.get("structureid");
-  if (structureId) {
-    params.push(`structureid=${structureId}`);
-  }
-  if (searchParams.has("isEjo")) {
-    params.push(isEjoParam());
-  }
+  const rangeOfYears = searchParams.get("range_of_years");
+  if (rangeOfYears) params.push(`range_of_years=${encodeURIComponent(rangeOfYears)}`);
 
-  const currentLang = (searchParams.get("language") === "en" ? "en" : "fr") as "fr" | "en";
+  if (searchParams.has("isEjo")) params.push(isEjoParam());
+
+  const currentLang = (searchParams.get("language") === "en" ? "en" : "fr") as Lang;
 
   const code = countryCode || "FRA";
   const countryN = getCountryNameWithArticle(code, currentLang).replace(/^(Le |La |Les |L')/, (m) => m.toLowerCase());
@@ -40,73 +48,37 @@ export function useGetParams() {
   // Pluriel seulement en français
   const adjMascPlural = currentLang === "fr" && !countryAdj.m.endsWith("s") ? `${countryAdj.m}s` : countryAdj.m;
 
-
   return { params: params.join("&"), currentLang, countryN, adjMascPlural };
 }
 
-// Champs génériques (code / name_fr / name_en), avec repli sur les champs du niveau pilier
-// (pillar / pilier_name_fr / pilier_name_en) tant que la requête ne renvoie pas les champs génériques
-export const getCode = (item): string => String(item?.code ?? item?.pillar ?? "");
+// Nom dans la langue demandée (repli sur le FR puis sur le code)
+export const getName = (item: ProportionItem | undefined, lang: Lang) =>
+  (lang === "en" ? item?.name_en : item?.name_fr) || item?.name_fr || item?.code || "";
 
-export const getName = (item, lang: "fr" | "en" = "fr"): string => {
-  const nameFr = item?.name_fr ?? item?.pilier_name_fr ?? "";
-  const nameEn = item?.name_en ?? item?.pilier_name_en ?? "";
-  return lang === "en" ? nameEn || nameFr : nameFr;
-};
+// Clé de proportion renvoyée par l'API selon l'indicateur affiché
+export const getProportionKey = (displayType: string) =>
+  displayType === "total_coordination_number"
+    ? "proportion_coordination_number"
+    : displayType === "total_number_involved"
+      ? "proportion_number_involved"
+      : displayType === "total_projects"
+        ? "proportion_projects"
+        : "proportion";
 
-export const sortByCode = (items) =>
-  [...items].sort((a, b) => getCode(a).localeCompare(getCode(b), undefined, { numeric: true }));
+// Codes dans l'ordre renvoyé par l'API (ne pas re-trier côté front)
+export const getOrderedCodes = (items: ProportionItem[]) => Array.from(new Set(items.map((item) => item.code)));
 
-// Ancien nom conservé pour ne pas casser les autres imports éventuels
-export const sortByPillar = sortByCode;
+export const findItem = (items: ProportionItem[], code: string, stage: string) =>
+  items.find((item) => item.code === code && item.stage === stage);
 
-/**
- * Génère un composant de tableau accessible avec les données de proportion de financement par pilier
- * @param data - Les données de proportion de financement par pilier
- * @param currentLang - La langue actuelle ('fr' ou 'en')
- * @returns Un composant JSX de tableau accessible ou un message si aucune donnée n'est disponible
- */
-export function renderDataTable(data: { data: Array<{ pilier_name_fr: string; stage: string; proportion: number }> }, currentLang: string = "fr") {
-  if (!data || !data.data || data.data.length === 0) {
+export function renderDataTable(data: ProportionData | null | undefined, currentLang: Lang) {
+  const items = data?.data;
+  if (!items || items.length === 0) {
     return <div className="fr-text--center fr-py-3w">{getI18nLabel(i18n, "no-data-table")}</div>;
   }
 
-  interface PillarData {
-    pillar: string;
-    evaluatedProportion: number;
-    successfulProportion: number;
-  }
-
-  // Grouper les données par pilier
-  const dataByPillar: Record<string, PillarData> = {};
-
-  data.data.forEach((item) => {
-    if (!dataByPillar[item.pilier_name_fr]) {
-      dataByPillar[item.pilier_name_fr] = {
-        pillar: item.pilier_name_fr,
-        evaluatedProportion: 0,
-        successfulProportion: 0,
-      };
-    }
-    if (item.stage === "evaluated") {
-      dataByPillar[item.pilier_name_fr].evaluatedProportion = item.proportion;
-    } else if (item.stage === "successful") {
-      dataByPillar[item.pilier_name_fr].successfulProportion = item.proportion;
-    }
-  });
-
-  // sort by pillar code
-  const sortedPillars = Object.values(dataByPillar).sort((a, b) => a.pillar.localeCompare(b.pillar, undefined, { numeric: true }));
-
-  const formatPercentage = (value: number) => {
-    return new Intl.NumberFormat(currentLang === "fr" ? "fr-FR" : "en-US", {
-      maximumFractionDigits: 2,
-      minimumFractionDigits: 2
-    }).format(value) + " %";
-  };
-
   const labels = {
-    pillar: getI18nLabel(i18n, "pillar"),
+    level: getI18nLabel(i18n, "pillar") || "Pilier",
     evaluated: getI18nLabel(i18n, "share-evaluated-projects"),
     successful: getI18nLabel(i18n, "share-successful-projects"),
     caption: getI18nLabel(i18n, "caption-pillar-proportion"),
@@ -115,26 +87,29 @@ export function renderDataTable(data: { data: Array<{ pilier_name_fr: string; st
   return (
     <div style={{ width: "100%" }}>
       <div className="fr-table-responsive">
-        <table
-          className="fr-table fr-table--bordered fr-table--sm"
-          style={{ width: "100%" }}
-        >
+        <table className="fr-table fr-table--bordered fr-table--sm" style={{ width: "100%" }}>
           <caption className="fr-sr-only">{labels.caption}</caption>
           <thead>
             <tr>
-              <th scope="col">{labels.pillar}</th>
+              <th scope="col">{labels.level}</th>
               <th scope="col">{labels.evaluated}</th>
               <th scope="col">{labels.successful}</th>
             </tr>
           </thead>
           <tbody>
-            {sortedPillars.map((pillar, index) => (
-              <tr key={index}>
-                <th scope="row">{pillar.pillar}</th>
-                <td>{formatPercentage(pillar.evaluatedProportion)}</td>
-                <td><strong>{formatPercentage(pillar.successfulProportion)}</strong></td>
-              </tr>
-            ))}
+            {getOrderedCodes(items).map((code) => {
+              const evaluated = findItem(items, code, "evaluated");
+              const successful = findItem(items, code, "successful");
+              return (
+                <tr key={code}>
+                  <th scope="row">{getName(evaluated ?? successful, currentLang)}</th>
+                  <td>{formatToPercentLang(evaluated?.proportion ?? 0, currentLang)}</td>
+                  <td>
+                    <strong>{formatToPercentLang(successful?.proportion ?? 0, currentLang)}</strong>
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>

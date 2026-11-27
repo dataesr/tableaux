@@ -1,11 +1,9 @@
 const { VITE_APP_SERVER_URL } = import.meta.env;
 
+// Données déjà triées par l'API (pilier_code)
 export async function getData(params: string) {
-  if (params === "") {
-    return [];
-  }
+  if (params === "") return { data: [] };
 
-  return fetch(
-    `${VITE_APP_SERVER_URL}/european-projects/overview/funding-proportion?${params}&groupBy=pillar`
-  ).then((response) => response.json());
+  const response = await fetch(`${VITE_APP_SERVER_URL}/european-projects/overview/funding-proportion?${params}&groupBy=pillar`);
+  return response.json();
 }
