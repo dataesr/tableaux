@@ -68,6 +68,7 @@ export function useGetParams() {
   return { currentLang, params: params.filter((item) => !!item).join("&") };
 }
 
+
 // --- Niveau sélectionné (propre au positioning : top-10 et intro) ---
 
 // Libellé exploitable (non vide, différent de "unknown")
@@ -117,20 +118,40 @@ export function getLevelText({
 
 // Commentaire du graph, avec le niveau sélectionné
 // levelText : { fr: "dans le pilier Excellence science", en: "in the pillar Excellent science" }
-export function comment(levelText: { fr: string; en: string }) {
+const ALL_LEVELS: Record<Lang, string> = { fr: "pour l'ensemble d'Horizon Europe", en: "for Horizon Europe as a whole" };
+const FOR: Record<Lang, string> = { fr: "pour", en: "for" };
+
+// {selectedText} :
+// - aucun niveau : "pour l'ensemble d'Horizon Europe"
+// - sinon        : "pour le pilier sélectionné" / "pour les thématiques sélectionnées"
+function getSelectedText(level: Level | null, lang: Lang, count = 1): string {
+  if (!level) return ALL_LEVELS[lang];
+  return `${FOR[lang]} ${getLevelVars(level, "", lang, count).selected}`;
+}
+
+// Commentaire du graph : reçoit data, comme readingKey
+export function comment(data) {
+  const { level, count } = getLevelFromResponse(data);
   return {
-    fr: <>{fillTemplate(i18nTop10.comment.fr, { levelText: levelText.fr })}</>,
-    en: <>{fillTemplate(i18nTop10.comment.en, { levelText: levelText.en })}</>,
+    fr: <>{fillTemplate(i18nTop10.comment.fr, { selectedText: getSelectedText(level, "fr", count) })}</>,
+    en: <>{fillTemplate(i18nTop10.comment.en, { selectedText: getSelectedText(level, "en", count) })}</>,
   };
 }
 
-export function readingKey(data, currentLang: Lang, levelText: { fr: string; en: string }) {
+export function readingKey(data, currentLang: Lang) {
   if (!data?.top10 || data.top10.length === 0) {
     return {
       fr: <></>,
       en: <></>,
     };
   }
+
+  // "dans le pilier Excellence scientifique" / "par Horizon Europe"
+  const { level, name, count: levelCount } = getLevelFromResponse(data);
+  const levelText = {
+    fr: getLevelText({ level, lang: "fr", name, count: levelCount }),
+    en: getLevelText({ level, lang: "en", name, count: levelCount }),
+  };
 
   const topCountry = data.top10[0];
   const secondCountry = data.top10.length > 1 ? data.top10[1] : null;
@@ -203,7 +224,7 @@ export function renderDataTable(data, currentLang, selectedCountryCode) {
                       <th scope="row">{index + 1}</th>
                       <td>{countryName}</td>
                       <td>{formatToMillionsLang(item.total_fund_eur, currentLang)}</td>
-                      <td>{item.influence?.toFixed(1)} %</td>
+                      <td>{formatToPercentLang(item.influence, currentLang)}</td>
                     </tr>
                   );
                 })}

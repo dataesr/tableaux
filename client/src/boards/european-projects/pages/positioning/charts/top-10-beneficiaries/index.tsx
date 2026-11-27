@@ -6,7 +6,7 @@ import DefaultSkeleton from "../../../../../../components/charts-skeletons/defau
 import { EPChartsSources } from "../../../../config.js";
 import getOptions from "./options";
 import { getData } from "./query";
-import { comment, getLevelFromResponse, getLevelText, readingKey, renderDataTable, useGetParams } from "./utils";
+import { comment,  readingKey, renderDataTable, useGetParams } from "./utils";
 
 export default function Top10Beneficiaries() {
   const [searchParams] = useSearchParams();
@@ -19,21 +19,13 @@ export default function Top10Beneficiaries() {
 
   if (isLoading || !data) return <DefaultSkeleton />;
 
-  // Niveau sélectionné et son libellé, renvoyés par l'API
-  const { level, name: levelName, count: levelCount } = getLevelFromResponse(data);
-
-  // "dans le pilier Excellence science" / "par Horizon Europe"
-  const levelText = {
-    fr: getLevelText({ level, lang: "fr", name: levelName, count: levelCount }),
-    en: getLevelText({ level, lang: "en", name: levelName, count: levelCount }),
-  };
 
   const chartId = "top10beneficiaries";
   const config = {
     id: chartId,
     idQuery: "top10beneficiaries",
-    comment: comment(levelText),
-    readingKey: readingKey(data, currentLang, levelText),
+    comment: comment(data),
+    readingKey: readingKey(data, currentLang),
     sources: EPChartsSources,
     title: {
       fr: "Principaux pays bénéficiaires",
