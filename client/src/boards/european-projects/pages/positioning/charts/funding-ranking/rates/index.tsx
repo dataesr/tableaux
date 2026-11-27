@@ -18,9 +18,8 @@ import { readingKey } from "./utils.js";
 
 export default function FundingRankingRates() {
   const [searchParams] = useSearchParams();
-  const currentLang = searchParams.get("language") || "fr";
+  const { params, currentLang } = useGetParams();
   const [sortBy, setSortBy] = useState("secured");
-  const params = useGetParams();
 
   const chartId = "fundingRankingRates";
   const { data, isLoading } = useQuery({
@@ -48,7 +47,7 @@ export default function FundingRankingRates() {
         </>
       ),
     },
-    readingKey: readingKey(data),
+    readingKey: readingKey(data, currentLang),
     sources: EPChartsSources,
     integrationURL: `/integration?chart_id=${chartId}&${params}`,
   };
