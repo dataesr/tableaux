@@ -1,7 +1,7 @@
 import { useLocation } from "react-router-dom";
 
 import { Layout } from "../../../../layout/layout";
-import { getI18nLabel } from "../../../../utils";
+import { getI18nLabel, isInDevelopment } from "../../../../utils";
 import { useSection as useBibliometrieSection } from "../../pages/bibliometrie/sections.ts";
 import { useSection as useFinancementsSection } from "../../pages/financements/sections.ts";
 import SelectionBar from "../selection";
@@ -13,7 +13,7 @@ const NAV_ITEMS = [
   { key: "accueil", icon: "home-4-line", to: `${BASE}/accueil` },
   { key: "bibliometrie", to: `${BASE}/bibliometrie` },
   { key: "fundings", to: `${BASE}/financements` },
-  { key: "innovation", to: `${BASE}/innovation` },
+  ...(isInDevelopment() ? [{ key: "innovation", to: `${BASE}/innovation` }] : []),
 ];
 
 // Le header DSFR passe sa navigation dans une modale pilotée par le JS du DSFR, qui n'est pas chargé :
