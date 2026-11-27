@@ -1,0 +1,30 @@
+{
+  "pillar": {
+    "inLevel": { "en": "In the pillar", "fr": "Dans le pilier" },
+    "byLevel": { "en": "by pillar", "fr": "par pilier" },
+    "scope": { "en": "for each pillar", "fr": "pour chaque pilier" },
+    "selected": { "en": "the selected pillar", "fr": "le pilier sélectionné" },
+    "selectedPlural": { "en": "the selected pillars", "fr": "les piliers sélectionnés" }
+  },
+  "program": {
+    "inLevel": { "en": "In the programme", "fr": "Dans le programme" },
+    "byLevel": { "en": "by programme", "fr": "par programme" },
+    "scope": { "en": "for each programme of the selected pillar", "fr": "pour chaque programme du pilier sélectionné" },
+    "selected": { "en": "the selected programme", "fr": "le programme sélectionné" },
+    "selectedPlural": { "en": "the selected programmes", "fr": "les programmes sélectionnés" }
+  },
+  "topic": {
+    "inLevel": { "en": "In the theme", "fr": "Dans la thématique" },
+    "byLevel": { "en": "by theme", "fr": "par thématique" },
+    "scope": { "en": "for each theme of the selected programme", "fr": "pour chaque thématique du programme sélectionné" },
+    "selected": { "en": "the selected theme", "fr": "la thématique sélectionnée" },
+    "selectedPlural": { "en": "the selected themes", "fr": "les thématique sélectionnées" }
+  },
+  "destination": {
+    "inLevel": { "en": "In the destination", "fr": "Dans la destination" },
+    "byLevel": { "en": "by destination", "fr": "par destination" },
+    "scope": { "en": "for each destination of the selected theme", "fr": "pour chaque destination de la thématique sélectionnée" },
+    "selected": { "en": "the selected destination", "fr": "la destination sélectionnée" },
+    "selectedPlural": { "en": "the selected destinations", "fr": "les destinations sélectionnées" }
+  }
+}

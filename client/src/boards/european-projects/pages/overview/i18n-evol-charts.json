@@ -13,50 +13,6 @@
       "en": "Total grants (EUR)"
     }
   },
-  "levels": {
-    "pillar": {
-      "selected": {
-        "fr": "le pilier sélectionné",
-        "en": "the selected pillar"
-      },
-      "selectedPlural": {
-        "fr": "les piliers sélectionnés",
-        "en": "the selected pillars"
-      },
-      "in": {
-        "fr": "dans le pilier {name}",
-        "en": "under the {name} pillar"
-      }
-    },
-    "program": {
-      "selected": {
-        "fr": "le programme sélectionné",
-        "en": "the selected programme"
-      },
-      "selectedPlural": {
-        "fr": "les programmes sélectionnés",
-        "en": "the selected programmes"
-      },
-      "in": {
-        "fr": "dans le programme {name}",
-        "en": "under the {name} programme"
-      }
-    },
-    "topic": {
-      "selected": {
-        "fr": "la thématique sélectionnée",
-        "en": "the selected topic"
-      },
-      "selectedPlural": {
-        "fr": "les thématiques sélectionnées",
-        "en": "the selected topics"
-      },
-      "in": {
-        "fr": "dans la thématique {name}",
-        "en": "under the {name} topic"
-      }
-    }
-  },
   "yAxis": {
     "total_fund_eur": {
       "fr": "Euros (M€)",
