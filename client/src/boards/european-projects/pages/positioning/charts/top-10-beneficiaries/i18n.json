@@ -1,11 +1,33 @@
 {
+
+  "total-funding-eur-axis": {
+    "fr": "Financements (M€)",
+    "en": "Funding (€M)"
+  },
+  "cumulative-weight-axis": {
+    "fr": "Poids du cumul des financements (%)",
+    "en": "Weight of cumulative funding (%)"
+  },
+  "total-funding-eur": {
+    "fr": "Financements obtenus",
+    "en": "Secured funding"
+  },
+  "total-funding": {
+    "fr": "Financements obtenus",
+    "en": "Secured funding"
+  },
+  "weight-of-funding": {
+    "fr": "Poids du cumul des financements obtenus",
+    "en": "Weight of cumulative funding secured"
+  },
+
   "comment": {
-    "fr": "Ce graphique représente le positionnement du pays sélectionné par rapport aux autres pays en fonction des financements alloués {levelText}. Les points correspondent au cumul des financements alloués. Seuls les 10 premiers bénéficiaires sont affichés, le pays sélectionné étant ajouté en 10ème position s'il n'en fait pas partie.",
-    "en": "This chart shows the position of the selected country relative to the other countries based on the funding awarded {levelText}. The points show the cumulative funding secured. Only the top 10 beneficiaries are displayed, with the selected country added in 10th position if it is not among them."
+    "fr": "Ce graphique présente, {selectedText}, le positionnement du pays sélectionné par rapport aux autres pays en fonction des financements qui leur sont alloués. Les points correspondent au cumul des financements alloués. Seuls les 10 premiers bénéficiaires sont affichés, le pays sélectionné étant ajouté en 10ème position s'il n'en fait pas partie.",
+    "en": "This chart shows, {selectedText}, the position of the selected country relative to the other countries based on the funding awarded to them. The points show the cumulative funding awarded. Only the top 10 beneficiaries are displayed, with the selected country added in 10th position if it is not among them."
   },
   "readingKey": {
     "first": {
-      "fr": "{country} se place en 1ère position du classement avec {amount} de financements obtenus",
+      "fr": "{country} est le 1er pays bénéficiaire avec {amount} de financements obtenus",
       "en": "{country} ranks 1st with {amount} in secured funding"
     },
     "second": {
