@@ -151,16 +151,13 @@ const COUNTRY_MAPPING = {
   },
 };
 
-type Lang = "fr" | "en";
-
 export default function Intro() {
   const [searchParams] = useSearchParams();
-  const params = useGetParams();
-  const currentLang: Lang = searchParams.get("language") === "en" ? "en" : "fr";
+  const { params, currentLang } = useGetParams();
   const selectedCountryCode = searchParams.get("country_code") || "FRA";
 
   const { data, isLoading } = useQuery({
-    queryKey: ["Top10Beneficiaries", params],
+    queryKey: ["top10beneficiaries", params],
     queryFn: () => getData(params),
   });
 
