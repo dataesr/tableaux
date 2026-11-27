@@ -175,11 +175,11 @@ router
         total_evaluated_ratio: (
           (el.total_evaluated / total_evaluated_all_country) *
           100
-        ).toFixed(2),
+        ),
         total_successful_ratio: (
           (el.total_successful / total_successful_all_country) *
           100
-        ).toFixed(2),
+        ),
         ratio: (el.total_successful / el.total_evaluated) * 100,
         ratio_coordination_number:
           (el.total_coordination_number_successful /
