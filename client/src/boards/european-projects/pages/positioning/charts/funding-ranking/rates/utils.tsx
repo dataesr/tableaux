@@ -64,7 +64,7 @@ export function readingKey(data, currentLang) {
       en: <></>,
     };
   }
-  console.log(data)
+
   // Trouver les pays avec les parts les plus élevées
   const topEvaluated = [...data].sort((a, b) => b.total_evaluated_ratio - a.total_evaluated_ratio)[0];
   const topSuccessful = [...data].sort((a, b) => b.total_successful_ratio - a.total_successful_ratio)[0];
