@@ -9,11 +9,13 @@ const collection_projects_entities = "european-projects_projects-entities";
 
 router.route("/european-projects/overview/funding").get(async (req, res) => {
   const filters = checkQuery(req.query, ["country_code"], res);
+
+  // `sort` = champ de tri du niveau (null → ordre par code)
   const groupings = {
-    pillar: { code: "$pilier_code", name_fr: "$pilier_name_fr", name_en: "$pilier_name_en" },
-    program: { code: "$programme_code", name_fr: "$programme_name_fr", name_en: "$programme_name_en" },
-    topic: { code: "$thema_code", name_fr: "$thema_name_fr", name_en: "$thema_name_en" },
-    destination: { code: "$destination_code", name_fr: "$destination_name_en", name_en: "$destination_name_en" },
+    pillar: { code: "$pilier_code", name_fr: "$pilier_name_fr", name_en: "$pilier_name_en", sort: null },
+    program: { code: "$programme_code", name_fr: "$programme_name_fr", name_en: "$programme_name_en", sort: null },
+    topic: { code: "$thema_code", name_fr: "$thema_name_fr", name_en: "$thema_name_en", sort: "$thema_sort" },
+    destination: { code: "$destination_code", name_fr: "$destination_name_fr", name_en: "$destination_name_en", sort: "$destination_sort" },
   };
   const requestedGrouping = req.query.groupBy;
   if (requestedGrouping !== undefined && (typeof requestedGrouping !== "string" || !Object.hasOwn(groupings, requestedGrouping))) {
@@ -24,47 +26,23 @@ router.route("/european-projects/overview/funding").get(async (req, res) => {
 
   // Depending on the filter selected, we want to group at the lowest level
   if (req.query.pillars) {
-    const pillars = req.query.pillars.split("|");
-    filters.pilier_code = { $in: pillars };
-
-    if (!hasExplicitGrouping) {
-      groupBy.code = "$programme_code";
-      groupBy.name_fr = "$programme_name_fr";
-      groupBy.name_en = "$programme_name_en";
-    }
+    filters.pilier_code = { $in: req.query.pillars.split("|") };
+    if (!hasExplicitGrouping) Object.assign(groupBy, groupings.program);
   }
 
   if (req.query.programs) {
-    const programs = req.query.programs.split("|");
-    filters.programme_code = { $in: programs };
-
-    if (!hasExplicitGrouping) {
-      groupBy.code = "$thema_code";
-      groupBy.name_fr = "$thema_name_fr";
-      groupBy.name_en = "$thema_name_en";
-    }
+    filters.programme_code = { $in: req.query.programs.split("|") };
+    if (!hasExplicitGrouping) Object.assign(groupBy, groupings.topic);
   }
 
   if (req.query.thematics) {
-    const thematics = req.query.thematics.split(",");
-    filters.thema_code = { $in: thematics };
-
-    if (!hasExplicitGrouping) {
-      groupBy.code = "$destination_code";
-      groupBy.name_fr = "$destination_name_fr";
-      groupBy.name_en = "$destination_name_en";
-    }
+    filters.thema_code = { $in: req.query.thematics.split(",") };
+    if (!hasExplicitGrouping) Object.assign(groupBy, groupings.destination);
   }
 
   if (req.query.destinations) {
-    const destinations = req.query.destinations.split(",");
-    filters.destination_code = { $in: destinations };
-
-    if (!hasExplicitGrouping) {
-      groupBy.code = "$destination_code";
-      groupBy.name_fr = "$destination_name_fr";
-      groupBy.name_en = "$destination_name_en";
-    }
+    filters.destination_code = { $in: req.query.destinations.split(",") };
+    if (!hasExplicitGrouping) Object.assign(groupBy, groupings.destination);
   }
 
   if (req.query.structureid) {
@@ -74,13 +52,11 @@ router.route("/european-projects/overview/funding").get(async (req, res) => {
 
   // group by exception: if no pilar, we want to show all programs too. This query will be call two times. One without grouBy params en one with
   if (req.query.showAllPrograms === "true") {
-    groupBy.code = "$programme_code";
-    groupBy.name_fr = "$programme_name_fr";
-    groupBy.name_en = "$programme_name_en";
+    Object.assign(groupBy, groupings.program);
   }
 
   if (req.query.isEjo) {
-    filters.is_ejo = { $eq: req.query.isEjo === "true" ? true : false };
+    filters.is_ejo = { $eq: req.query.isEjo === "true" };
   }
 
   if (req.query.range_of_years) {
@@ -99,6 +75,9 @@ router.route("/european-projects/overview/funding").get(async (req, res) => {
             name_fr: groupBy.name_fr,
             name_en: groupBy.name_en,
           },
+          // hors de _id pour ne pas éclater les groupes
+          // "" traité comme absent ($min ignore null/absent)
+          sort: { $min: { $cond: [{ $eq: [groupBy.sort, ""] }, null, groupBy.sort] } },
           total_fund_eur: { $sum: "$calculated_fund" },
           total_coordination_number: { $sum: "$coordination_number" },
           total_number_involved: { $sum: "$number_involved" },
@@ -113,14 +92,18 @@ router.route("/european-projects/overview/funding").get(async (req, res) => {
           name_fr: "$_id.name_fr",
           name_en: "$_id.name_en",
           stage: "$_id.stage",
+          sort: 1,
           total_fund_eur: 1,
           total_coordination_number: 1,
           total_number_involved: 1,
           count: 1,
           total_projects: { $size: "$projects" },
+          // 1 = pas de valeur de tri → à la fin
+          _noSort: { $cond: [{ $eq: [{ $ifNull: ["$sort", null] }, null] }, 1, 0] },
         },
       },
-      { $sort: { code: 1 } },
+      { $sort: { _noSort: 1, sort: 1, code: 1, stage: 1 } },
+      { $project: { _noSort: 0 } },
     ])
     .toArray();
 
@@ -167,6 +150,8 @@ router.route("/european-projects/overview/funding_indexes").get(async (req, res)
         programme_name_fr: 1,
         thema_name_en: 1,
         thema_name_fr: 1,
+        thema_sort: 1,
+        destination_sort: 1,
         calculated_fund: 1,
         coordination_number: 1,
         number_involved: 1,
