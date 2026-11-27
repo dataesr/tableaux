@@ -44,7 +44,7 @@ const i18n = {
     en: "Visualize the evolution of requested and obtained grants for the selected program over the years of the Horizon Europe program. This allows you to analyze funding trends and evaluate the program's performance over time. You can also adjust the display to view total grants, total coordinations, or total participations.",
   },
 
-  "thematic-composition": { fr: "Composition des thématiques", en: "Thematic composition" },
+  "thematic-composition": { fr: "Composition de la thématique", en: "Thematic composition" },
   "thematic-composition-callout": {
     fr: "Visualisez la répartition des subventions de la ou des thématiques sélectionnée(s) par destination. Cela vous permet d'identifier les destinations les plus financées et de comprendre leur contribution au sein de la ou des thématiques.",
     en: "Visualize the grant distribution of the selected topic(s) by destination. This allows you to identify the most funded destinations and understand their contribution within the topic(s).",
