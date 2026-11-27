@@ -1,7 +1,7 @@
 {
   "intro": {
-    "fr": "Dix pays concentrent {percent} des financements alloués par Horizon Europe : {countriesListSort}",
-    "en": "Ten countries account for {percent} of the funding awarded under Horizon Europe: {countriesListSort}"
+    "fr": "10 pays concentrent {percent} des financements alloués {levelText}\u00a0:",
+    "en": "10 countries account for {percent} of the funding awarded {levelText}:"
   },
   "ranking_masculine": {
     "fr": "est en {position} de ce classement.",
