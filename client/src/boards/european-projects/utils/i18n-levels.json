@@ -18,7 +18,7 @@
     "byLevel": { "en": "by theme", "fr": "par thématique" },
     "scope": { "en": "for each theme of the selected programme", "fr": "pour chaque thématique du programme sélectionné" },
     "selected": { "en": "the selected theme", "fr": "la thématique sélectionnée" },
-    "selectedPlural": { "en": "the selected themes", "fr": "les thématique sélectionnées" }
+    "selectedPlural": { "en": "the selected themes", "fr": "les thématiques sélectionnées" }
   },
   "destination": {
     "inLevel": { "en": "In the destination", "fr": "Dans la destination" },
