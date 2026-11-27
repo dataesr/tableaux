@@ -5,6 +5,15 @@ import { formatCurrencyLang, formatToMillionsLang, formatToPercentLang } from ".
 import i18n from "../../../../i18n-global.json";
 import { getCountryNameWithArticle } from "../../../../utils/country-mapping";
 import { isEjoParam } from "../../../../utils/params";
+import {
+  fillPlaceholders as fillTemplate,
+  getLevelVars,
+  LEVELS,
+  type Lang,
+  type Level,
+  type LevelName,
+} from "../../../../utils/levelsGet";
+import i18nTop10 from "./i18n.json";
 
 export function useGetParams() {
   const [searchParams] = useSearchParams();
@@ -41,7 +50,7 @@ export function useGetParams() {
     params.push(`destinations=${destinationIds}`);
   }
 
-    // Récupérer le paramètre range_of_years et le convertir en call_year pour l'API
+  // Récupérer le paramètre range_of_years
   const rangeOfYears = searchParams.get("range_of_years");
   if (rangeOfYears) {
     params.push(`range_of_years=${rangeOfYears}`);
@@ -51,15 +60,71 @@ export function useGetParams() {
     params.push(isEjoParam());
   }
 
-  const currentLang = (searchParams.get("language") === "en" ? "en" : "fr") as "fr" | "en";
+  const currentLang = (searchParams.get("language") === "en" ? "en" : "fr") as Lang;
 
   // Ajouter le paramètre stage par défaut
   params.push("stage=successful");
 
-  return {currentLang, params: params.filter((item) => !!item).join("&")};
+  return { currentLang, params: params.filter((item) => !!item).join("&") };
 }
 
-export function readingKey(data, currentLang) {
+// --- Niveau sélectionné (propre au positioning : top-10 et intro) ---
+
+// Libellé exploitable (non vide, différent de "unknown")
+const isValidName = (v) => typeof v === "string" && v.trim() !== "" && v.trim().toLowerCase() !== "unknown";
+
+// Niveau sélectionné renvoyé par l'API (champ "level" de la route top-10-beneficiaries) :
+// { type: "pillar" | "program" | "topic" | "destination", items: [{ code, name_fr, name_en }] } ou null
+export function getLevelFromResponse(data): { level: Level | null; name: LevelName | null; count: number } {
+  const type = data?.level?.type;
+  if (!type || !LEVELS[type]) return { level: null, name: null, count: 1 };
+
+  const items = data.level.items ?? [];
+  const first = items[0];
+  const name = first
+    ? {
+        fr: [first.name_fr, first.name_en].find(isValidName) ?? first.code,
+        en: [first.name_en, first.name_fr].find(isValidName) ?? first.code,
+      }
+    : null;
+
+  return { level: type, name, count: Math.max(items.length, 1) };
+}
+
+const NO_LEVEL: Record<Lang, string> = { fr: "par Horizon Europe", en: "under Horizon Europe" };
+const IN: Record<Lang, string> = { fr: "dans", en: "in" };
+
+// Fragment à insérer en milieu de phrase :
+// - aucun niveau ("tous les piliers") : "par Horizon Europe"
+// - 1 élément                         : "dans le pilier Excellence science"
+// - plusieurs éléments                : "dans les thématiques sélectionnées"
+export function getLevelText({
+  level,
+  lang,
+  name,
+  count = 1,
+}: {
+  level: Level | null;
+  lang: Lang;
+  name: LevelName | null;
+  count?: number;
+}): string {
+  if (!level) return NO_LEVEL[lang];
+  const vars = getLevelVars(level, name?.[lang] ?? "", lang, count);
+  if (count > 1) return `${IN[lang]} ${vars.selected}`;
+  return vars.inLevel;
+}
+
+// Commentaire du graph, avec le niveau sélectionné
+// levelText : { fr: "dans le pilier Excellence science", en: "in the pillar Excellent science" }
+export function comment(levelText: { fr: string; en: string }) {
+  return {
+    fr: <>{fillTemplate(i18nTop10.comment.fr, { levelText: levelText.fr })}</>,
+    en: <>{fillTemplate(i18nTop10.comment.en, { levelText: levelText.en })}</>,
+  };
+}
+
+export function readingKey(data, currentLang: Lang, levelText: { fr: string; en: string }) {
   if (!data?.top10 || data.top10.length === 0) {
     return {
       fr: <></>,
@@ -67,44 +132,39 @@ export function readingKey(data, currentLang) {
     };
   }
 
-  const topCountry = data.top10[0]
-  const genderedCountryFr = getCountryNameWithArticle(topCountry.id, 'fr')
-  const genderedCountryEn = getCountryNameWithArticle(topCountry.id, 'en')
-
+  const topCountry = data.top10[0];
   const secondCountry = data.top10.length > 1 ? data.top10[1] : null;
-  const genderedSecondCountryFr = secondCountry
-  ? getCountryNameWithArticle(secondCountry.id, 'fr')
-  : null;
-    const genderedSecondCountryEn = secondCountry
-  ? getCountryNameWithArticle(secondCountry.id, 'en')
-  : null;
-
   const tenthCountry = data.top10.length >= 10 ? data.top10[9] : data.top10[data.top10.length - 1];
+  const count = String(Math.min(data.top10.length, 10));
 
-  return {
-    fr: (
+  const build = (lang: Lang) => {
+    const tpl = i18nTop10.readingKey;
+    // Article en minuscule en milieu de phrase ("suivi par la France")
+    const secondName = secondCountry
+      ? getCountryNameWithArticle(secondCountry.id, lang).replace(/^(Le |La |Les |L')/, (m) => m.toLowerCase())
+      : "";
+
+    return (
       <>
-        {genderedCountryFr} se place en 1ère position du classement avec {formatCurrencyLang(topCountry.total_fund_eur, currentLang)} de financements obtenus
-        {secondCountry && (
-          <>
-            , suivi par {genderedSecondCountryFr} avec {formatCurrencyLang(secondCountry.total_fund_eur, currentLang)}
-          </>
-        )}
-        . {data.top10.length >= 10 ? "Les 10 premiers" : `Les ${data.top10.length}`} pays bénéficiaires représentent {formatToPercentLang(tenthCountry.influence, currentLang)} du cumul total des financements alloués.
+        {fillTemplate(tpl.first[lang], {
+          country: getCountryNameWithArticle(topCountry.id, lang),
+          amount: formatCurrencyLang(topCountry.total_fund_eur, currentLang),
+        })}
+        {secondCountry &&
+          fillTemplate(tpl.second[lang], {
+            country: secondName,
+            amount: formatCurrencyLang(secondCountry.total_fund_eur, currentLang),
+          })}
+        {fillTemplate(tpl.total[lang], {
+          count,
+          percent: formatToPercentLang(tenthCountry.influence, currentLang),
+          levelText: levelText[lang],
+        })}
       </>
-    ),
-    en: (
-      <>
-        {genderedCountryEn} ranks 1st with {formatCurrencyLang(topCountry.total_fund_eur, currentLang)} in secured funding
-        {secondCountry && (
-          <>
-            , followed by {genderedSecondCountryEn} with {formatCurrencyLang(secondCountry.total_fund_eur, currentLang)}
-          </>
-        )}
-        . The top {data.top10.length >= 10 ? "10" : data.top10.length} beneficiaries countries represent {formatToPercentLang(tenthCountry.influence, currentLang)} of the cumulative total allocated funding.
-      </>
-    ),
+    );
   };
+
+  return { fr: build("fr"), en: build("en") };
 }
 
 export function renderDataTable(data, currentLang, selectedCountryCode) {

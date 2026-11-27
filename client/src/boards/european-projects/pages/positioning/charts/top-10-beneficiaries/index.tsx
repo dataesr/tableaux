@@ -6,12 +6,12 @@ import DefaultSkeleton from "../../../../../../components/charts-skeletons/defau
 import { EPChartsSources } from "../../../../config.js";
 import getOptions from "./options";
 import { getData } from "./query";
-import { readingKey, renderDataTable, useGetParams } from "./utils";
+import { comment, getLevelFromResponse, getLevelText, readingKey, renderDataTable, useGetParams } from "./utils";
 
 export default function Top10Beneficiaries() {
   const [searchParams] = useSearchParams();
   const { params, currentLang } = useGetParams();
-  
+
   const { data, isLoading } = useQuery({
     queryKey: ["top10beneficiaries", params],
     queryFn: () => getData(params),
@@ -19,27 +19,21 @@ export default function Top10Beneficiaries() {
 
   if (isLoading || !data) return <DefaultSkeleton />;
 
+  // Niveau sélectionné et son libellé, renvoyés par l'API
+  const { level, name: levelName, count: levelCount } = getLevelFromResponse(data);
+
+  // "dans le pilier Excellence science" / "par Horizon Europe"
+  const levelText = {
+    fr: getLevelText({ level, lang: "fr", name: levelName, count: levelCount }),
+    en: getLevelText({ level, lang: "en", name: levelName, count: levelCount }),
+  };
+
   const chartId = "top10beneficiaries";
   const config = {
     id: chartId,
     idQuery: "top10beneficiaries",
-    comment: {
-      fr: (
-        <>
-          Ce graphique représente le positionnement du pays sélectionné par rapport aux autres pays en fonction des financements obtenus.{" "}
-          Les points correspondent au cumul des financements alloués. Seuls les 10 premiers bénéficiaires sont affichés, le pays sélectionné{" "}
-          étant ajouté en 10ème position s'il n'en fait pas partie.
-        </>
-      ),
-      en: (
-        <>
-          This chart shows the position of the selected country relative to the other countries based on funding secured.{" "}
-          The points show the cumulative funding secured. Only the top 10 beneficiaries are displayed, with the selected country{" "}
-          added in 10th position if it is not among them.
-        </>
-      ),
-    },
-    readingKey: readingKey(data, currentLang),
+    comment: comment(levelText),
+    readingKey: readingKey(data, currentLang, levelText),
     sources: EPChartsSources,
     title: {
       fr: "Principaux pays bénéficiaires",
@@ -65,7 +59,11 @@ export default function Top10Beneficiaries() {
 
   return (
     <div className="chart-container chart-container--default">
-      <ChartWrapper config={config} options={getOptions(prepareData(data), searchParams.get("country_code") ?? null, currentLang)} renderData={() => renderDataTable(prepareData(data), currentLang, searchParams.get("country_code") ?? null)} />
+      <ChartWrapper
+        config={config}
+        options={getOptions(prepareData(data), searchParams.get("country_code") ?? null, currentLang)}
+        renderData={() => renderDataTable(prepareData(data), currentLang, searchParams.get("country_code") ?? null)}
+      />
     </div>
   );
 }
