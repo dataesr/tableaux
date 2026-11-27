@@ -22,7 +22,7 @@ export default function GlobalLayout() {
 
   return (
     <Layout
-      footer={{ href: `${BASE}/accueil`, title: "#dataESR tableaux de bord" }}
+      footer={{ accessibility: "partially", href: `${BASE}/accueil`, title: "#dataESR tableaux de bord" }}
       items={items}
       serviceHref={`${BASE}/accueil`}
       serviceTag="Tableau de bord du personnel enseignant des établissements d'enseignement supérieur français"

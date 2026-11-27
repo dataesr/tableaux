@@ -4,6 +4,7 @@ import { useLocation, useSearchParams } from "react-router-dom"
 import SwitchLanguage from "../../components/switch-language"
 import SwitchTheme from "../../components/switch-theme"
 import { getI18nLabel, isInProduction } from "../../utils"
+import { ACCESSIBILITY_LABELS, AccessibilityStatus } from "./accessibility-config"
 import i18n from "./i18n.json"
 
 const { VITE_MINISTER_NAME, VITE_VERSION } = import.meta.env
@@ -11,12 +12,13 @@ const { VITE_MINISTER_NAME, VITE_VERSION } = import.meta.env
 const BOARD_CONFIGS = import.meta.glob("../../boards/*/sitemap-config.ts")
 
 type FooterProps = {
+  accessibility?: AccessibilityStatus
   href?: string
   sitemapHref?: string
   title?: string
 }
 
-export default function FooterWrapper({ href = "/", sitemapHref, title = "Accueil - Tableaux" }: FooterProps) {
+export default function FooterWrapper({ accessibility, href = "/", sitemapHref, title = "Accueil - Tableaux" }: FooterProps) {
   const { pathname } = useLocation()
   const [searchParams] = useSearchParams()
   const lang = searchParams.get("language")?.toLowerCase() === "en" ? "en" : "fr"
@@ -50,7 +52,7 @@ export default function FooterWrapper({ href = "/", sitemapHref, title = "Accuei
         {!isInProduction() && <Link href="/donnees-personnelles">{t("personalData")}</Link>}
         {!isInProduction() && <Link href="/cgu">{t("cgu")}</Link>}
         <Link href="/cookies">{t("cookies")}</Link>
-        <Link href={`/accessibility?from=${dashboard}`}>{t("accessibility")}</Link>
+        <Link href={`/accessibility?from=${dashboard}`}>{accessibility ? ACCESSIBILITY_LABELS[accessibility][lang] : t("accessibility")}</Link>
         <Link href={`/contact?from=${dashboard}`}>{t("contact")}</Link>
         <Link href="https://github.com/dataesr/tableaux" icon="github-fill" rel="noopener external" target="_blank" title={`Github dataESR - ${t("newWindow")}`}>
           Github

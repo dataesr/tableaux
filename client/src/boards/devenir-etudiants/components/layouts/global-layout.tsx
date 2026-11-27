@@ -42,6 +42,7 @@ export default function GlobalLayout() {
         </div>
       }
       footer={{
+        accessibility: "partially",
         href: `${BASE}/flux`,
         title: "Accueil - Parcours des néo-bacheliers inscrits en L1 en 2019 - Ministère de l'enseignement supérieur, de la recherche et de l'espace",
       }}
