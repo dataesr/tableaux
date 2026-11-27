@@ -1,8 +1,11 @@
 import { useSearchParams } from "react-router-dom";
 
-import { getI18nLabel } from "../../../../../../../utils";
-import i18n from "../../../../../i18n-global.json";
 import { isEjoParam } from "../../../../../utils/params";
+import { getI18nLabel } from "../../../../../../../utils";
+
+import { getCountryNameWithArticle } from "../../../../../utils/country-mapping";
+import i18n from "../../../../../i18n-global.json";
+import { formatToPercentLang } from "../../../../../../../utils/format";
 
 export function useGetParams() {
   const [searchParams] = useSearchParams();
@@ -49,32 +52,38 @@ export function useGetParams() {
     params.push(isEjoParam());
   }
 
-  return params.filter((item) => !!item).join("&");
+  const currentLang = (searchParams.get("language") === "en" ? "en" : "fr") as "fr" | "en";
+
+  return { currentLang, params: params.filter((item) => !!item).join("&") };
 }
 
-export function readingKey(data) {
+export function readingKey(data, currentLang) {
   if (!data || data.length === 0) {
     return {
       fr: <></>,
       en: <></>,
     };
   }
-
+  console.log(data)
   // Trouver les pays avec les parts les plus élevées
   const topEvaluated = [...data].sort((a, b) => b.total_evaluated_ratio - a.total_evaluated_ratio)[0];
   const topSuccessful = [...data].sort((a, b) => b.total_successful_ratio - a.total_successful_ratio)[0];
+  const countryN = getCountryNameWithArticle(topEvaluated?.id, currentLang);
+
 
   return {
     fr: (
       <>
-        Le pays <strong>{topEvaluated.name_fr}</strong> concentre{" "}
-        {topEvaluated.total_evaluated_ratio} % des financements demandés et {topSuccessful.total_successful_ratio} % des financements alloués.
+        {countryN} concentre{" "}
+        <strong>{formatToPercentLang(topEvaluated.total_evaluated_ratio, currentLang)}</strong> des financements demandés{" "}
+        <strong>{formatToPercentLang(topSuccessful.total_successful_ratio, currentLang)}</strong> des financements alloués.
       </>
     ),
     en: (
       <>
-        <strong>{topEvaluated.name_en}</strong> accounts for{" "}
-        {topEvaluated.total_evaluated_ratio}% of funding requested and {topSuccessful.total_successful_ratio}% of funding awarded.
+        {countryN} accounts for{" "}
+        <strong>{formatToPercentLang(topEvaluated.total_evaluated_ratio, currentLang)}</strong> of funding requested and{" "}
+        <strong>{formatToPercentLang(topSuccessful.total_successful_ratio, currentLang)}</strong> of funding awarded.
       </>
     ),
   };
