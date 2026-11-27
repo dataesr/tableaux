@@ -14,6 +14,8 @@ export default function FundingValues() {
   const { params, currentLang, countryN } = useGetParams();
   const i18nChart = i18nLocal.charts.total_fund_eur;
 
+  const country = countryN.replace(/^(Le |La |Les |L')/, (m) => m.toLowerCase());
+
   const { data, isLoading } = useQuery({
     queryKey: ["FundingValuesPrograms", params],
     queryFn: () => getData(params),
@@ -43,7 +45,7 @@ export default function FundingValues() {
     },
     sources: EPChartsSources,
     integrationURL: `/integration?chart_id=FundingValuesPrograms`,
-    title: getI18nLabel(i18nChart, "title", currentLang).replace("{country}", countryN),
+    title: getI18nLabel(i18nChart, "title", currentLang).replace("{country}", country),
   };
 
   if (isLoading || !data) return <DefaultSkeleton />;
