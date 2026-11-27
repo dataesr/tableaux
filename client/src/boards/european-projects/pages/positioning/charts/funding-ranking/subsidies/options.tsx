@@ -1,12 +1,16 @@
 import type Highcharts from "highcharts/es-modules/masters/highcharts.src.js";
 
-import { getResponsiveChartHeight } from "../../../../../../../utils";
+
+import { getI18nLabel, getResponsiveChartHeight } from "../../../../../../../utils";
 import { getCssColor } from "../../../../../../../utils/colors";
 import { formatToMillionsLang } from "../../../../../../../utils/format";
 import { CreateChartOptions } from "../../../../../components/chart-ep";
+import i18n from "./i18n.json";
 
 export default function Options(data, currentLang) {
   if (!data) return null;
+
+  const label = (key: string) => getI18nLabel(i18n, key, currentLang);
 
   const newOptions: Highcharts.Options = {
     chart: {
@@ -25,20 +29,24 @@ export default function Options(data, currentLang) {
     ],
     plotOptions: {
       series: {
-        dataLabels: { enabled: true },
+        dataLabels: { 
+          enabled: true, 
+          style: {
+            textOutline: "none",
+          },
+        },
       },
       bar: {
         groupPadding: 0.2,
         pointPadding: 0.1,
         borderWidth: 0,
         shadow: false,
-        borderRadius: 0,
       },
     },
     series: [
       {
         type: "bar",
-        name: "Financements demandés",
+        name: label("evaluated-funding"),
         color: getCssColor("evaluated-project"),
         data: data.map((item) => ({
           label: formatToMillionsLang(item.total_evaluated, currentLang, 1),
@@ -49,16 +57,18 @@ export default function Options(data, currentLang) {
         dataLabels: [
           {
             align: "right",
+            inside: true,
             format: "{point.rank_evaluated}e",
+            style: { textOutline: "none" },
           },
         ],
         tooltip: {
-          pointFormat: "Financements demandés: <b>{point.label}</b>",
+          pointFormat: `${label("evaluated-funding")}: <b>{point.label}</b>`,
         },
       },
       {
         type: "bar",
-        name: "Financements obtenus",
+        name: label("successful-funding"),
         color: getCssColor("successful-project"),
         data: data.map((item) => ({
           label: formatToMillionsLang(item.total_successful, currentLang, 1),
@@ -69,11 +79,13 @@ export default function Options(data, currentLang) {
         dataLabels: [
           {
             align: "right",
+            inside: true,
             format: "{point.rank_successful}e",
+            style: { textOutline: "none" },
           },
         ],
         tooltip: {
-          pointFormat: "Financements obtenus: <b>{point.label}</b>",
+          pointFormat: `${label("successful-funding")}: <b>{point.label}</b>`,
         },
       },
     ],

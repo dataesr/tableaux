@@ -8,5 +8,13 @@ export async function getData(params) {
   const baseUrl = `${VITE_APP_SERVER_URL}/european-projects/overview/funding-evo`;
   const finalUrl = params.length ? `${baseUrl}?${params}` : baseUrl;
 
-  return fetch(finalUrl).then((response) => response.json());
+  const data = await fetch(finalUrl).then((response) => response.json());
+
+  // Destination = niveau le plus fin : prioritaire si présent dans les paramètres
+  const searchParams = new URLSearchParams(params);
+  if (Array.isArray(data) && searchParams.get("destinationIds")) {
+    return data.map((item) => ({ ...item, level: "destination" }));
+  }
+
+  return data;
 }

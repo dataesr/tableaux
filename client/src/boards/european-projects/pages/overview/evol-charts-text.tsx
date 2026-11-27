@@ -1,8 +1,9 @@
 import { getI18nLabel } from "../../../../utils";
+import i18nLevels from "../../utils/i18n-levels.json";
 import i18nCharts from "./i18n-charts.json";
 import i18nEvol from "./i18n-evol-charts.json";
 
-export type EvolLevel = "pillar" | "program" | "topic" | "destination" ;
+export type EvolLevel = "pillar" | "program" | "topic" | "destination";
 export type EvolChart = "values" | "rates";
 type Lang = "fr" | "en";
 
@@ -55,21 +56,36 @@ export function renderBold(text: string) {
   return <>{text.split(/\*\*(.+?)\*\*/g).map((part, index) => (index % 2 === 1 ? <strong key={index}>{part}</strong> : part))}</>;
 }
 
-// {selected} : "le pilier sélectionné" (ou "les thématiques sélectionnées" si count > 1) / {inLevel} : "dans le pilier XXX"
+// Textes liés aux niveaux (pilier, programme, topic, destination) : centralisés dans i18n-levels.json
+// {selected} : "le pilier sélectionné" (ou "les topics sélectionnés" si count > 1)
+// {inLevel}  : "Dans le pilier XXX"
+// {byLevel}  : "par pilier"
+// {scope}    : "pour chaque pilier"
+const lowerFirst = (text: string) => text.charAt(0).toLowerCase() + text.slice(1);
+const levelLabel = (level: EvolLevel, key: string, lang: Lang) => getI18nLabel(i18nLevels, `${level}.${key}`, lang);
+
 export function getLevelVars(level: EvolLevel, levelName: string, lang: Lang, count = 1) {
-  const selectedKey = count > 1 && i18nEvol.levels?.[level]?.selectedPlural ? "selectedPlural" : "selected";
+  const selectedKey = count > 1 && i18nLevels[level]?.selectedPlural ? "selectedPlural" : "selected";
   return {
-    selected: getI18nLabel(i18nEvol, `levels.${level}.${selectedKey}`, lang),
-    inLevel: fillPlaceholders(getI18nLabel(i18nEvol, `levels.${level}.in`, lang), { name: levelName }),
+    selected: levelLabel(level, selectedKey, lang),
+    // inLevel est placé en milieu de phrase dans les readingKeys ("En 2021, dans le pilier XXX, ...") : minuscule initiale
+    inLevel: lowerFirst([levelLabel(level, "inLevel", lang), levelName].filter(Boolean).join(" ")),
+    byLevel: levelLabel(level, "byLevel", lang),
+    scope: levelLabel(level, "scope", lang),
   };
 }
 
-// Nom affiché d'un item : code pour les destinations, nom traduit sinon (code en secours)
+// Nom affiché d'un item : code pour les destinations, nom traduit sinon (autre langue puis code en secours)
 export function getItemName(item, level: EvolLevel, lang: string) {
   const { codeKey, nameKey } = LEVELS[level];
-  if (level === "destination") return item?.[codeKey] ?? "unknown";
-  return item?.[`${nameKey}_${lang === "en" ? "en" : "fr"}`] ?? item?.[codeKey] ?? "unknown";
+  const code = item?.[codeKey] ?? "";
+  if (level === "destination") return code;
+  const l = lang === "en" ? "en" : "fr";
+  const other = l === "en" ? "fr" : "en";
+  return [item?.[`${nameKey}_${l}`], item?.[`${nameKey}_${other}`]].find(isValidName) ?? code;
 }
+
+const isValidName = (v) => typeof v === "string" && v.trim() !== "" && v.trim().toLowerCase() !== "unknown";
 
 // Légendes serie_01 (évalués) / serie_02 (lauréats)
 export function getEvolLegend(displayType: string, currentLang: string) {

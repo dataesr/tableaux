@@ -5,7 +5,7 @@ import { getCssColor } from "../../../../../../utils/colors";
 import { formatToPercentLang } from "../../../../../../utils/format";
 import { CreateChartOptions } from "../../../../components/chart-ep";
 import { normalizeIdForCssColorNames } from "../../../../utils";
-import { getEvolLegend, getItemName, getEvolYAxisTitle, getLevelFromData, LEVELS } from "../../evol-charts-text";
+import { getEvolLegend, getEvolYAxisTitle, getItemName, getLevelFromData, LEVELS } from "../../evol-charts-text";
 
 export default function getOptionsSuccessRates(data, displayType, currentLang): HighchartsOptions {
   if (!data || !Array.isArray(data)) return null;
@@ -102,7 +102,6 @@ export default function getOptionsSuccessRates(data, displayType, currentLang): 
       .map((item) => {
         const allItemData = evaluatedAllItems.find((t) => t[codeKey] === item[codeKey]);
         const itemName = getItemName(item, level, currentLang);
-        
         return {
           name: `${itemName} - ${legend.serie_01}`,
           custom: { itemName },

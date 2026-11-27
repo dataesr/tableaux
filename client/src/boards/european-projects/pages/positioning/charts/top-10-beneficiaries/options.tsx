@@ -34,18 +34,17 @@ export default function getOptions(data, country_code, currentLang) {
         pointPadding: 0.1,
         borderWidth: 0,
         shadow: false,
-        borderRadius: 0,
       },
     },
     series: [
       {
         name: label("total-funding-eur"),
         type: "column",
-        color: getCssColor("countries"),
+        color: getCssColor("successful-project"),
         data: data.map((item) => ({
           name: item[`name_${currentLang}`],
           y: item.total_fund_eur,
-          color: item.id == country_code ? getCssColor("selected-country") : getCssColor("countries"),
+          color: item.id == country_code ? getCssColor("selected-country") : getCssColor("successful-project"),
         })),
         tooltip: {
           pointFormatter: function (this: HighchartsInstance.Point) {

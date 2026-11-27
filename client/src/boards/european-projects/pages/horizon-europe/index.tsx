@@ -39,7 +39,7 @@ function FloatingFilters() {
   function showParam(param) {
     let ret;
     switch (param[0]) {
-      case "country_code":
+      case "country_code":{
         const countryInfo = getCountryInfo(param[1]);
         ret = (
           <>
@@ -50,12 +50,13 @@ function FloatingFilters() {
           </>
         )
         break
+      }
       case "range_of_years":
         ret = (
           <>
             <span>{i18n[param[0]][currentLang]}</span>
             {param[1].split("|").map((y) => (
-              <Badge color="green-archipel" className="fr-mx-1w" key={y}>
+              <Badge key={y} color="green-archipel" className="fr-mx-1w">
                 {y}
               </Badge>
             ))}
@@ -89,7 +90,7 @@ function FloatingFilters() {
         )
         break
     }
-    return <li key={param[1]}>{ret}</li>;
+        return <li key={param[0]}>{ret}</li>;
   }
 
   return (

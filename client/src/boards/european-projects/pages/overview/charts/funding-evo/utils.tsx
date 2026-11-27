@@ -81,8 +81,8 @@ export function successRatesReadingKey(data, displayType, currentLang, countryN,
   // et on retrouve le même item (par son code) dans les autres jeux de données
   const firstItem = dataSelectedCountry?.data?.find((d) => d.stage === "evaluated")?.[itemsKey]?.[0];
   const year = firstItem?.years[0]?.year || "2021";
-  const level_name_fr = getItemName(firstItem, level, "fr");
-  const level_name_en = getItemName(firstItem, level, "en");
+  const level_name_fr = firstItem ? getItemName(firstItem, level, "fr") : "";
+  const level_name_en = firstItem ? getItemName(firstItem, level, "en") : "";
 
   const findYearData = (scopeData, stage) =>
     scopeData?.data?.find((d) => d.stage === stage)?.[itemsKey]?.find((i) => i[codeKey] === firstItem?.[codeKey])?.years?.find((y) => y.year === year);
@@ -117,8 +117,8 @@ export function valuesSuccessReadingKey(data, displayType, currentLang, countryN
   // Plusieurs thématiques possibles : on prend le premier item pour le readingKey
   const firstItem = dataSelectedCountry?.data?.find((d) => d.stage === "evaluated")?.[itemsKey]?.[0];
   const year = firstItem?.years[0]?.year || "2021";
-  const level_name_fr = getItemName(firstItem, level, "fr");
-  const level_name_en = getItemName(firstItem, level, "en");
+  const level_name_fr = firstItem ? getItemName(firstItem, level, "fr") : "";
+  const level_name_en = firstItem ? getItemName(firstItem, level, "en") : "";
 
   const findYearData = (stage) =>
     dataSelectedCountry?.data?.find((d) => d.stage === stage)?.[itemsKey]?.find((i) => i[codeKey] === firstItem?.[codeKey])?.years?.find((y) => y.year === year);

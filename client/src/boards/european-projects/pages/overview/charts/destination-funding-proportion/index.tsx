@@ -1,77 +1,60 @@
 import { useQuery } from "@tanstack/react-query";
+import type React from "react";
 
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
+import { formatToPercentLang } from "../../../../../../utils/format";
 import { EPChartsSources } from "../../../../config.js";
+import { getProportionChartTexts } from "../../proportion-charts-text";
 import getOptions from "./options";
 import { getData } from "./query";
-import { useGetParams, readingKey } from "./utils";
+import { findItem, getName, getOrderedCodes, getProportionKey, renderDataTable, useGetParams } from "./utils";
 
+type ChartConfig = {
+  id: string;
+  title?: { fr: string; en: string };
+  comment?: { fr: React.JSX.Element; en: React.JSX.Element };
+  readingKey?: { fr: React.JSX.Element; en: React.JSX.Element };
+  sources: typeof EPChartsSources;
+  integrationURL: string;
+};
 
-export default function DestinationFundingProportion({ displayType = "total_fund_eur" }: { displayType?: string }) {
-  const { params, currentLang, countryN, adjMascPlural } = useGetParams()
+export default function DestinationsFundingProportion({ displayType = "total_fund_eur" }: { displayType?: string }) {
+  const { params, currentLang, countryN, adjMascPlural } = useGetParams();
+
   const { data, isLoading } = useQuery({
-    queryKey: ["DestinationFundingProportion", params],
+    queryKey: ["destinationsFundingProportion", params],
     queryFn: () => getData(params),
   });
 
   if (isLoading || !data) return <DefaultSkeleton />;
-  
-    const config: {
-      id: string;
-      integrationURL: string;
-      comment?: { fr: React.JSX.Element; en: React.JSX.Element }
-      readingKey?: { fr: React.JSX.Element; en: React.JSX.Element }
-      sources: typeof EPChartsSources;
-      title?: { en: string; fr: string; }
-      } = {
-      id: "destinationFundingProportion",
-      readingKey: readingKey(data, isLoading, displayType, currentLang, countryN, adjMascPlural),
-      sources: EPChartsSources,
-      integrationURL: "/european-projects/components/pages/analysis/overview/charts/destination-funding-proportion",
-    }
-  
-    switch (displayType) {
-      case "total_coordination_number":
-        config.title = {
-          fr: `Part des projets évalués et lauréats coordonnés par ${countryN} sur l'ensemble des coordinations`,
-          en: `Share of evaluated and successful projects coordinated by ${countryN} out of all coordinations`
-        }
-        config.comment = { 
-          fr: <>Ce graphique présente, pour les destinations des thématiques sélectionnées, le nombre de projets évalués et lauréats coordonnés par le pays sélectionné, en part de l'ensemble des coordinations.</>, 
-          en: <>This chart shows, for the destinations of the selected themes, the number of evaluated and successful projects coordinated by the selected country, as a share of all coordinations.</>
-         }
-        break
-      case "total_number_involved":
-        config.title = {
-          fr: `Part des candidats et de participants ${adjMascPlural} sur l'ensemble des pays`,
-          en: `Share of the ${adjMascPlural} applicants and participants out of all countries`
-        }
-        config.comment = { 
-          fr: <>Ce graphique présente, pour les destinations des thématiques sélectionnées, le nombre de candidats et participants implantés dans le pays sélectionné, en part de l'ensemble des pays.</>, 
-          en: <>This chart shows, for the destinations of the selected themes, the number of applicants and participants established in the selected country, as a share of all countries.</>,      
-        }
-        break
-      case "total_projects":
-        config.title = {
-          fr: `Part des projets évalués et lauréats impliquant ${countryN} sur l'ensemble des pays`,
-          en: `Share of evaluated and successful projects involving ${countryN} out of all countries`
-        }
-        config.comment = { 
-          fr: <>Ce graphique présente, pour les destinations des thématiques sélectionnées, le nombre de projets évalués et lauréats impliquant le pays sélectionné, en part de l'ensemble des pays.</>, 
-          en: <>This chart shows, for the destinations of the selected themes, the number of evaluated and successful projects involving the selected country, as a share of all countries.</>,
-        }
-        break
-      default:
-        config.title = {
-          fr: `Part des financements demandés et obtenus par ${countryN} sur l'ensemble des pays`,
-          en: `Share of funding requested and secured by ${countryN} out of all countries`
-        }
-        config.comment = {
-          fr: <>Ce graphique présente, pour les destinations des thématiques sélectionnées, les financements demandés et obtenus par le pays sélectionné, en part de l'ensemble des pays.</>,
-          en: <>This chart shows, for the destinations of the selected themes, the funding requested and secured by the selected country, as a share of all countries.</>,
-        }
-    }
 
-  return <ChartWrapper config={config} options={getOptions(data, displayType, currentLang)} />;
+  const items = data.data ?? [];
+
+  // Reading key : premier élément dans l'ordre de l'API
+  const firstCode = getOrderedCodes(items)[0];
+  const evaluated = firstCode !== undefined ? findItem(items, firstCode, "evaluated") : undefined;
+  const successful = firstCode !== undefined ? findItem(items, firstCode, "successful") : undefined;
+  const valueKey = getProportionKey(displayType);
+
+  const texts = getProportionChartTexts({
+    displayType,
+    level: "destination",
+    countryN,
+    adjMascPlural,
+    name: { fr: getName(evaluated ?? successful, "fr"), en: getName(evaluated ?? successful, "en") },
+    evaluated: formatToPercentLang(evaluated?.[valueKey] ?? 0, currentLang),
+    successful: formatToPercentLang(successful?.[valueKey] ?? 0, currentLang),
+  });
+
+  const config: ChartConfig = {
+    id: "destinationFundingProportion",
+    title: texts.title,
+    comment: texts.comment,
+    readingKey: texts.readingKey,
+    sources: EPChartsSources,
+    integrationURL: "/european-projects/components/pages/analysis/overview/charts/destination-funding-proportion",
+  };
+
+  return <ChartWrapper config={config} options={getOptions(data, displayType, currentLang)} renderData={() => renderDataTable(data, currentLang)} />;
 }

@@ -23,6 +23,14 @@
     "fr": "Projets lauréats",
     "en": "Successful projects"
   },
+  "evaluated-funding": {
+    "fr": "Financements demandés",
+    "en": "Requested funding"
+  },
+  "successful-funding": {
+    "fr": "Financements obtenus",
+    "en": "Secured funding"
+  },
   "country-success-rate": {
     "fr": "Taux de succès du pays",
     "en": "Country success rate"

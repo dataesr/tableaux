@@ -4,57 +4,49 @@ import { getI18nLabel } from "../../../../../../utils";
 import { getCssColor } from "../../../../../../utils/colors";
 import { formatToPercentLang } from "../../../../../../utils/format";
 import { CreateChartOptions } from "../../../../components/chart-ep";
-import { sortByLevel } from "../../../../utils/levelsSort";
+// import { sortByLevel } from "../../../../utils/levelsSort";
 import i18n from "../../i18n-charts.json";
+import { getProportionYAxisTitle } from "../../proportion-charts-text";
+import { findItem, getName, getOrderedCodes, getProportionKey, type ProportionData } from "./utils";
 
-export default function getOptions(data, displayType: string = "total_fund_eur", currentLang: string) {
-  if (!data) return null;
+const LEGENDS: Record<string, [string, string]> = {
+  total_fund_eur: ["requestedFunding", "securedFunding"],
+  total_coordination_number: ["evaluatedCoordinations", "successfulCoordinations"],
+  total_number_involved: ["applicantsNumber", "participantsNumber"],
+  total_projects: ["evaluatedProjects", "successfulProjects"],
+};
 
-  const items = sortByLevel(data.data ?? [], "topic");
-  const valueKey = displayType === "total_coordination_number" ? "proportion_coordination_number" : displayType === "total_number_involved" ? "proportion_number_involved" : displayType === "total_fund_eur" ? "proportion" : "proportion_projects";
-  const lang: "fr" | "en" = currentLang === "en" ? "en" : "fr";
+export default function getOptions(data: ProportionData | null | undefined, displayType: string = "total_fund_eur", currentLang: "fr" | "en" = "fr") {
+  const items = data?.data;
+  if (!items || items.length === 0) return null;
 
-  const legend: any = {}
-  switch (displayType) {
-    case "total_fund_eur":
-      legend.serie_01 = getI18nLabel(i18n, "requestedFunding", lang)
-      legend.serie_02 = getI18nLabel(i18n, "securedFunding", lang)
-      break
-    case "total_coordination_number":
-      legend.serie_01 = getI18nLabel(i18n, "proportionEvaluated", lang)
-      legend.serie_02 = getI18nLabel(i18n, "proportionSuccessful", lang)
-      break
-    case "total_number_involved":
-      legend.serie_01 = getI18nLabel(i18n, "proportionApplicant", lang)
-      legend.serie_02 = getI18nLabel(i18n, "proportionParticipant", lang)
-      break
-    case "total_projects":
-      legend.serie_01 = getI18nLabel(i18n, "proportionEvaluated", lang)
-      legend.serie_02 = getI18nLabel(i18n, "proportionSuccessful", lang)
-      break
-    default:
-      break
-  }
+  const valueKey = getProportionKey(displayType);
+  const [legend01, legend02] = LEGENDS[displayType] ?? LEGENDS.total_fund_eur;
+
+  // Catégories explicites dans l'ordre de l'API : séries alignées (évite le warning Highcharts #15)
+  const codes = getOrderedCodes(items);
+  const categories = codes.map((code) => getName(findItem(items, code, "evaluated") ?? findItem(items, code, "successful"), currentLang));
+  const valuesFor = (stage: string) => codes.map((code) => findItem(items, code, stage)?.[valueKey] ?? 0);
+
+  const dataLabels = {
+    formatter: function (this: { y?: number | null }) {
+      return formatToPercentLang(this.y ?? 0, currentLang);
+    },
+  };
 
   const newOptions: HighchartsInstance.Options = {
     xAxis: {
-      type: "category",
+      categories,
       gridLineColor: "var(--background-default-grey-hover)",
       gridLineWidth: 0.5,
     },
     yAxis: {
       min: 0,
-      title: {
-        text: "Part (%)",
-      },
+      title: { text: getProportionYAxisTitle(currentLang) },
       gridLineColor: "var(--background-default-grey-hover)",
       gridLineWidth: 0.5,
     },
-    tooltip: {
-      pointFormatter: function () {
-        return `${this.series.name} : <b>${formatToPercentLang(this.y ?? 0, lang)}</b>`;
-      },
-    },
+    tooltip: { enabled: false },
     plotOptions: {
       series: {
         dataLabels: { enabled: true },
@@ -63,31 +55,23 @@ export default function getOptions(data, displayType: string = "total_fund_eur",
         borderWidth: 0,
         maxPointWidth: 90,
         groupPadding: 0.25, // espace entre les catégories (par défaut 0.2)
-        pointPadding: 0.1,
+        pointPadding: 0.1, 
       },
     },
     series: [
       {
         type: "column",
-        name: legend.serie_01,
+        name: getI18nLabel(i18n, legend01, currentLang),
         color: getCssColor("evaluated-project"),
-        data: items.filter((item) => item.stage === "evaluated").map((item) => [item.destination, item[valueKey]]),
-        dataLabels: {
-          formatter: function () {
-            return formatToPercentLang(this.y ?? 0, lang);
-          },
-        },
+        data: valuesFor("evaluated"),
+        dataLabels,
       },
       {
         type: "column",
-        name: legend.serie_02,
+        name: getI18nLabel(i18n, legend02, currentLang),
         color: getCssColor("successful-project"),
-        data: items.filter((item) => item.stage === "successful").map((item) => [item.destination, item[valueKey]]),
-        dataLabels: {
-          formatter: function () {
-            return formatToPercentLang(this.y ?? 0, lang);
-          },
-        },
+        data: valuesFor("successful"),
+        dataLabels,
       },
     ],
   };

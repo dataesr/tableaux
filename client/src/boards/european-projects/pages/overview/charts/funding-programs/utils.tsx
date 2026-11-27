@@ -50,13 +50,8 @@ export function useGetParams() {
 
   const currentLang = (searchParams.get("language") === "en" ? "en" : "fr") as "fr" | "en";
   const code = countryCode || "FRA";
-  const countryN = getCountryNameWithArticle(code, currentLang).replace(/^(Le |La |Les |L')/, (m) => m.toLowerCase());
-
-  // const countryAdj = getCountryAdjectives(code, currentLang);
-  // // Pluriel seulement en français
-  // const adjMascPlural =
-  // currentLang === "fr" && !countryAdj.m.endsWith("s") ? `${countryAdj.m}s` : countryAdj.m;
+  const countryN = getCountryNameWithArticle(code, currentLang);
 
 
-  return{ params: params.join("&"), currentLang, countryN};
+  return{ currentLang, countryN, params: params.join("&")};
 }
